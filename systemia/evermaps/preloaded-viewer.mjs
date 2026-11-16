@@ -44,5 +44,7 @@ export function buildPreloadedWgsViewer({template,collections,receipt,permits=nu
  const rendered=renderEvermapsMobileExplorer(enhanced.replace(MARKER,bootstrap));
  return data.permits?rendered.replace('class="legend-item permit-legend" hidden',
   'class="legend-item permit-legend"').replace('>Permit points</div>',
-  '>'+data.permits.features.length+' approximate reclamation permit locations</div>'):rendered;
+  '>'+data.permits.features.length+' permit points*</div>')
+  .replace('Classification names are from the Washington Geological Survey, not mineability ratings.',
+   'Geology labels are not mineability ratings. * DNR reclamation-permit points are approximate locations, not extraction rights.'):rendered;
 }
