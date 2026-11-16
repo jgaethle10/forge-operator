@@ -41,5 +41,35 @@ for name in TARGETS:
             parents.append({'tag':p.name,'attrs':{k:str(v)[:180] for k,v in p.attrs.items()},'snippet':p.get_text(' ',strip=True)[:160]})
             p=p.parent
     result['targets'][name]={'found':bool(m),'nearby_ids':all_ids[:15],'nearby_media':src[:10],'parents':parents}
+
+# Download only these three individually identified licensed music records for private editorial auditions.
+# The video editor must not publish stand-alone music files or claim ownership.
+graph_nodes=[]
+for node in soup.select('script[type="application/ld+json"]'):
+    try:
+        loaded=json.loads(node.string or node.get_text())
+        graph_nodes.extend(loaded.get('@graph',[]) if isinstance(loaded,dict) else [])
+    except Exception:
+        pass
+for name in TARGETS:
+    rec=next((x for x in graph_nodes if x.get('@type')=='MusicRecording' and x.get('name')==name),None)
+    if not rec:
+        raise RuntimeError('Missing official MusicRecording license metadata: '+name)
+    url=rec.get('url','')
+    if not re.fullmatch(r'https://assets\\.mixkit\\.co/music/(\\d+)/\\1\\.mp3',url):
+        raise RuntimeError('Unexpected recording URL: '+url)
+    if rec.get('license')!='https://mixkit.co/license/#musicFree':
+        raise RuntimeError('Missing verified Mixkit Stock Music Free License: '+name)
+    audio=fetch(url,15_000_000)
+    if len(audio)<100_000 or not (audio[:3]==b'ID3' or (audio[0]==255 and audio[1]&224==224)):
+        raise RuntimeError('Missing authentic MP3 audio for '+name)
+    fname=name.lower().replace(' ','_')+'.mp3'
+    (OUT/fname).write_bytes(audio)
+    entry={'title':name,'composer':rec['byArtist'],'source_url':url,'catalog_page':PAGE,'license_url':LICENSE,
+           'bytes':len(audio),'sha256':hashlib.sha256(audio).hexdigest(),'file':fname,
+           'usage':'private commercial audiovisual editing review; no standalone audio redistribution'}
+    result['downloaded'].append(entry)
+    print('RECORDING',json.dumps(entry))
+
 print(json.dumps(result,indent=2)[:11000])
 (OUT/'discovery.json').write_text(json.dumps(result,indent=2))
