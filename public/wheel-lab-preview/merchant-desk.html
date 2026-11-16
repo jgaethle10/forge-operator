@@ -9,6 +9,7 @@
 :root{color-scheme:dark;--bg:#090d14;--panel:#131b28;--line:#354358;--ink:#f4f7fb;--muted:#a2b0c3;--lime:#dfff70;--sky:#8edbff}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -30%,#25394e,var(--bg) 60%);color:var(--ink);font:15px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
 main{max-width:1140px;margin:auto;padding:24px clamp(14px,4vw,38px) 60px}.brand{display:flex;justify-content:space-between;gap:14px;align-items:center;padding-bottom:22px;border-bottom:1px solid #ffffff26}.brand strong{font-size:23px;letter-spacing:-.06em}.eyebrow{font-size:11px;letter-spacing:.15em;text-transform:uppercase;font-weight:900;color:var(--sky)}.pill{font-size:11px;border:1px solid #dfff7080;color:var(--lime);padding:7px 11px;border-radius:50px;font-weight:800}h1{font-size:clamp(34px,5vw,58px);letter-spacing:-.07em;line-height:1.02;margin:22px 0 12px}h1 span{color:var(--lime)}p{color:var(--muted)}.intro{max-width:800px}.layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(295px,.82fr);gap:18px;margin-top:28px}.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:22px;min-width:0}.panel h2{font-size:19px;margin:0 0 8px;letter-spacing:-.03em}.label{display:block;font-size:11px;font-weight:850;letter-spacing:.1em;text-transform:uppercase;color:#b1c2d7;margin:20px 0 8px}input,select{width:100%;background:#0a111b;border:1px solid #526177;color:#fff;border-radius:9px;min-height:44px;padding:10px;font:inherit}input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid var(--lime);outline-offset:2px}.hint{font-size:12px;color:#a6b7c7;margin:7px 0 0}.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}.buttons{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}button{cursor:pointer;font:inherit;background:#253648;border:1px solid #64768a;border-radius:10px;color:#fff;padding:12px 16px;font-weight:800}button.primary{background:var(--lime);color:#11171d;border-color:var(--lime)}button:disabled{opacity:.42;cursor:not-allowed}.line{border-top:1px solid #ffffff1e;margin:24px 0}.money{font-size:clamp(37px,5vw,58px);font-weight:950;letter-spacing:-.06em;color:var(--lime)}.small{font-size:12px;color:var(--muted)}.box{border-radius:12px;background:#0b131e;border:1px solid #354354;padding:14px;margin:15px 0;color:#d7e2ef}.box strong{font-size:13px}.box p{margin:5px 0 0}.warning{border-color:#aa8047;background:#33231555;color:#f5d9ae}.row{display:flex;justify-content:space-between;gap:10px;margin-top:8px}.row span{color:var(--muted)}#message{min-height:24px;color:var(--lime);font-size:13px}#catalogNote{font-size:12px;color:#abc4d8}.footer{border-top:1px solid #ffffff24;padding-top:18px;margin-top:25px;font-size:11px;color:#91a2b7}code{color:#e4ffae}a{color:var(--sky)}@media(max-width:750px){.layout{grid-template-columns:1fr}.brand strong{font-size:19px}.panel{padding:18px}}
+.concept-preview{display:inline-flex;margin-top:9px;background:#263a2b;color:#e8ff73;border:1px solid #dfff70;border-radius:9px;padding:10px 13px;font-size:13px;font-weight:800;text-decoration:none}.concept-preview:hover{background:#314a32}.concept-preview:focus-visible{outline:2px solid #dfff70;outline-offset:3px}.concept-preview[hidden]{display:none}
 </style>
 </head>
 <body>
@@ -34,7 +35,7 @@ main{max-width:1140px;margin:auto;padding:24px clamp(14px,4vw,38px) 60px}.brand{
 <label class="label" for="conceptFile">Import a Wheel Lab concept JSON</label>
 <input id="conceptFile" type="file" accept=".json,application/json">
 <p class="hint">From the shopper preview's "Export shop quote packet" button. Local to this browser, never transmitted. Maximum 20 KB.</p>
-<div class="box"><strong>Requested appearance (unverified)</strong><p id="conceptSummary">No shopper concept imported yet.</p><p class="small">FindMyPart is a separate parts research service. A sourcing-interest note is not permission to contact a customer or proof of compatible stock.</p></div>
+<div class="box"><strong>Requested appearance (unverified)</strong><p id="conceptSummary">No shopper concept imported yet.</p><a id="viewConcept" class="concept-preview" href="./shopper.html" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer" hidden>See this design on the concept car</a><p class="small">Opens the illustrative shopper view only when you choose. No customer, shop, pricing or actual vehicle details are transferred; fitment is not verified.</p><p class="small">FindMyPart is a separate parts research service. A sourcing-interest note is not permission to contact a customer or proof of compatible stock.</p></div>
 <div class="line"></div><h2>3. Shop workflow</h2>
 <label class="label" for="service">Additional service</label><select id="service"><option value="none">No service selected</option><option value="mount">Mount/balance (manual review)</option><option value="tpms">TPMS service (manual review)</option></select>
 <p class="hint">Service selection is a reminder only. It never adds an invented price.</p>
@@ -61,6 +62,11 @@ const SAMPLE=[
 {sku:'CONCEPT-HERITAGE-20',name:'Heritage concept',finish:'Warm bronze',diameter:20,cents:21900}
 ];
 const MAX_BYTES=200000, MAX_ROWS=200;
+const PREVIEW_KEYS={
+  style:Object.freeze({Orbit:'orbit',Turbine:'turbine',Mesh:'mesh',Heritage:'heritage'}),
+  finish:Object.freeze({'Gloss black':'black','Brushed silver':'silver','Warm bronze':'bronze'}),
+  paint:Object.freeze({'Torch red':'red','Pearl white':'white','Electric blue':'blue','Machine silver':'silver',Midnight:'black'})
+};
 const $=id=>document.getElementById(id);
 let inventory=SAMPLE,source='fictional_sample',inputName='',importedConcept=null;
 function parseCsv(text) {
@@ -206,8 +212,31 @@ $('inventoryFile').addEventListener('change',async(e)=>{
   }catch(error){$('message').textContent='Import rejected: '+error.message}
   e.target.value='';
 });
+const viewerBase=$('viewConcept').getAttribute('href');
+function visualPreviewHref(concept){
+  if(!concept || typeof concept!=='object')throw Error('No accepted appearance to preview');
+  const lookups=[
+    ['style',concept.wheel_design],
+    ['finish',concept.wheel_finish],
+    ['paint',concept.paint]
+  ];
+  const keys={};
+  for(const [type,value] of lookups){
+    if(typeof value!=='string'||!Object.prototype.hasOwnProperty.call(PREVIEW_KEYS[type],value))
+      throw Error('Unsupported concept appearance for preview');
+    keys[type]=PREVIEW_KEYS[type][value];
+  }
+  if(![17,18,19,20,21].includes(concept.diameter_in))throw Error('Unsupported wheel diameter for preview');
+  // Fixed, source-controlled relative path and allowlisted appearance params only.
+  // Never transfer shop label, vehicle note, contact, price, catalog, or sourcing intent.
+  return viewerBase+'?paint='+keys.paint+'&style='+keys.style+
+    '&size='+concept.diameter_in+'&finish='+keys.finish;
+}
 function setConcept(parsed){
+  const visualHref=visualPreviewHref(parsed);
   importedConcept=parsed;
+  $('viewConcept').href=visualHref;
+  $('viewConcept').hidden=false;
   $('conceptSummary').textContent=parsed.wheel_design+' · '+parsed.diameter_in+' inch · '+parsed.wheel_finish+' · '+parsed.paint+'. This does not identify a real wheel SKU or verify fitment.'+(parsed.findmypart_sourcing_interest_requested?' Separate FindMyPart research interest was included for local review only; no inquiry or referral sent.':'');
   updateSourcingAction();
 }
@@ -248,13 +277,14 @@ $('export').addEventListener('click',()=>{
 $('reset').addEventListener('click',()=>{
   inventory=SAMPLE;source='fictional_sample';inputName='';importedConcept=null;
   $('conceptSummary').textContent='No shopper concept imported yet.';
+  $('viewConcept').hidden=true;$('viewConcept').href=viewerBase;
   for(const id of ['shop','vehicle','codeInput'])$(id).value='';
   $('quantity').value='4';$('service').value='none';
   $('catalogNote').textContent='Using fictional sample inventory. CSV headers: sku,name,finish,diameter,unit_price_usd. Max 200 rows, 200 KB. All data stays in this browser.';
   $('message').textContent='Local quote desk reset.';populate();updateSourcingAction()
 });
 populate();updateSourcingAction();
-window.__wheelLabMerchantDeskTest={parseCsv,parseConcept,parseConceptCode,packet,sourcingBrief};
+window.__wheelLabMerchantDeskTest={parseCsv,parseConcept,parseConceptCode,packet,sourcingBrief,visualPreviewHref};
 })();
 </script>
 </body></html>
