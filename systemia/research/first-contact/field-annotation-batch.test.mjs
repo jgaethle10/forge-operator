@@ -75,9 +75,10 @@ test("incomplete evidence stays false in the downstream quality gate",t=>{
   const file=path.join(scratch(t),"session.json");
   fs.writeFileSync(file,JSON.stringify(result));
   const receipt=inspectPixelCalibrationFile(file);
-  assert.equal(receipt.result.status,"HOLD");
-  assert.equal(receipt.result.reason,"GROUND_TRUTH_OR_PREDECLARED_THRESHOLDS_NOT_ATTESTED"===receipt.result.reason?
-    "GROUND_TRUTH_OR_PREDECLARED_THRESHOLDS_NOT_ATTESTED":"EVIDENCE_NOT_ESTABLISHED");
+  assert.equal(receipt.result.status,"NUMERIC_GATE_NOT_MET");
+  assert.equal(receipt.result.accepted,0);
+  assert.equal(receipt.result.rejected,3);
+  assert.equal(receipt.result.sampleResults[1].reason,"EVIDENCE_NOT_ESTABLISHED");
 });
 test("unverified ground truth and preregistration claims remain false",()=>{
   const p=plan();p.evidence.knownTargetIndependentlySurveyed=false;
