@@ -7,6 +7,7 @@ import { signMicroSeedExecutionReceipt, verifyMicroSeedExecutionReceipt } from '
 import { signMicroSeedTelemetry } from './microseed-telemetry-signature.mjs';
 import { persistSignedMicroSeedReceipt, readSignedMicroSeedReceipt } from './microseed-signed-receipt-store.mjs';
 import { reserveSignedMicroSeedExecution } from './microseed-execution-intent-store.mjs';
+import { isMicroSeedExecutionQuarantined, MICROSEED_EXECUTION_QUARANTINE_REASON } from './microseed-device-quarantine.mjs';
 
 function clean(v){return String(v??'').trim();}
 function send(res,status,body){
@@ -79,6 +80,7 @@ export async function startMicroSeedNativeAgent({
     compute_execution_mode:'native_device',
     supported_workloads:manifest.supported_workloads,
     arbitrary_code_execution:false,
+    execution_quarantined:isMicroSeedExecutionQuarantined(manifest.device_id),
     active_executions:active,
     signed_receipts_required:manifest.attestation?.receipt_signing_required===true,
     signed_telemetry_required:manifest.attestation?.telemetry_signing_required===true,
@@ -117,6 +119,12 @@ export async function startMicroSeedNativeAgent({
       }
 
       if(req.method==='POST'&&req.url==='/v1/execute'){
+        // Stop before consuming the execution request or reserving an attempt.
+        // Node001 host halt initiator is unknown; the physical node is held
+        // until an explicit reviewed source change removes this quarantine.
+        if(isMicroSeedExecutionQuarantined(manifest.device_id)){
+          return send(res,423,{ok:false,error:MICROSEED_EXECUTION_QUARANTINE_REASON});
+        }
         const max=Math.max(1,Number(manifest.constraints?.max_concurrency||1));
         if(active>=max) return send(res,429,{ok:false,error:'microseed_agent_concurrency_limit'});
         const body=await readJson(req);
