@@ -113,7 +113,7 @@ test('quarantined Node001 rejects on-node hash proof without any network call',(
   assert.equal(calls,0);
   assert.equal(fs.existsSync(path.join(root,'state','signed-execution-intents')),false);
   assert.equal(fs.existsSync(path.join(root,'state','signed-receipts')),false);
-}),{deviceId:'evercraft-node001-penguin'}));
+},{deviceId:'evercraft-node001-penguin'}));
 
 test('quarantined Node001 allows signed telemetry but blocks direct execution POST',()=>withNode(async({
   root,agent,token,manifest,
@@ -145,7 +145,7 @@ test('quarantined Node001 allows signed telemetry but blocks direct execution PO
     'microseed_device_quarantined_pending_host_review');
   assert.equal(fs.existsSync(path.join(root,'state','signed-execution-intents')),false);
   assert.equal(fs.existsSync(path.join(root,'state','signed-receipts')),false);
-}),{deviceId:'evercraft-node001-penguin'}));
+},{deviceId:'evercraft-node001-penguin'}));
 
 test('hash probe refuses legacy agent without journal commit support before POST',()=>withNode(async({root})=>{
   const calls=[];
