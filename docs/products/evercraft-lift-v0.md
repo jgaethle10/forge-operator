@@ -145,6 +145,24 @@ Run the suite: node --test systemia/lift/*.test.mjs
 Use Evercraft Identity and Passport with authenticated server-origin tokens; establish proper scoped partner and reviewer enrollment; trusted immutable case records; production key management, rotation and deletion; attachment malware scanning; quarantine; content validation; access logging; quotas; incident response; audit/restore testing; and independent security review. Consent revocation must propagate to every recipient, search index and cache. Live donations remain disabled.
 
 
+## V0.4b signed-session → journal → encrypted fixture integration
+
+Files: systemia/lift/private-integration-lab.mjs and private-integration-lab.test.mjs.
+
+A *local, in-process synthetic integration* now composes four real code paths: Evercraft Identity signed sessions; current Passport resource grants; the Lift single-writer durable lab journal; and the AES-256-GCM fictional evidence vault.
+
+A reproducible fictional household case can be submitted with a signed session, persisted with a strict version check, have a fixed lab evidence fixture sealed, be reviewed by an independently authorized actor, be withdrawn by its owner, and refuse further evidence reading after withdrawal. A fictional organization can complete its independent vetting path, enter an eligible directory and disappear after suspension, including after a process restart.
+
+- The adapter constructs actors only from signed sessions and fixed server-side action mappings; it ignores caller-asserted roles. Journal actor policy now accepts signed-session-derived opaque Lift actor IDs in addition to hardcoded synthetic fixture IDs, while all other journal inputs remain lab-only.
+- Each operation checks current Passport permissions before persisting, and compares the resulting journal transition against the authorized proposed state. Compare-and-swap rejects stale parallel transitions.
+- Public case and organization snapshots are emitted only through the existing strict allowlist and active-status gates. No private record-reading HTTP route exists.
+- Evidence encryption and owner/reviewer grants remain tied to one synthetic case resource. All money and real applicant document paths stay disabled.
+
+**Not production:** there is no network listener, actual user registration, persistent security service deployment, real document upload, legal partner relationship, credential management service, tamper-resistant external audit or payments. The harness does not establish that real recipients can safely submit personal information. Existing CI is the only verified execution environment for this work until a dedicated owned-runtime pilot is independently confirmed.
+
+Next gate: authenticated private Evercraft-owned service with a real encrypted evidence vault, operator-reviewed enrollment, object-level access audit, durable revocation propagation, backup/restore proof, and security/legal signoff. Do not collect personal data or real donations before these are complete.
+
+
 ## Release status
 
 **Demo:** ready for local isolated evaluation. **Live assistance:** blocked. **Payments:** blocked. **Verified partners:** none onboarded by this change. **Public deployment:** not authorized by this branch. **Systemia API integration:** pending. The name is provisional pending checks for conflicts.
