@@ -83,6 +83,7 @@ export function buildMedicalOutcomeAudit({
         article_url:'https://pubmed.ncbi.nlm.nih.gov/'+id+'/',
         registry_url:'https://clinicaltrials.gov/study/'+check.nct_id,
         registry_check_status:check.check_status,
+        verified_registry_identity:identityOk,
         registry_last_update_posted:identityOk?(r.last_update_posted||null):null,
         protocol_snapshot_not_historical:true,
         registry_results_posted:identityOk?r.registry_results_posted:null,
@@ -109,7 +110,7 @@ export function buildMedicalOutcomeAudit({
     },
     counts:{
       paper_trial_pairs:audits.length,
-      official_identifiers_confirmed:count(x=>x.registry_check_status==='registry_identifier_confirmed'),
+      official_identifiers_confirmed:new Set(audits.filter(x=>x.verified_registry_identity).map(x=>x.nct_id)).size,
       registered_primary_outcome_rows:audits.reduce((n,x)=>n+x.registered_primary_outcomes.length,0),
       posted_result_headings:audits.reduce((n,x)=>n+x.posted_result_headings.length,0),
       abstract_literal_title_mentions:audits.reduce((n,x)=>n+x.primary_outcome_literal_comparisons.filter(c=>c.abstract_literal_title_mention).length,0),
