@@ -1,0 +1,39 @@
+name: Fallen Signature Standard
+on:
+  pull_request:
+    paths:
+      - 'systemia/media-studio/fallen-signature-gate.mjs'
+      - 'systemia/media-studio/fallen-signature-gate.test.mjs'
+      - 'systemia/media-studio/customer-commercial-gate.mjs'
+      - 'systemia/media-studio/customer-commercial-gate.test.mjs'
+      - 'systemia/media-studio/FALLEN-SIGNATURE-STANDARD.md'
+      - '.github/workflows/fallen-signature-standard.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/media-studio/fallen-signature-gate.mjs'
+      - 'systemia/media-studio/fallen-signature-gate.test.mjs'
+      - 'systemia/media-studio/customer-commercial-gate.mjs'
+      - 'systemia/media-studio/customer-commercial-gate.test.mjs'
+      - '.github/workflows/fallen-signature-standard.yml'
+permissions:
+  contents: read
+jobs:
+  release-gate-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify FFmpeg utilities
+        run: |
+          ffmpeg -version | head -n 1
+          ffprobe -version | head -n 1
+      - name: Test signature gate and existing release contracts
+        run: |
+          node --test \
+            systemia/media-studio/fallen-signature-gate.test.mjs \
+            systemia/media-studio/customer-commercial-gate.test.mjs \
+            systemia/media-studio/commercial-release-preflight.test.mjs
