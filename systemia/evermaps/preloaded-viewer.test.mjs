@@ -51,3 +51,28 @@ test('tampered WGS source geometry and incomplete layer cannot create a preloade
  assert.throws(()=>buildPreloadedWgsViewer({template,collections,receipt:truncated}),/Missing complete/);
  assert.throws(()=>buildPreloadedWgsViewer({template,collections,receipt:{...receipt,source_data_completeness:false}}),/Full verified/);
 });
+
+test('current signed WGS and DNR receipt includes approximate permit dots with no owner data',async()=>{
+ const {LAND_SOURCE_CATALOG}=await import('./land-context.mjs');
+ const origin=LAND_SOURCE_CATALOG.washingtonSurfacePermits.url;
+ const p={type:'FeatureCollection',features:[{type:'Feature',
+  properties:{OBJECTID:100,PERMIT_NO:'W100',COUNTY:'Grant',COMMODITY:'Sand',APPLICANT:'Do not emit'},
+  geometry:{type:'Point',coordinates:[-119.5,46.7]}}],metadata:{
+   complete:true,source:origin,source_count_before:1,source_count_after:1
+  }};
+ p.metadata.sha256_source_features=auditGeojsonCollection(p).sha256_source_features;
+ const r={schema:'evercraft.evermaps.permit-point-overlay-receipt.v1',
+  state:'point_geometry_overlay_verified',county:'Grant',source:origin,
+  geologic_source_sha256:receipt.layers.resources.geometry_audit.sha256_source_features,
+  permit_source_sha256:p.metadata.sha256_source_features,
+  site_recommendation_allowed:false,land_title_verified:false,permit_count:1};
+ const template=await readFile(new URL('./research-viewer.html',import.meta.url),'utf8');
+ const html=buildPreloadedWgsViewer({template,collections,receipt,permits:p,permitReceipt:r});
+ assert.ok(html.includes('1 approximate reclamation permit locations'));
+ assert.ok(html.includes('class="legend-item permit-legend"'));
+ assert.ok(!html.includes('class="legend-item permit-legend" hidden'));
+ assert.ok(html.includes('fill="#ffa95b"'));
+ assert.equal(html.includes('Do not emit'),false);
+ const damaged={...r,geologic_source_sha256:'b'.repeat(64)};
+ assert.throws(()=>buildPreloadedWgsViewer({template,collections,receipt,permits:p,permitReceipt:damaged}),/same-run/);
+});
