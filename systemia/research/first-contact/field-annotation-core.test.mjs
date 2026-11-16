@@ -147,3 +147,17 @@ test("inline browser module has valid JavaScript syntax",()=>{
     {input:script[1],encoding:"utf8",timeout:5000});
   assert.equal(proc.status,0,proc.stderr);
 });
+
+
+test("export whitelists calibrated fields rather than leaking imported camera secrets",()=>{
+  const x=state();
+  x.first.camera.apiToken="SECRET-MUST-NOT-EXPORT";
+  x.first.camera.ownerPrivateNote="PRIVATE-ALSO-STRIP";
+  x.first.detection.unrelatedUserData="EXTRA-DETECTION-DATA";
+  x.first.source.originalPrivatePath="/home/someone/private.jpg";
+  const record=createFieldPixelPacket(x);
+  const json=JSON.stringify(record);
+  assert.doesNotMatch(json,/SECRET-MUST-NOT-EXPORT|PRIVATE-ALSO-STRIP|EXTRA-DETECTION-DATA|originalPrivatePath/);
+  assert.equal(record.first.camera.fxPixels,800);
+  assert.equal(record.first.camera.skewPixels,0);
+});
