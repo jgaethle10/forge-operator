@@ -1,0 +1,103 @@
+{
+  "id": "fallen-journal-starship-flight15-catch-20261115",
+  "title": "Fallen Studios | Flight 15: The Catch From Orbit",
+  "brief": {
+    "prompt": "Create an original, stunning but faithful 45-second cinematic engineering reconstruction of the NOVEMBER 14 2026 SpaceX Ship 42 upper-stage return and first Starship upper-stage catch at Starbase Texas. THIS IS A RECONSTRUCTION, NOT ACTUAL VIDEO. Lead with the terrifying scale of a stainless upper-stage spacecraft moving through dusk clouds toward Mechazilla; cut to 3D cross-sectional geometry and an orbital-flight line; reveal black thermal tiles, control flaps, orbital reentry plasma, near-vertical descent, final engine braking and the two huge mechanical arms gently supporting the upper stage. Animate physically plausible relative scale and camera moves, NOT an unsupported engineering simulation or raw actual flight telemetry. Clearly separate Ship 42 from Super Heavy: do not show a booster being caught; the booster recovery ABORTED. Include a 2-second reality check at the end explaining no full-vehicle recovery was achieved. Source facts from SpaceX mission page, AP and AIAA. Logo and title elegant, editorial, not clickbait. No borrowed soundtrack or false footage claims; original score only. Voiceover warm, expressive and accurate only if a legitimately authorized voice model or performer is available, otherwise leave dialogue as a planned unrendered track. Export 9:16 with a separate 16:9 master. Do not publish unless visual provenance, rights, Systemia release and Clip receipts pass.",
+    "format": "social-short",
+    "durationSec": 45,
+    "aspectRatio": "9:16",
+    "audience": "Curious science and engineering readers on Facebook, Instagram, YouTube Shorts and Evercraft Journal",
+    "cta": "Read the source-backed breakdown on Evercraft Journal AFTER the canonical public URL is verified",
+    "style": "Fallen Studios cinematic documentary explainer; dimensional scale, original 3D modeling, real atmospheric light and precise mechanical detail; no neon text-card montage; labels readable on phone"
+  },
+  "assets": [],
+  "sourceRefs": [
+    "https://www.spacex.com/launches/starship-flight-15/",
+    "https://apnews.com/article/df394c1b5a0f85e11194f9ff7db9ee6b",
+    "https://aerospaceamerica.aiaa.org/spacex-achieves-first-starship-tower-catch/"
+  ],
+  "mediaTruth": {
+    "reconstruction": true,
+    "requiredOnscreenLabel": "ARTIST'S RECONSTRUCTION • NOT ACTUAL FLIGHT FOOTAGE",
+    "noThirdPartyVideoWithoutLicense": true,
+    "noFabricatedVoice": true,
+    "flightOutcome": {
+      "shipCaught": true,
+      "boosterCaught": false,
+      "boosterLost": true
+    }
+  },
+  "sceneBeats": [
+    {
+      "start": 0,
+      "end": 5,
+      "label": "First sight",
+      "shot": "Begin low by tower base, rack focus up its trusses to reveal spacecraft suspended in arms; realistic scale and red-orange afternoon edge light",
+      "sound": "Original deep low-frequency tonal lift"
+    },
+    {
+      "start": 5,
+      "end": 10,
+      "label": "From orbit",
+      "shot": "Match-cut from a dramatic orbit camera to Earth limb; translucent trajectory ribbon around planet, '14 ORBITS' sourced graphic, depict as explanatory not telemetry",
+      "sound": "Restrained evolving score"
+    },
+    {
+      "start": 10,
+      "end": 17,
+      "label": "Reentry",
+      "shot": "Upper-stage close tracking of black tiles and plasma sheath, body moving through clouds, no inaccurate reverse engine firing at orbital speed",
+      "sound": "Air pressure rush and percussive transition"
+    },
+    {
+      "start": 17,
+      "end": 25,
+      "label": "Tower geometry",
+      "shot": "Wide volumetric establishing shot of Mechazilla, giant arms, coastal grounds. Slow orbit camera for real parallax. Distinct 3D assets for arms, ship and lattice tower.",
+      "sound": "Heartbeat-like pulse, tension rise"
+    },
+    {
+      "start": 25,
+      "end": 34,
+      "label": "Catch",
+      "shot": "Two-camera scientifically labeled reconstruction of vertical final approach; engine deceleration, translation to arms, contact and settling; emphasize mechanical relationships, no invented precise numbers",
+      "sound": "Controlled sonic impact then sudden quiet"
+    },
+    {
+      "start": 34,
+      "end": 40,
+      "label": "Reality check",
+      "shot": "Elegant split scene, Ship 42 caught / Booster 22 abort over Gulf. NO fictional booster-catching shot. Overlay '1 HISTORIC CATCH • 1 ABORTED RETURN'.",
+      "sound": "Quiet resolved score"
+    },
+    {
+      "start": 40,
+      "end": 45,
+      "label": "Evercraft Journal close",
+      "shot": "Reveal still frame of real 3D asset and original Evercraft Journal masthead, 'WHAT THIS PROVES • WHAT COMES NEXT' with no fabricated link",
+      "sound": "Original short signature sting"
+    }
+  ],
+  "productionGates": {
+    "firstPassStatus": "planning_only_no_media_assets_or_render_receipt",
+    "requireCreativeCouncil": true,
+    "requireShotTournament": true,
+    "requireObservedFrameHashes": true,
+    "requireApprovedSources": true,
+    "requireVisualRights": true,
+    "requireEditorialRelease": true,
+    "requireJournalPublicLinkBeforeCTA": true,
+    "requireAuthorizedClipProvider": true
+  },
+  "distribution": {
+    "brandKey": "evercraft-journal",
+    "platforms": [
+      "facebook",
+      "instagram",
+      "youtube"
+    ],
+    "firstCommentJournalLink": "HOLD_PENDING_VERIFIED_CANONICAL_URL",
+    "state": "NOT_SUBMITTED",
+    "publicationAuthority": false
+  }
+}
