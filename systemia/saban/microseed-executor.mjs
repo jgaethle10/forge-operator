@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { isMicroSeedExecutionQuarantined, MICROSEED_EXECUTION_QUARANTINE_REASON } from './microseed-device-quarantine.mjs';
 import { createHash, randomBytes } from 'node:crypto';
 import { evaluateDeviceSafetyEnvelope } from './device-safety-envelope.mjs';
 import { executeRegisteredMicroSeedWorkload, BuiltinMicroSeedWorkloads, microSeedWorkloadSpec } from './microseed-workload-registry.mjs';
@@ -91,6 +92,11 @@ export async function executeMicroSeedWorkload({
 }={}){
   if(manifest?.schema!=='evercraft.microseed.device-manifest.v1'){
     throw new Error('microseed_manifest_required');
+  }
+  // Defense-in-depth: direct internal callers must not bypass the gateway
+  // or native-agent Node001 execution quarantine.
+  if(isMicroSeedExecutionQuarantined(manifest.device_id)){
+    throw new Error(MICROSEED_EXECUTION_QUARANTINE_REASON);
   }
   if(trustDecision?.eligible!==true||trustDecision?.state!=='active'){
     throw new Error('microseed_device_not_trusted_active');
