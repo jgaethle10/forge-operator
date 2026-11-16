@@ -70,6 +70,11 @@ node systemia/research/historical-tech/bench-evaluator.mjs systemia/research/his
 - [Independent reviewer tracking issue #2088](https://github.com/jgaethle10/forge-operator/issues/2088): individually checkable hardware, calibration, synchronization, thermal/electrical safety, NIST TN 1297 uncertainty and owner-signoff criteria. **No human reviewer is assigned or contacted.**
 - Candidate Adafruit 1407 explicitly lacks a full datasheet, so it is **not** an approved calibrated physics reference. JS220 has documented precision within each unit but cross-unit synchronization must be separately verified. No equipment purchased, energized, or installed. No Systemia admission or live work asserted.
 
+## Stage 10: qualified reviewer search and written outreach (2026-11-15)
+- [EXTERNAL_REVIEW_ROUTING.md](EXTERNAL_REVIEW_ROUTING.md) records sourced contact and competence leads at Central Washington University EET, WSU Tri-Cities EE, Global Calibration Services, and Connetix Engineering (Yakima). All candidates remain **uncontacted** and unapproved.
+- Three **Gmail drafts** were prepared for review, to CWU Greg Lyman, WSU Scott Hudson, and Global Calibration Services. Draft creation does **not** send mail or engage reviewers; no organization has replied, accepted a contract, provided equipment, or endorsed the methodology.
+- Correspondence explicitly requests ordinary electrical/metrology review before any low-voltage bench work, with no claim of new physics or power generation. The proposal remains **NO-GO for energized tests and external performance claims**.
+
 ## Review and authority gates
 - Systemia is authoritative for mission admission, agent delegation and signed receipts. Neither GitHub commits nor an issue prove that workers have executed.
 - Physical setup, tests, external claims or release require separate authorization and independent evidence/safety review.
