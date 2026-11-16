@@ -110,7 +110,17 @@ def make_preview(csv_text, member, start=CLIP_START, end=CLIP_END, source_sha=AR
     depth_rows = sum(1 for p in points if p["depth_source_signed"] is not None)
     return {
         "schema": SCHEMA,
-        "status": "PROVISIONAL_RAW_OBSERVATIONS_ONLY",
+        "status": "PROVISIONAL_NOAA_PROCESSED_1HZ_PRODUCT",
+        "record_type": "NOAA_D2_PROCESSED_1HZ_NAVIGATION_TRACK",
+        "source_processing_plan": "https://repository.library.noaa.gov/view/noaa/55994/noaa_55994_DS1.pdf",
+        "upstream_processing": [
+            "USBL positions converted to decimal degrees and rolling median filtered",
+            "navigation, Paroscientific-derived depth and DVL altitude combined with time-based interpolation",
+            "one-hertz product downsampled by carrying forward last good point (pad method)",
+        ],
+        "upstream_interpolation_and_padding": True,
+        "source_rows_are_not_independent_raw_sensor_fixes": True,
+        "evercraft_extra_interpolation": False,
         "mission_id": "EX2306_DIVE02",
         "title": "NOAA Kodiak Seep · 1Hz ROV observations",
         "source_credit": "NOAA Ocean Exploration",

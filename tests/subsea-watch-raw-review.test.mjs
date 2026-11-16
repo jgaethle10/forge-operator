@@ -10,15 +10,22 @@ const archive=fs.readFileSync('public/subsea-watch/field-archive/index.html','ut
 
 test('real NOAA sample is explicitly provisional, downsampled and source-hash pinned',()=>{
  assert.equal(sample.schema,'evercraft.subsea.raw_track_preview_5s.v1');
- assert.equal(sample.status,'PROVISIONAL_ROUNDED_DOWNSAMPLED_OBSERVATIONS');
+ assert.equal(sample.status,'PROVISIONAL_PROCESSED_TRACK_DISPLAY');
  assert.equal(sample.mission_id,'EX2306_DIVE02');
  assert.equal(sample.source_credit,'NOAA Ocean Exploration');
  assert.equal(sample.source_archive_sha256,'b83df8dd9ae8ebeee7e23c5b1d8a2550b192137bbe7f1e394e551ee4124dda61');
  assert.equal(sample.original_window_count,300);
  assert.equal(sample.preview_sample_count,61);
  assert.equal(sample.points.length,61);
- assert.equal(sample.positioning_quality,'UNVERIFIED');
+ assert.equal(sample.positioning_quality,'NOAA_USBL_DERIVED_1HZ_POSITIONING_ACCURACY_UNVERIFIED');
  assert.equal(sample.site_geometry,'NONE');
+ const processing=sample.processing_lineage;
+ assert.equal(processing.source_processing_applied_before_evercraft,true);
+ assert.equal(processing.independent_fix_at_each_second,false);
+ assert.equal(processing.raw_sensor_positions,false);
+ assert.equal(processing.evercraft_added_interpolation,false);
+ assert.deepEqual(processing.original_processing.length,4);
+ assert.match(processing.source_plan,/noaa_55994_DS1\.pdf/);
  assert.equal(sample.safety,'NOT_FOR_NAVIGATION_OR_DIVE_CLEARANCE');
  assert.match(sample.depth_reference,/UNVERIFIED/);
  assert.match(sample.clock_reference,/synchronization unverified/);
@@ -36,7 +43,11 @@ test('real NOAA sample is explicitly provisional, downsampled and source-hash pi
 });
 test('browser source-review interface never fabricates a 3D dive or a synchronized camera',()=>{
  assert.match(html,/Unverified positioning/);
- assert.match(html,/No interpolation/);
+ assert.match(html,/No extra Evercraft interpolation/);
+ assert.match(html,/NOAA track is USBL-derived, filtered, interpolated and padded/);
+ assert.match(html,/2023 NOAA data-management plan/);
+ assert.match(html,/not independent raw fixes/);
+ assert.match(html,/noaa_55994_DS1\.pdf/);
  assert.match(html,/signed depth/);
  assert.match(html,/NOT CERTIFIED/);
  assert.match(html,/noindex,nofollow/);
@@ -49,6 +60,8 @@ test('browser source-review interface never fabricates a 3D dive or a synchroniz
  assert.match(js,/EXPECTED_SHA/);
  assert.match(js,/dataset\.noaaTrack='source-observations-loaded'/);
  assert.match(js,/One dot per observed source sample/);
+ assert.match(js,/p\.independent_fix_at_each_second!==false/);
+ assert.match(js,/source_processing_applied_before_evercraft!==true/);
  assert.doesNotMatch(html,/three\.js|babylon|iframe|video.*autoplay/);
  assert.doesNotMatch(js,/WebSocket|sendBeacon|localStorage|innerHTML|createObjectURL|\.lineTo\(x,y\)/);
 });

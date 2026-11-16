@@ -94,7 +94,27 @@ test('Facebook Pages maps Page identity and Page token into the owned generic cr
   assert.equal(row.provider, 'facebook-pages');
   assert.equal(row.apiKeyId, '123456789012345');
   assert.equal(row.apiSecret, 'EAAB-owned-page-access-token-abcdefghijklmnopqrstuvwxyz');
-  assert.equal(row.label, 'evercraft-clip');
+  assert.equal(row.label, 'evercraft-clip-page-123456789012345');
+  assert.equal(row.environment, 'live');
+});
+
+test('Facebook Page credentials have distinct vault identities and reject spoofed labels', () => {
+  const first = normalizeProviderCredentialRequest('facebook-pages', {
+    page_id: '1253915241138545', page_access_token: 'test-token-page-one-abcdefghijklmnop',
+    label: 'overwritable', environment: 'paper',
+  });
+  const second = normalizeProviderCredentialRequest('facebook-pages', {
+    page_id: '150998551441188', page_access_token: 'test-token-page-two-abcdefghijklmnop',
+    label: 'overwritable', environment: 'paper',
+  });
+  assert.notEqual(first.label, second.label);
+  assert.equal(first.label, 'evercraft-clip-page-1253915241138545');
+  assert.equal(second.label, 'evercraft-clip-page-150998551441188');
+  assert.equal(first.environment, 'live');
+  assert.equal(second.environment, 'live');
+  assert.throws(() => normalizeProviderCredentialRequest('facebook-pages', {
+    page_id: 'not-a-page', page_access_token: 'test-token',
+  }), /facebook_page_id_invalid/);
 });
 
 

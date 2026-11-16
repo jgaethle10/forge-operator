@@ -1,0 +1,112 @@
+{
+  "contract": "evercraft.fallen.journal.production.v1",
+  "package_key": "journal:2026-11-15:nvidia-leadership-ai-infrastructure-concentration",
+  "mission_key": "evercraft-journal-owned-newsroom",
+  "work_key": "nvidia-ai-concentration-explainer-2026",
+  "story": {
+    "title": "NVIDIA Lost Its Founder-CEO. The AI Economy Has Bigger Questions.",
+    "thesis": "A documented leadership transition exposes wider questions about concentration, continuity and governance in AI infrastructure.",
+    "education_goal": "Separate documented leadership change and ongoing inquiry from unproven allegations; explain what makes the hardware layer consequential.",
+    "desk": "technology-systems"
+  },
+  "evidence": {
+    "source_refs": [
+      "nvidia-sec-transition-2026-11-11",
+      "nvidia-ceo-transition-2026-11-12",
+      "nvidia-board-2026-11-08",
+      "nvidia-fy27q2",
+      "reuters-nvidia-transition-2026-11-12",
+      "reuters-bessent-2026-11-15",
+      "evercraft-original-system-map"
+    ],
+    "evidence_refs": [
+      "nvidia-sec-transition-2026-11-11",
+      "nvidia-board-2026-11-08",
+      "nvidia-fy27q2"
+    ],
+    "evidence_state": "public_source_grounded",
+    "confidence": "high_on_official_actions_bounded_on_intelligence_reporting",
+    "freshness_state": "fresh",
+    "volatile_claims": [
+      {
+        "claim_key": "interim-ceo",
+        "claim": "Colette Kress is serving as interim chief executive",
+        "source_ref": "nvidia-ceo-transition-2026-11-12",
+        "verified_at": "2026-11-16T02:00:17.787Z",
+        "expires_at": "2026-11-18T02:00:17.787Z",
+        "freshness_state": "fresh"
+      }
+    ],
+    "uncertainty_notes": "Investigation and succession outcomes are unresolved as of this edition."
+  },
+  "rights": {
+    "visual_rights_state": "verified",
+    "visual_source_ref": "evercraft-original-system-map"
+  },
+  "derivative_plan": [
+    {
+      "format": "facebook",
+      "angle": "The scandal is the headline; infrastructure concentration is the story"
+    },
+    {
+      "format": "linkedin",
+      "angle": "AI infrastructure continuity after NVIDIA founder-CEO transition"
+    },
+    {
+      "format": "short_video",
+      "angle": "Three distinct risks, not one sensational headline"
+    }
+  ],
+  "visual_story": {
+    "id": "nvidia-ai-dependency-map",
+    "headline": "The infrastructure beneath AI",
+    "subhead": "Explaining hardware, data centers, applications and oversight",
+    "durationSec": 38,
+    "aspectRatio": "16:9",
+    "metrics": [
+      {
+        "id": "dc-revenue",
+        "label": "NVIDIA Q2 FY27 Data Center revenue",
+        "value": 89,
+        "unit": "USD billions",
+        "evidenceState": "public_source",
+        "sourceRefs": [
+          "nvidia-fy27q2"
+        ]
+      }
+    ],
+    "timeline": {
+      "startSec": 0,
+      "endSec": 38,
+      "events": [
+        {
+          "id": "inquiry",
+          "t": 8,
+          "label": "Nov 8: NVIDIA independent inquiry announced",
+          "evidenceState": "public_source",
+          "sourceRefs": [
+            "nvidia-board-2026-11-08"
+          ]
+        },
+        {
+          "id": "transition",
+          "t": 19,
+          "label": "Nov 11: Huang resignation accepted",
+          "evidenceState": "public_source",
+          "sourceRefs": [
+            "nvidia-sec-transition-2026-11-11"
+          ]
+        },
+        {
+          "id": "earnings",
+          "t": 30,
+          "label": "Nov 17: Scheduled NVIDIA results",
+          "evidenceState": "public_source",
+          "sourceRefs": [
+            "nvidia-ceo-transition-2026-11-12"
+          ]
+        }
+      ]
+    }
+  }
+}

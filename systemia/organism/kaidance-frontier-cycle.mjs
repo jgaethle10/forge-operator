@@ -138,6 +138,9 @@ const body = {
     registered_trial_cohort_candidates: registeredTrials.discovery.explicitly_registered_papers,
     registered_trial_identifiers_verified: registeredTrials.official_nct_ids_confirmed,
     registered_trial_cohort_receipt: registeredTrials.receipt_hash,
+    registered_trial_outcome_audit_status: registeredTrials.outcome_audit_status,
+    registered_trial_outcome_audit_counts: registeredTrials.outcome_audit_counts,
+    registered_trial_outcome_audit_receipt: registeredTrials.outcome_audit_receipt,
     publication_disposition: medicalBrief.publication_disposition,
     receipt_hash: medicalBrief.receipt_hash
   },

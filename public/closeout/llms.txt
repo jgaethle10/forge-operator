@@ -15,3 +15,5 @@ Search intents: contractor closeout packet, completion report generator, job com
 Boundaries: Evercraft does not certify that work was performed, a property was inspected, a customer has accepted it or warranties exist. Contractor-supplied facts must be checked by the contractor. No digital signature or verified payment is performed by this browser tool.
 
 Order authority: Evercraft Payments. Provider boundary: Raven Nexus. Stripe is a settlement adapter only. No generic Stripe link is substituted for the unverified Closeout product order.
+
+Optional buyer request: the public page includes a consented business-only pilot inquiry. Its owned API is https://fabric.systemiacommandcenters.com/api/closeout/inquiry and readiness is /api/closeout/readiness. Source is implemented but live intake deployment is not verified. If the backend cannot prove readiness, the page offers an explicit email draft; it does not report the inquiry submitted. No customer addresses, job photos, packet data, payments or work authorization are part of the inquiry.

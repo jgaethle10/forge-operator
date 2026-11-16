@@ -1,0 +1,25 @@
+name: Client 001 Shareable Review Safety
+on:
+  push:
+    branches: [release/client001-onthego-live-review-link-20261115]
+    paths:
+      - public/clients/on-the-go/review/**
+      - tests/client001-on-the-go-review.test.mjs
+      - .github/workflows/client001-on-the-go-review.yml
+  pull_request:
+    paths:
+      - public/clients/on-the-go/review/**
+      - tests/client001-on-the-go-review.test.mjs
+      - .github/workflows/client001-on-the-go-review.yml
+permissions:
+  contents: read
+jobs:
+  review:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - name: Verify client review remains unlisted, local and bilingual
+        run: node --test tests/client001-on-the-go-review.test.mjs

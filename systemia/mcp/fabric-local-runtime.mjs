@@ -47,6 +47,7 @@ import { createSignalBuyerInquiryHandler,signalBuyerIntakeReadiness,createSignal
 import { createFindMyPartInquiryHandler, createFindMyPartInquiryAlertDispatcher, findMyPartInquiryReadiness } from './findmypart-public-inquiry.mjs';
 import { createStudioAlertDispatcher } from './studio-lead-relay.mjs';
 import {createPartnerApplicationHandler,createPartnerApplicationDispatcher} from './partners-public-inquiry.mjs';
+import {createCloseoutInquiryHandler,createCloseoutInquiryAlertDispatcher,closeoutInquiryReadiness} from './closeout-public-inquiry.mjs';
 import { buildVisualStory, normalizeVisualStory } from '../visual-desk/factory.mjs';
 import { buildCommercialCampaign } from '../graphics-command/commercial-renderer.mjs';
 
@@ -421,6 +422,9 @@ export async function startFabricLocalRuntime({
   findMyPartIntakeKey=process.env.EVERCRAFT_FINDMYPART_INTAKE_KEY_B64||'',
   partnersLeadsDir=process.env.EVERCRAFT_PARTNERS_LEADS_DIR||'',
   partnersIntakeKey=process.env.EVERCRAFT_PARTNERS_INTAKE_KEY_B64||'',
+  closeoutLeadsDir=process.env.EVERCRAFT_CLOSEOUT_LEADS_DIR||'',
+  closeoutNotify=null,
+  closeoutRecipient=process.env.EVERCRAFT_STUDIO_RELAY_OWNER_PRINCIPAL||'',
 }={}) {
   const instanceId='fabric_local_'+crypto.randomBytes(10).toString('hex');
   const resolvedReleaseRefFile=String(
@@ -453,6 +457,16 @@ export async function startFabricLocalRuntime({
   const partnerApplication=createPartnerApplicationHandler({
     storeDir:partnersLeadsDir||undefined,key:partnersIntakeKey,
     onAlertQueued:()=>{if(partnerAlertDispatcher.enabled)void partnerAlertDispatcher.dispatch().catch(()=>{});},
+  });
+  const closeoutAlertDispatcher=createCloseoutInquiryAlertDispatcher({
+    storeDir:closeoutLeadsDir||undefined,
+    recipient:closeoutRecipient,
+    ...(closeoutNotify?{notify:closeoutNotify}:{})
+  });
+  const closeoutInquiry=createCloseoutInquiryHandler({
+    storeDir:closeoutLeadsDir||undefined,
+    notificationReady:()=>closeoutAlertDispatcher.enabled,
+    onAlertQueued:()=>{if(closeoutAlertDispatcher.enabled)void closeoutAlertDispatcher.dispatch().catch(()=>{});}
   });
   const checkoutHandoffs=new Map();
   const createCheckoutHandoff=({slug,checkoutUrl,amountLabel,orderKey})=>{
@@ -836,6 +850,19 @@ export async function startFabricLocalRuntime({
           ...state,payment_ready:false,payment_verified:false},cors);
       }
       if(signalRoute==='/api/signal/inquiry')return await signalInquiry(req,res);
+
+      // Customer-led Closeout inquiry is NOT a payment, signed acceptance or work order.
+      const closeoutRoute=new URL(String(req.url||'/'),'http://fabric.local').pathname;
+      if(closeoutRoute==='/api/closeout/readiness'){
+        if(req.method!=='GET')return sendJson(res,405,{ok:false,error:'method_not_allowed'});
+        const caller=String(req.headers.origin||'');
+        const cors=(caller==='https://jgaethle10.github.io'||caller==='https://fabric.systemiacommandcenters.com')
+          ?{'access-control-allow-origin':caller,'vary':'origin'}:{'vary':'origin'};
+        return sendJson(res,200,{schema:'evercraft.closeout.intake-readiness.v1',
+          ...closeoutInquiryReadiness({storeDir:closeoutLeadsDir||undefined,
+            notificationReady:closeoutAlertDispatcher.enabled})},cors);
+      }
+      if(closeoutRoute==='/api/closeout/inquiry')return await closeoutInquiry(req,res);
 
       // A separately bounded owned route accepts only consented FindMyPart part briefs.
       // Customer content cannot create a paid order or an executable mission.
@@ -1250,7 +1277,11 @@ export async function startFabricLocalRuntime({
             checkout_ready:false,
             order_created:false,
             fulfillment_release:false,
-            scope_url:'https://jgaethle10.github.io/forge-operator/signal/#request'
+            scope_url:slug==='signal-brief'
+              ?'https://jgaethle10.github.io/forge-operator/signal/#request'
+              :slug==='closeout-pilot'
+                ?'https://jgaethle10.github.io/forge-operator/closeout/#service'
+                :'https://fabric.systemiacommandcenters.com/offers/'+encodeURIComponent(slug)
           });
         }
 
@@ -1757,6 +1788,10 @@ export async function startFabricLocalRuntime({
     server.listen(port,host,resolve);
   });
 
+  if(closeoutAlertDispatcher.enabled){
+    closeoutAlertDispatcher.start();
+    void closeoutAlertDispatcher.dispatch().catch(()=>{});
+  }
   if(studioAlertDispatcher.enabled){
     studioAlertDispatcher.start();
     void studioAlertDispatcher.dispatch().catch(()=>{});
@@ -1797,6 +1832,7 @@ export async function startFabricLocalRuntime({
       return health();
     },
     close:async()=>{
+      closeoutAlertDispatcher.stop();
       studioAlertDispatcher.stop();
       websiteAuditAlertDispatcher.stop();
       signalAlertDispatcher.stop();

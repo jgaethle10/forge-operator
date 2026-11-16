@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.subsea.field_sources.v1",
-  "reviewed_on": "2026-11-10",
+  "reviewed_on": "2026-11-15",
   "program": "NOAA Ocean Exploration / NCEI",
   "mission": {
     "id": "EX2306_DIVE02",
@@ -14,7 +14,7 @@
     "alignment_status": "UNVERIFIED_NO_SYNC",
     "credit": "NOAA Ocean Exploration",
     "official_mission_page": "https://www.ncei.noaa.gov/waf/okeanos-rov-cruises/ex2306/",
-    "note": "Original Dive02 KML and ROV ancillary ZIP were downloaded and SHA-256 hashed by an Evercraft GitHub Actions audit. The KML is untimed; the ancillary ZIP contains a 1Hz ROV CSV with 26,092 rows. 300 records overlap the NCEI video UTC window, but instrument position quality, vertical datum and frame-level sync remain UNVERIFIED. No certified reconstruction."
+    "note": "The original EX2306 Dive 02 KML and ancillary ZIP are SHA256 audited. NOAA's 2023 Data Management Plan documents that its Deep Discoverer 1Hz ROV navigation track is a processed product: USBL fixes are converted and rolling-median filtered; navigation, depth and altitude are time-interpolated and then last-good-value padded/downsampled at 1Hz. The 300 rows coinciding with the 18:30 video clock window are processed track records, not independent raw position fixes. Accuracy, vertical datum and video frame alignment remain unverified."
   },
   "entries": [
     {
@@ -54,7 +54,7 @@
       "kind": "sensor_and_ancillary",
       "name": "Dive 02 ROV ancillary data",
       "mission_id": "EX2306_DIVE02",
-      "verified_metadata": "Original 15,727,951-byte ZIP fetched and hashed, with seven entries. Includes EX2306_DIVE02_RovTrack1Hz.csv: 26,092 timestamps; 25,518 rows with valid lat/lon and 25,615 numeric negative depths. 300/300 rows in the published video UTC window have both depth and position. Position instrument and depth datum remain unverified.",
+      "verified_metadata": "Original ancillary ZIP byte-audited (15,727,951 bytes, SHA256 pinned). NOAA 2023 DMP confirms RovTrack1Hz.csv is processed: USBL rolling median filtering, time interpolation of navigation/depth/altitude, then 1 Hz last-good-value padding. The source file has 26,092 rows; 300 processed records fall in the 18:30–18:34:59 UTC video clock window. They are not 300 independent raw sensor fixes. Position accuracy, depth datum and video frame synchronization remain unverified.",
       "file_format": "ZIP",
       "rights": "NOAA archive; review archive record metadata and provenance before redistribution",
       "category": "uninspected_sensor_source",
@@ -68,8 +68,13 @@
       "valid_position_rows_in_window": 300,
       "valid_depth_rows_in_window": 300,
       "track_time_rows": 26092,
-      "replay_status": "BLOCKED_PENDING_POSITION_SOLUTION_DATUM_AND_CLOCK_REVIEW",
-      "audit_workflow_url": "https://github.com/jgaethle10/forge-operator/actions/runs/42959837823"
+      "replay_status": "BLOCKED_PENDING_INDEPENDENT_POSITION_ACCURACY_DEPTH_DATUM_AND_VIDEO_FRAME_SYNC",
+      "audit_workflow_url": "https://github.com/jgaethle10/forge-operator/actions/runs/42959837823",
+      "processing_plan_url": "https://repository.library.noaa.gov/view/noaa/55994/noaa_55994_DS1.pdf",
+      "processing_plan_doi": "10.25923/hkht-a163",
+      "upstream_interpolation_and_padding": true,
+      "independent_raw_position_fixes_per_second": false,
+      "noaa_processing_method": "Deep Discoverer USBL navigation rolling median filtered; vehicle navigation, pressure-derived depth and DVL altitude time-interpolated; 1 Hz last-good value pad"
     },
     {
       "id": "noaa-ex2306-dive02-ctd",

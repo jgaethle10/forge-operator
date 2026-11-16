@@ -43,6 +43,12 @@ Only #1 has a full open packet. The rest remain queued until their turn.
 
 **BR-001 supplementary name exploration (November 11, 2026):** [Three name directions and documented exclusions](./BR-001-name-exploration-v1.md), [machine-readable concept proposals](./BR-001-name-exploration-v1.json), and [visual side-by-side review](https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/social-media-weekly/brand-review/). This is research and draft design, **not a founder decision, approval or rebrand**. The previous name proposal and original $100 service remain unchanged pending explicit feedback.
 
+## Review station for product #1 (November 15, 2026)
+
+The founder review station is at https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/social-media-weekly/brand-review/decision/ . It captures a **local, unsubmitted** JSON report with a candidate direction, dimension-by-dimension keep/revise/reject decisions, and the founder's exact written feedback. The page's `noindex` metadata discourages search indexing but is **not private access control**. It does not send data, authorize a purchase, mark a creative identity approved or advance the queue. Copy or save the draft, then communicate an explicit version-specific founder decision for the append-only results ledger.
+
+See [BR-001.R2 station contract](./BR-001-review-station-v2.md) and [review station CI test](../../../tests/brand-founder-review-station.test.mjs). Six other concepts remain queued, and BR-001 still requires explicit approval, revision, rejection or hold.
+
 ## Distribution and preservation rules
 - Existing original **service names and exact-price checkout routes** may continue buyer-specific, permissioned marketing even when the new creative imprint awaits founder approval.
 - The **new imprint/name, logo and story** must not be described as formally founder-approved, legally trademarked, externally posted, or final merely because their prototypes already appear in owned pages.

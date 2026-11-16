@@ -53,21 +53,29 @@
     "owned_offer_page_live_verified": false
   },
   "buyer_action": {
-    "mode": "explicit_email_inquiry",
+    "mode": "consented_owned_inquiry_if_ready_else_explicit_email_draft",
     "url": "mailto:jessegaethle10@gmail.com?subject=Evercraft%20Closeout%20%7C%20%2449%20pilot%20inquiry",
     "payment_required_before_paid_fulfillment": true,
-    "consent_required": true
+    "consent_required": true,
+    "native_intake_url": "https://fabric.systemiacommandcenters.com/api/closeout/inquiry",
+    "native_readiness_url": "https://fabric.systemiacommandcenters.com/api/closeout/readiness",
+    "native_source_implemented": true,
+    "native_runtime_deployment_verified": false,
+    "customer_materials_not_transmitted_by_inquiry": true,
+    "automated_payment": false,
+    "inquiry_is_not_order": true
   },
   "launch_evidence": {
     "github_branch": "engineering/closeout-paid-pilot-20261109",
     "pull_request": "https://github.com/jgaethle10/forge-operator/pull/1970",
-    "live_deployment_verified": false,
+    "live_deployment_verified": true,
     "external_buyer_validated": false,
     "paid_customer_verified": false,
     "revenue_verified": false,
     "github_pages_build_and_deploy_job_succeeded": true,
     "github_pages_workflow_run": "https://github.com/jgaethle10/forge-operator/actions/runs/42955275153",
-    "independent_closeout_page_canary": "pending"
+    "independent_closeout_page_canary": "verified_public_https_2026-11-11_workflow_43152904789",
+    "public_builder_only": true
   },
   "discovery": {
     "human_url": "https://jgaethle10.github.io/forge-operator/closeout/",

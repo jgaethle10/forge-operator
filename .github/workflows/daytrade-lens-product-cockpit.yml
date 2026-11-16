@@ -1,0 +1,31 @@
+name: DayTrade Lens Product Cockpit
+
+on:
+  pull_request:
+    paths:
+      - "public/daytrade-lens/**"
+      - "tests/daytrade-lens-product-cockpit.test.mjs"
+      - ".github/workflows/daytrade-lens-product-cockpit.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  product-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify local-only risk model, journal and public product boundaries
+        run: node --test tests/daytrade-lens-product-cockpit.test.mjs
+      - name: Syntax check client modules
+        run: |
+          node --check public/daytrade-lens/app.mjs
+          node --check public/daytrade-lens/model.mjs
+      - name: Confirm preview cannot call a broker
+        run: |
+          echo "DayTrade Lens local practice preview checked. No broker credentials, paid access, or order submission."

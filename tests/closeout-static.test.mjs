@@ -27,7 +27,8 @@ test('All printable handoff sections and controls exist', () => {
 });
 
 test('No automatic outbound calls or third-party dependencies', () => {
-  assert.doesNotMatch(html, /<script[^>]*\bsrc=/i);
+  assert.match(html, /<script type="module" src="\.\/inquiry\.mjs"><\/script>/);
+  assert.doesNotMatch(html, /<script[^>]*\bsrc="https?:/i);
   assert.doesNotMatch(html, /<link[^>]*rel="stylesheet"/i);
   assert.doesNotMatch(script, /\b(?:fetch|sendBeacon|XMLHttpRequest|WebSocket)\b/);
   assert.doesNotMatch(html, /buy\.stripe\.com|checkout\.stripe\.com/i);
@@ -37,7 +38,8 @@ test('Images use local FileReader and have explicit bounds', () => {
   assert.match(script, /new FileReader\(\)/);
   assert.match(script, /files\.slice\(0,4\)/);
   assert.match(script, /f\.size>5\*1024\*1024/);
-  assert.match(html, /No customer data or images are uploaded by this page/);
+  assert.match(html, /Packet details and job photos stay in your browser/);
+  assert.match(html, /separate optional pilot inquiry shares only your consented business contact/);
 });
 
 test('Customer-entered text is assigned as text, not HTML', () => {
@@ -73,4 +75,19 @@ test('Machine discovery and product description agree on purpose and boundaries'
   assert.match(html, /href=".\/llms.txt"/);
   assert.match(text, /inquiry-only/i);
   assert.match(text, /No Closeout checkout or paid customer has been verified/i);
+});
+
+
+test('Buyer intake is explicit and cannot transmit private packet fields',()=>{
+  const buyerScript=readFileSync(new URL('../public/closeout/inquiry.mjs', import.meta.url),'utf8');
+  assert.doesNotThrow(()=>new Script(buyerScript));
+  assert.match(html,/id="closeoutInquiryForm"/);
+  assert.match(html,/id="closeoutInquiryStatus"/);
+  assert.match(html,/name="consent" required/);
+  assert.match(buyerScript,/api\/closeout\/readiness/);
+  assert.match(buyerScript,/api\/closeout\/inquiry/);
+  assert.match(buyerScript,/if\(!ownedReady\)/);
+  assert.doesNotMatch(buyerScript,/byId\('photos'\)|getElementById\('photos'\)|outSummary|outAddress|FileReader|localStorage|innerHTML/);
+  assert.doesNotMatch(buyerScript,/buy\.stripe\.com|checkout\.stripe\.com/);
+  assert.match(buyerScript,/No payment or booking was made/);
 });

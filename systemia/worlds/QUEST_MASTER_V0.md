@@ -39,3 +39,49 @@ Manual browser acceptance: launch the existing local Worlds page. Enter Mossmere
 Wire an Evercraft-owned model planner to *suggest* the exact `evercraft.worlds.quest-proposal.v1` JSON schema. Treat model output as untrusted and validate it with `validateQuestProposal`, then keep the same player preview/approval/revision gate. Models receive only minimal allowlisted scene context and have no direct game-console, vault, shell or payment authority.
 
 Any server-backed persistent quest state, real multiplayer, inventory mutations, agent/tool dispatch, monetization or child-account controls require separate designed authorization, identity, abuse, privacy and real-device acceptance.
+
+
+---
+
+## Quest Master v1: private owned-model proposal path
+
+**Status:** Source integration only. A working NextGen llama.cpp process has **not** been independently observed from CI or this development environment. No public model API was enabled, no game world changed remotely, and no independent youth-safety review has occurred.
+
+This iteration adds a bounded, actual-model path without connecting a public browser to any local inference port:
+
+1. On the *same computer that runs an owned loopback llama-server*, check the model is present and is operator-approved. The existing classroom adapter validates `GET /v1/models` first and only accepts a loopback origin.
+2. Run an **explicit** operator command that requests one model-proposed JSON quest, validates its output, and writes an owner-only `0600` file. The CLI makes **no** changes to any world.
+3. Use the Worlds **Quest Master → Import an AI quest JSON** file picker, review every action, and click **Approve and play quest** to apply the allowed changes locally. The JSON file never uploads to the vault.
+4. Story proposals remain untrusted regardless of their source. Validation and scene-capacity/revision checks run again in the browser, and shared-world visitors remain read-only.
+
+### NextGen example (operator-owned, adult-supervised test)
+
+```bash
+# On NextGen, in the updated Evercraft repository checkout:
+node scripts/worlds-nextgen-quest.mjs --execute \
+  --llama-origin http://127.0.0.1:8080 \
+  --theme "A secret lantern garden" \
+  --output "$HOME/evercraft-worlds-quest.json"
+```
+
+The output filename must be an **absolute .json path** that does not already exist. If the model is unavailable, the result is a held error. The script never falls back to a cloud model or third-party host. To create another proposal, choose another output file. **Do not expose or port-forward** the local llama-server. Running the command on Penguin cannot reach a llama-server bound only to NextGen's loopback.
+
+### Technical boundaries
+
+- `systemia/worlds/quest-model-planner.mjs` constructs a compact story prompt using only the world sky and number of scene objects. It does **not** pass player coordinates, identity, NPC memories, edit capabilities or conversations.
+- The model may propose only one JSON object of schema `evercraft.worlds.quest-proposal.v1`. A single JSON code fence is tolerated; prose, malformed JSON, unsupported keys, new verbs and out-of-bounds coordinates are rejected.
+- The preflight calls `previewQuest` against an initial scene. The browser repeats `previewQuest` on the **actual local scene**, so proposals that exceed the live scene capacity fail closed.
+- `makeLocalLlamaTutor` reuses the already-built local NextGen adapter and validates model metadata before inference. An API response does not independently establish model executable identity, runtime attestation, output quality, safety, or actual NextGen operation.
+- No public-world inference endpoint, browser-to-localhost connection, tool-calling agent, live NPC narration, server console commands, loot, inventory modification, player accounts, multiplayer authority or automated publish path is activated.
+- A generated JSON file is content, not an attested receipt. The CLI receipt has model-name and proposal hashes and states `executed:false`, `deployed:false`, `model_process_attested:false`, `story_safety_certified:false`.
+- Imported stories may include invented or inappropriate narrative. This is an **operator-reviewed prototype**, not approved for unsupervised children.
+
+### Source verification
+
+```bash
+node --check systemia/worlds/quest-model-planner.mjs
+node --check scripts/worlds-nextgen-quest.mjs
+node --test tests/worlds-quest-master.test.mjs tests/worlds-quest-model-planner.test.mjs
+```
+
+Next release gate: operator-controlled actual NextGen model canary on the intended host, browser import/play acceptance on an actual device, child-safe narrative/quality review, and independent audit receipts before any promise of 'living AI residents' or public AI functionality. No Base44 or external hosted model may be used.

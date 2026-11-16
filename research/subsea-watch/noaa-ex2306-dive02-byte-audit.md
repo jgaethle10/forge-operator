@@ -31,6 +31,12 @@ Original source files were fetched into a GitHub Actions audit worker. The artif
 - Dive summary reports Max Vehicle Depth 4,261.5 m and bottom time 2:14:37. CSV negative-depth convention, pressure reference, geodetic datum and uncertainty need source-level review.
 - Original sensor inventory lists USBL (LinkQuest TN10015C), DVL (Tasman), PHINS and depth sensors. The presence of equipment does not identify which positioning solution generated `LAT_DD`/`LON_DD`, its accuracy, or how measurements were fused.
 
+## Verified NOAA 2023 processing lineage
+
+NOAA's **2023 Field Season Data Management Plan**, page 13 (DOI `10.25923/hkht-a163`), explicitly describes how its *Deep Discoverer* (D2) navigation products were made. USBL positions are converted to decimal degrees and rolling-median filtered; navigation, Paroscientific-derived depth and DVL altitude are time-interpolated; the 1 Hz export is downsampled using **last-good-value padding**. Its KML is a further downsampled subset of the processed ROV navigation track. Thus 26,092 one-second records are **not 26,092 independently measured sensor fixes**, and 300 video-window records are **not 300 independent raw observations**. The original source processing exists before Evercraft displays selected records. Source: https://repository.library.noaa.gov/view/noaa/55994/noaa_55994_DS1.pdf
+
+This documents the ROV processing method, but not individual-fix uncertainty, timestamp-specific processing flags, vertical datum, or frame-accurate camera alignment. The remaining engineering gates are not cleared.
+
 ## Required next acceptance gate
 
 1. Validate which hardware/processing stream produced the track lat/lon and depths. Document time basis, vertical reference, conversion rule for negative depths, ellipsoid/local tangent-frame registration, gaps and positioning uncertainty.

@@ -91,8 +91,8 @@ footer{color:var(--muted);font-size:12px;margin-top:28px;max-width:900px}
 <div class="instructions">
 <h3>Next engineering workflow</h3>
 <ol>
-<li>Original Dive 02 KML and ROV ancillary ZIP are now downloaded and SHA-256 audited. Their 1Hz CSV has 26,092 rows; 300 timed readings overlap the NOAA video segment, but data registration remains unverified.</li>
-<li>Confirm the actual navigation solution, coordinate reference, depth datum and measurement uncertainty; recorded instruments include USBL, DVL and inertial navigation, but their individual contribution to the export is not established.</li>
+<li>Original Dive 02 KML and ROV ancillary ZIP are now downloaded and SHA-256 audited. Their 1 Hz CSV has 26,092 processed rows; 300 records fall in the video-clock window. NOAA filtered and interpolated upstream, then carried forward last-good values. Per-second records are not independent raw sensor fixes.</li>
+<li>NOAA's 2023 data-management plan documents USBL rolling-median filtering and time interpolation with depth and DVL altitude before 1 Hz padding. Verify positioning uncertainty and depth datum before promoting any source coordinate to 3D.</li>
 <li>Review the separate real-data timeline of source longitude, latitude and signed depth samples. Its dots are not a validated underwater route.</li>
 <li>Register video against the recorded timeline only after verifying time references.</li>
 <li>Bring in surveyed 3D geometry separately, with scale, survey source, rights and uncertainty documented.</li>
