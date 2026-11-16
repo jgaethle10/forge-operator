@@ -190,6 +190,42 @@ class Studio:
         except (OSError, json.JSONDecodeError):
             return None
 
+    def save_review(self, jobid, scores, notes, fluent):
+        """Persist explicitly human ratings as a private claim, never release approval."""
+        job = self.read_job(jobid)
+        if job is None or job["state"] != "ready":
+            raise ValueError("UNVERIFIED_REVIEW_JOB")
+        axes = {"diction", "naturalness", "semantic_emphasis",
+                "brand_pronunciation", "accent"}
+        if (not isinstance(scores, dict) or set(scores) != axes
+                or any(type(v) is not int or not 1 <= v <= 5
+                       for v in scores.values())):
+            raise ValueError("INVALID_REVIEW_RATINGS")
+        if (not isinstance(notes, str) or len(notes) > 600
+                or any(ord(c) < 32 and c not in "\n\t" for c in notes)):
+            raise ValueError("INVALID_REVIEW_NOTES")
+        if type(fluent) is not bool:
+            raise ValueError("INVALID_LANGUAGE_FLUENCY_CLAIM")
+        folder = self.root / jobid
+        source = json.loads((folder / "evidence.json").read_text(encoding="utf8"))
+        verified_receipt(folder, job["voice"], source["script"])
+        review = {"schema": "evercraft.voice-foundry.private-listener-score.v1",
+                  "jobId": jobid, "voice": job["voice"],
+                  "sourceWavSha256": source["nativeWavSha256"],
+                  "fluentInLanguageClaim": fluent,
+                  "ratings": scores, "notes": notes,
+                  "isHumanClaimNotAutomatedQA": True,
+                  "commercialReleaseApproved": False, "productionApproved": False}
+        temp = folder / ("review-" + secrets.token_hex(8) + ".tmp")
+        try:
+            with open(temp, "x", encoding="utf8") as fh:
+                os.chmod(temp, 0o600)
+                json.dump(review, fh, indent=2, ensure_ascii=False)
+            os.replace(temp, folder / "private-review.json")
+        finally:
+            temp.unlink(missing_ok=True)
+        return {"saved": True, "productionApproved": False}
+
     def shutdown(self):
         self.executor.shutdown(wait=False, cancel_futures=True)
 
@@ -281,7 +317,11 @@ class Handler(BaseHTTPRequestHandler):
         if not secrets.compare_digest(
                 self.headers.get("X-Voice-Foundry-Token", ""), self.server.studio.csrf):
             return self.send_json(403, {"error": "CSRF_DENIED"})
-        if urlsplit(self.path).path != "/api/render":
+        path = urlsplit(self.path).path
+        parts = path.strip("/").split("/")
+        is_review = (len(parts) == 4 and parts[:2] == ["api", "jobs"]
+                     and parts[3] == "review")
+        if path != "/api/render" and not is_review:
             return self.send_json(404, {"error": "NOT_FOUND"})
         if self.headers.get("Content-Type", "").split(";")[0].strip() != "application/json":
             return self.send_json(415, {"error": "JSON_REQUIRED"})
@@ -293,7 +333,15 @@ class Handler(BaseHTTPRequestHandler):
             return self.send_json(413, {"error": "INPUT_TOO_LARGE"})
         try:
             data = json.loads(self.rfile.read(n))
-            if not isinstance(data, dict) or set(data) != {"voice", "script"}:
+            if not isinstance(data, dict):
+                raise ValueError("INVALID_FIELDS")
+            if is_review:
+                if set(data) != {"scores", "notes", "fluent"}:
+                    raise ValueError("INVALID_REVIEW_FIELDS")
+                saved = self.server.studio.save_review(
+                    parts[2], data["scores"], data["notes"], data["fluent"])
+                return self.send_json(200, saved)
+            if set(data) != {"voice", "script"}:
                 raise ValueError("INVALID_FIELDS")
             jobid = self.server.studio.submit(data["voice"], data["script"])
         except (TypeError, ValueError, UnicodeDecodeError):
@@ -326,7 +374,7 @@ h1{font-size:clamp(34px,6vw,58px);letter-spacing:-.05em;margin:6px 0}p{line-heig
 .panel{border:1px solid #e5e0df;border-radius:18px;background:#fff;padding:26px;margin-top:24px;box-shadow:0 8px 28px #11111107}
 label{display:block;font-size:13px;font-weight:700;margin:0 0 8px}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.script-field{margin-top:22px}select,textarea{width:100%;background:#fff;color:#181818;border:1px solid #d4cbca;border-radius:10px;padding:13px;font:inherit}
-textarea{min-height:190px;resize:vertical;margin:0}button{background:#9f1230;color:#fff;border:0;padding:15px 24px;border-radius:10px;font-size:15px;font-weight:800;cursor:pointer}
+textarea{min-height:190px;resize:vertical;margin:0}.notes{min-height:90px}button{background:#9f1230;color:#fff;border:0;padding:15px 24px;border-radius:10px;font-size:15px;font-weight:800;cursor:pointer}
 button:disabled{opacity:.55;cursor:wait}.row{display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap;margin-top:14px}
 .muted{font-size:12px;color:#777}audio{width:100%;margin:18px 0}a{color:#98112d;font-weight:700;margin-right:20px}
 .notice{border-radius:8px;padding:11px;background:#f6eef0;color:#84142e;font-weight:700;font-size:13px}
@@ -357,6 +405,16 @@ Hear the result using Evercraft's local Kokoro engine.</p>
   <audio controls id="player" preload="none"></audio>
   <div><a id="mp3" download="preview.mp3">Save MP3</a><a id="wav" download="native.wav">Save dry WAV</a></div>
   <p class="notice">Review only. Not cleared for public or commercial release.</p>
+  <div id="review" class="script-field">
+    <h3>Quality notes</h3>
+    <p class="muted">Rate what you actually hear. A 5 is excellent. Your scores do not approve a release.</p>
+    <div class="grid" id="ratings"></div>
+    <label for="notes" class="script-field">Exact word and timecode notes</label>
+    <textarea id="notes" maxlength="600" class="notes" placeholder="e.g., 0:08 Evercraft vowel sounds stretched"></textarea>
+    <label class="script-field"><input type="checkbox" id="fluent"> I am fluent in the selected language</label>
+    <button id="saveReview" type="button">Save private review</button>
+    <p class="muted" id="reviewStatus" role="status"></p>
+  </div>
 </div>
 <p class="foot">All processing runs on this computer. No public access, voice cloning, uploads,
 or automatic publication. Bella V05 stays protected in its separate approved-reference lab.
@@ -368,7 +426,22 @@ const token="@@TOKEN@@", lang=document.getElementById("language"),
 voice=document.getElementById("voice"), script=document.getElementById("script"),
 button=document.getElementById("render"), progress=document.getElementById("progress"),
 result=document.getElementById("result"), player=document.getElementById("player");
-let catalog={}, examples={};
+let catalog={}, examples={}, currentJobId=null;
+const axes=[
+  ["diction","Clear diction"],
+  ["naturalness","Natural delivery"],
+  ["semantic_emphasis","Emphasis follows meaning"],
+  ["brand_pronunciation","Brand pronunciation"],
+  ["accent","Accent authenticity"]
+];
+const ratings=document.getElementById("ratings");
+for(const [key,label] of axes){
+  const box=document.createElement("div");
+  const lab=document.createElement("label");lab.textContent=label;
+  const pick=document.createElement("select");pick.dataset.axis=key;
+  for(let n=1;n<=5;n++){const o=document.createElement("option");o.value=String(n);o.textContent=String(n)+" / 5";pick.append(o);}
+  pick.value="3";box.append(lab,pick);ratings.append(box);
+}
 function loadVoices(){
   const chosen=lang.value;
   voice.replaceChildren();
@@ -411,6 +484,7 @@ button.addEventListener("click",async()=>{
       const job=await r.json();
       if(job.state==="failed")throw Error("Voice render failed. Inspect local operator logs.");
       if(job.state==="ready"){
+        currentJobId=id;
         const base="/api/jobs/"+id+"/";
         player.src=base+"preview.mp3";
         document.getElementById("mp3").href=base+"preview.mp3";
@@ -425,6 +499,22 @@ button.addEventListener("click",async()=>{
     throw Error("Review is still processing. Try again later.");
   }catch(e){progress.textContent=e.message}
   finally{button.disabled=false}
+});
+document.getElementById("saveReview").addEventListener("click",async()=>{
+  if(!currentJobId)return;
+  const scores={};
+  ratings.querySelectorAll("select").forEach(x=>scores[x.dataset.axis]=Number(x.value));
+  const notes=document.getElementById("notes").value;
+  const fluent=document.getElementById("fluent").checked;
+  const status=document.getElementById("reviewStatus");
+  try{
+    const response=await fetch("/api/jobs/"+currentJobId+"/review",{
+      method:"POST",headers:{"Content-Type":"application/json","X-Voice-Foundry-Token":token},
+      body:JSON.stringify({scores,notes,fluent})
+    });
+    if(!response.ok)throw Error("Review could not be saved.");
+    status.textContent="Private listening notes saved. No public release approval was issued.";
+  }catch(e){status.textContent=e.message}
 });
 initialize();
 </script>
