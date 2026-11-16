@@ -1,9 +1,13 @@
 import http from 'node:http';
-import { randomBytes } from 'node:crypto';
-import { executeMicroSeedWorkload } from './microseed-executor.mjs';
-import { signMicroSeedExecutionReceipt } from './microseed-receipt-signature.mjs';
+import fs from 'node:fs';
+import path from 'node:path';
+import { randomBytes, createPublicKey } from 'node:crypto';
+import { executeMicroSeedWorkload, normalizeMicroSeedExecutionRequest } from './microseed-executor.mjs';
+import { signMicroSeedExecutionReceipt, verifyMicroSeedExecutionReceipt } from './microseed-receipt-signature.mjs';
 import { signMicroSeedTelemetry } from './microseed-telemetry-signature.mjs';
-import { persistSignedMicroSeedReceipt } from './microseed-signed-receipt-store.mjs';
+import { persistSignedMicroSeedReceipt, readSignedMicroSeedReceipt } from './microseed-signed-receipt-store.mjs';
+import { reserveSignedMicroSeedExecution } from './microseed-execution-intent-store.mjs';
+import { isMicroSeedExecutionQuarantined, MICROSEED_EXECUTION_QUARANTINE_REASON } from './microseed-device-quarantine.mjs';
 
 function clean(v){return String(v??'').trim();}
 function send(res,status,body){
@@ -61,6 +65,9 @@ export async function startMicroSeedNativeAgent({
 
   const instanceId='microseed-agent-'+randomBytes(8).toString('hex');
   let active=0;
+  const attemptsInFlight=new Set();
+  const receiptVerificationKey=receiptSigningPrivateKey
+    ? createPublicKey(receiptSigningPrivateKey) : null;
   let server=null;
 
   const health=()=>({
@@ -73,11 +80,14 @@ export async function startMicroSeedNativeAgent({
     compute_execution_mode:'native_device',
     supported_workloads:manifest.supported_workloads,
     arbitrary_code_execution:false,
+    execution_quarantined:isMicroSeedExecutionQuarantined(manifest.device_id),
     active_executions:active,
     signed_receipts_required:manifest.attestation?.receipt_signing_required===true,
     signed_telemetry_required:manifest.attestation?.telemetry_signing_required===true,
     signed_receipts_enabled:Boolean(receiptSigningPrivateKey),
     signed_telemetry_enabled:Boolean(receiptSigningPrivateKey),
+    // Capability signal only; the field proof must still reopen the journal.
+    signed_journal_commit_before_ack:Boolean(receiptSigningPrivateKey),
   });
 
   server=http.createServer(async(req,res)=>{
@@ -109,19 +119,84 @@ export async function startMicroSeedNativeAgent({
       }
 
       if(req.method==='POST'&&req.url==='/v1/execute'){
+        // Stop before consuming the execution request or reserving an attempt.
+        // Node001 host halt initiator is unknown; the physical node is held
+        // until an explicit reviewed source change removes this quarantine.
+        if(isMicroSeedExecutionQuarantined(manifest.device_id)){
+          return send(res,423,{ok:false,error:MICROSEED_EXECUTION_QUARANTINE_REASON});
+        }
         const max=Math.max(1,Number(manifest.constraints?.max_concurrency||1));
         if(active>=max) return send(res,429,{ok:false,error:'microseed_agent_concurrency_limit'});
         const body=await readJson(req);
+        const normalized=normalizeMicroSeedExecutionRequest(body.request||body);
+        if(normalized.device_id!==manifest.device_id){
+          throw new Error('microseed_execution_device_mismatch');
+        }
+        // Even when concurrency > 1, a repeated attempt cannot race the
+        // immutable journal commit or execute side effects twice.
+        if(attemptsInFlight.has(normalized.idempotency_key)){
+          return send(res,409,{ok:false,error:'microseed_signed_attempt_in_progress'});
+        }
+        attemptsInFlight.add(normalized.idempotency_key);
         active+=1;
         try{
-          const telemetry=await telemetryProvider({manifest,request:body.request||body});
+          if(receiptSigningPrivateKey){
+            let prior=null;
+            try {
+              prior=await readSignedMicroSeedReceipt({
+                stateDir,device_id:normalized.device_id,
+                idempotency_key:normalized.idempotency_key,
+              });
+            }catch(error){
+              if(error.code!=='ENOENT') throw error;
+            }
+            if(prior){
+              const verified=verifyMicroSeedExecutionReceipt(prior,{
+                publicKey:receiptVerificationKey,
+                expected_device_id:manifest.device_id,
+              });
+              if(!verified.verified||
+                verified.key_id!==(manifest.attestation?.receipt_key_id||receiptSigningKeyId)||
+                prior.manifest_hash!==manifest.manifest_hash||
+                prior.request_hash!==normalized.request_hash||
+                prior.workload_class!==normalized.workload_class){
+                throw new Error('microseed_signed_attempt_conflict_or_invalid');
+              }
+              // Replay unchanged signed bytes, never mutate a signed field.
+              return send(res,200,{ok:true,...prior});
+            }
+            // Legacy unsigned attempts cannot be treated as proven success,
+            // nor rerun under the same key without operator review.
+            const deviceKey=manifest.device_id
+              .replace(/[^a-zA-Z0-9._:-]/g,'_').slice(0,180);
+            const legacy=path.join(path.resolve(stateDir),'idempotency',
+              deviceKey,normalized.idempotency_key+'.json');
+            if(fs.existsSync(legacy)){
+              throw new Error('microseed_unsigned_legacy_attempt_requires_review');
+            }
+          }
+          const telemetry=await telemetryProvider({manifest,request:normalized});
+          // An agent can be halted after workload execution but before the
+          // signed journal commits. Reserve BEFORE work so a future restart
+          // holds this attempt as uncertain instead of silently rerunning it.
+          // A verified signed journal above always wins on a matching replay.
+          if(receiptSigningPrivateKey){
+            await reserveSignedMicroSeedExecution({
+              stateDir,device_id:normalized.device_id,
+              idempotency_key:normalized.idempotency_key,
+              request_hash:normalized.request_hash,
+              manifest_hash:manifest.manifest_hash,
+              workload_class:normalized.workload_class,
+            });
+          }
           const receipt=await executeMicroSeedWorkload({
             manifest,
             trustDecision:{eligible:true,state:'active',reason:'local_agent_authorized'},
             telemetry,
-            request:body.request||body,
+            request:normalized,
             stateDir,
             executionContext:'device',
+            persistUnsignedIdempotency:!receiptSigningPrivateKey,
             now:new Date(),
           });
           const signed=receiptSigningPrivateKey
@@ -130,14 +205,15 @@ export async function startMicroSeedNativeAgent({
                 key_id:manifest.attestation?.receipt_key_id||receiptSigningKeyId,
               })
             : receipt;
-          // Journal the *signed* statement before acknowledging success.
-          // The pre-existing idempotency store is unsigned and is not proof.
+          // Signed journal is now the first durable success record for native
+          // signed execution. Failure MUST NOT emit HTTP 200.
           if(receiptSigningPrivateKey){
             await persistSignedMicroSeedReceipt({stateDir,signedReceipt:signed});
           }
           return send(res,200,{ok:true,...signed});
         }finally{
           active=Math.max(0,active-1);
+          attemptsInFlight.delete(normalized.idempotency_key);
         }
       }
 

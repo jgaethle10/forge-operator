@@ -7,6 +7,7 @@ import { loadPerformanceLedger, recordPerformanceSample, savePerformanceLedger }
 import { runMicroSeedConformance, evaluateMicroSeedConformance } from './microseed-conformance.mjs';
 import { runMicroSeedCalibration } from './microseed-calibration.mjs';
 import { invokeMicroSeedCapability } from './microseed-capability-executor.mjs';
+import { isMicroSeedExecutionQuarantined, MICROSEED_EXECUTION_QUARANTINE_REASON } from './microseed-device-quarantine.mjs';
 
 function clean(v){return String(v??'').trim();}
 function loopback(host){
@@ -61,18 +62,33 @@ export async function startMicroSeedGateway({
   let activeGlobal=0;
   let server=null;
 
-  const health=()=>({
-    schema:'evercraft.saban.microseed-gateway-health.v1',
-    ok:Boolean(server?.listening),
-    service:'saban-microseed-gateway',
-    instance_id:instanceId,
-    host_scope:loopback(host)?'loopback':'explicit_non_loopback',
-    arbitrary_code_execution:false,
-    commercial_capacity:false,
-    active_executions:activeGlobal,
-    registered_device_count:registry.list({now:new Date()}).device_count,
-    eligible_device_count:registry.list({now:new Date()}).eligible_count,
-  });
+  // Reject Node001 before looking up trust, fetching telemetry, reserving
+  // execution, running canaries, or touching the device adapter.
+  function rejectQuarantined(res,deviceId){
+    if(!isMicroSeedExecutionQuarantined(deviceId)) return false;
+    send(res,423,{ok:false,error:MICROSEED_EXECUTION_QUARANTINE_REASON});
+    return true;
+  }
+
+  const health=()=>{
+    const snapshot=registry.list({now:new Date()});
+    return {
+      schema:'evercraft.saban.microseed-gateway-health.v1',
+      ok:Boolean(server?.listening),
+      service:'saban-microseed-gateway',
+      instance_id:instanceId,
+      host_scope:loopback(host)?'loopback':'explicit_non_loopback',
+      arbitrary_code_execution:false,
+      commercial_capacity:false,
+      active_executions:activeGlobal,
+      registered_device_count:snapshot.device_count,
+      trust_eligible_device_count:snapshot.eligible_count,
+      eligible_device_count:snapshot.rows.filter(row=>
+        row.eligible&&!isMicroSeedExecutionQuarantined(row.device_id)).length,
+      execution_quarantine_count:snapshot.rows.filter(row=>
+        isMicroSeedExecutionQuarantined(row.device_id)).length,
+    };
+  };
 
   async function resolveExecutionTelemetry(manifest,provided){
     const adapter=bridgeAdapters?.[manifest.bridge_mode];
@@ -166,6 +182,7 @@ export async function startMicroSeedGateway({
         const invocation=body.request||body;
         const deviceId=clean(invocation?.device_id);
         if(!deviceId) return send(res,400,{ok:false,error:'device_id_required'});
+        if(rejectQuarantined(res,deviceId)) return;
         const record=registry.get(deviceId);
         const manifest=registry.manifest(deviceId);
         if(!record||!manifest) return send(res,404,{ok:false,error:'microseed_device_not_registered'});
@@ -195,6 +212,7 @@ export async function startMicroSeedGateway({
         const body=await readJson(req);
         const deviceId=clean(body?.device_id);
         if(!deviceId) return send(res,400,{ok:false,error:'device_id_required'});
+        if(rejectQuarantined(res,deviceId)) return;
         const record=registry.get(deviceId);
         const manifest=registry.manifest(deviceId);
         if(!record||!manifest) return send(res,404,{ok:false,error:'microseed_device_not_registered'});
@@ -240,6 +258,7 @@ export async function startMicroSeedGateway({
         const body=await readJson(req);
         const deviceId=clean(body?.device_id);
         if(!deviceId) return send(res,400,{ok:false,error:'device_id_required'});
+        if(rejectQuarantined(res,deviceId)) return;
         const record=registry.get(deviceId);
         const manifest=registry.manifest(deviceId);
         const conformance=registry.conformance(deviceId);
@@ -293,6 +312,7 @@ export async function startMicroSeedGateway({
         const body=await readJson(req);
         const deviceId=clean(body?.request?.device_id||body?.device_id);
         if(!deviceId) return send(res,400,{ok:false,error:'device_id_required'});
+        if(rejectQuarantined(res,deviceId)) return;
 
         const record=registry.get(deviceId);
         const manifest=registry.manifest(deviceId);
@@ -355,7 +375,11 @@ export async function startMicroSeedGateway({
           ok:true,
           schema:'evercraft.saban.microseed-registry-summary.v1',
           device_count:snapshot.device_count,
-          eligible_count:snapshot.eligible_count,
+          trust_eligible_count:snapshot.eligible_count,
+          eligible_count:snapshot.rows.filter(row=>
+            row.eligible&&!isMicroSeedExecutionQuarantined(row.device_id)).length,
+          execution_quarantine_count:snapshot.rows.filter(row=>
+            isMicroSeedExecutionQuarantined(row.device_id)).length,
           states:snapshot.rows.reduce((acc,row)=>{
             acc[row.state]=(acc[row.state]||0)+1;
             return acc;

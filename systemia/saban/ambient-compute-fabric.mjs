@@ -1,4 +1,5 @@
 import { createHash } from 'node:crypto';
+import { isMicroSeedExecutionQuarantined, MICROSEED_EXECUTION_QUARANTINE_REASON } from './microseed-device-quarantine.mjs';
 
 const sha=(value)=>'sha256:'+createHash('sha256').update(
   typeof value==='string'?value:JSON.stringify(value)
@@ -9,6 +10,14 @@ const uniq=(values)=>[...new Set((values||[]).map(v=>String(v).trim()).filter(Bo
 const SAFE_ACCESS=new Set(['authorized_compute','voluntary_compute']);
 
 export function ambientCapabilityToComputeOffer(capability={}){
+  // Imported or cached capability snapshots can outlive quarantine policy.
+  // Reject them again at compute-offer resolution, regardless of trust,
+  // conformance, or their claimed source type.
+  const sourceId=String(capability?.id||'');
+  if(isMicroSeedExecutionQuarantined(capability?.metadata?.device_id)||
+    sourceId.startsWith('microseed:evercraft-node001-penguin:')){
+    throw new Error(MICROSEED_EXECUTION_QUARANTINE_REASON);
+  }
   if(capability?.schema!=='evercraft.ambient-capability.v1'){
     throw new Error('ambient_capability_schema_required');
   }

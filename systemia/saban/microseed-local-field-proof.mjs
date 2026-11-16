@@ -19,6 +19,7 @@ import { normalizeMicroSeedExecutionRequest } from './microseed-executor.mjs';
 import { verifyMicroSeedExecutionReceipt } from './microseed-receipt-signature.mjs';
 import { verifyMicroSeedTelemetry } from './microseed-telemetry-signature.mjs';
 import { readSignedMicroSeedReceipt } from './microseed-signed-receipt-store.mjs';
+import { isMicroSeedExecutionQuarantined } from './microseed-device-quarantine.mjs';
 import { loadActiveAmbientReceiptKeys } from '../control-plane/visualization/ambient-receipt-trust.mjs';
 
 const SCHEMA='evercraft.microseed.local-field-proof.v1';
@@ -125,6 +126,12 @@ export async function inspectLocalMicroSeedEvidence({
     'signed_native_manifest_required');
   demand(normalizeMicroDeviceManifest(manifest).manifest_hash===manifest.manifest_hash,
     'manifest_integrity_invalid');
+  // Quarantine is checked before reading credentials or contacting the agent.
+  // Read-only telemetry inspection is intentionally still supported.
+  if(hashProbe){
+    demand(!isMicroSeedExecutionQuarantined(manifest.device_id),
+      'device_quarantined_pending_host_review');
+  }
   const identityRoot=await safeRoot(join(base,'identity'));
   const identity=JSON.parse(await safeFile(join(identityRoot,'identity.json')));
   const publicPem=await safeFile(join(identityRoot,'current-public.pem'),8192);
@@ -159,6 +166,12 @@ export async function inspectLocalMicroSeedEvidence({
     health.signed_receipts_required===true&&health.signed_receipts_enabled===true&&
     health.signed_telemetry_required===true&&health.signed_telemetry_enabled===true&&
     health.arbitrary_code_execution===false,'agent_health_mismatch');
+  // A legacy agent can sign its HTTP response while leaving only an unsigned
+  // idempotency record. Fail before POST instead of producing another partial job.
+  if(hashProbe){
+    demand(health.signed_journal_commit_before_ack===true,
+      'signed_journal_protocol_unavailable');
+  }
 
   const telemetry=await call(origin,'/v1/telemetry',{fetchImpl,token:token.trim()});
   const tCheck=verifyMicroSeedTelemetry(telemetry,{

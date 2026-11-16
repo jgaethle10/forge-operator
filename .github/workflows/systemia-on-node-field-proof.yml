@@ -5,14 +5,38 @@ on:
     paths:
       - 'systemia/saban/microseed-local-field-proof*.mjs'
       - 'systemia/saban/microseed-native-agent.mjs'
+      - 'systemia/saban/microseed-device-quarantine.mjs'
+      - 'systemia/saban/microseed-device-bridge.mjs'
+      - 'systemia/saban/ambient-compute-fabric.mjs'
+      - 'tests/saban-microseed-device-bridge.test.mjs'
+      - 'tests/saban-ambient-compute-fabric.test.mjs'
+      - 'systemia/saban/microseed-gateway.mjs'
+      - 'systemia/saban/microseed-executor.mjs'
+      - 'systemia/saban/microseed-capability-executor.mjs'
+      - 'tests/saban-microseed-quarantine-core.test.mjs'
+      - 'tests/saban-microseed-e2e.test.mjs'
+      - 'systemia/saban/microseed-execution-intent-store*.mjs'
       - 'systemia/saban/microseed-signed-receipt-store.mjs'
+      - 'systemia/saban/microseed-signed-receipt-store.test.mjs'
       - 'systemia/control-plane/visualization/ambient-receipt-trust.mjs'
       - '.github/workflows/systemia-on-node-field-proof.yml'
   pull_request:
     paths:
       - 'systemia/saban/microseed-local-field-proof*.mjs'
       - 'systemia/saban/microseed-native-agent.mjs'
+      - 'systemia/saban/microseed-device-quarantine.mjs'
+      - 'systemia/saban/microseed-device-bridge.mjs'
+      - 'systemia/saban/ambient-compute-fabric.mjs'
+      - 'tests/saban-microseed-device-bridge.test.mjs'
+      - 'tests/saban-ambient-compute-fabric.test.mjs'
+      - 'systemia/saban/microseed-gateway.mjs'
+      - 'systemia/saban/microseed-executor.mjs'
+      - 'systemia/saban/microseed-capability-executor.mjs'
+      - 'tests/saban-microseed-quarantine-core.test.mjs'
+      - 'tests/saban-microseed-e2e.test.mjs'
+      - 'systemia/saban/microseed-execution-intent-store*.mjs'
       - 'systemia/saban/microseed-signed-receipt-store.mjs'
+      - 'systemia/saban/microseed-signed-receipt-store.test.mjs'
       - 'systemia/control-plane/visualization/ambient-receipt-trust.mjs'
       - '.github/workflows/systemia-on-node-field-proof.yml'
 
@@ -31,14 +55,28 @@ jobs:
       - name: Syntax and no-execution help check
         run: |
           node --check systemia/saban/microseed-local-field-proof.mjs
+          node --check systemia/saban/microseed-device-quarantine.mjs
+          node --check systemia/saban/microseed-device-bridge.mjs
+          node --check systemia/saban/ambient-compute-fabric.mjs
+          node --check systemia/saban/microseed-gateway.mjs
+          node --check systemia/saban/microseed-executor.mjs
+          node --check systemia/saban/microseed-capability-executor.mjs
+          node --check tests/saban-microseed-quarantine-core.test.mjs
           node --check systemia/saban/microseed-local-field-proof.test.mjs
+          node --check systemia/saban/microseed-signed-receipt-store.test.mjs
+          node --check systemia/saban/microseed-execution-intent-store.test.mjs
           node systemia/saban/microseed-local-field-proof.mjs --help
       - name: Test local synthetic native agent and existing signatures
         run: |
           node --test \
             systemia/saban/microseed-local-field-proof.test.mjs \
+            systemia/saban/microseed-signed-receipt-store.test.mjs \
+            systemia/saban/microseed-execution-intent-store.test.mjs \
             tests/saban-microseed-signed-receipt-store.test.mjs \
             tests/saban-microseed-e2e.test.mjs \
+            tests/saban-microseed-quarantine-core.test.mjs \
+            tests/saban-microseed-device-bridge.test.mjs \
+            tests/saban-ambient-compute-fabric.test.mjs \
             systemia/control-plane/visualization/passport-signed-device-read.test.mjs
       - name: Package portable Evercraft-owned field kit
         run: |
@@ -48,7 +86,13 @@ jobs:
           EVERCRAFT LOCAL SIGNED EVIDENCE FIELD KIT
           Read-only default:
             node systemia/saban/microseed-local-field-proof.mjs --root "$HOME/.local/state/evercraft/microseed"
-          Explicitly run ONE local registered content-hash workload and verify the private signed journal:
+          SAFETY HOLD: Node001 Penguin (evercraft-node001-penguin) is quarantined.
+          Do NOT restart, install, run hash probes, or activate native execution
+          on Node001 until ChromeOS host shutdown evidence is reviewed and
+          a reviewed source change explicitly lifts the execution hold.
+          See https://github.com/jgaethle10/forge-operator/issues/2132
+          On OTHER owner-authorized and non-quarantined devices, a deliberate
+          operator hash probe may run one registered content-hash workload:
             node systemia/saban/microseed-local-field-proof.mjs --root "$HOME/.local/state/evercraft/microseed" --hash-probe
           Optional trusted Ambient Registry:
             --ambient-registry-root "/path/to/owned/registry"

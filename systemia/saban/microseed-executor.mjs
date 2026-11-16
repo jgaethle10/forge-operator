@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { isMicroSeedExecutionQuarantined, MICROSEED_EXECUTION_QUARANTINE_REASON } from './microseed-device-quarantine.mjs';
 import { createHash, randomBytes } from 'node:crypto';
 import { evaluateDeviceSafetyEnvelope } from './device-safety-envelope.mjs';
 import { executeRegisteredMicroSeedWorkload, BuiltinMicroSeedWorkloads, microSeedWorkloadSpec } from './microseed-workload-registry.mjs';
@@ -84,10 +85,18 @@ export async function executeMicroSeedWorkload({
   stateDir='',
   bridgeAdapters={},
   executionContext='device',
+  // Signed native agents commit to their immutable journal instead of writing
+  // an unsigned success cache before their signature is safely persisted.
+  persistUnsignedIdempotency=true,
   now=new Date(),
 }={}){
   if(manifest?.schema!=='evercraft.microseed.device-manifest.v1'){
     throw new Error('microseed_manifest_required');
+  }
+  // Defense-in-depth: direct internal callers must not bypass the gateway
+  // or native-agent Node001 execution quarantine.
+  if(isMicroSeedExecutionQuarantined(manifest.device_id)){
+    throw new Error(MICROSEED_EXECUTION_QUARANTINE_REASON);
   }
   if(trustDecision?.eligible!==true||trustDecision?.state!=='active'){
     throw new Error('microseed_device_not_trusted_active');
@@ -124,7 +133,7 @@ export async function executeMicroSeedWorkload({
   const replayFile=root&&workloadSpec?.sensitive_result!==true
     ? path.join(root,'idempotency',safeKey(req.device_id),safeKey(req.idempotency_key)+'.json')
     : null;
-  if(replayFile&&fs.existsSync(replayFile)){
+  if(persistUnsignedIdempotency&&replayFile&&fs.existsSync(replayFile)){
     const prior=JSON.parse(fs.readFileSync(replayFile,'utf8'));
     if(prior.request_hash!==req.request_hash) throw new Error('microseed_idempotency_key_conflict');
     return {...prior,deduplicated:true};
@@ -165,7 +174,7 @@ export async function executeMicroSeedWorkload({
     completed_at:new Date(now instanceof Date?now.getTime():Date.parse(String(now))).toISOString(),
   };
   const receipt={...body,receipt_hash:sha(body)};
-  if(replayFile) atomicJson(replayFile,receipt);
+  if(persistUnsignedIdempotency&&replayFile) atomicJson(replayFile,receipt);
   return receipt;
 }
 
