@@ -25,8 +25,9 @@ The native path refuses actuation unless the caller separately supplies:
    device+inode/time-limited **permit** signed by *two distinct Ed25519
    private keys*, owner and independent reviewer, against the
    `evercraft.eo001.synthetic-scope-stop-permit.v1\n` domain.
-3. A clean Git checkout at the **permitted exact source commit** (checked
-   immediately before execution), a running user systemd manager and fresh
+3. A clean Git checkout at the **permitted exact source commit** (including
+   no untracked files or symlinked checkout root, checked immediately before
+   execution), a running user systemd manager and fresh
    readback of the exact active unit/cgroup, host boot identity, pre-recorded
    worker/descendant kernel starttime, session, group and membership.
 4. An owner-controlled external `reserve` + `record` sink that claims a
@@ -39,12 +40,18 @@ The native path refuses actuation unless the caller separately supplies:
    and retain failure/unknown evidence. A missing, removed or recreated
    cgroup is **UNKNOWN**, never independently proven empty.
 
-This is **still not a complete field implementation**. No actual owner or
-reviewer keys have been independently provisioned, no trusted private audit
-sink or one-use replay store has been implemented or independently tested,
-and no approved host runner wires these dependencies together. Passing
-ephemeral test signatures only proves signature checking against injected
-public keys. A caller can inject keys they control: cryptographic
+This is **still not a complete field implementation**. An opt-in local
+`eo001-one-use-stop-ledger.mjs` prototype now supports a dedicated 0700
+owner-only directory, 0600 exclusive one-use permit reservation, fsync of
+file and parent directory, and bounded ordered private receipts. Its CI tests
+exercise duplicate permits across reopened instances and actual local files.
+It is **not a deployed or independently approved trust service**; an owner
+or root user can edit/delete/rollback its directory, and disk failures can
+leave a burned permit requiring manual investigation. The controller does not
+automatically instantiate this ledger. No actual owner or reviewer keys have
+been independently provisioned and no approved host runner wires the pieces
+together. Passing ephemeral test signatures only proves signature checking
+against injected public keys. A caller can inject keys they control: cryptographic
 verification **does not establish human identity, approval provenance,
 independent Lab approval, or real authorization**. A test IO can fake the
 hardware. The source and source build themselves still need independent
