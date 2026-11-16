@@ -454,11 +454,23 @@ function renderWebsiteAuditPreview(){
 }
 
 
+// Exact live Stripe settlement link independently read back against the $49
+// inclusive, one-time Website Audit SKU on 2026-11-15. The link is a
+// payment route, NOT evidence of a paid order or fulfilled audit.
+// Stripe collects the website URL and goal as required checkout fields.
+const WEBSITE_AUDIT_SETTLEMENT_URL='https://buy.stripe.com/bJe28kfD885M9SP49n0Jq07';
+
 function renderHeldWebsiteAuditInquiryForm(){
   return [
-    '<section id="audit-order" class="offer-panel" aria-label="Request a $49 Website Audit">',
-    '<h2>Request your Quick Win Audit</h2>',
-    '<p>Tell us which public website you want reviewed. Evercraft will confirm the scope, availability, and exact $49 payment option by email before asking you to pay.</p>',
+    '<section id="audit-order" class="offer-panel" aria-label="Buy or request the $49 Website Audit">',
+    '<div class="eyebrow">One clear offer · $49 total</div>',
+    '<h2>Get your five priority fixes.</h2>',
+    '<p>Pay securely, enter one public website address and choose the business result you want. We review the public-site findings and email the completed report to the address you use at checkout. No passwords or phone call.</p>',
+    '<div class="actions"><a class="btn primary" href="'+escapeHtml(WEBSITE_AUDIT_SETTLEMENT_URL)+'" rel="noreferrer noopener" aria-label="Pay $49 for the Website Quick Win Audit using Stripe">Start my $49 audit · secure checkout</a></div>',
+    '<p class="checkout-note">One-time $49, including applicable sales tax. Stripe processes payment for Evercraft. Your URL and priority are requested during checkout. Purchase does not authorize website changes or guarantee sales results. Work begins only after verified payment, then a human-reviewed report is delivered by email.</p>',
+    '<details style="margin-top:22px"><summary style="cursor:pointer;font-weight:700">Not ready to purchase? Request a free review first.</summary>',
+    '<p>Use the optional form below to ask about fit and availability. This is separate from the live payment link and does not charge you.</p>',
+    '<h3>Request your Quick Win Audit</h3>',
     '<form class="audit-intake-form" method="post" action="/api/website-audit/inquiry">',
     '<label for="audit-inquiry-email">Your email<input id="audit-inquiry-email" name="email" type="email" autocomplete="email" maxlength="200" placeholder="you@business.com" required></label>',
     '<label for="audit-inquiry-url">Public website to review<input id="audit-inquiry-url" name="website_url" type="url" inputmode="url" maxlength="1000" placeholder="https://yourbusiness.com" required></label>',
@@ -467,7 +479,7 @@ function renderHeldWebsiteAuditInquiryForm(){
     '<label class="audit-intake-check"><input type="checkbox" name="consent" value="yes" required><span>I agree that Evercraft may store this request privately and contact me about this specific audit. Read the <a href="/privacy">privacy policy</a>.</span></label>',
     '<button class="btn primary audit-intake-submit" type="submit">Request audit review</button>',
     '<p class="checkout-note">Submitting is free. No charge, payment order, or automatic audit starts here. The $49 audit is offered only after Evercraft confirms the next step.</p>',
-    '</form></section>'
+    '</form></details></section>'
   ].join('');
 }
 
@@ -487,7 +499,7 @@ export function renderOfferPage(item,{checkoutConfigured=true,auditInquiryAvaila
   return shell(copy.headline+' · Evercraft',[
     '<main>',
     '<section class="offer-hero'+(copy.slug==='website-audit'?' audit-offer':'')+'">',
-    '<div class="kicker"><span class="dot"></span> '+escapeHtml(copy.eyebrow)+(checkoutHeld?' · online checkout on hold':' · checkout request')+'</div>',
+    '<div class="kicker"><span class="dot"></span> '+escapeHtml(copy.eyebrow)+(copy.slug==='website-audit'&&checkoutHeld&&auditInquiryAvailable?' · $49 secure checkout available':checkoutHeld?' · online checkout on hold':' · checkout request')+'</div>',
     '<h1>'+escapeHtml(copy.headline)+'</h1>',
     '<p class="lede">'+escapeHtml(copy.lede)+'</p>',
     copy.heroVisual?'<div class="offer-visual"><picture>'+(copy.heroVisualMobile?'<source media="(max-width: 700px)" srcset="'+escapeHtml(copy.heroVisualMobile)+'">':'')+'<img src="'+escapeHtml(copy.heroVisual)+'" alt="" loading="eager"></picture></div>':'',

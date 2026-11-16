@@ -70,7 +70,7 @@ export function renderWebsiteAuditDecisionJourney(){
  <div class="audit-journey-details">
   <details><summary>Will you need a meeting or passwords?</summary><p>No meeting or website credentials are needed to submit a public-site audit request. This service reviews publicly available material. If you choose to pursue a separate implementation later, access and scope would be handled separately.</p></details>
   <details><summary>Does $49 include changing my website?</summary><p>No. The Quick Win Audit identifies and prioritizes changes; it does not include implementing fixes, guarantees of sales or rankings, or access to private analytics.</p></details>
-  <details><summary>What happens after I submit?</summary><p>If checkout is available, Evercraft Payments prepares the exact offer and verifies completed payment before fulfillment. If checkout is held, the form records a free inquiry instead. You will see that distinction before submitting.</p></details>
+  <details><summary>What happens after I submit?</summary><p>The $49 secure payment link asks for your public website URL and top goal. Stripe processes the payment for Evercraft; the public-site report requires confirmed payment and quality review before delivery by email. The separate optional inquiry form is free and does not place an order.</p></details>
  </div>
 </section>`;
 }
