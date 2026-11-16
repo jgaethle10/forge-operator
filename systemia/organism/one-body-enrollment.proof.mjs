@@ -1,11 +1,11 @@
 import assert from 'node:assert/strict';
-import {createPrivateKey,sign} from 'node:crypto';
-import {mkdtemp,readFile,stat,chmod,rm} from 'node:fs/promises';
+import {createPrivateKey,generateKeyPairSync,sign} from 'node:crypto';
+import {mkdtemp,readFile,stat,chmod,rm,writeFile} from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import {execFileSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
-import {createLocalOneBodyEnrollment,readLocalOneBodyEnrollmentCandidate} from './one-body-enrollment.mjs';
+import {createLocalOneBodyEnrollment,readLocalOneBodyEnrollmentCandidate,verifyLocalOneBodyEnrollment} from './one-body-enrollment.mjs';
 import {bodyLaneReceiptSigningMessage,verifySignedBodyLaneReceipt} from './one-body-lane-signature.mjs';
 
 const temp=await mkdtemp(path.join(os.tmpdir(),'evercraft-onebody-enroll-proof-'));
@@ -36,6 +36,47 @@ try {
   assert.ok(secret.includes('PRIVATE KEY'));
   assert.ok(!publicText.includes(secret));
   assert.ok(!JSON.stringify(outcome).includes(secret));
+  const expected={
+    publicCandidateFile:outcome.public_enrollment_file,
+    privateSigningFile:outcome.private_signing_file,
+    expectedConsumerId:'node001',
+    expectedLane:'context_fabric',
+    expectedSignerKeyId:'node001:context:v1',
+    expectedFingerprint:outcome.public_key_fingerprint_sha256,
+  };
+  const preflight=await verifyLocalOneBodyEnrollment(expected);
+  assert.equal(preflight.ok,true);
+  assert.equal(preflight.local_keypair_matched,true);
+  assert.equal(preflight.operator_trust_registry_updated,false);
+  assert.equal(preflight.remote_runtime_connected,false);
+  assert.ok(!JSON.stringify(preflight).includes(secret));
+
+  const preflightCli=fileURLToPath(new URL('./one-body-enrollment-preflight-cli.mjs',import.meta.url));
+  const cliPreflight=JSON.parse(execFileSync(process.execPath,[
+    preflightCli,expected.publicCandidateFile,expected.privateSigningFile,
+    expected.expectedConsumerId,expected.expectedLane,
+    expected.expectedSignerKeyId,expected.expectedFingerprint,
+  ],{encoding:'utf8'}));
+  assert.equal(cliPreflight.local_keypair_matched,true);
+  assert.equal(cliPreflight.consumer_acknowledgement_verified,false);
+  await assert.rejects(()=>verifyLocalOneBodyEnrollment({
+    ...expected,expectedConsumerId:'node002',
+  }),/enrollment_identity_or_fingerprint_mismatch/);
+  await assert.rejects(()=>verifyLocalOneBodyEnrollment({
+    ...expected,expectedFingerprint:'sha256:'+'0'.repeat(64),
+  }),/enrollment_identity_or_fingerprint_mismatch/);
+
+  const otherPrivate=path.join(directory,'wrong-key.private.pem');
+  await writeFile(otherPrivate,generateKeyPairSync('ed25519').privateKey.export({
+    type:'pkcs8',format:'pem',
+  }),{mode:0o600});
+  await assert.rejects(()=>verifyLocalOneBodyEnrollment({
+    ...expected,privateSigningFile:otherPrivate,
+  }),/enrollment_private_public_key_mismatch/);
+  await chmod(outcome.private_signing_file,0o644);
+  await assert.rejects(()=>verifyLocalOneBodyEnrollment(expected),
+    /unsafe_enrollment_private_key/);
+  await chmod(outcome.private_signing_file,0o600);
   await assert.rejects(()=>createLocalOneBodyEnrollment({
     consumerId:'node001',lane:'context_fabric',
     signerKeyId:'node001:context:v1',outputDir:directory
@@ -85,6 +126,8 @@ try {
       'operator-pinned lane key authenticates canonical receipt',
       'revoked or mismatched public trust fails closed',
       'unsafe directory and candidate file modes rejected',
+      'host-local signer pair verifies without exporting a private key',
+      'wrong host identity, wrong fingerprint, wrong key and unsafe key mode fail closed',
     ]
   },null,2));
 } finally {await rm(temp,{recursive:true,force:true})}
