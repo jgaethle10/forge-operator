@@ -54,8 +54,11 @@ export function applyGoalInwardRecovery(args,latched,{pendingCommands=[]}={}){
   const candidate={x:unit.x*.16,z:unit.z*.16};
   const projected={x:estimate.x+unit.x*.18,z:estimate.z+unit.z*.18};
   const newViolation=insetViolation(projected,bounds,i);
-  if(newViolation>=oldViolation-.07)
-    return hold(latched,'not_strictly_inward',{oldViolation,newViolation});
+  // Near the inner boundary, do not demand a larger improvement than the
+  // remaining violation itself; otherwise the robot deadlocks just outside.
+  const minimumProgress=Math.min(.07,oldViolation*.5);
+  if(newViolation>=oldViolation-minimumProgress)
+    return hold(latched,'not_strictly_inward',{oldViolation,newViolation,minimumProgress});
   if(norm(velocity)>.12)
     return hold(latched,'braking_inertia_too_high',{currentSpeed:norm(velocity)});
   const clearance=freeDistance(heading,estimate,scan,{robotRadius,uncertainty,margin:.18});
