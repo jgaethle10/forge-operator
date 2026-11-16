@@ -34,3 +34,23 @@ Requires explicit operator confirmation, pinned fingerprint match, fresh adverti
 ## Limits
 
 Passage's iPhone/Safari compatibility is still a separate release gate under PR #1763. Four product subsystem QA checks are not proof of public uptime, payment settlement, supplier integration, customer delivery or security certification. No Base44, TinyFish, DigitalOcean or Opera runtime is needed.
+
+## Operator-local signed NodeSeed QA (v1.1)
+
+The portfolio QA CI mission remains ephemeral. A separate local-only runner now supports an already-running NodeSeed on the same trusted machine; this is not evidence that Node001 or Node002 ran in CI.
+
+The runner refuses non-loopback URLs, unknown or mismatched node identities, stale capacity, non-zero-cost execution, missing workload support, and absent approval. It issues a fresh nonce to the existing NodeSeed signed attestation endpoint, verifies its Ed25519 signature against a previously trusted public-key fingerprint, checks signed workload inventory and labels, and takes no lease if validation fails.
+
+On the actual operator machine, confirm the current trusted portfolio-qa code is installed into the NodeSeed runtime, note the actual loopback port, and obtain a previously trusted node fingerprint from independent inventory, not the same unauthenticated advertisement. Put the allocator token into a mode-0600 regular file. Never paste credentials into chat or commit them.
+
+Read-only signed preflight:
+
+    node scripts/saban-qa-local-node.mjs --endpoint=http://127.0.0.1:YOUR_PORT --node=YOUR_TRUSTED_ID --pin=YOUR_TRUSTED_FINGERPRINT --token-file=/private/token --operator-approved
+
+Only after a positive preflight, a separate explicit local QA run:
+
+    node scripts/saban-qa-local-node.mjs --endpoint=http://127.0.0.1:YOUR_PORT --node=YOUR_TRUSTED_ID --pin=YOUR_TRUSTED_FINGERPRINT --token-file=/private/token --operator-approved --execute --roles=work_saban_checker --out=/private/saban-qa-local-receipt.json
+
+The operator-local command runs real registered worker leases and a separate registered content-hash check on that local NodeSeed. It does not upload results. Receipts are created mode 0600 and never overwritten. Hosted GitHub Actions is explicitly prohibited from using the CLI execution flag.
+
+The result passed_local_qa_not_hardware_certified means the authenticated local software key holder returned the expected tests and receipts. It does NOT independently prove physical hardware identity, current running release SHA, trusted location, production readiness or native iPhone Safari. Device software keys may be copied. This release check remains a separate future gate.

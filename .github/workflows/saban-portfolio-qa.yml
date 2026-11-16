@@ -8,6 +8,9 @@ on:
       - 'systemia/saban/multiplication-registry.json'
       - 'tests/saban-portfolio-qa.test.mjs'
       - 'tests/saban-qa-device-admission.test.mjs'
+      - 'tests/saban-qa-local-node.test.mjs'
+      - 'systemia/saban/qa-local-node.mjs'
+      - 'scripts/saban-qa-local-node.mjs'
       - 'scripts/saban-qa-device-admission.mjs'
       - '.github/workflows/saban-portfolio-qa.yml'
       - 'docs/qa/saban-portfolio-qa-v1.md'
@@ -29,7 +32,9 @@ jobs:
           node --check systemia/saban/product-qa-adapter.mjs
           node --check systemia/saban/portfolio-qa-mission.mjs
           node --check scripts/saban-qa-device-admission.mjs
-          node --test tests/saban-portfolio-qa.test.mjs tests/saban-qa-device-admission.test.mjs
+          node --check scripts/saban-qa-local-node.mjs
+          node --check systemia/saban/qa-local-node.mjs
+          node --test tests/saban-portfolio-qa.test.mjs tests/saban-qa-device-admission.test.mjs tests/saban-qa-local-node.test.mjs
       - name: Dispatch actual registered Saban workers over leased loopback NodeSeed
         run: node systemia/saban/portfolio-qa-mission.mjs --out=/tmp/saban-portfolio-qa
       - name: Preserve worker evidence even after a held or failed mission
