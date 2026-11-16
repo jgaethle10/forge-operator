@@ -15,6 +15,12 @@ import { createOfflineKey, sealSourceVault, recoverSealedVault } from "./sealed-
 import { rehearseOfflineHome } from "./offline-hq-drill.mjs";
 
 const SCHEMA="evercraft.continuity.device-field-kit.v1";
+async function digestFile(filename){
+ const hash=createHash("sha256");
+ for await(const part of fs.createReadStream(filename))hash.update(part);
+ return hash.digest("hex");
+}
+
 const COMMANDS=Object.freeze(["preflight","prepare","recover"]);
 const TOOL_FILES=Object.freeze([
  "device-field-kit.mjs","source-vault.mjs","sealed-transfer.mjs","offline-hq-drill.mjs"
@@ -98,7 +104,7 @@ function stageTools(dir){
    fs.copyFileSync(from,to,fs.constants.COPYFILE_EXCL);
    fs.chmodSync(to,0o600);
  }
- return TOOL_FILES.length;
+ return Object.fromEntries(TOOL_FILES.map(name=>[name,createHash("sha256").update(fs.readFileSync(path.join(target,name))).digest("hex")]));
 }
 export async function preparePenguin({
  repo,state,now=()=>new Date()
@@ -123,13 +129,15 @@ export async function preparePenguin({
  const sealedPath=path.join(output,sealedName);
  const sealed=sealSourceVault({vault,output:sealedPath,keyFile:key});
  const tools=path.join(output,"tools");
- stageTools(tools);
+ const toolDigests=stageTools(tools);
+ const encryptedDigest=await digestFile(sealedPath);
  const timestamp=now().toISOString();
  const result={
    schema:SCHEMA,ok:true,state:"penguin_source_prepared_for_encrypted_transfer",
    observed_at:timestamp,source_head:archive.source_head,
    archive_sha256:archive.bundle_sha256,
-   sealed_file:sealedName,staged_tool_count:TOOL_FILES.length,
+   sealed_file:sealedName,encrypted_file_sha256:encryptedDigest,
+   recovery_tool_sha256:toolDigests,staged_tool_count:TOOL_FILES.length,
    encrypted_transfer_created:sealed.ok,
    local_independent_source_restore_verified:locallyVerified.ok,
    physical_transfer_to_nextgen_verified:false,
@@ -145,11 +153,15 @@ export async function preparePenguin({
  return {...result,receipt_file:receipt,
    next_step:"Copy sealed file and tools to NextGen. Deliver private key separately. Never send key bytes to ChatGPT or GitHub."};
 }
-export async function recoverNextGen({sealed,keyFile,state,now=()=>new Date()}={}){
+export async function recoverNextGen({sealed,keyFile,state,expectedEncryptedSha256,now=()=>new Date()}={}){
  if(typeof sealed!=="string"||!path.isAbsolute(sealed))
    throw Error("absolute_sealed_input_required");
  if(typeof keyFile!=="string"||!path.isAbsolute(keyFile))
    throw Error("absolute_key_file_required");
+ if(typeof expectedEncryptedSha256!=="string"||!/^[a-f0-9]{64}$/.test(expectedEncryptedSha256))
+   throw Error("penguin_ciphertext_fingerprint_required");
+ if(await digestFile(sealed)!==expectedEncryptedSha256)
+   throw Error("encrypted_copy_digest_mismatch");
  const root=secureDir(state,{create:true});
  if(sameOrInside(root,path.resolve(sealed))||
     sameOrInside(root,path.resolve(keyFile)))
@@ -193,7 +205,8 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
    if(command==="preflight")return preflightDevice({repo:opt(args,"repo")});
    if(command==="prepare")return preparePenguin({repo:opt(args,"repo"),state:opt(args,"state")});
    return recoverNextGen({
-     sealed:opt(args,"sealed"),keyFile:opt(args,"key-file"),state:opt(args,"state")
+     sealed:opt(args,"sealed"),keyFile:opt(args,"key-file"),
+     expectedEncryptedSha256:opt(args,"expected-sha256"),state:opt(args,"state")
    });
  }).then(result=>process.stdout.write(JSON.stringify(result,null,2)+"\n"))
    .catch(e=>{
