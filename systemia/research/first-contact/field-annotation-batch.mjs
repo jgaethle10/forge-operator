@@ -68,6 +68,8 @@ export function assembleAnnotatedPixelSession({plan,packets}={}){
       second:{camera:item.second?.camera,detection:item.second?.detection,source:src.sourceB},
       evidence:item.evidence,quality
     });
+    if(typeof item.annotationPacketSha256!=="string"||!/^sha256:[a-f0-9]{64}$/.test(item.annotationPacketSha256))
+      throw new RangeError("each annotation JSON must supply its exact input SHA-256 digest");
     if(caseIds.has(normalized.caseId))throw new RangeError("repeated case ID in session");
     caseIds.add(normalized.caseId);
     for(const hash of [normalized.annotationProvenance.sourceA.sha256,
@@ -92,6 +94,7 @@ export function assembleAnnotatedPixelSession({plan,packets}={}){
     samples.push({first:normalized.first,second:normalized.second});
     references.push({
       caseId:normalized.caseId,captureEpochMilliseconds:t1,
+      annotationPacketSha256:item.annotationPacketSha256,
       rectifiedImageASha256:normalized.annotationProvenance.sourceA.sha256,
       rectifiedImageBSha256:normalized.annotationProvenance.sourceB.sha256
     });
