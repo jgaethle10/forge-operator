@@ -171,6 +171,11 @@ export function surveyExistingSyntheticCgroupKillReadOnly({
     });
   }catch(e){
     if(e?.code?.startsWith('CGKILL_READONLY_'))throw e;
+    // The shared kernel events parser uses plain Error(message), while this
+    // survey exports bounded semantic error *codes*, never raw file contents.
+    if(['CGROUP_EVENTS_INVALID','CGROUP_POPULATED_MISSING',
+      'CGROUP_EVENTS_UNAVAILABLE_OR_TOO_LARGE'].includes(e?.message))
+      refuse('CGKILL_READONLY_EVENTS_INVALID');
     // Never return private host paths or raw cgroup/procfs data on failure.
     refuse('CGKILL_READONLY_SURVEY_UNVERIFIED');
   }finally{
