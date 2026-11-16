@@ -1,0 +1,28 @@
+name: Client 001 Review URL Live HTTPS Canary
+on:
+  push:
+    branches: [release/client001-onthego-live-review-link-20261115]
+    paths: ['.github/workflows/client001-review-https-canary.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 4
+    steps:
+      - name: Validate exact deployed client review link
+        shell: bash
+        run: |
+          set -euo pipefail
+          url='https://jgaethle10.github.io/forge-operator/clients/on-the-go/review/'
+          curl --fail --silent --show-error --location --retry 7 --retry-all-errors --retry-delay 3 --max-time 22 "$url" -o /tmp/review.html
+          grep -Fq '<title>On The Go | Client Preview | Evercraft</title>' /tmp/review.html
+          grep -Fq '<meta name="robots" content="noindex,nofollow,noarchive">' /tmp/review.html
+          grep -Fq 'CLIENT REVIEW ONLY' /tmp/review.html
+          grep -Fq 'tel:+15098335025' /tmp/review.html
+          grep -Fq 'Solicitud de servicio On The Go' /tmp/review.html
+          grep -Fq 'EC-DIRECT-001' /tmp/review.html
+          ! grep -Fq 'gtag(' /tmp/review.html
+          echo 'CLIENT001_PUBLIC_REVIEW_HTTPS_VERIFIED'
+          printf 'URL: %s\nBytes: %s\n' "$url" "$(wc -c < /tmp/review.html)"
