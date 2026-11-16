@@ -67,7 +67,7 @@ class OTIOBridgeTest(unittest.TestCase):
         self.assertIsInstance(timeline.tracks[0][1], otio.schema.Gap)
         self.assertEqual(timeline.tracks[0][2].source_range.start_time.value, 36)
         self.assertEqual(timeline.tracks[0][2].metadata["evercraft"]["startFrame"], 48)
-        self.assertEqual(timeline.tracks[0][0].media_reference.metadata["evercraft"]["sourceRefs"],
+        self.assertEqual(list(timeline.tracks[0][0].media_reference.metadata["evercraft"]["sourceRefs"]),
                          ["owned:work-001"])
         self.assertTrue((self.root / "output.otio.receipt.json").exists())
 
