@@ -172,10 +172,31 @@ try{
     const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('evercraft.worlds.mossmere.v1')));
     assert.equal(saved.sky,'sunset',profile.name+': sky change not stored');
     await page.locator('#closeEditor').click();
+    // The operator's private model produces a JSON proposal. Test the actual browser
+    // import/review/approve path with a SYNTHETIC proposal, never a hosted model.
+    await page.locator('#questToggle').click();
+    const staged={schema:'evercraft.worlds.quest-proposal.v1',
+      title:'Fireflies at the Gate',story:'Pip suggests one flower to light the way.',
+      narrator:'Pip',steps:[{type:'place',kind:'flower',x:5,z:2}]};
+    await page.locator('#questImport').setInputFiles({
+      name:'synthetic-model-proposal.json',mimeType:'application/json',
+      buffer:Buffer.from(JSON.stringify(staged))
+    });
+    assert.equal(await page.locator('#questExecute').isEnabled(),true,profile.name+': valid imported quest was not staged');
+    const stagedText=await page.locator('#questSteps').innerText();
+    assert.match(stagedText,/Place flower at 5, 2/,profile.name+': actions were not previewed');
+    const beforeApproval=await page.evaluate(()=>JSON.parse(localStorage.getItem('evercraft.worlds.mossmere.v1')).objects.length);
+    assert.equal(beforeApproval,1,profile.name+': imported quest mutated world before approval');
+    await page.locator('#questExecute').click();
+    const receiptText=await page.locator('#questReceipt').innerText();
+    assert.match(receiptText,/applied_to_local_scene_only/,profile.name+': local execution receipt absent');
+    const afterApproval=await page.evaluate(()=>JSON.parse(localStorage.getItem('evercraft.worlds.mossmere.v1')).objects.length);
+    assert.equal(afterApproval,2,profile.name+': imported and approved quest did not change scene');
+    await page.locator('#questClose').click();
     await page.screenshot({path:out+'/'+profile.name+'.png',timeout:10000});
     await page.reload({waitUntil:'domcontentloaded'});
     const loaded=await page.evaluate(()=>JSON.parse(localStorage.getItem('evercraft.worlds.mossmere.v1')));
-    assert.equal(loaded.objects.length,1,profile.name+': world object missing after reload');
+    assert.equal(loaded.objects.length,2,profile.name+': approved quest object missing after reload');
     assert.equal(loaded.sky,'sunset',profile.name+': environment edit missing after reload');
     assert.equal(await page.locator('#qualityMode').inputValue(),'smooth',profile.name+': quality mode did not load after refresh');
     assert.deepEqual(errors,[],profile.name+': browser exceptions');
