@@ -1,4 +1,5 @@
 import { createHash } from 'node:crypto';
+import { isMicroSeedExecutionQuarantined, MICROSEED_EXECUTION_QUARANTINE_REASON } from './microseed-device-quarantine.mjs';
 
 const sha=(value)=>'sha256:'+createHash('sha256').update(
   typeof value==='string'?value:JSON.stringify(value)
@@ -155,6 +156,10 @@ export function microDeviceToAmbientCapabilities(manifestInput={},options={}){
   const manifest=manifestInput?.schema==='evercraft.microseed.device-manifest.v1'
     ? manifestInput
     : normalizeMicroDeviceManifest(manifestInput);
+  // This method publishes *actionable* device capabilities, not health or
+  // inventory observations. Old signed conformance must not resurrect a
+  // quarantined physical node as an executable capability.
+  if(isMicroSeedExecutionQuarantined(manifest.device_id))return [];
   const conformance=options?.conformance||null;
   const verifiedWorkloads=
     conformance?.schema==='evercraft.microseed.conformance-receipt.v1' &&
@@ -261,6 +266,9 @@ export function microDeviceToAmbientCapabilities(manifestInput={},options={}){
 
 export function microDeviceToAmbientCapability(manifestInput={},options={}){
   const capabilities=microDeviceToAmbientCapabilities(manifestInput,options);
+  if(isMicroSeedExecutionQuarantined(manifestInput?.device_id)){
+    throw new Error(MICROSEED_EXECUTION_QUARANTINE_REASON);
+  }
   const compute=capabilities.find(x=>x.kind==='compute');
   if(!compute) throw new Error('micro_device_native_compute_not_declared');
   return compute;
