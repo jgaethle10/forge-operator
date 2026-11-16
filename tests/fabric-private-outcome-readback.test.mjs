@@ -20,10 +20,12 @@ function sign(body,short=false){return {...body,receipt_hash:short?H(JSON.string
 function fixture(t){
   const dir=fs.mkdtempSync(path.join(os.tmpdir(),"evercraft-fabric-outcome-"));
   const tokenFile=path.join(dir,"token"),signingKeyFile=path.join(dir,"signing");
+  const executionEventsFile=path.join(dir,"execution-lease-events.jsonl");
+  const shippingLedgerFile=path.join(dir,"shipping-ledger.json");
   fs.writeFileSync(tokenFile,TOKEN+"\n",{mode:0o600});
   fs.writeFileSync(signingKeyFile,SIGNING+"\n",{mode:0o600});
   t.after(()=>fs.rmSync(dir,{force:true,recursive:true}));
-  return {tokenFile,signingKeyFile};
+  return {tokenFile,signingKeyFile,executionEventsFile,shippingLedgerFile};
 }
 function receiptSpecimen(now){
   // Entire specimen is artificial, despite intentionally exercising the live-
@@ -68,12 +70,45 @@ function receiptSpecimen(now){
   assert.equal(shippingProof.pass,true);
   return {paidOrder,missionReceipt,executionReceipt,deliveryReceipt,shippingProof};
 }
+// A synthetic test ledger is written to disk solely by the test runner.
+function writeWitnessFixture(creds,records) {
+  const delivery=records.deliveryReceipt,proof=records.shippingProof;
+  fs.writeFileSync(creds.executionEventsFile,
+    JSON.stringify(records.executionReceipt)+"\n",{mode:0o600});
+  const shipping={
+    schema:"evercraft.shipping.ledger.v2",revision:1,
+    shipments:[{
+      schema:"evercraft.shipping.shipment.v2",
+      shipment_key:delivery.shipment_key,
+      idempotency_key:delivery.shipment_idempotency_key,
+      recipient_ref:delivery.recipient_ref,
+      package_digest:delivery.package_digest,
+      authorization_ref:"synthetic-human-send-approval",
+      state:"verified_delivered",
+      provider_message_id:delivery.provider_message_id,
+      attempts:[{outcome:"sent",provider_message_id:delivery.provider_message_id}],
+      sent_copy_verification:{
+        provider_message_id:delivery.provider_message_id,
+        recipient_verified:true,subject_verified:true,attachments_verified:true,
+        attachment_names:delivery.sent_copy_verification.attachment_names,
+      },
+    }],
+  };
+  assert.equal(proof.transport.shipment_key,delivery.shipment_key);
+  fs.writeFileSync(creds.shippingLedgerFile,JSON.stringify(shipping)+"\n",{mode:0o600});
+}
 async function fabric(t,{loader=null,creds=fixture(t)}={}){
   const runtime=await startFabricLocalRuntime({
     host:"127.0.0.1",port:0,catalog:[],faieSurfaceEnabled:false,
     outcomeReadbackTokenFile:creds.tokenFile,
     outcomeReadbackSigningKeyFile:creds.signingKeyFile,
-    outcomeReadbackRecordLoader:loader,
+    outcomeExecutionEventsFile:creds.executionEventsFile,
+    outcomeShippingLedgerFile:creds.shippingLedgerFile,
+    outcomeReadbackRecordLoader:loader?async args=>{
+      const result=await loader(args);
+      if(result)writeWitnessFixture(creds,result);
+      return result;
+    }:null,
   });
   t.after(()=>runtime.close());
   return runtime;
@@ -185,4 +220,38 @@ test("private secret file mode reversal causes preflight hold",async t=>{
   const r=await fabric(t,{creds,loader:async()=>receiptSpecimen(Date.now())});
   const response=await request(r);
   assert.equal(response.status,503);
+});
+
+test("Fabric refuses a structural source when its private local ledgers are missing or conflicting",async t=>{
+  const creds=fixture(t),source=receiptSpecimen(Date.now());
+  const absent=await startFabricLocalRuntime({
+    host:"127.0.0.1",port:0,catalog:[],faieSurfaceEnabled:false,
+    outcomeReadbackTokenFile:creds.tokenFile,
+    outcomeReadbackSigningKeyFile:creds.signingKeyFile,
+    outcomeExecutionEventsFile:creds.executionEventsFile,
+    outcomeShippingLedgerFile:creds.shippingLedgerFile,
+    outcomeReadbackRecordLoader:async()=>source,
+  });
+  t.after(()=>absent.close());
+  let response=await request(absent,{nonce:"ef".repeat(24)});
+  assert.equal(response.status,503,"syntactically valid records are not sufficient");
+  writeWitnessFixture(creds,source);
+  // The last Execution Gate state is the authoritative current lease state.
+  const altered={...source.executionReceipt,state:"cancelled"};
+  const {receipt_hash:ignored,...body}=altered;
+  const lastEvent=sign(body);
+  fs.appendFileSync(creds.executionEventsFile,JSON.stringify(lastEvent)+"\n");
+  response=await request(absent,{nonce:"fa".repeat(24)});
+  assert.equal(response.status,503,"a later non-completed lease event blocks a stale completion");
+  // Repair synthetic fixture, then break Shipping recorded provider acceptance.
+  writeWitnessFixture(creds,source);
+  const ledger=JSON.parse(fs.readFileSync(creds.shippingLedgerFile,"utf8"));
+  ledger.shipments[0].sent_copy_verification.attachments_verified=false;
+  fs.writeFileSync(creds.shippingLedgerFile,JSON.stringify(ledger),{mode:0o600});
+  response=await request(absent,{nonce:"fb".repeat(24)});
+  assert.equal(response.status,503,"Shipping ledger provider evidence must agree");
+  writeWitnessFixture(creds,source);
+  fs.chmodSync(creds.shippingLedgerFile,0o644);
+  response=await request(absent,{nonce:"fc".repeat(24)});
+  assert.equal(response.status,503,"world-readable customer shipping ledger is held");
 });
