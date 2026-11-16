@@ -124,6 +124,27 @@ Lift now has a pure service adapter designed to reuse Evercraft's **Identity** s
 **Important:** this is a composition layer, not a running authenticated service or production identity integration. A deployed service must validate sessions and Passport grants at the transaction boundary, enforce least privilege, atomically persist state changes with revocation, prevent request races, and obtain operator/legal approvals before processing real people.
 
 
+## V0.4 encrypted fictional evidence lab
+
+New files: systemia/lift/evidence-vault-lab.mjs and evidence-vault-lab.test.mjs.
+
+This is a **fictional fixture-only** experiment, NOT a production evidence repository. It is built specifically to prove a secure design without inviting people to submit bills or identity documents before a proper security and privacy review.
+
+- Exactly three pre-approved fictional fixture codes may be written. Raw documents, freeform descriptions, account numbers, real names, and file uploads are not accepted.
+- Each fixture record is encrypted with AES-256-GCM using a unique 96-bit nonce, a case-specific HKDF-derived key from a caller-provided 32-byte master key, and authenticated additional data binding the case/evidence identity and record version.
+- The private directory and files require owner-only permissions; filenames are SHA-256 digests of synthetic identifiers. A single-writer file lease refuses a second process. Writes use a temporary file, a sync request and rename.
+- Every write/read/revocation checks a cryptographically signed Evercraft Identity session, current session-revocation state, live Evercraft Passport grant for exactly one case resource, and appropriate ownership or reviewer scope. Merely possessing a token or having a broad grant does not confer permission.
+- Withdrawal/rejected status blocks further review reads. The synthetic requester can revoke an evidence fixture; this replaces ciphertext with a signed tombstone and remains blocked across restart.
+- The returned revocation receipt explicitly says secure_erase_proven=false. Tombstones do not establish that storage snapshots, journaled blocks, or backups have been physically wiped. No automatic key lifecycle, restore, retention policy or legal privacy guarantee is claimed.
+- The lab is an in-process module with no public HTTP handlers, no independent permission provisioning, no enrollment flow, no encryption-key vault service and no real customer storage.
+
+Run the suite: node --test systemia/lift/*.test.mjs
+
+### Further gates before actual applicant documents
+
+Use Evercraft Identity and Passport with authenticated server-origin tokens; establish proper scoped partner and reviewer enrollment; trusted immutable case records; production key management, rotation and deletion; attachment malware scanning; quarantine; content validation; access logging; quotas; incident response; audit/restore testing; and independent security review. Consent revocation must propagate to every recipient, search index and cache. Live donations remain disabled.
+
+
 ## Release status
 
 **Demo:** ready for local isolated evaluation. **Live assistance:** blocked. **Payments:** blocked. **Verified partners:** none onboarded by this change. **Public deployment:** not authorized by this branch. **Systemia API integration:** pending. The name is provisional pending checks for conflicts.
