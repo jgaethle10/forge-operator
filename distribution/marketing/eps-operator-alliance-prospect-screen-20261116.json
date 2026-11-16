@@ -181,6 +181,29 @@
       "prior_gmail_exact_name_or_address_match": 0,
       "proposed_status": "research_only_not_contacted",
       "next": "Owner approved outreach through legitimate business channel after exact-contact recheck, no claims of verified distress or income"
+    },
+    {
+      "name": "Alpha Pro Exteriors",
+      "where": "Pasco / Kennewick / Richland and Tri-Cities Washington",
+      "fit": "roofing, roof repairs, gutters, siding, storm damage, commercial roofing",
+      "website": "https://www.alphaproexteriors.com/",
+      "contact_url": "https://www.alphaproexteriors.com/free-roof-inspection",
+      "email": "oscar.s@alpharoof1.com",
+      "source_urls": [
+        "https://www.hbatc.com/",
+        "https://web.hbatc.com/directory/results/results.aspx?affcode=Tri+Cities+Chapter",
+        "https://www.alphaproexteriors.com/",
+        "https://nextdoor.com/pages/alpha-pro-exteriors-pasco-wa/"
+      ],
+      "unique_public_signal": "Tri-Cities HBA listed company as new member Nov 9, 2026, with Oscar Suarez as its listed contact. Company-owned website describes an established roof/siding repair/install crew and claims hundreds of satisfied customers. New HBA membership is evidence of networking, not financial stress or willingness to partner.",
+      "angle": "Mutual nonexclusive referrals between distinct trades for permitted property refresh and roofing/exterior projects; inspect intake handoff as a separate service only if they express interest.",
+      "equipment_evidence": "Company website claims crews and roofing capabilities; no independently audited equipment count",
+      "source_verified_status": "HBA new-member record + company site; contractor registration, insurance and specific roofing classification not yet independently verified",
+      "contact_history_screen": "Exact company and listed email searched Gmail Nov 16 2026, zero results",
+      "priority": 11,
+      "prior_gmail_exact_name_or_address_match": 0,
+      "proposed_status": "research_only_not_contacted",
+      "next": "Hold for owner-approved precise fit question, not a rushed cold blast"
     }
   ],
   "excluded_duplicate_outreach": [
@@ -256,5 +279,49 @@
     "Where do quotes or follow-ups currently stall, if anywhere?",
     "Who contracts with and collects customer payment, and do you prefer separate branding?",
     "Any required contractor license, GL, workers comp or truck permits for offered scope?"
-  ]
+  ],
+  "source_channels": [
+    {
+      "id": "cwhba",
+      "name": "Central Washington Home Builders Association public member directory",
+      "url": "https://memberships.cwhba.org/directory",
+      "scope": "Yakima/Kittitas/Chelan/Douglas etc",
+      "public_verified": "Member directory with role, trade and area filters",
+      "use": "Discover trade-specialty firms, research own websites, run contact-dedupe, request voluntary 1:1 partner discussions",
+      "status": "RESEARCH_ONLY",
+      "memberships_or_solicitation_authorized": false
+    },
+    {
+      "id": "hbatc",
+      "name": "Home Builders Association of Tri-Cities",
+      "url": "https://www.hbatc.com/",
+      "scope": "Benton/Franklin/Walla Walla area",
+      "public_verified": "Public site lists new member names and dated recent additions",
+      "use": "Prioritize recently joined companies demonstrating professional networking interest; do not infer distress or scrape/spam",
+      "status": "RESEARCH_ONLY",
+      "memberships_or_solicitation_authorized": false
+    },
+    {
+      "id": "walp",
+      "name": "Washington Association of Landscape Professionals",
+      "url": "https://www.walp.org/membership/",
+      "scope": "Statewide Washington landscape providers",
+      "public_verified": "Paid contractor membership starting at $350/year for revenue up to $250k as published, subject to change",
+      "use": "Potential larger industry referral lane after real pilot conversion, no membership spend authorized",
+      "status": "DEFER_PAID_MEMBERSHIP",
+      "memberships_or_solicitation_authorized": false
+    }
+  ],
+  "pipeline_metrics": {
+    "researched_prospects": 11,
+    "known_previously_approached_excluded": [
+      "Joe's Yard Service",
+      "ServiceMaster 1st Choice",
+      "SERVPRO Gig Harbor"
+    ],
+    "new_direct_outreach_sent": 0,
+    "partner_replies_confirmed": 0,
+    "operator_contracts_signed": 0,
+    "customer_jobs_settled": 0
+  }
 }
