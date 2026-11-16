@@ -94,15 +94,18 @@ export function createCloseoutInquiryHandler({storeDir=DEFAULT_DIR(),now=Date.no
       offer_key:'evercraft.closeout.human_review_packet_49.v1',amount_cents_proposed:4900,
       ...checked.value,source:'closeout_public_buyer_form',state:'UNREVIEWED_SCOPE_FIRST',
       order_created:false,paid:false,fulfillment_released:false,agent_execution_authorized:false};
+    try{atomicCreate(path.join(storeDir,reference+'.json'),JSON.stringify(record)+'\n');}
+    catch{return reply(res,503,{ok:false,error:'intake_write_failed',received:false},origin);}
+    let alert_queued=false;
     try{
-      atomicCreate(path.join(storeDir,reference+'.json'),JSON.stringify(record)+'\n');
       atomicCreate(path.join(storeDir,'alert-outbox',reference+'.json'),JSON.stringify({
         schema:'evercraft.closeout.alert.v1',reference,received_at,
         contains_customer_pii:false
       })+'\n');
-    }catch{return reply(res,503,{ok:false,error:'intake_write_failed',received:false},origin);}
+      alert_queued=true;
+    }catch{console.error('closeout_alert_outbox_unavailable');}
     requests.set(key,[...recent,ts]);
-    try{onAlertQueued()}catch{}
+    if(alert_queued)try{onAlertQueued()}catch{}
     return reply(res,201,{ok:true,received:true,reference,
       message:'Your inquiry was recorded for a scope and availability review. No charge, payment order, or work authorization was created.'},origin);
   };
