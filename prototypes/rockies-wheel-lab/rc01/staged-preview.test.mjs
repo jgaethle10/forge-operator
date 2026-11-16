@@ -95,3 +95,17 @@ test('RC09 FindMyPart promotion refuses an unknown source or source shape',()=>{
   assert.throws(()=>stageWheelLabMarkup('unknown.html','<head></head>'),/Unsupported/);
   assert.throws(()=>stageWheelLabMarkup('index.html','<body></body>'),/stage anchor mismatch/);
 });
+
+test('RC11 staged merchant preview targets shopper rather than launcher, with no private query fields',()=>{
+  const staged=read(publicDir,'merchant-desk.html');
+  const source=read(prototype,'merchant-desk.html');
+  assert.match(source,/id="viewConcept" class="concept-preview" href="\.\/index\.html"/);
+  assert.match(staged,/id="viewConcept" class="concept-preview" href="\.\/shopper\.html"/);
+  assert.match(staged,/target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer" hidden/);
+  assert.match(staged,/const viewerBase=\$\('viewConcept'\)\.getAttribute\('href'\);/);
+  assert.match(staged,/return viewerBase\+'\?paint='\+keys\.paint\+'&style='\+keys\.style/);
+  assert.doesNotMatch(staged,/window\.open\(/);
+  assert.doesNotMatch(staged,/URLSearchParams\(\s*(?:window\.)?location\.search/);
+  assert.doesNotMatch(staged,/href="https:\/\/[^"]*\/wheel-lab-preview/);
+  assert.match(staged,/fitment is not verified/i);
+});
