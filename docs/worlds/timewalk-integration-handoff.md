@@ -174,3 +174,19 @@ The original 1960 atlas images have **not** been independently inspected or down
 **Next realistic feature unlock:** obtain or examine the actual 1960-corrected sheet #6 and #15 images under proper access/permissions; review the public LOC 1952 counterparts; prepare a **per-building change ledger** around the named landmarks. Use 1930 original architectural designs and dated photos to separate facade appearance from plan footprint evidence. Only after human/source review may canonical Worlds admit measured 1960 geometry.
 
 Research follow-ups remain in #1938 (CSUN 1960 atlas) and #1972 (Yakima Valley Museum original plans); integration issue #1794 tracks main engine provenance ingestion.
+
+## November 15: source-review workbench added, with third-party map alignment held in quarantine
+
+[**Research-only Timewalk source review**](../../public/worlds/timewalk/review.html) is now implemented at `/worlds/timewalk/review.html` **in the draft branch**, not yet published. It is intentionally a normal static archive-review page **within the canonical Worlds path**, not a WebGL engine, alternate scene or geometry authority. Browser UI requires the deployed static root to serve `public/worlds/timewalk/**` at this path. The page loads and validates the historical ledger, CSUN acquisition receipt and review queue before showing evidence links; it does not fetch/rehost map images or claim to have inspected inaccessible images.
+
+**New research lead**: [mapsnap v2.0 Washington inventory](https://mapsnap.org/runs/v2.0/states/wa) lists the **1952 Yakima volume: 92 sheets, 73 automatically placed**. That is a **volume-wide summary**, not proof that #6 or #15 was placed or aligned correctly. mapsnap itself warns wrong-block/town georeferencing can occur. Its control-point annotations are licensed under **Open Database License (ODbL) 1.0**, independently of public-domain LOC-hosted map scan rights. Do not ingest those coordinates without technical QC and licensing review. No mapsnap annotations or controls have been imported. No sheet-specific georegistration has been verified.
+
+**Added**:
+- `public/worlds/timewalk/yakima-1960/source-review-queue.v1.json`: two exact LOC digitized 1952 source links and four review tickets (Larson, Capitol, and separately two **unidentified neighboring-building zones** on respective sheets; these are review areas, NOT claims that four buildings existed). The queue records CSUN six correction rounds and uncertainty, uninspected pixels/1960 originals, unresolved rights, and mapsnap candidate without GCPs.
+- `public/worlds/timewalk/source-review-workbench.mjs`: strict read-only validator and source packet. Invalid original map claims, third-party auto alignment upgrades, unauthorized render geometry and source identity claims fail closed.
+- `public/worlds/timewalk/review.html` and `source-review-page.mjs`: mobile-friendly archival-review page linking original LOC sources. No 3D renderer, photo hosting, paid scans, uploads or scene mutation. Static page is **code committed, not deployment evidence**.
+- `tests/timewalk-source-review-workbench.test.mjs` and `tests/timewalk-source-review-page.test.mjs`: enforce read-only provenance state and lack of separate engine. CI command `node --test tests/timewalk-*.test.mjs`.
+
+**Next action**: inspect actual 1952 LOC pixels through a working image-access channel, verify or correct map placement with independent GCPs and a reviewed sheet-level registration, then identify the **specific** neighbors changed on the physical 1960 CSUN source where lawfully accessible. Only then author historically supported footprints in the existing Worlds world-engine scene contract.
+
+**PR status:** #1780 intentionally remains draft; a live route or successful customer/device UI test is **not** claimed. Source/rights tracking remains #1938; museum architectural plans remain #1972; canonical Worlds integration #1794.
