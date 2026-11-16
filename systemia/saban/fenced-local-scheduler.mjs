@@ -13,6 +13,7 @@ import {SabanFencedAckJournal} from './fenced-ack-journal.mjs';
 import {verifySignedMicroSeedExecutionReceipt} from './signed-microseed-execution.mjs';
 import {verifyFencedMicroSeedExecutionPermit} from './fenced-execution-admission.mjs';
 import {verifyFencedGoalAtPreflight,checkpointFencedGoalAttempt,recordFencedGoalCompletion} from './fenced-systemia-goal.mjs';
+import {assertLocalSignedMicroSeedAdapter} from './local-signed-microseed-adapter.mjs';
 
 const hash = value => 'sha256:' + createHash('sha256').update(JSON.stringify(value)).digest('hex');
 
@@ -71,6 +72,9 @@ function assertCandidate({state,plan,contract,physicalWorkers,statePath,journal,
           !/^[a-zA-Z0-9._:-]{16,256}$/.test(String(pin.nonce||''))) {
         throw new Error('fenced_scheduler_independent_signed_node_pin_required');
       }
+      assertLocalSignedMicroSeedAdapter({
+        adapter,job,nodePin:pin,workDigest:fencedSchedulerWorkDigest(job)
+      });
     }
   }
 }
