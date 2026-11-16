@@ -180,7 +180,7 @@
     "proof:public-edge-organism-watch": "node systemia/organism/public-edge-activation-watch.proof.mjs",
     "proof:public-edge-controller-runner": "node systemia/organism/public-edge-controller-runner.proof.mjs",
     "proof:yard-remote-ops": "node systemia/yard/remote-ops-specialist.proof.mjs",
-    "test:remote-ops-flight": "node --test tests/remote-ops-flight.test.mjs",
+    "test:remote-ops-flight": "node --test tests/remote-ops-flight.test.mjs tests/remote-ops-ui-smoke.test.mjs",
     "proof:public-edge-field-admit": "node systemia/compute/public-edge-field-admit.proof.mjs",
     "proof:field-enrollment-packet": "node systemia/yard/field-enrollment-packet.proof.mjs",
     "test:public-route-field-preflight": "node --test tests/public-route-field-preflight.test.mjs",
