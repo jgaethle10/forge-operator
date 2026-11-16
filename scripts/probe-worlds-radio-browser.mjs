@@ -178,7 +178,18 @@ try{
     {waitUntil:'domcontentloaded',timeout:25000});
   assert.equal(walkResponse?.status(),200,'New walkable Yakima route unavailable');
   const walkToggle=walkPage.locator('#worldRadioToggle');
+  // The walk opens on the source-led intro; radio belongs in the in-world
+  // HUD, and must never intercept clicks on the historical evidence panel.
+  assert.equal(await walkToggle.isVisible(),false,
+    'Walkable Yakima radio should remain in the in-world HUD until entry');
+  await walkPage.locator('#start').click();
+  await walkPage.locator('#hud').waitFor({state:'visible',timeout:12000});
   await walkToggle.waitFor({state:'visible',timeout:12000});
+  await walkPage.locator('#guide').click();
+  await walkPage.locator('#panel').waitFor({state:'visible',timeout:12000});
+  await walkPage.locator('#close').click({timeout:8000});
+  assert.equal(await walkPage.locator('#panel').isVisible(),false,
+    'Walkable Yakima radio intercepted closing the historical source panel');
   assert.equal(walkRequests,0,'Walkable Yakima contacted directory without visitor action');
   await walkToggle.click();
   assert.match(await walkPage.locator('.wr-history').innerText(),/PRESENT-DAY/);
