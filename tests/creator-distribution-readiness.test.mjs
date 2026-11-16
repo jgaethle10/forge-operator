@@ -82,3 +82,17 @@ test('owned creator front door is standalone, original and does not misrepresent
   assert.match(html,/name="viewport"/);
   assert.match(html,/rel="canonical"/);
 });
+
+test('founder creator page keeps TOWI, Rockies and Worldstate distinct from the four series',()=>{
+  const html=fs.readFileSync('public/jesse/index.html','utf8');
+  for(const term of ['Rockies','Worldstate','TOWI','Context Fabric','Reality Delta','Evercraft Journal','Evercraft Clip']){
+    assert.ok(html.includes(term),term);
+  }
+  assert.match(html,/Investigations can begin independently/);
+  assert.match(html,/not a finished story/);
+  assert.match(html,/Nothing on this page claims these stories or channels are already live/);
+  const plan=fs.readFileSync('docs/creator/FOUNDING_DISTRIBUTION_RECOVERY_20261115.md','utf8');
+  for(const term of ['systemia\/rockies\/README.md','systemia\/worldstate\/README.md','TOWI','99 target baseline logical Rockies','illustrative planned workflow']){
+    assert.ok(plan.includes(term),term);
+  }
+});

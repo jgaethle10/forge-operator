@@ -1,0 +1,66 @@
+name: Website Audit mobile buyer path
+on:
+  pull_request:
+    paths:
+      - 'systemia/mcp/fabric-public-site.mjs'
+      - 'tests/website-audit-mobile-buyer-first.test.mjs'
+      - 'systemia/evercraft-web/browser-worker/website-audit-mobile-preview.mjs'
+      - '.github/workflows/website-audit-mobile-buyer-first.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  buyer-first-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate honest buy-first mobile page and held Evercraft Payments route
+        run: |
+          node --test \
+            tests/website-audit-mobile-buyer-first.test.mjs \
+            tests/fabric-offer-pages.test.mjs \
+            tests/fabric-precheckout-hold.test.mjs
+
+  browser-proof:
+    needs: buyer-first-contract
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install existing Saban Playwright browser
+        working-directory: systemia/evercraft-web/browser-worker
+        run: npm install --no-audit --no-fund --ignore-scripts
+      - name: Install Chromium
+        working-directory: systemia/evercraft-web/browser-worker
+        run: npx playwright install --with-deps chromium
+      - name: Inspect nonproduction responsive source (held and checkout-enabled)
+        run: node systemia/evercraft-web/browser-worker/website-audit-mobile-preview.mjs --out "${{ runner.temp }}/audit-buyer-first"
+      - name: Require no hidden action, horizontal scrolling, charging or open graphic
+        run: |
+          node --input-type=module -e '
+            import fs from "node:fs";
+            const r=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+"/audit-buyer-first/buyer-first-preview-receipt.json","utf8"));
+            if(r.schema!=="evercraft.website-audit.buyer-first-preview.v1"||
+              r.liveDeployed!==false||r.paymentAttempted!==false||
+              r.publisherAuthorized!==false||r.views.length!==4||r.blockers.length||
+              r.views.some(v=>v.ctaFirstViewport!==true||v.horizontalOverflowPx!==0||
+                v.visualDisclosureCollapsed!==true||v.brandLogoLoaded!==true||
+                v.checkoutFormCount!==(v.name.endsWith("-held")?0:1))){
+              throw Error("website_audit_mobile_buyer_path_not_approved");
+            }
+          '
+      - name: Save four source-only review screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: website-audit-mobile-buyer-first
+          path: ${{ runner.temp }}/audit-buyer-first/**
+          if-no-files-found: error
+          retention-days: 7

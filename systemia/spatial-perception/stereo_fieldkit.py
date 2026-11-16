@@ -267,8 +267,39 @@ def validated_calibration(data, np):
     return (w,h),matrices
 
 
+
+def checked_heldout_receipt(report_path, calibration_file, data):
+    """Bind a V9 provisional held-out pass to exact V8 calibration bytes."""
+    if not report_path.is_file() or report_path.is_symlink():
+        error("missing_or_unsafe_heldout_receipt")
+    report=read_json(report_path)
+    if (report.get("schema") != "evercraft.spatial-perception.heldout-epipolar.v1" or
+        report.get("rigId") != data.get("rigId") or
+        report.get("calibrationFileSha256") != sha256_file(calibration_file) or
+        report.get("imageWidth") != data.get("imageWidth") or
+        report.get("imageHeight") != data.get("imageHeight") or
+        report.get("trainingBytesReused") is not False or
+        report.get("heldoutAlignmentGatePassed") is not True or
+        report.get("gateStatus") != "provisional_heldout_epipolar_pass"):
+        error("heldout_receipt_not_accepted")
+    metrics=report.get("verticalEpipolarResidualPx")
+    if not isinstance(metrics,dict):
+        error("heldout_missing_metrics")
+    p95=number(metrics.get("p95AbsVerticalPx"),0,1000,"heldout_p95")
+    threshold=number(report.get("gateThresholdP95VerticalPx"),.1,5,"heldout_threshold")
+    if (p95 > threshold or
+        integer(report.get("holdoutImageCount"),6,80,"heldout_images")%2 or
+        report.get("absoluteDepthAccuracyCertified") is not False or
+        report.get("safetyCriticalApproved") is not False or
+        report.get("worldPersistenceAuthorized") is not False):
+        error("heldout_receipt_not_accepted")
+    return {"receiptSha256":sha256_file(report_path),"p95VerticalPx":p95,
+            "gateThresholdPx":threshold,"provisionalHeldoutPassed":True}
+
+
 def rectify(calibration_file, source_video, output_video, receipt_path,
-            authorized_source=False, reviewed_calibration=False, max_frames=120):
+            authorized_source=False, reviewed_calibration=False, max_frames=120,
+            heldout_report=None, field_mode=False):
     if not authorized_source or not reviewed_calibration:
         error("explicit_source_and_calibration_review_required")
     integer(max_frames,1,MAX_FRAMES,"max_frames")
@@ -284,6 +315,10 @@ def rectify(calibration_file, source_video, output_video, receipt_path,
             for out in (output_video,receipt_path))):
         error("unsafe_or_existing_output")
     data=read_json(calibration_file)
+    if field_mode and heldout_report is None:
+        error("field_mode_requires_heldout_pass")
+    heldout_status=(checked_heldout_receipt(heldout_report,calibration_file,data)
+                    if heldout_report is not None else None)
     cv2,np=vision_modules()
     (w,h),m=validated_calibration(data,np)
     map1x,map1y=cv2.initUndistortRectifyMap(
@@ -338,6 +373,10 @@ def rectify(calibration_file, source_video, output_video, receipt_path,
             "fxPx":data["rectifiedFxPx"],"baselineM":data["baselineM"],
             "cxPx":data["rectifiedCxPx"],"cyPx":data["rectifiedCyPx"],
             "rectificationStatus":"computed_operator_reviewed_not_field_validated",
+            "heldoutEpipolarReceiptSha256":heldout_status["receiptSha256"] if heldout_status else None,
+            "heldoutEpipolarP95Px":heldout_status["p95VerticalPx"] if heldout_status else None,
+            "heldoutProvisionalPassBound":bool(heldout_status),
+            "fieldModeRequested":field_mode,
             "originalFootagePreserved":True,
             "fieldAccuracyCertified":False,
             "safetyCriticalApproved":False,
@@ -375,13 +414,18 @@ def main():
     rec.add_argument("--max-frames",type=int,default=120)
     rec.add_argument("--authorized-source",action="store_true")
     rec.add_argument("--reviewed-calibration",action="store_true")
+    rec.add_argument("--heldout-report",type=Path,
+                     help="Optional V9 held-out receipt bound to exact calibration hash")
+    rec.add_argument("--field-mode",action="store_true",
+                     help="Require passed V9 held-out epipolar receipt before writing derivative")
     args=parser.parse_args()
     try:
         if args.operation=="calibrate":
             result=calibrate(args.manifest,args.output,args.authorized_source)
         else:
             result=rectify(args.calibration,args.video,args.output_video,args.receipt,
-                           args.authorized_source,args.reviewed_calibration,args.max_frames)
+                           args.authorized_source,args.reviewed_calibration,args.max_frames,
+                           args.heldout_report,args.field_mode)
         print(json.dumps(result))
     except (ValueError,RuntimeError,OSError,json.JSONDecodeError) as exc:
         print("spatial_fieldkit_error: "+str(exc),file=sys.stderr)

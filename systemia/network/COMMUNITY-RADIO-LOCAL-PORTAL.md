@@ -87,3 +87,21 @@ The command reads the ephemeral join URL **from standard input, never a command-
 The verifier does not fetch any hostnames or public addresses: it requires an explicit HTTP URL to an RFC1918 private IPv4 with a port and exact /join/64hex route. All requests disallow redirects, time out, and cap their response sizes. The receipt reports real HTTP statuses and audio/page hashes. It explicitly labels upstream loss, separate physical hardware, auditory playback, power runtime, and broadcast authority **unverified**. This is a synthetic-only lab protocol over **unencrypted HTTP**, so it is unsuitable for sensitive environments.
 
 The operator must still separately record genuine footage or direct eyewitness evidence of playback, a measured no-internet condition on both devices, approval/expiration and server-stop negative tests, and measured battery performance. See the blank field-attestation template and the independent witness requirements. If the host is a Chromebook Linux guest or WSL2 instance, its private address may not be reachable by a second machine; do not modify firewall/router/forwarding without separate operator approval.
+
+## Saban preflight orchestration (read-only)
+
+Saban's registered software contract is now `community-radio-preflight`, with four bounded specialist roles:
+- `station_boundary_guard`: keeps actual FM/EAS operation and real station permissions outside the mission;
+- `device_authorization_guard`: requires a separate real user/operator grant before Saban/NodeSeed access to physical hardware;
+- `source_integrity_guard`: checks the code-level availability of signed offline audio components, not a real broadcaster's audio;
+- `field_receipt_guard`: rejects synthetic or absent physical evidence as proof of a two-device field test.
+
+Run the **software-only** mission from the Forge repository:
+
+    npm run test:saban-community-radio-preflight
+    npm run saban:multiply -- --software community-radio-preflight --agents 4 --workers 2 --execute --reconcile
+
+The registered adapter does not open network listeners, transmit RF, inspect a customer's devices, dispatch a live NodeSeed lease, or change internet/network settings. It consumes only a synthetic registry fixture. A green Saban review means **the admission checks executed**, while the reconciliation state remains `held_pending_authorized_physical_test`. It is deliberately not evidence that Saban reached an HP, Chromebook or iPhone.
+
+For eventual Saban-driven field work, a separate verified remote operator route, explicit owner approval, capability-scoped task admission, and an actual two-device trial receipt are prerequisites. The existing Yard/Saban unified dispatcher is bound to content-hash-only NodeSeed jobs; discovering Saban or seeing an eligible NodeSeed does not itself confer permission to deploy or run this test on a private machine. An iPhone playback check still requires an observed browser/audio result on the phone, not simulated remote software logs.
+

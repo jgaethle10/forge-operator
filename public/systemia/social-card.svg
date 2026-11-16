@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+<title id="title">Meet Systemia by Evercraft</title>
+<desc id="desc">White and gold editorial text on a deep navy field with an illuminated ice-blue orbital intelligence mark.</desc>
+<defs>
+  <radialGradient id="bg"><stop stop-color="#163c50"/><stop offset=".6" stop-color="#0a1925"/><stop offset="1" stop-color="#070c13"/></radialGradient>
+  <radialGradient id="node" cx=".36" cy=".25" r=".8"><stop stop-color="#effbff"/><stop offset=".15" stop-color="#90def7"/><stop offset=".55" stop-color="#205c77"/><stop offset="1" stop-color="#06151f"/></radialGradient>
+  <linearGradient id="line" x1="0" x2="1"><stop stop-color="#85d7f9" stop-opacity=".12"/><stop offset=".5" stop-color="#85d7f9" stop-opacity=".9"/><stop offset="1" stop-color="#85d7f9" stop-opacity=".12"/></linearGradient>
+  <filter id="glow"><feGaussianBlur stdDeviation="13"/></filter>
+</defs>
+<rect width="1200" height="630" fill="url(#bg)"/>
+<path d="M0 540H1200" stroke="#5c8294" stroke-opacity=".28"/>
+<path d="M52 49H1148" stroke="#89b4c7" stroke-opacity=".17"/>
+<text x="68" y="94" fill="#e5d3ac" font-family="Arial,sans-serif" font-size="22" font-weight="700" letter-spacing="6">EVERCRAFT  /  SYSTEMIA</text>
+<text x="70" y="230" fill="#f4f7fa" font-family="Arial,sans-serif" font-size="77" font-weight="800" letter-spacing="-3">ONE VISION.</text>
+<text x="70" y="316" fill="#a6e6fa" font-family="Arial,sans-serif" font-size="77" font-weight="800" letter-spacing="-3">MANY HANDS.</text>
+<text x="73" y="393" fill="#d0e0e9" font-family="Arial,sans-serif" font-size="27">Explore the idea. Try real tools today.</text>
+<text x="72" y="585" fill="#d8d4cd" font-family="Arial,sans-serif" font-size="23" letter-spacing="3">BUILT TO ENDURE. DESIGNED TO EMPOWER.</text>
+<g transform="translate(962 285)">
+  <circle r="190" fill="#5dc8f4" opacity=".17" filter="url(#glow)"/>
+  <circle r="189" fill="none" stroke="url(#line)" stroke-width="2"/>
+  <circle r="149" fill="none" stroke="#d9c08b" stroke-opacity=".58" stroke-width="2" stroke-dasharray="5 11"/>
+  <circle r="106" fill="none" stroke="#9fdef8" stroke-opacity=".66" stroke-width="2"/>
+  <circle r="73" fill="url(#node)" stroke="#b6eaff" stroke-width="2"/>
+  <circle cx="-129" cy="-131" r="7" fill="#9be9fb"/>
+  <circle cx="159" cy="95" r="8" fill="#e3c18d"/>
+  <circle cx="-94" cy="42" r="5" fill="#f3ffff"/>
+  <text x="-27" y="32" fill="#f7feff" font-family="Arial,sans-serif" font-size="86" font-weight="800">S</text>
+</g>
+</svg>

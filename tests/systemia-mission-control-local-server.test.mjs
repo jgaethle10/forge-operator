@@ -68,6 +68,7 @@ test('loopback HTTP serves only finite same-origin assets and a sanitized read-o
   assert.equal(ok.headers['access-control-allow-origin'],undefined);
   assert.equal((await httpRequest(port,'/mission-control.html')).status,200);
   assert.equal((await httpRequest(port,'/mission-control.mjs')).status,200);
+  assert.equal((await httpRequest(port,'/mission-triage.mjs')).status,200);
   assert.equal((await httpRequest(port,'/../../systemia/organism/goal-store.mjs')).status,404);
   assert.equal((await httpRequest(port,'/v1/snapshot?file=%2Fetc%2Fpasswd')).status,400);
   assert.equal((await httpRequest(port,'/v1/snapshot',{method:'POST'})).status,405);

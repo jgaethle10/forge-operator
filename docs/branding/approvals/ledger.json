@@ -91,7 +91,16 @@
           "Cadencekeep",
           "Weekmorrow"
         ],
-        "founder_selected_candidate": null
+        "founder_selected_candidate": null,
+        "review_station": {
+          "version": "BR-001.R2",
+          "type": "local_browser_only_draft",
+          "url": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/social-media-weekly/brand-review/decision/",
+          "source_path": "public/mesh/checkout-ready/social-media-weekly/brand-review/decision/index.html",
+          "documentation": "docs/branding/approvals/BR-001-review-station-v2.md",
+          "automatically_records_approval": false,
+          "founder_decision_received": false
+        }
       }
     },
     {
