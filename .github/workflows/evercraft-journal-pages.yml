@@ -61,6 +61,9 @@ jobs:
           npm run test:product-url-fabric
           node --test tests/clip-public-entry.test.mjs
 
+      - name: Prove Systemia front door and honest commercial handoff
+        run: node --test tests/systemia-front-door.test.mjs
+
       - name: Verify Boardroom source logic and luxury theme
         run: node --test tests/boardroom-compare.test.mjs tests/boardroom-heritage.test.mjs
       - name: Prove owned Journal contracts
