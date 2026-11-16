@@ -5,8 +5,8 @@
  * HTTP 200. This journal is separate from the existing unsigned idempotency store.
  * It is NOT independent effect verification, a delivery ledger or an authority.
  */
-import { createHash } from 'node:crypto';
-import { mkdir, open, lstat, readFile, realpath } from 'node:fs/promises';
+import { createHash, randomBytes } from 'node:crypto';
+import { mkdir, open, lstat, readFile, realpath, link, unlink } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
 
 const SHA = /^sha256:[a-f0-9]{64}$/;
@@ -65,23 +65,47 @@ export async function persistSignedMicroSeedReceipt({stateDir, signedReceipt} = 
   });
   const folder=join(base(stateDir), name(signedReceipt.device_id));
   await mkdir(folder, {recursive:true,mode:0o700});
-  // A local path redirection must never send signed evidence elsewhere.
+  // Refuse path redirection before any attempt to publish evidence.
   need(await realpath(base(stateDir)) === resolve(base(stateDir)), 'unsafe_root');
   need(await realpath(folder) === folder, 'unsafe_directory');
-  let handle;
+
+  // Never create the final path until its complete bytes have reached storage.
+  // A crashed write may leave a .pending-*.tmp file, but cannot leave a
+  // truncated final receipt that later blocks a valid idempotent replay.
+  const pending=join(folder,'.pending-'+randomBytes(16).toString('hex')+'.tmp');
+  let handle=null;
+  let committed=false;
   try {
-    handle = await open(file, 'wx', 0o600);
+    handle=await open(pending,'wx',0o600);
     await handle.writeFile(data);
     await handle.sync();
     await handle.close();
-    return {state:'stored', existing:false, receipt_hash:signedReceipt.receipt_hash};
-  } catch (error) {
-    if (handle) await handle.close().catch(()=>{});
-    if (error.code !== 'EEXIST') {
-      // A partial first record must not be treated as success. An operator
-      // must repair it before retrying; existing file is never auto-replaced.
-      throw new Error('microseed_signed_receipt_persistence_failed');
+    handle=null;
+    try {
+      // Same-directory hard link publishes atomically without overwriting the
+      // immutable first receipt when competing attempts use the same key.
+      await link(pending,file);
+      committed=true;
+    } catch(error) {
+      if(error.code!=='EEXIST') throw error;
     }
+    if(committed){
+      // The new directory entry must be durable before HTTP 200 can be sent.
+      const directory=await open(folder,'r');
+      try { await directory.sync(); }
+      finally { await directory.close(); }
+    }
+  } catch(error) {
+    // An existing final path after failed fsync is retained for manual review
+    // and a matching signed replay, never replaced or falsely acknowledged.
+    throw new Error('microseed_signed_receipt_persistence_failed');
+  } finally {
+    if(handle) await handle.close().catch(()=>{});
+    await unlink(pending).catch(()=>{});
+  }
+
+  if(committed){
+    return {state:'stored',existing:false,receipt_hash:signedReceipt.receipt_hash};
   }
   const existing = await readAt(file, signedReceipt);
   need(existing.receipt_hash === signedReceipt.receipt_hash &&
