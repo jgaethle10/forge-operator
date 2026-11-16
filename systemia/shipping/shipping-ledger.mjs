@@ -31,6 +31,9 @@ function defaultLedger() {
 function atomicWrite(file, value) {
   const folder = path.dirname(file);
   fs.mkdirSync(folder, { recursive:true, mode:0o700 });
+  const directory = fs.lstatSync(folder);
+  if (!directory.isDirectory() || directory.isSymbolicLink())
+    throw new Error('shipping_private_ledger_dir_untrusted');
   fs.chmodSync(folder, 0o700);
   const temp = file + '.' + process.pid + '.tmp';
   // Shipment recipient and provider evidence are private. Newly materialized
