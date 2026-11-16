@@ -29,6 +29,7 @@ import { renderLineageControlRoomHtml } from "../lineage/control-room.mjs";
 import { planEvercraftHomeOsAppInstall, readEvercraftOsApps, readEvercraftOsStatus } from "./os-adapter.mjs";
 import { readEvercraftOsIntegration } from "./os-integration-adapter.mjs";
 import { readEvercraftOsSabanSnapshot } from "./os-saban-snapshot.mjs";
+import { createPrivateOutcomeReadback } from "./os-private-outcome-readback.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const publicDir = path.join(here, "public");
@@ -148,6 +149,7 @@ export async function startEvercraftHomeServer({
   clipFacebookFetch = globalThis.fetch,
   clipLinkedInFetch = globalThis.fetch,
   paymentsReadbackFetch = globalThis.fetch,
+  outcomeReadbackFetch = globalThis.fetch,
 } = {}) {
   const loopback = ["127.0.0.1", "localhost", "::1"].includes(host);
   if (authMode === "local" && !loopback) {
@@ -200,6 +202,15 @@ export async function startEvercraftHomeServer({
     readbackUrl: String(serviceOrigins?.EVERCRAFT_HOME_PAYMENTS_READBACK_URL || "").trim(),
     authorizationTokenFile: String(serviceOrigins?.EVERCRAFT_HOME_PAYMENTS_READBACK_TOKEN_FILE || "").trim(),
     fetchImpl: paymentsReadbackFetch,
+  });
+
+  // Source-only correlation is an optional private owned bridge, not payment
+  // authority, mission admission or proof of actual customer fulfillment.
+  const privateOutcomeReadback = createPrivateOutcomeReadback({
+    endpointUrl: String(serviceOrigins?.EVERCRAFT_OS_OUTCOME_READBACK_URL || "").trim(),
+    tokenFile: String(serviceOrigins?.EVERCRAFT_OS_OUTCOME_READBACK_TOKEN_FILE || "").trim(),
+    signatureKeyFile: String(serviceOrigins?.EVERCRAFT_OS_OUTCOME_READBACK_SIGNING_KEY_FILE || "").trim(),
+    fetchImpl: outcomeReadbackFetch,
   });
 
   const lineageControlRoomBridgeUrl = String(
@@ -1079,6 +1090,19 @@ export async function startEvercraftHomeServer({
       return json(res, 200, {
         ok: true, subject: session.subject,
         ...(await executivePayments.read()),
+      });
+    }
+
+    if (req.method === "GET" && url.pathname === "/api/os/outcome-readback") {
+      // Two existing independent Passport scopes must both pass. No client
+      // order/mission IDs are accepted and no upstream raw receipts escape.
+      const paymentsSession = sessionFor(req, "home.payments.read");
+      if (!paymentsSession.ok) return json(res, paymentsSession.status, paymentsSession);
+      const systemiaSession = sessionFor(req, "home.systemia.read");
+      if (!systemiaSession.ok) return json(res, systemiaSession.status, systemiaSession);
+      return json(res, 200, {
+        ok: true, subject: paymentsSession.subject,
+        ...(await privateOutcomeReadback.read()),
       });
     }
 
