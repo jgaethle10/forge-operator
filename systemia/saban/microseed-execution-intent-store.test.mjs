@@ -26,6 +26,15 @@ function destination(stateDir){
   return path.join(folder(stateDir),sha(request.idempotency_key)+'.json');
 }
 
+test('first execution initializes an absent private native state directory',()=>fixture(async existing=>{
+  const stateDir=path.join(existing,'new-native-agent-state');
+  assert.equal(fs.existsSync(stateDir),false);
+  const saved=await reserveSignedMicroSeedExecution({stateDir,...request});
+  assert.equal(saved.reserved,true);
+  assert.equal(fs.statSync(stateDir).mode&0o777,0o700);
+  assert.equal(fs.existsSync(destination(stateDir)),true);
+}));
+
 test('durable intent precedes execution and does not store payloads or credentials',()=>fixture(async stateDir=>{
   const saved=await reserveSignedMicroSeedExecution({stateDir,...request});
   assert.equal(saved.reserved,true);
