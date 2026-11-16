@@ -1,0 +1,34 @@
+name: Fallen Roman open music audition pilot
+on:
+  push:
+    branches:
+      - feature/fallen-roman-open-music-bridge-20261116
+    paths:
+      - systemia/media-studio/commercial-music-open-source-bridge.mjs
+      - systemia/media-studio/commercial-music-open-source-bridge.test.mjs
+      - systemia/media-studio/ROMAN-OPEN-SOURCE-MUSIC-V6.md
+      - .github/workflows/fallen-roman-open-music-pilot.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  audition_contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate audition adapter without model downloads or paid inference
+        run: |
+          node --test systemia/media-studio/commercial-music-open-source-bridge.test.mjs
+          mkdir -p artifacts/roman-music-v6
+          node systemia/media-studio/commercial-music-open-source-bridge.mjs plan artifacts/roman-music-v6/auditions.json
+          node -e "const a=require('./artifacts/roman-music-v6/auditions.json');if(a.takes.length!==6||new Set(a.takes.map(t=>t.brand)).size!==2) process.exit(1)"
+      - name: Preserve six audition requests for owned-node generation
+        uses: actions/upload-artifact@v4
+        with:
+          name: roman-six-music-auditions-no-model-output
+          path: artifacts/roman-music-v6/auditions.json
+          retention-days: 14
