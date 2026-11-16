@@ -55,6 +55,9 @@ function near(a,b,epsilon=.002){assert(Math.abs(a-b)<epsilon,'expected '+a+' to 
   const {rig,frames,tick,flush}=frameHarness();
   rig.setTarget({zoom:999,pitch:-200,yaw:500,panX:-900,panY:900});
   assert.equal(rig.getTarget().zoom,1.42);
+  rig.setTarget({zoom:-100});
+  assert.equal(rig.getTarget().zoom,.20,'tiny scenes require lower bounded zoom');
+  rig.setTarget({zoom:1.42});
   assert.equal(rig.getTarget().pitch,32);
   assert.equal(rig.getTarget().yaw,170);
   assert.equal(rig.getTarget().panX,-480);
