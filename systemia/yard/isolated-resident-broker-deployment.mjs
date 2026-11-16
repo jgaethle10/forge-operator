@@ -58,7 +58,7 @@ export async function proveIsolatedYardBrokerDeployment(){
     assert.equal(localOrigin.hostname,'127.0.0.1');
     assert.ok(Number(localOrigin.port)>0);
 
-    const response=await fetch(localOrigin+'/v1/remote/health',{
+    const response=await fetch(localOrigin.origin+'/v1/remote/health',{
       signal:AbortSignal.timeout(5000),
     });
     assert.equal(response.status,200);
