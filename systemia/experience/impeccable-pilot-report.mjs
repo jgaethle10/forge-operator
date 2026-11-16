@@ -21,7 +21,7 @@ function readJson(file) {
 function ruleSummary(findings) {
   const counts = new Map();
   for (const f of findings) {
-    const rule = String(f.ruleId || f.rule_id || f.rule || f.id || 'unknown');
+    const rule = String(f.antipattern || f.ruleId || f.rule_id || f.rule || f.id || 'unknown');
     counts.set(rule, (counts.get(rule) || 0) + 1);
   }
   return [...counts.entries()].map(([rule, count]) => ({rule, count})).sort((a,b)=>a.rule.localeCompare(b.rule));
@@ -70,7 +70,8 @@ export function evaluatePilot({ resultDir, rootDir = repo }) {
       upstream_finding_count: detected.length,
       upstream_rules: ruleSummary(detected),
       upstream_sample: detected.slice(0, 6).map(f => ({
-        rule: String(f.ruleId || f.rule_id || f.rule || f.id || 'unknown').slice(0, 120),
+        rule: String(f.antipattern || f.ruleId || f.rule_id || f.rule || f.id || 'unknown').slice(0, 120),
+        name: String(f.name || '').slice(0, 160),
         severity: String(f.severity || f.level || 'unknown').slice(0, 60)
       }))
     });
