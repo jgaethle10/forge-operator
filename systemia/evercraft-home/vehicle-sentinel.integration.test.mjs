@@ -1,5 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { startEvercraftHomeServer } from "./server.mjs";
 
 test("Raven Nexus Overview and OS expose the same fail-closed Vehicle Sentinel module", async t => {
@@ -22,6 +23,7 @@ test("Raven Nexus Overview and OS expose the same fail-closed Vehicle Sentinel m
   assert.equal(module.authority.device_bluetooth_permission_granted, false);
   assert.equal(module.commercial.direct_checkout_enabled, false);
   assert.equal(module.privacy.observation_upload_automatic, false);
+  assert.equal(module.privacy.report_storage,"ephemeral_tab_memory");
 
   const journalRes = await fetch(runtime.url + "/safety/vehicle");
   assert.equal(journalRes.status, 200);
@@ -30,6 +32,20 @@ test("Raven Nexus Overview and OS expose the same fail-closed Vehicle Sentinel m
   assert.match(html, /Vehicle Sentinel/);
   assert.match(html, /does not scan Bluetooth, detect AirTags, or locate GPS trackers/i);
   assert.equal(/<script\s+src=/.test(html), false);
+  assert.doesNotMatch(html,/localStorage|sessionStorage|indexedDB/i);
+  assert.match(html,/Resume from a previous JSON report/i);
+  const csp=journalRes.headers.get("content-security-policy");
+  const script=html.match(/<script>([\s\S]*?)<\/script>/)?.[1];
+  assert.ok(script);
+  const sha=createHash("sha256").update(script,"utf8").digest("base64");
+  assert.ok(csp.includes("script-src 'sha256-"+sha+"'"));
+  assert.match(csp,/connect-src 'none'/);
+  assert.match(csp,/form-action 'none'/);
+  assert.match(csp,/frame-ancestors 'none'/);
+  assert.doesNotMatch(csp,/unsafe-eval/);
+  assert.match(journalRes.headers.get("permissions-policy"),/bluetooth=\(\)/);
+  assert.match(journalRes.headers.get("permissions-policy"),/geolocation=\(\)/);
+
 
   const home = await (await fetch(runtime.url + "/")).text();
   assert.match(home, /href="\/safety\/vehicle"/);
