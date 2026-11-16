@@ -3,6 +3,7 @@
 import {STORAGE_KEY,GOALS,dayKey,shiftDay,emptyState,normalizeState} from './engine.mjs';
 import {placeFacility,WORLD_CATALOG} from './world-engine.mjs';
 import {walkableScene,spawnExplorer,updateExplorer,nearestFacility} from './walk-engine.mjs';
+import {roomForFacility,spawnInterior,stepInterior} from './facility-interiors.mjs';
 
 const el=id=>document.getElementById(id);
 const canvas=el('view');
@@ -22,6 +23,7 @@ function sampleCampus(){
 }
 function campusState(){return isDemo?sampleCampus():habit;}
 let scene=walkableScene(campusState(),goal,mode),player=spawnExplorer();
+let interior=null,outdoorPlayer=null;
 let running=false,dragging=false,lookPointer=null,lastX=0,lastY=0;
 const held=new Set(),touch=new Set();
 const colors={
@@ -124,6 +126,77 @@ function terrain(scene){
   scene.buildings.forEach(b=>{smallFacility(b,p);});
   signpost(-12,9);
 }
+function drawFacilityRoom(room){
+  const p=colors[mode],w=room.halfWidth,d=room.halfDepth,h=room.ceiling;
+  const wall=mode==='symphony'?'#3c465e':mode==='sanctuary'?'#507264':'#40584d';
+  const floor=mode==='symphony'?'#746b78':mode==='sanctuary'?'#9b9476':'#847f70';
+  // Real enclosed spatial room, not a modal image. The front wall has a doorway.
+  box(0,-.22,0,w*2+.8,.4,d*2+.8,floor);
+  box(-w,h/2,0,.38,h,d*2+.4,wall);
+  box(w,h/2,0,.38,h,d*2+.4,wall);
+  box(0,h/2,-d,w*2+.4,h,.38,wall);
+  const doorHalf=2.4,side=(w-doorHalf)/2;
+  box(-doorHalf-side/2,h/2,d,side,h,.35,wall);
+  box(doorHalf+side/2,h/2,d,side,h,.35,wall);
+  box(0,h-.55,d,doorHalf*2,1.1,.35,wall);
+  box(0,h+.06,0,w*2+.5,.22,d*2+.4,p.roof);
+  for(let i=-2;i<=2;i++){
+    const z=i*d/2.8;
+    box(-w+.24,h-1.7,z,.14,2.5,2.2,p.accent);
+    box(w-.24,h-1.7,z,.14,2.5,2.2,p.accent);
+  }
+  // Skylight strips and directional illumination make this feel inhabited.
+  for(let z=-d+2;z<=d-2;z+=4.5){
+    box(0,h-.11,z,w*1.24,.045,.32,'#f2e7ce');
+    box(-w+1.3,.05,z,.16,.06,2.2,p.accent);
+    box(w-1.3,.05,z,.16,.06,2.2,p.accent);
+  }
+  // An uninterrupted central path keeps even the narrowest facility accessible.
+  box(0,.01,0,2.4,.025,d*1.7,p.path);
+  for(const s of room.stations){
+    const x=s.x,z=s.z;
+    if(s.kind==='training-rig'){
+      for(let a=-1;a<=1;a++){box(x+a*.65,1.2,z,.22,2.4,.24,p.stone);}
+      box(x,2.5,z,2.5,.26,1.2,p.roof);
+      box(x,.45,z+1.1,2.2,.65,1,p.wood);
+    } else if(s.kind==='recovery-bench'||s.kind==='reflection-chair'){
+      box(x,.55,z,2.2,.3,1.2,p.wood);
+      box(x,1.05,z-.5,2.2,1,.24,p.roof);
+      for(const xoff of [-.8,.8])box(x+xoff,.27,z,.22,.55,.85,p.stone);
+    } else if(s.kind==='progress-board'||s.kind==='legacy-display'||s.kind==='memory-shelf'){
+      box(x,2.8,-d+.39,4.5,3.6,.25,p.roof);
+      box(x,2.85,-d+.57,3.8,2.7,.12,p.stone);
+      for(let j=0;j<4;j++)box(x-1.35+j*.88,2.5+(j%2)*.65,-d+.67,.48,.66,.07,p.accent);
+    } else if(s.kind==='instrument-platform'){
+      box(x,.55,z,5.2,1.1,3.5,p.wood);
+      for(let j=-2;j<=2;j++){
+        box(x+j*.75,1.5,z-.3,.09,1.2,.09,p.stone);
+        box(x+j*.75,2.18,z-.3,.7,.12,.55,p.accent);
+      }
+      box(x,3.1,z-1.4,4.8,.18,.22,p.accent);
+    } else if(s.kind==='mixing-console'){
+      box(x,.8,z,2.7,1.3,1.4,p.wood);
+      for(let j=-2;j<=2;j++)box(x+j*.42,1.51,z,.19,.07,.5,p.accent);
+    } else if(s.kind==='listening-nook'){
+      box(x,.42,z,2,.68,1.7,p.wood);
+      box(x,1,z-.7,2,1.4,.22,p.roof);
+    } else if(s.kind==='team-table'){
+      box(x,.85,z,4.4,.35,2,p.wood);
+      for(const dx of [-1.7,1.7])for(const dz of [-.7,.7])box(x+dx,.43,z+dz,.2,.85,.2,p.stone);
+    } else if(s.kind==='locker-bank'){
+      for(let j=-1;j<=1;j++){box(x+j*.82,1.7,z,.72,3.2,1,p.stone);box(x+j*.82,2.5,z+.55,.48,.08,.1,p.accent);}
+    } else if(s.kind==='garden-bed'){
+      box(x,.44,z,3.4,.85,2.1,p.wood);
+      for(let j=-2;j<=2;j++){box(x+j*.48,1.35,z,.13,1.1,.13,'#6a9b78');box(x+j*.48,1.9,z,.4,.65,.42,'#85ab83');}
+    }
+  }
+  // Permanent recognition changes *appearance* by facility level, never loss or reset.
+  const markerCount=Math.min(room.level,10);
+  for(let i=0;i<markerCount;i++){
+    const x=(i-((markerCount-1)/2))*.58;
+    box(x,4.3,-d+.7,.38,.62,.12,p.accent);
+  }
+}
 function compile(type,src){
   const sh=gl.createShader(type);gl.shaderSource(sh,src);gl.compileShader(sh);
   if(!gl.getShaderParameter(sh,gl.COMPILE_STATUS))throw Error(gl.getShaderInfoLog(sh));
@@ -184,13 +257,23 @@ else{
   }catch(error){gl=null;el('fallback').style.display='block';el('fallback').prepend(document.createTextNode('3D initialization failed. Your data is unchanged. '));}
 }
 function refreshScene(){
-  scene=walkableScene(campusState(),goal,mode);packed=[];triangles=0;terrain(scene);
+  scene=walkableScene(campusState(),goal,mode);packed=[];triangles=0;
+  if(interior)drawFacilityRoom(interior);else terrain(scene);
   if(gl){gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(packed),gl.STATIC_DRAW);drawCount=packed.length/9;}
   canvas.dataset.facilityCount=String(scene.buildings.length);
   canvas.dataset.mode=mode;
+  canvas.dataset.space=interior?'interior':'campus';
+  canvas.dataset.room=interior?.facilityId||'';
   canvas.dataset.geometryTriangles=String(triangles);
   el('world-name').textContent=mode==='franchise'?'Franchise World':mode==='symphony'?'Symphony World':'Sanctuary World';
   el('meta').textContent=scene.buildings.length+' owned facilities · '+(isDemo?'sample campus, not saved':'personal world, local only');
+  const picker=el('facility-picker'),selected=picker.value;
+  picker.replaceChildren(...scene.buildings.map(b=>new Option(b.name+' · level '+b.level,b.id)));
+  if(scene.buildings.some(b=>b.id===selected))picker.value=selected;
+  picker.disabled=!!interior||scene.buildings.length===0;
+  const button=el('tour');
+  button.disabled=!interior&&scene.buildings.length===0;
+  button.textContent=interior?'Return to campus':'Explore selected facility';
 }
 function perspective(fov,ratio,near,far){
  const f=1/Math.tan(fov/2), nf=1/(near-far);
@@ -240,11 +323,17 @@ let previous=performance.now(),sampleTimer=0;
 function tick(now){
  const dt=Math.min(.08,(now-previous)/1000||0);previous=now;
  if(running){
-   player=updateExplorer(scene,player,inputs(),dt);
+   player=interior?stepInterior(interior,player,inputs(),dt):updateExplorer(scene,player,inputs(),dt);
    sampleTimer+=dt;
-   if(sampleTimer>.3){sampleTimer=0;const nearby=nearestFacility(scene,player.x,player.z,60);
-     el('nearby').textContent=nearby?nearby.name:'Founders Ground';
-     el('description').textContent=nearby?'Level '+nearby.level+' · '+nearby.distance+' meters away':'Walk toward a facility to discover it';
+   if(sampleTimer>.3){sampleTimer=0;
+     if(interior){
+       el('nearby').textContent=interior.name;
+       el('description').textContent='Inside your '+interior.type+' space · Level '+interior.level;
+     }else{
+       const nearby=nearestFacility(scene,player.x,player.z,60);
+       el('nearby').textContent=nearby?nearby.name:'Founders Ground';
+       el('description').textContent=nearby?'Level '+nearby.level+' · '+nearby.distance+' meters away':'Walk toward a facility to discover it';
+     }
      canvas.dataset.playerX=player.x.toFixed(3);canvas.dataset.playerZ=player.z.toFixed(3);
    }
  }
@@ -252,15 +341,44 @@ function tick(now){
  requestAnimationFrame(tick);
 }
 function start(demo){
- isDemo=demo;refreshScene();player=spawnExplorer(scene);canvas.dataset.playerX=player.x.toFixed(3);canvas.dataset.playerZ=player.z.toFixed(3);running=true;el('welcome').classList.add('hidden');el('hud').classList.remove('hidden');
+ isDemo=demo;interior=null;outdoorPlayer=null;refreshScene();player=spawnExplorer(scene);
+ canvas.dataset.playerX=player.x.toFixed(3);canvas.dataset.playerZ=player.z.toFixed(3);
+ running=true;el('welcome').classList.add('hidden');el('hud').classList.remove('hidden');
  el('status').textContent=demo?'Preview only. No progress was changed.':'Your lifetime facilities are safe.';
+}
+function visitFacility(){
+ if(!running)return;
+ if(interior){
+   interior=null;player=outdoorPlayer||spawnExplorer(scene);outdoorPlayer=null;
+   refreshScene();
+   el('nearby').textContent='Your Campus';
+   el('description').textContent='Back outside. Every facility is still yours.';
+   el('status').textContent='Returned outside without changing any earned progress.';
+ }else{
+   const target=el('facility-picker').value;
+   if(!scene.buildings.some(b=>b.id===target))return;
+   outdoorPlayer={...player};
+   interior=roomForFacility(scene,target);
+   player=spawnInterior(interior);
+   refreshScene();
+   el('nearby').textContent=interior.name;
+   el('description').textContent='Inside your '+interior.type+' space · Level '+interior.level;
+   el('status').textContent='This room is built from your owned facility. No check-in data was shared.';
+ }
+ canvas.dataset.playerX=player.x.toFixed(3);
+ canvas.dataset.playerZ=player.z.toFixed(3);
 }
 el('enter').addEventListener('click',()=>start(false));
 el('demo').addEventListener('click',()=>start(true));
-el('reset').addEventListener('click',()=>{player=spawnExplorer();el('status').textContent='Back at Founders Ground.';});
+el('tour').addEventListener('click',visitFacility);
+el('reset').addEventListener('click',()=>{
+ player=interior?spawnInterior(interior):spawnExplorer(scene);
+ el('status').textContent=interior?'Back at the room entrance.':'Back at your campus entrance.';
+});
 el('pause').addEventListener('click',()=>{running=!running;el('pause').textContent=running?'Pause':'Resume';held.clear();touch.clear();});
 addEventListener('keydown',event=>{
  if(['KeyW','KeyA','KeyS','KeyD','ShiftLeft','ShiftRight','ArrowUp','ArrowDown'].includes(event.code)){held.add(event.code);event.preventDefault();}
+ if(event.code==='KeyE'&&running&&!event.repeat){visitFacility();event.preventDefault();}
  if(event.code==='Escape'&&running){running=false;el('pause').textContent='Resume';held.clear();touch.clear();}
 });
 addEventListener('keyup',event=>held.delete(event.code));
