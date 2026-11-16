@@ -38,7 +38,7 @@ export async function proveIsolatedYardBrokerDeployment(){
       capacityEndpoint:seed.endpoint,
       allocatorToken,
       input:{
-        state_root:path.join(root,'broker'),
+        state_root:path.join(root,'compute','services','remote-broker'),
         authorized_devices:{},
         poll_wait_ms:100,
         command_timeout_ms:2500,
