@@ -63,6 +63,7 @@ test("invalid and non-object JSON fail closed rather than being repaired", async
     ['null', "raven_inference_json_object_required"],
     ['42', "raven_inference_json_object_required"],
     ['{"ok":true,}', "raven_inference_json_invalid"],
+    ['{"message":"raw\nnewline"}', "raven_inference_json_invalid"],
   ]) {
     const requests = [];
     const engine = createInferenceEngine({
@@ -79,6 +80,21 @@ test("invalid and non-object JSON fail closed rather than being repaired", async
     );
     assert.equal(requests.length, 1);
   }
+});
+
+test("oversized structured replies fail closed before parsing", async () => {
+  const requests = [];
+  const engine = createInferenceEngine({
+    provider: "ollama", model: "fixture-model",
+    fetchImpl: mockOllama('{"large":"' + "x".repeat(50001) + '"}', requests),
+  });
+  await assert.rejects(
+    engine.infer({
+      request_id: "overlong", role: "qa", input: "test", response_format: "json",
+    }),
+    { message: "raven_inference_json_too_large" },
+  );
+  assert.equal(requests.length, 1);
 });
 
 test("unsupported output format and hosted JSON are denied before model calls", async () => {
