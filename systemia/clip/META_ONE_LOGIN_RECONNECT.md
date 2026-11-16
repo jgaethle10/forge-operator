@@ -36,6 +36,15 @@ CLIP_META_REDIRECT_URI=https://fabric.systemiacommandcenters.com/home/api/clip/f
 CLIP_META_GRAPH_VERSION=v27.0
 \`\`\`
 
+**Private one-command setup after the owner registers the Meta app:**
+
+From the canonical `forge-operator` checkout on Penguin:
+
+```bash
+sudo bash scripts/configure-home-meta-app.sh YOUR_NUMERIC_META_APP_ID
+```
+
+The command privately prompts for the **App Secret with echo disabled**, writes it in an owned 0600 private file, preserves existing Home identity, Passport and Clip configuration, and restarts the service. Never paste the App Secret into ChatGPT or put it on a command line. Creating the Meta app and granting Facebook account access still requires the owner's consent.
 Place the Meta app secret in the referenced file, readable by the Evercraft Home service user but not group/other (file mode 0600, private directory mode 0700). Do not put the secret value in \`home.env\`, git, CLI arguments, screenshots or chat. Do not print it in logs. Restart \`evercraft-home.service\` only after the private configuration is complete.
 
 Config is intentionally *not* inserted by the repo installer: private Home settings survive release updates and must be verified for real authorization.
