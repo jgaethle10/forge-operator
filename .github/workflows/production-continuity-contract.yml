@@ -7,6 +7,7 @@ on:
       - 'tests/production-continuity.test.mjs'
       - 'tests/production-receipt-bridge.test.mjs'
       - 'tests/production-resident.test.mjs'
+      - 'tests/production-parallel-slate.test.mjs'
       - '.github/workflows/production-continuity-contract.yml'
   workflow_dispatch:
 
@@ -23,4 +24,4 @@ jobs:
         with:
           node-version: '22'
       - name: Test synthetic continuity, Saban artifact bridge, and resident restart integrity
-        run: node --test tests/production-continuity.test.mjs tests/production-receipt-bridge.test.mjs tests/production-resident.test.mjs
+        run: node --test tests/production-continuity.test.mjs tests/production-receipt-bridge.test.mjs tests/production-resident.test.mjs tests/production-parallel-slate.test.mjs
