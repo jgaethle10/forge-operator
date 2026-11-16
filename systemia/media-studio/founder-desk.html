@@ -52,7 +52,7 @@ footer{color:var(--muted);font-size:12px;padding:28px 0}
         <div><label for="offer">What is true about the business?</label><textarea id="offer" placeholder="A verified offer or value statement"></textarea></div>
         <div><label for="cta">What should viewers do?</label><textarea id="cta" placeholder="Verified contact action. Never invent a number or URL"></textarea></div>
       </div>
-      <label for="format">Primary format</label><select id="format"><option>9:16</option><option>16:9</option><option>1:1</option></select>
+      <div class="meta"><div><label for="format">Primary format</label><select id="format"><option>9:16</option><option>16:9</option><option>1:1</option></select></div><div><label for="narration">Voice treatment</label><select id="narration"><option value="narrated">Professional narration</option><option value="music_only">Intentional music-only film</option></select></div></div>
       <label for="notes">Director notes / existing creative direction</label><textarea id="notes" rows="4"></textarea>
       <section><button id="saveBrief" class="primary">Save brief</button></section>
       <hr/>
@@ -110,7 +110,7 @@ function draw(){
   const job=records.find(x=>x.id===active);
   $('empty').hidden=!!job;$('editor').hidden=!job;if(!job)return;
   $('projectId').textContent=job.id;$('projectName').textContent=job.name;
-  for(const key of ['goal','audience','offer','cta','notes','format'])$(key).value=job[key]||'';
+  for(const key of ['goal','audience','offer','cta','notes','format','narration'])$(key).value=job[key]||'';
   $('readiness').textContent=job.technicalRender?'Technical render exists. Creative and client release are still blocked.':'No approved customer-ready master yet.';
   const ul=$('blockers');ul.replaceChildren();
   for(const b of job.readiness.blockers){const li=document.createElement('li');li.textContent=b;ul.append(li)}
@@ -139,7 +139,7 @@ $('newJob').onclick=async()=>{
   catch(e){say(e.message)}
 };
 $('saveBrief').onclick=async()=>{
-  try{const patch={};for(const key of ['goal','audience','offer','cta','notes','format'])patch[key]=$(key).value;
+  try{const patch={};for(const key of ['goal','audience','offer','cta','notes','format','narration'])patch[key]=$(key).value;
     await api('/api/jobs/'+active+'/update','POST',JSON.stringify(patch),'application/json');
     say('Brief saved locally.');await refresh();
   }catch(e){say(e.message)}
