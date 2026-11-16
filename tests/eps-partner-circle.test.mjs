@@ -61,3 +61,23 @@ test('existing EPS quote intake retains separate customer referral value without
  assert.match(code,/execution_authority_granted:false/);
  assert.match(code,/payment_created:false/);
 });
+
+test('operator alliance preserves independent business identity and reuses existing Partners',()=>{
+ const page=load('public/eps-partners/operators/index.html');
+ const epsPage=load('public/eps-partners/index.html');
+ const partners=load('public/partners/index.html');
+ const app=load('public/partners/app.mjs');
+ assert.match(page,/Your crew\. Your gear/);
+ assert.match(page,/noindex,nofollow/);
+ assert.match(page,/not.*guaranteed access to customers/i);
+ assert.match(page,/who contracts with the customer/);
+ assert.match(page,/separately registered eligible operator/);
+ assert.match(page,/software design partner/i);
+ assert.match(page,/franchise, licensing, branding/i);
+ assert.match(page,/\.\.\/\.\.\/partners\/\?focus=eps_operator#apply/);
+ assert.match(epsPage,/href="\.\/operators\/"/);
+ assert.match(partners,/Independent field-service operator \(EPS\)/);
+ assert.match(partners,/\.\.\/eps-partners\/operators\//);
+ assert.match(app,/eps_operator:'Independent field-service operator \(EPS\)'/);
+ assert.doesNotMatch(page,/join fee|exclusive region|monthly royalty|start earning now/i);
+});
