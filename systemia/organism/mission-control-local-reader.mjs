@@ -5,6 +5,7 @@ import {lstat,readFile} from 'node:fs/promises';
 import {readGoalState} from './goal-store.mjs';
 import {projectGoalStates} from './mission-control-projection.mjs';
 import {projectLocalHealthWatch} from './mission-control-node-watch.mjs';
+import {projectPinnedNodeIdentity} from './mission-control-identity.mjs';
 
 const SCHEMA='evercraft.systemia.operator-mission-snapshot.v1';
 const MAX_BYTES=1024*1024;
@@ -14,11 +15,11 @@ async function explicitSource(file){
  if(!meta.isFile()||meta.isSymbolicLink()||meta.size<1||meta.size>MAX_BYTES)throw Error('local source is not a bounded regular file');
  return file;
 }
-export async function buildLocalMissionSnapshot({stateFiles=[],nodeWatches=[],now=Date.now()}={}){
- if(!Array.isArray(stateFiles)||!Array.isArray(nodeWatches)||stateFiles.length>80||nodeWatches.length>2)throw Error('source selection out of bounds');
- if(!stateFiles.length&&!nodeWatches.length)throw Error('explicit local source required');
+export async function buildLocalMissionSnapshot({stateFiles=[],nodeWatches=[],nodeIdentityProofs=[],now=Date.now()}={}){
+ if(!Array.isArray(stateFiles)||!Array.isArray(nodeWatches)||!Array.isArray(nodeIdentityProofs)||stateFiles.length>80||nodeWatches.length>2||nodeIdentityProofs.length>2)throw Error('source selection out of bounds');
+ if(!stateFiles.length&&!nodeWatches.length&&!nodeIdentityProofs.length)throw Error('explicit local source required');
  if(!Number.isFinite(now))throw Error('invalid observation clock');
- const selected=[...stateFiles,...nodeWatches.map(x=>x?.file)];
+ const selected=[...stateFiles,...nodeWatches.map(x=>x?.file),...nodeIdentityProofs.flatMap(x=>[x?.file,x?.keyFile,x?.nonceFile])];
  if(selected.some(x=>typeof x!=='string')||new Set(selected).size!==selected.length)throw Error('missing or duplicate source');
  const states=[];
  for(const file of stateFiles){
@@ -41,7 +42,24 @@ export async function buildLocalMissionSnapshot({stateFiles=[],nodeWatches=[],no
    nodeKey:entry.nodeKey,expectedNodeId:entry.expectedNodeId,now
   }));
  }
- snapshot.notice='LOCAL SELF-REPORTED SOURCE. No authenticated remote status, payment, fulfillment, live worker, or authority attested.';
+ snapshot.identity_checks=[];
+ const identityKeys=new Set();
+ for(const entry of nodeIdentityProofs){
+  if(!entry||!['node001','node002'].includes(entry.nodeKey)||identityKeys.has(entry.nodeKey))throw Error('invalid or duplicate identity node slot');
+  identityKeys.add(entry.nodeKey);
+  const attestationFile=await explicitSource(entry.file);
+  const keyFile=await explicitSource(entry.keyFile);
+  const nonceFile=await explicitSource(entry.nonceFile);
+  const [attestationJson,pinnedKey,nonceText]=await Promise.all([
+   readFile(attestationFile,'utf8'),readFile(keyFile,'utf8'),readFile(nonceFile,'utf8')
+  ]);
+  if(attestationJson.length>32768||pinnedKey.length>8192||nonceText.length>512)throw Error('identity input exceeds bounds');
+  snapshot.identity_checks.push(projectPinnedNodeIdentity(JSON.parse(attestationJson),{
+   nodeKey:entry.nodeKey,expectedNodeId:entry.expectedNodeId,
+   expectedNonce:nonceText.trim(),trustedPublicKeyPem:pinnedKey,now
+  }));
+ }
+ snapshot.notice='LOCAL SELF-REPORTS AND OPT-IN PINNED DEVICE KEY CHECKS ONLY. Remote status, NodeSeed health, payment, fulfillment, live worker and authority NOT attested.';
  if(JSON.stringify(snapshot).length>249000)throw Error('sanitized snapshot exceeds browser import contract');
  return snapshot;
 }
