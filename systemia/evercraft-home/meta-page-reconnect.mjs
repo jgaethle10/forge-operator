@@ -64,6 +64,11 @@ export function createMetaPageReconnect({
     Boolean(secretFile) && Boolean(credentialVault);
   const returnPath = '/home/credentials.html?provider=facebook-pages';
   const graphBase = 'https://graph.facebook.com/' + version;
+  function appReady() {
+    if (!validConfig) return false;
+    try { readMetaAppSecret(secretFile); return true; }
+    catch { return false; }
+  }
   function prune() {
     for (const [state, flow] of flows) if (flow.expires <= now()) flows.delete(state);
   }
@@ -121,7 +126,7 @@ export function createMetaPageReconnect({
   return {
     status(session) {
       prune();
-      if (!validConfig) return {ok:true,configured:false,state:'meta_app_configuration_required',pages:[],secret_material_returned:false};
+      if (!appReady()) return {ok:true,configured:false,state:'meta_app_configuration_required',pages:[],secret_material_returned:false};
       const {subject,sessionId} = owner(session);
       const flow = [...flows.values()].reverse().find((x)=>x.subject===subject && x.sessionId===sessionId && x.phase==='ready');
       return {
@@ -134,7 +139,7 @@ export function createMetaPageReconnect({
       };
     },
     start(session) {
-      if (!validConfig) throw new Error('meta_app_configuration_required');
+      if (!appReady()) throw new Error('meta_app_configuration_required');
       const {subject,sessionId} = owner(session);
       prune();
       // One outstanding authorization per verified owner session.
@@ -194,7 +199,7 @@ export function createMetaPageReconnect({
       }
     },
     commit(session, ids) {
-      if (!validConfig) throw new Error('meta_app_configuration_required');
+      if (!appReady()) throw new Error('meta_app_configuration_required');
       const {subject,sessionId} = owner(session);
       prune();
       const flow = [...flows.values()].reverse().find((x)=>matches(x,{subject,session_id:sessionId}) && x.phase==='ready');
