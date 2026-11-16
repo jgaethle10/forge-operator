@@ -22,6 +22,17 @@ button,select{font:inherit}button{cursor:pointer;color:inherit}button:focus-visi
 #welcome .secondary{background:#26483d;color:white;margin-left:8px;border:1px solid #6a9080}
 #hud{position:fixed;inset:0;z-index:2;pointer-events:none}
 #hud.hidden,#welcome.hidden{display:none!important}
+.facility-nav{position:absolute;top:125px;right:clamp(17px,3vw,40px);pointer-events:auto;
+  width:min(258px,calc(100vw - 34px));background:#132d29d9;border:1px solid var(--line);
+  padding:12px;border-radius:13px;backdrop-filter:blur(10px);display:grid;gap:7px}
+.facility-nav label{font-size:10px;font-weight:850;letter-spacing:.14em;color:var(--gold)}
+.facility-nav select{width:100%;border-radius:7px;border:1px solid #79958677;padding:9px;color:white;
+  background:#18372f;font-size:12px;min-height:39px}
+.facility-nav button{font-size:12px;font-weight:850;padding:10px 12px;border:1px solid #e7c38f;
+  color:#17352b;border-radius:8px;background:#eed09d}
+.facility-nav button:disabled{opacity:.5;cursor:not-allowed}
+.facility-nav p{font-size:10px;color:var(--muted);margin:0}
+
 .cross{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:21px;font-weight:200;color:#fff9;text-shadow:0 1px 5px #000b}
 .bottom{position:absolute;bottom:22px;left:clamp(18px,3vw,40px);right:clamp(18px,3vw,40px);display:flex;justify-content:space-between;align-items:flex-end;gap:20px}
 .readout{background:#132d29ce;border:1px solid var(--line);border-radius:13px;padding:14px 18px;max-width:410px;backdrop-filter:blur(10px)}
@@ -40,7 +51,10 @@ button,select{font:inherit}button{cursor:pointer;color:inherit}button:focus-visi
 #fallback{display:none;position:fixed;z-index:9;inset:20px;background:#132d29;border:1px solid #56786c;padding:28px;border-radius:14px;max-width:520px;max-height:250px}
 #fallback a{color:#f6d29b}
 @media(hover:none),(pointer:coarse){#touch-controls{display:grid}#welcome{left:20px;top:45%;padding:25px}.bottom{bottom:12px;left:14px;right:14px}.readout{max-width:calc(100% - 100px);padding:10px}.readout strong{font-size:19px}.controls{align-self:flex-end}.controls button{padding:8px 10px;font-size:11px;min-height:43px}.cross{opacity:.5}}
-@media(max-width:680px){#touch-controls{display:grid;bottom:195px}}@media(max-width:600px){.header{padding:15px 18px}.brand span{font-size:22px}.topmeta{font-size:10px}.readout{max-width:230px}#touch-controls{right:14px;bottom:195px;grid-template-columns:repeat(3,50px);grid-template-rows:repeat(3,50px)}}
+@media(max-width:680px){#touch-controls{display:grid;bottom:195px}}@media(max-width:600px){.facility-nav{top:111px;right:14px;width:185px;padding:9px;gap:5px}
+.facility-nav select{font-size:11px;padding:8px}
+.facility-nav button{font-size:11px;padding:8px}
+.header{padding:15px 18px}.brand span{font-size:22px}.topmeta{font-size:10px}.readout{max-width:230px}#touch-controls{right:14px;bottom:195px;grid-template-columns:repeat(3,50px);grid-template-rows:repeat(3,50px)}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -49,9 +63,15 @@ button,select{font:inherit}button{cursor:pointer;color:inherit}button:focus-visi
 <div class="shade"></div>
 <header class="header"><div><div class="brand">EVERCRAFT / BECOMING<span id="world-name">Franchise World</span></div><div class="topmeta" id="meta">Your permanent facilities, now in three dimensions.</div></div><a href="./worlds.html">← Campus planner</a></header>
 <div id="fallback" role="alert">3D graphics are not available on this device. Your saved facilities are safe. <a href="./worlds.html">Return to the 2.5D campus planner.</a></div>
-<div id="welcome"><div class="kicker">First-person world preview · Local only</div><h1>Step inside<br>what you've built.</h1><p>Walk between facilities from your actual Becoming World. The campus is generated entirely in your browser from your locally saved structures. It doesn't send check-ins anywhere.</p><p>Desktop: WASD to move, drag to look, hold Shift to move faster. Phone: move with the direction pad and drag the view to look around.</p><button id="enter">Enter my campus</button><button id="demo" class="secondary">Explore a sample</button></div>
+<div id="welcome"><div class="kicker">First-person world preview · Local only</div><h1>Step inside<br>what you've built.</h1><p>Walk between facilities from your actual Becoming World. The campus is generated entirely in your browser from your locally saved structures. It doesn't send check-ins anywhere.</p><p>Desktop: WASD to move, drag to look, hold Shift to move faster. Phone: move with the direction pad and drag the view. Select an owned facility to explore its interior; return outside whenever you like.</p><button id="enter">Enter my campus</button><button id="demo" class="secondary">Explore a sample</button></div>
 <div id="hud" class="hidden">
   <div class="cross" aria-hidden="true">＋</div>
+  <div class="facility-nav" id="facility-nav">
+    <label for="facility-picker">YOUR LIFETIME FACILITIES</label>
+    <select id="facility-picker" aria-label="Choose an owned facility to explore"></select>
+    <button id="tour" type="button">Enter selected facility</button>
+    <p>Original procedural rooms · private, read-only preview</p>
+  </div>
   <div id="touch-controls" role="group" aria-label="Walking controls">
     <button data-move="forward" aria-label="Walk forward">↑</button>
     <button data-move="strafe-left" aria-label="Walk left">←</button>
