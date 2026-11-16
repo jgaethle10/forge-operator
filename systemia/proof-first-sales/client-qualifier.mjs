@@ -6,6 +6,18 @@ import { admitProofFirstOutreach } from './engine.mjs';
 // These are routing hypotheses, not claims of independent service readiness.
 export const CLIENT_SCOUT_OFFERS = Object.freeze([
   Object.freeze({
+    key: 'systemia_quick_win_audit',
+    name: 'Systemia Website Audit: Quick Win Audit',
+    need_tags: ['website_diagnosis', 'website_conversion', 'local_seo', 'lead_form_audit', 'mobile_performance'],
+    // Canonical catalog says payment-ready; end-to-end public checkout and delivery
+    // still require independent external canary. A discovery page is NOT proof.
+    sale_state: 'catalog_payment_ready_customer_path_unverified',
+    offer_page_url: 'https://fabric.systemiacommandcenters.com/offers/website-audit',
+    public_proof_url: null,
+    price_usd: 49,
+    required_gate: 'verify_live_offer_checkout_settlement_and_fulfillment_before_outreach',
+  }),
+  Object.freeze({
     key: 'work_saban_report_pilot',
     name: 'Work Saban: monthly sales reporting pilot',
     need_tags: ['monthly_reporting', 'spreadsheet_reconciliation', 'sales_csv'],
@@ -161,6 +173,7 @@ export function qualifyClientSignal(raw = {}, now = new Date()) {
       key: o.key, name: o.name, sale_state: o.sale_state,
       price_usd: o.price_usd, required_gate: o.required_gate,
       public_proof_url: o.public_proof_url,
+      offer_page_url: o.offer_page_url ?? null,
     })),
     next_action: disposition === 'scoping_priority'
       ? 'verify_scope_capacity_checkout_and_exact_buyer_terms'
