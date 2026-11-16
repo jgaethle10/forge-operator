@@ -62,3 +62,21 @@ jobs:
             }
             if(p.withdrawn.routes.some(x=>x.state!=="held"))process.exit(1);
           '
+
+      - name: Check creator Studio preview is local-only, syntactically valid and never claims payments
+        run: |
+          node --input-type=commonjs -e '
+            const fs=require("node:fs");
+            const html=fs.readFileSync("systemia/participation-economy/creator-studio-preview.html","utf8");
+            const match=[...html.matchAll(/<script>([\s\S]*?)<\/script>/g)];
+            if(match.length!==1)throw Error("Expected one local inline UI script");
+            new Function(match[0][1]);
+            for(const phrase of [
+              "Local prototype", "not live", "Nothing is uploaded or published",
+              "creator_publish_opt_in", "creator_revenue_opt_in",
+              "publisher_authority:false", "payouts_enabled:false"
+            ])if(!html.includes(phrase))throw Error("Missing local-only boundary: "+phrase);
+            if(/<script[^>]+src=|fetch\s*\(|XMLHttpRequest|sendBeacon|localStorage/.test(html))
+              throw Error("Unexpected external transfer or persistent browser storage");
+            console.log("Creator Studio local preview contract OK");
+          '
