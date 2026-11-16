@@ -16,10 +16,15 @@ const HEX64=/^[a-f0-9]{64}$/;
 const NUM=/^[1-9][0-9]*$/;
 const UUID=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const UNIT=/^eo001-g1-synthetic-[a-f0-9]{32}\.scope$/;
-const validPath=value=>typeof value==='string'&&
-  value.startsWith('/user.slice/')&&value.length<=512&&
-  !value.includes('//')&&!value.includes('..')&&
-  !value.split('/').some(p=>p==='.'||p==='..');
+const validPath=value=>{
+  if(typeof value!=='string'||!value.startsWith('/user.slice/')||
+     value.length>512||/[\\\x00-\x1f\x7f]/.test(value))
+    return false;
+  const segments=value.slice(1).split('/');
+  return segments.length>=2&&segments.length<=24&&
+    segments.every(part=>/^[A-Za-z0-9_.@-]+$/.test(part)&&
+      part!=='.'&&part!=='..');
+};
 const sha=v=>createHash('sha256').update(v).digest('hex');
 const untrusted=['LOCAL_NATIVE_READ_ONLY_UNATTESTED',
   'INJECTED_TEST_READ_ONLY_UNATTESTED'];
@@ -96,6 +101,8 @@ export function joinHeldScopeKillSurveyForReview({
     'CGKILL_JOIN_SCOPE_OR_SOURCE_MISMATCH');
   need(typeof candidate.expected_original_cgroup_device==='string'&&
     typeof candidate.expected_original_cgroup_inode==='string'&&
+    typeof survey.original_scope_device==='string'&&
+    typeof survey.original_scope_inode==='string'&&
     NUM.test(candidate.expected_original_cgroup_device||'')&&
     NUM.test(candidate.expected_original_cgroup_inode||'')&&
     candidate.expected_original_cgroup_device===

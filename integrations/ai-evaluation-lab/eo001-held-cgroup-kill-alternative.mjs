@@ -20,10 +20,15 @@ const UNIT=/^eo001-g1-synthetic-[a-f0-9]{32}\.scope$/;
 const BOOT=/^[a-f0-9]{8}-[a-f0-9]{4}-[1-8][a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/i;
 const NUM=/^[1-9][0-9]*$/;
 const sha=value=>createHash('sha256').update(value).digest('hex');
-const validPath=value=>typeof value==='string'&&
-  value.startsWith('/user.slice/')&&value.length<=512&&
-  !value.includes('//')&&!value.includes('..')&&
-  !value.split('/').some(p=>p==='.'||p==='..');
+const validPath=value=>{
+  if(typeof value!=='string'||!value.startsWith('/user.slice/')||
+     value.length>512||/[\\\x00-\x1f\x7f]/.test(value))
+    return false;
+  const segments=value.slice(1).split('/');
+  return segments.length>=2&&segments.length<=24&&
+    segments.every(part=>/^[A-Za-z0-9_.@-]+$/.test(part)&&
+      part!=='.'&&part!=='..');
+};
 export function reviewHeldCgroupKillAlternative({
   proposal,observation
 }={}){
@@ -45,8 +50,10 @@ export function reviewHeldCgroupKillAlternative({
     observation.scope_unit===proposal.scope_unit&&
     observation.cgroup_path===proposal.cgroup_path&&
     BOOT.test(observation.boot_id||'')&&
-    NUM.test(observation.device||'')&&
-    NUM.test(observation.inode||'')&&
+    typeof observation.device==='string'&&
+    typeof observation.inode==='string'&&
+    NUM.test(observation.device)&&
+    NUM.test(observation.inode)&&
     observation.held_scope_fd_identity_source===
       'INJECTED_UNAUTHENTICATED_READONLY_OBSERVATION'&&
     observation.opened_control_file===false&&

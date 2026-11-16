@@ -131,3 +131,46 @@ test('source cannot open or write kernel control files',()=>{
     'process.kill(','fetch(','openSync('
   ]) assert.equal(source.includes(forbidden),false,forbidden);
 });
+
+test('held-scope producer rejects numeric/coercible device and inode metadata',()=>{
+  for(const key of ['device','inode']){
+    for(const value of [31,BigInt(31),{toString(){return '31';}},['31']]){
+      refuse(f=>{f.observation[key]=value;},
+        'CGROUP_KILL_SCOPE_HANDLE_NOT_ESTABLISHED');
+    }
+    const evil={toString(){throw Error('UNTRUSTED_TOSTRING_EXECUTED');}};
+    refuse(f=>{f.observation[key]=evil;},
+      'CGROUP_KILL_SCOPE_HANDLE_NOT_ESTABLISHED');
+  }
+});
+test('held-scope producer refuses unsafe path encodings before returning review metadata',()=>{
+  const unsafe=[
+    '/user.slice//user-1000.slice/'+U,
+    '/user.slice/../user.slice/'+U,
+    '/user.slice/%2e%2e/'+U,
+    '/user.slice/whitespace here/'+U,
+    '/user.slice/unsafe\ttab/'+U,
+    '/user.slice/unsafe\nline/'+U,
+    '/user.slice/unsafe\u0000nul/'+U,
+    '/user.slice/unsafe\\path/'+U,
+    '/user.slice/unsafe#fragment/'+U,
+    'user.slice/app.slice/'+U,
+    '/user.slice/app.slice/'+U+'/extra',
+    '/user.slice/app.slice/'+U+'/'
+  ];
+  for(const path of unsafe){
+    refuse(f=>{
+      f.proposal.cgroup_path=path;
+      f.observation.cgroup_path=path;
+    },'CGROUP_KILL_UNREVIEWED_SOURCE_PROPOSAL');
+  }
+});
+test('valid hierarchical original synthetic scope with systemd user-service names still reviews',()=>{
+  const valid=fixture();
+  valid.proposal.cgroup_path=P;
+  valid.observation.cgroup_path=P;
+  const result=reviewHeldCgroupKillAlternative(valid);
+  assert.equal(result.state,'HELD_SCOPE_CGROUP_KILL_CANDIDATE_SOURCE_REVIEW_ONLY');
+  assert.equal(result.kernel_write_attempted,false);
+  assert.equal(result.model_execution_authorized,false);
+});

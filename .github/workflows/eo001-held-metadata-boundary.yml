@@ -1,0 +1,46 @@
+name: EO-001 held cgroup metadata strict-boundary review
+on:
+  push:
+    branches:
+      - research/eo001-held-cgroup-metadata-strict-20261116
+    paths:
+      - 'integrations/ai-evaluation-lab/eo001-held-cgroup-kill-alternative*'
+      - 'integrations/ai-evaluation-lab/eo001-held-cgroup-kill-survey-join*'
+      - '.github/workflows/eo001-held-metadata-boundary.yml'
+  pull_request:
+    branches:
+      - research/eo001-gate1-consolidated-observers-20261115
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  metadata-producer-and-consumer:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Syntax review
+        run: |
+          node --check integrations/ai-evaluation-lab/eo001-held-cgroup-kill-alternative.mjs
+          node --check integrations/ai-evaluation-lab/eo001-held-cgroup-kill-survey-join.mjs
+      - name: Test malformed producer observations and path refusal
+        run: node --test integrations/ai-evaluation-lab/eo001-held-cgroup-kill-alternative.test.mjs
+      - name: Test direct JSON join anti-coercion and hashed path refusal
+        run: node --test integrations/ai-evaluation-lab/eo001-held-cgroup-kill-survey-join.test.mjs
+      - name: Regress read-only native metadata survey
+        run: node --test integrations/ai-evaluation-lab/eo001-cgroup-kill-readonly-capability.test.mjs
+      - name: Verify no kernel effects added to the pure review modules
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          for name in ['eo001-held-cgroup-kill-alternative.mjs','eo001-held-cgroup-kill-survey-join.mjs']:
+              data=(Path('integrations/ai-evaluation-lab')/name).read_text()
+              assert "from 'node:fs'" not in data
+              assert "from 'node:child_process'" not in data
+              assert "from 'node:http'" not in data
+              assert 'process.kill(' not in data
+          print('REVIEW_ONLY_NO_KERNEL_EFFECTS: PASS')
+          PY
