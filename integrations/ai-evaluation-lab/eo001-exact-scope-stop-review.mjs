@@ -14,6 +14,8 @@
 import {parseExactScopeProperties} from './eo001-cgroup-supervisor-observer.mjs';
 import {parseStableProcIdentity,verifySwapPolicyMetadata}
   from './eo001-stable-scope-lifecycle.mjs';
+import {parseStrictCgroupEvents,validateSyntheticScopePath}
+  from './eo001-cgroup-subtree-cleanup.mjs';
 
 const fail=code=>{const e=new Error(code);e.code=code;throw e;};
 const need=(ok,code)=>{if(!ok)fail(code);};
@@ -34,21 +36,20 @@ export function proposeExactScopeStopForReview({
     'STOP_REVIEW_BUDGET_UNACCEPTABLE');
   const properties=parseExactScopeProperties(systemdProperties);
   const path=properties.ControlGroup;
-  const segments=path.split('/');
-  need(segments.at(-1)===scopeId&&
-    segments.filter(Boolean).every(s=>s!=='.'&&s!=='..'),
-    'STOP_REVIEW_SYSTEMD_UNIT_SCOPE_MISMATCH');
+  validateSyntheticScopePath({controlGroup:path,scopeUnit:scopeId});
   need(typeof supervisorProcCgroup==='string'&&
     /^0::\/[^\r\n]+\n?$/.test(supervisorProcCgroup),
     'STOP_REVIEW_SUPERVISOR_MEMBERSHIP_UNVERIFIED');
   const observer=supervisorProcCgroup.trim().slice(3);
-  need(observer!==path&&!observer.startsWith(path+'/'),
+  need(!observer.split('/').some(s=>s==='.'||s==='..')&&
+    observer!==path&&!observer.startsWith(path+'/'),
     'STOP_REVIEW_OBSERVER_INSIDE_TARGET_SCOPE');
 
   need(pre&&pre.cgroup&&pre.worker&&pre.detached&&
     pre.cgroup.path===path&&
     decimal(pre.cgroup.device)&&decimal(pre.cgroup.inode)&&
-    pre.cgroup.events?.includes('populated 1')&&
+    typeof pre.cgroup.events==='string'&&
+    parseStrictCgroupEvents(pre.cgroup.events).populated===true&&
     pre.boot_id&&pid(pre.worker.pid)&&pid(pre.detached.pid)&&
     pre.worker.pid!==pre.detached.pid,
     'STOP_REVIEW_NO_LIVE_EXACT_SCOPE_BASELINE');
@@ -74,11 +75,11 @@ export function proposeExactScopeStopForReview({
     scope_unit:scopeId,
     cgroup_path:path,
     // This is a purely inert proposed argument vector, NEVER executed here.
-    proposed_unit_control:{
+    proposed_unit_control:Object.freeze({
       program:'systemctl',
-      args:['--user','stop',scopeId],
+      args:Object.freeze(['--user','stop',scopeId]),
       timeout_ms:cleanupBudgetMs
-    },
+    }),
     resource_policy:'SYNTHETIC_ONLY_ZERO_SWAP',
     original_process_starttime_observed:true,
     separate_session_descendant_metadata_consistent:true,
