@@ -23,8 +23,10 @@ jobs:
         with:
           node-version: '22'
       - name: Syntax-check local source vault
-        run: node --check systemia/continuity/source-vault.mjs
+        run: |
+          node --check systemia/continuity/source-vault.mjs
+          node --check systemia/continuity/offline-hq-drill.mjs
       - name: Prove offline Git custody and isolated restore
         env:
           GIT_TERMINAL_PROMPT: '0'
-        run: node --test systemia/continuity/source-vault.test.mjs
+        run: node --test systemia/continuity/source-vault.test.mjs systemia/continuity/offline-hq-drill.test.mjs

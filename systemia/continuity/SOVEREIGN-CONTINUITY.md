@@ -55,3 +55,26 @@ The verify command itself proves an independent local restore in disposable stor
 6. Simulated GitHub outage, AI outage, device loss and network outage with real restore receipts, documented recovery times and recovery points.
 
 This tool establishes the first bounded rescue capability and a reproducible synthetic proof. Do not call the company fully independent until the separate acceptance criteria are proven.
+
+## Offline HQ Direct Mode boot rehearsal (V2)
+
+Once a private Source Vault has been created and verified on an Evercraft-owned machine, the operator can test a **disposable, detached** Evercraft Home boot from a freshly recovered copy. This never modifies live Home.
+
+Run with local Node 22+ and Git; neither command fetches GitHub or calls ChatGPT:
+
+    node systemia/continuity/source-vault.mjs verify --vault /secure/vault-outside-repo
+
+    node systemia/continuity/offline-hq-drill.mjs --vault /secure/vault-outside-repo --receipt-dir /secure/owner-recovery-receipts
+
+The drill:
+1. Verifies/restores the private bundle into an independent temporary bare repository.
+2. Checks out the exact source commit into an ephemeral worktree.
+3. Starts recovered Evercraft Home on 127.0.0.1 on an ephemeral port in development-only Direct Mode.
+4. Checks the health, overview and continuity status endpoints with NO upstream models, customer data, credentials, Passport or external provider services configured.
+5. Closes the service, removes temporary files and optionally writes a private mode 0600 receipt into a mode 0700 directory.
+
+A green receipt proves **committed source can be restored and Home can boot locally** on the tested machine. Its field network_interface_disconnected_by_drill:false says the tool does not itself disable the machine network. For a real air-gap field drill, independently disconnect external connectivity before running the command. Test this on NextGen as a genuinely separate device, not just the same Penguin checkout.
+
+Never expose local development mode to a public interface. The tool forces loopback and is NOT a production Home deployment or authorization replacement. A standalone recovery proof does not recover the Identity, Passport, CRM, settlements, inbox, media archives or customers. Those still need private, encrypted backup with restore receipts.
+
+Next gates: encrypted independent physical media, actual node-by-node receipts, signed offline release and rollback, production Identity/Passport recovery and full company Direct Mode operations while external AI and GitHub are unreachable. GitHub Actions only executes the tool's standalone regression tests; GitHub is not part of the tool's runtime.
