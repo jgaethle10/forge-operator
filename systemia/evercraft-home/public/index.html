@@ -105,6 +105,18 @@ a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid #4fb8
 .executive-evidence-observed{font-size:11px;color:#9ea4ad;margin:13px 0 0}
 @media(max-width:900px){.executive-receipts-grid{grid-template-columns:1fr}.executive-receipt-card{min-height:135px}}
 @media(max-width:590px){.executive-receipts-heading{display:block}.executive-receipts-heading button{margin-top:16px}}
+
+.continuity-panel{margin-top:15px;border:1px solid #54503e;background:linear-gradient(145deg,#1b2127,#111519);padding:24px}
+.continuity-panel-heading{display:flex;justify-content:space-between;gap:18px;align-items:center}
+.continuity-panel h3{font:500 25px/1.15 Arial,system-ui,sans-serif;letter-spacing:-.03em;color:#f1efe9;margin:10px 0 0}
+.continuity-panel button{border:1px solid #83714f;background:transparent;color:#e9ce97;padding:11px 14px;cursor:pointer;font-size:12px}
+.continuity-panel button:hover{background:#4d422b45}
+.continuity-panel button:disabled{opacity:.55;cursor:default}
+.continuity-status-state{font-size:17px;color:#f1dfb4;font-weight:600;margin:21px 0 7px}
+.continuity-status-detail{font-size:12px;color:#b7bcc6;line-height:1.6;margin:0}
+.continuity-boundaries{display:flex;gap:11px;flex-wrap:wrap;margin-top:18px}
+.continuity-boundaries span{font-size:10px;letter-spacing:.02em;color:#bbc0c8;border:1px solid #414649;padding:8px 10px}
+@media(max-width:650px){.continuity-panel-heading{display:block}.continuity-panel button{margin-top:17px}.continuity-panel h3{font-size:21px}}
 </style>
 </head>
 <body>
@@ -179,6 +191,15 @@ a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid #4fb8
      <article class="executive-receipt-card"><span>PAYMENTS / SALES</span><strong id="executive-payments-state">Not connected</strong><p id="executive-payments-detail">Canonical settled orders appear only after an authorized and complete Evercraft Payments readback. Unverified totals remain unknown.</p></article>
    </div>
    <p id="executive-evidence-observed" class="executive-evidence-observed">Source observation pending · no live storefront or provider audit implied</p>
+ </section>
+ <section class="continuity-panel" aria-labelledby="continuity-panel-title">
+   <div class="continuity-panel-heading">
+     <div><div class="eyebrow">Sovereign operations / local custody</div><h3 id="continuity-panel-title">GitHub is optional. Recovery is ours.</h3></div>
+     <button id="continuity-status-refresh" type="button">Check local custody</button>
+   </div>
+   <p id="continuity-status-state" class="continuity-status-state" role="status">Local source custody not checked</p>
+   <p id="continuity-status-detail" class="continuity-status-detail">The source archive and offline restore must exist on an Evercraft-owned machine. This display cannot create a backup or certify recovery.</p>
+   <div class="continuity-boundaries"><span>GitHub not required to restore local archive</span><span>AI not required to open HQ Direct Mode</span><span>Private databases require separate backups</span></div>
  </section>
  <p class="deck-disclaimer">Command status is sourced from the authenticated Home APIs above. Revenue totals, completed publishing, and automatic fulfillment are not asserted by this screen.</p>
 </section>
@@ -478,6 +499,33 @@ document.getElementById("plan-form").addEventListener("submit",async(event)=>{
   }
 });
 
+async function refreshContinuityStatus(){
+  const state=document.getElementById("continuity-status-state");
+  const detail=document.getElementById("continuity-status-detail");
+  const refresh=document.getElementById("continuity-status-refresh");
+  if(!state||!detail)return;
+  if(refresh)refresh.disabled=true;
+  try{
+    const response=await homeFetch("/api/continuity/status");
+    if(!response.ok)throw Error("continuity_readback_unavailable");
+    const record=await response.json();
+    if(record.ok!==true||record.schema!=="evercraft.home.continuity-readiness.v1")
+      throw Error("continuity_schema_mismatch");
+    const labels={
+      vault_not_configured:"No local vault configured",
+      vault_evidence_unavailable:"Local custody evidence held",
+      source_bundle_present_not_reverified:"Private source bundle recorded",
+    };
+    state.textContent=labels[record.state]||"Continuity state unverified";
+    detail.textContent=String(record.detail||"No verified local recovery evidence.")+
+      (record.latest_at?" Last recorded archive: "+record.latest_at+".":"");
+  }catch{
+    state.textContent="Continuity readback unavailable";
+    detail.textContent="The live Home service did not return trustworthy local custody status. No restore or backup success is implied.";
+  }finally{if(refresh)refresh.disabled=false;}
+}
+document.getElementById("continuity-status-refresh").addEventListener("click",()=>{void refreshContinuityStatus();});
+
 async function refreshExecutiveEvidence(){
   const refresh=document.getElementById("executive-evidence-refresh");
   if(refresh)refresh.disabled=true;
@@ -508,7 +556,7 @@ async function refreshExecutiveEvidence(){
     set("executive-payments-detail","No payment outcome can be inferred from a failed readback.");
     set("executive-evidence-observed","No verified observation returned");
   }finally{
-    await refreshExecutivePayments();
+    await Promise.all([refreshExecutivePayments(),refreshContinuityStatus()]);
     if(refresh)refresh.disabled=false;
   }
 }
