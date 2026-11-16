@@ -131,7 +131,8 @@ test('Saban gateway relays exactly-once work to a real native MicroSeed agent',a
     });
     assert.equal(conformanceResponse.status,200);
     const conformanceBody=await conformanceResponse.json();
-    assert.deepEqual(conformanceBody.verified_workloads,['systemia.content-hash.v1']);
+    assert.deepEqual(conformanceBody.verified_workloads,['systemia.content-hash.v1'],
+      JSON.stringify(conformanceBody.unverified_workloads));
     const executionsAfterConformance=executionTelemetryCalls;
 
     const requestBody={
