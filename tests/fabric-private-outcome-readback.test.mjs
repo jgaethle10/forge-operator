@@ -9,6 +9,7 @@ import { FABRIC_OUTCOME_ROUTE } from "../systemia/mcp/fabric-private-outcome-rea
 import { startEvercraftHomeServer } from "../systemia/evercraft-home/server.mjs";
 import { buildVerifiedDeliveryReceipt } from "../systemia/shipping/delivery-receipt.mjs";
 import { buildShippingProofBundle } from "../systemia/shipping/proof-bundle.mjs";
+import { reserveShipment } from "../systemia/shipping/shipping-ledger.mjs";
 
 const TOKEN="private-test-bridge-token-material-0123456789";
 const SIGNING="private-test-source-signature-material-0123456789";
@@ -254,4 +255,19 @@ test("Fabric refuses a structural source when its private local ledgers are miss
   fs.chmodSync(creds.shippingLedgerFile,0o644);
   response=await request(absent,{nonce:"fc".repeat(24)});
   assert.equal(response.status,503,"world-readable customer shipping ledger is held");
+});
+
+test("canonical Shipping writer creates private 0700 directory and 0600 ledger for readback",t=>{
+  const root=fs.mkdtempSync(path.join(os.tmpdir(),"evercraft-shipping-private-"));
+  t.after(()=>fs.rmSync(root,{recursive:true,force:true}));
+  const folder=path.join(root,"shipping");
+  const ledger=path.join(folder,"shipping-ledger.json");
+  const shipment=reserveShipment({
+    ledger_file:ledger,recipient_ref:"private-fixture@example.test",
+    subject:"Synthetic test item",package_digest:"sha256:"+"a".repeat(64),
+    authorization_ref:"synthetic-only-authority",
+  });
+  assert.equal(shipment.dispatch_allowed,true);
+  assert.equal(fs.statSync(folder).mode&0o777,0o700);
+  assert.equal(fs.statSync(ledger).mode&0o777,0o600);
 });
