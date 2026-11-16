@@ -157,3 +157,19 @@ test('historical visual stays phone-first, dated, unapproved and source-anchored
   assert.match(app,/indexReviewCounts/);
   assert.doesNotMatch(app,/innerHTML\s*=/);
 });
+
+test('five-day graph renders only explicitly reported official warning-marked NRCS indices',()=>{
+  assert.match(page,/id="index-review-visuals"/);
+  assert.match(page,/id="print-evidence"/);
+  assert.match(page,/@media print/);
+  assert.match(app,/function renderIndexReviewCharts\(review\)/);
+  assert.match(app,/reading\.percent\/150/);
+  assert.match(app,/official NRCS index/);
+  assert.match(app,/document\.createTextNode/);
+  assert.match(app,/printButton\.disabled=true/);
+  assert.match(app,/window\.print\(\)/);
+  assert.match(app,/index-review-visuals.*replaceChildren/);
+  assert.doesNotMatch(app,/\.innerHTML\s*=/);
+  assert.ok(review.days.every(x=>x.indices.every(y=>y.nrcs_warning===true)));
+  assert.equal(review.reservoir_history_calculated,false);
+});
