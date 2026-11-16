@@ -28,6 +28,23 @@ try{
     hero.includes('Request my $50 commercial');
   results.push({name:'price_first_customer_copy',url:site,status:a.status,exact_introductory_offer_visible:priceFirst});
   if(!priceFirst)findings.push('PUBLIC_PRICE_FIRST_VALUE_PROP_NOT_DEPLOYED');
+  // Buyers must have a direct email escape hatch even if Fabric intake is
+  // degraded; an unverified Stripe destination must not be served anywhere,
+  // including machine-readable structured data.
+  const directEmail=hero.includes('id="studio-email-hero"')&&
+    hero.includes('mailto:jessegaethle10@gmail.com')&&
+    hero.includes('Email my brief directly');
+  results.push({name:'buyer_direct_email',url:site,status:a.status,
+    first_screen_contact_visible:directEmail});
+  if(!directEmail)findings.push('PUBLIC_FIRST_SCREEN_EMAIL_CONTACT_NOT_DEPLOYED');
+  const paymentHeld=a.body.includes('Already approved a project? Request payment instructions')&&
+    a.body.includes('Email for verified payment instructions')&&
+    a.body.includes('No payment or booking happens on this page')&&
+    !a.body.includes('4gM5kEd6K40d7ju86w4AU0e');
+  results.push({name:'unverified_checkout_suppressed',url:site,status:a.status,
+    unverified_stripe_destination_absent:!a.body.includes('4gM5kEd6K40d7ju86w4AU0e'),
+    verified_payment_instructions_required:paymentHeld});
+  if(!paymentHeld)findings.push('PUBLIC_UNVERIFIED_CHECKOUT_STILL_EXPOSED_OR_HOLD_NOT_DEPLOYED');
 }catch{findings.push('PUBLIC_CUSTOMER_FORM_UNOBSERVED');}
 try{
   const a=await observe(endpoint,'OPTIONS',{'origin':'https://jgaethle10.github.io','access-control-request-method':'POST','access-control-request-headers':'content-type'});
