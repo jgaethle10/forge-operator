@@ -97,6 +97,13 @@ def validate(updated: object, archived: object, provisional: object, html: str) 
         "Archived surveillance snapshots",
     ):
         check(fragment in html, "Missing revision/time context marker: " + fragment)
+    # The visible headline numbers must agree with the canonical latest source.
+    # Static markup is checked separately from embedded JSON to catch an
+    # accidentally stale or edited hero figure.
+    check("<strong>8,780</strong>" in html,
+          "Headline 2025 visible clinical count differs from reviewed CDC revision")
+    check("<strong>6,370</strong>" in html,
+          "Headline 2024 visible clinical count differs from reviewed CDC revision")
     check(not re.search(r"<script\b[^>]*\bsrc\s*=", html, flags=re.I),
           "Unexpected third-party JavaScript")
     check(not re.search(r"\bfetch\s*\(", html),
