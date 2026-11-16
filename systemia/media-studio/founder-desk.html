@@ -111,7 +111,9 @@ function draw(){
   $('empty').hidden=!!job;$('editor').hidden=!job;if(!job)return;
   $('projectId').textContent=job.id;$('projectName').textContent=job.name;
   for(const key of ['goal','audience','offer','cta','notes','format','narration'])$(key).value=job[key]||'';
-  $('readiness').textContent=job.technicalRender?'Technical render exists. Creative and client release are still blocked.':'No approved customer-ready master yet.';
+  $('readiness').textContent=job.technicalRender
+    ?('Technical render exists. Picture scan: '+(job.technicalRender.pictureStatus||'pending')+'. Creative and client release remain blocked.')
+    :'No approved customer-ready master yet.';
   const ul=$('blockers');ul.replaceChildren();
   for(const b of job.readiness.blockers){const li=document.createElement('li');li.textContent=b;ul.append(li)}
   const items=$('assets');items.replaceChildren();
