@@ -15,6 +15,7 @@ import {reactiveCommandEscape} from './controller-rc05-escape.mjs';
 import {updateMotionMemory,reactiveCommandMotionWatch} from './controller-rc05-motion-watch.mjs';
 import {initialHazardLatch,reactiveCommandLatched} from './controller-rc05-latched-watch.mjs';
 import {FAMILY_NAMES,createFamilyScenario,familyMovingInputs} from './adversarial-families-rc05f.mjs';
+import {applyGoalInwardRecovery} from './controller-rc05-goal-recovery.mjs';
 
 export const RC05_SCHEMA='evercraft.sim-to-real.reactive-native.rc05';
 export const RC05_BENCHMARK='evercraft.sim-to-real.reactive-holdout.rc05';
@@ -28,7 +29,7 @@ const assert=(ok,msg)=>{if(!ok)throw Error(msg);};
 
 export function runReactiveEpisode({seed=41,maxTicks=350,forcedBlackout=null,controllerMode='baseline',scenarioFamily='legacy'}={}){
   assert(Number.isSafeInteger(seed)&&seed>0,'rc05_invalid_seed');
-  assert(['baseline','progress-gated','progress-shielded','observed-lateral-escape','observed-motion-watch','observed-motion-latched'].includes(controllerMode),'rc05_invalid_controller_mode');
+  assert(['baseline','progress-gated','progress-shielded','observed-lateral-escape','observed-motion-watch','observed-motion-latched','observed-goal-recovery'].includes(controllerMode),'rc05_invalid_controller_mode');
   assert(Number.isInteger(maxTicks)&&maxTicks>0&&maxTicks<=650,'rc05_invalid_max_ticks');
   assert(scenarioFamily==='legacy'||FAMILY_NAMES.includes(scenarioFamily),'rc05f_invalid_scenario_family');
   const {course,world}=scenarioFamily==='legacy'?createMotionWorld(seed):createFamilyScenario(seed,scenarioFamily);
@@ -60,7 +61,7 @@ export function runReactiveEpisode({seed=41,maxTicks=350,forcedBlackout=null,con
       z:p0.z+(rng()-.5)*course.params.sensorNoiseMeters-uncertainty*.08,
       heading:orientation+(rng()-.5)*.03};
     let motionTracks=[];
-    if((controllerMode==='observed-motion-watch'||controllerMode==='observed-motion-latched')&&observed){
+    if((controllerMode==='observed-motion-watch'||controllerMode==='observed-motion-latched'||controllerMode==='observed-goal-recovery')&&observed){
       const tracking=updateMotionMemory({history:motionHistory,scan:lastScan,estimate,tick,dt:DT});
       motionHistory=tracking.history;
       motionTracks=tracking.tracks;
@@ -73,8 +74,10 @@ export function runReactiveEpisode({seed=41,maxTicks=350,forcedBlackout=null,con
       bounds:course.bounds,scan:lastScan,scanAgeSec:age,velocity:v0,uncertainty,
       delaySeconds:course.params.commandDelaySteps*DT,braking:course.params.braking,
       maxSpeed:.82,robotRadius:course.robotRadius,state:{preferredTurn},tracks:motionTracks};
-    const latchResult=controllerMode==='observed-motion-latched'?
+    let latchResult=(controllerMode==='observed-motion-latched'||controllerMode==='observed-goal-recovery')?
       reactiveCommandLatched(commandArgs,{latch:latchState,pendingCommands:queue}):null;
+    if(controllerMode==='observed-goal-recovery')
+      latchResult=applyGoalInwardRecovery(commandArgs,latchResult,{pendingCommands:queue});
     const decision=latchResult?latchResult.decision:decide(commandArgs);
     if(latchResult){latchState=latchResult.latch;
       if(latchResult.diagnostic.phase==='hold')latchedHoldTicks++;}
