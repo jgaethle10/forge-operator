@@ -30,13 +30,20 @@ export async function reserveSignedMicroSeedExecution({
   need(typeof workload_class==='string'&&workload_class.length>0&&
     workload_class.length<=240,'workload_invalid');
 
-  const root=join(resolve(stateDir),'signed-execution-intents','v1');
+  const state=resolve(stateDir);
+  // Verify each existing parent before creating a child. A symlinked
+  // intermediate parent must not redirect even the initial mkdir.
+  need(await realpath(state)===state,'unsafe_root');
+  const parent=join(state,'signed-execution-intents');
+  await mkdir(parent,{recursive:true,mode:0o700});
+  need(await realpath(parent)===parent,'unsafe_root');
+  const root=join(parent,'v1');
+  await mkdir(root,{recursive:true,mode:0o700});
+  need(await realpath(root)===root,'unsafe_root');
   const folder=join(root,hashName(device_id));
-  const destination=join(folder,hashName(idempotency_key)+'.json');
-
   await mkdir(folder,{recursive:true,mode:0o700});
-  need(await realpath(root)===resolve(root),'unsafe_root');
   need(await realpath(folder)===folder,'unsafe_directory');
+  const destination=join(folder,hashName(idempotency_key)+'.json');
 
   const intent={
     schema:'evercraft.microseed.signed-execution-intent.v1',
