@@ -29,6 +29,9 @@ The PRIVATE local first run creates job records without media, invoices or conta
 
 The starter jobs preserve existing private progress if the owner restarts the program. The repo contains no customer uploads or the owner's private reviews.
 
+## Authentic photo-motion route
+For a real client such as Tile Works whose source package contains authorized photographs rather than moving footage, Fallen's source-first planner now recognizes creativeStandard: source-photo-motion-v1. Its brief must include a named photoMotionApproval reviewer, review timestamp, evidence reference, and noSyntheticAction=true. Each still scene requires a motionTreatment from macro_push, gentle_pan, subtle_parallax or matched_frame. The opening still must show an actual observed subject, not stock pretending to be client work or synthetic visualization. A photo-based plan is NOT a finished master; every resulting render needs final motion, continuity, authenticity and Signature review. Existing video-first and EPS Relay-floor controls are unchanged.
+
 ## Hard boundaries
 - This local pilot is not customer SaaS, remote login, Stripe checkout, a voice synthesizer, an AI scene generator, a music composer, a self-serve broadcaster submission or a replacement for Saban.
 - A browser does NOT get to bypass Fallen Signature even for the founder.
