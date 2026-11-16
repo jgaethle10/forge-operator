@@ -28,8 +28,9 @@ jobs:
           node --check systemia/participation-economy/creator-intake.mjs
           node --check systemia/participation-economy/creator-record-store.mjs
           node --check systemia/participation-economy/creator-queue-pilot.mjs
+          node --check systemia/participation-economy/creator-access.mjs
       - name: Run economy and fraud-hold tests
-        run: node --test systemia/participation-economy/engine.test.mjs systemia/participation-economy/journal.test.mjs systemia/participation-economy/creator-intake.test.mjs systemia/participation-economy/creator-record-store.test.mjs
+        run: node --test systemia/participation-economy/engine.test.mjs systemia/participation-economy/journal.test.mjs systemia/participation-economy/creator-intake.test.mjs systemia/participation-economy/creator-record-store.test.mjs systemia/participation-economy/creator-access.test.mjs
       - name: Prove demo remains read-only
         run: |
           node systemia/participation-economy/pilot.mjs > /tmp/home-participation-pilot.json
