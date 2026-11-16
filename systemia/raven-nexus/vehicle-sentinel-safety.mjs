@@ -37,10 +37,12 @@ export function readVehicleSentinelSafetyModule(root = rootDefault) {
       emergency_response: false,
     },
     privacy: {
-      report_storage: "client_local_unencrypted",
+      report_storage: "ephemeral_tab_memory",
       observation_upload_automatic: false,
       automatic_location_collection: false,
       authorized_export_required: true,
+      durable_record_requires_explicit_export: true,
+      export_files_not_encrypted_by_app: true,
       inference_or_identity_attribution: false,
     },
     authority: {
