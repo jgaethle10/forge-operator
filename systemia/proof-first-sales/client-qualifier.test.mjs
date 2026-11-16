@@ -77,5 +77,42 @@ test('ranks actionable relationships first and deduplicates prospect keys', () =
   assert.equal(rows.length, 2);
   assert.equal(rows[0].prospect_key, 'y');
   assert.equal(rows[0].matched_offers[0].key, 'commercial_studio');
-  assert.equal(CLIENT_SCOUT_OFFERS.length, 5);
+  assert.equal(CLIENT_SCOUT_OFFERS.length, 6);
+});
+
+test('Quick Win Audit maps an owner-described website problem without claiming a live checkout', () => {
+  const result = qualifyClientSignal({
+    prospect_key: 'synthetic-website-inbound',
+    business: 'Synthetic Website Inbound',
+    source_kind: 'client_request',
+    evidence_refs: ['synthetic:website-ask'],
+    observed_at: '2026-11-15T12:00:00Z',
+    need_tags: ['website_conversion'],
+    reply_confirmed: true, scope_requested: true,
+    budget_confirmed: true, delivery_capacity_confirmed: true,
+  }, now);
+  assert.equal(result.disposition, 'scoping_priority');
+  assert.equal(result.matched_offers[0].key, 'systemia_quick_win_audit');
+  assert.equal(result.matched_offers[0].price_usd, 49);
+  assert.equal(result.matched_offers[0].public_proof_url, null);
+  assert.match(result.matched_offers[0].required_gate, /verify_live_offer_checkout_settlement/);
+  assert.equal(result.paid_order_confirmed, false);
+  assert.equal(result.outreach_preflight.state, 'proof_required');
+  assert.equal(result.outreach_preflight.can_send_from_this_module, false);
+});
+
+test('public business profile with a website is research-only, not buying intent or contact permission', () => {
+  const result = qualifyClientSignal({
+    prospect_key: 'synthetic-public-profile',
+    business: 'Synthetic Public Business',
+    source_kind: 'public_service_description',
+    evidence_refs: ['https://example.com/synthetic-public-business'],
+    observed_at: '2026-11-15T12:00:00Z',
+    need_tags: ['website_conversion'],
+    public_proof_verified: false,
+  }, now);
+  assert.equal(result.disposition, 'research_only');
+  assert.equal(result.reason, 'public_clue_not_buyer_permission');
+  assert.equal(result.contact_permission_inferred, false);
+  assert.equal(result.outreach_preflight.state, 'proof_required');
 });
