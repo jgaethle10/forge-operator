@@ -1,0 +1,56 @@
+{
+  "schema": "evercraft.aqua.static-release.rc17.v1",
+  "research_only": true,
+  "source_truth": "LOCAL_EXACT_FILE_BYTES_NOT_HOSTED",
+  "assets": {
+    "index.html": {
+      "sha256": "4330b8e364a37a6991d0a703363c461d047fa193b313f047bca3c07bae7145bd",
+      "bytes": 14148
+    },
+    "manifest.webmanifest": {
+      "sha256": "a2248abc482158c4a998edec08bfa9a84ad134a32b07c1898b7e6dd91dc3f6cd",
+      "bytes": 719
+    },
+    "icon.svg": {
+      "sha256": "68ed2ff4840f820aed7fec89657f99a0d92b76f5d3aefbd942bbce66b9d78bc2",
+      "bytes": 350
+    },
+    "icon-192.png": {
+      "sha256": "0a1576732241b6471143b2baf6e01c8d74abb430936dbb53ab4db62dcc892622",
+      "bytes": 5938
+    },
+    "icon-512.png": {
+      "sha256": "2bb0b50c884504dc9771e1d330d20efa401bb4284fe9c71638f57e7667c7535b",
+      "bytes": 16574
+    },
+    "apple-touch-icon.png": {
+      "sha256": "93a0baab649a3ae7e2d76c25d489760863787c65d71cfd57ad6f9d34ab1aa645",
+      "bytes": 5497
+    },
+    "sw.js": {
+      "sha256": "5982cc161c2d0e09db949802eb31257cf74e7012da444dea2401be3a27b67b5d",
+      "bytes": 2704
+    },
+    "app/app.js": {
+      "sha256": "f5541eb5cf3c0408841582642eacfd4a58939484cc13022959918908fb46aa72",
+      "bytes": 9745
+    },
+    "app/core.mjs": {
+      "sha256": "5843075c33e5fbe8a8abde4bbb137944359d7bef735896aafef14f37ab2c96ef",
+      "bytes": 11395
+    },
+    "app/journal.mjs": {
+      "sha256": "f826ea4b52f385cd6ff8e629d22e5df8430312c112e2dad04487a796119c0eb1",
+      "bytes": 5443
+    },
+    "app/storage.mjs": {
+      "sha256": "315ec41079f6b76c6a699b35fd2c6478ccbbc715ed62b0774f7475d58f1b1ceb",
+      "bytes": 3829
+    },
+    "app/readiness.mjs": {
+      "sha256": "7d87bd5780eb66e9422a3965e65b96d48ee678d30e30dc015c0d03c29dbfda1d",
+      "bytes": 1672
+    }
+  },
+  "note": "Static byte integrity only. No real hosted origin, offline device acceptance, calibration or water-savings result."
+}
