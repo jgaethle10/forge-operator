@@ -8,6 +8,7 @@ import { buildVerifiedDeliveryReceipt } from "../shipping/delivery-receipt.mjs";
 import { buildShippingProofBundle } from "../shipping/proof-bundle.mjs";
 import { createPrivateOutcomeReadback } from "./os-private-outcome-readback.mjs";
 import { startEvercraftHomeServer } from "./server.mjs";
+import { EvercraftPassport } from "../passport/passport.mjs";
 
 const CLOCK = Date.parse("2026-11-15T18:07:00.000Z");
 const TIME = stamp => new Date(CLOCK + stamp * 1000).toISOString();
@@ -249,4 +250,64 @@ test("Home HTTP boundary performs a private signed read and emits no customer id
     "pi_fixture_private_001","private-worker-reference-123"]) {
     assert.equal(serialized.includes(secret),false);
   }
+});
+
+test("Passport-mode Home denies outcome bridge without payments scope and permits explicit grant", async t => {
+  const root=fs.mkdtempSync(path.join(os.tmpdir(),"evercraft-os-scope-"));
+  const claimCode="private-one-time-os-scope-claim";
+  let runtime;
+  t.after(async()=>{
+    if(runtime)await runtime.close();
+    fs.rmSync(root,{recursive:true,force:true});
+  });
+  runtime=await startEvercraftHomeServer({
+    host:"127.0.0.1",port:0,authMode:"passport",
+    identitySecret:"os-scope-test-identity-secret-long-enough-1234",
+    identityStateDir:path.join(root,"identity"),
+    passportStateDir:path.join(root,"passport"),
+    credentialStateDir:path.join(root,"credentials"),
+    cookieSecure:false,
+    ownerClaimSha256:hash(claimCode),
+    ownerSubjectRef:"user:os-scope-owner",
+    ownerLogin:"operator-test",
+    ownerDisplayName:"Operator",
+    serviceOrigins:{},
+  });
+  const claimed=await fetch(runtime.url+"/api/owner-claim",{
+    method:"POST",headers:{"content-type":"application/json"},
+    body:JSON.stringify({claim_code:claimCode,password:"long-local-test-password-123"}),
+  });
+  assert.equal(claimed.status,201);
+  const login=await fetch(runtime.url+"/api/login",{
+    method:"POST",headers:{"content-type":"application/json"},
+    body:JSON.stringify({login:"operator-test",password:"long-local-test-password-123"}),
+  });
+  assert.equal(login.status,200);
+  const cookie=String(login.headers.get("set-cookie")).split(";")[0];
+  assert.match(cookie,/^evercraft_session=/);
+  let response=await fetch(runtime.url+"/api/os/outcome-readback",{
+    headers:{cookie},
+  });
+  assert.equal(response.status,403,"identity + Systemia read must not imply payment read");
+  const passport=new EvercraftPassport({stateDir:path.join(root,"passport")});
+  const now=Date.now();
+  const granted=passport.issueGrant({
+    idempotency_key:"os-proof-grant-payment-read",
+    authority_state:"manual_authorized",
+    authority_receipt_ref:"receipt:synthetic-os-scope-review",
+    subject_ref:"user:os-scope-owner",
+    issuer_ref:"authority:synthetic-test",
+    product:"evercraft-home",
+    scopes:["home.payments.read"],
+    starts_at:new Date(now-60_000).toISOString(),
+    ends_at:new Date(now+60*60_000).toISOString(),
+  });
+  assert.equal(granted.state,"issued");
+  response=await fetch(runtime.url+"/api/os/outcome-readback",{
+    headers:{cookie},
+  });
+  assert.equal(response.status,200);
+  const body=await response.json();
+  assert.equal(body.state,"not_connected");
+  assert.equal(body.customer_delivery_verified,false);
 });
