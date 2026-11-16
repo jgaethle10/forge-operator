@@ -29,7 +29,9 @@ function defaultLedger() {
 }
 
 function atomicWrite(file, value) {
-  fs.mkdirSync(path.dirname(file), { recursive:true });
+  const folder = path.dirname(file);
+  fs.mkdirSync(folder, { recursive:true, mode:0o700 });
+  fs.chmodSync(folder, 0o700);
   const temp = file + '.' + process.pid + '.tmp';
   // Shipment recipient and provider evidence are private. Newly materialized
   // ledger files must not be world/group-readable on common host umasks.
