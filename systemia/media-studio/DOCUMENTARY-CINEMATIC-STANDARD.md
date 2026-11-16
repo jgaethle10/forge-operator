@@ -77,3 +77,32 @@ prove all pixels or all footage are legitimate.
 rights solely to test failure behavior. No owned-node deployment or
 rights-cleared client film has been completed by these new checks. Draft PR
 review and real-world creative approval remain mandatory.
+
+
+## Embedded third-party footage restriction (November 16, 2026)
+
+**Observed source problem:** the downloaded 2020 Voice of America film from
+Wikimedia Commons includes a frame with an **AFP** watermark. A film described
+overall as federal/public domain can still contain separately owned embedded
+images, wire footage, protected trademarks or individual privacy rights.
+
+Real-video \`sources[]\` must now declare
+\`embeddedThirdPartyStatus: "none_observed" | "cleared_per_shot"\`.
+Missing, unknown or \`"suspected"\` **rejects** cinematic admission; do not
+silently default missing to public domain. For a \`"cleared_per_shot"\` source,
+every selected footage shot must carry a named segment-level review with
+\`segmentRightsReviewed: true\` and \`segmentRightsEvidenceRef\`. The
+editorial team must independently authenticate those references in the
+private evidence vault: flags do NOT prove legal rights.
+
+The real archive scout returned **two valid downloaded 1080p videos** in
+https://github.com/jgaethle10/forge-operator/actions/runs/43977895088:
+2019 CBP construction near **Yuma**, not Lukeville; and 2020 broader-border
+Voice of America coverage. Both are legitimate technical test assets, but
+neither is the photographer's 2023 footage. The official Lukeville DVIDS
+downloads failed 3/3 with HTTP 403 in
+https://github.com/jgaethle10/forge-operator/actions/runs/43977192962.
+
+Source attribution, geography, capture date and non-endorsement are hard
+editorial boundaries. No client publication or portfolio rights follow from
+this technical proof; no new showcase reel has been approved.
