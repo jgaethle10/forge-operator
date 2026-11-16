@@ -10,8 +10,8 @@ const html=fs.readFileSync(path.join(ROOT,'public/help/index.html'),'utf8');
 const source=loadPublicProductDiscovery();
 const byId=id=>source.find(item=>item.public_id===id);
 
-test('Evercraft help is an honest, usable mobile-first decision door with three clear needs',()=>{
-  for(const anchor of ['id="work"','id="home"','id="community"','id="how-this-works"']){
+test('Evercraft help is an honest mobile-first decision door for four real-life needs',()=>{
+  for(const anchor of ['id="work"','id="home"','id="community"','id="everyday"','id="how-this-works"']){
     assert.ok(html.includes(anchor),'missing '+anchor);
   }
   assert.match(html,/<meta name="viewport"/);
@@ -28,7 +28,7 @@ test('Evercraft help is an honest, usable mobile-first decision door with three 
 
 test('each owned path links to a real file in this checkout',()=>{
   const localHrefs=[...html.matchAll(/href="(\/forge-operator\/[^"]*)"/g)].map(x=>x[1]);
-  assert.ok(localHrefs.length>=9);
+  assert.ok(localHrefs.length>=13);
   for(const url of localHrefs){
     assert.ok(!url.includes('..'),'unsafe traversal');
     const remaining=url.slice('/forge-operator/'.length);
