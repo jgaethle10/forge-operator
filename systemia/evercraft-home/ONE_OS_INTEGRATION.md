@@ -68,6 +68,19 @@ Successful HMAC verifies only possession of the configured **bridge secret**, *n
 
 Source proof command: `node --test systemia/evercraft-home/os-private-outcome-readback.test.mjs`. It exercises synthetic owned-origin HTTP, valid and invalid HMAC, nonce mismatch, oversized/stale/unconfigured data, no identifier disclosure, and local scoped HTTP projection. Deployment of any actual resident upstream remains a separately authorized source/field project.
 
+## Owned Fabric endpoint: server-side half of the bridge
+
+`systemia/mcp/fabric-private-outcome-readback.mjs` is now loaded by the existing `startFabricLocalRuntime` (not a separate host or product). Its precise private route is `POST /internal/os/outcomes/latest`, handled **ahead of public OPTIONS and MCP**. The runtime has no explicit CORS allow-origin for this route and rejects browser Origin/Fetch Metadata, GET, OPTIONS, bad authorization, malformed request, stale timestamp, and duplicate recent nonce. It uses a constant-time bearer token comparison, separate private signing key, and request-/response-size limits.
+
+Fabric configuration:
+- `EVERCRAFT_FABRIC_OUTCOME_READBACK_TOKEN_FILE`: server-owned 0600 private bearer token.
+- `EVERCRAFT_FABRIC_OUTCOME_READBACK_SIGNING_KEY_FILE`: *different* server-owned 0600 HMAC key.
+- `outcomeReadbackRecordLoader` is intentionally **NOT** supplied by the default runtime; a trusted, authoritatively scoped loader must be integrated by existing Payments/Systemia/Saban/Shipping owners after verifying their ledgers and provider evidence. No generic browser upload, generated test fixture, configuration-only JSON file, or unauthenticated "paid" flag may count as such a loader.
+
+Without an actual canonical source loader, the private route returns **503**, even if credentials exist. When an approved loader is injected in local tests, the runtime source-checks the exact receipt shapes before signing an HMAC envelope, including a nonce and fresh server timestamp. It is deliberately **source-only**, not trusted supplier verification. The Home client independently recomputes the source correlation and refuses any independent customer-fulfillment claim.
+
+Run `node --test tests/fabric-private-outcome-readback.test.mjs` to prove the actual Fabric HTTP server and Home HTTP server can exchange an authenticated signed, redacted result in one local integration test. All order, payment, mission and Shipping records in this test are synthetic. **CI passing does not mean the real source loader exists, a paying buyer was observed, or either resident runtime was deployed.**
+
 ## Next vertical integration
 
 Reuse Issue #1546 and existing Saban, Payments and Shipping implementation owners. Build an authenticated, permission-scoped canonical receipt reader (the source-only structural audit above does **not** satisfy this) joining:
