@@ -1,0 +1,36 @@
+name: Client 001 Branded V2 External HTTPS Acceptance
+on:
+  push:
+    branches: [verify/client001-branded-v2-https-20261115]
+    paths: ['.github/workflows/client001-branded-v2-live-canary.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  public-preview:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    steps:
+      - name: Validate actual public On The Go branded V2 preview
+        shell: bash
+        run: |
+          set -euo pipefail
+          url='https://jgaethle10.github.io/forge-operator/clients/on-the-go/review/'
+          for attempt in 1 2 3 4 5 6 7 8; do
+            if curl -fLsS --max-time 23 "$url" -o /tmp/onthego.html &&
+              grep -Fq '<title>On The Go Mobile Quick Lube | Client Preview V2</title>' /tmp/onthego.html; then
+              break
+            fi
+            sleep 12
+          done
+          grep -Fq '<meta name="robots" content="noindex,nofollow,noarchive">' /tmp/onthego.html
+          grep -Fq 'Real people.' /tmp/onthego.html
+          grep -Fq 'JUAN BELLO' /tmp/onthego.html
+          grep -Fq 'Tu día sigue.' /tmp/onthego.html
+          grep -Fq '509-833-5025' /tmp/onthego.html
+          grep -Fq 'data:image/jpeg;base64,' /tmp/onthego.html
+          grep -Fq 'mailto:onthegomobileoilchange@outlook.com' /tmp/onthego.html
+          grep -Fq 'No customer information is submitted to Evercraft.' /tmp/onthego.html
+          echo 'CLIENT001_BRANDED_V2_PUBLIC_HTTPS_VERIFIED'
+          echo "Verified URL: $url"
+          echo "Bytes: $(wc -c < /tmp/onthego.html)"
