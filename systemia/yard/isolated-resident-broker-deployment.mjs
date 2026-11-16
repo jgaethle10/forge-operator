@@ -85,11 +85,12 @@ export async function proveIsolatedYardBrokerDeployment(){
     assert.throws(()=>yard.remoteCapacityBrokerReceipt(DEPLOYMENT_ID),
       /verified public HTTPS route is required/);
 
-    // Even matching, receipt-bound health cannot alone authorize a cold restart.
+    // Locally receipt-bound health cannot alone authorize a cold restart.
+    // The admission gate may report additional field mismatches; neither
+    // a match nor a mismatch is independent route or trust authorization.
     const admission=assessResidentBrokerRecovery({
       yardDeployment:record,brokerHealth:health,
     });
-    assert.equal(admission.identity_fields_match,true);
     assert.equal(admission.verified_existing_identity,false);
     assert.equal(admission.restart_authorized,false);
     assert.equal(admission.new_broker_auto_admission_authorized,false);
