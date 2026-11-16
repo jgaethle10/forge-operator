@@ -4,6 +4,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import {fileURLToPath} from "node:url";
+import {spawnSync} from "node:child_process";
 import {createFieldPixelPacket,EVIDENCE_KEYS,FIELD_PIXEL_PACKET_SCHEMA}
   from "./field-annotation-core.mjs";
 import {rectifiedPixelToEnuBearing} from "./pixel-bearing.mjs";
@@ -135,4 +136,14 @@ test("local annotator HTML uses only owned relative JavaScript modules and priva
   assert.match(html,/data-claim="synchronizedClocks"/);
   assert.doesNotMatch(html,/<script[^>]+src=["']https?:/i);
   assert.doesNotMatch(html,/\b(?:fetch|XMLHttpRequest|WebSocket)\s*\(/);
+});
+
+
+test("inline browser module has valid JavaScript syntax",()=>{
+  const html=fs.readFileSync(path.join(root,"field-annotation.html"),"utf8");
+  const script=html.match(/<script type="module">([\s\S]*?)<\/script>/);
+  assert.ok(script,"one inline module is required");
+  const proc=spawnSync(process.execPath,["--check","--input-type=module"],
+    {input:script[1],encoding:"utf8",timeout:5000});
+  assert.equal(proc.status,0,proc.stderr);
 });
