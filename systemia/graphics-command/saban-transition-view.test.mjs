@@ -27,7 +27,7 @@ test('verified private scheduler entries become readable mobile-first timeline w
     assert.match(html,/The work\./);
     assert.match(html,/At a glance/);
     assert.match(html,/WHAT TO DO NEXT/);
-    assert.match(html,/No outstanding jobs in the final observation/);
+    assert.match(html,/1 job remains queued/);
     assert.match(html,/Work assigned/);
     assert.match(html,/Work completed/);
     assert.match(html,/Local hash chain checked/); // local integrity, not independent attestation
