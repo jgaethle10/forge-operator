@@ -22,7 +22,7 @@ for(const pose of [phone,largerPhone,narrowDesktopPanel,wideDesktop]){
   assert.equal(pose.yaw,-9);
   assert.equal(pose.pitch,61);
   assert.equal(pose.panX,0);
-  assert.equal(pose.panY,0);
+  assert(pose.panY>=24&&pose.panY<=68,'camera shifts the back-row faces below the top edge');
   assert(Object.isFrozen(pose));
 }
 for(const dims of [{width:0,height:500},{width:300,height:-1},{width:NaN,height:500}])
