@@ -301,6 +301,13 @@ test('Saban gateway quarantines Node001 across every work-dispatch endpoint befo
         'microseed_device_quarantined_pending_host_review',endpoint);
     }
     assert.equal(deviceCalls,0);
+    const gatewayHealthResponse=await fetch(gateway.url+'/health');
+    assert.equal(gatewayHealthResponse.status,200);
+    const gatewayHealth=await gatewayHealthResponse.json();
+    assert.equal(gatewayHealth.registered_device_count,1);
+    assert.equal(gatewayHealth.trust_eligible_device_count,1);
+    assert.equal(gatewayHealth.eligible_device_count,0);
+    assert.equal(gatewayHealth.execution_quarantine_count,1);
     assert.equal(fs.existsSync(path.join(root,'gateway-state','idempotency')),false);
     assert.equal(fs.existsSync(path.join(root,'gateway-state','signed-execution-intents')),false);
 
@@ -309,7 +316,12 @@ test('Saban gateway quarantines Node001 across every work-dispatch endpoint befo
       headers:{authorization:'Bearer test-gateway-token'},
     });
     assert.equal(summaryResponse.status,200);
-    assert.equal((await summaryResponse.json()).device_ids_exposed,false);
+    const summary=await summaryResponse.json();
+    assert.equal(summary.device_ids_exposed,false);
+    assert.equal(summary.device_count,1);
+    assert.equal(summary.trust_eligible_count,1);
+    assert.equal(summary.eligible_count,0);
+    assert.equal(summary.execution_quarantine_count,1);
   }finally{
     if(gateway)await gateway.close();
     fs.rmSync(root,{recursive:true,force:true});
