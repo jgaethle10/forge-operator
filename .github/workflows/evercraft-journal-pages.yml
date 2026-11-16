@@ -552,10 +552,17 @@ jobs:
           print('CLIP_SOCIAL_PREVIEW_HTTP_VERIFIED')
           PY
           # No exposed white-label-to-corporate publishing control plane.
+          echo 'Verifying private publishing paths are inaccessible on the public fallback'
           for path in clip/audience-sites/ clip/audience-sites/queue.json audience-sites/properties.json; do
             code=$(curl --silent --show-error --max-time 10 -o /dev/null -w '%{http_code}' "${base%/}/$path")
-            test "$code" = "404"
+            echo "Excluded path $path returned HTTP $code"
+            if [ "$code" != "404" ]; then
+              echo "::error title=Public fallback boundary::Excluded publishing path $path returned HTTP $code rather than 404"
+              exit 1
+            fi
           done
+          echo 'PUBLIC_FALLBACK_SENSITIVE_PATHS_DENIED'
+          echo 'Checking Roman recovery content after sensitive-route gate'
           rescue="${base%/}/site-status/roman/"
           rescue_body="$(curl --fail --silent --show-error --retry 8 --retry-all-errors --retry-delay 2 "$rescue")"
           printf '%s' "$rescue_body" | grep -q 'Copy working link'
