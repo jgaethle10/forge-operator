@@ -13,10 +13,16 @@ let requestId=crypto.randomUUID();
 const field=id=>String(document.getElementById(id)?.value||'').trim().replace(/[\r\n]+/g,' ');
 // A fixed focus preselects the already-existing audience field. No raw URL tag,
 // tracking cookie, independent partner program or payout credential is created.
-if(new URLSearchParams(location.search).get('focus')==='eps'){
+const partnerFocus=new URLSearchParams(location.search).get('focus');
+const focusAudiences=Object.freeze({
+ eps:'Local homeowners & property managers (EPS)',
+ eps_operator:'Independent field-service operator (EPS)',
+});
+if(Object.hasOwn(focusAudiences,partnerFocus)){
  const audience=document.getElementById('audience');
- if(audience&&[...audience.options].some(option=>option.value==='Local homeowners & property managers (EPS)'))
-  audience.value='Local homeowners & property managers (EPS)';
+ const selection=focusAudiences[partnerFocus];
+ if(audience&&[...audience.options].some(option=>option.value===selection))
+  audience.value=selection;
 }
 function prepareEmail() {
  const lines=[
