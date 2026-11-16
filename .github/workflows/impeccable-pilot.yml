@@ -25,10 +25,10 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p "$RUNNER_TEMP/evercraft-pilot/stage" "$RUNNER_TEMP/evercraft-pilot/results"
-          cp public/headquarters/index.html "$RUNNER_TEMP/evercraft-pilot/stage/headquarters_html"
-          cp public/headquarters/tower.css "$RUNNER_TEMP/evercraft-pilot/stage/headquarters_css"
-          cp public/work-saban/index.html "$RUNNER_TEMP/evercraft-pilot/stage/work_saban_html"
-          cp systemia/experience/fixtures/impeccable-synthetic-defects.html "$RUNNER_TEMP/evercraft-pilot/stage/synthetic_defects"
+          cp public/headquarters/index.html "$RUNNER_TEMP/evercraft-pilot/stage/headquarters_html.html"
+          cp public/headquarters/tower.css "$RUNNER_TEMP/evercraft-pilot/stage/headquarters_css.css"
+          cp public/work-saban/index.html "$RUNNER_TEMP/evercraft-pilot/stage/work_saban_html.html"
+          cp systemia/experience/fixtures/impeccable-synthetic-defects.html "$RUNNER_TEMP/evercraft-pilot/stage/synthetic_defects.html"
           chmod -R a+rX "$RUNNER_TEMP/evercraft-pilot/stage"
           node --check systemia/experience/impeccable-pilot-report.mjs
       - name: Fetch a pinned upstream binary and independently verify digest
@@ -49,6 +49,8 @@ jobs:
           docker pull ubuntu:24.04
           root="$RUNNER_TEMP/evercraft-pilot"
           for item in headquarters_html headquarters_css work_saban_html synthetic_defects; do
+            extension=html
+            if [ "$item" = headquarters_css ]; then extension=css; fi
             set +e
             docker run --rm --network none --read-only --cap-drop ALL \
               --security-opt no-new-privileges --pids-limit 64 --user 65534:65534 \
@@ -57,7 +59,7 @@ jobs:
               --env HOME=/tmp --env IMPECCABLE_HOME=/tmp/impeccable \
               --mount "type=bind,src=$root/stage,dst=/audit,readonly" \
               --mount "type=bind,src=$root/impeccable-linux-x64,dst=/usr/local/bin/impeccable,readonly" \
-              ubuntu:24.04 /usr/local/bin/impeccable detect --json "/audit/$item" \
+              ubuntu:24.04 /usr/local/bin/impeccable detect --json "/audit/$item.$extension" \
               > "$root/results/$item.json"
             status=$?
             set -e
