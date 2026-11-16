@@ -34,6 +34,20 @@ The first bounded Direct Mode slice is live in source:
 
 This is deliberate. Home is an operating entrance, not a way around Systemia.
 
+## Executive evidence readback (source-verified, read-only)
+
+The founder Executive Floor now requests `GET /api/executive/evidence` **after a valid Home session**. Production passes the existing Evercraft Identity plus Passport `home.read` decision. Local loopback development remains explicitly non-production.
+
+The adapter reads only the on-disk owned `public/journal/index.json`, the exact indexed article, and its Journal publication receipt. It checks the article SHA-256 digest and receipt fields before returning `source_receipt_verified`. A source publication receipt is **not** an independent external HTTPS delivery check.
+
+Clip gets `handoff_source_present` only when the matching on-disk handoff source is present. A handoff does not establish a provider post, permalink, social reach, or automatic publication.
+
+Payments get `canonical_order_feed_not_connected` until an authorized, source-of-truth Evercraft Payments order/settlement read bridge is installed and tested. Paid orders and revenue remain **null / unknown**, never fabricated as zero. A public price page or Stripe return is not a paid receipt. No credentials, provider tokens, private payment records or execution privileges are returned.
+
+The UI refreshes its private readback at Home entry and when the owner clicks **Refresh source receipts**. This call never invokes a payment, social post, mission execution, or account mutation.
+
+Validation: `node --test executive-evidence-adapter.test.mjs`, plus the existing Home test suite. Runtime production release still requires a Home deployment and external authenticated/anonymous probes; a merged GitHub commit alone is not proof of deployment.
+
 ## Authentication
 
 ### Local development
