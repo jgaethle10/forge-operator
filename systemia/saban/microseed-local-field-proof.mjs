@@ -159,6 +159,12 @@ export async function inspectLocalMicroSeedEvidence({
     health.signed_receipts_required===true&&health.signed_receipts_enabled===true&&
     health.signed_telemetry_required===true&&health.signed_telemetry_enabled===true&&
     health.arbitrary_code_execution===false,'agent_health_mismatch');
+  // A legacy agent can sign its HTTP response while leaving only an unsigned
+  // idempotency record. Fail before POST instead of producing another partial job.
+  if(hashProbe){
+    demand(health.signed_journal_commit_before_ack===true,
+      'signed_journal_protocol_unavailable');
+  }
 
   const telemetry=await call(origin,'/v1/telemetry',{fetchImpl,token:token.trim()});
   const tCheck=verifyMicroSeedTelemetry(telemetry,{
