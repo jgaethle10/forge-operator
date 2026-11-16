@@ -1100,6 +1100,11 @@ export async function startEvercraftHomeServer({
       if (!paymentsSession.ok) return json(res, paymentsSession.status, paymentsSession);
       const systemiaSession = sessionFor(req, "home.systemia.read");
       if (!systemiaSession.ok) return json(res, systemiaSession.status, systemiaSession);
+      // No tenant-targeted correlation yet: keep the single latest outcome
+      // owner-only until the private upstream can authorize tenant/order scope.
+      if (authMode === "passport" && paymentsSession.subject !== ownerSubjectRef) {
+        return json(res, 403, { ok: false, state: "owner_only_outcome_readback" });
+      }
       return json(res, 200, {
         ok: true, subject: paymentsSession.subject,
         ...(await privateOutcomeReadback.read()),
