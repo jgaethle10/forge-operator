@@ -193,6 +193,11 @@ jobs:
           # Do not replace the visitor homepage with a machine directory redirect.
           test -s _public_pages/headquarters/index.html
           grep -Fq 'id="hero-title"' _public_pages/headquarters/index.html
+          # Preserve the complete owned, multi-file architectural experience.
+          for asset in tower.css tower.mjs mark.svg; do
+            test -s "_public_pages/headquarters/$asset"
+          done
+          grep -Fq 'id="explore"' _public_pages/headquarters/index.html
           cp _public_pages/headquarters/index.html _public_pages/index.html
           node <<'NODE'
           const fs=require('fs');
@@ -291,6 +296,16 @@ jobs:
           grep -Fq 'id="hero-title"' /tmp/evercraft-headquarters-root.html
           grep -Fq 'Built to endure.' /tmp/evercraft-headquarters-root.html
           ! grep -Fq 'http-equiv="refresh"' /tmp/evercraft-headquarters-root.html
+          grep -Fq '/forge-operator/headquarters/tower.css' /tmp/evercraft-headquarters-root.html
+          grep -Fq '/forge-operator/headquarters/tower.mjs' /tmp/evercraft-headquarters-root.html
+          grep -Fq '/forge-operator/headquarters/mark.svg' /tmp/evercraft-headquarters-root.html
+          for asset in tower.css tower.mjs mark.svg; do
+            curl --fail --silent --show-error --location --retry 5 --retry-all-errors --retry-delay 2 --max-time 20 "${base%/}/headquarters/$asset" -o "/tmp/evercraft-headquarters-$asset"
+            test -s "/tmp/evercraft-headquarters-$asset"
+          done
+          grep -Fq '.floor-button' /tmp/evercraft-headquarters-tower.css
+          grep -Fq 'selectFloor' /tmp/evercraft-headquarters-tower.mjs
+          grep -Fq '<svg' /tmp/evercraft-headquarters-mark.svg
           {
             echo '## Evercraft Headquarters public root verified'
             echo

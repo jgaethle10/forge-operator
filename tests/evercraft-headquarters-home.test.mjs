@@ -10,7 +10,7 @@ test('headquarters is a genuine public company front door',()=>{
   }
   assert.match(publicPage,/name="viewport"/);
   assert.match(publicPage,/<main id="main">/);
-  assert.match(publicPage,/<a class="skip"/);
+  assert.match(publicPage,/<a class="skip(?:-link)?"/);
   assert.match(publicPage,/No physical public office is represented/i);
   assert.doesNotMatch(publicPage,/base44\.app|fake.live|pretend\s+(revenue|live)|guaranteed/i);
   assert.doesNotMatch(publicPage,/<form[\s>]/i,'public homepage should not imitate an intake backend');
