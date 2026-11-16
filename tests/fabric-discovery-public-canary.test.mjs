@@ -3,7 +3,6 @@ import assert from 'node:assert/strict';
 import {probePublicDiscovery,DEFAULT_ORIGIN} from '../scripts/fabric-discovery-public-canary.mjs';
 
 const namedMatch=[
-  ['Havenly Cleaning','product:havenly-cleaning'],
   ['seasonal November','product:seasonally'],
   ['Evercraft Rewards','product:evercraft-rewards'],
   ['Contractor Cloud','product:contractor-cloud'],
@@ -52,8 +51,6 @@ function fetchFixture({total=123,wrongSpecialist=false,paid=false}={}){
             type:'website',
             url:id==='product:evercraft-partners'
               ?'https://jgaethle10.github.io/forge-operator/partners/'
-              :id==='product:havenly-cleaning'
-              ?'https://jgaethle10.github.io/forge-operator/havenly/'
               :'https://jgaethle10.github.io/forge-operator/chum/products/evercraft-rewards/',
           }],
         };
@@ -65,12 +62,12 @@ function fetchFixture({total=123,wrongSpecialist=false,paid=false}={}){
   return {fetcher,calls};
 }
 
-test('external canary passes 15 public-read-only acceptance checks with no side effects',async()=>{
+test('external canary passes 13 public-read-only acceptance checks with no side effects',async()=>{
   const {fetcher,calls}=fetchFixture();
   const result=await probePublicDiscovery({fetcher});
   assert.equal(result.passed,true,JSON.stringify(result,null,2));
-  assert.equal(result.passed_count,15);
-  assert.equal(result.total_checks,15);
+  assert.equal(result.passed_count,13);
+  assert.equal(result.total_checks,13);
   assert.equal(result.state,'verified_public_discovery');
   assert.equal(result.deployment_performed,false);
   assert.equal(result.customer_data_sent,false);

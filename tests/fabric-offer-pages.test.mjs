@@ -56,8 +56,13 @@ test('human offer copy gives sell-now capabilities short memorable URLs',()=>{
   assert.match(page,/property="og:description"/);
   assert.match(page,/property="og:url" content="https:\/\/fabric\.systemiacommandcenters\.com\/offers\/website-audit"/);
   assert.match(page,/rel="canonical" href="https:\/\/fabric\.systemiacommandcenters\.com\/offers\/website-audit"/);
-  assert.match(page,/name="twitter:card" content="summary"/);
-  assert.doesNotMatch(page,/poster-feed\.svg|poster-hero-wide\.svg|property="og:image"/);
+  assert.match(page,/name="twitter:card" content="summary_large_image"/);
+  assert.match(page,/property="og:image" content="https:\/\/jgaethle10\.github\.io\/forge-operator\/visuals\/website-audit-attention\/preview-og-v2\.png"/);
+  assert.match(page,/property="og:image:type" content="image\/png"/);
+  assert.match(page,/property="og:image:width" content="1200"/);
+  assert.match(page,/property="og:image:height" content="630"/);
+  assert.match(page,/property="og:image:alt" content="Systemia Website Audit by Evercraft/);
+  assert.doesNotMatch(page,/poster-feed\.svg|poster-hero-wide\.svg/);
   assert.match(page,/Inside your Quick Win Audit/);
   assert.match(page,/Five prioritized fixes/);
   assert.match(page,/Illustrative process preview/);
@@ -249,7 +254,8 @@ test('human checkout failures render a branded Evercraft Payments page instead o
     assert.match(response.headers.get('content-type')||'',/^text\/html/i);
     const body=await response.text();
     assert.match(body,/Checkout could not be confirmed\./);
-    assert.match(body,/Request payment assistance/);
+    assert.match(body,/Email Evercraft for payment help/);
+    assert.doesNotMatch(body,/tel:\+15097590440|Call Evercraft/);
     assert.match(body,/Evercraft Payments/);
     assert.match(body,/Return to the offer/);
     assert.doesNotMatch(body,/evercraft_payments_checkout_not_ready|adapter_error|gate_key/);

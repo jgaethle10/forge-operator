@@ -18,6 +18,13 @@ function findCitedTrials(paper) {
   return [...new Set(ids.filter(isNct))].slice(0,6);
 }
 
+// Registry protocol and posted-result headings are kept separate; neither is a
+// historical preregistration snapshot or independently verified outcome.
+const normalizeOutcomeRows=(rows,type,max=10)=>Array.isArray(rows)?rows.slice(0,max)
+ .map(row=>({type,measure:text(row?.measure??row?.title,260)||null,
+  time_frame:text(row?.timeFrame,220)||null,description:text(row?.description,430)||null}))
+ .filter(x=>x.measure):[];
+
 export function normalizeClinicalTrialsStudy(record, expectedId) {
   const protocol=record?.protocolSection;
   const identification=protocol?.identificationModule;
@@ -28,6 +35,14 @@ export function normalizeClinicalTrialsStudy(record, expectedId) {
   const conditions=protocol?.conditionsModule||{};
   const sponsor=protocol?.sponsorCollaboratorsModule?.leadSponsor;
   const results=record?.hasResults===true;
+  const outcomes=protocol?.outcomesModule;
+  const posted=record?.resultsSection?.outcomeMeasuresModule;
+  const protocolPrimary=normalizeOutcomeRows(outcomes?.primaryOutcomes,'PRIMARY',12);
+  const protocolSecondary=normalizeOutcomeRows(outcomes?.secondaryOutcomes,'SECONDARY',12);
+  const postedMeasures=Array.isArray(posted?.outcomeMeasures)?posted.outcomeMeasures.slice(0,20)
+   .map(row=>({type:text(row?.type,60)||'UNKNOWN',
+    measure:text(row?.title,260)||null,time_frame:text(row?.timeFrame,220)||null}))
+   .filter(x=>x.measure):[];
   return {
     nct_id:expectedId,
     registry_url:'https://clinicaltrials.gov/study/'+expectedId,
@@ -42,6 +57,11 @@ export function normalizeClinicalTrialsStudy(record, expectedId) {
     conditions:cleanList(conditions.conditions,12),
     lead_sponsor:text(sponsor?.name,160)||null,
     registry_results_posted:results,
+    protocol_outcomes_status:outcomes?'observed_current_registry':'module_unavailable',
+    protocol_primary_outcomes:protocolPrimary,
+    protocol_secondary_outcomes:protocolSecondary,
+    posted_result_measure_headings:postedMeasures,
+    registry_snapshot_limitation:'Current registry response only; historical prespecification and amendments not established',
     metadata_identity:'NCT_identifier_matches_registry_record',
     clinical_conclusion:'none; registry linkage does not verify paper results or treatment benefit'
   };

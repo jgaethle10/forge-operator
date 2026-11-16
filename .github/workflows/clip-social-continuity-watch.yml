@@ -53,6 +53,29 @@ jobs:
             --queue distribution/marketing/evercraft-problem-first-20261022.review.json \
             --receipts-dir artifacts/clip/social-publish-receipts \
             --out artifacts/clip/social-continuity-watch/latest.json
+      - name: Seven-service buyer campaign receipt watch (read-only)
+        run: |
+          node systemia/clip/social-continuity-watch.mjs \
+            --queue distribution/marketing/evercraft-services-clip-20261110.review.json \
+            --receipts-dir artifacts/clip/social-publish-receipts \
+            --out artifacts/clip/social-continuity-watch/commercial-services/latest.json
+      - name: Surface commercial services publication truth
+        if: always()
+        run: |
+          if [ -f artifacts/clip/social-continuity-watch/commercial-services/latest.json ]; then
+            node --input-type=module -e "
+              import fs from 'node:fs';
+              const d=JSON.parse(fs.readFileSync('artifacts/clip/social-continuity-watch/commercial-services/latest.json'));
+              fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,
+                '## Seven-service Evercraft Clip campaign (read-only)\\n'+
+                'Status: '+d.status+'\\n'+
+                'Entries: '+d.counts.total+'\\n'+
+                'Missing campaign-scoped approval / provider connection: '+d.counts.approval_hold+'\\n'+
+                'Provider publication receipts: '+d.counts.provider_receipt_recorded+'\\n'+
+                'Provider receipts source available: '+d.receipt_source_available+'\\n'+
+                'No post, clicks, qualified buyer or paid order can be inferred from this check.\\n');
+            "
+          fi
       - name: Work Saban launch receipt watch (read-only)
         run: |
           node systemia/clip/social-continuity-watch.mjs \
@@ -148,6 +171,8 @@ jobs:
           name: evercraft-clip-social-continuity
           path: |
             artifacts/clip/social-continuity-watch/latest.json
+            artifacts/clip/social-continuity-watch/commercial-services/latest.json
+            artifacts/clip/social-continuity-watch/commercial-services/mission-snapshot.json
             artifacts/clip/social-continuity-watch/work-saban/latest.json
             artifacts/clip/social-continuity-watch/work-saban/mission-snapshot.json
             artifacts/clip/social-continuity-watch/work-saban/rotation/latest.json

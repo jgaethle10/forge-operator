@@ -1,0 +1,47 @@
+{
+  "schema": "evercraft.journal.editorial-photo-rights-review.v1",
+  "story_id": "journal:2026-10-31:arase-radiation-barrier",
+  "reviewed_on": "2026-11-15",
+  "original_photo": {
+    "url": "https://svs.gsfc.nasa.gov/vis/a010000/a014800/a014835/MaraJohnson-Groh_May2024AuroraPhoto2.jpg",
+    "published_item": "https://svs.gsfc.nasa.gov/14835/",
+    "item_title": "What Happened During the Biggest Geomagnetic Storm in Over 20 Years",
+    "item_credit": "NASA/Mara Johnson-Groh",
+    "item_caption": "The aurora borealis in Southwestern British Columbia on May 10, 2024.",
+    "date": "2024-05-10",
+    "dimensions_px": {
+      "width": 6000,
+      "height": 4000
+    },
+    "bytes": 4358678,
+    "sha256": "a54bc4786411886eab821f17d89aef6ebb63481264bc3e993d5fa0260d8beaf6",
+    "image_is_contextual_not_scientific_measurement": true
+  },
+  "policy": {
+    "url": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
+    "source_scope": "NASA-originated media, except separately identified third-party material",
+    "editorial_guidance": "NASA factual editorial use generally does not require explicit permission, with acknowledgement, no endorsement, and separate clearance for third-party material.",
+    "promotion_limitation": "Do not use in Evercraft product advertisements, promotional campaigns or merchandising without a separate applicable rights determination.",
+    "asset_specific_concern": "NASA SVS video on the same page includes separately permitted aurora footage; verify this specific NASA/Mara Johnson-Groh still photograph is NASA-originated and not separately copyrighted. Page-level NASA credit is favorable evidence but not conclusive legal title.",
+    "portrait_or_logo_concern": "Image is a natural landscape and aurora; no identifiable people or NASA logos relied upon in this assessment."
+  },
+  "preliminary_decision": {
+    "editorial_news_article_use": "supported_subject_to_asset_specific_verification",
+    "article_approval": false,
+    "visual_rights_state": "not_yet_verified",
+    "newsroom_hero_may_publish": false,
+    "clip_promotional_use_authorized": false,
+    "nasa_approval_or_endorsement_claimed": false,
+    "local_source_hash_verified": true,
+    "outstanding_checks": [
+      "Reconfirm photograph's specific page credit and third-party copyright indication immediately before publication",
+      "Record the final editorial rights reviewer and date; preserve NASA credit and no endorsement language",
+      "Approve an actual local cropped/optimized rendition and bind crop hash to original-photo source",
+      "Review social/Clip usage separately from factual publication, especially where a post promotes Evercraft products"
+    ]
+  },
+  "evidence_urls": [
+    "https://svs.gsfc.nasa.gov/14835/",
+    "https://www.nasa.gov/nasa-brand-center/images-and-media/"
+  ]
+}

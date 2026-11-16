@@ -13,6 +13,7 @@ on:
       - 'systemia/organism/medical-review-packet*.mjs'
       - 'systemia/organism/medical-registry-crosscheck*.mjs'
       - 'systemia/organism/medical-registered-trial-lane*.mjs'
+      - 'systemia/organism/medical-outcome-audit*.mjs'
       - 'systemia/organism/medical-registry-source-probe.mjs'
       - 'systemia/organism/medical-workflow-continuity.test.mjs'
       - 'systemia/organism/medical-abstract-evidence*.mjs'
@@ -33,6 +34,7 @@ on:
       - 'systemia/organism/medical-review-packet*.mjs'
       - 'systemia/organism/medical-registry-crosscheck*.mjs'
       - 'systemia/organism/medical-registered-trial-lane*.mjs'
+      - 'systemia/organism/medical-outcome-audit*.mjs'
       - 'systemia/organism/medical-registry-source-probe.mjs'
       - 'systemia/organism/medical-workflow-continuity.test.mjs'
       - 'systemia/organism/kaidance-frontier-proof.mjs'
@@ -100,6 +102,9 @@ jobs:
       - name: Prove registered-trial PubMed cohort and official crosscheck
         run: node systemia/organism/medical-registered-trial-lane.test.mjs
 
+      - name: Prove registered protocol to abstract reviewer comparisons
+        run: node systemia/organism/medical-outcome-audit.test.mjs
+
       - name: Run live KAIDANCE frontier field cycle
         run: node systemia/organism/kaidance-frontier-cycle.mjs
 
@@ -149,6 +154,9 @@ jobs:
             artifacts/medical-registered-trials/review.md
             artifacts/medical-registered-trials/registry.md
             artifacts/medical-registered-trials/index.html
+            artifacts/medical-registered-trials/outcome-audit/latest.json
+            artifacts/medical-registered-trials/outcome-audit/review.md
+            artifacts/medical-registered-trials/outcome-audit/index.html
           if-no-files-found: warn
           retention-days: 14
 

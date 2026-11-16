@@ -156,6 +156,7 @@ export function createForensiScopeCustomerRuntime({
    }
    if(guestLedger&&(
     route==='/v1/forensiscope/guest'||
+    route==='/v1/forensiscope/guest/challenge'||
     route==='/v1/forensiscope/orders'||
     /^\/v1\/forensiscope\/orders\/forensiscope-[a-f0-9]{32}$/.test(route)
    ))return guestLedger.handler(req,res);
