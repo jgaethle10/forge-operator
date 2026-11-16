@@ -216,3 +216,36 @@ test('Lab review: agreed dot-dot cgroup path and matching hashes cannot join',()
   assert.throws(()=>joinHeldScopeKillSurveyForReview(f),
     /CGKILL_JOIN_UNREVIEWED_PROPOSAL/);
 });
+
+test('direct JSON join refuses typed and coerced device/inode values on either view',()=>{
+  for(const field of ['original_scope_device','original_scope_inode']){
+    for(const value of [31,BigInt(31),{toString(){return '31';}},['31']]){
+      bad(f=>{f.survey[field]=value;},
+        'CGKILL_JOIN_BOOT_OR_KERNEL_IDENTITY_MISMATCH');
+    }
+  }
+  for(const field of ['expected_original_cgroup_device',
+    'expected_original_cgroup_inode']){
+    for(const value of [31,{toString(){return '31';}},['31']]){
+      bad(f=>{f.candidate={...f.candidate,[field]:value};},
+        'CGKILL_JOIN_BOOT_OR_KERNEL_IDENTITY_MISMATCH');
+    }
+  }
+});
+test('matching path hash cannot compensate for malformed cgroup path bytes',()=>{
+  const paths=[
+    '/user.slice/%2e%2e/'+U,
+    '/user.slice/unsafe\u0000nul/'+U,
+    '/user.slice/unsafe\nnewline/'+U,
+    '/user.slice/unsafe\\slash/'+U,
+    '/user.slice/space name/'+U,
+    '/user.slice//'+U
+  ];
+  for(const changed of paths){
+    bad(f=>{
+      f.proposal.cgroup_path=changed;
+      f.candidate={...f.candidate,cgroup_path_sha256:hash(changed)};
+      f.survey.scope_path_sha256=hash(changed);
+    },'CGKILL_JOIN_UNREVIEWED_PROPOSAL');
+  }
+});
