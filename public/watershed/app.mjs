@@ -139,10 +139,37 @@ function renderEvidence(source){
   });
 }
 
+function renderIndexReviewCharts(review){
+  // Each bar is an observed, NRCS-warning-flagged index, not a forecast curve.
+  const labels={'upper-yakima':'Upper Yakima','naches':'Naches','lower-yakima':'Lower Yakima'};
+  blockInto('index-review-visuals',parent=>{
+    for(const id of ['upper-yakima','naches','lower-yakima']){
+      const card=el('article','index-chart');
+      card.append(el('h3','',labels[id]));
+      card.append(el('div','index-explainer','Five source dates · index scale 0–150% · NRCS caution on every value'));
+      for(const day of review.days){
+        const reading=day.indices.find(x=>x.id===id);
+        const row=el('div','index-day');
+        row.setAttribute('aria-label',day.date+': '+labels[id]+' official NRCS index '+reading.percent+
+          '% with official early-season warning, '+(day.preservation==='ledger_recorded'?'stored ledger receipt':'temporary source staging'));
+        const track=el('div','index-day-track');
+        track.setAttribute('aria-hidden','true');
+        const bar=el('div','index-day-fill');
+        bar.style.width=Math.min(100,(reading.percent/150)*100).toFixed(1)+'%';
+        track.append(bar);
+        put(row,span('Nov '+day.date.slice(-2),'index-day-name'),track,
+          span(formatNumber(reading.percent)+'%*','index-day-value'));
+        card.append(row);
+      }
+      parent.append(card);
+    }
+  });
+}
 function renderIndexReview(review){
   const result=validateIndexReview(review);
   if(!result.valid)throw new TypeError('Index source history validation failed: '+result.errors.join(', '));
   const counts=indexReviewCounts(review);
+  renderIndexReviewCharts(review);
   $('index-history-summary').textContent=counts.days+' verified dated NRCS reports · '+
     counts.durable_days+' ledger-recorded · '+counts.temporary_days+
     ' temporary staging receipts · '+counts.warned_indices+' official warning flags.';
@@ -171,6 +198,8 @@ function renderIndexReview(review){
     }
   });
   $('index-history-error').hidden=true;
+  const button=$('print-evidence');
+  if(button)button.disabled=false;
 }
 export async function loadIndexReview(fetchImpl=fetch){
   const response=await fetchImpl(INDEX_REVIEW_PATH,{cache:'no-store'});
@@ -199,8 +228,17 @@ export async function loadWatershed(fetchImpl=fetch){
   renderWatershed(snapshot);
 }
 if(typeof document!=='undefined'){
+  const printButton=$('print-evidence');
+  if(printButton){
+    printButton.disabled=true;
+    printButton.addEventListener('click',()=>{
+      if(!printButton.disabled&&$('index-history-error')?.hidden)window.print();
+    });
+  }
   loadWatershed().then(()=>loadIndexReview().catch(error=>{
     $('index-history-list')?.replaceChildren();
+    $('index-review-visuals')?.replaceChildren();
+    const button=$('print-evidence');if(button)button.disabled=true;
     const warning=$('index-history-error');
     if(warning)warning.hidden=false;
     if($('index-history-summary'))$('index-history-summary').textContent='History withheld: source validation unavailable';
