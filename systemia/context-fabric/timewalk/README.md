@@ -322,6 +322,28 @@ counts. It reconstructs packets for accepted decisions and returns a packet
 node --test systemia/context-fabric/timewalk/intake-ledger-reader.test.mjs
 ```
 
+## Historical as-of privacy correction (v0.7)
+
+Even when a record was ingested before `known_at`, its current
+Context snapshot may include a retraction that was recorded **after**
+the requested historical knowledge cutoff. Timewalk must **not**
+expose that future retraction's event timestamp, stored-at timestamp
+or evidence reference to an earlier as-of query. Once the retraction
+is known, the fields and retracted status can appear.
+
+Older legacy retractions have no independently recorded knowledge
+clock. They remain `retraction_time_unverified` with
+`historical_status_complete: false`, and their unverifiable event
+timestamp and evidence reference are withheld rather than presented
+as already known in the past.
+
+Historical queries also require an authorized Context snapshot that
+explicitly declares `authority_filter_applied: true`. Caller-supplied
+authorization times cannot replay revoked access rights.
+
+These bounds are asserted in `timewalk.test.mjs`; the source
+resolution and provenance rules are unchanged.
+
 ## Performance and security boundaries
 
 The Context Fabric method `authorizedTimewalkSnapshot` filters by **current**, entity/record-resource-scoped Passport grants before returning internal records, then performs an in-memory read-only projection. The snapshot has a hard cap of **5000 authorized matching records** and fails closed if exceeded. Timewalk output has a separate `limit` of 1 to 1000, and reports truncation as `complete: false`.
