@@ -27,7 +27,7 @@ export function auditAraseRelease({markdown,claimInput,media,rights,index}){
  requireEqual(claimInput.release_state,'candidate_only_not_approved','claim_authority');
  requireEqual(media.publication_state,'editorial_draft_only','media_authority');
  requireEqual(story.title,"The Particle Accelerator Inside Earth's \"Impenetrable\" Barrier",'precise_title');
- if(/made its own radiation/i.test(story.title)||!/electrons were (accelerated|energized)/i.test(markdown)){
+ if(/made its own radiation/i.test(story.title)||!/electrons were being accelerated|electrons were accelerated|electrons being accelerated/i.test(markdown)){
   throw Error('arase_dossier_headline_or_mechanism_unbounded');
  }
  const paper=claimInput.sources.find(s=>s.source_id==='arase-peer-reviewed');
@@ -55,7 +55,7 @@ export function auditAraseRelease({markdown,claimInput,media,rights,index}){
  const published=(index.stories||[]).find(x=>x.story_id===id);
  const archive=(index.archive||[]).find(x=>x.story_id===id);
  const checks=[
-  gate('claim_reactor','preflight_passed',preflight.claim_count+' claims / '+preflight.evidence_count+' evidence rows; no missing source links','Independent scientific editor must examine the direct paper and reconcile the claim register.'),
+  gate('claim_reactor','preflight_passed',preflight.claim_count+' claims / '+preflight.evidence_count+' evidence rows; all source IDs resolve within packet','Independent scientific editor must examine the direct paper and reconcile the claim register.'),
   gate('independent_editorial_10_of_10','pending',null,'Obtain dated, attributable independent editorial acceptance; never mint it from this machine report.'),
   gate('source_freshness_and_independent_corroboration','pending',null,'Recheck sources on release day; distinguish the study from institutional summaries of the same study.'),
   gate('exact_photo_rights','pending',rights.original_photo.sha256,'Reconfirm original NASA photograph ownership, credit, third-party exceptions and precise editorial reuse; record named rights reviewer.'),
