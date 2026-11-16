@@ -1,0 +1,28 @@
+name: Pacific Licensed Guitar Music Private Research
+on:
+  push:
+    branches:
+      - studio/pacific-real-music-audition-20261115
+    paths:
+      - systemia/media-studio/pacific-licensed-music-discover.py
+      - .github/workflows/pacific-licensed-music-discover.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  licensed-music-discovery:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install beautifulsoup4
+      - run: python systemia/media-studio/pacific-licensed-music-discover.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pacific-mixkit-licensed-music-source-discovery
+          path: pacific-licensed-music-private/
+          retention-days: 7
+          if-no-files-found: error
