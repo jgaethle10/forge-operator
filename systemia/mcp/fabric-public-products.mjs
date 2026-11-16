@@ -73,8 +73,8 @@ export function loadPublicProductDiscovery({
         }
       :key==='evercraft-property-services'
       ? {
-          url:'https://evercraftpropertyservices.com/',
-          label:'Visit EPS for a non-binding property-service estimate request',
+          url:SOURCE_ROOT+'/eps/',
+          label:'Open the owned EPS email-first quote page (customer must send the email)',
         }
       :null;
     products.push(discoveryRecord({
