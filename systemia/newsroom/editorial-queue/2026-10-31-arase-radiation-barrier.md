@@ -1,5 +1,5 @@
 # Evercraft Journal | Editorial candidate
-**Working title:** The "Impenetrable" Barrier That Made Its Own Radiation
+**Working title:** The Particle Accelerator Inside Earth's "Impenetrable" Barrier
 **Desk:** Science & Discovery
 **Story ID:** journal:2026-10-31:arase-radiation-barrier
 **Slug:** arase-radiation-barrier-local-acceleration
@@ -7,11 +7,11 @@
 **Research reported:** October 2026
 **Prepared:** 2026-10-31
 **State:** EVIDENCE-SOURCED EDITORIAL DRAFT. Not approved, built, deployed, posted or published.
-**Next gates:** claim-reactor pass; independent editorial QA; attribution; original/rights-cleared visual; Fallen production brief; fresh-source preflight; 10/10 Journal editorial acceptance; Systemia release receipt; owned-origin link validation; Clip publication authorization and provider receipts.
+**Editorial correction (2026-11-15):** Working headline tightened to reflect local *electron acceleration*, not creation of radiation or disappearance of the magnetic field. Earlier headline is superseded; no publication authority is implied.\n**Next gates:** claim-reactor pass; independent editorial QA; attribution; original/rights-cleared visual; Fallen production brief; fresh-source preflight; 10/10 Journal editorial acceptance; Systemia release receipt; owned-origin link validation; Clip publication authorization and provider receipts.
 
 ## Article
 
-### The "Impenetrable" Barrier That Made Its Own Radiation
+### The Particle Accelerator Inside Earth's "Impenetrable" Barrier
 *For years, a region of near-Earth space appeared to keep the fastest radiation-belt electrons out. A powerful solar storm exposed a more complicated story: some of those electrons appear to have been energized inside it.*
 
 In May 2024, an extraordinary solar storm lit up skies far beyond the usual reach of the northern lights. For many people, the event was memorable because of the auroras. For scientists studying the environment around Earth, however, the same storm provided an unusually powerful experiment. One of its most unexpected results was recorded not on the ground but by Japan's Arase satellite, high above the atmosphere.
