@@ -78,7 +78,7 @@ jobs:
           artwork=html.find('<div class="offer-visual">')
           disclosure=html.find('<details class="audit-more-info">')
           actions=[i for i in (form, hosted_link, inquiry) if i>=0]
-          checks['large_artwork_collapsed_after_buying_action']=bool(actions) and disclosure>min(actions) and artwork>disclosure
+          checks['large_artwork_collapsed_after_buying_action']=bool(actions) and disclosure>min(actions) and preview>disclosure and (artwork<0 or artwork>disclosure)
           for name,passed in checks.items():
             print(f'{name}: {"PASS" if passed else "FAIL"}')
           print('buyer_action_mode:',mode)
