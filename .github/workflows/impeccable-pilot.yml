@@ -1,0 +1,78 @@
+name: Impeccable Isolated Detector Pilot
+
+on:
+  pull_request:
+    paths:
+      - "systemia/experience/impeccable-pilot-report.mjs"
+      - "systemia/experience/fixtures/impeccable-*"
+      - ".github/workflows/impeccable-pilot.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pinned-detector:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Prepare only public sources and a clearly synthetic test fixture
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/evercraft-pilot/stage" "$RUNNER_TEMP/evercraft-pilot/results"
+          cp public/headquarters/index.html "$RUNNER_TEMP/evercraft-pilot/stage/headquarters_html"
+          cp public/headquarters/tower.css "$RUNNER_TEMP/evercraft-pilot/stage/headquarters_css"
+          cp public/work-saban/index.html "$RUNNER_TEMP/evercraft-pilot/stage/work_saban_html"
+          cp systemia/experience/fixtures/impeccable-synthetic-defects.html "$RUNNER_TEMP/evercraft-pilot/stage/synthetic_defects"
+          chmod -R a+rX "$RUNNER_TEMP/evercraft-pilot/stage"
+          node --check systemia/experience/impeccable-pilot-report.mjs
+      - name: Fetch a pinned upstream binary and independently verify digest
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fL --retry 2 --connect-timeout 10 --max-time 90 \
+            "https://github.com/pbakaus/impeccable/releases/download/engine-v0.1.25/impeccable-linux-x64" \
+            -o "$RUNNER_TEMP/evercraft-pilot/impeccable-linux-x64"
+          printf '%s  %s\n' \
+            "f48aca43294a9ba1ea3eb7b1d0a0b2d595c480e8c65003e410247b9884820ddd" \
+            "$RUNNER_TEMP/evercraft-pilot/impeccable-linux-x64" | sha256sum --check
+          chmod 755 "$RUNNER_TEMP/evercraft-pilot/impeccable-linux-x64"
+      - name: Run detector offline in read-only, least-privilege container
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker pull ubuntu:24.04
+          root="$RUNNER_TEMP/evercraft-pilot"
+          for item in headquarters_html headquarters_css work_saban_html synthetic_defects; do
+            set +e
+            docker run --rm --network none --read-only --cap-drop ALL \
+              --security-opt no-new-privileges --pids-limit 64 --user 65534:65534 \
+              --tmpfs /tmp:rw,nosuid,nodev,size=32m,mode=1777 \
+              --env CI=1 --env DO_NOT_TRACK=1 --env IMPECCABLE_NO_TELEMETRY=1 \
+              --env HOME=/tmp --env IMPECCABLE_HOME=/tmp/impeccable \
+              --mount "type=bind,src=$root/stage,dst=/audit,readonly" \
+              --mount "type=bind,src=$root/impeccable-linux-x64,dst=/usr/local/bin/impeccable,readonly" \
+              ubuntu:24.04 /usr/local/bin/impeccable detect --json "/audit/$item" \
+              > "$root/results/$item.json"
+            status=$?
+            set -e
+            echo "$item exit=$status (0=clean, 2=findings)"
+            if [ "$status" -ne 0 ] && [ "$status" -ne 2 ]; then
+              echo "Detector could not scan $item (exit $status)" >&2
+              exit 1
+            fi
+            node -e "const f=require('fs'); const x=JSON.parse(f.readFileSync(process.argv[1])); if(!Array.isArray(x))process.exit(1); console.log('Valid upstream findings array:',x.length)" "$root/results/$item.json"
+          done
+      - name: Compare with first-party Human Experience Sentinel
+        shell: bash
+        run: |
+          EVERCRAFT_PILOT_RESULTS="$RUNNER_TEMP/evercraft-pilot/results" node systemia/experience/impeccable-pilot-report.mjs
+      - name: Confirm nothing was installed into the checkout
+        run: |
+          git status --porcelain
+          test -z "$(git status --porcelain)"
