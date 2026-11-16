@@ -23,6 +23,21 @@ const boundedStats=(stats,keys)=>{
   }
   return result;
 };
+/**
+ * Local presentation only. The device clock is untrusted; this does not poll a
+ * server, attest to freshness, or establish real-time agent activity.
+ */
+export function snapshotAgeLabel(timestamp,nowMs){
+  const at=Date.parse(timestamp);
+  if(!Number.isFinite(at)||!Number.isFinite(nowMs))throw Error('Invalid snapshot age input');
+  const minutes=Math.floor((nowMs-at)/60000);
+  if(minutes< -5)return 'Snapshot appears newer than device clock · check clock';
+  if(minutes<5)return 'Snapshot within 5 min of device clock · NOT LIVE';
+  if(minutes<60)return 'Snapshot ~'+minutes+' min old · device clock';
+  if(minutes<1440)return 'Snapshot ~'+Math.floor(minutes/60)+' h old · device clock';
+  return 'Snapshot ~'+Math.floor(minutes/1440)+' d old · device clock';
+}
+
 export function validateSocietyObservation(data){
   if(!data||data.schema!==OBSERVATION_SCHEMA||
     data.origin!=='operator_supplied_local_snapshot_not_authenticated'||
@@ -164,6 +179,7 @@ export function mountSocietyLedger({onOpen=()=>{}}={}){
       node('span','Tick '+observation.tick),
       node('span',observation.coverage==='complete'?'Retained slice complete':'History is partial'),
       node('span','Snapshot '+observation.heartbeatAt),
+      node('span',snapshotAgeLabel(observation.heartbeatAt,Date.now())),
       ...(observation.sourceFetch?[node('span','GitHub commit '+observation.sourceFetch.commitSha.slice(0,12)+' (file-reported)')]:[]));
     const statsEl=$('sl-stats');
     const summary=[];
