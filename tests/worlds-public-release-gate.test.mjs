@@ -55,6 +55,7 @@ test('Hidden World public proof requires all four owned-origin artifacts',async(
   if(url.endsWith('/yakima-walk/app.mjs'))return response(200,'buildYakimaDrawList','text/javascript');
   if(url.endsWith('/yakima-walk/scene.mjs'))return response(200,'evercraft.hidden-world.yakima-streetscape.v1','text/javascript');
   if(url.endsWith('/yakima-walk/tour.mjs'))return response(200,'YAKIMA_TOUR_SECONDS','text/javascript');
+  if(url.endsWith('/yakima-walk/periods.mjs'))return response(200,'evercraft.hidden-world.yakima-period-lenses.v1','text/javascript');
   if(url.endsWith('/yakima-standalone.html'))return response(200,'scene-ready');
   if(url.endsWith('.csv'))return response(200,'id,title\nyakima,example','text/csv');
   if(url.endsWith('yakima-evidence-ledger.v1.json'))return response(200,JSON.stringify({schema:'evercraft.hidden-world.evidence-ledger.v1'}),'application/json');
@@ -90,6 +91,9 @@ test('Hidden World public proof requires all four owned-origin artifacts',async(
  const missingYakimaApp=await probeHiddenWorldPublic('https://worlds.example.org',{fetchFn:async url=>
   url.endsWith('/yakima-walk/app.mjs')?response(404,'not deployed'):mock(url)});
  assert.equal(missingYakimaApp.reason,'yakima_walk_runtime_not_verified');
+ const missingPeriod=await probeHiddenWorldPublic('https://worlds.example.org',{fetchFn:async url=>
+  url.endsWith('/yakima-walk/periods.mjs')?response(404,'not deployed'):mock(url)});
+ assert.equal(missingPeriod.reason,'yakima_period_lenses_not_verified');
 
  const wrongMime=await probeHiddenWorldPublic('https://worlds.example.org',{fetchFn:async url=>
   url.endsWith('.csv')?response(200,'yakima,','text/html'):mock(url)});
