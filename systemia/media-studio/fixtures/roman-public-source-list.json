@@ -1,0 +1,46 @@
+{
+  "schema": "evercraft.fallen.public-source-list.v1",
+  "project": "roman-two-restaurants-2026-11",
+  "sources": [
+    {
+      "brand": "Icy Tai",
+      "channel": "ordering",
+      "url": "https://postmates.com/store/icy-tais/S0P1TR24U1WOFNE3x72nvQ"
+    },
+    {
+      "brand": "Icy Tai",
+      "channel": "ordering",
+      "url": "https://www.doordash.com/store/icy-tai-yakima-24773568/"
+    },
+    {
+      "brand": "Icy Tai",
+      "channel": "local_coverage_reference",
+      "url": "https://929thebull.com/icy-tai-has-more-than-just-icy-treats-in-yakima/"
+    },
+    {
+      "brand": "Icy Tai",
+      "channel": "public_gallery_reference",
+      "url": "https://www.restaurantji.com/wa/yakima/icy-tai-/"
+    },
+    {
+      "brand": "Flame & Brew",
+      "channel": "official_website",
+      "url": "https://www.flameandbrew.com/"
+    },
+    {
+      "brand": "Flame & Brew",
+      "channel": "ordering",
+      "url": "https://order.online/store/flame-%26-brew-yakima-24702561"
+    },
+    {
+      "brand": "Flame & Brew",
+      "channel": "local_coverage_reference",
+      "url": "https://929thebull.com/flame-and-brew-seize-the-deal/"
+    },
+    {
+      "brand": "Flame & Brew",
+      "channel": "public_gallery_reference",
+      "url": "https://www.restaurantji.com/wa/yakima/flame-and-brew-wood-fired-pizza-/"
+    }
+  ]
+}
