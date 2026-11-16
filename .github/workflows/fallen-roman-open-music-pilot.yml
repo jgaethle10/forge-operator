@@ -6,6 +6,8 @@ on:
     paths:
       - systemia/media-studio/commercial-music-open-source-bridge.mjs
       - systemia/media-studio/commercial-music-open-source-bridge.test.mjs
+      - systemia/media-studio/roman-music-node-preflight.mjs
+      - systemia/media-studio/roman-music-node-preflight.test.mjs
       - systemia/media-studio/ROMAN-OPEN-SOURCE-MUSIC-V6.md
       - .github/workflows/fallen-roman-open-music-pilot.yml
   workflow_dispatch:
@@ -27,13 +29,14 @@ jobs:
           ffprobe -version | head -n 1
       - name: Validate audition adapter without model downloads or paid inference
         run: |
-          node --test systemia/media-studio/commercial-music-open-source-bridge.test.mjs
+          node --test systemia/media-studio/commercial-music-open-source-bridge.test.mjs systemia/media-studio/roman-music-node-preflight.test.mjs
           mkdir -p artifacts/roman-music-v6
+          node systemia/media-studio/roman-music-node-preflight.mjs --out artifacts/roman-music-v6/runner-preflight.json
           node systemia/media-studio/commercial-music-open-source-bridge.mjs plan artifacts/roman-music-v6/auditions.json
           node -e "const a=require('./artifacts/roman-music-v6/auditions.json');if(a.takes.length!==6||new Set(a.takes.map(t=>t.brand)).size!==2) process.exit(1)"
       - name: Preserve six audition requests for owned-node generation
         uses: actions/upload-artifact@v4
         with:
           name: roman-six-music-auditions-no-model-output
-          path: artifacts/roman-music-v6/auditions.json
+          path: artifacts/roman-music-v6/
           retention-days: 14
