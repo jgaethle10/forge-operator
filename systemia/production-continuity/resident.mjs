@@ -4,6 +4,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { auditProductionLedger } from './ledger.mjs';
 import { planSabanRecovery, reconcileSabanArtifacts } from './receipt-bridge.mjs';
+import { buildParallelSlate } from './parallel-slate.mjs';
 
 export const RESIDENT_SCHEMA = 'evercraft.production.continuity.resident-state.v1';
 const PRIVATE_INPUT = 'ledger.json';
@@ -102,10 +103,19 @@ export function runResidentCycle({ privateDir, now = Date.now(), staleAfterHours
     }
     const audit = auditProductionLedger(reconciled.ledger, { now, staleAfterHours });
     const plan = planSabanRecovery(audit);
+    // Persist visibility of the whole authorized production slate, not merely
+    // the first ten stale-item recovery probes. Never reset a live Saban queue.
+    const parallel = buildParallelSlate(reconciled.ledger, { maxInFlight: 6, createdAt: now });
+    const parallel_intake = {
+      schema: parallel.schema, queued_count: parallel.queued_count,
+      held_count: parallel.held_count, max_in_flight: parallel.max_in_flight,
+      owner_counts: parallel.owner_counts, dispatch_performed: false,
+      separate_queue_authoritative: true
+    };
     const withoutDigest = {
       schema: RESIDENT_SCHEMA, sequence: (prior?.sequence ?? 0) + 1,
       previous_digest: prior?.digest ?? null, saved_at: new Date(now).toISOString(),
-      ledger: reconciled.ledger, audit, plan, reconciliation: reconciled.summary,
+      ledger: reconciled.ledger, audit, plan, parallel_intake, reconciliation: reconciled.summary,
       agent_dispatch_performed: false, publication_performed: false, canon_modified: false
     };
     const saved = { ...withoutDigest, digest: sha(withoutDigest) };
@@ -116,6 +126,8 @@ export function runResidentCycle({ privateDir, now = Date.now(), staleAfterHours
       need_attention: audit.attention_count,
       verified_artifacts_imported: reconciled.summary.imported_count,
       proposed_recovery_assignments: plan.assignments.length,
+      parallel_projects_queued: parallel.queued_count,
+      parallel_projects_held: parallel.held_count,
       worker_execution_verified: false, agent_dispatch_performed: false,
       publication_performed: false, canon_modified: false
     };
