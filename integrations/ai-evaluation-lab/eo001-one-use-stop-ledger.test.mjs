@@ -134,3 +134,39 @@ test('does not create missing directory, permit, service or runner',()=>{
     assert.equal(fs.readdirSync(dir).length,0);
   });
 });
+
+test('writer rejects terminal without PRESTOP, duplicate PRESTOP and any third receipt',()=>{
+  withPrivateDir(dir=>{
+    const sink=openPrivateOneUseStopLedger({directory:dir});
+    assert.equal(sink.reserve(digest),true);
+    const final={
+      schema:'evercraft.eo001.native-stop-observation.v1',
+      permit_digest_sha256:digest,
+      state:'STOP_ACK_AND_SUPERVISOR_METADATA_CONSISTENT_REVIEW_REQUIRED'
+    };
+    assert.throws(()=>sink.record(final),
+      /STOP_LEDGER_RECEIPT_SEQUENCE_INVALID/);
+    assert.equal(sink.record(receipt()),true);
+    assert.throws(()=>sink.record(receipt()),
+      /STOP_LEDGER_RECEIPT_SEQUENCE_INVALID/);
+    assert.equal(sink.record(final),true);
+    assert.throws(()=>sink.record(final),
+      /STOP_LEDGER_RECORD_LIMIT/);
+    sink.close();
+    assert.equal(fs.readdirSync(dir).length,3);
+  });
+});
+test('blocked first receipt is terminal and cannot be followed by another record',()=>{
+  withPrivateDir(dir=>{
+    const sink=openPrivateOneUseStopLedger({directory:dir});
+    assert.equal(sink.reserve(digest),true);
+    assert.equal(sink.record({
+      schema:'evercraft.eo001.gate1.native-stop-blocked.v1',
+      state:'NATIVE_EXACT_SCOPE_STOP_HELD',
+      permit_digest_sha256:digest,stop_request_issued:false
+    }),true);
+    assert.throws(()=>sink.record(receipt()),
+      /STOP_LEDGER_RECEIPT_SEQUENCE_INVALID/);
+    sink.close();
+  });
+});
