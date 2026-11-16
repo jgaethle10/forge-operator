@@ -65,3 +65,17 @@ test('unavailable sources fail closed', () => {
     fs.rmSync(rootDir, { recursive: true, force: true });
   }
 });
+
+
+test('Work Saban keeps customer-facing microtype at readable source sizes', () => {
+  const html = fs.readFileSync(path.join(ROOT, 'public/work-saban/index.html'), 'utf8');
+  const css = html.match(/<style>([\s\S]*?)<\/style>/i)?.[1] || '';
+  assert.ok(css.length > 1000, 'expected owned, embedded page stylesheet');
+  // Source checks do not certify calculated pixel sizes or rendered contrast.
+  assert.doesNotMatch(css, /font-size:(?:10|11)px\b/, 'known tiny text overrides should not return');
+  for (const selector of ['.preview', '.example-label', '.person small', '.person .step', '.tour-note', '.report small']) {
+    const escaped = selector.replaceAll('.', '\\.');
+    assert.match(css, new RegExp(escaped + '\\{[^}]*font-size:12px'), selector + ' should remain readable');
+  }
+  assert.doesNotMatch(css, /color:#777\b|color:#7a7a7a\b/, 'low-contrast copy tokens should not return');
+});
