@@ -58,7 +58,6 @@ class StudioTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             folder=Path(tmp)/"job"
             script="Cada proyecto merece una voz clara y confiable. Esto es solamente una prueba."
-            fake_native_runner("ef_dora",Path(tmp)/"missing",folder) if False else None
             input_path=Path(tmp)/"copy.txt";input_path.write_text(script)
             fake_native_runner("ef_dora",input_path,folder)
             receipt=studio_mod.verified_receipt(folder,"ef_dora",script)
@@ -126,7 +125,6 @@ class StudioHTTPTests(unittest.TestCase):
         text=page.decode()
         self.assertIn("EVERCRAFT",text)
         self.assertIn("Generate private audition",text)
-        self.assertIn("@@NONCE@@",text) if False else None
         self.assertNotIn("@@TOKEN@@",text)
         self.assertIn("frame-ancestors 'none'",headers["Content-Security-Policy"])
         status,_,raw=self.request("/api/voices")
