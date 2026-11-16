@@ -74,3 +74,27 @@ jobs:
           node --check scripts/community-radio-second-device-probe.mjs
           node --check systemia/saban/community-radio-preflight-adapter.mjs
           node --test tests/community-broadcast-continuity.test.mjs tests/community-radio-offline-portal.test.mjs tests/community-radio-lan-lab.test.mjs tests/community-radio-clock-guard.test.mjs tests/community-radio-field-evidence.test.mjs tests/community-radio-second-device-probe.test.mjs tests/saban-community-radio-preflight.test.mjs
+      - name: Execute the registered four-role Saban preflight (no device access)
+        run: |
+          node systemia/saban/multiplier.mjs --software community-radio-preflight --agents 4 --workers 2 --fixed --execute --reconcile
+          node --input-type=module -e "
+          import assert from 'node:assert/strict';
+          import fs from 'node:fs';
+          const r=JSON.parse(fs.readFileSync('artifacts/saban-multiplier/community-radio-preflight-latest.json','utf8'));
+          assert.equal(r.software_id,'community-radio-preflight');
+          assert.equal(r.logical_agents,4);
+          assert.equal(r.physical_workers,2);
+          assert.equal(r.quality.status,'pass');
+          assert.equal(r.reconciliation.status,'reconciled');
+          assert.equal(r.reconciliation.mission_state,'held_pending_authorized_physical_test');
+          assert.equal(r.reconciliation.physical_two_device_test_completed,false);
+          assert.equal(r.reconciliation.actual_node_access_confirmed,false);
+          assert.equal(r.reconciliation.side_effects_executed,0);
+          console.log(JSON.stringify({schema:'evercraft.saban.community-radio-ci-check.v1', software_id:r.software_id,quality:r.quality.status, review:r.reconciliation.mission_state, physical_test:false,hardware_control:false,receipt_path:'artifacts/saban-multiplier/community-radio-preflight-latest.json'}));
+          "
+      - uses: actions/upload-artifact@v4
+        with:
+          name: saban-radio-synthetic-preflight-receipt
+          path: artifacts/saban-multiplier/community-radio-preflight-latest.json
+          retention-days: 7
+          if-no-files-found: error
