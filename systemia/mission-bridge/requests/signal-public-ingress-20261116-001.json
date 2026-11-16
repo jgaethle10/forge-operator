@@ -1,0 +1,8 @@
+{
+  "schema": "evercraft.systemia.chat-mission-request.v1",
+  "mission_id": "signal-public-ingress-20261116-001",
+  "objective": "Independently verify the public Signal offer, owned Fabric health and buyer-intake API. Return an evidence receipt without touching Penguin.",
+  "route": "signal-public-ingress",
+  "mode": "observe",
+  "requested_at": "2026-11-16T23:22:59.109Z"
+}
