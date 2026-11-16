@@ -1,0 +1,41 @@
+name: Roman merchant public media scout
+on:
+  push:
+    branches:
+      - production/roman-merchant-media-scout-20261115
+    paths:
+      - 'systemia/media-studio/merchant-public-media-scout.mjs'
+      - 'systemia/media-studio/merchant-public-media-scout.test.mjs'
+      - 'systemia/media-studio/fixtures/roman-public-source-list.json'
+      - '.github/workflows/roman-merchant-media-scout.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  scout:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Test safe discovery
+        run: node --test systemia/media-studio/merchant-public-media-scout.test.mjs
+      - name: Discover public candidate media references
+        run: |
+          mkdir -p artifacts/roman-media
+          node systemia/media-studio/merchant-public-media-scout.mjs \
+            systemia/media-studio/fixtures/roman-public-source-list.json \
+            artifacts/roman-media/candidate-media-leads.json
+      - name: Inspect source counts
+        run: |
+          node -e "const x=require('./artifacts/roman-media/candidate-media-leads.json'); console.log('media leads:',x.leads.length,'source errors:',x.errors.length); console.log(x.errors);"
+      - name: Keep machine-readable lead inventory
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: roman-two-restaurant-media-leads
+          path: artifacts/roman-media/candidate-media-leads.json
+          if-no-files-found: warn
+          retention-days: 7
