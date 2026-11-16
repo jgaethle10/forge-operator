@@ -5,6 +5,7 @@ import datetime as dt
 import hashlib
 import json
 import os
+import re
 from pathlib import Path
 import sqlite3
 import time
@@ -90,6 +91,8 @@ def connect(db):
     return conn
 
 def run(args):
+    if not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_-]{0,79}', args.mission_id):
+        raise ValueError('invalid mission id')
     if not args.endpoint.startswith("http://127.0.0.1:") and not args.endpoint.startswith("http://localhost:"):
         raise ValueError("only loopback inference endpoints permitted")
     db = Path(args.db).expanduser()
