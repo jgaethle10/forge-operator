@@ -1,0 +1,73 @@
+name: Systemia Atlas synthetic rebuild checks
+on:
+  pull_request:
+    paths:
+      - 'public/apps/systemia-atlas/**'
+      - 'public/apps/route-twin/**'
+      - 'tests/systemia-atlas-rebuild.test.mjs'
+      - 'tests/atlas-route-twin.test.mjs'
+      - 'scripts/probe-systemia-atlas-browser.mjs'
+      - '.github/workflows/systemia-atlas-rebuild-checks.yml'
+  push:
+    branches:
+      - feature/systemia-atlas-rebuild-20261115
+    paths:
+      - 'public/apps/systemia-atlas/**'
+      - 'public/apps/route-twin/**'
+      - 'tests/systemia-atlas-rebuild.test.mjs'
+      - 'tests/atlas-route-twin.test.mjs'
+      - '.github/workflows/systemia-atlas-rebuild-checks.yml'
+jobs:
+  synthetic-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Parse Atlas and RouteTwin browser modules
+        run: |
+          node --check public/apps/systemia-atlas/atlas-core.mjs
+          node --check public/apps/systemia-atlas/app.mjs
+          node --check public/apps/route-twin/route-core.mjs
+          node --check public/apps/route-twin/app.mjs
+      - name: Prove deterministic synthetic lifecycle and no-go boundaries
+        run: node --test tests/systemia-atlas-rebuild.test.mjs tests/atlas-route-twin.test.mjs
+      - name: Check static shell and ownership boundaries
+        run: |
+          node --input-type=module <<'EOF'
+          import assert from 'node:assert/strict';
+          import {readFileSync} from 'node:fs';
+          const atlas=readFileSync('public/apps/systemia-atlas/index.html','utf8');
+          const twin=readFileSync('public/apps/route-twin/index.html','utf8');
+          assert.match(atlas,/DEMO · NO LIVE OPERATIONS/);
+          assert.match(atlas,/\.\/app\.mjs/);
+          assert.match(twin,/Synthetic proof/);
+          assert.match(twin,/\.\/app\.mjs/);
+          EOF
+  browser-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 14
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Install owned browser test harness
+        run: npm install --no-save --no-audit --no-fund playwright@1.55.1
+      - name: Install Playwright Chromium
+        run: npx playwright install chromium
+      - name: Atlas lifecycle and 3D RouteTwin desktop/mobile emulation
+        run: node scripts/probe-systemia-atlas-browser.mjs
+      - name: Save browser screenshots and proof receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: atlas-route-twin-browser-evidence
+          path: artifacts/systemia-atlas-browser/
+          if-no-files-found: warn
