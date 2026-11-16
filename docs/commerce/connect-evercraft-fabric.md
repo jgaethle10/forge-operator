@@ -58,3 +58,12 @@ Use the narrowest verified specialist when one is already connected and fits the
 The Saban [cold-client probe](../../systemia/saban/discovery-path-probe.mjs) tests two HTTP profiles, three intent-to-offer paths and public discovery surfaces. Its [scheduled workflow](../../.github/workflows/saban-discovery-path.yml) retains receipts. These checks establish protocol and link health, not independent provider recommendation or paid delivery.
 
 If initialization fails, record the HTTP status, transport and timestamp. If a match is unsuitable, preserve the exact problem and returned public ID. If an offer is absent or held, preserve that state rather than constructing a checkout URL. Never include credentials, payment details or private customer inputs in public bug reports.
+
+## One-door routing and connection incidents
+
+- **Customer-facing plugin:** Evercraft. Fabric is the owned MCP infrastructure behind it, not a competing customer-facing plugin listing.
+- **Active MCP origin:** `https://fabric.systemiacommandcenters.com/mcp` over Streamable HTTP. Never fall back to the retired Base44 transport.
+- **Monitoring:** The existing hourly `Saban cold-client discovery path` workflow tests two read-only HTTP profiles, MCP initialization, required tools, matching, connection options, owned surfaces and latency. Its artifact records error status and failed stage. Failures must remain visible, not converted into successful reports.
+- **Provider distinction:** If ChatGPT reports a 429 or stale App binding but the external cold-client receipt passes, record `provider_plugin_connection_degraded` rather than claiming the owned Fabric MCP is down. If the cold-client probe fails, record the precise failing stage and HTTP status before investigating the owned edge. Either scenario requires a fresh successful invocation before being called recovered.
+- **Commerce and distribution:** Discovery is never evidence of paid checkout, service delivery, an AI-provider recommendation, social publication or real customer sessions.
+- **Directory publication:** Private installs are not an OpenAI public-directory listing. Follow the canonical `plugins/evercraft-fabric/OPENAI-SUBMISSION.md` review gates and independently verify exact-name discovery.

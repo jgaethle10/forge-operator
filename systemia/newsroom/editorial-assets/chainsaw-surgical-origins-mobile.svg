@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 900" role="img" aria-labelledby="title desc">
+<title id="title">Historical chain saw origins: a surgical device before the logging industry</title>
+<desc id="desc">Original non-photographic editorial concept illustrating the principle of Heine's hand-cranked chain osteotome, with labels explicitly stating that geometry is not a historically exact reconstruction.</desc>
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#152b36"/><stop offset="1" stop-color="#08131d"/></linearGradient>
+  <linearGradient id="steel" x1="0" y1="0" x2="0.1" y2="1"><stop stop-color="#e6e9e0"/><stop offset=".5" stop-color="#89a3ac"/><stop offset="1" stop-color="#3e626f"/></linearGradient>
+  <linearGradient id="wood" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#e3bd84"/><stop offset=".6" stop-color="#b38551"/><stop offset="1" stop-color="#7b5637"/></linearGradient>
+  <filter id="shadow"><feGaussianBlur stdDeviation="17"/></filter>
+</defs>
+<rect width="720" height="900" fill="url(#bg)"/>
+<path d="M46 70H674" stroke="#526a73"/><text x="48" y="49" fill="#d4b485" font-family="Arial,sans-serif" font-size="19" letter-spacing="4.2" font-weight="bold">EVERCRAFT JOURNAL</text>
+<text x="46" y="127" fill="#d0dbde" font-family="Arial,sans-serif" font-size="17" letter-spacing="3">HIDDEN HISTORY / MEDICAL ENGINEERING</text>
+<text x="46" y="202" fill="#f7f2e9" font-family="Georgia,serif" font-size="52" font-weight="bold">Before forests,</text>
+<text x="46" y="261" fill="#f7f2e9" font-family="Georgia,serif" font-size="52" font-weight="bold">there was surgery.</text>
+<text x="48" y="307" fill="#b9cbd0" font-family="Arial,sans-serif" font-size="21">An early mechanical idea with a surprising origin.</text>
+<ellipse cx="363" cy="595" rx="284" ry="64" fill="#000" opacity=".55" filter="url(#shadow)"/>
+<g transform="translate(-5 30) rotate(-14 360 540)" stroke-linejoin="round" stroke-linecap="round">
+  <path d="M117 558L408 514Q451 505 459 524L469 566Q460 579 434 583L121 600Z" fill="url(#steel)" stroke="#cdd7d5" stroke-width="6"/>
+  <path d="M122 566L429 532" stroke="#182e3b" stroke-width="14"/>
+  <path d="M108 546C70 548 64 572 101 614C173 643 394 596 449 581" fill="none" stroke="#a4b8ba" stroke-width="9" stroke-dasharray="9 9"/>
+  <path d="M107 546C70 548 64 572 101 614C173 643 394 596 449 581" fill="none" stroke="#e4d6b3" stroke-width="2" stroke-dasharray="6 12"/>
+  <rect x="415" y="492" width="72" height="109" rx="15" fill="#415d68" stroke="#d2dedc" stroke-width="7"/>
+  <path d="M480 520L558 470Q573 458 581 469L596 500Q606 526 580 539L493 574Z" fill="url(#wood)" stroke="#d9b082" stroke-width="7"/>
+  <path d="M499 528L579 484" stroke="#f1d3a4" stroke-width="3" opacity=".5"/>
+  <circle cx="450" cy="509" r="27" fill="#253b44" stroke="#d6d8cc" stroke-width="10"/>
+  <path d="M447 508L410 445L373 445" fill="none" stroke="#d9c1a0" stroke-width="13"/>
+  <rect x="350" y="423" width="65" height="29" rx="14" fill="url(#wood)" stroke="#d3bb92" stroke-width="4"/>
+  <path d="M420 591L394 647L446 660L479 598" fill="#304956" stroke="#c5d4d4" stroke-width="5"/>
+  <circle cx="432" cy="547" r="6" fill="#eef0e5"/>
+  <circle cx="448" cy="569" r="5" fill="#eef0e5"/>
+</g>
+<path d="M48 713H671" stroke="#48616c"/>
+<text x="50" y="752" fill="#d4b485" font-family="Arial,sans-serif" font-size="19" font-weight="bold" letter-spacing="2">1830 · HAND-CRANKED OSTEOTOME</text>
+<text x="50" y="789" fill="#d2dfe2" font-family="Arial,sans-serif" font-size="19">Inspired by the engineering principle of</text>
+<text x="50" y="817" fill="#d2dfe2" font-family="Arial,sans-serif" font-size="19">Bernhard Heine's surgical chain saw.</text>
+<text x="50" y="856" fill="#8caab6" font-family="Arial,sans-serif" font-size="14">Conceptual illustration, not a scale-accurate artifact drawing.</text>
+</svg>

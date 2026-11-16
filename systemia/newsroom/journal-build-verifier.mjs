@@ -40,6 +40,13 @@ export function verifyJournalBuild({root='public/journal',expectedOrigin}={}){
   if(!fs.existsSync(path.join(outRoot,'index.html'))) throw new Error('journal_verify_index_html_missing');
   if(!fs.existsSync(path.join(outRoot,'feed.xml'))) throw new Error('journal_verify_feed_missing');
   if(!fs.existsSync(path.join(outRoot,'llms.txt'))) throw new Error('journal_verify_llms_missing');
+  const readerAssets=Array.isArray(index.reader_assets)?index.reader_assets:[];
+  for(const asset of readerAssets){
+    if(asset.relative_path!=='assets/listen.js'||!/^[a-f0-9]{64}$/.test(String(asset.sha256||''))) throw new Error('journal_verify_reader_asset_receipt_invalid');
+    const file=safeFile(outRoot,asset.relative_path);
+    if(!fs.existsSync(file)) throw new Error('journal_verify_reader_asset_missing');
+    if(sha256(fs.readFileSync(file))!==asset.sha256) throw new Error('journal_verify_reader_asset_hash_mismatch');
+  }
 
   const current=Array.isArray(index.stories)?index.stories:[];
   const archived=Array.isArray(index.archive)?index.archive:[];
@@ -130,6 +137,7 @@ export function verifyJournalBuild({root='public/journal',expectedOrigin}={}){
     origin,
     live_story_count:current.length,
     archived_story_count:archived.length,
+    verified_reader_assets:readerAssets.length,
     stories:verified,
   };
 }

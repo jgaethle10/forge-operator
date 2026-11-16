@@ -1,4 +1,5 @@
 import { PUBLIC_PAYMENT_OFFERS } from './public-payment-offers.mjs';
+import {renderWebsiteAuditDecisionJourney} from './website-audit-experience.mjs';
 import crypto from 'node:crypto';
 function escapeHtml(value='') {
   return String(value)
@@ -17,6 +18,11 @@ const shell=(title,body,{
   canonical='',
   ogType='website',
   ogImage='',
+  ogImageType='',
+  ogImageWidth=0,
+  ogImageHeight=0,
+  ogImageAlt='',
+  noindex=false,
 }={})=>{
   const canonicalUrl=canonical
     ? (String(canonical).startsWith('https://')?String(canonical):PUBLIC_ORIGIN+String(canonical))
@@ -39,6 +45,11 @@ const shell=(title,body,{
 <meta property="og:description" content="${socialDescription}">
 <meta property="og:url" content="${socialUrl}">
 ${socialImage?'<meta property="og:image" content="'+socialImage+'">':''}
+${socialImage&&ogImageType?'<meta property="og:image:type" content="'+escapeHtml(ogImageType)+'">':''}
+${socialImage&&ogImageWidth?'<meta property="og:image:width" content="'+Number(ogImageWidth)+'">':''}
+${socialImage&&ogImageHeight?'<meta property="og:image:height" content="'+Number(ogImageHeight)+'">':''}
+${socialImage&&ogImageAlt?'<meta property="og:image:alt" content="'+escapeHtml(ogImageAlt)+'">':''}
+${noindex?'<meta name="robots" content="noindex,nofollow">':''}
 <meta name="twitter:card" content="${socialImage?'summary_large_image':'summary'}">
 ${socialImage?'<meta name="twitter:image" content="'+socialImage+'">':''}
 <meta name="twitter:title" content="${socialTitle}">
@@ -93,6 +104,29 @@ h1{font-size:clamp(48px,8vw,90px);line-height:.95;letter-spacing:-.065em;margin:
 .offer-visual{margin:26px 0 24px;border:1px solid var(--line);border-radius:22px;overflow:hidden;background:#07111b;box-shadow:0 28px 70px rgba(0,0,0,.26)}
 .offer-visual picture,.offer-visual img{display:block;width:100%}
 .offer-visual img{height:auto}
+
+/* A bounded, illustrative audit surface, not a fabricated test result. */
+.audit-preview{margin:26px 0 0;padding:22px;border:1px solid #2f536f;border-radius:20px;background:linear-gradient(140deg,#12314a,#071525);box-shadow:0 24px 48px #0003}
+.audit-preview-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+.audit-preview-head strong{color:#8cd2ff;letter-spacing:.14em;text-transform:uppercase;font-size:11px}
+.audit-preview-head span{color:#d4ecfe;border:1px solid #54809c;border-radius:40px;padding:7px 10px;font-size:11px;font-weight:700}
+.audit-preview-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
+.audit-demo{border:1px solid #355571;border-radius:14px;background:linear-gradient(145deg,#1a3b53,#091724);overflow:hidden;min-width:0}
+.audit-demo-bar{display:flex;align-items:center;gap:6px;padding:12px;background:#0e2637;border-bottom:1px solid #31516b}
+.audit-demo-bar i{display:block;width:7px;height:7px;background:#7199b1;border-radius:50%}
+.audit-demo-bar small{margin-left:auto;color:#a8c8dc;letter-spacing:.1em;text-transform:uppercase;font-size:9px}
+.audit-demo-body{padding:22px;min-height:195px}
+.audit-demo-body small{color:#93d1f9;text-transform:uppercase;letter-spacing:.1em;font-size:10px}
+.audit-demo-body b{display:block;margin:14px 0;font-size:clamp(22px,2.6vw,30px);letter-spacing:-.04em;line-height:1.08}
+.audit-demo-line{height:8px;background:#345a72;border-radius:4px;width:79%;margin:9px 0}
+.audit-demo-line.short{width:52%}
+.audit-demo-chip{display:inline-block;border:1px solid #62b9e9;color:#d3efff;padding:9px 12px;border-radius:8px;font-size:11px;font-weight:700;margin-top:8px}
+.audit-list{display:grid;gap:7px;align-content:center}
+.audit-list h3{font-size:14px;margin:0 0 5px}
+.audit-list-item{display:flex;align-items:center;gap:12px;background:#1d3e58aa;border:1px solid #345a71;border-radius:9px;padding:10px 12px;font-size:13px;font-weight:650}
+.audit-list-item em{font-style:normal;color:#80cfff;font-size:11px;font-weight:800}
+.audit-preview-note{font-size:12px!important;color:#b0c7d9!important;line-height:1.5!important;margin:16px 0 0!important}
+@media(max-width:700px){.audit-offer{padding-top:38px}.audit-offer h1{font-size:clamp(36px,9vw,48px);line-height:1.03;margin:20px 0}.audit-offer .lede{font-size:18px;line-height:1.45}.audit-offer .checkout-form{align-items:stretch}.audit-offer .checkout-form label{width:100%}.audit-offer .checkout-form input,.audit-offer .checkout-form button{width:100%!important;max-width:none!important}.audit-preview{padding:15px;border-radius:16px}.audit-preview-grid{grid-template-columns:1fr}.audit-demo-body{min-height:160px;padding:17px}.audit-list{grid-template-columns:1fr 1fr}.audit-list h3{grid-column:1/-1}.audit-list-item{padding:9px;font-size:12px}.audit-list-item:last-child{grid-column:1/-1}}
 .offer-panel{border:1px solid var(--line);background:linear-gradient(180deg,rgba(14,25,48,.82),rgba(9,16,30,.82));border-radius:18px;padding:24px}
 .offer-panel h2{font-size:25px;margin:0 0 14px}
 .offer-panel p,.offer-panel li{color:#c5d2e4;line-height:1.65}
@@ -103,6 +137,15 @@ h1{font-size:clamp(48px,8vw,90px);line-height:.95;letter-spacing:-.065em;margin:
 .offer-step strong{display:block;margin-bottom:4px}
 .offer-proof{border-left:3px solid var(--green);padding:3px 0 3px 14px;color:#c8d8e9;margin-top:18px}
 .checkout-form{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:30px}
+/* A no-charge, consented audit request: this is not Stripe checkout. */
+.audit-intake-form{display:grid;gap:13px;margin-top:22px}
+.audit-intake-form label{font-weight:680;color:#eaf2ff;font-size:14px}
+.audit-intake-form input:not([type="checkbox"]),.audit-intake-form textarea,.audit-intake-form select{display:block;margin-top:6px;width:100%;min-width:0;background:#071426;color:#f1f8ff;border:1px solid #477197;border-radius:10px;padding:12px 14px;font:inherit}
+.audit-intake-form input:focus,.audit-intake-form textarea:focus{outline:2px solid #69baf1;outline-offset:2px}
+.audit-intake-form textarea{min-height:92px;resize:vertical}
+.audit-intake-check{display:flex;align-items:flex-start;gap:10px;line-height:1.5}
+.audit-intake-check input{width:18px;height:18px;flex:none;margin-top:3px}
+.audit-intake-submit{width:100%;padding:14px 17px;margin:5px 0 0}
 .checkout-note{width:100%;color:var(--muted);font-size:13px;line-height:1.5;max-width:690px}
 .trust{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:34px 0 76px}
 .trust div,.card,.prompt,.doc{
@@ -143,31 +186,30 @@ footer{border-top:1px solid var(--line);padding:30px 0 48px;color:var(--muted);f
   .navlinks{display:none}.hero{padding-top:48px}.trust{grid-template-columns:repeat(2,1fr)}
   .grid,.prompts,.capability-grid,.detail-grid{grid-template-columns:1fr}
 }
-/* Website Audit: purchase options before promotional art, with no payment authority change. */
-.website-audit-mobile-fix .offer-hero{max-width:760px;padding:30px 0 34px}
-.website-audit-mobile-fix .offer-hero h1{font-size:clamp(39px,5vw,64px);line-height:1.08;letter-spacing:-.05em;max-width:740px;margin:18px 0 14px}
-.website-audit-mobile-fix .offer-hero .lede{font-size:clamp(17px,1.6vw,21px);line-height:1.55;max-width:640px;margin:0}
-.website-audit-mobile-fix .offer-price{font-size:clamp(43px,5vw,56px);margin:20px 0 4px}
-.website-audit-mobile-fix .offer-price-note{font-size:15px;line-height:1.5;color:#d1dff0;max-width:660px}
-.website-audit-mobile-fix .checkout-form{display:grid;max-width:550px;grid-template-columns:minmax(0,1fr);gap:9px;align-items:stretch;margin-top:22px;padding:22px;border:1px solid #395575;border-radius:18px;background:linear-gradient(160deg,#0c1b31,#091220)}
-.website-audit-mobile-fix .checkout-form label{font-size:14px;font-weight:650}
-.website-audit-mobile-fix .checkout-form input{width:100%!important;max-width:100%!important;min-width:0;min-height:46px;border:1px solid #4e6788!important;border-radius:10px!important}
-.website-audit-mobile-fix .checkout-form .btn{width:100%;min-height:48px;margin-top:8px}
-.website-audit-mobile-fix .checkout-form .checkout-note{font-size:12px;line-height:1.6}
-.website-audit-mobile-fix .offer-hero>.offer-panel{margin-top:20px;padding:22px}
-.website-audit-mobile-fix .offer-hero>.offer-panel .actions{margin-top:18px}
-.website-audit-mobile-fix .audit-more-info{margin-top:22px;border:1px solid #304868;border-radius:14px;padding:15px 18px;color:#c6d7eb}
-.website-audit-mobile-fix .audit-more-info summary{font-size:14px;font-weight:650;cursor:pointer;line-height:1.5}
-.website-audit-mobile-fix .audit-more-info p{font-size:13px;line-height:1.65;color:#adc0d7}
-.website-audit-mobile-fix .audit-more-info .offer-visual{max-width:480px;margin:18px 0}
+
+/* Mobile-first Website Audit offer: put the real $49 buyer action before promo art. */
+.website-audit-mobile-fix .audit-offer{max-width:850px;padding-top:32px}
+.website-audit-mobile-fix .audit-offer h1{font-size:clamp(38px,5vw,60px);line-height:1.08;letter-spacing:-.055em;margin:18px 0 13px;max-width:830px}
+.website-audit-mobile-fix .audit-offer .lede{font-size:clamp(17px,1.7vw,21px);line-height:1.55;max-width:740px;margin:0}
+.website-audit-mobile-fix .offer-price{margin:20px 0 5px;font-size:clamp(44px,5.5vw,60px)}
+.website-audit-mobile-fix .offer-price-note{font-size:15px;line-height:1.5;max-width:680px}
+.website-audit-mobile-fix .checkout-form{margin-top:20px;display:grid;gap:9px;align-items:stretch;max-width:570px;padding:21px;border:1px solid #365777;border-radius:17px;background:linear-gradient(150deg,#0d1e33,#071222)}
+.website-audit-mobile-fix .checkout-form label{font-size:14px;font-weight:660}
+.website-audit-mobile-fix .checkout-form input{width:100%!important;max-width:100%!important;min-width:0!important;min-height:45px}
+.website-audit-mobile-fix .checkout-form .btn{width:100%;min-height:48px;text-align:center}
+.website-audit-mobile-fix .audit-offer>.offer-panel{margin-top:20px}
+.website-audit-mobile-fix .audit-more-info{border:1px solid #304f6c;border-radius:14px;padding:15px 17px;margin-top:26px;color:#c9daec}
+.website-audit-mobile-fix .audit-more-info summary{cursor:pointer;font-size:14px;font-weight:700;line-height:1.5}
+.website-audit-mobile-fix .audit-more-info .offer-visual{max-width:510px;margin:18px 0}
 .website-audit-mobile-fix .audit-more-info .offer-visual img{width:100%;height:auto}
+.website-audit-mobile-fix .audit-more-info p{font-size:13px;line-height:1.65;color:#b8cce0}
 @media(max-width:780px){
-  .website-audit-mobile-fix .offer-hero{padding:18px 0 26px}
-  .website-audit-mobile-fix .offer-hero h1{font-size:clamp(35px,9vw,45px);line-height:1.07;margin:16px 0 12px}
-  .website-audit-mobile-fix .offer-hero .lede{font-size:16px;line-height:1.55}
-  .website-audit-mobile-fix .offer-price{font-size:47px;margin:17px 0 4px}
-  .website-audit-mobile-fix .checkout-form{padding:18px;margin-top:18px}
-  .website-audit-mobile-fix .offer-hero>.offer-panel{padding:18px}
+ .website-audit-mobile-fix .audit-offer{padding-top:18px}
+ .website-audit-mobile-fix .audit-offer h1{font-size:clamp(35px,9vw,44px);margin:13px 0 10px;line-height:1.07}
+ .website-audit-mobile-fix .audit-offer .lede{font-size:16px;line-height:1.5}
+ .website-audit-mobile-fix .offer-price{font-size:45px;margin:15px 0 5px}
+ .website-audit-mobile-fix .checkout-form{padding:17px;margin-top:16px}
+ .website-audit-mobile-fix .audit-more-info{margin-top:20px}
 }
 </style>
 </head>
@@ -226,11 +268,13 @@ const OFFER_PAGE_COPY={
     purchase_key:'website-audit-quick-win',
     eyebrow:'Website Audit',
     headline:'See your website through their eyes.',
-    lede:'A focused review of your public website, with five prioritized fixes and clear next steps.',
+    lede:'A focused look at your public website, five prioritized fixes, and clear next steps.',
     promise:'Public-web scan. Clear health snapshot. Five priority fixes.',
-    heroVisual:'/visuals/website-audit-attention/poster-hero-wide.svg',
-    heroVisualMobile:'/visuals/website-audit-attention/poster-feed.svg',
-    shareImage:'https://fabric.systemiacommandcenters.com/visuals/website-audit-attention/poster-feed.svg',
+    shareImage:'https://jgaethle10.github.io/forge-operator/visuals/website-audit-attention/preview-og-v2.png',
+    shareImageType:'image/png',
+    shareImageWidth:1200,
+    shareImageHeight:630,
+    shareImageAlt:'Systemia Website Audit by Evercraft. $49 Quick Win Audit, five areas reviewed and five prioritized fixes.',
     send:['Your website URL','What you want the site to produce','Anything you already know is frustrating'],
     get:['Public-web evidence snapshot','Five priority fixes','A clear next move'],
     steps:[
@@ -326,6 +370,19 @@ if(signalOfferCopy){
   });
 }
 
+const closeoutOfferCopy=OFFER_PAGE_COPY['payment-offer-closeout-pilot'];
+if(closeoutOfferCopy){
+  Object.assign(closeoutOfferCopy,{
+    eyebrow:'Evercraft Closeout / field-service handoffs',
+    headline:'Your job is finished. Make the handoff just as professional.',
+    lede:'Create a customer-ready completion report yourself for free, or request a $49 human-reviewed pilot packet for one job.',
+    promise:'One human-reviewed, properly formatted customer-facing PDF packet with a work summary, follow-up notes, up to four authorized job photos and one factual correction round. Actual scope is confirmed before payment.',
+    send:['A short service scope and approved company contact details','Job photos and customer details only by a separately authorized secure intake method after scope agreement'],
+    get:['A reviewed customer handoff packet for one completed job','A clearly stated next-step or warranty-care section based on contractor-supplied facts','One round of factual corrections after the first delivered draft'],
+    steps:[['1. Preview the free builder','Make a synthetic packet or inspect a preview without uploading job photos.'],['2. Request a $49 scope review','Give business contact details and a short, non-sensitive description.'],['3. Confirm and deliver','Evercraft agrees scope, securely collects authorized job materials, verifies payment through Evercraft Payments, and delivers the reviewed PDF.']]
+  });
+}
+
 export function offerSlugForCapability(publicId){
   return OFFER_PAGE_COPY[String(publicId||'')]?.slug||null;
 }
@@ -402,7 +459,56 @@ export function renderOffers(capabilities=[]){
   });
 }
 
-export function renderOfferPage(item,{checkoutConfigured=true}={}){
+
+function renderWebsiteAuditPreview(){
+  // An illustrated process, explicitly not real customer data or audit findings.
+  return [
+    '<aside class="audit-preview" aria-label="Illustrative Website Audit process">',
+    '<div class="audit-preview-head"><strong>Inside your Quick Win Audit</strong><span>Five prioritized fixes</span></div>',
+    '<div class="audit-preview-grid">',
+    '<div class="audit-demo" aria-hidden="true"><div class="audit-demo-bar"><i></i><i></i><i></i><small>Customer experience</small></div>',
+    '<div class="audit-demo-body"><small>Public website</small><b>See your site like a customer.</b><div class="audit-demo-line"></div><div class="audit-demo-line short"></div><span class="audit-demo-chip">Website journey</span></div></div>',
+    '<div class="audit-list"><h3>Five areas we inspect</h3>',
+    '<div class="audit-list-item"><em>01</em> Clarity</div>',
+    '<div class="audit-list-item"><em>02</em> Speed</div>',
+    '<div class="audit-list-item"><em>03</em> Trust</div>',
+    '<div class="audit-list-item"><em>04</em> Mobile experience</div>',
+    '<div class="audit-list-item"><em>05</em> Calls to action</div></div>',
+    '</div><p class="audit-preview-note">Illustrative process preview. Actual findings are made for the site you submit. No customer results are shown here.</p></aside>',
+  ].join('');
+}
+
+
+// Exact live Stripe settlement link independently read back against the $49
+// inclusive, one-time Website Audit SKU on 2026-11-15. The link is a
+// payment route, NOT evidence of a paid order or fulfilled audit.
+// Stripe collects the website URL and goal as required checkout fields.
+const WEBSITE_AUDIT_SETTLEMENT_URL='https://buy.stripe.com/bJe28kfD885M9SP49n0Jq07';
+
+function renderHeldWebsiteAuditInquiryForm(){
+  return [
+    '<section id="audit-order" class="offer-panel" aria-label="Buy or request the $49 Website Audit">',
+    '<div class="eyebrow">One clear offer · $49 total</div>',
+    '<h2>Get your five priority fixes.</h2>',
+    '<p>Pay securely, enter one public website address and choose the business result you want. We review the public-site findings and email the completed report to the address you use at checkout. No passwords or phone call.</p>',
+    '<div class="actions"><a class="btn primary" href="'+escapeHtml(WEBSITE_AUDIT_SETTLEMENT_URL)+'" rel="noreferrer noopener" aria-label="Pay $49 for the Website Quick Win Audit using Stripe">Start my $49 audit · secure checkout</a></div>',
+    '<p class="checkout-note">One-time $49, including applicable sales tax. Stripe processes payment for Evercraft. Your URL and priority are requested during checkout. Purchase does not authorize website changes or guarantee sales results. Work begins only after verified payment, then a human-reviewed report is delivered by email.</p>',
+    '<details style="margin-top:22px"><summary style="cursor:pointer;font-weight:700">Not ready to purchase? Request a free review first.</summary>',
+    '<p>Use the optional form below to ask about fit and availability. This is separate from the live payment link and does not charge you.</p>',
+    '<h3>Request your Quick Win Audit</h3>',
+    '<form class="audit-intake-form" method="post" action="/api/website-audit/inquiry">',
+    '<label for="audit-inquiry-email">Your email<input id="audit-inquiry-email" name="email" type="email" autocomplete="email" maxlength="200" placeholder="you@business.com" required></label>',
+    '<label for="audit-inquiry-url">Public website to review<input id="audit-inquiry-url" name="website_url" type="url" inputmode="url" maxlength="1000" placeholder="https://yourbusiness.com" required></label>',
+    '<label for="audit-inquiry-goal">What should your website do better?<select id="audit-inquiry-goal" name="goal" required><option value="" disabled selected>Choose your top priority</option><option value="Get more phone calls">Get more phone calls</option><option value="Get more quote requests">Get more quote requests</option><option value="Get more bookings">Get more bookings</option><option value="Get more online orders">Get more online orders</option><option value="Make the site clearer and easier to trust">Make the site clearer and easier to trust</option></select></label>',
+    '<div hidden aria-hidden="true"><label>Leave blank<input name="company_website_honey" tabindex="-1" autocomplete="off"></label></div>',
+    '<label class="audit-intake-check"><input type="checkbox" name="consent" value="yes" required><span>I agree that Evercraft may store this request privately and contact me about this specific audit. Read the <a href="/privacy">privacy policy</a>.</span></label>',
+    '<button class="btn primary audit-intake-submit" type="submit">Request audit review</button>',
+    '<p class="checkout-note">Submitting is free. No charge, payment order, or automatic audit starts here. The $49 audit is offered only after Evercraft confirms the next step.</p>',
+    '</form></details></section>'
+  ].join('');
+}
+
+export function renderOfferPage(item,{checkoutConfigured=true,auditInquiryAvailable=false}={}){
   const copy=OFFER_PAGE_COPY[item?.public_id];
   if(!copy) return null;
   const entry=item.entry_paid_offer||null;
@@ -413,32 +519,38 @@ export function renderOfferPage(item,{checkoutConfigured=true}={}){
   const steps=copy.steps.map(([title,body])=>'<div class="offer-step"><strong>'+escapeHtml(title)+'</strong><span>'+escapeHtml(body)+'</span></div>').join('');
   const idempotencyKey='offer-'+copy.slug+'-'+crypto.randomUUID();
   const checkoutHeld=!checkoutConfigured||PUBLIC_PAYMENT_OFFERS[copy.slug]?.native_order_enabled===false;
-  const websiteOffer=copy.slug==='website-audit';
-  const visualMarkup=copy.heroVisual?'<div class="offer-visual"><picture>'+(copy.heroVisualMobile?'<source media="(max-width: 700px)" srcset="'+escapeHtml(copy.heroVisualMobile)+'">':'')+'<img src="'+escapeHtml(copy.heroVisual)+'" alt="Illustrative website audit concept, not an analysis of your website" loading="lazy"></picture></div>':'';
+  const auditOffer=copy.slug==='website-audit';
+  const auditHeroVisual=copy.heroVisual?'<div class="offer-visual"><picture>'+(copy.heroVisualMobile?'<source media="(max-width: 700px)" srcset="'+escapeHtml(copy.heroVisualMobile)+'">':'')+'<img src="'+escapeHtml(copy.heroVisual)+'" alt="" loading="eager"></picture></div>':'';
   const supportSubject=encodeURIComponent('Evercraft | '+copy.slug+' | assisted invoice request');
   const supportBody=encodeURIComponent('I would like to discuss '+offerName+' ('+price+'). Please confirm the scope, availability and an approved manual payment method before invoicing.');
   return shell(copy.headline+' · Evercraft',[
-    '<main'+(websiteOffer?' class="website-audit-mobile-fix"':'')+'>',
-    '<section class="offer-hero">',
-    '<div class="kicker"><span class="dot"></span> '+escapeHtml(copy.eyebrow)+(checkoutHeld?' · online checkout on hold':' · checkout request')+'</div>',
+    '<main'+(auditOffer?' class="website-audit-mobile-fix"':'')+'>',
+    '<section class="offer-hero'+(copy.slug==='website-audit'?' audit-offer':'')+'">',
+    '<div class="kicker"><span class="dot"></span> '+escapeHtml(copy.eyebrow)+(copy.slug==='website-audit'&&checkoutHeld&&auditInquiryAvailable?' · $49 secure checkout available':checkoutHeld?' · online checkout on hold':' · checkout request')+'</div>',
     '<h1>'+escapeHtml(copy.headline)+'</h1>',
     '<p class="lede">'+escapeHtml(copy.lede)+'</p>',
-    websiteOffer?'':visualMarkup,
+    auditOffer?'':auditHeroVisual,
     '<div class="offer-price">'+escapeHtml(price)+'</div>',
-    '<div class="offer-price-note">'+escapeHtml(websiteOffer?'Quick Win Audit · $49 one-time · five prioritized fixes, no subscription.':offerName+' · '+String(item.pricing||''))+'</div>',
-    ...(checkoutHeld ? [
+    '<div class="offer-price-note">'+escapeHtml(offerName)+(copy.slug==='website-audit'?' · one public website · five prioritized fixes':' · '+escapeHtml(item.pricing||''))+'</div>',
+    ...(checkoutHeld ? (copy.slug==='website-audit'&&auditInquiryAvailable ? [
+      renderHeldWebsiteAuditInquiryForm(),
+    ] : [
       '<section class="offer-panel" aria-label="Assisted purchase request">',
-      copy.slug==='signal-brief'?'<h2>Confirm your incident brief first.</h2>':'<h2>Online checkout is temporarily unavailable.</h2>',
+      copy.slug==='signal-brief'?'<h2>Confirm your incident brief first.</h2>':copy.slug==='closeout-pilot'?'<h2>Preview a closeout packet, then request a pilot.</h2>':'<h2>Online checkout is temporarily unavailable.</h2>',
       copy.slug==='signal-brief'
         ?'<p>This is an Evercraft Payments offer for $250, not a processor-first link. The specific Signal checkout remains held until the bounded incident scope and native settlement route are accepted. No payment or order is created here yet.</p>'
-        :'<p>Speak with Evercraft about this exact offer, confirm the scope, and request an approved manual invoice. This page does not create an order, collect money or schedule fulfillment.</p>',
+        :copy.slug==='closeout-pilot'
+          ?'<p>Build a private sample without an account or photos leaving your browser. A $49 human-reviewed service is available by scope inquiry only. No payment order or fulfillment is created yet.</p>'
+          :'<p>Speak with Evercraft about this exact offer, confirm the scope, and request an approved manual invoice. This page does not create an order, collect money or schedule fulfillment.</p>',
       copy.slug==='signal-brief'
         ?'<div class="actions"><a class="btn primary" href="https://jgaethle10.github.io/forge-operator/signal/#request">Prepare my incident brief request</a><a class="btn" href="/offers">Explore Evercraft offers</a></div>'
-        :'<div class="actions"><a class="btn primary" href="mailto:jessegaethle10@gmail.com?subject='+supportSubject+'&body='+supportBody+'">Request assisted invoicing</a><a class="btn" href="tel:+15097590440">Call Evercraft</a></div>',
+        :copy.slug==='closeout-pilot'
+          ?'<div class="actions"><a class="btn primary" href="https://jgaethle10.github.io/forge-operator/closeout/">Try the free builder</a><a class="btn" href="https://jgaethle10.github.io/forge-operator/closeout/#service">Request the $49 pilot</a></div>'
+          :'<div class="actions"><a class="btn primary" href="mailto:jessegaethle10@gmail.com?subject='+supportSubject+'&body='+supportBody+'">Email Evercraft for invoicing</a></div>',
       '<div class="checkout-note">Checkout and fulfillment remain unconfirmed until Evercraft Payments verifies an exact offer, accepted scope and provider receipt.</div>',
       '</section>',
-    ] : [
-    '<form class="checkout-form" method="post" action="/api/offers/'+encodeURIComponent(copy.slug)+'/checkout">',
+    ]) : [
+    '<form '+(copy.slug==='website-audit'?'id="audit-order" ':'')+'class="checkout-form" method="post" action="/api/offers/'+encodeURIComponent(copy.slug)+'/checkout">',
     '<input type="hidden" name="user_confirmed" value="true">',
     '<input type="hidden" name="idempotency_key" value="'+escapeHtml(idempotencyKey)+'">',
     '<label for="offer-customer-email">Email for your receipt and delivery</label>',
@@ -449,7 +561,9 @@ export function renderOfferPage(item,{checkoutConfigured=true}={}){
     '<div class="checkout-note">Evercraft Payments prepares the checkout. Nothing is marked paid until settlement is verified.</div>',
     '</form>',
     ]),
-    websiteOffer?'<details class="audit-more-info"><summary>See the example artwork and other audit options</summary>'+visualMarkup+'<p>'+escapeHtml(String(item.pricing||''))+'</p><p>Artwork is illustrative, not a finding about your website. Payment remains subject to verification.</p></details>':'',
+    auditOffer?renderWebsiteAuditDecisionJourney():'',
+    auditOffer?'<details class="audit-more-info"><summary>Optional example artwork and other audit options</summary>'+auditHeroVisual+'<p>'+escapeHtml(String(item.pricing||''))+'</p><p>Artwork is illustrative, not a finding about your website. Payment and delivery are verified separately.</p></details>':'',
+    copy.slug==='website-audit'?renderWebsiteAuditPreview():'',
     '</section>',
     '<div class="offer-grid">',
     '<section class="offer-panel"><h2>What you are buying</h2><p class="plain">'+escapeHtml(copy.promise)+'</p></section>',
@@ -463,6 +577,47 @@ export function renderOfferPage(item,{checkoutConfigured=true}={}){
     canonical:'/offers/'+copy.slug,
     ogType:'website',
     ogImage:copy.shareImage||'',
+    ogImageType:copy.shareImageType||'',
+    ogImageWidth:copy.shareImageWidth||0,
+    ogImageHeight:copy.shareImageHeight||0,
+    ogImageAlt:copy.shareImageAlt||'',
+  });
+}
+
+export function renderWebsiteAuditPaymentStatus({state='pending',queued=false}={}){
+  const known=['paid','pending','invalid','synthetic'];
+  const status=known.includes(state)?state:'pending';
+  const paid=status==='paid', isQueued=paid&&queued===true;
+  const heading=paid?'Payment verified.':status==='synthetic'?'QA transaction only.':status==='invalid'?'This checkout cannot be verified.':'We are checking your payment.';
+  const explanation=paid
+    ?(isQueued?'Evercraft Payments verified the order and the audit job was queued. A queued job is not yet a completed report.':'Evercraft Payments verified the order. Report preparation and delivery still need independent confirmation.')
+    :status==='synthetic'?'This is a synthetic verification, not a real customer purchase. No customer report has been authorized.'
+    :status==='invalid'?'The return details did not match an authorized Website Audit order. We cannot confirm any payment or begin work.'
+    :'We do not yet have a matching provider-paid receipt. Do not pay again until the payment is verified. If you paid, keep your receipt.';
+  const badge=paid?'Provider payment confirmed':status==='synthetic'?'Test only':status==='invalid'?'Verification unavailable':'Awaiting payment evidence';
+  const progress=(label,complete,note)=>'<div style="display:grid;grid-template-columns:32px 1fr;gap:13px;align-items:start;padding:14px 0;border-bottom:1px solid #284766"><div aria-hidden="true" style="width:28px;height:28px;display:grid;place-items:center;border-radius:50%;border:1px solid '+(complete?'#78d9bb':'#577690')+';background:'+(complete?'#164334':'#16283c')+';color:'+(complete?'#acf0d8':'#b7cde0')+';font-size:12px;font-weight:800">'+(complete?'✓':'·')+'</div><div><strong style="display:block;color:#f4f9ff">'+escapeHtml(label)+'</strong><span style="font-size:13px;color:#b7cde0;line-height:1.6">'+escapeHtml(note)+'</span></div></div>';
+  return shell('Website Audit order status · Evercraft',[
+    '<main style="max-width:870px;margin:0 auto;padding:60px 0 100px">',
+    '<div class="eyebrow">Evercraft Payments · Website Audit</div>',
+    '<h1 style="font-size:clamp(38px,6.8vw,68px);margin:18px 0 20px;max-width:850px">'+heading+'</h1>',
+    '<p class="lede">'+escapeHtml(explanation)+'</p>',
+    '<section aria-label="Payment and delivery progress" style="padding:clamp(20px,4vw,36px);margin:34px 0 24px;border:1px solid #355d7d;border-radius:22px;background:linear-gradient(140deg,#102b41,#0a1728)">',
+    '<div style="display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap"><h2 style="margin:0;font-size:23px">Your audit journey</h2><span style="border:1px solid #5585a5;padding:8px 12px;border-radius:999px;font-size:12px;color:#d6eeff">'+escapeHtml(badge)+'</span></div>',
+    progress('Secure checkout',paid,'Checkout details alone never prove payment.'),
+    progress('Provider-paid receipt',paid,'Only matching evidence from Evercraft Payments can confirm this step.'),
+    progress('Audit work queued',isQueued,'We inspect one public site and prioritize five specific fixes.'),
+    progress('Reviewed report delivered',false,'A completed, reviewed delivery is confirmed separately.'),
+    '</section>',
+    '<section aria-label="Next step" class="offer-panel">',
+    '<h2>'+(paid?'What happens next?':'Need assistance?')+'</h2>',
+    '<p>'+(paid?'Check the email address used for checkout for updates. No report is claimed delivered on this page.':'If you have a charge or receipt, preserve it and email us. Do not repeat a payment just because the return page is pending.')+'</p>',
+    '<div class="actions"><a class="btn primary" href="mailto:jessegaethle10@gmail.com?subject=Website%20Audit%20order%20status">Email Evercraft about this order</a><a class="btn" href="/offers/website-audit">Website Audit details</a></div>',
+    '<p class="checkout-note">We do not require a phone call to request help. This page never takes a second payment.</p>',
+    '</section></main>'
+  ].join('\n'),{
+    description:'Secure Website Audit order-status page with verified payment and delivery state.',
+    canonical:'/offers/website-audit',
+    noindex:true,
   });
 }
 
@@ -509,9 +664,8 @@ export function renderPaymentHoldPage({slug='',orderKey='',noAttempt=false}={}){
     '<h1>'+ (noAttempt?'Checkout is temporarily unavailable.':'Checkout could not be confirmed.') +'</h1>',
     '<p class="lede">'+message+'</p>',
     '<div class="actions">',
-    '<a class="btn primary" href="mailto:jessegaethle10@gmail.com?subject='+subject+'">Request payment assistance</a>',
+    '<a class="btn primary" href="mailto:jessegaethle10@gmail.com?subject='+subject+'">Email Evercraft for payment help</a>',
     '<a class="btn" href="'+back+'">Return to the offer</a>',
-    '<a class="btn" href="tel:+15097590440">Call Evercraft</a>',
     '</div>',
     order?'<div class="checkout-note">Reference to mention when contacting support: <code>'+escapeHtml(order)+'</code></div>':'',
     '</section>',

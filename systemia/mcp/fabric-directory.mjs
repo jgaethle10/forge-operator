@@ -1,4 +1,5 @@
 import { ownedOfferLink } from './owned-offer-links.mjs';
+import { loadPublicProductDiscovery } from './fabric-public-products.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -295,6 +296,18 @@ export function loadFabricCatalogFromRepository({catalogPath=''}={}){
       }
     }
   }
+  // Public products are a distinct read-only source from machine-commerce offers.
+  // Reuse CHUM's canonical Pain Index: historical/public discovery must not
+  // disappear merely because a product has no verified machine checkout.
+  // This enrichment is disabled for custom fixture catalogs.
+  if(!catalogPath){
+    const known=new Set(mapped.map(item=>item.public_id));
+    for(const product of loadPublicProductDiscovery()){
+      if(known.has(product.public_id)) continue;
+      mapped.push(product);
+      known.add(product.public_id);
+    }
+  }
   return normalizeFabricCatalog(mapped);
 }
 
@@ -416,6 +429,14 @@ function scoreEntry(intent,entry,{frequency,total}){
 
   const phrase=clean(intent).toLowerCase();
   if(phrase&&entry.name.toLowerCase().includes(phrase)) score+=20;
+  // Explicit product names outrank coincidental cross-domain keyword overlap.
+  // Only source product records get this priority. An exact brand-name match
+  // still carries discovery-only authority and cannot become a paid offer.
+  if(entry.public_id.startsWith('product:')){
+    const productName=entry.name.toLowerCase().trim();
+    if(productName!=='evercraft' && productName.length>=6 &&
+       phrase.includes(productName)) score+=300;
+  }
 
   // Physical-part routing guardrails. Rare generic words such as "broken" must not
   // let software-health capabilities outrank a specialist when the user is holding
@@ -476,6 +497,50 @@ function scoreEntry(intent,entry,{frequency,total}){
       hasAnyRawSignal(rawSignals,['job','project'])
     ) score+=30;
   }
+
+  // A source-only product is not a substitute for an already published,
+  // specialist machine capability when the person has NOT named that product.
+  // Keep broad product discoverability, but prioritize verified specialist
+  // handoffs over incidental keyword matches (e.g. ForensiScope, EarthWorks).
+  if(entry.public_id.startsWith('product:')){
+    const name=entry.name.toLowerCase().trim();
+    const named=name!=='evercraft' && name.length>=6 &&
+      clean(intent).toLowerCase().includes(name);
+    if(!named) score*=0.3;
+  }
+
+  // Household needs are not enterprise software rescue requests. These narrow
+  // user-problem signals are stronger than incidental word overlap in a large
+  // machine-offer catalog, but never unlock booking or checkout authority.
+  // Explicit IBM i or software rescue language stays on its existing specialist
+  // path. Keep this *after* generic product dilution, so relevant products
+  // remain visible to people who do not know their Evercraft product names.
+  const raw=rawIntentSignals(intent);
+  const hasHomeSubject=hasAnyRawSignal(raw,['homeowner','homeowners','home','house','household','my property']);
+  const hasMaintenanceNeed=hasAnyRawSignal(raw,[
+    'maintenance','winter','seasonal','furnace','gutters','gutter','hvac','roof','heating','weatherize',
+  ]);
+  const namedEnterpriseNeed=hasAnyRawSignal(raw,[
+    'ibm i','ibmi','as/400','iseries','mainframe','server','legacy software','repository','codebase',
+  ]);
+  if(hasHomeSubject&&hasMaintenanceNeed&&!namedEnterpriseNeed){
+    if(entry.public_id==='product:evercraft-property-services') score+=135;
+    if(entry.public_id==='product:seasonally') score+=105;
+    if(entry.public_id==='product:contractor-cloud') score+=90;
+    if(entry.public_id==='raven-nexus-home-setup-v1') score+=35;
+    if(entry.public_id==='ibmi-rescue-v1'||entry.public_id==='legacy-rescue-lab-v1') score-=180;
+  }
+
+  // A broad everyday-help question should lead through the free public utility
+  // instead of presenting an unrelated commercial diagnosis as the default.
+  // This is deliberately inapplicable to explicit specialist/product requests.
+  const everydayHelp=hasAnyRawSignal(raw,[
+    'everyday life','daily life','practical help','make life easier',
+  ])&&!hasAnyRawSignal(raw,[
+    'forensiscope','earthworks','contractor cloud','evercraft rewards',
+    'evercraft circles','work saban','ai boardroom','raven nexus',
+  ]);
+  if(everydayHelp&&entry.public_id==='product:evercraft-front-door') score+=120;
 
   return Math.max(0,Math.round(score*100)/100);
 }
@@ -549,6 +614,29 @@ function rpcError(id,code,message){
   return {jsonrpc:'2.0',id:id??null,error:{code,message}};
 }
 
+// The live MCP connector can be fully operational while a *different*
+// product checkout or payment provider remains unverified. Returning a
+// successful tool call is direct evidence of this read-only operation,
+// NOT a newly checked customer payment flow.
+const pluginResponseStatus=(method)=>Object.freeze({
+  state:'operational_for_this_request',
+  method,
+  scope:'read_only_capability_discovery',
+  payment_or_order_created:false,
+});
+const historicalCheckoutEvidence=Object.freeze({
+  state:'checkout_unverified_and_not_offered',
+  checkout_enabled:false,
+  last_observed_provider_failure:{
+    http_status:402,
+    observed_date:'2026-10-17',
+    evidence_scope:'historical_commercial_checkout_probe',
+  },
+  current_provider_http_status:'not_checked_by_this_plugin_call',
+  current_paid_receipt:'not_verified',
+  plugin_usable_independently:true,
+});
+
 function toolResult(payload){
   return {
     content:[{type:'text',text:JSON.stringify(payload,null,2)}],
@@ -588,6 +676,7 @@ export async function executeFabricDirectoryRpc(rpc,catalog=[]){
       return rpcResult(id,toolResult({
         ok:true,
         directory:'Evercraft Fabric',
+        plugin_operation:pluginResponseStatus('match_evercraft_capability'),
         intent,
         matches,
         match_count:matches.length,
@@ -602,6 +691,7 @@ export async function executeFabricDirectoryRpc(rpc,catalog=[]){
       return rpcResult(id,toolResult({
         ok:true,
         directory:'Evercraft Fabric',
+        plugin_operation:pluginResponseStatus('list_evercraft_capabilities'),
         capabilities,
         returned:capabilities.length,
         total:normalized.length,
@@ -617,17 +707,36 @@ export async function executeFabricDirectoryRpc(rpc,catalog=[]){
       return rpcResult(id,toolResult({
         ok:true,
         directory:'Evercraft Fabric',
+        plugin_operation:pluginResponseStatus('get_evercraft_connection_options'),
+        checkout_evidence:historicalCheckoutEvidence,
         public_id:capability.public_id,
         name:capability.name,
         state:capability.state,
         connections:capability.connections,
-        // Public buyer URLs are held after independent HTTP 402 findings.
-        // A dated catalog validation does not prove current checkout availability.
-        // Restore only with an explicitly verified provider-to-canonical-receipt gate.
+        // The checkout hold is a separate commercial gate. Its last
+        // observed provider 402 was October 17, not a fresh provider
+        // probe from this successful plugin call. Keep customer payment
+        // blocked until provider settlement/fulfillment is verified.
         human_offer_url:null,
         owned_human_buyer_options:[],
         human_buyer_options:[],
         human_buyer_options_state:'held_provider_http_402_requires_new_payment_receipt',
+        // Optional, separately priced service navigation. This is NOT a substitute
+        // checkout for the held $49 Website Quick Win Audit or any payment claim.
+        related_independent_services:capability.public_id==='audit-center-website-audit-machine-v1'
+          ? [{
+              service_name:'Evercraft Asset Diagnosis',
+              price_usd:149,
+              url:'https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/asset-diagnosis/',
+              scope:'One owned website, app, workflow or other digital/operational asset: a scoped, human-reviewed diagnostic summary and practical next actions.',
+              distinct_from_requested_offer:true,
+              requested_website_audit_checkout_still_held:true,
+              scope_and_delivery_confirmation_required:true,
+              payment_url:null,
+              purchase_initiated:false,
+              explanation:'Separate existing $149 Asset Diagnosis service, not the $49 Quick Win Audit. Only present when a broader asset diagnosis genuinely fits the user problem; agree in writing before payment.',
+            }]
+          : [],
         buyer_checkout_available:false,
         checkout_suppression_reason:'evercraft_public_commercial_mcp_http402_20261017',
         transactional:false,

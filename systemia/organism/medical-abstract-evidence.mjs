@@ -47,6 +47,15 @@ export function parsePubmedEfetch(xml, ids) {
   const doiMatches=[...raw.matchAll(/<ArticleId\b([^>]*)>([\s\S]*?)<\/ArticleId>/g)]
    .filter(x=>/\bIdType="doi"/i.test(x[1]))
    .map(x=>xmlText(x[2])).filter(x=>/^10\.\d{4,9}\/\S{1,160}$/i.test(x));
+  // Registration IDs must appear in the actual abstract or ClinicalTrials.gov DataBank.
+  // Never infer a study registration from paper titles or an unverified web search.
+  const trialBankIds=[];
+  for(const bank of medline.matchAll(/<DataBank\b[^>]*>([\s\S]*?)<\/DataBank>/g)){
+   if(!/ClinicalTrials\.gov/i.test(xmlText(match(bank[1],/<DataBankName\b[^>]*>([\s\S]*?)<\/DataBankName>/))))continue;
+   trialBankIds.push(...[...bank[1].matchAll(/<AccessionNumber\b[^>]*>([\s\S]*?)<\/AccessionNumber>/g)].map(x=>xmlText(x[1])));
+  }
+  const trialText=sections.map(x=>x.text).join(' ');
+  const registrations=[...new Set([...trialBankIds,...(trialText.match(/\bNCT\d{8}\b/gi)||[])].map(x=>x.toUpperCase()).filter(x=>/^NCT\d{8}$/.test(x)))].slice(0,6);
   const corrections=[...raw.matchAll(/<CommentsCorrections\b([^>]*)>[\s\S]*?<\/CommentsCorrections>/g)]
    .map(x=>trim(match(x[1],/\bRefType="([^"]*)"/),70)).filter(Boolean).slice(0,20);
   const needsReview=types.some(x=>/retract|erratum|expression of concern|correct/i.test(x))||
@@ -56,6 +65,7 @@ export function parsePubmedEfetch(xml, ids) {
    doi:doiMatches[0]||null,publication_types:types,study_design_hint:design(types),
    abstract_status:sections.length?'present':'missing_or_unindexed',abstract_sections:sections,
    correction_signals:corrections,needs_correction_review:needsReview,
+   registry_ids:registrations,
    source_url:'https://pubmed.ncbi.nlm.nih.gov/'+id+'/',
    verification:'abstract_metadata_only; article_not_independently_appraised'
   });
@@ -95,7 +105,7 @@ export async function collectMedicalAbstractEvidence({watch,fetcher=globalThis.f
  const papers=ids.map((id)=>parsed.get(id)||{
   pmid:id,title:'EFetch record unavailable',doi:null,publication_types:[],
   study_design_hint:'study_design_not_classified',abstract_status:'missing_or_unindexed',
-  abstract_sections:[],correction_signals:[],needs_correction_review:false,
+  abstract_sections:[],correction_signals:[],needs_correction_review:false,registry_ids:[],
   source_url:'https://pubmed.ncbi.nlm.nih.gov/'+id+'/',
   verification:'no_article_level_evidence'
  });

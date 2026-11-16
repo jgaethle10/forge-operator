@@ -298,15 +298,23 @@ function writeFreshnessFeed({ publicRoot, state, changedEntries, origin }) {
   fs.writeFileSync(freshnessXmlPath, feed);
 }
 
+// This canonical landing is hosted at the owned GitHub Pages public address.
+// Crawl pressure indexes paths for local byte comparison, but must NOT rewrite
+// this externally hosted Studio URL into a relative URL in public/sitemap.xml.
+// Its inquiry remains human reviewed, not a pay-now checkout.
+const CANONICAL_STUDIO_LOC = 'https://jgaethle10.github.io/forge-operator/commercial-studio/';
+const CANONICAL_STUDIO_PATH = new URL(CANONICAL_STUDIO_LOC).pathname;
+
 function rewriteSitemap({ sitemapPath, paths, entries }) {
   const lines = [
     '<?xml version="1.0" encoding="UTF-8"?>',
     '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
     ...paths.map((urlPath) => {
       const entry = entries[urlPath];
+      const canonicalLoc = urlPath === CANONICAL_STUDIO_PATH ? CANONICAL_STUDIO_LOC : urlPath;
       return entry?.last_changed
-        ? `  <url><loc>${escapeXml(urlPath)}</loc><lastmod>${escapeXml(entry.last_changed)}</lastmod></url>`
-        : `  <url><loc>${escapeXml(urlPath)}</loc></url>`;
+        ? `  <url><loc>${escapeXml(canonicalLoc)}</loc><lastmod>${escapeXml(entry.last_changed)}</lastmod></url>`
+        : `  <url><loc>${escapeXml(canonicalLoc)}</loc></url>`;
     }),
     '</urlset>',
     ''

@@ -1,0 +1,25 @@
+name: Client 001 Branded V2 Release Gate
+on:
+  push:
+    branches: [release/client001-onthego-branded-v2-20261115]
+    paths:
+      - public/clients/on-the-go/review/**
+      - tests/client001-on-the-go-v2.test.mjs
+      - .github/workflows/client001-v2-branded.yml
+  pull_request:
+    paths:
+      - public/clients/on-the-go/review/**
+      - tests/client001-on-the-go-v2.test.mjs
+permissions:
+  contents: read
+jobs:
+  brand-and-function:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Confirm client branding, image provenance and bilingual functionality
+        run: node --test tests/client001-on-the-go-v2.test.mjs

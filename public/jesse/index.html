@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#101713">
+<meta name="description" content="Look closer. Build better. Jesse Gaethle explores the overlooked world through evidence-led stories, original engineering, field notes, and honest progress.">
+<link rel="canonical" href="https://jgaethle10.github.io/forge-operator/jesse/">
+<meta property="og:type" content="profile">
+<meta property="og:title" content="Jesse Gaethle | Look Closer. Build Better.">
+<meta property="og:description" content="Curiosity, engineering, exploration, and the stories hiding in plain sight.">
+<meta property="og:url" content="https://jgaethle10.github.io/forge-operator/jesse/">
+<meta name="twitter:card" content="summary">
+<title>Jesse Gaethle | Look Closer. Build Better.</title>
+<style>
+:root{--night:#101713;--ink:#14211b;--paper:#f1efe7;--pale:#dedfd4;--muted:#9fa9a3;--fire:#ffb76c;--line:#9eb09b33;font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--night);color:var(--paper);line-height:1.5}
+a{color:inherit}a:focus-visible{outline:3px solid var(--fire);outline-offset:4px}
+.skip{position:absolute;left:-999px;top:0}.skip:focus{left:16px;top:16px;z-index:100;background:var(--paper);color:var(--ink);padding:10px}
+.wrap{width:min(1200px,calc(100% - 48px));margin-inline:auto}
+header{position:relative;z-index:3;border-bottom:1px solid var(--line)}
+.head{display:flex;justify-content:space-between;align-items:center;min-height:74px;gap:20px}
+.brand{font-size:14px;letter-spacing:.17em;font-weight:750;text-decoration:none}
+.head nav{display:flex;gap:24px;font-size:13px;letter-spacing:.03em}
+.head nav a{text-decoration:none;color:var(--pale)}.head nav a:hover{text-decoration:underline}
+.hero{position:relative;overflow:hidden;isolation:isolate;padding:104px 0 104px;background:radial-gradient(circle at 84% 28%,#36533b80 0,transparent 40%),radial-gradient(circle at 20% 78%,#61452855 0,transparent 35%)}
+.hero:after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:repeating-linear-gradient(132deg,transparent 0 25px,#f6edda08 26px 27px,transparent 28px 60px);mask-image:linear-gradient(90deg,transparent 25%,black)}
+.kicker{font-size:12px;letter-spacing:.21em;text-transform:uppercase;color:var(--fire);font-weight:760}
+h1{font-size:clamp(4.2rem,10.2vw,10.7rem);font-weight:680;line-height:.94;letter-spacing:-.082em;margin:22px 0 28px;max-width:1100px}
+h1 span{display:block;color:var(--fire)}.intro{font-size:clamp(1.08rem,2.2vw,1.5rem);max-width:730px;color:var(--pale);line-height:1.55}
+.ctas{display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin-top:32px}
+.cta{display:inline-flex;justify-content:center;align-items:center;min-height:49px;padding:13px 20px;border:1px solid #a4bcaa66;border-radius:7px;text-decoration:none;font-size:14px;font-weight:700}
+.cta.primary{color:var(--night);background:var(--fire);border-color:var(--fire)}.cta:hover{filter:brightness(1.12)}
+.hero-foot{margin-top:80px;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;color:var(--muted);text-transform:uppercase;letter-spacing:.13em;font-size:11px}
+section{scroll-margin-top:30px}.section{padding:82px 0;border-top:1px solid var(--line)}
+.section-head{display:flex;justify-content:space-between;gap:28px;align-items:end;flex-wrap:wrap;margin-bottom:30px}
+h2{font-size:clamp(2.25rem,5vw,4.4rem);line-height:1.03;letter-spacing:-.061em;margin:12px 0}
+.section-head p{color:var(--pale);max-width:500px}
+.shows{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.show{display:flex;min-height:306px;flex-direction:column;justify-content:space-between;border:1px solid #7d9c7e55;border-radius:9px;padding:27px;background:linear-gradient(145deg,#233128,#171f1a)}
+.show:nth-child(2){background:linear-gradient(145deg,#363c34,#181d1b)}
+.show:nth-child(3){background:linear-gradient(145deg,#393529,#1c201c)}
+.show:nth-child(4){background:linear-gradient(145deg,#2e3e3b,#1c2421)}
+.number{font-size:12px;letter-spacing:.15em;color:var(--fire);font-weight:750}
+.show h3{font-size:clamp(2rem,4vw,3.7rem);letter-spacing:-.058em;line-height:1.03;margin:0 0 12px}
+.show p{margin:0;max-width:440px;color:#d0d8ce;font-size:15px}
+.intelligence{background:linear-gradient(115deg,#18251c,#14201b)}
+.engine-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:30px}
+.engine-card{border:1px solid #82a48a55;background:#ffffff07;border-radius:9px;padding:24px}
+.engine-card h3{font-size:clamp(1.55rem,3vw,2.15rem);letter-spacing:-.05em;margin:11px 0}
+.engine-card p{color:#d0d8ce;line-height:1.6;margin:0}
+.engine-label{font-size:11px;letter-spacing:.16em;color:var(--fire);text-transform:uppercase;font-weight:750}
+.engine-tail{color:var(--pale);max-width:770px;margin-top:26px;font-size:15px;line-height:1.7}
+.about{display:grid;grid-template-columns:1.1fr .9fr;gap:8%;align-items:start}
+.about p{font-size:17px;line-height:1.75;color:var(--pale);max-width:740px}
+.note{border-left:2px solid var(--fire);padding:8px 0 8px 22px;font-size:19px;line-height:1.6}
+.contact{background:#e5e7dd;color:var(--ink)}
+.contact .kicker{color:#8e4d1f}.contact p{font-size:18px;line-height:1.6;max-width:650px}
+.contact .cta{background:var(--ink);color:white;border-color:var(--ink)}
+footer{padding:26px 0;border-top:1px solid var(--line);color:var(--muted);font-size:12px}
+.foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px}
+@media(max-width:900px){.engine-grid{grid-template-columns:1fr}}
+@media(max-width:740px){.wrap{width:min(100% - 36px,1200px)}.head nav{gap:12px}.hero{padding:76px 0 54px}.hero-foot{margin-top:56px}.section{padding:62px 0}.shows,.about{grid-template-columns:1fr}.show{min-height:244px;padding:23px}.note{margin:8px 0}.head{min-height:66px}h1{font-size:clamp(3.65rem,14vw,6rem)}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header><div class="wrap head"><a class="brand" href="#top">JESSE GAETHLE</a><nav aria-label="Site navigation"><a href="#shows">The series</a><a href="#about">About</a><a href="#contact">Contact</a></nav></div></header>
+<main id="main">
+<section class="hero" id="top"><div class="wrap">
+<div class="kicker">A builder. An investigator. A very curious human.</div>
+<h1>Look closer.<span>Build better.</span></h1>
+<p class="intro">There are remarkable things happening all around us, and a lot that deserves a second look. I'm Jesse. I investigate overlooked stories, explore extraordinary places, and build technology through Evercraft. I want to show the evidence, the process, and what happens when an idea meets the real world.</p>
+<div class="ctas"><a class="cta primary" href="#shows">Explore the four series</a><a class="cta" href="#about">Meet the builder</a></div>
+<div class="hero-foot"><span>Curiosity is the starting point.</span><span>Independent stories. Honest work.</span></div>
+</div></section>
+<section class="section" id="shows" aria-labelledby="shows-title"><div class="wrap">
+<div class="section-head"><div><div class="kicker">Original series · In development</div><h2 id="shows-title">Four ways to see the world.</h2></div><p>Each series has its own rhythm. The same curiosity connects them. Episodes will appear here only after they are actually released.</p></div>
+<div class="shows">
+<article class="show"><div class="number">01 / DISCOVER</div><div><h3>Look Closer</h3><p>Science, hidden history, engineering mysteries and unexpected discoveries. Start with the evidence. Follow the question.</p></div></article>
+<article class="show"><div class="number">02 / MAKE</div><div><h3>Build Log</h3><p>Actual engineering, software and inventions. The good ideas, the failed attempts and the tests that separate demonstrations from reality.</p></div></article>
+<article class="show"><div class="number">03 / EXPLORE</div><div><h3>Field Notes</h3><p>Wild places, forgotten landmarks, remarkable communities and the stories you only find by going there.</p></div></article>
+<article class="show"><div class="number">04 / DOCUMENT</div><div><h3>Week in Motion</h3><p>A recurring documentary of what we learned, what moved, what broke and what comes next.</p></div></article>
+</div></div></section>
+<section class="section intelligence" id="engine" aria-labelledby="engine-title"><div class="wrap">
+<div class="kicker">Behind the stories · Existing Evercraft systems</div>
+<h2 id="engine-title">Curiosity with an evidence trail.</h2>
+<p class="intro">A story can start with a strange change, a public record, a question in the field, or an engineering test. Evercraft has distinct systems for observing and investigating the world. They inform my work; they don't automatically decide what is true or what deserves publication.</p>
+<div class="engine-grid">
+<article class="engine-card"><div class="engine-label">Observe / Detect change</div><h3>Rockies</h3><p>Public-source observers follow environmental conditions, infrastructure, technology and other evolving systems. They record source context and meaningful differences instead of turning every update into a headline.</p></article>
+<article class="engine-card"><div class="engine-label">Integrate / Compare</div><h3>Worldstate</h3><p>Context Fabric and Reality Delta connect observations, preserve uncertainties and show what materially changed. A signal is a starting point for verification, not a finished story.</p></article>
+<article class="engine-card"><div class="engine-label">Investigate / Challenge</div><h3>TOWI</h3><p>Evidence-controlled research digs into official records, competing claims, technical questions and unresolved gaps. Investigations can begin independently, even without a Rockies signal.</p></article>
+</div>
+<p class="engine-tail">A verified investigation may become a longer Evercraft Journal feature, a Look Closer episode or a field documentary. Fallen Studios helps produce the work, and Evercraft Clip handles distribution only where the publication and account permissions have actually been confirmed. Nothing on this page claims these stories or channels are already live.</p>
+</div></section>
+<section class="section" id="about"><div class="wrap about">
+<div><div class="kicker">The person behind the work</div><h2>I don't have to know the answer to ask a better question.</h2><p>I founded Evercraft to make useful things, but the reason I keep building is bigger than software. I'm interested in why our systems work, why they fail, what we forget, and what is still possible. This space is where those investigations become stories you can follow.</p><p>Evercraft supports the research, production, and engineering. My perspective is my own. Whenever a video uses reconstruction, illustration, or simulation, it should be identified plainly.</p></div>
+<aside class="note">Not every discovery needs to become a product. Not every invention works. The interesting part is finding out.</aside>
+</div></section>
+<section class="section contact" id="contact"><div class="wrap">
+<div class="kicker">Stay in touch</div><h2>Found something worth investigating?</h2>
+<p>Send a story lead, a collaboration idea, or a note about your own project. Email is the current contact route. A newsletter and verified social links will be added once those channels are connected.</p>
+<a class="cta" href="mailto:jessegaethle10@gmail.com?subject=Jesse%20Gaethle%20%7C%20Story%20or%20collaboration">Email Jesse</a>
+</div></section>
+</main>
+<footer><div class="wrap foot"><span>© 2026 Jesse Gaethle · Original reporting and exploration</span><span>Made with Evercraft · No paid endorsement implied</span></div></footer>
+</body>
+</html>

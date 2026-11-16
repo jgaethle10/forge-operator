@@ -1,0 +1,41 @@
+name: Systemia front door proof
+
+on:
+  pull_request:
+    paths:
+      - 'public/systemia/**'
+      - 'public/headquarters/index.html'
+      - 'public/try/index.html'
+      - 'tests/systemia-front-door.test.mjs'
+      - '.github/workflows/systemia-front-door.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'public/systemia/**'
+      - 'public/headquarters/index.html'
+      - 'public/try/index.html'
+      - 'tests/systemia-front-door.test.mjs'
+      - '.github/workflows/systemia-front-door.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Run Systemia truth, links and buyer-handoff tests
+        run: node --test tests/systemia-front-door.test.mjs
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Render actual social preview
+        run: |
+          python -m pip install --quiet cairosvg==2.8.2
+          python -c 'import cairosvg; cairosvg.svg2png(url="public/systemia/social-card.svg",write_to="/tmp/systemia-social-card.png",output_width=1200,output_height=630)'
+          python -c 'from pathlib import Path; import struct; p=Path("/tmp/systemia-social-card.png").read_bytes(); assert p[:8]==bytes.fromhex("89504e470d0a1a0a") and struct.unpack(">II",p[16:24])==(1200,630) and len(p)<4_000_000; print("SYSTEMIA_PREVIEW_PASS")'

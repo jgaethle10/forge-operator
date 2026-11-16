@@ -22,6 +22,18 @@ A reader should finish each feature with three things:
 
 Do not serialize all editorial work through a single product or desk. A new substantive article can run independently of commercial launches.
 
+## Source intelligence backbone: Rockies, Worldstate and TOWI
+
+These are established Evercraft capabilities and distinct sources of editorial inputs, **not replacement publications**:
+
+- **Rockies** observes permitted public sources, compares to normal baselines, and retains provenance. Feed change alone never becomes a headline. Its declared 99 logical baseline / 26-range topology is a scaling target, not an independently confirmed live agent count.
+- **Worldstate / Context Fabric** connects observations and material deltas, keeping conflicting evidence visible. Sentinel correlates anomalies; Signal Fabric governs notifications. None automatically authorizes publication or surveillance of individuals.
+- **TOWI** runs evidence-controlled investigations into records, infrastructure and environmental/public-interest questions, whether prompted by a Rocky observation or an independent question. Preserve findings, disputed claims and source gaps. Past dossiers are not automatically finished or publicly released.
+- **Evercraft Journal / Jesse creator lane** are *different editorial expressions* of appropriately approved evidence. A Journal feature and a personal Look Closer documentary require appropriate rights and distinct editorial review. They need not always publish together.
+- **Fallen Studios / Clip** convert approved original work into media derivatives and distribute only to verified destinations with recorded provider receipts.
+
+Before accepting a story signal, require a concrete observation/record identifier, original event time, provenance, source state, independent corroboration when available, a bounded claim and a named editorial decision. Reject noise, inferred catastrophes, implied wrongdoing without evidence and fake "live" signals. Do not turn sensor or investigative outputs into automatic publishing permission. Protect private data and separate corporate from personal creator accounts.
+
 ## Selection rule: reader gravity, not noise
 
 Rank every candidate on 0-5 each:

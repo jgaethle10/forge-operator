@@ -50,3 +50,9 @@ npm run journal:test
 ```
 
 The tool invokes the shared `claim-reactor.mjs` and emits a local JSON **candidate** on stdout. It fails closed on broken source or evidence references, counterfeit approval fields, and unsupported causal bridges. An `evidence_preflight_ready` value of `true` only means a packet can proceed to an **independent editorial reviewer**. It cannot mark a story approved, produce a Systemia release, populate `public/journal`, or authorize Evercraft Clip. Those gates remain separate and require genuine receipts.
+
+### Mobile/offline historical image reliability (November 9)
+
+The chainsaw editorial preview now embeds **two owned SVG illustrations** as `data:image/svg+xml;base64` images, with a portrait version for iPhone and a landscape version for desktop. This avoids the blank hero observed when iOS opened a local HTML attachment that referenced an external Wikimedia JPEG. Both illustrations are **clearly labeled conceptual** artwork, not historical artifact photography. The separate Commons link retains the attributed real osteotome photograph and its public-domain rights documentation.
+
+No browser or phone network access is required to render the preview hero. No remote image is silently presented as an embedded photograph. The renderer rejects SVG script, foreignObject, image and event-handler content, and the newsroom test verifies offline embedding and historical separation. This does not change Journal release authority, publication receipts, or the Clip distribution gate.

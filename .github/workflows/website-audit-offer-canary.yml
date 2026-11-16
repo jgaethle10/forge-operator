@@ -2,12 +2,15 @@ name: Website audit offer canary
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '19 */4 * * *'
   push:
     branches: [main]
     paths:
       - '.github/workflows/website-audit-offer-canary.yml'
       - 'systemia/mcp/fabric-public-site.mjs'
       - 'systemia/mcp/fabric-local-runtime.mjs'
+      - 'systemia/mcp/website-audit-inquiry.mjs'
 
 permissions:
   contents: read
@@ -17,35 +20,74 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Observe live audit page without claiming paid checkout
+      - name: Verify actual live Website Audit layout and payment boundary
         shell: bash
         run: |
           set -euo pipefail
           url="https://fabric.systemiacommandcenters.com/offers/website-audit"
-          body="$(curl --fail --silent --show-error --location --retry 24 --retry-all-errors --retry-delay 5 "$url")"
-          printf '%s' "$body" | grep -Fq "See your website through their eyes."
-          printf '%s' "$body" | grep -Fq 'Quick Win Audit'
-          printf '%s' "$body" | grep -Fq '\$49'
-          printf '%s' "$body" | grep -Fq 'Evercraft Payments'
-          if printf '%s' "$body" | grep -Fq 'Online checkout is temporarily unavailable'; then
-            if printf '%s' "$body" | grep -Fq 'action="/api/offers/website-audit/checkout"'; then
-              echo 'ERROR: held offer still contains a checkout submission form'
-              exit 1
-            fi
-            printf '%s' "$body" | grep -Fq 'Request assisted invoicing'
-            checkout_state='held_assisted_contact'
-          elif printf '%s' "$body" | grep -Fq 'Continue to checkout'; then
-            printf '%s' "$body" | grep -Fq 'action="/api/offers/website-audit/checkout"'
-            checkout_state='html_form_visible_payment_not_verified'
-          else
-            echo 'ERROR: neither a held-state assisted route nor a prepared checkout form was visible'
-            exit 1
-          fi
+          page="$(mktemp)"
+          readiness="$(mktemp)"
+          trap 'rm -f "$page" "$readiness"' EXIT
+          curl --fail --silent --show-error --location --retry 12 --retry-all-errors --retry-delay 5 "$url" -o "$page"
+          curl --fail --silent --show-error --location --retry 12 --retry-all-errors --retry-delay 5 "https://fabric.systemiacommandcenters.com/api/website-audit/readiness" -o "$readiness"
+          python3 - "$page" "$readiness" <<'PY'
+          import sys, json
+          from pathlib import Path
+          html=Path(sys.argv[1]).read_text(encoding='utf-8')
+          readiness=json.loads(Path(sys.argv[2]).read_text(encoding='utf-8'))
+          checks={
+            'headline': 'See your website through their eyes.' in html,
+            'price': '$49' in html,
+            'offer': 'Quick Win Audit' in html,
+            'payments_authority': 'Evercraft Payments' in html,
+            'new_native_preview': 'class="audit-preview"' in html,
+            'honest_preview_disclaimer': 'Illustrative process preview.' in html,
+            'old_feed_poster_absent': 'poster-feed.svg' not in html,
+            'old_wide_poster_absent': 'poster-hero-wide.svg' not in html,
+          }
+          price=html.find('class="offer-price"')
+          preview=html.find('class="audit-preview"')
+          checks['price_before_preview']=price>=0 and preview>price
+          form=html.find('name="customer_ref"')
+          inquiry=html.find('class="audit-intake-form"')
+          verified_hosted_url='https://buy.stripe.com/bJe28kfD885M9SP49n0Jq07'
+          hosted_link=html.find('href="'+verified_hosted_url+'"')
+          if form>=0:
+            mode='native_checkout'
+            checks['buyer_action_before_preview']=form<preview
+            checks['correct_checkout_route']='/api/offers/website-audit/checkout' in html
+          elif hosted_link>=0:
+            # Exact Stripe URL independently verified as active and owned by
+            # Evercraft LLC. This HTTP check does NOT inspect a payment or
+            # prove that paid-to-human-reviewed fulfillment works.
+            mode='verified_hosted_checkout_with_optional_inquiry'
+            checks['buyer_action_before_preview']=hosted_link<preview
+            checks['correct_checkout_route']=hosted_link>=0 and 'Start my $49 audit' in html
+            checks['stripe_tax_and_scope_disclosed']='including applicable sales tax' in html and 'Your URL and priority are requested during checkout' in html
+            checks['no_autonomous_fulfillment_claim']='Work begins only after verified payment' in html and 'human-reviewed report is delivered by email' in html
+            checks['optional_free_inquiry_separate']=inquiry>=0 and inquiry<preview and '/api/website-audit/inquiry' in html and 'No charge, payment order, or automatic audit starts here.' in html
+            checks['private_intake_ready']=readiness.get('intake_available') is True
+            checks['native_payment_still_held']=readiness.get('payment_ready') is False
+          else:
+            mode='held_buyer_inquiry'
+            checks['buyer_action_before_preview']=inquiry>=0 and inquiry<preview
+            checks['correct_checkout_route']='/api/website-audit/inquiry' in html
+            checks['no_charge_claim']=('No charge, payment order, or automatic audit starts here.' in html)
+            checks['private_intake_ready']=readiness.get('intake_available') is True
+            checks['native_payment_still_held']=readiness.get('payment_ready') is False
+          artwork=html.find('<div class="offer-visual">')
+          disclosure=html.find('<details class="audit-more-info">')
+          actions=[i for i in (form, hosted_link, inquiry) if i>=0]
+          checks['large_artwork_collapsed_after_buying_action']=bool(actions) and disclosure>min(actions) and artwork>disclosure
+          for name,passed in checks.items():
+            print(f'{name}: {"PASS" if passed else "FAIL"}')
+          print('buyer_action_mode:',mode)
+          if not all(checks.values()):
+            raise SystemExit('LIVE_WEBSITE_AUDIT_CUSTOMER_PATH_NOT_VERIFIED')
+          PY
           {
-            echo "## Website Audit public-page readback"
+            echo "## Website Audit live layout verified"
             echo
             echo "URL: $url"
-            echo "Observed: exact headline, $49 price, Evercraft Payments identity"
-            echo "Checkout page state: $checkout_state"
-            echo "No checkout POST, paid receipt, provider settlement, or delivery verified by this read-only test."
+            echo "Verified: correct $49 buyer-action ordering, exact known hosted Stripe URL if present, private inquiry readiness and scope disclosures. No purchase, paid order, or fulfilled audit was exercised."
           } >> "$GITHUB_STEP_SUMMARY"

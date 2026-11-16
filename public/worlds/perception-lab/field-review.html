@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>Evercraft | Spatial Field Review</title>
+<style>
+:root{font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;color:#17283d;background:#f5f8fd;font-synthesis:none}
+*{box-sizing:border-box}body{margin:0}button,input,select{font:inherit}button{cursor:pointer}
+.top{background:#fff;border-bottom:1px solid #e0e9f2}
+.top-inner{max-width:1240px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:18px;padding:18px 24px}
+.brand{font-weight:900;letter-spacing:.065em;color:#15569c;font-size:.9rem}
+.brand span{font-weight:500;color:#8699ab}.nav{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+a{color:#1763a8;text-decoration:none;font-size:.86rem;font-weight:650}
+a:hover{text-decoration:underline}.chip{padding:7px 12px;border-radius:99px;border:1px solid #d6e2f0;font-size:.74rem;color:#396181;letter-spacing:.04em}
+main{max-width:1240px;padding:42px 24px 80px;margin:0 auto}
+.eyebrow{font-weight:850;letter-spacing:.16em;color:#3179bb;font-size:.73rem;text-transform:uppercase;margin-bottom:14px}
+h1{font-size:clamp(2.4rem,5.3vw,4.5rem);line-height:1.03;letter-spacing:-.052em;margin:0 0 18px}
+h1 span{color:#1678c2}.lead{font-size:1.05rem;color:#556a80;line-height:1.6;max-width:820px;margin:0 0 24px}
+.actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.btn{border:0;border-radius:10px;padding:13px 18px;font-weight:780;background:#165da8;color:#fff}
+.btn:hover{background:#0b498e}.btn.alt{background:#eaf2fa;color:#16558e}
+.labelled-upload{display:inline-flex;align-items:center;gap:9px;border:1px solid #c7d9ed;background:white;border-radius:10px;padding:12px 15px;color:#16558e;font-size:.91rem;font-weight:760;cursor:pointer}
+.labelled-upload input{position:absolute;opacity:0;width:1px;height:1px}
+.labelled-upload:focus-within{outline:3px solid #92cbff}
+.help{color:#6a7d8f;font-size:.84rem}
+#message{margin-top:15px;color:#355d82;font-size:.9rem;min-height:26px}
+.panel{background:#fff;border:1px solid #dce8f3;border-radius:18px;padding:24px;box-shadow:0 10px 36px rgba(23,58,100,.045);margin-top:20px}
+.header-row{display:flex;justify-content:space-between;align-items:start;gap:16px;flex-wrap:wrap}
+h2{font-size:1.22rem;letter-spacing:-.025em;margin:0 0 8px}
+.subtitle{color:#61768b;font-size:.88rem;line-height:1.5;margin:0}
+.status{font-size:.74rem;font-weight:800;letter-spacing:.03em;color:#235f91;background:#eaf3fc;padding:7px 12px;border-radius:99px}
+.status.unverified{color:#485e72;background:#eef2f6}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px;margin-top:20px}
+.stat{padding:20px;border:1px solid #dce7f1;border-radius:14px;background:#fbfdff}
+.stat .name{font-size:.77rem;color:#63798e;font-weight:700;margin:0 0 10px}
+.stat .value{font-size:clamp(1.55rem,2.5vw,2.7rem);font-weight:880;letter-spacing:-.055em;color:#175b9f;line-height:1.1}
+.stat .foot{color:#7c8b9a;font-size:.71rem;margin-top:8px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.chart{width:100%;height:270px;display:block;border-radius:12px;background:#fbfdff}
+.legend{display:flex;gap:15px;margin-top:12px;font-size:.78rem;color:#667d91}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#1c87ca;margin-right:6px}
+.dot.line{background:#97b1c5}
+.note{font-size:.86rem;color:#485f77;line-height:1.6}
+.warning{border-left:3px solid #8faac1;padding:9px 13px;margin-top:9px;background:#f5f9fc;font-size:.82rem;line-height:1.55;color:#476075}
+.controls{display:flex;gap:12px;flex-wrap:wrap;margin:16px 0}
+input[type=search],select{background:#fff;border:1px solid #ccdae9;color:#24435c;border-radius:10px;padding:11px 13px;min-width:170px;max-width:100%}
+input[type=search]{flex:1;min-width:210px}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:700px;font-size:.86rem}
+th{text-align:left;padding:13px 12px;color:#6a7c8f;border-bottom:1px solid #dae5ee;font-size:.74rem;letter-spacing:.045em;text-transform:uppercase}
+td{padding:14px 12px;border-bottom:1px solid #edf2f7;white-space:nowrap}
+tbody tr{cursor:pointer}tbody tr:hover{background:#f2f8fd}
+td strong{color:#243d54}
+.flag{background:#eff5f9;color:#3e6888;border-radius:6px;padding:5px 8px;font-weight:700;font-size:.74rem}
+.flag.valid{background:#e8f5fb;color:#1469a1}
+.detail{padding:15px 18px;border:1px solid #dbe8f3;background:#f7fbff;border-radius:12px;margin-top:16px;min-height:70px;font-size:.85rem;line-height:1.65;color:#435c72}
+.mono{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;overflow-wrap:anywhere}
+.empty{display:flex;align-items:center;justify-content:center;flex-direction:column;min-height:170px;color:#71869b;text-align:center;border:1px dashed #c6d7e8;border-radius:12px;margin-top:14px}
+.footnote{color:#788ba0;font-size:.77rem;line-height:1.7}
+[hidden]{display:none!important}
+@media(max-width:830px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.two{grid-template-columns:1fr}.top-inner{padding:16px}.nav .chip{display:none}main{padding:28px 16px 60px}.panel{padding:18px}.chart{height:235px}}
+@media(max-width:450px){.stats{gap:9px}.stat{padding:15px}.actions{align-items:stretch}.actions button,.labelled-upload{justify-content:center}}
+.retest-items{display:grid;gap:10px;margin-top:14px}
+.retest-item{background:#f7fbff;border:1px solid #dce9f4;border-radius:12px;padding:14px 16px}
+.retest-item strong{color:#214d76;font-size:.91rem}
+.retest-item p{color:#62798e;font-size:.8rem;line-height:1.5;margin:7px 0}
+.retest-item ol{margin:8px 0 0 22px;padding:0;font-size:.8rem;color:#526c81;line-height:1.65}
+button:disabled{cursor:not-allowed;opacity:.5}
+</style>
+</head>
+<body>
+<header class="top"><div class="top-inner"><div class="brand">EVERCRAFT <span>/ WORLDS / PERCEPTION</span></div>
+<nav class="nav"><a href="./">Spatial lab</a><a href="https://github.com/jgaethle10/forge-operator/blob/main/docs/worlds/SPATIAL-FIELD-EVALUATION-V5.md">Field protocol</a><span class="chip">V7 · REVIEW + RETEST</span></nav></div></header>
+<main>
+<section>
+<div class="eyebrow">Spatial Intelligence / Field Evidence</div>
+<h1>See the measurements.<br><span>See what's missing.</span></h1>
+<p class="lead">Review an independently prepared V5 depth-evaluation report, including every missed or ambiguous reference target. All data stays inside your browser. Evidence validation is not the same as certifying a real camera.</p>
+<div class="actions">
+<label class="labelled-upload">Import field report JSON <input type="file" id="file" accept=".json,application/json"></label>
+<button class="btn alt" id="demo" type="button">Explore synthetic fixture</button>
+<span class="help">No uploads · Max 10 MB · No account</span>
+</div>
+<div id="message" role="status" aria-live="polite">Choose a local V5 report, or open the clearly labeled artificial example.</div>
+</section>
+<section id="dashboard" hidden>
+<div class="panel">
+<div class="header-row"><div><h2 id="reportTitle">Evaluation review</h2><p class="subtitle" id="reportScope"></p></div><span id="classification" class="status unverified">UNVERIFIED</span></div>
+<div class="stats">
+<div class="stat"><div class="name">Reference coverage</div><div id="coverage" class="value">—</div><div class="foot" id="evaluated">No evaluated targets</div></div>
+<div class="stat"><div class="name">Mean absolute error</div><div id="mae" class="value">—</div><div class="foot">Measured target subset only</div></div>
+<div class="stat"><div class="name">Root mean square error</div><div id="rmse" class="value">—</div><div class="foot">Measured target subset only</div></div>
+<div class="stat"><div class="name">Unresolved targets</div><div id="unresolved" class="value">—</div><div class="foot">Missing, ambiguous or unknown depth</div></div>
+</div>
+</div>
+<div class="two">
+<div class="panel"><h2>Reference vs. estimated depth</h2><p class="subtitle">Camera-axis Z in meters · Only evaluated targets</p><canvas id="scatter" class="chart" width="700" height="330"></canvas><div class="legend"><span><i class="dot line"></i>Ideal agreement</span><span><i class="dot"></i>Observed estimate</span></div></div>
+<div class="panel"><h2>Outcome breakdown</h2><p class="subtitle">Includes every supplied reference, even when no depth was produced</p><canvas id="outcomes" class="chart" width="700" height="330"></canvas><p class="note" id="breakdown"></p></div>
+</div>
+<div class="panel"><div class="header-row"><div><h2>Evidence and limits</h2><p class="subtitle">Source hash prefix, rig declaration and reviewer restrictions</p></div></div>
+<div id="provenance" class="note"></div><div id="warnings"></div>
+</div>
+<div class="panel" id="retestPanel">
+<div class="header-row"><div><h2>Next field-capture tasks</h2>
+<p class="subtitle">Translate missing detections, uncertain matches, null depth and large errors into reviewable retest actions. These are engineering suggestions, never safety priorities.</p></div><span class="status unverified">V7 · UNREVIEWED PLAN</span></div>
+<div class="controls">
+<label for="reviewThreshold" style="font-size:.84rem;color:#4d6379;font-weight:700;display:flex;align-items:center;gap:10px">Operator error-review threshold (meters)
+<input id="reviewThreshold" type="number" min="0" max="1000" step="0.05" value="0.5" style="width:105px"></label>
+<button class="btn alt" type="button" id="buildRetest">Rebuild review plan</button>
+<button class="btn alt" type="button" id="downloadRetest" disabled>Export local plan JSON</button>
+</div>
+<p id="retestSummary" class="note" role="status">Load a report to prepare a proposed retest plan.</p>
+<div id="retestItems" class="retest-items"></div>
+<p id="retestLimits" class="footnote">The threshold is an operator triage setting, not an accuracy acceptance criterion. Export does not schedule a capture, validate evidence, or create any production task.</p>
+</div>
+<div class="panel">
+<div class="header-row"><div><h2>Every reference target</h2><p class="subtitle">Select a row to inspect its exact status, depths and uncertainty.</p></div><span id="rowTotal" class="chip"></span></div>
+<div class="controls">
+<input id="search" type="search" placeholder="Find target, frame or label" aria-label="Search references">
+<select id="filter" aria-label="Filter outcome">
+<option value="all">All outcomes</option>
+<option value="evaluated_uncertified">Evaluated</option>
+<option value="no_corresponding_detection">No detection</option>
+<option value="ambiguous_detection">Ambiguous</option>
+<option value="no_depth_estimate">Unknown depth</option>
+<option value="duplicate_detection_match">Duplicate match</option>
+</select>
+<select id="sort" aria-label="Sort targets">
+<option value="error_desc">Largest error first</option>
+<option value="error_asc">Smallest error first</option>
+<option value="reference_asc">Reference distance</option>
+<option value="frame">Frame / ID</option>
+</select>
+</div>
+<div class="table-wrap"><table><thead><tr><th>Reference</th><th>Frame</th><th>Outcome</th><th>Measured Z</th><th>Estimated Z</th><th>Abs. error</th></tr></thead><tbody id="targets"></tbody></table></div>
+<div id="empty" class="empty" hidden>No references match those filters.</div>
+<div id="detail" class="detail" role="status">Select a reference above for its evidence details.</div>
+</div>
+</section>
+<p class="footnote">Experimental Evercraft engineering interface. No browser-side check proves that an input report, model, or physical measurement is authentic. A low error is not approval to use data for driving, emergency warnings, forensic conclusions, geographic maps, or authoritative 3D reconstruction.</p>
+</main>
+<script type="module">
+import {inspectFieldReport,filterFieldRows} from './field-review.mjs';
+import {buildFieldRetestPlan} from './field-retest.mjs';
+const $=id=>document.getElementById(id);
+let current=null;
+let latestRetestPlan=null;
+const text=(id,value)=>{$(id).textContent=String(value)};
+const num=n=>n===null?'Unknown':n.toLocaleString(undefined,{maximumFractionDigits:3});
+const meters=n=>n===null?'Unknown':num(n)+' m';
+function make(tag,content,cls=''){
+ const e=document.createElement(tag);e.textContent=content;if(cls)e.className=cls;return e;
+}
+function clearCanvas(id){
+ const c=$(id),ctx=c.getContext('2d');ctx.clearRect(0,0,c.width,c.height);
+ ctx.fillStyle='#fbfdff';ctx.fillRect(0,0,c.width,c.height);return {c,ctx};
+}
+function backdrop(ctx,w,h){
+ ctx.strokeStyle='#e4edf5';ctx.lineWidth=1;
+ for(let i=0;i<=4;i++){const y=36+i*(h-80)/4;
+  ctx.beginPath();ctx.moveTo(55,y);ctx.lineTo(w-25,y);ctx.stroke();}
+}
+function scatter(review){
+ const {c,ctx}=clearCanvas('scatter'),w=c.width,h=c.height;
+ backdrop(ctx,w,h);
+ const rows=review.rows.filter(r=>r.error!==null);
+ if(!rows.length){ctx.fillStyle='#8295a8';ctx.font='20px system-ui';ctx.fillText('No evaluable targets',95,h/2);return;}
+ const cap=Math.max(1,...rows.map(r=>Math.max(r.reference,r.estimate)))*1.08;
+ const x=v=>55+(w-85)*v/cap, y=v=>h-45-(h-82)*v/cap;
+ ctx.strokeStyle='#99b7cf';ctx.lineWidth=2;ctx.setLineDash([6,5]);ctx.beginPath();
+ ctx.moveTo(x(0),y(0));ctx.lineTo(x(cap),y(cap));ctx.stroke();ctx.setLineDash([]);
+ ctx.fillStyle='#698299';ctx.font='16px system-ui';
+ ctx.fillText('Reference Z (m)',w/2-60,h-10);
+ ctx.save();ctx.translate(18,h/2+58);ctx.rotate(-Math.PI/2);ctx.fillText('Estimated Z (m)',0,0);ctx.restore();
+ for(const r of rows){
+  ctx.fillStyle='#1683c5';ctx.beginPath();ctx.arc(x(r.reference),y(r.estimate),5.5,0,Math.PI*2);ctx.fill();
+  ctx.strokeStyle='#fff';ctx.lineWidth=1.5;ctx.stroke();
+ }
+}
+function outcomes(review){
+ const {c,ctx}=clearCanvas('outcomes'),w=c.width,h=c.height;
+ const items=[
+ ['Evaluated',review.counts.evaluated_uncertified],
+ ['No detection',review.counts.no_corresponding_detection],
+ ['Ambiguous',review.counts.ambiguous_detection],
+ ['No depth',review.counts.no_depth_estimate],
+ ['Duplicate',review.counts.duplicate_detection_match]
+ ];
+ const max=Math.max(1,...items.map(x=>x[1]));
+ for(let i=0;i<items.length;i++){
+  const [label,value]=items[i],yy=31+i*55;
+  ctx.fillStyle='#5c7186';ctx.font='16px system-ui';ctx.fillText(label,17,yy+16);
+  ctx.fillStyle='#eaf2f8';ctx.fillRect(143,yy,Math.max(0,w-204),23);
+  ctx.fillStyle=i===0?'#1782c0':'#84a7c4';
+  ctx.fillRect(143,yy,(w-204)*value/max,23);
+  ctx.fillStyle='#1c4b71';ctx.font='bold 18px system-ui';ctx.fillText(String(value),w-42,yy+18);
+ }
+}
+function showDetail(r){
+ const d=$('detail');d.replaceChildren();
+ const heading=make('strong',r.id+' · '+r.label+' · '+r.frameId);
+ const line=make('div','Status: '+r.status.replaceAll('_',' '));
+ const amounts=make('div','Reference camera-axis Z: '+meters(r.reference)+
+   ' (stated uncertainty ±'+meters(r.uncertainty)+') · Estimated Z: '+meters(r.estimate)+
+   ' · Absolute error: '+meters(r.error));
+ const method=make('div','Method: '+r.method.replaceAll('_',' '));
+ d.append(heading,line,amounts,method);
+}
+function updateRows(){
+ if(!current)return;
+ const rows=filterFieldRows(current,{query:$('search').value,
+   status:$('filter').value,sort:$('sort').value});
+ const body=$('targets');body.replaceChildren();
+ for(const r of rows){
+  const tr=document.createElement('tr');
+  const badge=make('span',r.status.replaceAll('_',' '),
+    'flag'+(r.error!==null?' valid':''));
+  tr.append(make('td',r.id),make('td',r.frameId));
+  const statusCell=document.createElement('td');statusCell.append(badge);tr.append(statusCell);
+  tr.append(make('td',meters(r.reference)),make('td',meters(r.estimate)),make('td',meters(r.error)));
+  tr.tabIndex=0;tr.setAttribute('aria-label','Inspect '+r.id);
+  tr.addEventListener('click',()=>showDetail(r));
+  tr.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();showDetail(r);}});
+  body.append(tr);
+ }
+ $('empty').hidden=rows.length>0;
+ text('rowTotal',rows.length+' / '+current.total+' references');
+ text('detail',rows.length?'Select a reference above for its evidence details.':'No matching references.');
+}
+
+function updateRetestPlan(){
+ if(!current)return;
+ const input=$('reviewThreshold').value.trim();
+ const threshold=input===''?NaN:Number(input);
+ try{
+  const plan=buildFieldRetestPlan(current,{reviewThresholdM:threshold});
+  latestRetestPlan=plan;
+  $('downloadRetest').disabled=false;
+  text('retestSummary',plan.totalFlagged+' of '+plan.totalReferences+
+    ' reference targets flagged for review. '+plan.interpretationWarning+
+    ' Error threshold '+num(threshold)+' m is for operator triage only.');
+  const wrap=$('retestItems');wrap.replaceChildren();
+  for(const task of plan.tasks.slice(0,12)){
+   const item=document.createElement('article');item.className='retest-item';
+   item.append(make('strong','Priority '+task.engineeringPriority+
+     ' · '+task.title+' · '+task.id));
+   item.append(make('p',task.objective+' (frame '+task.frameId+', '+task.label+')'));
+   const ordered=document.createElement('ol');
+   for(const action of task.actions)ordered.append(make('li',action));
+   item.append(ordered);wrap.append(item);
+  }
+  if(plan.totalFlagged>12)wrap.append(make('p',
+   'Showing 12 of '+plan.totalFlagged+' proposed tasks. Export JSON to review the complete queue.','note'));
+  if(plan.totalFlagged===0)wrap.append(make('p',
+   'No observations exceed the selected triage threshold or have unresolved outcomes. This does NOT certify accuracy.','note'));
+ }catch(e){
+  latestRetestPlan=null;$('downloadRetest').disabled=true;
+  $('retestItems').replaceChildren();
+  text('retestSummary','Cannot build retest plan: '+e.message);
+ }
+}
+function downloadRetestPlan(){
+ if(!latestRetestPlan)return;
+ const content=JSON.stringify(latestRetestPlan,null,2);
+ const blob=new Blob([content],{type:'application/json'});
+ const url=URL.createObjectURL(blob),a=document.createElement('a');
+ a.href=url;a.download='evercraft-spatial-proposed-retests.json';
+ a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+function render(report,source){
+ try{
+  const review=inspectFieldReport(report);
+  current=review;$('dashboard').hidden=false;
+  text('reportTitle','Rig: '+review.rigId);
+  text('classification',review.scope==='synthetic_fixture'?'SYNTHETIC · NOT FIELD':'OPERATOR-ATTESTED · UNVERIFIED');
+  $('classification').className='status unverified';
+  text('reportScope',review.scope==='synthetic_fixture'
+    ?'Artificial data. This example cannot establish real-camera accuracy.'
+    :'Physical measurement claims require independent human verification.');
+  text('coverage',num(review.coverage)+'%');text('evaluated',review.evaluated+' of '+review.total+' targets evaluated');
+  text('mae',meters(review.metrics.mae));text('rmse',meters(review.metrics.rmse));
+  text('unresolved',review.total-review.evaluated);
+  text('provenance','Source SHA-256 prefix: '+review.hashPrefix+'… · Declared rig: '+review.rigId+
+     ' · Original bytes hash-checked by producer: '+(review.byteIntegrityCheckedLocally?'reported yes':'NO'));
+  const warnings=$('warnings');warnings.replaceChildren();
+  for(const item of review.warnings)warnings.append(make('div',item,'warning'));
+  text('breakdown',review.evaluated+' evaluated · '+(review.total-review.evaluated)+
+    ' unresolved. Missing measurements are not scored as zero error.');
+  $('search').value='';$('filter').value='all';$('sort').value='error_desc';
+  scatter(review);outcomes(review);updateRows();updateRetestPlan();
+  text('message',source+' loaded locally. No report bytes were transmitted. Accuracy remains unverified.');
+ }catch(e){current=null;latestRetestPlan=null;$('downloadRetest').disabled=true;$('dashboard').hidden=true;
+  text('message','Report rejected: '+e.message+'. Verify the original V5 report and avoid manually editing summary totals.');}
+}
+function syntheticDemo(){
+ const H='a'.repeat(64);
+ const base=(id,frame,label,ref,method='synthetic_known_disparity')=>({
+  targetId:id,frameId:frame,label,
+  referenceCameraAxisDepthM:ref,referenceUncertaintyM:0,
+  measurementMethod:method,
+  matchedObservationId:null,intersectionOverUnion:null,
+  estimatedCameraAxisDepthM:null,absoluteErrorM:null,relativeErrorPct:null,
+  result:'no_corresponding_detection'});
+ const a=base('synthetic-1','frame-a','car',3.6);
+ Object.assign(a,{matchedObservationId:'obs-a',intersectionOverUnion:0.91,
+  estimatedCameraAxisDepthM:3.4,absoluteErrorM:0.2,relativeErrorPct:5.556,
+  result:'evaluated_uncertified'});
+ const b=base('synthetic-2','frame-b','car',4);
+ Object.assign(b,{matchedObservationId:'obs-b',intersectionOverUnion:0.89,
+  estimatedCameraAxisDepthM:4.2,absoluteErrorM:0.2,relativeErrorPct:5,
+  result:'evaluated_uncertified'});
+ const c=base('synthetic-3','frame-c','bus',8);
+ const d=base('synthetic-4','frame-d','truck',7);
+ d.result='no_depth_estimate';
+ const e=base('synthetic-5','frame-e','bus',5);
+ e.result='ambiguous_detection';
+ const f=base('synthetic-6','frame-f','car',9);
+ f.result='duplicate_detection_match';
+ render({
+  schema:'evercraft.spatial-perception.field-evaluation.v1',
+  provenance:{sourceSha256:H,modelSha256:H,calibrationEvidenceSha256:H,
+   rigId:'DEMO-SYNTHETIC-NOT-A-REAL-RIG',
+   byteIntegrityCheckedLocally:false,calibrationAuthenticityVerified:false,
+   referenceIndependenceVerified:false},
+  referenceEvidenceClass:'synthetic_fixture',measurementAxis:'left_camera_optical_z_meters',
+  summary:{referenceTargets:6,evaluatedTargets:2,coveragePct:33.33,
+   noDetection:1,ambiguousDetections:1,noDepth:1,
+   meanAbsoluteErrorM:.2,rootMeanSquareErrorM:.2,medianAbsoluteErrorM:.2,maximumAbsoluteErrorM:.2},
+  targets:[a,b,c,d,e,f],status:'operator_supplied_reference_comparison_not_certified',
+  humanReviewRequired:true,fieldAccuracyCertified:false,safetyCriticalApproved:false,
+  georegistered:false,worldPersistenceAuthorized:false
+ },'Synthetic demo');
+}
+$('demo').addEventListener('click',syntheticDemo);
+$('buildRetest').addEventListener('click',updateRetestPlan);
+$('downloadRetest').addEventListener('click',downloadRetestPlan);
+$('file').addEventListener('change',async()=>{
+ const file=$('file').files?.[0];if(!file)return;
+ if(file.size>10000000){text('message','Report rejected: file exceeds local 10 MB limit.');return;}
+ try{render(JSON.parse(await file.text()),file.name)}
+ catch(e){text('message','Cannot read report JSON: '+e.message);}
+ $('file').value='';
+});
+for(const id of ['search','filter','sort'])$(id).addEventListener(id==='search'?'input':'change',updateRows);
+window.addEventListener('resize',()=>{if(current){scatter(current);outcomes(current);}});
+</script>
+</body>
+</html>

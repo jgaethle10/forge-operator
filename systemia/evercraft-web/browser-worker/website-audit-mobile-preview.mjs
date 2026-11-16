@@ -63,7 +63,7 @@ try{
       return route.continue();
     });
     const response=await page.goto('http://'+host+':'+port+'/'+(hold?'held':'open'),{waitUntil:'domcontentloaded',timeout:20000});
-    const button=hold?page.getByRole('link',{name:/Request assisted invoicing/}):
+    const button=hold?page.getByRole('link',{name:/Email Evercraft for invoicing/}):
       page.getByRole('button',{name:/Continue to checkout/});
     const rect=await button.boundingBox();
     const overflow=await page.evaluate(()=>Math.max(0,document.documentElement.scrollWidth-window.innerWidth));

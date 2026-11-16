@@ -1,0 +1,19 @@
+{
+  "schema": "evercraft.systemia.workflow-manifest.v1",
+  "workflow_key": "work-saban-clip-delivery-watch",
+  "mission_key": "evercraft-social-distribution-engine-2026-09",
+  "runtime": "systemia-core-resident",
+  "cadence_seconds": 300,
+  "entrypoint": "systemia/clip/work-saban-delivery-watch.mjs",
+  "purpose": "Read privately claimed Work Saban company Facebook provider receipts; surface whether account binding is absent, delivery is due, a provider receipt exists, or manual reconciliation is required. Does not post or establish public visibility.",
+  "safety": {
+    "read_only": true,
+    "no_credential_lookup": true,
+    "no_grant_issue": true,
+    "no_facebook_api_calls": true,
+    "private_claim_root_required": true,
+    "provider_post_url_only_after_receipt_validation": true,
+    "provider_visibility_independently_verified": false,
+    "read_only_kaidance_snapshot": true
+  }
+}

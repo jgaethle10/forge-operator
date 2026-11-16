@@ -68,6 +68,8 @@ jobs:
           npm run chum:mirror
           npm run chum:crawl-pressure
           npm run saban:discovery
+          # Prevent an automated refresh from silently publishing a broken Studio canonical.
+          node --test tests/chum-studio-public-discovery.test.mjs tests/chum-studio-sitemap-crawl-retention.test.mjs
 
       - name: Publish changed CHUM mirrors
         if: github.ref == 'refs/heads/main'
@@ -86,6 +88,8 @@ jobs:
             npm run chum:mirror
             npm run chum:crawl-pressure
             npm run saban:discovery
+            # Fail closed before any direct push to main if canonical discovery drifts.
+            node --test tests/chum-studio-public-discovery.test.mjs tests/chum-studio-sitemap-crawl-retention.test.mjs
           }
 
           stage_mirrors() {

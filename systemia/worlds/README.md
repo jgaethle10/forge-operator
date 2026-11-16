@@ -119,3 +119,61 @@ A renewable user-systemd timer can be prepared using scripts/install-worlds-edge
 Fail-closed checks require: loopback-only vault and edge control, correct vault-pinned public origin, TLS-admitted wildcard HTTPS edge, a dedicated worlds subdomain of the owned base domain, and real deployment receipt identity. The reconciler renews its own lease, and can recreate it after an edge restart without changing route targets.
 
 These source and local-proxy tests do not prove public DNS, TLS end-to-end, external POST or Safari. An independent external read-only probe using scripts/probe-worlds-public.mjs and an owner-approved authenticated create/update/unpublish drill on a real iPhone remain the next launch gates. Shared reverse-proxy client rate limits, backups, deletion retention, accounts, and recovery remain separate readiness requirements.
+
+## Gateway client attribution (source hardening)
+
+The Worlds-only edge lease now **overwrites**, rather than trusts, incoming `x-worlds-client-ip` and `x-forwarded-for` headers with the TCP peer address. Only when the vault is configured with its exact HTTPS public origin and receives the edge-stamped address over loopback does it use that address for its per-client creation quota. Browser-supplied forwarded headers cannot select a different bucket through the owned proxy. Other Evercraft leases keep their previous header behavior. The limiter remains 10 creations per client per ten minutes, with bounded in-memory tracking. It is per process and IP-based: shared NATs still share a quota, restarts reset buckets, a trusted same-host process can spoof loopback headers, and edge/host DDoS defenses remain outside this release.
+
+## External write proof (explicit operator opt-in)
+
+**The repository does not activate this automatically.** After the owned Worlds HTTPS route is deployed and the read-only canaries pass, a trusted operator can execute a disposable write drill from outside the local network:
+
+~~~bash
+# No mutations without --execute. The command fails closed.
+node scripts/probe-worlds-write.mjs https://worlds.YOUR_OWNED_BASE_DOMAIN
+
+# Operator-authorized verification of an actual live endpoint:
+node scripts/probe-worlds-write.mjs https://worlds.YOUR_OWNED_BASE_DOMAIN --execute
+~~~
+
+The `--execute` path checks read-only HTTPS identity and the vault's exact pinned public origin, then creates **one blank unlisted test world**, reads it back, proves a stale revision cannot overwrite it, updates the sky, checks its revision and content, and unpublishes it. It verifies the old visit link returns HTTP 404. Cleanup is attempted even when the test fails, with one retry. The JSON receipt contains no editing capability, scene payload, personal data, or private token. A failed cleanup marks the release **not verified** and may include an orphan world ID for private operator follow-up; a failing attempt is not guaranteed to leave zero server state.
+
+The manual GitHub Actions **Evercraft Worlds external release gate** defaults to read-only. An explicit `allow_disposable_write=true` dispatch runs the write drill after the read-only Worlds, Heritage and Hidden World gates succeed. It uploads only the sanitized receipt. This is a test on one endpoint, not a physical iPhone Safari test, continuous monitoring or a guarantee of availability.
+
+Public release requires passing external receipts and a separate, real-device iPhone create/save/return/share/unpublish check with the intended public TLS route. Do not label Worlds online saving live from source CI alone.
+
+## One-command, non-mutating launch diagnostic
+
+On the owning Linux computer, from the repository checkout:
+
+~~~bash
+node scripts/worlds-launch-diagnostics.mjs
+~~~
+
+Set the real owned hostname with the private environment variable `EVERCRAFT_WORLDS_PUBLIC_ORIGIN`, or pass `--public-origin https://worlds.YOUR_OWNED_BASE_DOMAIN`. Optional `--vault`, `--edge-control`, and `--backup-root` flags support alternate locally-owned paths. `EVERCRAFT_EDGE_CONTROL_TOKEN` is read from the private environment, never printed in the result.
+
+The diagnostic inspects five prerequisites **without any mutations**: the owned HTTPS origin, a healthy pinned loopback vault, the latest integrity-verified private backup, the existing TLS-admitted owned edge, and the **same three** independent external read-only HTTPS probes used by the Worlds readiness watcher: Worlds vault, Heritage tour (including its module and atlas), and Hidden World. If any one surface is missing or comes from the wrong HTTPS origin, the diagnostic holds the disposable write drill. It returns a structured JSON receipt with the first next action, plus `external_read_only_surfaces` showing which of the three public surfaces failed without exposing private tokens. A missing hostname, failed backup, proof-only edge, or failed HTTPS route produces a blocked receipt and nonzero exit status.
+
+Even a completely green diagnostic reports only `ready_for_disposable_write_drill=true`, not a live public launch. It never creates a world, starts a service, renews a lease, installs a timer, or performs customer writes. The next gate remains a separately authorized `node scripts/probe-worlds-write.mjs ... --execute` through the public HTTPS origin, followed by real iPhone Safari verification.
+
+## Discover the actual Worlds hostname from the owned edge (no guessing)
+
+The release watcher currently reports `blocked_no_origin` because the repository has no confirmed `EVERCRAFT_WORLDS_PUBLIC_ORIGIN`. On the Linux machine running the Evercraft public edge and Worlds vault, after updating the repository checkout, run:
+
+~~~bash
+node scripts/discover-worlds-owned-host.mjs
+~~~
+
+This command performs **only loopback HTTP GET** to the existing edge control endpoint at `127.0.0.1:18081` and Worlds vault at `127.0.0.1:8788`. It checks that the edge is a real `wildcard_https` runtime, that the live edge and route capabilities agree on the base domain, that a wildcard-covering certificate has at least 72 hours remaining, and that the vault's `public_origin` exactly matches `https://worlds.<owned-edge-base-domain>`. The hostname is **derived from the running edge**, never a hardcoded or guessed domain.
+
+Status `candidate_for_external_probe` means the local edge and vault agree on the candidate, **not** that DNS, the lease, public routing, certificate trust, or a customer-facing site is independently proven. A proof-only edge, missing TLS admission, absent vault, mismatched pinned origin, or expired cert produces a blocked receipt with no external HTTPS claim. The receipt does not include the private control token or any private key.
+
+Once the candidate exists and the operator knows the intended DNS/route lease is legitimately established, a read-only independent external inspection can be requested:
+
+~~~bash
+node scripts/discover-worlds-owned-host.mjs --external
+~~~
+
+The optional external mode runs the *same three independent HTTPS GET probes* as the readiness watcher for Worlds, the underwater Heritage exhibit, and Hidden World. It never creates, updates, or unpublishes worlds, installs services, reconciles leases, sets GitHub variables, or changes DNS/TLS. `verified_readonly` still does not prove a physical iPhone or live customer saves.
+
+If the local command reports `blocked_edge_unavailable`, inspect the **real** public-edge service and discover its control port instead of guessing a hostname. If it reports `blocked_vault_origin`, check the private vault's intended public host before activating the route. Do not set `EVERCRAFT_WORLDS_PUBLIC_ORIGIN` from a mere candidate: first independently verify ownership, the external HTTPS URL and route. Issue [#1994](https://github.com/jgaethle10/forge-operator/issues/1994) is the release blocker until the external receipts and real-device gate pass.

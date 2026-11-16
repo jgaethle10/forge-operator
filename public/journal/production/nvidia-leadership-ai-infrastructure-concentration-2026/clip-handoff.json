@@ -1,0 +1,47 @@
+{
+  "schema": "evercraft.clip.journal-handoff.v1",
+  "story_id": "journal:2026-11-15:nvidia-leadership-ai-infrastructure-concentration",
+  "slug": "nvidia-leadership-ai-infrastructure-concentration-2026",
+  "title": "NVIDIA Lost Its Founder-CEO. The AI Economy Has Bigger Questions.",
+  "canonical_url": "https://fabric.systemiacommandcenters.com/journal/nvidia-leadership-ai-infrastructure-concentration-2026/",
+  "publication_receipt_ref": "receipts/nvidia-leadership-ai-infrastructure-concentration-2026.json",
+  "link_verification": {
+    "expectedText": [
+      "NVIDIA Lost Its Founder-CEO. The AI Economy Has Bigger Questions."
+    ],
+    "expectedCanonicalUrl": "https://fabric.systemiacommandcenters.com/journal/nvidia-leadership-ai-infrastructure-concentration-2026/",
+    "expectedOgUrl": "https://fabric.systemiacommandcenters.com/journal/nvidia-leadership-ai-infrastructure-concentration-2026/",
+    "expectedStoryId": "journal:2026-11-15:nvidia-leadership-ai-infrastructure-concentration",
+    "requireCanonicalSelfMatch": true,
+    "requireOpenGraphSelfMatch": true
+  },
+  "source_refs": [
+    "nvidia-sec-transition-2026-11-11",
+    "nvidia-ceo-transition-2026-11-12",
+    "nvidia-board-2026-11-08",
+    "nvidia-fy27q2",
+    "reuters-nvidia-transition-2026-11-12",
+    "reuters-bessent-2026-11-15",
+    "evercraft-original-system-map"
+  ],
+  "evidence_state": "verified_and_reported_public_sources",
+  "derivatives": [
+    {
+      "platform": "facebook",
+      "copy": "NVIDIA confirmed Jensen Huang's resignation. The security inquiry is ongoing, and no compromise has been established by the company's board. The deeper story is what this moment reveals about the systems powering AI. Read the source-grounded Evercraft Journal explainer."
+    },
+    {
+      "platform": "linkedin",
+      "copy": "A founder-CEO transition at NVIDIA is more than an executive story. Our Evercraft Journal analysis separates verified filings from allegations and examines continuity, governance and concentration across AI infrastructure."
+    }
+  ],
+  "production_grade": {
+    "status": "accepted",
+    "hero_kind": "data_visualization",
+    "text_primary": false,
+    "note": "Original Evercraft-owned vector systems diagram in public/newsroom-assets; narrative is independently supported by primary filings and reporting."
+  },
+  "ranking_visuals": null,
+  "publication_authority": false,
+  "rule": "Clip may produce approved derivatives, but this handoff alone does not grant social publication authority."
+}

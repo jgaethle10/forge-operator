@@ -9,7 +9,7 @@ The customer can keep typing **evercraftpropertyservices.com** or **havenlyclean
 - HAVENLY: https://jgaethle10.github.io/forge-operator/havenly/
 - EPS estimator: https://jgaethle10.github.io/forge-operator/apps/eps-estimator/
 
-These are deployment-independent reference surfaces; do not mistake their availability for the two custom domains having moved. The edge shell embeds each canonical HTML at build time and serves it without calling GitHub Pages either. Current EPS confirmed phone is 509-759-0440; primary email jessegaethle10@gmail.com; alternate evercraftpropertyservices@gmail.com. HAVENLY retains its separately verified owner contacts.
+These are deployment-independent reference surfaces; do not mistake their availability for the two custom domains having moved. The edge shell embeds each canonical HTML at build time and serves it without calling GitHub Pages either. **November 12, 2026 emergency contact override:** the previously published EPS phone 509-759-0440 is temporarily unavailable and must not appear as a customer-facing call or SMS action. EPS's active contact is **jessegaethle10@gmail.com**. **HAVENLY is Nikki's separate operation:** its customer page retains **havenlycleaning@gmail.com**, phone **(509) 560-5190**, and text option. Do not reroute HAVENLY to Evercraft, treat it as an Evercraft product/lead source, or alter its contact settings without Nikki's own authorization. Historical source here is preserved solely to avoid accidentally breaking her currently reachable website during a future handoff.
 
 ## Option A: fastest emergency rescue by IONOS domain forwarding
 
@@ -42,7 +42,7 @@ curl -H 'Host: evercraftpropertyservices.com' http://127.0.0.1:3080/
 curl -H 'Host: havenlycleaning.com' http://127.0.0.1:3080/
 ```
 
-Pre-cutover proof: independently load HTTPS preview (mobile and desktop), correct site by hostname, request SMS/email composers, estimator interaction, real TLS chain, contact click and real-device delivery if desired. Then DNS administrator changes ONLY apex/www records of the two verified domains with a documented rollback. Preserve MX/TXT/SRV/CAA and other active subdomains. Verify two distinct public network resolvers and external HTTPS content after propagation. Do not replace all NS records for a simple website migration.
+Pre-cutover proof: independently load HTTPS preview (mobile and desktop), correct site by hostname, request email composers, estimator interaction, real TLS chain, email-contact click and real-device send/receipt check if desired. Then DNS administrator changes ONLY apex/www records of the two verified domains with a documented rollback. Preserve MX/TXT/SRV/CAA and other active subdomains. Verify two distinct public network resolvers and external HTTPS content after propagation. Do not replace all NS records for a simple website migration.
 
 If either custom domain is still 402, it is **not** fronted by this shell. A script, browser service worker, or a background agent cannot intercept new visitors before domain routing. Existing cached redirects may differ, so test on a fresh browser/device.
 
@@ -53,3 +53,16 @@ If either custom domain is still 402, it is **not** fronted by this shell. A scr
 - Private and API paths return 404, unrecognized hostnames 421, writes 405. HTTPS www navigations canonicalize to apex.
 - The read-only health response reports `dns_cutover_verified:false` until replaced by independently generated receipts; no fake DNS, live booking, checkout, record import or customer submission claim.
 - Embedded HTML must always be refreshed from the canonical public pages by `node infra/evercraft-edge/service-frontdoor/generate-embedded.mjs --write`. CI rejects stale snapshots. No customer data, mail secrets or Base44 API keys are bundled.
+
+## Emergency communication contract (2026-11-12)
+
+- **EPS only** must show email-first and launch mailto drafts to `jessegaethle10@gmail.com`. HAVENLY keeps Nikki's original independent routes.
+- Remove EPS call/SMS buttons until its owner confirms service restoration. Never remove Nikki's HAVENLY phone/SMS paths under this policy.
+- Maintain customer form contact-by-email and optional copy tools; never imply a draft automatically submitted.
+- Generated `embedded-sites.mjs` must be regenerated from canonical source; CI must assert it is identical.
+- Fabric payment-assistance surface also must not list the unavailable phone.
+- **Do not alter Nikki's HAVENLY contacts or any other independently operated business numbers; never route their customers into Evercraft's inbox.**
+
+## HAVENLY isolation decision (2026-11-15)
+
+Nikki operates HAVENLY independently from Evercraft's current sales, support, outreach, internal product discovery and lead funnel. Existing HAVENLY source and historical domain/hosting records are retained for continuity and potential handover only. Do not start or redeploy HAVENLY operations, publish on its behalf, change DNS, handle customer requests, or use its customer information without Nikki's direct authorization. This source change does not claim legal ownership transfer and does not make any DNS or billing change. A verified owner-controlled hosting cutover must precede retiring shared legacy serving paths if any are active.

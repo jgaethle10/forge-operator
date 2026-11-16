@@ -67,9 +67,42 @@ try{
     await page.locator('#toggle').click();
     await page.waitForFunction(()=>window.__heritageTelemetry?.frameDraws===1,null,{timeout:10000});
     assert.equal(await page.locator('#toggle').getAttribute('aria-pressed'),'false');
+    // Guided camera tour must render on the same real WebGL canvas.
+    await page.locator('#tour').click();
+    assert.equal(await page.locator('#tour').getAttribute('aria-pressed'),'true');
+    assert.equal(await page.locator('#tourprogress').isVisible(),true);
+    await page.waitForTimeout(850);
+    assert.ok((await page.locator('#tourchapter').textContent()).length>10);
+    assert.notEqual(await page.locator('#tourfill').evaluate(el=>el.style.transform),'scaleX(0)');
+    await page.screenshot({path:output+'/'+p.name+'-tour.png',timeout:12000});
+    await page.locator('#tour').click();
+    assert.equal(await page.locator('#tourprogress').isVisible(),false);
+    assert.equal(await page.evaluate(()=>document.activeElement?.id),'world',p.name+': scene keyboard focus not restored');
     const before=await page.evaluate(()=>window.__heritageTelemetry.viewMatrix);
     if(!p.mobile){
-      await page.keyboard.down('w');await page.waitForTimeout(850);await page.keyboard.up('w');
+      const initial=await page.evaluate(()=>window.__evercraftHeritageQA());
+      assert.equal(initial.running,true,p.name+': world not active');
+      assert.equal(initial.tourActive,false,p.name+': tour still owns camera');
+      assert.ok([initial.x,initial.z,initial.yaw,initial.pitch,initial.move.x,initial.move.y].every(Number.isFinite),
+        p.name+': nonfinite tour handoff state '+JSON.stringify(initial));
+      await page.keyboard.down('w');
+      try{
+        const keyState=await page.evaluate(()=>window.__evercraftHeritageQA());
+        assert.ok(keyState.keys.includes('w'),p.name+': keyboard event did not reach scene '+JSON.stringify(keyState));
+        // Check actual scene coordinates first, then the GL view transform.
+        // This separates an input/camera bug from a stale WebGL telemetry sample.
+        await page.waitForFunction(previous=>{
+          const now=window.__evercraftHeritageQA?.();
+          return !!now&&Math.hypot(now.x-previous.x,now.z-previous.z)>.15;
+        },initial,{timeout:15000,polling:100});
+        await page.waitForFunction(previous=>{
+          const view=window.__heritageTelemetry?.viewMatrix;
+          return !!view&&Math.hypot(...[12,13,14].map(i=>view[i]-previous[i]))>.15;
+        },before,{timeout:15000,polling:100});
+      }catch(err){
+        const diagnostic=await page.evaluate(()=>({scene:window.__evercraftHeritageQA?.(),view:window.__heritageTelemetry?.viewMatrix,draws:window.__heritageTelemetry?.totalDraws}));
+        throw Error(p.name+': camera handoff QA '+JSON.stringify(diagnostic)+'; '+String(err));
+      }finally{await page.keyboard.up('w');}
     }else{
       assert.equal(await page.locator('#joystick').isVisible(),true,p.name+': touch stick not visible');
       const stick=await page.locator('#joystick').boundingBox();
@@ -105,7 +138,7 @@ try{
     assert.deepEqual(errors,[],p.name+': uncaught browser exceptions');
     receipt.scenarios.push({profile:p.name,status:'PASS',elapsed_ms:Date.now()-start,
       render:pre,control_movement_schematic_units:Math.round(movement*100)/100,
-      toggle_verified:true,source_links_verified:true,page_errors:errors});
+      toggle_verified:true,guided_tour_verified:true,source_links_verified:true,page_errors:errors});
     await ctx.close();
   }
   // Explicit no-WebGL fallback, tested separately from the real renderer.

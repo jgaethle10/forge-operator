@@ -1,7 +1,9 @@
-import {normalizeDive,atTime} from '../core.mjs';
+import {normalizeDive,atTime,parseInput} from '../core.mjs';
+import {parseVideoStart,videoAtMissionTime} from './video-sync.mjs';
 
 const $=id=>document.getElementById(id);
 const canvas=$('view');
+const video=$('dive-video');
 const gl=canvas.getContext('webgl',{alpha:false,antialias:true,depth:true});
 if(!gl){
  $('unsupported').hidden=false;
@@ -120,24 +122,115 @@ if(!gl){
  }
  const meshes={floor:buffer(terrain),objects:buffer(objects),pipe:buffer(pipe),diver:buffer(diver)};
  let track=null,logs=null,dive=null,current=0,playing=false,last=0;
- let yaw=-.43,pitch=.35,distance=18,following=true,drag=null,pinchDistance=null;
+ let videoUrl=null,videoReady=false,videoStart=0,videoPlayBlocked=false,videoState='';
+ function videoStatus(message){
+  if(videoState!==message){videoState=message;$('video-status').textContent=message;}
+ }
+ function clearFootage(){
+  video.pause();
+  video.removeAttribute('src');video.load();
+  if(videoUrl)URL.revokeObjectURL(videoUrl);
+  videoUrl=null;videoReady=false;videoStart=0;videoPlayBlocked=false;
+  video.muted=true;
+  $('video-offset').value='0';
+  $('video-clock').textContent='No footage loaded';
+  $('sound-toggle').textContent='Sound off';
+  $('sound-toggle').setAttribute('aria-pressed','false');
+  $('footage-panel').hidden=true;
+  $('footage-toggle').setAttribute('aria-expanded','false');
+  videoStatus('Choose a local recording. Alignment is not independently verified.');
+ }
+ function updateVideoClock(forceSeek=false){
+  if(!videoUrl)return;
+  if(!Number.isFinite(videoStart)){
+   video.pause();$('video-clock').textContent='Invalid offset';
+   videoStatus('Enter a valid video start second (-86400 to 86400).');
+   return;
+  }
+  const mapped=videoAtMissionTime(current,videoStart,videoReady?video.duration:NaN);
+  if(mapped.state!=='within_video'){
+   video.pause();
+   $('video-clock').textContent=mapped.state==='before_video'?'Video not started':
+    mapped.state==='after_video'?'Footage has ended':'Reading video metadata…';
+   videoStatus(mapped.state==='before_video'?'No footage at this mission time (before video start).':
+    mapped.state==='after_video'?'No footage at this mission time (recording ended).':
+    'Waiting for supported video metadata. No alignment is inferred.');
+   return;
+  }
+  const desired=mapped.videoTime;
+  if(forceSeek||Math.abs(video.currentTime-desired)>(playing?0.35:0.07)){
+   // Object URL points only to a file selected by the user; no upload or external playback.
+   try{video.currentTime=Math.min(desired,Math.max(0,video.duration-0.03));}
+   catch{videoStatus('This video cannot seek in this browser; alignment is not available.');return;}
+  }
+  $('video-clock').textContent=fmt(desired)+' / '+fmt(video.duration);
+  if(!videoPlayBlocked)videoStatus('Manually aligned footage · unverified; displayed time is approximate.');
+  if(playing&&!$('footage-panel').hidden&&video.paused&&!videoPlayBlocked){
+   const attempt=video.play();
+   if(attempt&&typeof attempt.catch==='function')
+    attempt.catch(()=>{videoPlayBlocked=true;videoStatus('Video playback blocked; pause and scrub the timeline to inspect frames.');});
+  }else if((!playing||$('footage-panel').hidden)&&!video.paused)video.pause();
+ }
+ let mode='synthetic',origin=[0,0],lastKnown=[-4,-3,-7];
+ let yaw=-.43,pitch=.35,distance=12,following=true,drag=null,pinchDistance=null;
  const pointers=new Map();
+ // User-declared local coordinates are recentered without changing their relative geometry.
+ // The origin is not a geographic fix and must never be interpreted as one.
+ const world=p=>[p.x-origin[0],p.y-origin[1],-p.depth];
  function route(points){
+  if(track)gl.deleteBuffer(track.buffer);
+  if(logs)gl.deleteBuffer(logs.buffer);
+  track=null;logs=null;
+  if(!points.length)return;
   const t=[],dots=[];
   for(let i=1;i<points.length;i++)if(points[i].t-points[i-1].t<=15)
-   tube(t,[points[i-1].x,points[i-1].y,-points[i-1].depth],[points[i].x,points[i].y,-points[i].depth],.065,[.43,.93,.89],6);
-  for(let i=0;i<points.length;i+=3)sphere(dots,[points[i].x,points[i].y,-points[i].depth],[.12,.12,.12],[.47,.87,.85],5,6);
-  track=buffer(t);logs=buffer(dots);
+   tube(t,world(points[i-1]),world(points[i]),.065,[.43,.93,.89],6);
+  for(let i=0;i<points.length;i+=3)sphere(dots,world(points[i]),[.12,.12,.12],[.47,.87,.85],5,6);
+  track=t.length?buffer(t):null;
+  logs=dots.length?buffer(dots):null;
  }
  const fmt=t=>String(Math.floor(t/60)).padStart(2,'0')+':'+String(Math.floor(t%60)).padStart(2,'0');
+ function activate(next,synthetic){
+  dive=next;mode=synthetic?'synthetic':'imported';
+  $('pick-video').disabled=synthetic;
+  if(synthetic)videoStatus('Import a dive log before pairing a real video with it.');
+  playing=false;$('play').textContent='▶ Play';$('play').disabled=false;
+  current=dive.points[0].t;
+  origin=dive.xyAvailable?[dive.points[0].x,dive.points[0].y]:[0,0];
+  lastKnown=dive.xyAvailable?world(dive.points[0]):[0,0,-9];
+  route(dive.xyAvailable?dive.points:[]);
+  yaw=-.43;pitch=.35;distance=Math.min(window.innerWidth,window.innerHeight)<700?11:18;
+  following=true;$('follow').setAttribute('aria-pressed','true');
+  $('timeline').min=dive.points[0].t;
+  $('timeline').max=dive.points.at(-1).t;
+  $('timeline').value=current;
+  $('timeline').setAttribute('aria-label',synthetic?'Synthetic dive replay timeline':'Imported dive replay timeline');
+  $('mode-pill').textContent=synthetic?'Synthetic demonstration':'User file · unverified';
+  $('depth-label').textContent=synthetic?'Recorded depth · synthetic':'Depth · user-provided readings';
+  $('scene-intro').textContent=synthetic?
+   'Explore one fictional dive route in a rendered underwater environment.':
+   'Replay user-provided readings. No seafloor, infrastructure or site geometry is inferred.';
+  $('synthetic-notes').hidden=!synthetic;
+  $('import-notes').hidden=synthetic;
+  $('import-summary').textContent=synthetic?'Synthetic mission only.':
+   dive.title+' · '+(dive.xyAvailable?dive.positionSource+' (declared, unverified)':'horizontal position unavailable')+' · '+dive.provenance;
+  $('no-position').hidden=synthetic||dive.xyAvailable;
+  $('caption').textContent=synthetic?'Illustrative diver route and pipe, not a surveyed site':
+   dive.xyAvailable?'User-declared local track only · no surveyed seabed or structures':
+   'Depth-only import · no horizontal route can be drawn';
+  canvas.setAttribute('aria-label',synthetic?
+   'Interactive synthetic underwater dive scene. Drag to rotate and pinch to zoom.':
+   'Three-dimensional visualization of user-declared local positions only, with no reconstructed site.');
+  document.documentElement.dataset.subseaMode=mode;
+ }
  async function load(){
   try{
    const r=await fetch('../sample.json',{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);
-   dive=normalizeDive(await r.json());
-   if(!dive.demo||!dive.xyAvailable||dive.positionSource!=='SIMULATED')throw Error('Example missing synthetic provenance');
-   route(dive.points);current=dive.points[0].t;
+   const sample=normalizeDive(await r.json());
+   if(!sample.demo||!sample.xyAvailable||sample.positionSource!=='SIMULATED')throw Error('Example missing synthetic provenance');
+   activate(sample,true);
    document.documentElement.dataset.subseaSample='synthetic-loaded';
-   $('timeline').max=dive.points.at(-1).t;
+   $('file-status').textContent='Built-in fictional mission. Local files never leave this browser.';
   }catch(e){$('caption').textContent='Example unavailable: '+e.message;$('play').disabled=true;}
  }
  function frame(time){
@@ -149,21 +242,26 @@ if(!gl){
    if(current>=dive.points.at(-1).t){playing=false;$('play').textContent='▶ Play';}
   }
   last=time;
+  updateVideoClock();
   const pt=dive?atTime(dive,current):null;
-  const pos=pt&&pt.x!==null?[pt.x,pt.y,-pt.depth]:[-4,-3,-7];
-  const target=following?pos:[0,0,-9];
+  const pos=pt&&pt.x!==null&&pt.depth!==null?world(pt):null;
+  if(pos)lastKnown=pos;
+  // Never jump the camera to a fabricated position when recorded fixes are missing.
+  const target=following?lastKnown:[0,0,-9];
   const eye=[target[0]+Math.sin(yaw)*Math.cos(pitch)*distance,target[1]-Math.cos(yaw)*Math.cos(pitch)*distance,target[2]+Math.sin(pitch)*distance];
-  gl.uniformMatrix4fv(uniforms.vp,false,multiply(perspective(57*Math.PI/180,W/H,.2,180),lookAt(eye,target)));
+  gl.uniformMatrix4fv(uniforms.vp,false,multiply(perspective(57*Math.PI/180,W/H,.2,1500),lookAt(eye,target)));
   gl.uniform3fv(uniforms.eye,new Float32Array(eye));gl.uniform1f(uniforms.time,time/1000);
-  const id=eyeMatrix();draw(meshes.floor,id);draw(meshes.objects,id);draw(meshes.pipe,id);
+  const id=eyeMatrix();
+  // Fictional terrain and pipe are NEVER drawn alongside customer telemetry.
+  if(mode==='synthetic'){draw(meshes.floor,id);draw(meshes.objects,id);draw(meshes.pipe,id);}
   if(track)draw(track,id);if(logs)draw(logs,id);
-  if(pt&&pt.x!==null){
+  if(pos){
    let angle=0;const a=dive.points[pt.nearest],b=dive.points[Math.min(pt.nearest+1,dive.points.length-1)];
    if(a!==b)angle=Math.atan2(b.y-a.y,b.x-a.x);
    draw(meshes.diver,move(pos,angle));
   }
   if(dive){
-   $('depth').textContent=pt.depth===null?'Not recorded':pt.depth.toFixed(1)+' m';
+   $('depth').textContent=pt.depth===null?'Data gap':pt.depth.toFixed(1)+' m';
    $('time').textContent=fmt(current)+' / '+fmt(dive.points.at(-1).t);
    $('timeline').value=current;
   }
@@ -174,10 +272,15 @@ if(!gl){
   if(!dive)return;
   if(current>=dive.points.at(-1).t)current=dive.points[0].t;
   playing=!playing;$('play').textContent=playing?'Ⅱ Pause':'▶ Play';
+  videoPlayBlocked=false;updateVideoClock(true);
  });
- $('timeline').addEventListener('input',e=>current=Number(e.target.value));
+ $('timeline').addEventListener('input',e=>{
+  current=Number(e.target.value);
+  playing=false;$('play').textContent='▶ Play';
+  videoPlayBlocked=false;updateVideoClock(true);
+ });
  $('follow').addEventListener('click',()=>{following=!following;$('follow').setAttribute('aria-pressed',String(following));});
- $('rotate').addEventListener('click',()=>{yaw=-.43;pitch=.35;distance=18;following=true;$('follow').setAttribute('aria-pressed','true');});
+ $('rotate').addEventListener('click',()=>{yaw=-.43;pitch=.35;distance=Math.min(window.innerWidth,window.innerHeight)<700?11:18;following=true;$('follow').setAttribute('aria-pressed','true');});
  $('zoom-in').addEventListener('click',()=>distance=clamp(distance*.8,5,65));
  $('zoom-out').addEventListener('click',()=>distance=clamp(distance*1.2,5,65));
  $('evidence').addEventListener('click',()=>{$('details').hidden=false;$('evidence').setAttribute('aria-expanded','true');});
@@ -211,6 +314,79 @@ if(!gl){
  canvas.addEventListener('pointerup',pointerDone);
  canvas.addEventListener('pointercancel',pointerDone);
  canvas.addEventListener('wheel',e=>{e.preventDefault();distance=clamp(distance*(e.deltaY>0?1.08:.92),5,65);},{passive:false});
- document.addEventListener('visibilitychange',()=>{if(document.hidden){playing=false;$('play').textContent='▶ Play';}});
+ $('import-file').addEventListener('click',()=>$('load-file').click());
+ $('load-file').addEventListener('change',async e=>{
+  const file=e.target.files?.[0];
+  e.target.value='';
+  if(!file)return;
+  try{
+   if(file.size>2e6)throw Error('File exceeds the 2 MB preview limit.');
+   const next=parseInput(await file.text(),file.name);
+   if(next.demo||next.positionSource==='SIMULATED')
+    throw Error('SIMULATED paths belong only in the clearly labeled example mission.');
+   clearFootage();activate(next,false);
+   $('file-status').textContent=next.xyAvailable?
+    'Local file loaded. Coordinates are user-declared, not independently verified. No site model is shown.':
+    'Depth data loaded. Horizontal position is missing or incomplete, so no 3D route is shown.';
+  }catch(err){$('file-status').textContent='Import failed: '+err.message;}
+ });
+ $('reset-sample').addEventListener('click',()=>{clearFootage();load();});
+ $('footage-toggle').addEventListener('click',()=>{
+  const opening=$('footage-panel').hidden;
+  $('footage-panel').hidden=!opening;
+  $('footage-toggle').setAttribute('aria-expanded',String(opening));
+  if(!opening)video.pause();
+  if(opening)updateVideoClock(true);
+ });
+ $('close-footage').addEventListener('click',()=>{
+  $('footage-panel').hidden=true;
+  $('footage-toggle').setAttribute('aria-expanded','false');
+  video.pause();
+ });
+ $('pick-video').addEventListener('click',()=>{
+  if(mode!=='imported'){videoStatus('Import a dive log first.');return;}
+  $('load-video').click();
+ });
+ $('load-video').addEventListener('change',e=>{
+  const file=e.target.files?.[0];
+  e.target.value='';
+  if(!file)return;
+  if(mode!=='imported'){videoStatus('Import a dive log before pairing video.');return;}
+  if(!file.size||file.size>2_147_483_648){
+   videoStatus('Choose a nonempty video under 2 GB for this local preview.');return;
+  }
+  if(!file.type.startsWith('video/')&&!/\.(?:mp4|mov|m4v|webm|ogv)$/i.test(file.name)){
+   videoStatus('Select a supported local video recording.');return;
+  }
+  video.pause();video.removeAttribute('src');video.load();
+  if(videoUrl)URL.revokeObjectURL(videoUrl);
+  videoUrl=URL.createObjectURL(file);videoReady=false;videoPlayBlocked=false;
+  video.muted=true;$('sound-toggle').textContent='Sound off';
+  $('sound-toggle').setAttribute('aria-pressed','false');
+  video.src=videoUrl;video.load();
+  videoStatus('Local video selected: '+file.name.slice(0,90)+'. Reading metadata…');
+ });
+ video.addEventListener('loadedmetadata',()=>{
+  videoReady=Number.isFinite(video.duration)&&video.duration>0;
+  videoPlayBlocked=false;updateVideoClock(true);
+ });
+ video.addEventListener('error',()=>{
+  if(videoUrl){videoReady=false;video.pause();videoStatus('Video codec or file is not supported here. Try MP4/H.264.');}
+ });
+ $('video-offset').addEventListener('change',e=>{
+  try{videoStart=parseVideoStart(e.target.value);videoPlayBlocked=false;updateVideoClock(true);}
+  catch(err){videoStart=NaN;video.pause();videoStatus(err.message);}
+ });
+ $('sound-toggle').addEventListener('click',()=>{
+  video.muted=!video.muted;
+  $('sound-toggle').textContent=video.muted?'Sound off':'Sound on';
+  $('sound-toggle').setAttribute('aria-pressed',String(!video.muted));
+ });
+ document.addEventListener('visibilitychange',()=>{
+  if(document.hidden){playing=false;$('play').textContent='▶ Play';video.pause();}
+ });
+ window.addEventListener('pagehide',()=>{
+  video.pause();if(videoUrl){URL.revokeObjectURL(videoUrl);videoUrl=null;}
+ });
  load().then(()=>requestAnimationFrame(frame));
 }

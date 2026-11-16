@@ -7,7 +7,7 @@ import {
 } from './provider-credentials.mjs';
 
 test('provider credential intake is an explicit allowlist', () => {
-  assert.deepEqual(supportedCredentialProviders(), ['alpaca', 'google-places', 'kroger', 'kaggle', 'numerai', 'qloo', 'nebius', 'paypal', 'facebook-pages', 'gemini', 'openai']);
+  assert.deepEqual(supportedCredentialProviders(), ['alpaca', 'google-places', 'kroger', 'kaggle', 'numerai', 'qloo', 'nebius', 'paypal', 'facebook-pages', 'linkedin-organization', 'gemini', 'openai']);
   assert.equal(credentialProviderSpec('unknown'), null);
   assert.throws(
     () => normalizeProviderCredentialRequest('unknown', {}),
@@ -94,7 +94,27 @@ test('Facebook Pages maps Page identity and Page token into the owned generic cr
   assert.equal(row.provider, 'facebook-pages');
   assert.equal(row.apiKeyId, '123456789012345');
   assert.equal(row.apiSecret, 'EAAB-owned-page-access-token-abcdefghijklmnopqrstuvwxyz');
-  assert.equal(row.label, 'evercraft-clip');
+  assert.equal(row.label, 'evercraft-clip-page-123456789012345');
+  assert.equal(row.environment, 'live');
+});
+
+test('Facebook Page credentials have distinct vault identities and reject spoofed labels', () => {
+  const first = normalizeProviderCredentialRequest('facebook-pages', {
+    page_id: '1253915241138545', page_access_token: 'test-token-page-one-abcdefghijklmnop',
+    label: 'overwritable', environment: 'paper',
+  });
+  const second = normalizeProviderCredentialRequest('facebook-pages', {
+    page_id: '150998551441188', page_access_token: 'test-token-page-two-abcdefghijklmnop',
+    label: 'overwritable', environment: 'paper',
+  });
+  assert.notEqual(first.label, second.label);
+  assert.equal(first.label, 'evercraft-clip-page-1253915241138545');
+  assert.equal(second.label, 'evercraft-clip-page-150998551441188');
+  assert.equal(first.environment, 'live');
+  assert.equal(second.environment, 'live');
+  assert.throws(() => normalizeProviderCredentialRequest('facebook-pages', {
+    page_id: 'not-a-page', page_access_token: 'test-token',
+  }), /facebook_page_id_invalid/);
 });
 
 
@@ -112,4 +132,19 @@ test('Raven Gemini and OpenAI keys map into the owned credential envelope', () =
   assert.equal(openai.provider, 'openai');
   assert.equal(openai.apiKeyId, 'openai-api-key');
   assert.equal(openai.label, 'raven-inference');
+});
+
+test('LinkedIn organization OAuth token seals under an organization identity, never a user-provided provider', () => {
+  const row=normalizeProviderCredentialRequest('linkedin-organization',{
+    organization_id:'5515715',access_token:'linkedin-fixture-access-token-abc0123456789',
+    label:'other-brand',environment:'sandbox',
+  });
+  assert.equal(row.provider,'linkedin-organization');
+  assert.equal(row.apiKeyId,'urn:li:organization:5515715');
+  assert.equal(row.apiSecret,'linkedin-fixture-access-token-abc0123456789');
+  assert.equal(row.environment,'live');
+  assert.equal(row.label,'evercraft-clip');
+  assert.throws(()=>normalizeProviderCredentialRequest('linkedin-organization',{
+    organization_id:'urn:li:person:55',access_token:'secret'
+  }),/linkedin_organization_id_invalid/);
 });

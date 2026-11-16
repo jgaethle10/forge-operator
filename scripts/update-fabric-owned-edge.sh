@@ -12,6 +12,7 @@ FABRIC_ENV="/etc/evercraft/fabric.env"
 ENV_BACKUP=""
 EDGE_ATTESTATION_EXPECTED=false
 VISUAL_INGEST_TOKEN_CREATED=false
+SIGNAL_INTAKE_KEY_CREATED=false
 PUBLIC_EDGE_SERVICE="evercraft-public-edge.service"
 ROUTER_MAP_SERVICE="evercraft-router-map.service"
 ROUTER_MAP_TIMER="evercraft-router-map.timer"
@@ -209,6 +210,27 @@ write_runtime_release_ref() {
   printf '%s\n' "${release,,}" > "$tmp"
   install -o root -g "$RUN_USER" -m 0640 "$tmp" "$RUNTIME_RELEASE_REF_FILE"
   rm -f "$tmp"
+}
+
+ensure_signal_private_intake() {
+  local provision_script="$REPO_ROOT/scripts/provision-signal-resident-intake.mjs"
+  [[ -f "$provision_script" ]] || {
+    echo "ERROR: Signal private intake provisioner missing" >&2
+    return 1
+  }
+  local output=""
+  if [[ -f "$FABRIC_ENV" ]] && grep -Eq '^EVERCRAFT_SIGNAL_INTAKE_KEY_B64=.{12,}$' "$FABRIC_ENV"; then
+    output="$(node "$provision_script" --uid "$(id -u "$RUN_USER")" --gid "$(id -g "$RUN_USER")" --external-key)" || return 1
+  else
+    output="$(node "$provision_script" --uid "$(id -u "$RUN_USER")" --gid "$(id -g "$RUN_USER")")" || return 1
+  fi
+  if [[ "$output" == *'"key_state":"created_once"'* ]]; then
+    SIGNAL_INTAKE_KEY_CREATED=true
+    echo "Evercraft update: Signal private intake key initialized on owned host"
+  else
+    SIGNAL_INTAKE_KEY_CREATED=false
+    echo "Evercraft update: Signal private intake key preserved"
+  fi
 }
 
 ensure_visual_ingest_token() {
@@ -537,6 +559,22 @@ verify_current_runtime() {
     return 17
   fi
 
+  # A healthy API process is not proof that Signal can securely capture leads.
+  # Read-only local GET; no real customer record or payment is created.
+  local signal_readiness=""
+  signal_readiness="$(curl --fail --silent --show-error --max-time 5 'http://127.0.0.1:8787/api/signal/readiness' 2>/dev/null || true)"
+  if ! runuser -u "$RUN_USER" -- env SIGNAL_READINESS_JSON="$signal_readiness" node -e "
+    try{
+      const r=JSON.parse(process.env.SIGNAL_READINESS_JSON||'null');
+      if(r?.schema!=='evercraft.signal.intake-readiness.v1')process.exit(2);
+      if(r.intake_available!==true)process.exit(3);
+      if(r.payment_ready!==false||r.payment_verified!==false)process.exit(4);
+    }catch{process.exit(5)}
+  "; then
+    echo "ERROR: Signal resident private inquiry intake unavailable" >&2
+    return 18
+  fi
+
   local attestation_code=10
   for attempt in 1 2 3 4 5 6; do
     set +e
@@ -625,9 +663,13 @@ expected_count_for_current() {
 
 if [[ "$before" == "$target" ]]; then
   write_runtime_release_ref "$before"
+  if ! ensure_signal_private_intake; then
+    echo "ERROR: Signal buyer intake provisioning failed" >&2
+    exit 18
+  fi
   ensure_visual_ingest_token
   reconcile_edge_attestation_env
-  if [[ -n "$ENV_BACKUP" || "$VISUAL_INGEST_TOKEN_CREATED" == "true" ]]; then
+  if [[ -n "$ENV_BACKUP" || "$VISUAL_INGEST_TOKEN_CREATED" == "true" || "$SIGNAL_INTAKE_KEY_CREATED" == "true" ]]; then
     if ! systemctl restart "$SERVICE"; then
       restore_edge_attestation_env
       systemctl restart "$SERVICE" || true
@@ -715,6 +757,10 @@ if ! (
   exit 6
 fi
 
+if ! ensure_signal_private_intake; then
+  rollback "signal_private_intake_provision_failed"
+  exit 18
+fi
 ensure_visual_ingest_token
 reconcile_edge_attestation_env
 write_runtime_release_ref "$target"

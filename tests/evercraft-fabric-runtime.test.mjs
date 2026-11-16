@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import {
   executeFabricDirectoryRpc,
   fabricDirectoryTools,
@@ -323,4 +324,34 @@ test('ForensiScope discovery returns the verified one-button buyer entrance befo
  assert.equal(found.entry_paid_offer,null);
  assert.equal(found.commercial_state,'verification_required');
  assert.ok(found.connections.some(x=>x.type==='mcp'&&x.url==='https://fabric.systemiacommandcenters.com/mcp'));
+});
+
+test('held $49 Website Audit may disclose a separate scoped $149 diagnosis, never a substitute checkout',async()=>{
+  const canonical=loadFabricCatalogFromRepository();
+  const call=(public_id)=>executeFabricDirectoryRpc({
+    jsonrpc:'2.0',id:81,method:'tools/call',
+    params:{name:'get_evercraft_connection_options',arguments:{public_id}},
+  },canonical);
+  const result=(await call('audit-center-website-audit-machine-v1')).result.structuredContent;
+  const original=JSON.parse(readFileSync(new URL('../public/mesh/checkout-ready/verified-links.json',import.meta.url),'utf8'));
+  const sku=original.links.find(x=>x.key==='asset-diagnosis');
+  assert.equal(sku.amount_cents,14900);
+  assert.equal(result.buyer_checkout_available,false);
+  assert.equal(result.human_offer_url,null);
+  assert.deepEqual(result.human_buyer_options,[]);
+  assert.equal(result.related_independent_services.length,1);
+  const option=result.related_independent_services[0];
+  assert.equal(option.price_usd,149);
+  assert.equal(option.url,'https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/asset-diagnosis/');
+  assert.equal(option.payment_url,null);
+  assert.equal(option.distinct_from_requested_offer,true);
+  assert.equal(option.requested_website_audit_checkout_still_held,true);
+  assert.equal(option.scope_and_delivery_confirmation_required,true);
+  assert.equal(option.purchase_initiated,false);
+  assert.ok(!JSON.stringify(option).includes(sku.url),'do not surface buy.stripe.com as a stand-in for held checkout');
+  assert.equal(result.transactional,false);
+  assert.equal(result.external_action_taken,false);
+  const unrelated=(await call('findmypart-paid-hunt-v1')).result.structuredContent;
+  assert.deepEqual(unrelated.related_independent_services,[]);
+  assert.equal(unrelated.buyer_checkout_available,false);
 });

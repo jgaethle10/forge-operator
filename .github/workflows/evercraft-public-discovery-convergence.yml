@@ -1,0 +1,67 @@
+name: Evercraft Public Discovery Convergence
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/mcp/fabric-directory.mjs'
+      - 'systemia/mcp/fabric-public-products.mjs'
+      - 'public/.well-known/evercraft-pain-index.json'
+      - 'scripts/fabric-discovery-public-canary.mjs'
+      - 'tests/fabric-discovery-public-canary.test.mjs'
+      - '.github/workflows/evercraft-public-discovery-convergence.yml'
+  pull_request:
+    paths:
+      - 'systemia/mcp/fabric-directory.mjs'
+      - 'systemia/mcp/fabric-public-products.mjs'
+      - 'public/.well-known/evercraft-pain-index.json'
+      - 'scripts/fabric-discovery-public-canary.mjs'
+      - 'tests/fabric-discovery-public-canary.test.mjs'
+      - '.github/workflows/evercraft-public-discovery-convergence.yml'
+  schedule:
+    - cron: '29 */2 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: evercraft-public-discovery-convergence
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Checkout source under test
+        uses: actions/checkout@v4
+
+      - name: Install Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Confirm read-only canary contract with mocks
+        run: node --test tests/fabric-discovery-public-canary.test.mjs
+
+      # A PR is source validation, not an attempt to change production.
+      # Main/scheduled runs verify independently what @Evercraft actually serves.
+      - name: Probe external Evercraft MCP
+        if: github.event_name != 'pull_request'
+        id: public
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts
+          node scripts/fabric-discovery-public-canary.mjs --output artifacts/evercraft-public-discovery-canary.json
+          jq -e '.passed == true and .total_checks == 15 and .passed_count == 15' artifacts/evercraft-public-discovery-canary.json >/dev/null
+
+      - name: Preserve independent public discovery receipt
+        if: always() && github.event_name != 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-public-discovery-canary
+          path: artifacts/evercraft-public-discovery-canary.json
+          retention-days: 30
+          if-no-files-found: warn

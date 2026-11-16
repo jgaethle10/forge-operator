@@ -31,8 +31,14 @@ const paths={
  standard:'/mesh/checkout-ready/ai-boardroom-standard/',
  financial:'/mesh/checkout-ready/ai-boardroom-financial-modeling/'
 };
+function hasRequiredBodyClasses(html,required){
+ const match=html.match(/<body\b[^>]*\bclass="([^"]+)"/i);
+ if(!match)return false;
+ const present=new Set(match[1].trim().split(/\s+/));
+ return required.every(token=>present.has(token));
+}
 const docs=Object.fromEntries(await Promise.all(Object.entries(paths).map(async([key,value])=>[key,await get(value)])));
-assert.ok(docs.home.includes('class="boardroom-heritage"'));
+assert.ok(hasRequiredBodyClasses(docs.home,['boardroom-heritage']));
 assert.ok(docs.home.includes('Take your seat.'));
 assert.ok(docs.home.includes('href="./compare/"'));
 assert.ok(docs.share.includes('Your personal launch kit.'));
@@ -41,7 +47,7 @@ assert.ok(docs.share.includes('Copy LinkedIn post'));
 assert.ok(docs.share.includes('founder_manual_only') || docs.share.includes('Nothing gets published automatically.'));
 assert.ok(docs.share.includes('/compare/?demo=1'));
 for(const token of ['#10100f','#ccad72','#f2e6cf','#28221b'])assert.ok(docs.css.toLowerCase().includes(token),'Missing heritage CSS token '+token);
-assert.ok(docs.compare.includes('class="boardroom-heritage comparison"'));
+assert.ok(hasRequiredBodyClasses(docs.compare,['boardroom-heritage','comparison']));
 assert.ok(docs.compare.includes('Compare the answers'));
 assert.ok(docs.compare.includes("import {buildReport} from './engine.mjs'"));
 assert.ok(docs.engine.includes('export function buildReport'));
@@ -58,8 +64,8 @@ assert.equal(capability.machine_state,'source_discovery_only');
 assert.equal(capability.start_url,null);
 assert.equal(capability.entry_paid_offer,null);
 assert.deepEqual(capability.offers,[]);
-assert.ok(docs.standard.includes('class="boardroom-heritage checkout"'));
-assert.ok(docs.financial.includes('class="boardroom-heritage checkout"'));
+assert.ok(hasRequiredBodyClasses(docs.standard,['boardroom-heritage','checkout']));
+assert.ok(hasRequiredBodyClasses(docs.financial,['boardroom-heritage','checkout']));
 assert.ok(docs.standard.includes('../../ai-boardroom/heritage.css'));
 assert.ok(docs.financial.includes('../../ai-boardroom/heritage.css'));
 assert.ok(docs.standard.includes('$250'));

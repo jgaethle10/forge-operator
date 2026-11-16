@@ -34,7 +34,11 @@ test('the landing page presents real deliverables, price and an actual editable 
   assert.match(html,/name="question"/);
   assert.match(html,/type="module"/);
   assert.match(html,/scope-request\.mjs/);
-  assert.match(html,/nothing is sent automatically/);
+  assert.match(html,/encrypted intake/);
+  assert.match(html,/id="signal-email"/);
+  assert.match(html,/name="consent" type="checkbox" required/);
+  assert.match(html,/api\/signal\/inquiry/);
+  assert.match(html,/Use email instead/);
   assert.match(html,/Evercraft Payments checkout remains on hold pending verification/);
   assert.ok(!html.includes('Ask about organizational monitoring'));
 });
@@ -44,6 +48,8 @@ test('empty or overlong scope fields fail closed',()=>{
   assert.throws(()=>prepareSignalInquiry({...data,question:'why?'}),/Decision or evidence question/);
   assert.throws(()=>prepareSignalInquiry({...data,question:'a'.repeat(501)}),/Decision or evidence question/);
   assert.throws(()=>prepareSignalInquiry({...data,location:'x'.repeat(121)}),/Location/);
+  assert.throws(()=>prepareSignalInquiry({...data,email:'not-an-email'}),/Reply email/);
+  assert.ok(prepareSignalInquiry({...data,email:'buyer@example.test'}).body.includes('buyer@example.test'));
 });
 
 test('headers cannot be customer-overridden with newline injection',()=>{

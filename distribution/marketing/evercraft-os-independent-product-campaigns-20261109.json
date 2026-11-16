@@ -1,0 +1,563 @@
+{
+  "schema": "evercraft.independent-product-distribution.v1",
+  "purpose": "Distinct opt-in product campaigns, not seven identical posts or a promise of already published content.",
+  "suite": "Evercraft OS",
+  "source": "public/mesh/checkout-ready/products.json",
+  "created_on": "2026-11-09",
+  "constraints": [
+    "Do not publish via unrelated social brands or founder personal profiles without scoped authorization",
+    "Do not auto-send cold bulk email or bypass Systemia/Passport permissions",
+    "No claim of posted material without provider ID and permalink",
+    "Public checkout pages require agreed scope before payment; Stripe paid receipt is different from checkout view",
+    "Buyer intent and product identity must match exact existing Stripe SKU"
+  ],
+  "campaigns": [
+    {
+      "product_id": "evercraft.commerce.social-media-weekly",
+      "brand": "Evercraft Social | Weekly",
+      "landing_page": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/social-media-weekly/",
+      "exact_price_usd": 100,
+      "audiences": [
+        "Small-business owners with authorized social channels who want a bounded week of support"
+      ],
+      "intent_query_prompts": [
+        "weekly social media help for small business",
+        "one week of social content support",
+        "small business social media task help"
+      ],
+      "campaign": {
+        "problem_education": {
+          "headline": "Social media shouldn't require a long agency contract to get unstuck.",
+          "copy": "The business is moving, but its public channels keep going quiet. Social media shouldn't require a long agency contract to get unstuck. Evercraft Evercraft Social | Weekly is designed for small-business owners with authorized social channels who want a bounded week of support. Here's the practical first step: a written one-week support plan and the specifically agreed content-management or publishing deliverables. Scope and delivery timing are agreed before any payment.",
+          "call_to_action": "See the Evercraft Social | Weekly product: https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/social-media-weekly/"
+        },
+        "offer_launch": {
+          "headline": "Keep your channels moving without signing a retainer.",
+          "copy": "Need a focused week of help keeping your business channels moving? Evercraft Social | Weekly offers a scoped $100 service. We agree on channels, deliverables and permissions before payment. We only use the matching, exact-price checkout after scope and availability are agreed.",
+          "call_to_action": "See what's included: https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/social-media-weekly/"
+        },
+        "permissioned_referral": {
+          "message": "If you're working with someone who needs help with the business is moving, but its public channels keep going quiet. the Evercraft Social | Weekly page explains the buyer fit, scope and exact price. No referral payout or partnership is assumed. https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/social-media-weekly/",
+          "approval": "Only send to a genuine opted-in or established, authorized relationship."
+        },
+        "story_first_intro": {
+          "hook": "Some weeks, the win is simply showing up with something worth saying.",
+          "body": "Some weeks, the win is simply showing up with something worth saying. Make consistent communication achievable for small teams without forcing an agency retainer. That's the reason behind The Weekly Signal, a distinct Evercraft OS product identity. The actual service is Evercraft Social | Weekly at $100, with a written scope and delivery date agreed before payment. https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/social-media-weekly/",
+          "tone": "energetic, kind, practical; short rhythmic sentences; no hype",
+          "visual_direction": "Original rising-signal mark, #ffad79 accent on #141d2c, motif: repeating ascending bars and weekly cadence lines. No generic portfolio collage.",
+          "publication_state": "approved_draft_not_published"
+        }
+      },
+      "distribution": {
+        "state": "copy_ready_not_provider_published",
+        "channels": [
+          "Evercraft-owned site",
+          "Authenticated Evercraft company channels only",
+          "Qualified consent-based introductions"
+        ],
+        "provider_post_url": null,
+        "provider_post_id": null,
+        "campaign_tracking_label": "ec-os-social-media-weekly",
+        "no_spam": true
+      },
+      "conversion_measurement": {
+        "qualified_product_page_visits": "requires real analytics",
+        "scope_requests": "requires inquiry log",
+        "approved_checkouts": "requires buyer and service match",
+        "paid_orders": "requires provider-paid receipt",
+        "delivered": "requires acceptance evidence",
+        "gross_revenue_cents": "requires payment records",
+        "refunds_cents": "requires payment records",
+        "cost_to_serve_cents": "requires actual labor/cost evidence"
+      },
+      "creative_identity": {
+        "working_imprint": "The Weekly Signal",
+        "signature": "Show up. Say something that matters.",
+        "purpose": "Make consistent communication achievable for small teams without forcing an agency retainer.",
+        "visual_palette": {
+          "background": "#141d2c",
+          "panel": "#202b3b",
+          "ink": "#fff1e6",
+          "muted": "#cbd4df",
+          "accent": "#ffad79",
+          "secondary": "#ffddbd",
+          "mark": "rising-signal",
+          "typography": "rounded modern sans-serif with decisive bold headlines",
+          "motif": "repeating ascending bars and weekly cadence lines"
+        },
+        "brand_manifest": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/social-media-weekly/brand.json",
+        "mark_svg": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/social-media-weekly/brand-mark.svg",
+        "trademark_cleared": false
+      }
+    },
+    {
+      "product_id": "evercraft.commerce.asset-diagnosis",
+      "brand": "Evercraft Asset Diagnosis",
+      "landing_page": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/asset-diagnosis/",
+      "exact_price_usd": 149,
+      "audiences": [
+        "Owners of an existing website, workflow, app or other digital or operational asset"
+      ],
+      "intent_query_prompts": [
+        "why is my business website not converting",
+        "digital asset audit with recommendations",
+        "diagnose a broken business workflow"
+      ],
+      "campaign": {
+        "problem_education": {
+          "headline": "A good repair starts with knowing what needs repair.",
+          "copy": "An asset exists but its next useful fix or opportunity is unclear. A good repair starts with knowing what needs repair. Evercraft Evercraft Asset Diagnosis is designed for owners of an existing website, workflow, app or other digital or operational asset. Here's the practical first step: a written diagnostic summary identifying observed issues, evidence limits and practical next actions for the agreed asset. Scope and delivery timing are agreed before any payment.",
+          "call_to_action": "See the Evercraft Asset Diagnosis product: https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/asset-diagnosis/"
+        },
+        "offer_launch": {
+          "headline": "Before you rebuild it, find out what's actually wrong.",
+          "copy": "Before spending money rebuilding an app, website or business workflow, get a scoped $149 Asset Diagnosis. Evercraft reviews one agreed asset and provides written findings and next steps after scope confirmation. We only use the matching, exact-price checkout after scope and availability are agreed.",
+          "call_to_action": "See what's included: https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/asset-diagnosis/"
+        },
+        "permissioned_referral": {
+          "message": "If you're working with someone who needs help with an asset exists but its next useful fix or opportunity is unclear. the Evercraft Asset Diagnosis page explains the buyer fit, scope and exact price. No referral payout or partnership is assumed. https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/asset-diagnosis/",
+          "approval": "Only send to a genuine opted-in or established, authorized relationship."
+        },
+        "story_first_intro": {
+          "hook": "Before you pay for the fix, find out what actually needs fixing.",
+          "body": "Before you pay for the fix, find out what actually needs fixing. Reveal what is actually happening inside one asset before the owner spends on the wrong fix. That's the reason behind The Second Look, a distinct Evercraft OS product identity. The actual service is Evercraft Asset Diagnosis at $149, with a written scope and delivery date agreed before payment. https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/asset-diagnosis/",
+          "tone": "clear-eyed, exact, curious; never alarmist",
+          "visual_direction": "Original focus-frame mark, #71c5ed accent on #0d202c, motif: framing corners, grids and a single focal point. No generic portfolio collage.",
+          "publication_state": "approved_draft_not_published"
+        }
+      },
+      "distribution": {
+        "state": "copy_ready_not_provider_published",
+        "channels": [
+          "Evercraft-owned site",
+          "Authenticated Evercraft company channels only",
+          "Qualified consent-based introductions"
+        ],
+        "provider_post_url": null,
+        "provider_post_id": null,
+        "campaign_tracking_label": "ec-os-asset-diagnosis",
+        "no_spam": true
+      },
+      "conversion_measurement": {
+        "qualified_product_page_visits": "requires real analytics",
+        "scope_requests": "requires inquiry log",
+        "approved_checkouts": "requires buyer and service match",
+        "paid_orders": "requires provider-paid receipt",
+        "delivered": "requires acceptance evidence",
+        "gross_revenue_cents": "requires payment records",
+        "refunds_cents": "requires payment records",
+        "cost_to_serve_cents": "requires actual labor/cost evidence"
+      },
+      "creative_identity": {
+        "working_imprint": "The Second Look",
+        "signature": "See it clearly before changing it.",
+        "purpose": "Reveal what is actually happening inside one asset before the owner spends on the wrong fix.",
+        "visual_palette": {
+          "background": "#0d202c",
+          "panel": "#142e3c",
+          "ink": "#e9f6fb",
+          "muted": "#b6cdda",
+          "accent": "#71c5ed",
+          "secondary": "#c0e7f6",
+          "mark": "focus-frame",
+          "typography": "precise compact sans-serif with small technical labels",
+          "motif": "framing corners, grids and a single focal point"
+        },
+        "brand_manifest": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/asset-diagnosis/brand.json",
+        "mark_svg": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/asset-diagnosis/brand-mark.svg",
+        "trademark_cleared": false
+      }
+    },
+    {
+      "product_id": "evercraft.commerce.ai-boardroom-standard",
+      "brand": "Evercraft AI Boardroom | Standard",
+      "landing_page": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/ai-boardroom-standard/",
+      "exact_price_usd": 250,
+      "audiences": [
+        "Founders and managers facing one defined, non-emergency business decision"
+      ],
+      "intent_query_prompts": [
+        "AI second opinion on business decision",
+        "compare conflicting AI business advice",
+        "decision review for a founder"
+      ],
+      "campaign": {
+        "problem_education": {
+          "headline": "Confidence is cheap. A carefully challenged decision is worth more.",
+          "copy": "A decision matters and the alternatives, evidence gaps and assumptions are poorly understood. Confidence is cheap. A carefully challenged decision is worth more. Evercraft Evercraft AI Boardroom | Standard is designed for founders and managers facing one defined, non-emergency business decision. Here's the practical first step: a written decision brief comparing agreed alternatives, assumptions, risks and open evidence questions. Scope and delivery timing are agreed before any payment.",
+          "call_to_action": "See the Evercraft AI Boardroom | Standard product: https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/ai-boardroom-standard/"
+        },
+        "offer_launch": {
+          "headline": "One decision. Better questions. Clearer tradeoffs.",
+          "copy": "Have one business decision you want pressure-tested? Evercraft AI Boardroom Standard offers a scoped $250 human-reviewed brief covering alternatives, risks and unanswered questions. We only use the matching, exact-price checkout after scope and availability are agreed.",
+          "call_to_action": "See what's included: https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/ai-boardroom-standard/"
+        },
+        "permissioned_referral": {
+          "message": "If you're working with someone who needs help with a decision matters and the alternatives, evidence gaps and assumptions are poorly understood. the Evercraft AI Boardroom | Standard page explains the buyer fit, scope and exact price. No referral payout or partnership is assumed. https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/ai-boardroom-standard/",
+          "approval": "Only send to a genuine opted-in or established, authorized relationship."
+        },
+        "story_first_intro": {
+          "hook": "A confident recommendation is not the same thing as a tested decision.",
+          "body": "A confident recommendation is not the same thing as a tested decision. Give one consequential decision a serious structured challenge before action is taken. That's the reason behind The Chamber, a distinct Evercraft OS product identity. The actual service is Evercraft AI Boardroom | Standard at $250, with a written scope and delivery date agreed before payment. https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/ai-boardroom-standard/",
+          "tone": "measured, composed, intellectually brave; elegant and restrained",
+          "visual_direction": "Original chamber-columns mark, #d6b676 accent on #171613, motif: architectural columns, fine brass rules and deliberate negative space. No generic portfolio collage.",
+          "publication_state": "approved_draft_not_published"
+        }
+      },
+      "distribution": {
+        "state": "copy_ready_not_provider_published",
+        "channels": [
+          "Evercraft-owned site",
+          "Authenticated Evercraft company channels only",
+          "Qualified consent-based introductions"
+        ],
+        "provider_post_url": null,
+        "provider_post_id": null,
+        "campaign_tracking_label": "ec-os-ai-boardroom-standard",
+        "no_spam": true
+      },
+      "conversion_measurement": {
+        "qualified_product_page_visits": "requires real analytics",
+        "scope_requests": "requires inquiry log",
+        "approved_checkouts": "requires buyer and service match",
+        "paid_orders": "requires provider-paid receipt",
+        "delivered": "requires acceptance evidence",
+        "gross_revenue_cents": "requires payment records",
+        "refunds_cents": "requires payment records",
+        "cost_to_serve_cents": "requires actual labor/cost evidence"
+      },
+      "creative_identity": {
+        "working_imprint": "The Chamber",
+        "signature": "Bring the decision. We'll challenge the assumptions.",
+        "purpose": "Give one consequential decision a serious structured challenge before action is taken.",
+        "visual_palette": {
+          "background": "#171613",
+          "panel": "#28241e",
+          "ink": "#f5ead3",
+          "muted": "#c5bba6",
+          "accent": "#d6b676",
+          "secondary": "#f0dba9",
+          "mark": "chamber-columns",
+          "typography": "heritage serif headlines, spare humanist sans body",
+          "motif": "architectural columns, fine brass rules and deliberate negative space"
+        },
+        "brand_manifest": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/ai-boardroom-standard/brand.json",
+        "mark_svg": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/ai-boardroom-standard/brand-mark.svg",
+        "trademark_cleared": false
+      }
+    },
+    {
+      "product_id": "evercraft.commerce.ai-boardroom-financial-modeling",
+      "brand": "Evercraft AI Boardroom | Deep Dive",
+      "landing_page": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/ai-boardroom-financial-modeling/",
+      "exact_price_usd": 500,
+      "audiences": [
+        "Operators comparing business plans whose assumptions materially affect the decision"
+      ],
+      "intent_query_prompts": [
+        "business financial scenario modeling",
+        "sensitivity analysis for a startup decision",
+        "AI Boardroom financial deep dive"
+      ],
+      "campaign": {
+        "problem_education": {
+          "headline": "The model is only as useful as the assumptions you can inspect.",
+          "copy": "A business choice looks attractive until the assumptions change. The model is only as useful as the assumptions you can inspect. Evercraft Evercraft AI Boardroom | Deep Dive is designed for operators comparing business plans whose assumptions materially affect the decision. Here's the practical first step: a written review and agreed scenario table with assumptions, sensitivity discussion and limitations. Scope and delivery timing are agreed before any payment.",
+          "call_to_action": "See the Evercraft AI Boardroom | Deep Dive product: https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/ai-boardroom-financial-modeling/"
+        },
+        "offer_launch": {
+          "headline": "See the financial assumptions before they surprise you.",
+          "copy": "Compare business choices before committing resources. Evercraft AI Boardroom Deep Dive is a $500 scoped human-reviewed decision brief with financial-scenario modeling and clearly stated assumptions. We only use the matching, exact-price checkout after scope and availability are agreed.",
+          "call_to_action": "See what's included: https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/ai-boardroom-financial-modeling/"
+        },
+        "permissioned_referral": {
+          "message": "If you're working with someone who needs help with a business choice looks attractive until the assumptions change. the Evercraft AI Boardroom | Deep Dive page explains the buyer fit, scope and exact price. No referral payout or partnership is assumed. https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/ai-boardroom-financial-modeling/",
+          "approval": "Only send to a genuine opted-in or established, authorized relationship."
+        },
+        "story_first_intro": {
+          "hook": "Move one assumption. Watch the decision change.",
+          "body": "Move one assumption. Watch the decision change. Show how a business decision changes when costs, demand and other assumptions change. That's the reason behind The Scenario Room, a distinct Evercraft OS product identity. The actual service is Evercraft AI Boardroom | Deep Dive at $500, with a written scope and delivery date agreed before payment. https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/ai-boardroom-financial-modeling/",
+          "tone": "analytical, calm, precise; numbers with interpretation, never certainty theater",
+          "visual_direction": "Original scenario-grid mark, #adcfb6 accent on #162329, motif: scenario matrix, branching lines and balanced ledger rules. No generic portfolio collage.",
+          "publication_state": "approved_draft_not_published"
+        }
+      },
+      "distribution": {
+        "state": "copy_ready_not_provider_published",
+        "channels": [
+          "Evercraft-owned site",
+          "Authenticated Evercraft company channels only",
+          "Qualified consent-based introductions"
+        ],
+        "provider_post_url": null,
+        "provider_post_id": null,
+        "campaign_tracking_label": "ec-os-ai-boardroom-financial-modeling",
+        "no_spam": true
+      },
+      "conversion_measurement": {
+        "qualified_product_page_visits": "requires real analytics",
+        "scope_requests": "requires inquiry log",
+        "approved_checkouts": "requires buyer and service match",
+        "paid_orders": "requires provider-paid receipt",
+        "delivered": "requires acceptance evidence",
+        "gross_revenue_cents": "requires payment records",
+        "refunds_cents": "requires payment records",
+        "cost_to_serve_cents": "requires actual labor/cost evidence"
+      },
+      "creative_identity": {
+        "working_imprint": "The Scenario Room",
+        "signature": "Change the assumptions. See what changes.",
+        "purpose": "Show how a business decision changes when costs, demand and other assumptions change.",
+        "visual_palette": {
+          "background": "#162329",
+          "panel": "#223940",
+          "ink": "#f0f6ec",
+          "muted": "#c6d4cf",
+          "accent": "#adcfb6",
+          "secondary": "#eed7a7",
+          "mark": "scenario-grid",
+          "typography": "serif decision headlines paired with mono-spaced scenario labels",
+          "motif": "scenario matrix, branching lines and balanced ledger rules"
+        },
+        "brand_manifest": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/ai-boardroom-financial-modeling/brand.json",
+        "mark_svg": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/ai-boardroom-financial-modeling/brand-mark.svg",
+        "trademark_cleared": false
+      }
+    },
+    {
+      "product_id": "evercraft.commerce.knowledge-activation",
+      "brand": "Evercraft Knowledge Activation",
+      "landing_page": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/knowledge-activation/",
+      "exact_price_usd": 500,
+      "audiences": [
+        "Teams with authorized documents, notes and workflows that are hard to organize or hand off"
+      ],
+      "intent_query_prompts": [
+        "organize company knowledge base",
+        "turn team documents into usable documentation",
+        "knowledge handoff help for small business"
+      ],
+      "campaign": {
+        "problem_education": {
+          "headline": "Information that only one person can find is not yet a team asset.",
+          "copy": "Institutional information is scattered and hard for the next person to use. Information that only one person can find is not yet a team asset. Evercraft Evercraft Knowledge Activation is designed for teams with authorized documents, notes and workflows that are hard to organize or hand off. Here's the practical first step: an agreed knowledge inventory, organization plan or bounded handoff artifact, depending on approved access and scope. Scope and delivery timing are agreed before any payment.",
+          "call_to_action": "See the Evercraft Knowledge Activation product: https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/knowledge-activation/"
+        },
+        "offer_launch": {
+          "headline": "Turn scattered know-how into something the next person can use.",
+          "copy": "Documents, procedures and decisions scattered everywhere? Evercraft Knowledge Activation is a $500 scoped service to organize a defined knowledge problem into a usable starting point, with permissions agreed first. We only use the matching, exact-price checkout after scope and availability are agreed.",
+          "call_to_action": "See what's included: https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/knowledge-activation/"
+        },
+        "permissioned_referral": {
+          "message": "If you're working with someone who needs help with institutional information is scattered and hard for the next person to use. the Evercraft Knowledge Activation page explains the buyer fit, scope and exact price. No referral payout or partnership is assumed. https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/knowledge-activation/",
+          "approval": "Only send to a genuine opted-in or established, authorized relationship."
+        },
+        "story_first_intro": {
+          "hook": "The answer might already exist. Can the next person actually find it?",
+          "body": "The answer might already exist. Can the next person actually find it? Turn authorized scattered know-how into a practical reference the next teammate can actually use. That's the reason behind The Knowledge Desk, a distinct Evercraft OS product identity. The actual service is Evercraft Knowledge Activation at $500, with a written scope and delivery date agreed before payment. https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/knowledge-activation/",
+          "tone": "welcoming, editorial, orderly; explain rather than overwhelm",
+          "visual_direction": "Original indexed-pages mark, #c0d5fb accent on #1c2431, motif: index tabs, filing margins and card dividers. No generic portfolio collage.",
+          "publication_state": "approved_draft_not_published"
+        }
+      },
+      "distribution": {
+        "state": "copy_ready_not_provider_published",
+        "channels": [
+          "Evercraft-owned site",
+          "Authenticated Evercraft company channels only",
+          "Qualified consent-based introductions"
+        ],
+        "provider_post_url": null,
+        "provider_post_id": null,
+        "campaign_tracking_label": "ec-os-knowledge-activation",
+        "no_spam": true
+      },
+      "conversion_measurement": {
+        "qualified_product_page_visits": "requires real analytics",
+        "scope_requests": "requires inquiry log",
+        "approved_checkouts": "requires buyer and service match",
+        "paid_orders": "requires provider-paid receipt",
+        "delivered": "requires acceptance evidence",
+        "gross_revenue_cents": "requires payment records",
+        "refunds_cents": "requires payment records",
+        "cost_to_serve_cents": "requires actual labor/cost evidence"
+      },
+      "creative_identity": {
+        "working_imprint": "The Knowledge Desk",
+        "signature": "Find the knowledge. Put it to work.",
+        "purpose": "Turn authorized scattered know-how into a practical reference the next teammate can actually use.",
+        "visual_palette": {
+          "background": "#1c2431",
+          "panel": "#2c3949",
+          "ink": "#f8f3e9",
+          "muted": "#d2d7df",
+          "accent": "#c0d5fb",
+          "secondary": "#f3d9a2",
+          "mark": "indexed-pages",
+          "typography": "editorial serif accents with clean accessible sans body",
+          "motif": "index tabs, filing margins and card dividers"
+        },
+        "brand_manifest": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/knowledge-activation/brand.json",
+        "mark_svg": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/knowledge-activation/brand-mark.svg",
+        "trademark_cleared": false
+      }
+    },
+    {
+      "product_id": "evercraft.commerce.social-intelligence-launch",
+      "brand": "Evercraft Social Intelligence",
+      "landing_page": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/social-intelligence-launch/",
+      "exact_price_usd": 1000,
+      "audiences": [
+        "Teams planning a campaign or market approach that need legitimate audience and content evidence"
+      ],
+      "intent_query_prompts": [
+        "research audience for a product launch",
+        "social intelligence for marketing strategy",
+        "evidence based social campaign plan"
+      ],
+      "campaign": {
+        "problem_education": {
+          "headline": "Better audience understanding comes before better posting frequency.",
+          "copy": "Content is produced without a clear evidence-backed understanding of the audience. Better audience understanding comes before better posting frequency. Evercraft Evercraft Social Intelligence is designed for teams planning a campaign or market approach that need legitimate audience and content evidence. Here's the practical first step: a written audience-signal analysis and agreed launch recommendations based on permitted evidence. Scope and delivery timing are agreed before any payment.",
+          "call_to_action": "See the Evercraft Social Intelligence product: https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/social-intelligence-launch/"
+        },
+        "offer_launch": {
+          "headline": "Understand the audience before buying more attention.",
+          "copy": "Launching into an audience you don't really understand? Evercraft Social Intelligence is a $1,000 scoped engagement that turns authorized audience signals into a practical launch brief. We only use the matching, exact-price checkout after scope and availability are agreed.",
+          "call_to_action": "See what's included: https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/social-intelligence-launch/"
+        },
+        "permissioned_referral": {
+          "message": "If you're working with someone who needs help with content is produced without a clear evidence-backed understanding of the audience. the Evercraft Social Intelligence page explains the buyer fit, scope and exact price. No referral payout or partnership is assumed. https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/social-intelligence-launch/",
+          "approval": "Only send to a genuine opted-in or established, authorized relationship."
+        },
+        "story_first_intro": {
+          "hook": "More noise won't help a campaign that doesn't know its audience.",
+          "body": "More noise won't help a campaign that doesn't know its audience. Help teams understand real audience patterns before committing effort to a launch. That's the reason behind Signal Map, a distinct Evercraft OS product identity. The actual service is Evercraft Social Intelligence at $1,000, with a written scope and delivery date agreed before payment. https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/social-intelligence-launch/",
+          "tone": "insightful, curious, grounded; never surveillance-oriented",
+          "visual_direction": "Original signal-nodes mark, #bcacff accent on #151829, motif: connected audience nodes, soft gradients and signal trails. No generic portfolio collage.",
+          "publication_state": "approved_draft_not_published"
+        }
+      },
+      "distribution": {
+        "state": "copy_ready_not_provider_published",
+        "channels": [
+          "Evercraft-owned site",
+          "Authenticated Evercraft company channels only",
+          "Qualified consent-based introductions"
+        ],
+        "provider_post_url": null,
+        "provider_post_id": null,
+        "campaign_tracking_label": "ec-os-social-intelligence-launch",
+        "no_spam": true
+      },
+      "conversion_measurement": {
+        "qualified_product_page_visits": "requires real analytics",
+        "scope_requests": "requires inquiry log",
+        "approved_checkouts": "requires buyer and service match",
+        "paid_orders": "requires provider-paid receipt",
+        "delivered": "requires acceptance evidence",
+        "gross_revenue_cents": "requires payment records",
+        "refunds_cents": "requires payment records",
+        "cost_to_serve_cents": "requires actual labor/cost evidence"
+      },
+      "creative_identity": {
+        "working_imprint": "Signal Map",
+        "signature": "Listen for the pattern, then launch.",
+        "purpose": "Help teams understand real audience patterns before committing effort to a launch.",
+        "visual_palette": {
+          "background": "#151829",
+          "panel": "#242840",
+          "ink": "#f0efff",
+          "muted": "#cecde4",
+          "accent": "#bcacff",
+          "secondary": "#86e3d1",
+          "mark": "signal-nodes",
+          "typography": "geometric display sans with analytical micro-labels",
+          "motif": "connected audience nodes, soft gradients and signal trails"
+        },
+        "brand_manifest": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/social-intelligence-launch/brand.json",
+        "mark_svg": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/social-intelligence-launch/brand-mark.svg",
+        "trademark_cleared": false
+      }
+    },
+    {
+      "product_id": "evercraft.commerce.institutional-memory-system",
+      "brand": "Evercraft Institutional Memory",
+      "landing_page": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/institutional-memory-system/",
+      "exact_price_usd": 1500,
+      "audiences": [
+        "Organizations losing process history, decision rationale and reusable operating knowledge"
+      ],
+      "intent_query_prompts": [
+        "institutional memory system for company",
+        "stop losing decisions during employee handoffs",
+        "document why business decisions were made"
+      ],
+      "campaign": {
+        "problem_education": {
+          "headline": "When the reasons disappear, the same mistakes become new projects.",
+          "copy": "Decisions and ownership disappear in handoffs, forcing teams to rediscover the same work. When the reasons disappear, the same mistakes become new projects. Evercraft Evercraft Institutional Memory is designed for organizations losing process history, decision rationale and reusable operating knowledge. Here's the practical first step: an agreed memory workflow, record schema, provenance and retrieval plan, and acceptance test or implementation artifact as contracted. Scope and delivery timing are agreed before any payment.",
+          "call_to_action": "See the Evercraft Institutional Memory product: https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/institutional-memory-system/"
+        },
+        "offer_launch": {
+          "headline": "Keep the decisions, not just the files.",
+          "copy": "Your company should not lose hard-won knowledge every time responsibilities change. Evercraft Institutional Memory is a $1,500 scoped design or implementation engagement, with sources, rights and acceptance criteria agreed first. We only use the matching, exact-price checkout after scope and availability are agreed.",
+          "call_to_action": "See what's included: https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/institutional-memory-system/"
+        },
+        "permissioned_referral": {
+          "message": "If you're working with someone who needs help with decisions and ownership disappear in handoffs, forcing teams to rediscover the same work. the Evercraft Institutional Memory page explains the buyer fit, scope and exact price. No referral payout or partnership is assumed. https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/institutional-memory-system/",
+          "approval": "Only send to a genuine opted-in or established, authorized relationship."
+        },
+        "story_first_intro": {
+          "hook": "The document survived. The reason behind the decision did not.",
+          "body": "The document survived. The reason behind the decision did not. Preserve how a team reached decisions, who owns the next action and where the evidence lives. That's the reason behind The Living Archive, a distinct Evercraft OS product identity. The actual service is Evercraft Institutional Memory at $1,500, with a written scope and delivery date agreed before payment. https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/institutional-memory-system/",
+          "tone": "thoughtful, enduring, humane; purposeful without nostalgia",
+          "visual_direction": "Original continuity-rings mark, #a7d6b7 accent on #172720, motif: overlapping rings, archival stamps and provenance threads. No generic portfolio collage.",
+          "publication_state": "approved_draft_not_published"
+        }
+      },
+      "distribution": {
+        "state": "copy_ready_not_provider_published",
+        "channels": [
+          "Evercraft-owned site",
+          "Authenticated Evercraft company channels only",
+          "Qualified consent-based introductions"
+        ],
+        "provider_post_url": null,
+        "provider_post_id": null,
+        "campaign_tracking_label": "ec-os-institutional-memory-system",
+        "no_spam": true
+      },
+      "conversion_measurement": {
+        "qualified_product_page_visits": "requires real analytics",
+        "scope_requests": "requires inquiry log",
+        "approved_checkouts": "requires buyer and service match",
+        "paid_orders": "requires provider-paid receipt",
+        "delivered": "requires acceptance evidence",
+        "gross_revenue_cents": "requires payment records",
+        "refunds_cents": "requires payment records",
+        "cost_to_serve_cents": "requires actual labor/cost evidence"
+      },
+      "creative_identity": {
+        "working_imprint": "The Living Archive",
+        "signature": "Keep the reason, not just the record.",
+        "purpose": "Preserve how a team reached decisions, who owns the next action and where the evidence lives.",
+        "visual_palette": {
+          "background": "#172720",
+          "panel": "#26392e",
+          "ink": "#f3f3e6",
+          "muted": "#c6d9c7",
+          "accent": "#a7d6b7",
+          "secondary": "#dec7a0",
+          "mark": "continuity-rings",
+          "typography": "bookish serif headline with precise metadata typography",
+          "motif": "overlapping rings, archival stamps and provenance threads"
+        },
+        "brand_manifest": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/institutional-memory-system/brand.json",
+        "mark_svg": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/institutional-memory-system/brand-mark.svg",
+        "trademark_cleared": false
+      }
+    }
+  ],
+  "branding_revision": "2026-11-09: seven independent identity-led campaigns, never a generic seven-offer broadcast."
+}

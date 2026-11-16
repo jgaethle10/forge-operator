@@ -57,7 +57,23 @@ test('human offer copy gives sell-now capabilities short memorable URLs',()=>{
   assert.match(page,/property="og:url" content="https:\/\/fabric\.systemiacommandcenters\.com\/offers\/website-audit"/);
   assert.match(page,/rel="canonical" href="https:\/\/fabric\.systemiacommandcenters\.com\/offers\/website-audit"/);
   assert.match(page,/name="twitter:card" content="summary_large_image"/);
-  assert.match(page,/property="og:image" content="https:\/\/fabric\.systemiacommandcenters\.com\/visuals\/website-audit-attention\/poster-feed\.svg"/);
+  assert.match(page,/property="og:image" content="https:\/\/jgaethle10\.github\.io\/forge-operator\/visuals\/website-audit-attention\/preview-og-v2\.png"/);
+  assert.match(page,/property="og:image:type" content="image\/png"/);
+  assert.match(page,/property="og:image:width" content="1200"/);
+  assert.match(page,/property="og:image:height" content="630"/);
+  assert.match(page,/property="og:image:alt" content="Systemia Website Audit by Evercraft/);
+  assert.doesNotMatch(page,/poster-feed\.svg|poster-hero-wide\.svg/);
+  assert.match(page,/Inside your Quick Win Audit/);
+  assert.match(page,/Five prioritized fixes/);
+  assert.match(page,/Illustrative process preview/);
+  assert.doesNotMatch(page,/62%|conversion drop-off rate|fake audit score/i);
+  assert.ok(page.indexOf('name="customer_ref"') < page.indexOf('class="audit-preview"'), 'checkout appears before illustration');
+  const details=page.indexOf('<details class="audit-more-info">');
+  const poster=page.indexOf('<div class="offer-visual">');
+  const price=page.indexOf('<div class="offer-price">');
+  const submit=page.indexOf('Continue to checkout');
+  assert.ok(price>0&&submit>price&&details>submit&&poster>details,
+    'Website Audit must show $49 and action before optional large promotional artwork');
   assert.doesNotMatch(page,/machine state|start_url_state|preferred_agent_route/i);
 });
 
@@ -244,7 +260,8 @@ test('human checkout failures render a branded Evercraft Payments page instead o
     assert.match(response.headers.get('content-type')||'',/^text\/html/i);
     const body=await response.text();
     assert.match(body,/Checkout could not be confirmed\./);
-    assert.match(body,/Request payment assistance/);
+    assert.match(body,/Email Evercraft for payment help/);
+    assert.doesNotMatch(body,/tel:\+15097590440|Call Evercraft/);
     assert.match(body,/Evercraft Payments/);
     assert.match(body,/Return to the offer/);
     assert.doesNotMatch(body,/evercraft_payments_checkout_not_ready|adapter_error|gate_key/);

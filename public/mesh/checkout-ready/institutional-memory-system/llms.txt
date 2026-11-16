@@ -1,0 +1,19 @@
+# Evercraft Institutional Memory
+Independent Evercraft commercial product | part of the Evercraft OS portfolio.
+Customer page: https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/institutional-memory-system/
+Product definition: https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/institutional-memory-system/product.json
+Exact Stripe SKU: Institutional Memory System
+Price: USD 1500 (one-time scoped service)
+Ideal buyer: Organizations losing process history, decision rationale and reusable operating knowledge
+Problem: Decisions and ownership disappear in handoffs, forcing teams to rediscover the same work.
+Promise: Keep the decisions, not just the files.
+Scoped deliverable: An agreed memory workflow, record schema, provenance and retrieval plan, and acceptance test or implementation artifact as contracted
+Required buyer inputs: One workflow or department, data rights, record ownership, security, retention and retrieval needs
+Agreement needed: Authorized data boundaries, named workflow, design vs implementation scope, tests and acceptance owner
+Not included: No entire-enterprise deployment for a fixed blanket scope, compliance certification, unrestricted private data transfer or guaranteed future AI recall
+Intent match examples:
+- institutional memory system for company
+- stop losing decisions during employee handoffs
+- document why business decisions were made
+
+Evercraft Payments is the canonical order-authority target; Systemia Stripe handles the existing exact-product checkout at https://buy.stripe.com/14AfZid6K54hfQ00E44AU06. Scope, capacity and timeline must be agreed before payment. Provider-paid receipts are reconciled manually. The public product and its checkout are not proof of a completed sale, automated fulfillment or production integration with Evercraft OS.

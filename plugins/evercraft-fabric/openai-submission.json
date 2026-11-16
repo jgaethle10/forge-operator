@@ -14,13 +14,13 @@
     "terms_url": "https://fabric.systemiacommandcenters.com/terms",
     "support_url": "https://fabric.systemiacommandcenters.com/support"
   },
-  "submission_state": "owned_public_fabric_live_platform_upload_pending",
+  "submission_state": "existing_public_listing_v1_0_6_publisher_reports_published",
   "public_directory_claim_allowed": false,
   "compatibility_transport": {
-    "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
-    "authority": "legacy_compatibility_transport_only",
+    "mcp": null,
+    "authority": "retired_no_legacy_endpoint",
     "owned_fabric_cutover_required": false,
-    "owned_fabric_cutover_gate": "verified_stable_yard_public_https_route_receipt",
+    "owned_fabric_cutover_gate": "owned_public_https_route_verified",
     "active": false
   },
   "owned_fabric_contract": {
@@ -91,5 +91,22 @@
     "recording_access": "public_link_reader",
     "notes": "Walkthrough demonstrates capability listing, natural-language routing to FindMyPart, capability-specific connection lookup, and read-only/non-transactional behavior. Canonical v1.0.6 metadata points to the independently verified owned Fabric public edge. The 1.0.6 private release was created specifically to clear stale ChatGPT connector binding/cache drift without changing authority or expanding tool scope."
   },
-  "package_version": "1.0.6"
+  "package_version": "1.0.6",
+  "existing_public_listing": {
+    "observed_in": "OpenAI Platform publisher dashboard screenshot supplied 2026-11-10",
+    "portal_version": "1.0.2",
+    "portal_directory_status": "Listed publicly",
+    "portal_owned_mcp_configured": true,
+    "portal_domain_verified": true,
+    "latest_portal_scan_no_findings": true,
+    "independent_directory_search": "not_confirmed",
+    "upgrade_version": "1.0.6",
+    "upgrade_submission_status": "not_confirmed",
+    "upgrade_publication_status": "publisher_reports_published_not_independently_verified",
+    "evidence_ref": "distribution/openai-plugin/public-listing-observation-2026-11-10.json",
+    "publisher_reported_latest_public_version": "1.0.6",
+    "publisher_report_date": "2026-11-11",
+    "publisher_report_evidence_ref": "distribution/openai-plugin/public-release-report-2026-11-11.json"
+  },
+  "public_directory_claim_scope": "publisher reported public v1.0.6; independent brand-blind discovery unverified"
 }

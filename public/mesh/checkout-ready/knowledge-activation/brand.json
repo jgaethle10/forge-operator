@@ -1,0 +1,55 @@
+{
+  "schema": "evercraft.product-brand-identity.v1",
+  "status": "creative_direction_live_in_owned_pages_not_trademark_clearance",
+  "product_slug": "knowledge-activation",
+  "imprint": "The Knowledge Desk",
+  "purpose": "Turn authorized scattered know-how into a practical reference the next teammate can actually use.",
+  "story": {
+    "origin_narrative": "Brand positioning story, not a claim about company founding history. The answer may already be written down, somewhere. The Knowledge Desk exists to bridge the distance between having information and knowing where to begin.",
+    "core_belief": "Useful knowledge is findable, attributable and transferable.",
+    "customer_emotion": "relief"
+  },
+  "signature_phrase": "Find the knowledge. Put it to work.",
+  "personality": {
+    "tone": "welcoming, editorial, orderly; explain rather than overwhelm",
+    "principles": [
+      "Start with approved sources",
+      "Avoid claims of automated ingestion",
+      "Make a useful bounded artifact"
+    ]
+  },
+  "design_system": {
+    "background": "#1c2431",
+    "panel": "#2c3949",
+    "ink": "#f8f3e9",
+    "muted": "#d2d7df",
+    "accent": "#c0d5fb",
+    "secondary": "#f3d9a2",
+    "mark": "indexed-pages",
+    "typography": "editorial serif accents with clean accessible sans body",
+    "motif": "index tabs, filing margins and card dividers"
+  },
+  "relationship": {
+    "front_of_house": "Product first",
+    "parent": "Evercraft OS",
+    "parent_visibility": "Small endorsement after the individual product story; never replace product identity",
+    "payment": "Original exact-price Systemia Stripe checkout only; no rebranding of Stripe product without separate approval"
+  },
+  "governance": {
+    "trademark_cleared": false,
+    "visual_identity_direction": "Custom CSS motif; not a registered logo or legal mark",
+    "live_traffic_claim": false,
+    "paid_sale_claim": false,
+    "founder_approved": false,
+    "founder_review_status": "not_reviewed",
+    "founder_approval_evidence": null,
+    "approval_ledger": "docs/branding/approvals/ledger.json",
+    "review_packet": null,
+    "production_brand_lock": false
+  },
+  "assets": {
+    "original_vector_emblem": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/knowledge-activation/brand-mark.svg",
+    "owned_css_stylesheet": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/brand-world.css",
+    "usage": "Emblem and palette are original working design directions. Not trademark cleared and not proof of external publication."
+  }
+}

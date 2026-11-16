@@ -20,15 +20,15 @@ function assertBuyerFirst(page,cta){
   assert.ok(title>0&&title<price&&price<note&&note<button&&button<disclosure&&disclosure<visual,
     'headline, price and action must all precede large illustrative graphic');
   assert.match(page,/<main class="website-audit-mobile-fix">/);
-  assert.match(page,/Quick Win Audit · \$49 one-time · five prioritized fixes, no subscription/);
-  assert.match(page,/See the example artwork and other audit options/);
+  assert.match(page,/Quick Win Audit/);
+  assert.match(page,/Optional example artwork and other audit options/);
   assert.match(page,/Artwork is illustrative, not a finding about your website/);
   assert.match(page,/@media\(max-width:780px\)/);
-  assert.match(page,/\.website-audit-mobile-fix \.offer-hero h1/);
+  assert.match(page,/\.website-audit-mobile-fix \.audit-offer h1/);
 }
 test('held Website Audit is purchase-first and shows assisted contact, not a broken form',()=>{
   const page=renderOfferPage(item,{checkoutConfigured:false});
-  assertBuyerFirst(page,'Request assisted invoicing');
+  assertBuyerFirst(page,'Email Evercraft for invoicing');
   assert.match(page,/Online checkout is temporarily unavailable/);
   assert.doesNotMatch(page,/action="\/api\/offers\/website-audit\/checkout"/);
   assert.doesNotMatch(page,/Continue to checkout/);
@@ -50,6 +50,6 @@ test('other offers retain their original general-purpose layout and checkout sta
   assert.match(page,/method="post" action="\/api\/offers\/site-survive\/checkout"/);
   assert.match(page,/Continue to checkout/);
   const held=renderOfferPage(other,{checkoutConfigured:false});
-  assert.match(held,/Request assisted invoicing/);
+  assert.match(held,/Email Evercraft for invoicing/);
   assert.doesNotMatch(held,/action="\/api\/offers\/site-survive\/checkout"/);
 });

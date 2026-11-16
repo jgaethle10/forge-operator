@@ -1,0 +1,53 @@
+{
+  "schema": "evercraft.journal.publication-receipt.v1",
+  "story_id": "journal:2026-11-15:nvidia-leadership-ai-infrastructure-concentration",
+  "slug": "nvidia-leadership-ai-infrastructure-concentration-2026",
+  "title": "NVIDIA Lost Its Founder-CEO. The AI Economy Has Bigger Questions.",
+  "published_at": "2026-11-16T02:00:17.787Z",
+  "built_at": "2026-11-16T05:10:17.390Z",
+  "canonical_url": "https://fabric.systemiacommandcenters.com/journal/nvidia-leadership-ai-infrastructure-concentration-2026/",
+  "clip_handoff_ref": "production/nvidia-leadership-ai-infrastructure-concentration-2026/clip-handoff.json",
+  "evidence_state": "verified_and_reported_public_sources",
+  "source_refs": [
+    "nvidia-sec-transition-2026-11-11",
+    "nvidia-ceo-transition-2026-11-12",
+    "nvidia-board-2026-11-08",
+    "nvidia-fy27q2",
+    "reuters-nvidia-transition-2026-11-12",
+    "reuters-bessent-2026-11-15",
+    "evercraft-original-system-map"
+  ],
+  "freshness_expires_at": "2026-11-18T02:00:17.787Z",
+  "editorial_gate": {
+    "status": "accepted",
+    "score": 10,
+    "checks": [
+      "primary_filing_reviewed",
+      "company_transition_reviewed",
+      "board_inquiry_qualified",
+      "reported_allegations_attributed",
+      "financial_metric_crosschecked",
+      "future_event_dated",
+      "causal_distinctions_checked",
+      "source_lineage_checked",
+      "original_visual_rights_checked",
+      "uncertainty_and_reader_review"
+    ]
+  },
+  "production_grade": {
+    "status": "accepted",
+    "hero_kind": "data_visualization",
+    "text_primary": false,
+    "note": "Original Evercraft-owned vector systems diagram in public/newsroom-assets; narrative is independently supported by primary filings and reporting."
+  },
+  "article_sha256": "fee0bf72f3c99a935c51f3d2c646dd93c5673a4af1890937c31b1987b9b6e497",
+  "fallen_brief_sha256": "f3354e830873749fc16e1abe3e868b8513adcd30b2655c44f4147d04ff4677db",
+  "machine_evidence_ref": null,
+  "machine_evidence_sha256": null,
+  "ranking_visuals": null,
+  "publisher": "evercraft-owned-static-journal-v1",
+  "publication_authority": true,
+  "publication_state": "live",
+  "live_edition_eligible": true,
+  "archive_reason": null
+}

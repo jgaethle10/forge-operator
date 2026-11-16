@@ -42,7 +42,7 @@ export function stageReports(reports) {
     const gate = reviewEvent(event);
     reviewQueue.push({index, event, reasons:gate.reasons});
     // Only non-sensitive records can advance to human review; none are published.
-    if (!gate.reasons.some(r=>["possible_operational_intelligence","precise_location_requires_review"].includes(r))) {
+    if (gate.reasons.length === 1 && gate.reasons[0] === "safety_approval_missing") {
       candidates.push({index, event, review_required:true});
     }
   }

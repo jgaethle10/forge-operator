@@ -44,6 +44,11 @@ const SPECS = Object.freeze({
     label: 'evercraft-clip',
     environment: 'live',
   }),
+  'linkedin-organization': Object.freeze({
+    provider: 'linkedin-organization',
+    label: 'evercraft-clip',
+    environment: 'live',
+  }),
   gemini: Object.freeze({
     provider: 'gemini',
     label: 'raven-inference',
@@ -164,12 +169,32 @@ export function normalizeProviderCredentialRequest(provider, body = {}) {
   }
 
   if (spec.provider === 'facebook-pages') {
+    const pageId = clean(body.page_id);
+    if (!/^[0-9]{5,30}$/.test(pageId)) {
+      throw new Error('facebook_page_id_invalid');
+    }
+    // The vault's stable credential reference is based on provider, environment
+    // and label. Page-scoped labels prevent sealing Page B from overwriting Page A.
+    // Never take the isolation label from an HTTP caller.
     return {
       provider: spec.provider,
-      environment: clean(body.environment) || spec.environment,
-      label: clean(body.label) || spec.label,
-      apiKeyId: clean(body.page_id),
+      environment: 'live',
+      label: 'evercraft-clip-page-' + pageId,
+      apiKeyId: pageId,
       apiSecret: clean(body.page_access_token),
+    };
+  }
+  if (spec.provider === 'linkedin-organization') {
+    const organizationId=clean(body.organization_id);
+    if (!/^[1-9][0-9]{1,19}$/.test(organizationId)) {
+      throw new Error('linkedin_organization_id_invalid');
+    }
+    return {
+      provider: spec.provider,
+      environment: 'live',
+      label: spec.label,
+      apiKeyId: 'urn:li:organization:' + organizationId,
+      apiSecret: clean(body.access_token),
     };
   }
 
