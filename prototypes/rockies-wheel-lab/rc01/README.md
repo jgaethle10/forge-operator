@@ -135,3 +135,14 @@ Cross-product behavior is unchanged: the FindMyPart local research note requires
 Technical limitations: the check digit catches many, not all, transcription errors; the concept code is neither a secure signature nor proof of merchant permission or fitment. The merchant must independently confirm every real part/vehicle detail. All formats remain an unverified illustrative prototype.
 
 Regression coverage includes 600 allowed appearance/interest combinations decoded end-to-end against the exact shopper encoder, rejection of corrupted codes, fail-closed source flags, and staged source parity. Read the final GitHub Actions receipts for the exact commit before claiming CI green.
+
+## RC11 | Merchant opens the exact illustrative customer look (2026-11-15)
+
+After the merchant loads an accepted short Wheel Lab code or imports the original JSON, the desk reveals a secondary **See this design on the concept car** link. It opens the current offline shopper preview in a new tab, with the shopper's exact wheel design, diameter, finish and illustrative car paint recreated through the shopper's own allowlisted URL settings. The real-world vehicle is not identified and **fitment is never implied**.
+
+- The merchant page starts with the link hidden. It cannot be opened from an empty or rejected concept, and Reset hides and clears the link. A malformed code leaves any previously accepted concept intact.
+- `visualPreviewHref` maps only supported enumerated appearance values into a fixed same-directory relative URL with four allowed query parameters: `paint`, `style`, `size`, `finish`. It never copies an imported URL, vehicle note, VIN, shop label, contact details, price, SKU or sourcing preference. A forged appearance fails closed.
+- In the **offline source**, the link opens `./index.html`; the first-party stage transform rewrites that one exact known `href` to `./shopper.html`, never to the review launcher. Both links use `target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer"`. Neither version sends the concept to a server.
+- New unit/regression checks exercise all 600 supported visual configurations and the two interest settings, invalid values, stale-link prevention, reset, and first-party source parity. The code itself stays a low-assurance appearance reference, not authorization or a tamper-proof identifier.
+
+Release decision is unchanged: this feature is committed only to the held draft PR; source tests or preview screenshots cannot substitute for Systemia admission, exact public publishing approval, independent hosted HTTPS canary, real merchant pilot, verified fitment and real settlement.
