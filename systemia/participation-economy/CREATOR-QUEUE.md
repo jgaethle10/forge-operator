@@ -32,3 +32,13 @@ Tenant refs, creator identity, and editorial decisions are caller-supplied. Hash
 6. Use production transactional storage with durable locking, backups and adversarial multi-host tests. Do not directly expose this local queue as a service.
 
 Issue: https://github.com/jgaethle10/forge-operator/issues/1998
+
+
+## Nov 15: restricted creator/editor access integration
+
+- \`creator-access.mjs\` verifies HMAC-SHA256 bearer capabilities with an exact issuer and audience, 15-minute maximum lifetime, tenant, subject, role and narrow scopes. It never issues credentials.
+- Callers cannot supply another tenant or creator identity to submit, read, review or withdraw through this interface. Reviewer actor is bound to signed subject; editor and creator roles remain separate.
+- It wraps the existing durable queue only, not the public media service, operator Home, authentication system, editorial attestation authority or payout system.
+- \`creator-access.test.mjs\` covers impersonation, expiry, signature tampering, audience separation, role/scope restriction, tenant isolation and withdrawal.
+- A real issuer must independently authenticate people, authorize reviewers, securely manage signing keys with rotation and revocation, and enforce rate limits and auditing. HMAC key custody is the responsibility of the service hosting this module.
+- **No public HTTP endpoint or public creator login is introduced.** A signed token alone is not proof that footage exists, a source is correct, a reviewer is impartial, or a payment has settled. Review records remain non-authoritative claims for publishing.
