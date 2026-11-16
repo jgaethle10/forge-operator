@@ -163,12 +163,25 @@
     paint(side);message("point"+side,"Marker: not selected");
     if(!file){message("status"+side,"No image loaded");return;}
     try{
-      if(!/\.png$/i.test(file.name)||file.type!=="image/png")
+      if(!/\.png$/i.test(file.name)||(file.type && file.type!=="image/png"))
         throw new Error("Use a lens-rectified PNG, not uncorrected JPEG/native footage");
       if(file.size<1||file.size>33554432)
         throw new Error("Rectified PNG must be between 1 byte and 32 MiB");
+      const pngHeader=new Uint8Array(await file.slice(0,24).arrayBuffer());
+      const sig=[137,80,78,71,13,10,26,10];
+      if(pngHeader.length!==24||sig.some((n,i)=>pngHeader[i]!==n)||
+        String.fromCharCode(...pngHeader.slice(12,16))!=="IHDR")
+        throw new Error("Invalid PNG signature or missing IHDR header");
+      const view=new DataView(pngHeader.buffer);
+      const declaredWidth=view.getUint32(16),declaredHeight=view.getUint32(20);
+      if(declaredWidth<2||declaredHeight<2||
+        declaredWidth>8192||declaredHeight>8192||declaredWidth*declaredHeight>30000000)
+        throw new Error("PNG is too large (max 8192/side, 30 megapixels)");
       message("status"+side,"Reading local PNG and calculating SHA-256...");
       const [bitmap,digest]=await Promise.all([createImageBitmap(file),sha256(file)]);
+      if(bitmap.width!==declaredWidth||bitmap.height!==declaredHeight){
+        bitmap.close();throw new Error("Decoded PNG dimensions disagree with source header");
+      }
       if(generation!==data.loadGeneration){bitmap.close();return;}
       if(bitmap.width<2||bitmap.height<2||bitmap.width>8192||bitmap.height>8192||
          bitmap.width*bitmap.height>30000000){
@@ -208,7 +221,7 @@
       const point=state[side].point;
       if(!point||!["ArrowLeft","ArrowRight","ArrowUp","ArrowDown"].includes(event.key))return;
       event.preventDefault();
-      const step=event.shiftKey?.1:1;
+      const step=event.shiftKey ? 0.1 : 1;
       const du=event.key==="ArrowLeft"?-step:event.key==="ArrowRight"?step:0;
       const dv=event.key==="ArrowUp"?-step:event.key==="ArrowDown"?step:0;
       setPoint(side,point.uPixels+du,point.vPixels+dv);
