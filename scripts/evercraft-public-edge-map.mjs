@@ -29,8 +29,8 @@ if (!['all','web','dns'].includes(scope)) {
 }
 
 const allMappings = [
-  { external: 80, internal: 18080, proto: 'TCP', desc: 'Evercraft Fabric HTTP', scope:'web', lifetime:86400, production:true }
-  { external: 443, internal: 8443, proto: 'TCP', desc: 'Evercraft Fabric HTTPS', scope:'web', lifetime:86400, production:true }
+  { external: 80, internal: 18080, proto: 'TCP', desc: 'Evercraft Fabric HTTP', scope:'web', lifetime:86400, production:true },
+  { external: 443, internal: 8443, proto: 'TCP', desc: 'Evercraft Fabric HTTPS', scope:'web', lifetime:86400, production:true },
   { external: 53, internal: 1053, proto: 'TCP', desc: 'Evercraft Edge authoritative DNS TCP', scope:'dns', lifetime:86400, production:true },
   { external: 53, internal: 1053, proto: 'UDP', desc: 'Evercraft Edge authoritative DNS UDP', scope:'dns', lifetime:86400, production:true },
   { external: 53053, internal: 1053, proto: 'TCP', desc: 'Evercraft Edge DNS diagnostic TCP', scope:'dns-diagnostic', lifetime:600, diagnostic:true },
