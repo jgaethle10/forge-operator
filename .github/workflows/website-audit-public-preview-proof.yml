@@ -1,0 +1,72 @@
+name: Website Audit Live Social Preview Proof
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/website-audit-public-preview-canary.mjs'
+      - 'tests/website-audit-public-preview-canary.test.mjs'
+      - '.github/workflows/website-audit-public-preview-proof.yml'
+      - 'systemia/mcp/fabric-public-site.mjs'
+      - '.github/workflows/evercraft-journal-pages.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/website-audit-public-preview-canary.mjs'
+      - 'tests/website-audit-public-preview-canary.test.mjs'
+      - '.github/workflows/website-audit-public-preview-proof.yml'
+      - 'systemia/mcp/fabric-public-site.mjs'
+      - '.github/workflows/evercraft-journal-pages.yml'
+  schedule:
+    - cron: '23 16 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: evercraft-website-audit-public-preview-proof
+  cancel-in-progress: false
+
+jobs:
+  website-audit-live-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test evidence and false-positive rejection
+        run: node --test tests/website-audit-public-preview-canary.test.mjs
+      - name: Diagnose public Fabric network path independently
+        if: always()
+        shell: bash
+        run: |
+          set +e
+          echo '=== DNS ANSWERS ==='
+          getent ahostsv4 fabric.systemiacommandcenters.com | head -n 8
+          echo '=== IPv4 PAGE REACHABILITY ==='
+          curl --ipv4 -L -sS -o /tmp/fabric-audit-page-4.html --max-time 12 \
+            -w 'http=%{http_code} remote_ip=%{remote_ip} total=%{time_total}\n' \
+            https://fabric.systemiacommandcenters.com/offers/website-audit
+          echo "curl_ipv4_exit=$?"
+          echo '=== IPv6 PAGE REACHABILITY ==='
+          curl --ipv6 -L -sS -o /tmp/fabric-audit-page-6.html --max-time 8 \
+            -w 'http=%{http_code} remote_ip=%{remote_ip} total=%{time_total}\n' \
+            https://fabric.systemiacommandcenters.com/offers/website-audit
+          echo "curl_ipv6_exit=$?"
+          echo '=== PRESERVE VALIDATED METADATA WHEN AVAILABLE ==='
+          if [ -s /tmp/fabric-audit-page-4.html ]; then
+            grep -oE '<meta[^>]+(og:image|twitter:card)[^>]*>' /tmp/fabric-audit-page-4.html | head -n 10
+          fi
+      - name: Probe public social metadata and real PNG
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            # PRs must report production truth, not mistake an unmerged design for a deployment.
+            node scripts/website-audit-public-preview-canary.mjs
+          else
+            # Merged and scheduled checks must fail if the buyer-facing preview regresses.
+            node scripts/website-audit-public-preview-canary.mjs --strict
+          fi
