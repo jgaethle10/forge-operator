@@ -42,13 +42,23 @@ jobs:
             "f48aca43294a9ba1ea3eb7b1d0a0b2d595c480e8c65003e410247b9884820ddd" \
             "$RUNNER_TEMP/evercraft-pilot/impeccable-linux-x64" | sha256sum --check
           chmod 755 "$RUNNER_TEMP/evercraft-pilot/impeccable-linux-x64"
+      - name: Pin revised first-party Work Saban source for before-after comparison
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fL --retry 2 --connect-timeout 10 --max-time 40 \
+            "https://raw.githubusercontent.com/jgaethle10/forge-operator/f910f5faf51e1535a6d5cea4d3b1b73076e33e0c/public/work-saban/index.html" \
+            -o "$RUNNER_TEMP/evercraft-pilot/stage/work_saban_after.html"
+          actual="$(git hash-object "$RUNNER_TEMP/evercraft-pilot/stage/work_saban_after.html")"
+          test "$actual" = "001b7f53646c52484a19f045c8ab08a689f5305e"
+          echo "Verified revised Work Saban source blob $actual"
       - name: Run detector offline in read-only, least-privilege container
         shell: bash
         run: |
           set -euo pipefail
           docker pull ubuntu:24.04
           root="$RUNNER_TEMP/evercraft-pilot"
-          for item in headquarters_html headquarters_css work_saban_html synthetic_defects; do
+          for item in headquarters_html headquarters_css work_saban_html work_saban_after synthetic_defects; do
             extension=html
             if [ "$item" = headquarters_css ]; then extension=css; fi
             set +e
