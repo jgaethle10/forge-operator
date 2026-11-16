@@ -45,6 +45,30 @@ test('seven scoped services are marketable now without falsely claiming complete
  assert.match(page,/All seven original service checkouts are available for customer inquiries now/);
  assert.equal((page.match(/secure checkout ↗/g)||[]).length,7);
 });
+test('latest independent Nov 15 buyer-form proof cannot impersonate an order or native payment release',()=>{
+ const proof=manifest.latest_independent_buyer_browser_check;
+ assert.equal(proof.observed_at,'2026-11-15T21:23:19.769Z');
+ assert.equal(proof.observed_date_pacific,'2026-11-15');
+ assert.equal(proof.state,'ALL_SEVEN_READ_ONLY_FORMS_VERIFIED');
+ assert.equal(proof.verified_count,7);
+ assert.equal(proof.total,manifest.links.length);
+ assert.equal(proof.payment_attempted,false);
+ assert.equal(proof.customer_data_entered,false);
+ assert.equal(proof.form_submitted,false);
+ assert.equal(proof.orders_created,false);
+ assert.equal(proof.payment_received_verified,false);
+ assert.equal(proof.fulfillment_verified,false);
+ assert.equal(proof.manual_reconciliation_required,true);
+ const readiness=JSON.parse(readFileSync(new URL('../public/.well-known/evercraft-commercial-readiness.json',import.meta.url),'utf8'));
+ assert.equal(readiness.commercial_checkout_ready,false);
+ assert.equal(readiness.may_claim_verified_revenue,false);
+ assert.equal(readiness.separate_systemia_hosted_stripe.automated_browser_checked_at,proof.observed_at);
+ assert.equal(readiness.separate_systemia_hosted_stripe.verified_payment_observed,false);
+ const html=get('checkout-ready/index.html');
+ assert.match(html,/data-checkout-browser-proof="2026-11-15"/);
+ assert.ok(html.includes(proof.evidence_url));
+ assert.match(html,/No card was entered, no payment was submitted/);
+});
 test('no unrelated $19, $49 or PDF product is passed through existing service links',()=>{
  assert.deepEqual(manifest.forbidden_substitutions,['Garage Field Notes PDF products','FindMyPart Quick Hunt','Website Quick Win Audit']);
  assert.ok(manifest.links.every(x=>![700,900,1900,4900].includes(x.amount_cents)));
