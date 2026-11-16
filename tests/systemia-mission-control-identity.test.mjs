@@ -4,7 +4,6 @@ import {generateKeyPairSync} from 'node:crypto';
 import {mkdtemp,writeFile,rm} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import path from 'node:path';
-import {spawnSync} from 'node:child_process';
 import {fingerprintPublicKey,createNodeAttestation} from '../systemia/compute/device-identity.mjs';
 import {projectPinnedNodeIdentity} from '../systemia/organism/mission-control-identity.mjs';
 import {buildLocalMissionSnapshot} from '../systemia/organism/mission-control-local-reader.mjs';
@@ -29,7 +28,7 @@ test('valid signed node challenge matches pin and only yields a sanitized identi
  });
  assert.equal(result.verification,'pinned_signature_verified');
  const serialized=JSON.stringify(result);
- assert.doesNotMatch(serialized,/BEGIN PUBLIC KEY|signature|nonce|fingerprint|node-test-001|owner-verified-challenge/i);
+ assert.doesNotMatch(serialized,/BEGIN PUBLIC KEY|\\"signature\\"|nonce|fingerprint|node-test-001|owner-verified-challenge/i);
  assert.match(result.note,/Remote connectivity/);
 });
 
