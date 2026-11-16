@@ -27,33 +27,73 @@ export function renderVerifiedSabanTransitionView(raw){
   const rows=raw.trimEnd().split('\n').map(line=>JSON.parse(line));
   const source=rows[0].source_class;
   if(rows.some(e=>e.source_class!==source))throw new Error('Mixed journal source classes');
-  const blocks=rows.map((row,i)=>{
-    const bar=STATES.map(s=>'<span class="mini '+s+'" style="flex:'+row.counts[s]+' 0 0" title="'+s+' '+row.counts[s]+'"></span>').join('');
-    const values=STATES.map(s=>'<div class="cell"><small>'+s.replace('_',' ')+'</small><strong>'+row.counts[s]+'</strong></div>').join('');
-    return '<article class="event"><div class="rail"><span>'+String(row.seq).padStart(2,'0')+'</span><i></i></div>'+
-      '<div class="event-body"><div class="event-head"><div><span class="flag '+row.kind+'">'+FLAGS[row.kind]+'</span><h2>'+LABELS[row.kind]+'</h2></div><time>'+row.at+'</time></div>'+
-      '<div class="stack" role="img" aria-label="Queued '+row.counts.queued+', assigned '+row.counts.leased+
-      ', completed '+row.counts.completed+', needs attention '+row.counts.dead_letter+'">'+bar+'</div>'+
-      '<div class="values">'+values+'</div></div></article>';
-  }).join('');
-  const mode=source==='synthetic_test'?'SYNTHETIC TEST / NOT LIVE':'PRIVATE SCHEDULER OBSERVATIONS';
+
+  // A compact decision surface, not 25 full-size repeated cards.
+  // Every displayed number is derived from the latest verified local entry.
+  const latest=rows.at(-1);
+  const state=latest.counts;
+  const outstanding=state.queued+state.leased+state.dead_letter;
+  const mode=source==='synthetic_test'?'SYNTHETIC TEST / NOT LIVE':'PRIVATE LOCAL OBSERVATIONS';
+  const guidance=state.dead_letter>0?
+    state.dead_letter+' job'+(state.dead_letter===1?' needs':'s need')+
+      ' review. Inspect the authorized Saban error records privately before releasing work.':
+    state.queued>0?
+      state.queued+' job'+(state.queued===1?' remains':'s remain')+
+      ' queued in the last observation. Inspect the scheduler, not a simulated progress animation.':
+    state.leased>0?
+      state.leased+' job'+(state.leased===1?' was':'s were')+
+      ' assigned in the last observation. Check lease freshness before assuming work is still running.':
+    'No outstanding jobs in the final observation. Check actual output receipts before customer delivery.';
+  const boxes=[
+    ['completed','Completed',state.completed],
+    ['dead_letter','Needs review',state.dead_letter],
+    ['queued','Waiting',state.queued],
+    ['leased','Assigned',state.leased]
+  ].map(([kind,label,count])=>'<div class="metric '+kind+'"><span>'+label+
+    '</span><strong>'+count.toLocaleString('en-US')+'</strong></div>').join('');
+  const compact=rows.slice(-4).reverse().map(row=>
+    '<li class="recent-event"><span class="recent-mark '+row.kind+'"></span>'+
+      '<span class="recent-copy"><strong>'+LABELS[row.kind]+'</strong>'+
+      '<small>Recorded observation '+row.seq+' · '+row.at.slice(11,19)+' UTC</small></span>'+
+      '<span class="recent-count">'+row.counts.completed+' done</span></li>'
+  ).join('');
+  const history=rows.map(row=>
+    '<li class="history-event"><b>#'+String(row.seq).padStart(2,'0')+'</b>'+
+      '<span>'+LABELS[row.kind]+'</span><time>'+row.at.slice(11,19)+' UTC</time>'+
+      '<small>Q '+row.counts.queued+' · A '+row.counts.leased+
+      ' · C '+row.counts.completed+' · R '+row.counts.dead_letter+'</small></li>'
+  ).join('');
   return '<!doctype html><html lang="en"><head><meta charset="utf-8">'+
     '<meta name="viewport" content="width=device-width,initial-scale=1">'+
     '<meta name="robots" content="noindex,nofollow"><meta name="referrer" content="no-referrer">'+
     '<meta http-equiv="Content-Security-Policy" content="default-src &#39;none&#39;; style-src &#39;unsafe-inline&#39;; base-uri &#39;none&#39;; form-action &#39;none&#39;">'+
-    '<title>Evercraft Saban / Verified Local Transitions</title><style>'+
-    ':root{color-scheme:dark}*{box-sizing:border-box}body{margin:0;background:#111014;color:#f9f6f8;font:15px/1.55 system-ui,-apple-system,Segoe UI,sans-serif}main{max-width:1080px;margin:auto;padding:clamp(19px,5vw,64px)}'+
-    '.top{display:flex;align-items:center;justify-content:space-between;gap:13px;flex-wrap:wrap;padding-bottom:23px;border-bottom:1px solid #36313a;font-weight:850;letter-spacing:-.03em}.top em{font-style:normal;color:#f16b87}.mode{font:700 10px ui-monospace,monospace;color:#f5c1cd;border:1px solid #7c4154;border-radius:20px;padding:8px 12px}'+
-    '.hero{padding:48px 0 32px}.hero small{color:#f48da2;font:750 12px ui-monospace,monospace;letter-spacing:.1em}.hero h1{font-size:clamp(42px,7vw,86px);line-height:1;letter-spacing:-.075em;margin:16px 0 20px}.hero h1 span{color:#f38ca6}.hero p{max-width:700px;color:#bfb5bf;font-size:14px}.summary{display:flex;gap:13px;flex-wrap:wrap;margin-top:25px}.summary div{background:#211920;padding:11px 15px;border:1px solid #4b3540;border-radius:10px;font-size:12px}.summary strong{color:#f9b1c1}'+
-    '.event{display:grid;grid-template-columns:45px minmax(0,1fr);gap:14px;margin-bottom:17px}.rail{display:flex;flex-direction:column;align-items:center;gap:8px;font:750 12px ui-monospace,monospace;color:#f18ba5}.rail span{width:37px;height:37px;border:1px solid #9f4d60;border-radius:50%;display:grid;place-items:center}.rail i{width:1px;background:linear-gradient(#9f4d60,#34303b);flex:1}.event-body{background:linear-gradient(115deg,#211a22,#17151b);border:1px solid #453744;border-radius:17px;padding:25px}.event-head{display:flex;justify-content:space-between;gap:12px;align-items:start;flex-wrap:wrap}.event-head h2{font-size:24px;letter-spacing:-.05em;line-height:1.1;margin:9px 0 0}.event-head time{color:#bdb1bd;font:11px ui-monospace,monospace;overflow-wrap:anywhere}.flag{font:800 10px ui-monospace,monospace;letter-spacing:.1em;color:#f19aaf}.flag.completed{color:#8de4ca}.flag.leased{color:#fac894}.flag.dead_letter{color:#ff98ac}'+
-    '.stack{display:flex;gap:3px;min-height:11px;background:#363039;border-radius:12px;overflow:hidden;margin:26px 0 18px}.mini{display:block;min-width:0}.mini.queued{background:#8b8798}.mini.leased{background:#f0b679}.mini.completed{background:#76cbb3}.mini.dead_letter{background:#f26d86}.values{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}.cell small{font:650 10px ui-monospace,monospace;color:#bdb1bd;text-transform:uppercase;display:block}.cell strong{font:800 22px ui-monospace,monospace;font-variant-numeric:tabular-nums}.footer{margin:28px 0 0;padding:24px 0;border-top:1px solid #443742;color:#b6aeb7;font-size:12px}'+
-    '@media(max-width:560px){.event{grid-template-columns:30px minmax(0,1fr);gap:7px}.rail span{width:30px;height:30px;font-size:10px}.event-body{padding:17px 15px}.values{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:13px}.hero{padding-top:37px}.event-head h2{font-size:21px}}'+
-    '</style></head><body><main><header class="top"><div>EVERCRAFT <em>/</em> SABAN</div><span class="mode">'+mode+'</span></header>'+
-    '<section class="hero"><small>GRAPHICS COMMAND / OBSERVED TRANSITIONS</small><h1>The work.<br><span>In sequence.</span></h1>'+
-    '<p>Recorded state changes emitted by the local Saban scheduler. Aggregate counts only, with a locally checkable hash chain. This is not independent attestation, a live dashboard, or a complete history of events before or outside this capture.</p>'+
-    '<div class="summary"><div>OBSERVATIONS <strong>'+check.entries+'</strong></div>'+
-    '<div>CHAIN <strong>LOCAL SHA-256</strong></div><div>PUBLICATION <strong>DISABLED</strong></div></div></section>'+
-    blocks+'<footer class="footer">The hash chain detects some edits to this local file, but it does not prove who wrote the entries or verify real-world completion. Private source data and worker identifiers are excluded. Do not publish this report or interpret it as an independently authenticated audit.</footer></main></body></html>';
+    '<title>Evercraft Saban / Work Review</title><style>'+
+    ':root{color-scheme:dark;--bg:#111014;--ink:#f9f6f8;--muted:#b9b0bc;--hair:#403541;--accent:#f77d97}'+
+    '*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}'+
+    'main{max-width:1000px;margin:auto;padding:clamp(18px,4vw,50px)}.top{display:flex;justify-content:space-between;align-items:center;gap:13px;flex-wrap:wrap;border-bottom:1px solid var(--hair);padding-bottom:17px;font-size:15px;font-weight:850;letter-spacing:-.02em}'+
+    '.brand em{font-style:normal;color:var(--accent)}.mode{font:700 10px/1.5 ui-monospace,monospace;color:#f3bac7;border:1px solid #81475b;border-radius:20px;padding:6px 10px}.hero{padding:30px 0 19px}'+
+    '.eyebrow{font:750 11px ui-monospace,monospace;letter-spacing:.08em;color:#ef9aaf}.hero h1{font-size:clamp(37px,6vw,62px);line-height:1.06;letter-spacing:-.065em;margin:12px 0 13px}.hero h1 span{color:var(--accent)}'+
+    '.hero p{margin:0;max-width:630px;color:var(--muted);font-size:13px}.hero .context{margin-top:12px;font:700 11px ui-monospace,monospace;color:#d5c7d0}'+
+    '.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.metric{min-width:0;background:linear-gradient(145deg,#252027,#1a181e);border:1px solid #4a3846;border-radius:14px;padding:17px 18px}.metric>span{display:block;font-size:12px;color:#c8c0c9}.metric strong{display:block;font:850 clamp(29px,5vw,49px) system-ui,sans-serif;letter-spacing:-.075em;font-variant-numeric:tabular-nums;margin-top:7px}.metric.completed{border-top:3px solid #8de3c8}.metric.dead_letter{border-top:3px solid #f27b95}.metric.queued{border-top:3px solid #9492a1}.metric.leased{border-top:3px solid #eabb88}'+
+    '.action{margin:16px 0 25px;border:1px solid #7d495a;border-left:4px solid var(--accent);background:#291c24;border-radius:12px;padding:17px 19px}.action strong{font:800 12px ui-monospace,monospace;color:#f6aebf;letter-spacing:.07em}.action p{font-size:13px;line-height:1.55;margin:7px 0 0;color:#f1e4e9}'+
+    '.section-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:0 0 11px}.section-head h2{font-size:19px;letter-spacing:-.04em;margin:0}.section-head span{color:var(--muted);font:600 11px ui-monospace,monospace}'+
+    '.recent-list,.history-list{list-style:none;margin:0;padding:0}.recent-event{background:#1c191f;border:1px solid #3f3540;padding:12px 16px;border-radius:10px;display:flex;gap:12px;align-items:center;margin-bottom:7px}'+
+    '.recent-mark{width:9px;height:9px;flex:none;background:#f3a1b3;border-radius:50%}.recent-mark.completed{background:#8de3c8}.recent-mark.leased{background:#eabb88}.recent-mark.dead_letter{background:#f27b95}'+
+    '.recent-copy{flex:1;min-width:0}.recent-copy strong,.recent-copy small{display:block}.recent-copy strong{font-size:13px}.recent-copy small{color:var(--muted);font-size:11px;margin-top:2px}.recent-count{font:700 11px ui-monospace,monospace;color:#d8c2c9;white-space:nowrap}'+
+    '.history{margin-top:23px;border:1px solid #53424f;background:#1c1920;border-radius:12px;overflow:hidden}.history summary{cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:56px;padding:15px 17px;font-weight:750;font-size:13px}.history summary::-webkit-details-marker{display:none}.history summary span{color:#f6a7b9;font:750 11px ui-monospace,monospace}.history[open] summary{border-bottom:1px solid #483b47}.history-list{padding:10px 15px 16px;max-height:480px;overflow:auto}.history-event{display:grid;grid-template-columns:42px minmax(0,1fr) 88px;column-gap:12px;row-gap:2px;align-items:center;padding:9px 4px;border-bottom:1px solid #413640;font-size:12px}.history-event b{color:#e7a1b0;font:750 11px ui-monospace,monospace}.history-event time{font:11px ui-monospace,monospace;color:#cec4ce;text-align:right}.history-event small{grid-column:2/-1;color:#a99daa;font:10px ui-monospace,monospace}'+
+    '.footer{margin-top:22px;border-top:1px solid #463945;padding-top:17px;color:#aaa0ac;font-size:11px;max-width:780px}.footnote{color:#cdbfc8}'+
+    '@media(max-width:650px){.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.metric{padding:15px}.metric strong{font-size:38px}.hero{padding:27px 0 18px}.hero h1{font-size:41px}.recent-event{padding:11px 12px}.history-list{padding:8px 10px 13px}.mode{font-size:9px}}'+
+    '</style></head><body><main><header class="top"><div class="brand">EVERCRAFT <em>/</em> SABAN</div><span class="mode">'+mode+'</span></header>'+
+    '<section class="hero"><span class="eyebrow">GRAPHICS COMMAND · PRIVATE OPERATIONS REVIEW</span>'+
+    '<h1>The work.<br><span>At a glance.</span></h1>'+
+    '<p>Recorded scheduler observations, not a live control room. Start with the outcome, then open the evidence only when you need it.</p>'+
+    '<div class="context">'+check.entries.toLocaleString('en-US')+' recorded transitions · Local hash chain checked</div></section>'+
+    '<section class="metrics" aria-label="Latest recorded job counts">'+boxes+'</section>'+
+    '<section class="action" aria-label="Next action"><strong>WHAT TO DO NEXT</strong><p>'+guidance+'</p></section>'+
+    '<section aria-label="Recent scheduler observations"><div class="section-head"><h2>Recent activity</h2><span>Last '+Math.min(4,rows.length)+' of '+check.entries+'</span></div><ol class="recent-list">'+compact+'</ol></section>'+
+    '<details class="history"><summary>Inspect all '+check.entries+' recorded transitions <span>EXPAND HISTORY +</span></summary><ol class="history-list">'+history+'</ol></details>'+
+    '<footer class="footer"><strong class="footnote">Verification boundary:</strong> Local SHA-256 chain only. It does not prove who recorded the events or independently verify job completion. Intermediate events outside this capture may be missing. No customer information, agent identities or private work contents are included. Not for publication or customer delivery.</footer>'+
+    '</main></body></html>';
 }
 export function createPrivateTransitionReview({directory}={}){
   if(typeof directory!=='string'||!path.isAbsolute(directory))
