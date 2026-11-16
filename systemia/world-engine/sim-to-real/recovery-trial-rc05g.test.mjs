@@ -53,3 +53,12 @@ test('RC05G rejects invalid trial parameters and integrity corruption',()=>{
   r.scores.recovery.collisions+=1;
   assert.equal(verifyRecoveryTrial(r),false);
 });
+
+test('RC05G native receipt does not omit hazard-latch hold and cancellation counts',()=>{
+  const ep=runReactiveEpisode({seed:51,maxTicks:200,controllerMode:'observed-goal-recovery'});
+  const observedHolds=ep.frames.filter(f=>f.latchDiagnostics?.phase==='hold').length;
+  assert.equal(ep.outcome.latchedHoldTicks,observedHolds);
+  assert.equal(typeof ep.outcome.modeledCanceledCommands,'number');
+  assert.ok(ep.outcome.modelledCanceledCommands===undefined);
+  assert.ok(ep.outcome.modeledCanceledCommands>=0);
+});
