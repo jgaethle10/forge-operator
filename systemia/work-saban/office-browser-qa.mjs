@@ -78,6 +78,8 @@ async function viewport(send,{width,height,mobile,label,out}){
   assert(loaded.rig,'Owned camera did not load');
   assert.equal(loaded.desks,6);
   assert(loaded.shown,'CSS3D office remained hidden');
+  // Let the layout's 3D class and ResizeObserver settle before testing fit.
+  await sleep(180);
   const initialFit=await js(send,"(()=>{const u=window.WorkSaban3D,s=document.getElementById('office-scene'),bar=document.getElementById('office-camera-toolbar'),r=s.getBoundingClientRect(),expected=window.EvercraftOfficeFraming.fit({width:r.width,height:r.height});const view=document.getElementById('spatial-viewport');const vp=view.getBoundingClientRect();const actors=[...document.querySelectorAll('.spatial-agent .spatial-person')];const centers=actors.map(x=>{const b=x.getBoundingClientRect();return {x:b.x+b.width/2,y:b.y+b.height/2}});return {width:r.width,height:r.height,zoom:u.getCamera().zoom,expected:expected.zoom,auto:u.isAutoFraming(),toolbarVisible:!bar.hidden,toolbarOutside:bar.getBoundingClientRect().top>=r.bottom-2,cameraButtonsInScene:view.querySelectorAll('.spatial-control').length,actorsVisible:centers.filter(p=>p.x>=vp.left&&p.x<=vp.right&&p.y>=vp.top&&p.y<=vp.bottom).length,totalActors:actors.length};})()");
   assert(initialFit.width>0&&initialFit.height>0,'3D viewport must have dimensions');
   assert.equal(initialFit.zoom,initialFit.expected,'Initial camera uses measured scene, not browser width');
