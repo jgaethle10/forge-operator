@@ -53,8 +53,24 @@ function record(name,value){
   const detection=object(name+".detection",r.detection);
   const verified=rectifiedPixelToEnuBearing({camera,detection});
   const source=cleanSource(r.source,camera);
+  // Whitelist only the parameters used by the geometry engine. Never copy
+  // arbitrary metadata, private notes, tokens or unrelated camera fields
+  // from an imported file into an exported measurement packet.
+  const safeCamera={
+    sensorId:camera.sensorId,
+    observerMeters:{
+      x:camera.observerMeters.x,y:camera.observerMeters.y,z:camera.observerMeters.z
+    },
+    imageWidthPixels:camera.imageWidthPixels,
+    imageHeightPixels:camera.imageHeightPixels,
+    fxPixels:camera.fxPixels,fyPixels:camera.fyPixels,
+    cxPixels:camera.cxPixels,cyPixels:camera.cyPixels,
+    skewPixels:camera.skewPixels===undefined?0:camera.skewPixels,
+    rectifiedImage:true,
+    rotationCameraToEnu:camera.rotationCameraToEnu.map(row=>row.slice())
+  };
   return {
-    measurement:{camera,detection:{
+    measurement:{camera:safeCamera,detection:{
       uPixels:finite(name+".uPixels",detection.uPixels),
       vPixels:finite(name+".vPixels",detection.vPixels),
       captureEpochMilliseconds:detection.captureEpochMilliseconds
