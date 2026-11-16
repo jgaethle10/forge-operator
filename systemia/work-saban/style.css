@@ -740,3 +740,116 @@ html.office-observe-open,body.office-observe-open{overflow:hidden;height:100%}
     width:100%;text-align:center;margin-left:0;
   }
 }
+
+
+/* Crew-first camera: keep the characters, not control panels, in the viewport. */
+.office-camera-toolbar{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:9px;padding:9px 12px;background:#0d2035;
+  border-top:1px solid #35516c;border-bottom:1px solid #35516c;
+}
+.office-camera-toolbar[hidden]{display:none!important}
+.office-camera-toolbar .spatial-camera-primary{
+  display:flex;flex-wrap:nowrap;align-items:center;gap:7px;min-width:0;
+}
+.office-camera-toolbar .spatial-control{
+  flex:0 0 auto;min-width:41px;min-height:42px;
+  padding:6px 10px;background:#223d56;border:1px solid #476d8a;
+  border-radius:9px;font-size:18px;cursor:pointer;touch-action:manipulation;
+}
+.office-camera-toolbar .spatial-control[aria-label="Fit whole crew"]{
+  padding:8px 14px;font-size:11px;letter-spacing:.04em;
+  font-weight:900;background:#244f60;color:#d3fcf5;border-color:#679b9b;
+}
+.office-camera-toolbar .spatial-camera-more{
+  flex:0 0 auto;position:relative;margin:0;
+}
+.office-camera-toolbar .spatial-camera-more-label{
+  display:flex;align-items:center;justify-content:center;
+  min-height:42px;padding:5px 11px;border-radius:9px;
+  color:#cbdcec;background:#142b41;border:1px solid #45637d;
+  font-size:11px;font-weight:800;cursor:pointer;list-style:none;
+}
+.office-camera-toolbar .spatial-camera-more-label::-webkit-details-marker{display:none}
+.office-camera-toolbar .spatial-camera-more-label:focus-visible,
+.office-camera-toolbar .spatial-control:focus-visible{
+  outline:3px solid #a2eff7;outline-offset:2px;
+}
+.office-camera-toolbar .spatial-camera-more[open] .spatial-controls{
+  display:flex;gap:7px;flex-wrap:wrap;justify-content:center;
+  padding:8px 0 0;background:transparent;
+}
+.office-camera-toolbar .spatial-controls{
+  display:none;pointer-events:auto;
+}
+.office-camera-toolbar .spatial-camera-more[open]{
+  width:auto;max-width:100%;
+}
+/* Legible and unobtrusive informational chips, not giant text across faces. */
+.spatial-overlay{padding:10px;gap:3px;justify-content:flex-start}
+.spatial-orbit-label{
+  align-self:start;max-width:180px;
+  margin:0;padding:5px 8px;font-size:9px;
+  letter-spacing:.025em;border-radius:7px;
+  color:#9ec1d6;background:#081a2ed6;border-color:#385d78;
+}
+.spatial-motion-disclosure{
+  align-self:start;max-width:220px;margin:2px 0 0;
+  padding:5px 8px;font-size:8px;line-height:1.2;
+  letter-spacing:.035em;border-radius:7px;
+  color:#afd2df;background:#08192bba;border-color:#244761;
+}
+@media(max-width:650px){
+  .office-camera-toolbar{padding:7px 8px;gap:6px;flex-wrap:wrap;justify-content:center}
+  .office-camera-toolbar .spatial-camera-primary{gap:6px;justify-content:center}
+  .office-camera-toolbar .spatial-control{min-width:40px;min-height:41px;padding:5px 9px}
+  .office-camera-toolbar .spatial-control[aria-label="Fit whole crew"]{
+    padding:6px 10px;font-size:10px;
+  }
+  .office-camera-toolbar .spatial-camera-more{flex:1 0 100%}
+  .office-camera-toolbar .spatial-camera-more-label{
+    min-height:31px;padding:4px 9px;font-size:10px;
+  }
+  .spatial-orbit-label{max-width:125px;font-size:8px}
+  .spatial-motion-disclosure{max-width:170px;font-size:7px}
+}
+@media(max-width:360px){
+  .office-camera-toolbar .spatial-camera-primary{width:100%;justify-content:space-between}
+  .office-camera-toolbar .spatial-control{min-width:36px;padding:5px 7px}
+}
+
+
+/* Browser-reviewed stage cleanup: keep original truth text in the footer and
+   viewport accessibility label. No instructional plaque covers a character. */
+.spatial-viewport .spatial-orbit-label,
+.spatial-viewport .spatial-motion-disclosure{display:none!important}
+.office-bottom .office-motion-note{
+  flex:1 0 100%;display:block;margin-top:4px;
+  padding-top:9px;border-top:1px solid #263b57;
+  color:#88acc1;font-size:9px;font-weight:700;line-height:1.35;
+  letter-spacing:.035em;text-align:center;
+}
+@media(max-width:650px){
+  .office-bottom .office-motion-note{font-size:8px;line-height:1.4}
+}
+
+
+/* Mobile wardrobe: both selectors on one compact row, not giant stacked bars. */
+@media(max-width:650px){
+  .office-costume-toolbar{padding:6px 8px}
+  .office-costume-toolbar .spatial-costume-bar{
+    display:flex;flex-wrap:wrap;align-items:center;
+    width:100%;justify-content:space-between;column-gap:6px;row-gap:4px;
+  }
+  .office-costume-toolbar .spatial-costume-choice{
+    flex:1 1 calc(50% - 3px);width:calc(50% - 3px);
+    min-width:0;max-width:calc(50% - 3px);
+    min-height:37px;padding:6px 5px;
+    font-size:9px;letter-spacing:.02em;white-space:nowrap;overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .office-costume-toolbar .spatial-costume-caption{
+    margin:0;max-width:none;width:100%;
+    text-align:center;font-size:7px;line-height:1.2;
+  }
+}

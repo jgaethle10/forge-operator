@@ -48,10 +48,12 @@ class Element {
 const scene=new Element('div');scene.id='office-scene';
 const toggle=new Element('button');toggle.id='office-3d-toggle';
 const costumeMount=new Element('div');costumeMount.id='office-costume-toolbar';costumeMount.hidden=true;
+const cameraMount=new Element('div');cameraMount.id='office-camera-toolbar';cameraMount.hidden=true;
 const doc={
   createElement:tag=>new Element(tag),
   getElementById:(id)=>id==='office-scene'?scene:id==='office-3d-toggle'?toggle:
-      id==='office-costume-toolbar'?costumeMount:scene.querySelector('#'+id)
+      id==='office-costume-toolbar'?costumeMount:
+      id==='office-camera-toolbar'?cameraMount:scene.querySelector('#'+id)
 };
 let clock=0,frameId=0;
 const frames=new Map();
@@ -97,6 +99,14 @@ assert(role,'agent desk rendered');
 assert.equal(scene.querySelector('.spatial-world')!==null,true,'spatial geometry rendered');
 const all=documentWalk(scene).filter(x=>x.className==='spatial-agent');
 assert.equal(all.length,6);
+assert.equal(cameraMount.hidden,false,'compact camera controls are available outside the viewing stage');
+assert.equal(documentWalk(scene).filter(x=>x.className==='spatial-controls').length,0,
+  'full camera controls must never cover the character stage');
+const primary=documentWalk(cameraMount).find(x=>x.className==='spatial-camera-primary');
+const fitButton=documentWalk(primary).find(x=>x.getAttribute('aria-label')==='Fit whole crew');
+assert(fitButton,'whole team framing has a discoverable FIT control');
+assert.equal(documentWalk(cameraMount).filter(x=>x.className==='spatial-camera-more').length,1,
+  'secondary camera controls collapse behind More views');
 assert.equal(ui.getCostumes().pack,'classic','the original coworkers are the default');
 const wardrobeButtons=documentWalk(costumeMount).filter(x=>x.className==='spatial-costume-choice');
 assert.equal(costumeMount.hidden,false,'costume controls are visible above the 3D scene');
@@ -164,7 +174,10 @@ const keydown=viewport.listeners.keydown[0];
 for(let i=0;i<30;i++)keydown({key:'+',preventDefault(){}});
 assert.equal(ui.getCamera().zoom,1.42,'upper zoom bound');
 for(let i=0;i<60;i++)keydown({key:'-',preventDefault(){}});
-assert.equal(ui.getCamera().zoom,0.35,'lower zoom bound');
+assert.equal(ui.getCamera().zoom,0.20,'lower zoom bound for cramped phone scenes');
+fitButton.listeners.click[0]({stopPropagation(){}});
+assert.equal(ui.isAutoFraming(),true,'FIT re-enables responsive camera framing');
+assert.equal(ui.getCamera().zoom,.72,'DOM-less harness uses original safe fallback framing');
 keydown({key:'q',preventDefault(){}});
 assert(ui.getCamera().yaw<0);
 advanceFrames();
@@ -188,10 +201,12 @@ viewport.listeners.pointerup[0]({pointerId:11});
 viewport.listeners.pointerup[0]({pointerId:12});
 ui.setEnabled(false);
 assert.equal(viewport.hidden,true);
+assert.equal(cameraMount.hidden,true,'camera controls hide with 3D view');
 assert.equal(costumeMount.hidden,true,'costumes hidden when the scene is in 2D floorplan mode');
 ui.consume({type:'stage_started',role:'writer'});
 ui.consume({type:'stage_verified',role:'writer',receipt:{quality_status:'pass',result_sha256:'sha256:other'}});
 ui.setEnabled(true);
+assert.equal(cameraMount.hidden,false,'camera controls return with the viewing stage');
 assert.equal(costumeMount.hidden,false,'costumes return alongside the 3D view');
 assert.equal(all.find(x=>x.dataset.agent==='writer').dataset.state,'verified','2D and 3D retain state consistency');
 ui.reset();

@@ -6,7 +6,7 @@
 (function(root){
   'use strict';
   const FIELDS=['yaw','pitch','zoom','panX','panY'];
-  const BOUNDS={yaw:[-170,170],pitch:[32,74],zoom:[.35,1.42],panX:[-480,480],panY:[-360,360]};
+  const BOUNDS={yaw:[-170,170],pitch:[32,74],zoom:[.20,1.42],panX:[-480,480],panY:[-360,360]};
   const clamp=(value,min,max)=>Math.min(max,Math.max(min,value));
   function clean(source,prior){
     const next={};
