@@ -43,7 +43,7 @@ export async function probeHiddenWorldPublic(origin,{fetchFn=fetch}={}){
     catch{return fail(id+'_not_verified');}
   }
   return {schema:'evercraft.hidden-world.public-release-gate.v1',verified:true,origin:safe,
-    checks:['owned_worlds_health','atlas_entry','yakima_evidence','lund_architecture','titan_exhibit','titan_ledger','titan_walk_page','titan_walk_runtime','titan_walk_scene','titan_walk_tour','yakima_walk_page','yakima_walk_runtime','yakima_walk_scene','yakima_walk_tour','yakima_period_lenses','yakima_exhibit,'research_data','evidence_ledger'],
+    checks:['owned_worlds_health','atlas_entry','yakima_evidence','lund_architecture','titan_exhibit','titan_ledger','titan_walk_page','titan_walk_runtime','titan_walk_scene','titan_walk_tour','yakima_walk_page','yakima_walk_runtime','yakima_walk_scene','yakima_walk_tour','yakima_period_lenses','yakima_exhibit','research_data','evidence_ledger'],
     physical_iphone_verified:false,write_test_performed:false};
 }
 
