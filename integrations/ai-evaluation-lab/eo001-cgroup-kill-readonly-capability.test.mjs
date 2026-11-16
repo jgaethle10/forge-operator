@@ -125,7 +125,7 @@ test('unpopulated, malformed or oversize control readback refuses capability',()
     fixture(({query,leaf})=>{
       fs.writeFileSync(path.join(leaf,'cgroup.events'),content);
       assert.throws(()=>query(),
-        /CGKILL_READONLY_NOT_LIVE_SYNTHETIC_SCOPE|CGROUP_EVENTS_INVALID|CGKILL_READONLY_CONTROL_OVERSIZE_OR_MISSING/);
+        /CGKILL_READONLY_NOT_LIVE_SYNTHETIC_SCOPE|CGKILL_READONLY_EVENTS_INVALID|CGKILL_READONLY_CONTROL_OVERSIZE_OR_MISSING/);
     });
   }
 });
