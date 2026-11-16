@@ -62,6 +62,7 @@ function input(overrides={}){
     finish:[],close:0,verify:0};
   let ticks=1000;
   const io={
+    executionMode:'OFFLINE_SYNTHETIC_IO',
     now:()=>120000,
     monotonic:()=>ticks+=10,
     show:()=>{
@@ -343,4 +344,35 @@ test('real disk ledger replay returns replay denial without creating new receipt
       assert.deepEqual(fs.readdirSync(dir).sort(),files);
     }finally{secondSink.close();}
   }finally{fs.rmSync(dir,{recursive:true,force:true});}
+});
+
+test('production/native route remains intentionally unavailable, even with valid signed permit',()=>{
+  const f=input();
+  const noNative=f.execute({io:null});
+  assert.equal(noNative.state,'NATIVE_EXACT_SCOPE_STOP_HELD');
+  assert.equal(noNative.reason,'NATIVE_STOP_MANAGER_ATOMIC_BINDING_UNAVAILABLE');
+  assert.equal(noNative.stop_request_issued,false);
+  assert.equal(noNative.stop_permit_reserved,false);
+  assert.equal(noNative.local_failure_record_persisted,false);
+  assert.equal(f.calls.reserve.length,0);
+  assert.equal(f.calls.stop.length,0);
+  assert.equal(f.calls.close,1);
+});
+test('unlabeled or falsely production-labeled I/O cannot issue a stop',()=>{
+  for(const mode of [undefined,'PRODUCTION_NATIVE','APPROVED_FIELD_RUN']){
+    const f=input();
+    const io={...f.io,executionMode:mode};
+    const result=f.execute({io});
+    assert.equal(result.reason,'NATIVE_STOP_MANAGER_ATOMIC_BINDING_UNAVAILABLE');
+    assert.equal(result.stop_request_issued,false);
+    assert.equal(f.calls.stop.length,0);
+    assert.equal(f.calls.reserve.length,0);
+  }
+});
+test('controller has no native host subprocess or by-name stop implementation',()=>{
+  const code=fs.readFileSync(new URL('./eo001-native-scope-stop.mjs',import.meta.url),'utf8');
+  assert.equal(code.includes("from 'node:child_process'"),false);
+  assert.equal(code.includes('spawnSync('),false);
+  assert.equal(code.includes('function nativeIo('),false);
+  assert.equal(code.includes("'/usr/bin/systemctl'"),false);
 });
