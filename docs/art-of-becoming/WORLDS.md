@@ -53,6 +53,21 @@ A separate first-party, offline-capable browser renderer now lives at `public/ar
 
 ---
 
+## Facility interiors: first shared-world immersion milestone (v0.4)
+
+A 3D campus is only meaningful if someone can inhabit what they built. The newest preview adds a **room per owned facility**, generated from the same lifetime construction data:
+
+- `public/art-of-becoming/facility-interiors.mjs`: pure owned-facility room selection, type-specific station catalogs, entry spawning, interior movement and collision. No account, history or goal detail is serialized into the 3D room.
+- `public/art-of-becoming/campus-walk.mjs`: live geometry for training rooms, clubhouse/trophy areas, stage and rehearsal rooms, quiet retreats and a central accessible aisle. Facility level influences permanent decoration; there is no seasonal destruction.
+- The viewer includes an accessible selector for owned facilities and a reversible **Explore selected facility / Return to campus** action, plus `E` on desktop. Users can walk in, inspect, and walk back out without changing the saved campus.
+- The browser test validates room entry, actual first-person movement, geometry, safe exit, retention of the owned building, and an exact unchanged `localStorage` snapshot before and after visiting.
+- These are procedural **exterior/interior blockouts**, not realistic floorplans, real-life athletic training, clinical services, interactive sports games, recorded orchestral performances or completed content.
+- Facility interiors stay local. The current Evercraft World Engine V1 bridge deliberately carries only non-health spatial entities, and the cloud/vault remains unconnected. Sensitive check-ins are never exported as part of a world scene.
+
+Next experiential quality gates: distinctive architecture and lighting, door-transition animation, actual navigable rooms inside a shared scene rather than a temporary camera-space room, accessibility fallback, native mobile tactile controls, sound comfort settings, and artist-authored environment assets.
+
+---
+
 ## Long-horizon requirements before a lifetime ownership claim
 A browser-local save and manual JSON export **cannot guarantee** survival for decades. A credible lifetime platform requires:
 1. **User-owned durable account identity** (optional pseudonymous mode), explicit consent and no silent collection of sensitive check-ins.
