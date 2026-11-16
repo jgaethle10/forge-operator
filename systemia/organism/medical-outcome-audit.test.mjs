@@ -99,7 +99,18 @@ test('incomplete upstream receipts, unconfirmed IDs and unrelated PMIDs never cr
  },now});
  assert.equal(unverified.counts.paper_trial_pairs,1);
  assert.equal(unverified.audits[0].registered_primary_outcomes.length,0);
+ assert.equal(unverified.counts.official_identifiers_confirmed,0);
  assert.ok(unverified.audits[0].screening_flags.includes('official_registry_identity_unconfirmed'));
+});
+
+test('multiple paper links to one confirmed NCT count as one registry identity',()=>{
+ const second={...paper,pmid:'23456'};
+ const two={...discovery,papers:[paper,second]};
+ const check={...registry.checks[0],source_pubmed_ids:['12345','23456']};
+ const out=buildMedicalOutcomeAudit({discovery:two,source,review,registry:{...registry,checks:[check]},now});
+ assert.equal(out.counts.paper_trial_pairs,2);
+ assert.equal(out.counts.official_identifiers_confirmed,1);
+ assert.equal(out.counts.independently_verified_outcome_claims,0);
 });
 
 test('missing outcome module makes an explicit hold, not inferred clinical outcomes',()=>{
