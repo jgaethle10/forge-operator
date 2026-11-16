@@ -70,18 +70,25 @@ export async function startMicroSeedGateway({
     return true;
   }
 
-  const health=()=>({
-    schema:'evercraft.saban.microseed-gateway-health.v1',
-    ok:Boolean(server?.listening),
-    service:'saban-microseed-gateway',
-    instance_id:instanceId,
-    host_scope:loopback(host)?'loopback':'explicit_non_loopback',
-    arbitrary_code_execution:false,
-    commercial_capacity:false,
-    active_executions:activeGlobal,
-    registered_device_count:registry.list({now:new Date()}).device_count,
-    eligible_device_count:registry.list({now:new Date()}).eligible_count,
-  });
+  const health=()=>{
+    const snapshot=registry.list({now:new Date()});
+    return {
+      schema:'evercraft.saban.microseed-gateway-health.v1',
+      ok:Boolean(server?.listening),
+      service:'saban-microseed-gateway',
+      instance_id:instanceId,
+      host_scope:loopback(host)?'loopback':'explicit_non_loopback',
+      arbitrary_code_execution:false,
+      commercial_capacity:false,
+      active_executions:activeGlobal,
+      registered_device_count:snapshot.device_count,
+      trust_eligible_device_count:snapshot.eligible_count,
+      eligible_device_count:snapshot.rows.filter(row=>
+        row.eligible&&!isMicroSeedExecutionQuarantined(row.device_id)).length,
+      execution_quarantine_count:snapshot.rows.filter(row=>
+        isMicroSeedExecutionQuarantined(row.device_id)).length,
+    };
+  };
 
   async function resolveExecutionTelemetry(manifest,provided){
     const adapter=bridgeAdapters?.[manifest.bridge_mode];
@@ -368,7 +375,11 @@ export async function startMicroSeedGateway({
           ok:true,
           schema:'evercraft.saban.microseed-registry-summary.v1',
           device_count:snapshot.device_count,
-          eligible_count:snapshot.eligible_count,
+          trust_eligible_count:snapshot.eligible_count,
+          eligible_count:snapshot.rows.filter(row=>
+            row.eligible&&!isMicroSeedExecutionQuarantined(row.device_id)).length,
+          execution_quarantine_count:snapshot.rows.filter(row=>
+            isMicroSeedExecutionQuarantined(row.device_id)).length,
           states:snapshot.rows.reduce((acc,row)=>{
             acc[row.state]=(acc[row.state]||0)+1;
             return acc;
