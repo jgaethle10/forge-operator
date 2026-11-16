@@ -14,7 +14,7 @@ function parseArgs(argv){
   if(key==='--state')stateFiles.push(value);
   else if(key==='--out'&&!out)out=value;
   else if(/^--node00[12]-(watch|id|attestation|public-key|nonce-file)$/.test(key)){
-   const [,nodeKey,field]=key.match(/^--(node00[12])-(watch|id)$/);
+   const [,nodeKey,field]=key.match(/^--(node00[12])-(watch|id|attestation|public-key|nonce-file)$/);
    if(node[nodeKey][field])throw Error('Duplicate node parameter');
    node[nodeKey][field]=value;
   }else throw Error(usage);
