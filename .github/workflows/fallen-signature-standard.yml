@@ -27,10 +27,15 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Verify FFmpeg utilities
+      - name: Install and verify FFmpeg utilities
         run: |
-          ffmpeg -version | head -n 1
-          ffprobe -version | head -n 1
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y ffmpeg
+          command -v ffmpeg
+          command -v ffprobe
+          ffmpeg -version >/dev/null
+          ffprobe -version >/dev/null
       - name: Test signature gate and existing release contracts
         run: |
           node --test \
