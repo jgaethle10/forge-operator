@@ -31,6 +31,7 @@ export function selectTransport({
     reason,
   });
   if(!Array.isArray(transports)) return invalid('transport_catalog_must_be_array');
+  if(typeof requires_offline!=='boolean') return invalid('requires_offline_must_be_boolean');
   if(typeof purpose!=='string'||!purpose.trim()){
     return invalid('purpose_must_be_nonempty_string');
   }
