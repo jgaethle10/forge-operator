@@ -80,6 +80,12 @@ h1{font-size:clamp(40px,6vw,78px);line-height:.97;letter-spacing:-.06em;margin:1
         <div class="measure" id="payments-measure">—</div>
         <p class="footnote">Paid settlement summary is not net profit or proof of delivery.</p>
       </article>
+      <article class="runtime-card"><div class="kicker">One OS · Payments + Systemia read scopes</div>
+        <h3 id="outcome-status">Checking permissions</h3>
+        <p id="outcome-detail">The owned private bridge may reconcile a signed source bundle, without revealing customer receipts.</p>
+        <div class="measure" id="outcome-measure">—</div>
+        <p class="footnote">An authenticated bridge is not independent payment, worker, or delivery verification.</p>
+      </article>
     </div>
   </section>
   <section class="notebook">
@@ -136,6 +142,22 @@ async function loadOperationalReadbacks(){
         total.toLocaleString("en-US",{style:"currency",currency:"USD"})+
         ". Settlement is not profit and does not attest customer delivery.";
     }),
+    readScopedCard("/api/os/outcome-readback","outcome-status","outcome-detail","outcome-measure",
+      (data,status,detail,measure)=>{
+        if(data.schema!=="evercraft.home.os-outcome-readback.v1")throw Error("wrong schema");
+        if(data.state==="authenticated_source_consistent_unattested"){
+          status.textContent="Source contracts agree";
+          measure.textContent="Unattested";
+          detail.textContent="Owned bridge response authenticated. Payment issuer, worker execution, shipping provider, replay safety, and customer delivery remain unverified.";
+        }else if(data.state==="authenticated_source_held"){
+          status.textContent="Source mismatch / held";
+          measure.textContent=String(Array.isArray(data.reason_codes)?data.reason_codes.length:0)+" holds";
+          detail.textContent="A signed source bundle was read, but it did not reconcile. No finished customer outcome is asserted.";
+        }else{
+          status.textContent="Not connected / held";
+          detail.textContent=String(data.detail||"No verified private outcome source connected.");
+        }
+      }),
   ]);
 }
 
