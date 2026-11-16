@@ -19,16 +19,21 @@ export function projectPublicTimeline(records, ledgerEntries, {asOf} = {}) {
   for (const entry of ledgerEntries) lastById.set(entry.event_id,entry);
   const events = [];
   const withheld = [];
+  const seenIds = new Set();
   for (const record of records) {
     const id = record?.id;
     if (typeof id !== "string" || !/^[a-zA-Z0-9_-]{1,100}$/.test(id)) {withheld.push({id:null,reason:"invalid_id"});continue;}
+    if (seenIds.has(id)) {withheld.push({id,reason:"duplicate_id"});continue;}
+    seenIds.add(id);
     const last = lastById.get(id);
     if (!last || !["approved","corrected"].includes(last.type)) {withheld.push({id,reason:"not_currently_approved"});continue;}
-    if (asOf && Date.parse(last.at) > Date.parse(asOf)) {withheld.push({id,reason:"approval_after_snapshot"});continue;}
+    // Snapshot exports are not historical replay: later retractions remain withheld.
+    // A full historical view requires versioned record content and redaction review.
+    if (asOf && Date.parse(last.at) > Date.parse(asOf)) {withheld.push({id,reason:"state_changed_after_snapshot"});continue;}
     if (!allowedCategories.has(record.category) || !allowedStatuses.has(record.status)) {withheld.push({id,reason:"invalid_classification"});continue;}
     const checked = reviewEvent(record);
     if (!checked.eligible) {withheld.push({id,reason:"failed_publication_gate"});continue;}
-    if (!validTime(record.published_at_utc) || Date.parse(record.published_at_utc) < Date.parse(last.at)) {withheld.push({id,reason:"invalid_publication_time"});continue;}
+    if (!validTime(record.published_at_utc) || (asOf && Date.parse(record.published_at_utc) > Date.parse(asOf)) || Date.parse(record.published_at_utc) < Date.parse(last.at)) {withheld.push({id,reason:"invalid_publication_time"});continue;}
     // Explicit allowlist. No spread of untrusted record fields.
     events.push({
       id,category:record.category,status:record.status,
