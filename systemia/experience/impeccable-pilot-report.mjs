@@ -76,6 +76,23 @@ export function evaluatePilot({ resultDir, rootDir = repo }) {
       }))
     });
   }
+  const revised = path.join(resultDir, 'work_saban_after.json');
+  if (fs.existsSync(revised)) {
+    const after = readJson(revised);
+    const before = output.results.find(item => item.id === 'work_saban_html');
+    output.follow_up = {
+      comparison: 'same_engine_public_source_before_after',
+      proposed_revision_commit: 'f910f5faf51e1535a6d5cea4d3b1b73076e33e0c',
+      revision_blob_sha1: '001b7f53646c52484a19f045c8ab08a689f5305e',
+      before_findings: before.upstream_finding_count,
+      after_findings: after.length,
+      delta: after.length - before.upstream_finding_count,
+      after_rules: ruleSummary(after),
+      browser_verified_by_this_scan: false,
+      production_release_claimed: false,
+      accessibility_improvement_certified: false
+    };
+  }
   output.summary = {
     scanned_source_files: output.results.length,
     owned_html_findings: output.results.reduce((n, r) => n + r.owned_finding_count, 0),
