@@ -224,3 +224,92 @@ test('native-agent relay never accepts credentials embedded in the device URL',a
     /url_credentials_forbidden/
   );
 });
+
+
+test('Saban gateway quarantines Node001 across every work-dispatch endpoint before adapter or registry work',async()=>{
+  const root=fs.mkdtempSync(path.join(os.tmpdir(),'microseed-gateway-quarantine-'));
+  let gateway=null;
+  let deviceCalls=0;
+  try{
+    const deviceId='evercraft-node001-penguin';
+    const registryRoot=path.join(root,'registry');
+    // A current registry authorization must not bypass the quarantine.
+    const manifest=normalizeMicroDeviceManifest({
+      device_id:deviceId,
+      device_class:'linux-host',
+      bridge_mode:'native_agent',
+      authorization_ref:'synthetic-approved-owner',
+      endpoint:'http://127.0.0.1:1',
+      supported_workloads:['systemia.content-hash.v1'],
+      resources:{cpu_units:1,memory_mb:1024,storage_gb:1},
+    });
+    const registry=new AmbientDeviceRegistry({root:registryRoot});
+    registry.observe({device_id:deviceId});
+    registry.candidate({device_id:deviceId,manifest});
+    registry.authorize({
+      device_id:deviceId,
+      approval_ref:'synthetic-permit-not-quarantine-override',
+      expires_at:new Date(Date.now()+3600000).toISOString(),
+      heartbeat_target_seconds:300,
+      attestation_mode:'device',
+      attestation_identity:manifest.attestation.device_identity,
+    });
+    registry.heartbeat({
+      device_id:deviceId,
+      capability_manifest_hash:manifest.manifest_hash,
+      attestation_identity:manifest.attestation.device_identity,
+    });
+    gateway=await startMicroSeedGateway({
+      registryRoot,
+      stateDir:path.join(root,'gateway-state'),
+      authorizationToken:'test-gateway-token',
+      bridgeAdapters:{
+        native_agent:{
+          telemetry:async()=>{deviceCalls++;throw Error('unexpected_telemetry');},
+          execute:async()=>{deviceCalls++;throw Error('unexpected_dispatch');},
+        },
+      },
+    });
+    for(const [endpoint,request] of [
+      ['/v1/execute',{request:{
+        device_id:deviceId,
+        workload_class:'systemia.content-hash.v1',
+        idempotency_key:'blocked-work',
+        payload:{value:'never dispatched'},
+      }}],
+      ['/v1/conformance',{device_id:deviceId}],
+      ['/v1/calibrate',{device_id:deviceId}],
+      ['/v1/capabilities/invoke',{request:{
+        device_id:deviceId,
+        capability_class:'systemia.health-probe.v1',
+      }}],
+    ]){
+      const response=await fetch(gateway.url+endpoint,{
+        method:'POST',
+        headers:{
+          authorization:'Bearer test-gateway-token',
+          'content-type':'application/json',
+        },
+        body:JSON.stringify(request),
+      });
+      assert.equal(response.status,423,endpoint);
+      const result=await response.json();
+      assert.equal(result.ok,false,endpoint);
+      assert.equal(result.error,
+        'microseed_device_quarantined_pending_host_review',endpoint);
+    }
+    assert.equal(deviceCalls,0);
+    assert.equal(fs.existsSync(path.join(root,'gateway-state','idempotency')),false);
+    assert.equal(fs.existsSync(path.join(root,'gateway-state','signed-execution-intents')),false);
+
+    // Read-only registry summary remains accessible to authenticated users.
+    const summaryResponse=await fetch(gateway.url+'/v1/registry-summary',{
+      headers:{authorization:'Bearer test-gateway-token'},
+    });
+    assert.equal(summaryResponse.status,200);
+    assert.equal((await summaryResponse.json()).device_ids_exposed,false);
+  }finally{
+    if(gateway)await gateway.close();
+    fs.rmSync(root,{recursive:true,force:true});
+  }
+});
