@@ -17,7 +17,7 @@
   let enabled=false,selected='director',position={yaw:-14,pitch:58,zoom:typeof window.innerWidth==='number'&&window.innerWidth<720?0.40:0.72,panX:0,panY:0};
   let world=null,drag=null,cameraRig=null,followSelected=false,followButton=null,roomLevel=false,roomButton=null;
   let costumes=null,crewButton=null,individualButton=null,costumeCaption=null;
-  let autoFraming=true;
+  let autoFraming=true,sceneResizeObserver=null;
   const touches=new Map();
   let gesture=null;
   const rooms=[
@@ -507,6 +507,15 @@
     if(enabled){
       if(firstVisit||autoFraming)fitCrew({instant:firstVisit});
       else applyCamera();
+      // The host toggles its 3D layout class after setEnabled(), and its
+      // measured stage height can change. Refit on actual size changes rather
+      // than assuming the initial DOM dimensions are final.
+      if(!sceneResizeObserver&&typeof window.ResizeObserver==='function'){
+        sceneResizeObserver=new window.ResizeObserver(()=>{
+          if(enabled&&autoFraming)fitCrew();
+        });
+        sceneResizeObserver.observe(scene);
+      }
     }
   }
   window.addEventListener?.('resize',()=>{
