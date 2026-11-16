@@ -245,3 +245,32 @@ Authoritative inputs are:
 Portfolio Sentinel calls the live renderer directly each cycle.
 
 This prevents a moving `main` branch from invalidating a PR merely because a generated snapshot was computed against an older base. Derived state can be reproduced at any time; source truth cannot be silently replaced by it.
+
+## External capability adoption (reference-first v1)
+
+The **external adoption review** in this same Capability Mesh is separate from the public-product registry and the installed Evercraft OS capsules. It is not an executable plugin loader or an authority grant. This avoids mistaking an interesting GitHub repository for an approved production dependency.
+
+```bash
+npm run test:external-adoption
+node systemia/capability-mesh/external-adoption-gate.mjs
+```
+
+`external-adoption-candidates.json` is an explicit shortlist of third-party references with a repository, exact observed upstream commit SHA, apparent top-level license, intended Evercraft owner, performance benchmark question, risk checks and learning target. The source-only compiler validates the manifest, reports missing reviews, and refuses any claim that a reference is installed or authorized.
+
+### Allowed progression
+
+1. **Discover:** Read public upstream source and licensing; capture a full revision fingerprint and objective that solves an existing Evercraft product need.
+2. **Sandbox:** Audit the pinned code, dependencies, licenses/attribution, privacy, expected cost, and rollback; run only in an explicitly isolated, consented first-party test environment.
+3. **Prove:** Compare the existing Evercraft baseline and candidate with the same real specimen, recording output quality, time, accessibility, cost and failure modes. Synthetic data must be labeled.
+4. **Adapter:** A separate approved capability contract and Systemia/Passport scope are required before any external execution is admitted. No source review auto-promotes code into a Saban worker or Evercraft OS capsule.
+5. **Internalize:** Document tested patterns and behavior, build first-party replacements or reuse appropriately licensed code with required notices, run parity tests, and retain a reversible fallback until the owned solution wins.
+
+Current initial candidates: `nextlevelbuilder/ui-ux-pro-max-skill` (MIT), `VoltAgent/awesome-design-md` (MIT), and `pbakaus/impeccable` (Apache-2.0). These are **review references only**. The current manifest records no sandbox execution, measured improvement, live adapter, or completed first-party replacement.
+
+### Authority boundaries
+
+- No automatic `npm install`, `npx`, `curl | bash`, plugin injection, outgoing network request, data upload, production publication or access to a developer's private credentials.
+- An open-source license permits certain uses but does **not** validate dependency safety or transfer ownership of upstream IP. Preserve attribution and applicable notices whenever code is copied.
+- A repository SHA is metadata for provenance planning, not evidence that the complete dependency tree was reviewed or that fetched bytes were verified.
+- New third-party integrations must use existing Systemia admission, Passport scopes, Evercraft Compute/Yard resource policies, receipts and rollback. They do not bypass any live product release/commerce gate.
+- Distinguish a locally installed, owner-operated open-source tool from a remote hosted service. Avoid adding new externally hosted production dependencies simply for convenience.
