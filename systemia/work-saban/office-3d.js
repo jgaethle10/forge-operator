@@ -324,7 +324,7 @@
     autoFraming=true;
     const m=scene?.getBoundingClientRect?.();
     if(m&&m.width>0&&m.height>0&&window.EvercraftOfficeFraming){
-      position=window.EvercraftOfficeFraming.fit({width:m.width,height:m.height});
+      position={...window.EvercraftOfficeFraming.fit({width:m.width,height:m.height})};
     }else{
       position={yaw:-14,pitch:58,
         zoom:typeof window.innerWidth==='number'&&window.innerWidth<720?.40:.72,
