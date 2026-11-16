@@ -37,7 +37,7 @@ function parseDf(s){
  return Number.isFinite(availableKb)?Number((availableKb*1024/GB).toFixed(1)):null;
 }
 export function parseMemAvailableGb(content){
- const m=String(content||'').match(/^MemAvailable:\\s*(\\d+)\\s*kB\\s*$/m);
+ const m=String(content||'').match(/^MemAvailable:\s*(\d+)\s*kB\s*$/m);
  return m?Number((Number(m[1])*1024/GB).toFixed(2)):null;
 }
 function availableMem(){
