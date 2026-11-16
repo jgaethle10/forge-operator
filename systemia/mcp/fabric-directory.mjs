@@ -545,16 +545,28 @@ function scoreEntry(intent,entry,{frequency,total}){
   return Math.max(0,Math.round(score*100)/100);
 }
 
+// Some products have both a general discovery record and a canonical
+// specialist capability. Do not show both as separate customer choices when
+// the specialist matches this request. Preserve the source-only product
+// fallback if no matching specialist is present.
+const CANONICAL_PRODUCT_HANDOFFS=new Map([
+  ['product:forensiscope','forensiscope-evidence-review-v1'],
+]);
+
 export function matchFabricCapabilities(intent,catalog,{limit=5}={}){
   const normalized=normalizeFabricCatalog(catalog);
   const max=Math.max(1,Math.min(20,Number(limit||5)));
   const frequency=buildDocumentFrequency(normalized);
   const total=normalized.length;
-  return normalized
+  const ranked=normalized
     .map((entry)=>({...entry,match_score:scoreEntry(intent,entry,{frequency,total})}))
     .filter((entry)=>entry.match_score>0)
-    .sort((a,b)=>b.match_score-a.match_score||a.name.localeCompare(b.name))
-    .slice(0,max);
+    .sort((a,b)=>b.match_score-a.match_score||a.name.localeCompare(b.name));
+  const matchingIds=new Set(ranked.map(entry=>entry.public_id));
+  return ranked.filter(entry=>{
+    const canonicalId=CANONICAL_PRODUCT_HANDOFFS.get(entry.public_id);
+    return !canonicalId||!matchingIds.has(canonicalId);
+  }).slice(0,max);
 }
 
 export function fabricDirectoryTools(){
