@@ -3,9 +3,11 @@ import path from 'node:path';
 import { createHash } from 'node:crypto';
 
 // Mirrors the explicit source construction in intake-fabric/intake.mjs.
-// Only these two source files, never an arbitrary path or network endpoint.
+// Only Intake's three fixed source files, never arbitrary paths or endpoints.
 const CANDIDATE = 'evercraft.intake.mission-candidate.v1';
 const DECISION = 'evercraft.intake.admission-decision.v1';
+const RELEASE = 'evercraft.intake.quarantine-release.v1';
+const RELEASE_FILE = 'quarantine-releases.jsonl';
 const PACKET = 'evercraft.intake.systemia-admission-packet.v1';
 const HASH = /^sha256:[a-f0-9]{64}$/;
 const FILES = [
@@ -28,9 +30,17 @@ function requireCap(value, maximum, name) {
     throw new Error('timewalk_intake_' + name + '_invalid');
   }
 }
-function readCompletePrivateJsonl(root, filename, schema, max_bytes, max_events) {
+function readCompletePrivateJsonl(root, filename, schema, max_bytes, max_events, optionalMissing = false) {
   const file = path.join(root, filename);
-  const stat = fs.lstatSync(file);
+  let stat;
+  try {
+    stat = fs.lstatSync(file);
+  } catch (error) {
+    // Native Intake does not create the quarantine ledger before its first
+    // release. Absence never gives permission to replay a quarantined record.
+    if (optionalMissing && error?.code === 'ENOENT') return [];
+    throw error;
+  }
   if (!stat.isFile() || stat.isSymbolicLink() || stat.size <= 0 ||
       stat.size > max_bytes ||
       (process.platform !== 'win32' && (stat.mode & 0o077) !== 0)) {
@@ -103,11 +113,11 @@ function reconstructAdmissionPacket(candidate, decision) {
 }
 
 /**
- * Read-only, operator-owned snapshot of Intake's two persisted source ledgers.
+ * Read-only, operator-owned snapshot of Intake's three persisted source ledgers.
  *
  * A Systemia admission packet is not itself written into these ledgers:
  * it is reconstructed exactly from signed candidate and signed accepted
- * decision bytes. Only the returned digest-matched packet is usable by the
+ * decision bytes, with a separately validated quarantine-release gate. Only the returned digest-matched packet is usable by the
  * existing authorized Context source reconciler.
  *
  * An operator must enforce current Passport identity before exposing this
@@ -136,6 +146,8 @@ export function createIntakeAdmissionLedgerReceiptReader({
     }
     const [candidates, decisions] = FILES.map(([name, schema]) =>
       readCompletePrivateJsonl(root, name, schema, max_bytes, max_events));
+    const releases = readCompletePrivateJsonl(
+      root, RELEASE_FILE, RELEASE, max_bytes, max_events, true);
     const byCandidate = new Map();
     for (const candidate of candidates) {
       const id = candidate.candidate_id;
@@ -157,14 +169,41 @@ export function createIntakeAdmissionLedgerReceiptReader({
       // candidate, using storage insertion order, not a client timestamp.
       lastDecision.set(decision.candidate_id, decision);
     }
+    const byReleasedCandidate = new Map();
+    const releaseIds = new Set();
+    for (const release of releases) {
+      const candidate = byCandidate.get(release.candidate_id);
+      if (!candidate || candidate.quarantine_required !== true ||
+          typeof release.release_id !== 'string' || !release.release_id ||
+          releaseIds.has(release.release_id) ||
+          byReleasedCandidate.has(release.candidate_id) ||
+          typeof release.authority_grant_id !== 'string' || !release.authority_grant_id ||
+          typeof release.actor_ref !== 'string' || !release.actor_ref ||
+          typeof release.evidence_ref !== 'string' || !release.evidence_ref ||
+          typeof release.reason !== 'string' || !release.reason ||
+          !Number.isFinite(Date.parse(release.released_at)) ||
+          !Number.isFinite(Date.parse(candidate.received_at)) ||
+          Date.parse(release.released_at) < Date.parse(candidate.received_at)) {
+        throw new Error('timewalk_intake_invalid_quarantine_release_lineage');
+      }
+      // This is only a hash-consistent release *claim*. Verifying that the
+      // cited grant was actually valid requires separate Passport history.
+      releaseIds.add(release.release_id);
+      byReleasedCandidate.set(release.candidate_id, release);
+    }
     const rebuilt = new Map();
     for (const [id, decision] of lastDecision) {
       if (decision.decision !== 'accept') continue;
       const candidate = byCandidate.get(id);
       if (candidate.quarantine_required === true) {
-        // A quarantine release is a separate authority ledger, so do NOT
-        // infer eligibility or source authority from these two stores alone.
-        continue;
+        const release = byReleasedCandidate.get(id);
+        if (!release) continue;
+        // Backdated or reordered release claims cannot make an earlier
+        // acceptance look authorized. Hold, do not silently repair history.
+        if (!Number.isFinite(Date.parse(decision.decided_at)) ||
+            Date.parse(release.released_at) > Date.parse(decision.decided_at)) {
+          continue;
+        }
       }
       if (decision.execution_authority_granted !== false ||
           decision.external_side_effects_authorized !== false ||
