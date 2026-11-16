@@ -134,6 +134,11 @@ jobs:
           test -s _public_pages/work-saban/brand/work-saban-social.svg
           python -c 'import cairosvg; cairosvg.svg2png(url="_public_pages/work-saban/brand/work-saban-social.svg", write_to="_public_pages/work-saban/brand/work-saban-social.png", output_width=1200, output_height=630)'
           test -s _public_pages/work-saban/brand/work-saban-social.png
+          # Systemia's dedicated social-card is an actual PNG for Facebook and LinkedIn.
+          test -s _public_pages/systemia/index.html
+          test -s _public_pages/systemia/social-card.svg
+          python -c 'import cairosvg; cairosvg.svg2png(url="_public_pages/systemia/social-card.svg", write_to="_public_pages/systemia/social-card.png", output_width=1200, output_height=630)'
+          python -c 'from pathlib import Path; import struct; p=Path("_public_pages/systemia/social-card.png").read_bytes(); assert p[:8]==bytes.fromhex("89504e470d0a1a0a") and struct.unpack(">II",p[16:24])==(1200,630) and len(p)<4_000_000; print("SYSTEMIA_SOCIAL_PNG_VERIFIED")'
           python systemia/clip/build-audience-social-previews.py \
             --source public/clip/audience-sites \
             --destination _public_pages/clip/audience-sites
