@@ -7,7 +7,7 @@ import os from 'node:os';
 import path from 'node:path';
 import {randomBytes} from 'node:crypto';
 import {fileURLToPath} from 'node:url';
-import {startNodeSeed} from '../systemia/compute/node-seed.mjs';
+import {startNodeSeed} from '../compute/node-seed.mjs';
 import {YardOperator} from './operator.mjs';
 import {assessResidentBrokerRecovery} from './broker-recovery-admission.mjs';
 
