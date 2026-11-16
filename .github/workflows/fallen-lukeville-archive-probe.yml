@@ -1,0 +1,96 @@
+name: Fallen Verified Lukeville Archive Probe
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/fallen-lukeville-archive-probe.yml'
+      - 'docs/commercial/fallen-lukeville-archive-scout.md'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  archive-source-probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v5
+      - name: Ensure FFprobe available
+        run: |
+          if ! command -v ffprobe >/dev/null 2>&1; then
+            sudo apt-get update -qq && sudo apt-get install -y ffmpeg
+          fi
+      - name: Try three official public-domain archive downloads, fail closed on inaccessible bytes
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p archive-receipts /tmp/fallen-archive
+          python3 - <<'PY'
+          import json,hashlib,subprocess,datetime,urllib.request
+          from pathlib import Path
+          root=Path('/tmp/fallen-archive')
+          items=[
+            ('710935','2019-09-19','USACE / Dr. Michael Izard and Vincent Mouzon','6578579'),
+            ('746766','2020-03-25','USACE / Orville Collins','7039053'),
+            ('756907','2020-06-18','USACE / Dave Palmer','7246534')
+          ]
+          results=[]
+          for item_id,date,credit,video_file_id in items:
+            source_url='https://www.dvidshub.net/video/'+item_id
+            direct='https://www.dvidshub.net/download/videofile/'+video_file_id
+            receipt={'id':item_id,'captured_on':date,'credit':credit,'source_url':source_url}
+            target=root/(item_id+'.mp4')
+            request=urllib.request.Request(direct,headers={
+              'User-Agent':'Mozilla/5.0','Referer':'https://www.dvidshub.net/download/popup/'+item_id})
+            try:
+              with urllib.request.urlopen(request,timeout=45) as response:
+                receipt['http_status']=response.status
+                receipt['content_type']=response.headers.get('Content-Type','')
+                if 'video' not in receipt['content_type'] and 'octet-stream' not in receipt['content_type']:
+                  raise ValueError('not an MP4 response')
+                size=0
+                with target.open('wb') as output:
+                  while True:
+                    data=response.read(1024*1024)
+                    if not data:break
+                    size+=len(data)
+                    if size>35*1024*1024:raise ValueError('probe byte cap reached')
+                    output.write(data)
+              p=subprocess.run(['ffprobe','-v','error','-select_streams','v:0',
+                '-show_entries','format=duration,size:stream=codec_name,width,height',
+                '-of','json',str(target)],capture_output=True,text=True,timeout=20)
+              if p.returncode!=0:raise ValueError('ffprobe rejected bytes')
+              metadata=json.loads(p.stdout)
+              if not metadata.get('streams'):raise ValueError('no video stream')
+              receipt.update(status='verified_video',sha256=hashlib.sha256(target.read_bytes()).hexdigest(),
+                size_bytes=target.stat().st_size,ffprobe=metadata)
+            except Exception as error:
+              receipt.update(status='blocked',reason=type(error).__name__+': '+str(error)[:120])
+              target.unlink(missing_ok=True)
+            results.append(receipt)
+            print('ARCHIVE',item_id,receipt['status'],receipt.get('reason',''))
+          count=sum(x['status']=='verified_video' for x in results)
+          report={'schema':'evercraft.fallen.archive-download-probe.v1',
+            'verified_count':count,'source_date_scope':'2019 and 2020 ONLY',
+            'editorial_warning':'NEVER label these as 2023 migration footage',
+            'rights_review':'DVIDS marks them PUBLIC DOMAIN, independent human review still required',
+            'published':False,'client_authorized':False,'results':results,
+            'checked_at_utc':datetime.datetime.now(datetime.timezone.utc).isoformat()}
+          Path('archive-receipts/archive-access.json').write_text(json.dumps(report,indent=2)+'\n')
+          print('VERIFIED_ARCHIVE_COUNT',count)
+          PY
+      - name: Preserve access evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fallen-lukeville-archive-access
+          path: archive-receipts/
+          retention-days: 7
+      - name: Block film claim without three genuine downloaded clips
+        run: |
+          python3 - <<'PY'
+          import json,sys
+          r=json.load(open('archive-receipts/archive-access.json'))
+          if r['verified_count']<3:
+            print('NO-GO: source delivery restricted or unverifiable; no footage-led reel produced.')
+            sys.exit(2)
+          print('3 archival video files technically verified, no film or rights signoff implied.')
+          PY
