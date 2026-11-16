@@ -1,0 +1,27 @@
+name: EPS email lead capture and path contract
+on:
+  pull_request:
+    paths:
+      - 'public/eps/**'
+      - 'tests/eps-email-quote-route.test.mjs'
+      - 'infra/evercraft-edge/service-frontdoor/**'
+      - '.github/workflows/eps-email-quote-route.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'public/eps/**'
+      - 'tests/eps-email-quote-route.test.mjs'
+      - 'infra/evercraft-edge/service-frontdoor/**'
+      - '.github/workflows/eps-email-quote-route.yml'
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test tests/eps-email-quote-route.test.mjs
