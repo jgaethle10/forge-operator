@@ -20,11 +20,18 @@ The entire readback remains `held_pending_end_to_end_field_proof` even if local 
 
 **Privacy:** This `home.read` surface must never include customer orders, amounts, sensitive job payloads, provider tokens or private execution receipts. The separate payments summary is governed by `home.payments.read`, and any customer-level evidence join requires a separately authorized, private server-side projection. The browser does not fetch or correlate hidden operator secrets.
 
+## Additional operational readbacks (read-only)
+
+- `GET /api/os/saban-snapshot` requires **existing** `home.systemia.read`. Operator may configure `EVERCRAFT_HOME_SABAN_WORK_STATE_FILE` with an absolute, permission-restricted private `.json` file (mode 0600, parent mode 0700). Readback includes sanitized totals for queued/leased/completed/dead-letter, retries and checkpoints plus a source digest and snapshot timestamp. No job IDs, customer details, role names, lease identities, result bytes, errors, paths or credentials. No file supplied means `not_configured`, not zero jobs. A source snapshot is neither a live worker connection nor an independently authenticated execution receipt. Review use of file ownership and rotation on physical nodes before installation.
+- `GET /api/os/commerce` requires **existing** `home.payments.read`. It delegates exclusively to Home's existing `createExecutivePaymentsReader` with its approved private HTTPS endpoint and token, and returns only the rolling seven-day aggregate. Incomplete, absent or otherwise unverified settlement returns UNKNOWN, not 0. Even a valid provider settlement snapshot does not close the customer-delivery stage.
+- The first-party One OS page queries these scoped endpoints independently. A user lacking the scope sees Restricted, not payment or worker data. No cross-tenant customer joins, authorizations, settlements or dispatches are created.
+
 ## Verify
 
 ```sh
 node --test systemia/evercraft-home/os-integration.test.mjs
 node --test systemia/evercraft-home/os-status.test.mjs
+node --test systemia/evercraft-home/os-operational-readbacks.test.mjs
 ```
 
 Only a successful CI run on this branch proves this source-level test. It does not prove a resident OS rollout.
