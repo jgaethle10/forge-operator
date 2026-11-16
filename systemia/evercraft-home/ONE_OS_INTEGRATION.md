@@ -53,6 +53,21 @@ This audit intentionally has **no HTTP route, no browser upload, no resident fil
 
 Run its tests: `node --test systemia/evercraft-home/os-outcome-source-audit.test.mjs`.
 
+## Private owned outcome bridge (source-only readback)
+
+`os-private-outcome-readback.mjs` adds a server-to-server private **read-only** bridge; `GET /api/os/outcome-readback` is available inside Home only after **both** existing Passport scopes, `home.payments.read` **and** `home.systemia.read`, pass. It does not accept a browser order ID, upload, user-selected URL, or arbitrary private job.
+
+Configuration (no defaults; missing means `not_connected`):
+- `EVERCRAFT_OS_OUTCOME_READBACK_URL`: owned HTTPS URL on the **exact** pinned `fabric.systemiacommandcenters.com` origin, under `/internal/os/outcomes/<service>`; no redirects, custom ports, query parameters or credentials.
+- `EVERCRAFT_OS_OUTCOME_READBACK_TOKEN_FILE`: absolute private bearer token file.
+- `EVERCRAFT_OS_OUTCOME_READBACK_SIGNING_KEY_FILE`: **separate** absolute private signing key file. Both must be regular, non-symlink files (0600), immediate parent privately owned/permissioned (0700), with bounded secret sizes. Rotate credentials through the existing private owner operations process, not source control or browser.
+
+On each permitted GET, Home sends a single `POST` with a freshly generated 192-bit nonce, request timestamp and `max_outcomes:1` to the pinned private endpoint. The owned service is **not yet implemented or configured by this source PR**. Its expected `evercraft.os.private-outcome-source-envelope.v1` response must contain matching nonce, complete non-synthetic declaration, fresh observation (within 120 seconds), and a `hmac-sha256:` authentication tag over the unsigned serialized body using the private signing key. Home rejects HTTP errors, redirects, content types other than JSON, oversized responses (>256 KiB), HMAC tampering, stale/replayed nonce, invalid output, and untrusted credentials.
+
+Successful HMAC verifies only possession of the configured **bridge secret**, *not* the issuer authority of any contained receipt. Home passes the bounded private source records into the existing pure structural `reconcileEvercraftOutcomeSource` checker and emits **only** sanitized `authenticated_source_consistent_unattested` or `authenticated_source_held` plus hold reason codes. It never sends customer order identifiers, raw receipts, keys, shipment data, provider IDs or personal information to the browser. Even the consistent state does not prove real payment, a true completed Saban job, verified Shipping provider readback, net margin, replay safety, or customer acceptance. Home's overall status must remain held. **No merchant, systemia, worker, shipping, or deployment action takes place.**
+
+Source proof command: `node --test systemia/evercraft-home/os-private-outcome-readback.test.mjs`. It exercises synthetic owned-origin HTTP, valid and invalid HMAC, nonce mismatch, oversized/stale/unconfigured data, no identifier disclosure, and local scoped HTTP projection. Deployment of any actual resident upstream remains a separately authorized source/field project.
+
 ## Next vertical integration
 
 Reuse Issue #1546 and existing Saban, Payments and Shipping implementation owners. Build an authenticated, permission-scoped canonical receipt reader (the source-only structural audit above does **not** satisfy this) joining:
