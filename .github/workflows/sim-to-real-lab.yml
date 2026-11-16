@@ -361,3 +361,58 @@ jobs:
           name: sim-to-real-rc05f-cross-family-gate
           path: /tmp/evercraft-rc05f-global-hold-gate.json
           retention-days: 7
+
+      - name: RC05G strictly inward goal recovery and fail-closed math tests
+        run: node --test systemia/world-engine/sim-to-real/controller-rc05-goal-recovery.test.mjs
+      - name: RC05G native runtime and legacy default preservation tests
+        run: node --import tsx --test systemia/world-engine/sim-to-real/recovery-trial-rc05g.test.mjs
+      - name: RC05G regression cohort (includes original timeout seeds 55 and 56)
+        run: node --import tsx systemia/world-engine/sim-to-real/recovery-trial-rc05g.mjs --family legacy --first-seed 49 --seeds 8 --out /tmp/evercraft-rc05g-legacy.json
+      - name: RC05G distinct crossing lanes cohort 101-108
+        run: node --import tsx systemia/world-engine/sim-to-real/recovery-trial-rc05g.mjs --family crossing-lanes --first-seed 101 --seeds 8 --out /tmp/evercraft-rc05g-crossing.json
+      - name: RC05G offset slalom cohort 201-208
+        run: node --import tsx systemia/world-engine/sim-to-real/recovery-trial-rc05g.mjs --family offset-slalom --first-seed 201 --seeds 8 --out /tmp/evercraft-rc05g-slalom.json
+      - name: RC05G unseen slalom cohort 209-216
+        run: node --import tsx systemia/world-engine/sim-to-real/recovery-trial-rc05g.mjs --family offset-slalom --first-seed 209 --seeds 8 --out /tmp/evercraft-rc05g-slalom-fresh.json
+      - name: RC05G evidence integrity, per-seed regression and non-deployment review
+        run: |
+          node --import tsx --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import {verifyRecoveryTrial} from './systemia/world-engine/sim-to-real/recovery-trial-rc05g.mjs';
+          const reports=['legacy','crossing','slalom','slalom-fresh'].map(name=>{
+            const r=JSON.parse(fs.readFileSync('/tmp/evercraft-rc05g-'+name+'.json','utf8'));
+            if(!verifyRecoveryTrial(r)||r.hardwareExecution!==false||r.productionAuthorized!==false||
+              r.review.hardwareAuthorized!==false)throw Error('rc05g_integrity_or_authority_invalid:'+name);
+            const actualNewCollision=r.pairs.filter(p=>p.recovery.status==='collision'&&p.latched.status!=='collision').map(p=>p.seed);
+            const actualLostArrivals=r.pairs.filter(p=>p.latched.status==='arrived'&&p.recovery.status!=='arrived').map(p=>p.seed);
+            if(JSON.stringify(actualNewCollision)!==JSON.stringify(r.review.newCollision)||
+              JSON.stringify(actualLostArrivals)!==JSON.stringify(r.review.lostArrivals))
+              throw Error('rc05g_false_review_accounting:'+name);
+            console.log('RC05G VERIFIED',JSON.stringify({cohort:name,scores:r.scores,
+              review:r.review,failures:r.pairs.filter(p=>p.recovery.status!=='arrived').map(p=>({
+                seed:p.seed,status:p.recovery.status,position:p.recovery.finalPosition,
+                inwardRequests:p.recovery.inwardRecoveryTicks})),digest:r.sha256}));
+            return r;
+          });
+          const unsafe=reports.some(r=>r.review.newCollision.length||r.review.newGeofence.length||r.review.lostArrivals.length);
+          const improvements=reports.reduce((sum,r)=>sum+r.review.improvedArrivals.length,0);
+          const researchGate=!unsafe&&improvements>0;
+          const decision=researchGate?'FURTHER_SYNTHETIC_REVIEW_ONLY':'HOLD';
+          // This decision NEVER represents permission to ship or actuate a robot.
+          const summary={decision,improvements,newSafetyOrCompletionRegressions:unsafe,
+            hardwareAuthorized:false,productionAuthorized:false,
+            sources:reports.map(r=>({family:r.scenarioFamily,firstSeed:r.firstSeed,sha256:r.sha256}))};
+          fs.writeFileSync('/tmp/evercraft-rc05g-review.json',JSON.stringify(summary,null,2)+'\n');
+          console.log('RC05G GLOBAL MODELED REVIEW',JSON.stringify(summary));
+          NODE
+      - name: Upload RC05G native trajectories and strict review evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: sim-to-real-rc05g-native-modeled-review
+          path: |
+            /tmp/evercraft-rc05g-legacy.json
+            /tmp/evercraft-rc05g-crossing.json
+            /tmp/evercraft-rc05g-slalom.json
+            /tmp/evercraft-rc05g-slalom-fresh.json
+            /tmp/evercraft-rc05g-review.json
+          retention-days: 7
