@@ -232,3 +232,18 @@ node --import tsx systemia/world-engine/sim-to-real/recovery-trial-rc05g.mjs --f
 ```
 
 **Safety and evidence:** This is synthetic, planar sphere motion, not verified rover dynamics. It cannot command physical hardware, bypass an outer modeled fence, certify an emergency stop, or authorize deployment. Deterministic SHA-256 receipts demonstrate replay consistency only. A collision, geofence failure, lost arrival or absent improvement blocks review promotion. The PR must remain draft until separately reviewed.
+
+### RC05G verified native results and final research screen
+
+On commit `340ee1abab0f69accaee809e80d4a7cd9e0c2d87`, GitHub **Sim-to-Real Lab run 43978789723** and **World Engine run 43978789525** succeeded. Seven RC05G geometry tests and seven native tests passed.
+
+| Cohort | RC05E latched arrivals / collisions / geofence / timeout | RC05G arrivals / collisions / geofence / timeout |
+| --- | --- | --- |
+| Legacy 49–56 | 6 / 0 / 0 / 2 | **7 / 0 / 0 / 1** |
+| Crossing lanes 101–108 | 8 / 0 / 0 / 0 | 8 / 0 / 0 / 0 |
+| Offset slalom 201–208 | 7 / 0 / 0 / 1 | 7 / 0 / 0 / 1 |
+| New slalom 209–216 | 6 / 0 / 1 / 1 | 6 / 0 / 1 / 1 |
+
+The documented **seed 55** geofence-margin deadlock now arrived after **28** inward corrections. **Seed 56** remains timed out, while new slalom seed **215** still breaches the modeled outer geofence under both RC05E and RC05G. This is not a robot safety validation.
+
+The global modeled research decision is set to **HOLD** while any candidate collision or outer-geofence exit remains, even if it is inherited from an earlier version. The tightened gate and updated receipts require a subsequent GitHub verification. Default and previous opt-in policies remain unchanged; all hardware and production authorization flags stay false.
