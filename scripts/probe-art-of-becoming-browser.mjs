@@ -15,7 +15,7 @@ await fs.mkdir(out,{recursive:true});
 const server=createServer(async (request,response)=>{
   try {
     const url=new URL(request.url,'http://127.0.0.1');
-    const files={'/':'index.html','/index.html':'index.html','/engine.mjs':'engine.mjs','/world-engine.mjs':'world-engine.mjs','/worlds.html':'worlds.html','/campus-walk.html':'campus-walk.html','/campus-walk.mjs':'campus-walk.mjs','/walk-engine.mjs':'walk-engine.mjs'};
+    const files={'/':'index.html','/index.html':'index.html','/engine.mjs':'engine.mjs','/world-engine.mjs':'world-engine.mjs','/worlds.html':'worlds.html','/campus-walk.html':'campus-walk.html','/campus-walk.mjs':'campus-walk.mjs','/walk-engine.mjs':'walk-engine.mjs','/facility-interiors.mjs':'facility-interiors.mjs'};
     const filename=files[url.pathname];
     if(!filename){response.writeHead(404);response.end('Not found');return;}
     const buffer=await fs.readFile(path.join(root,filename));
@@ -119,6 +119,28 @@ try {
   const newZ=Number(await page.locator('#view').getAttribute('data-player-z'));
   assert.ok(newZ<initialZ-1,'WASD walking must move the camera in 3D');
   await page.screenshot({path:path.join(out,'walkable-franchise-webgl-mobile.png'),fullPage:true});
+  // Visiting a facility must produce a real, enclosed walkable space without
+  // spending credits, changing self-reports or silently saving navigation data.
+  const savedBeforeTour=await page.evaluate(key=>localStorage.getItem(key),STORAGE_KEY);
+  assert.equal(await page.locator('#facility-picker option').count(),1);
+  await page.locator('#tour').click();
+  await page.waitForFunction(()=>document.getElementById('view')?.dataset.space==='interior',null,{timeout:10000});
+  assert.equal(await page.locator('#view').getAttribute('data-room'),'build-1');
+  assert.equal(await page.locator('#nearby').innerText(),'Training Facility');
+  assert.equal(await page.locator('#tour').innerText(),'Return to campus');
+  const interiorZ=Number(await page.locator('#view').getAttribute('data-player-z'));
+  await page.keyboard.down('w');
+  await page.waitForTimeout(480);
+  await page.keyboard.up('w');
+  await page.waitForTimeout(480);
+  const interiorMoved=Number(await page.locator('#view').getAttribute('data-player-z'));
+  assert.ok(interiorMoved<interiorZ-.3,'First-person movement must work inside owned rooms');
+  await page.screenshot({path:path.join(out,'training-facility-interior-mobile.png'),fullPage:true});
+  await page.locator('#tour').click();
+  assert.equal(await page.locator('#view').getAttribute('data-space'),'campus');
+  assert.equal(await page.locator('#view').getAttribute('data-facility-count'),'1');
+  assert.equal(await page.evaluate(key=>localStorage.getItem(key),STORAGE_KEY),savedBeforeTour,
+    'Walking through a room must never edit earned history or saved buildings');
   await page.reload();
   await page.locator('#enter').click();
   await page.waitForFunction(() => document.getElementById('view')?.dataset.rendered === 'true',null,{timeout:20000});
@@ -211,7 +233,7 @@ try {
   await fs.writeFile(path.join(out,'receipt.json'),JSON.stringify({
     schema:'evercraft.art-of-becoming.browser-qa.v1',ok:true,
     viewport_checks:[320,390,1440],
-    checks:['mobile render','lifetime world campus construction','owned WebGL2 walk and mobile screenshot','world modes and demo isolation','check-in progression','completed SVG download','permanent local gallery','difficult-day preservation','reload','multiple goals','theme selection','backup export','erase','validated restore','corrupt storage recovery','no external requests','no runtime exceptions'],
+    checks:['mobile render','lifetime world campus construction','owned WebGL2 walk and mobile screenshot','owned facility interior walkthrough and safe return','world modes and demo isolation','check-in progression','completed SVG download','permanent local gallery','difficult-day preservation','reload','multiple goals','theme selection','backup export','erase','validated restore','corrupt storage recovery','no external requests','no runtime exceptions'],
     tested_at:new Date().toISOString(),external_requests:externalRequests.length,page_errors:errors.length
   },null,2)+'\n');
   console.log('ART_OF_BECOMING_BROWSER_QA_PASS: all mobile, desktop, privacy and retention checks passed');
