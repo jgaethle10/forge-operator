@@ -35,3 +35,33 @@ If no archive media is accessible, record the blocker and return to the photogra
 ## Hard no-go
 
 Do not claim a source-backed sample, paid documentary readiness, a live render on NextGen, or a human-approved film based on a successful download probe alone.
+
+## Access test outcome and fallback, November 16, 2026
+
+GitHub Actions run https://github.com/jgaethle10/forge-operator/actions/runs/43977192962
+attempted all three DVIDS MP4 download links without authentication. Every one
+returned **HTTP 403 Forbidden**; verified source count was 0. The scout properly
+exited with NO-GO. No DVIDS video file, contact sheet, or documentary master was
+obtained.
+
+A second **separate test** now checks two Wikimedia Commons-hosted federal
+archive videos for accessible source pixels:
+- **Yuma, June 4, 2019:** CBP b-roll, https://commons.wikimedia.org/wiki/File:New_Bollard_Wall_Installed_Near_Yuma,_AZ.webm
+- **Border coverage, October 29, 2020:** Voice of America, https://commons.wikimedia.org/wiki/File:Trump%E2%80%99s_Border_Wall_and_Other_Tools_Border_Agents_Use.webm
+
+These are *not Lukeville* or *December 2023* video sources. The fallback is only
+an archival-technical editing proof; every scene needs individually verified
+location, credit and time and cannot be used in a Lukeville documentary as a
+specific place/date shot unless labeled as broader context. VOA materials may
+contain third-party footage despite government origin, so a producer must review
+all rights/embedded elements.
+
+**Official DVIDS usage limitations**: https://www.dvidshub.net/about/copyright
+specifies non-endorsement, potentially surviving publicity/privacy rights and
+restrictions on protected military marks/insignia. Display the relevant federal
+non-endorsement disclaimer where applicable. Do not claim Evercraft's service is
+endorsed by the U.S. government or that commercial archival reuse is unrestricted.
+
+This step **does not** satisfy the requirement for a polished and independently
+reviewed footage-led 1080p film. No additional outreach to the photographer
+was performed.
