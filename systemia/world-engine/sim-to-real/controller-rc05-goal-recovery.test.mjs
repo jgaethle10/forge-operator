@@ -35,7 +35,7 @@ test('RC05G rejects stale scans, uncertain pose, outer fence and far-field escap
     [{scanAgeSec:2},'stale_or_uncertain_localization'],
     [{uncertainty:.3},'stale_or_uncertain_localization'],
     [{estimate:{x:10.799,z:0,heading:0}},'outside_modeled_outer_geofence'],
-    [{estimate:{x:10.45,z:0,heading:0}},'outside_recovery_band'],
+    [{estimate:{x:10.42,z:0,heading:0}},'outside_recovery_band'],
     [{estimate:{x:7.5,z:0,heading:0}},'not_near_goal']
   ];
   for(const [fields,label] of changes){
