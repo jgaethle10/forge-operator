@@ -81,8 +81,8 @@ export function buildYakimaDrawList(scene=YAKIMA_SCENE){
  for(let z=lz-7;z<=lz+7;z+=2.4){
   add(lx-7.32,3.7,z,.12,.12,1.9,'#baac8f','illustrative','non-surveyed stone course');
  }
- add(lx-7.48,1.35,lz+6,.16,2.65,1.6,'#44433e','illustrative','artist-made entrance silhouette');
- add(lx-7.55,2.7,lz+6,.19,.22,2.0,'#dac8a6','illustrative','artist-made entrance lintel');
+ // Period-dependent doorway/canopy geometry lives in periods.mjs,
+ // so a saloon door is not erroneously displayed during the later retail era.
  for(let z=lz-5;z<=lz+5;z+=5){
   add(lx-7.37,5.6,z,.10,1.4,2.0,'#354b56','documented_category','symbolic arched-window bay');
   add(lx-7.43,6.33,z,.16,.13,2.30,'#dfd0ac','illustrative','arch suggestion');
