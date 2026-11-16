@@ -10,7 +10,9 @@ on:
   pull_request:
     paths:
       - 'systemia/worlds/living-lobby-policy.mjs'
+      - 'systemia/worlds/living-lobby-invitation-proof.mjs'
       - 'tests/worlds-living-lobby-policy.test.mjs'
+      - 'tests/worlds-living-lobby-invitations.test.mjs'
       - '.github/workflows/worlds-living-lobbies.yml'
 permissions:
   contents: read
