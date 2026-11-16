@@ -1,6 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {generateKeyPairSync,sign} from 'node:crypto';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import {openPrivateOneUseStopLedger} from './eo001-one-use-stop-ledger.mjs';
 import {proposeExactScopeStopForReview}
   from './eo001-exact-scope-stop-review.mjs';
 import {attemptApprovedExactSyntheticScopeStop}
@@ -266,4 +270,28 @@ test('approval provided by chat booleans is not a signature or owner host author
   const r=f.execute({permit:{...f.permit,ownerApproved:true}});
   assert.equal(r.state,'NATIVE_EXACT_SCOPE_STOP_HELD');
   assert.equal(f.calls.stop.length,0);
+});
+
+test('real local fsynced one-use sink works with fake systemd and forbids replay across process reopens',()=>{
+  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'eo001-stop-real-ledger-ci-'));
+  try{
+    const first=input(),sink=openPrivateOneUseStopLedger({directory:dir});
+    try{
+      const r=first.execute({sink});
+      assert.equal(r.state,'SYNTHETIC_STOP_ACK_METADATA_REVIEW_REQUIRED');
+      assert.deepEqual(first.calls.stop,[{unit:UNIT,timeout:3000}]);
+    }finally{sink.close();}
+    const names=fs.readdirSync(dir);
+    assert.equal(names.length,3);
+    assert.ok(names.some(n=>n.endsWith('.reserved.json')));
+    const second=input(),reopened=openPrivateOneUseStopLedger({directory:dir});
+    try{
+      const r=second.execute({sink:reopened});
+      assert.equal(r.state,'NATIVE_EXACT_SCOPE_STOP_HELD');
+      assert.equal(r.stop_request_issued,false);
+      assert.equal(second.calls.stop.length,0);
+      assert.equal(second.calls.reserve.length,0);
+    }finally{reopened.close();}
+    assert.equal(fs.readdirSync(dir).length,3);
+  }finally{fs.rmSync(dir,{recursive:true,force:true});}
 });
