@@ -2,6 +2,7 @@
 """Research-only, recoverable local Qwen mission. No shell tools or production integration."""
 import argparse
 import datetime as dt
+import fcntl
 import hashlib
 import json
 import os
@@ -99,6 +100,21 @@ def run(args):
     db.parent.mkdir(mode=0o700, parents=True, exist_ok=True)
     if db.is_symlink():
         raise ValueError("database symlink refused")
+    # Advisory flock protects direct runner calls and compatibility-launcher calls alike.
+    lock_path = db.parent / (args.mission_id + ".lock")
+    lock_fd = os.open(lock_path, os.O_CREAT | os.O_RDWR | os.O_NOFOLLOW, 0o600)
+    try:
+        fcntl.flock(lock_fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except BlockingIOError:
+        os.close(lock_fd)
+        print("MISSION BUSY: another process owns this mission", flush=True)
+        return 75
+    try:
+        return _run_locked(args, db)
+    finally:
+        os.close(lock_fd)
+
+def _run_locked(args, db):
     conn = connect(db)
     source_hash = digest({"records": RECORDS, "schema": SCHEMA})
     now = lambda: dt.datetime.now(dt.timezone.utc).isoformat()
@@ -154,4 +170,4 @@ if __name__ == "__main__":
     p.add_argument("--endpoint", default="http://127.0.0.1:8080/v1/chat/completions")
     p.add_argument("--timeout", type=int, default=120)
     p.add_argument("--stop-after", choices=STAGES)
-    run(p.parse_args())
+    raise SystemExit(run(p.parse_args()) or 0)
