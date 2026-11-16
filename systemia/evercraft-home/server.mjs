@@ -9,6 +9,7 @@ import { authorizeEvercraftHome, verifyEvercraftSession } from "./identity.mjs";
 import { planSystemiaMission, readSystemiaInventory } from "./systemia-adapter.mjs";
 import { readNetworkOverview, readYardOverview } from "./operations-adapter.mjs";
 import { readExecutiveEvidence } from "./executive-evidence-adapter.mjs";
+import { createExecutivePaymentsReader } from "./payments-executive-readback.mjs";
 import { readRavenOverview } from "./raven-adapter.mjs";
 import { executeRavenCommand, planRavenCommand } from "./raven-command-adapter.mjs";
 import { askIntelligence, intelligenceOptions } from "./intelligence-router.mjs";
@@ -142,6 +143,7 @@ export async function startEvercraftHomeServer({
   sourceReleaseRef = String(process.env.EVERCRAFT_HOME_RELEASE_REF || "").trim(),
   clipFacebookFetch = globalThis.fetch,
   clipLinkedInFetch = globalThis.fetch,
+  paymentsReadbackFetch = globalThis.fetch,
 } = {}) {
   const loopback = ["127.0.0.1", "localhost", "::1"].includes(host);
   if (authMode === "local" && !loopback) {
@@ -182,6 +184,11 @@ export async function startEvercraftHomeServer({
     ? readPrivateRuntimeToken(ravenWorkBridgeTokenFile, "raven_work_bridge")
     : "";
   const ravenReceiptDir = String(serviceOrigins?.EVERCRAFT_RAVEN_RECEIPT_DIR || "").trim();
+  const executivePayments = createExecutivePaymentsReader({
+    readbackUrl: String(serviceOrigins?.EVERCRAFT_HOME_PAYMENTS_READBACK_URL || "").trim(),
+    authorizationTokenFile: String(serviceOrigins?.EVERCRAFT_HOME_PAYMENTS_READBACK_TOKEN_FILE || "").trim(),
+    fetchImpl: paymentsReadbackFetch,
+  });
 
   const lineageControlRoomBridgeUrl = String(
     serviceOrigins?.LINEAGE_CONTROL_ROOM_BRIDGE_URL || ""
@@ -1155,6 +1162,16 @@ export async function startEvercraftHomeServer({
       const session = sessionFor(req, "home.network.read");
       if (!session.ok) return json(res, session.status, session);
       return json(res, 200, { ok: true, subject: session.subject, ...readNetworkOverview(repoRoot) });
+    }
+
+    if (req.method === "GET" && url.pathname === "/api/executive/payments") {
+      // Separate least-privilege Passport scope: generic Home read cannot expose business settlement totals.
+      const session = sessionFor(req, "home.payments.read");
+      if (!session.ok) return json(res, session.status, session);
+      return json(res, 200, {
+        ok: true, subject: session.subject,
+        ...(await executivePayments.read()),
+      });
     }
 
     if (req.method === "GET" && url.pathname === "/api/executive/evidence") {
