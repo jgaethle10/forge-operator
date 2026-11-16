@@ -192,7 +192,7 @@ try{
     const beforeApproval=await page.evaluate(()=>JSON.parse(localStorage.getItem('evercraft.worlds.mossmere.v1')).objects.length);
     assert.equal(beforeApproval,1,profile.name+': imported quest mutated world before approval');
     await page.locator('#questExecute').click();
-    const receiptText=await page.locator('#questReceipt').innerText();
+    const receiptText=await page.locator('#questReceipt').textContent();
     assert.match(receiptText,/applied_to_local_scene_only/,profile.name+': local execution receipt absent');
     const afterApproval=await page.evaluate(()=>JSON.parse(localStorage.getItem('evercraft.worlds.mossmere.v1')).objects.length);
     assert.equal(afterApproval,2,profile.name+': imported and approved quest did not change scene');
