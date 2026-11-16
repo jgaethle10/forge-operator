@@ -70,10 +70,11 @@ test('human offer copy gives sell-now capabilities short memorable URLs',()=>{
   assert.ok(page.indexOf('name="customer_ref"') < page.indexOf('class="audit-preview"'), 'checkout appears before illustration');
   const details=page.indexOf('<details class="audit-more-info">');
   const poster=page.indexOf('<div class="offer-visual">');
+  const preview=page.indexOf('class="audit-preview"');
   const price=page.indexOf('<div class="offer-price">');
   const submit=page.indexOf('Continue to checkout');
-  assert.ok(price>0&&submit>price&&details>submit&&poster>details,
-    'Website Audit must show $49 and action before optional large promotional artwork');
+  assert.ok(price>0&&submit>price&&details>submit&&preview>details&&(poster<0||poster>details),
+    'Website Audit must show $49 and action before optional artwork and native preview');
   assert.doesNotMatch(page,/machine state|start_url_state|preferred_agent_route/i);
 });
 
