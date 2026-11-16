@@ -16,6 +16,10 @@ const HEX64=/^[a-f0-9]{64}$/;
 const NUM=/^[1-9][0-9]*$/;
 const UUID=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const UNIT=/^eo001-g1-synthetic-[a-f0-9]{32}\.scope$/;
+const validPath=value=>typeof value==='string'&&
+  value.startsWith('/user.slice/')&&value.length<=512&&
+  !value.includes('//')&&!value.includes('..')&&
+  !value.split('/').some(p=>p==='.'||p==='..');
 const sha=v=>createHash('sha256').update(v).digest('hex');
 const untrusted=['LOCAL_NATIVE_READ_ONLY_UNATTESTED',
   'INJECTED_TEST_READ_ONLY_UNATTESTED'];
@@ -36,7 +40,7 @@ export function joinHeldScopeKillSurveyForReview({
     proposal.resource_policy==='SYNTHETIC_ONLY_ZERO_SWAP'&&
     HEX40.test(proposal.reviewed_source_revision||'')&&
     UNIT.test(proposal.scope_unit||'')&&
-    typeof proposal.cgroup_path==='string'&&
+    validPath(proposal.cgroup_path)&&
     proposal.cgroup_path.endsWith('/'+proposal.scope_unit),
     'CGKILL_JOIN_UNREVIEWED_PROPOSAL');
   need(candidate?.schema==='evercraft.eo001.gate1.held-cgroup-kill-review.v1'&&
@@ -90,7 +94,9 @@ export function joinHeldScopeKillSurveyForReview({
     candidate.source_revision===proposal.reviewed_source_revision&&
     survey.source_revision===proposal.reviewed_source_revision,
     'CGKILL_JOIN_SCOPE_OR_SOURCE_MISMATCH');
-  need(NUM.test(candidate.expected_original_cgroup_device||'')&&
+  need(typeof candidate.expected_original_cgroup_device==='string'&&
+    typeof candidate.expected_original_cgroup_inode==='string'&&
+    NUM.test(candidate.expected_original_cgroup_device||'')&&
     NUM.test(candidate.expected_original_cgroup_inode||'')&&
     candidate.expected_original_cgroup_device===
       survey.original_scope_device&&
