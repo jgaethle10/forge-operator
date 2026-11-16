@@ -45,8 +45,13 @@ try{
     assert.ok(page.includes('id="'+id+'"'),'Missing deployed builder control: '+id);
   }
   assert.match(page,/No payment is taken here/);
-  assert.match(page,/No customer data or images are uploaded by this page/);
+  assert.match(page,/Packet details and job photos stay in your browser/);
+  assert.match(page,/id="closeoutInquiryForm"/);
   assert.doesNotMatch(page,/buy\.stripe\.com|checkout\.stripe\.com/i);
+  const intakeScript=await get('inquiry.mjs','text/javascript');
+  assert.match(intakeScript,/api\/closeout\/readiness/);
+  assert.match(intakeScript,/api\/closeout\/inquiry/);
+  assert.match(intakeScript,/Open email request/);
   const product=JSON.parse(await get('product.json','application/json'));
   assert.equal(product.product_id,'evercraft.commerce.closeout');
   assert.equal(product.proposed_price_usd,49);

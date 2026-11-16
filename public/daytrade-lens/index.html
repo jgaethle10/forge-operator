@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0c1019">
+  <meta name="description" content="DayTrade Lens by Evercraft: practice trading decisions with a clear risk check, behavioral journal and evidence-led review. No real-money trades.">
+  <title>DayTrade Lens | Practice with evidence</title>
+  <link rel="stylesheet" href="./style.css">
+  <script type="module" src="./app.mjs"></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="shell">
+    <header class="mast">
+      <a class="wordmark" href="../chum/products/daytrade-lens/" aria-label="DayTrade Lens, Evercraft product">
+        <span class="mark" aria-hidden="true">D<span>↗</span></span>
+        <span><strong>DAYTRADE <b>LENS</b></strong><small>AN EVERCRAFT PRODUCT</small></span>
+      </a>
+      <div class="mast-right"><span class="live-state"><i></i> LOCAL PRACTICE</span><a class="text-link" href="../chum/products/daytrade-lens/">Product record ↗</a></div>
+    </header>
+    <div class="system-warning" role="status">
+      <strong>Practice environment.</strong> No market feed, broker connection, executed orders or AI agents are running in this preview. All entries are self-reported and stored in this browser.
+    </div>
+    <div class="app-layout">
+      <aside class="rail" aria-label="Product navigation">
+        <div class="rail-title">WORKSPACE</div>
+        <nav class="nav" id="nav">
+          <button class="nav-button selected" data-view="overview" aria-current="page"><span>◈</span> Overview</button>
+          <button class="nav-button" data-view="practice"><span>◎</span> Practice desk</button>
+          <button class="nav-button" data-view="journal"><span>▤</span> Trade journal</button>
+          <button class="nav-button" data-view="team"><span>⌘</span> Agent team</button>
+          <button class="nav-button" data-view="evidence"><span>◇</span> Evidence</button>
+        </nav>
+        <div class="rail-bottom">
+          <span class="eyebrow">PILOT LIMIT</span>
+          <strong>$20.00 <small>virtual position</small></strong>
+          <p>No account, payment or API key needed for the practice desk.</p>
+          <span class="tiny-note">Local prototype • v0.1</span>
+        </div>
+      </aside>
+      <main id="main">
+        <section class="view" id="view-overview" aria-labelledby="overview-title">
+          <div class="eyebrow"><span class="beacon"></span> CONTROL ROOM / LOCAL PRACTICE</div>
+          <div class="hero">
+            <div>
+              <h1 id="overview-title">A better trade begins <em>before</em> the trade.</h1>
+              <p>Plan the setup. See its risk. Challenge the impulse. Capture what you learned. DayTrade Lens is built for better decisions, not overnight-profit promises.</p>
+              <button class="primary" data-open="practice">Start a practice plan <span aria-hidden="true">↗</span></button>
+            </div>
+            <div class="hero-art" aria-label="Illustrative risk control diagram, not a live market chart">
+              <span class="art-caption">DECISION QUALITY / ILLUSTRATION</span>
+              <div class="horizon"><span></span><span></span><span></span><span></span><span></span></div>
+              <svg viewBox="0 0 380 170" role="img" aria-label="Illustrative upward path with a guarded decision checkpoint">
+                <path d="M0 144 L380 144" stroke="#375067" stroke-dasharray="4 7"/>
+                <path d="M0 91 L380 91" stroke="#304254" stroke-dasharray="4 7"/>
+                <path d="M4 139 C45 130 53 149 86 120 S147 127 182 98 244 115 286 58 329 76 377 29" fill="none" stroke="#4dd9b3" stroke-width="3"/>
+                <circle cx="286" cy="58" r="7" fill="#0d1520" stroke="#bfeee0" stroke-width="3"/>
+                <path d="M286 60 V136" stroke="#4dd9b3" stroke-dasharray="4 6"/>
+              </svg>
+              <div class="art-foot"><span>01 / PLAN</span><span>02 / CHECK</span><span>03 / REFLECT</span></div>
+            </div>
+          </div>
+          <div class="metrics">
+            <div class="metric"><span>Practice plans</span><strong id="metric-plans">0</strong><small>Locally recorded</small></div>
+            <div class="metric"><span>Awaiting review</span><strong id="metric-pending">0</strong><small>Not broker positions</small></div>
+            <div class="metric"><span>Self-reported P&amp;L</span><strong id="metric-pnl">$0.00</strong><small>Unverified reflections</small></div>
+          </div>
+          <div class="section-heading"><div><span class="eyebrow">THE PRODUCT</span><h2>Built around decisions, not dopamine.</h2></div></div>
+          <div class="feature-grid">
+            <article class="feature"><span class="glyph">01</span><h3>Risk first</h3><p>Test a hypothetical entry, stop and target against a conservative virtual budget before saving a plan.</p></article>
+            <article class="feature"><span class="glyph">02</span><h3>Behavior matters</h3><p>Write down the thesis and acknowledge your plan instead of chasing the last candle.</p></article>
+            <article class="feature"><span class="glyph">03</span><h3>Evidence over theater</h3><p>Clearly separate manual notes, historical replay, paper-broker receipts and real-money activity.</p></article>
+          </div>
+          <div class="bottom-callout"><div><span class="eyebrow">FOUNDER BETA</span><strong>The public catalog lists $19/month.</strong><p>Production launch and verified payment activation are still pending. This preview is free and local.</p></div><button class="secondary" data-open="evidence">See readiness evidence</button></div>
+        </section>
+
+        <section class="view" id="view-practice" aria-labelledby="practice-title" hidden>
+          <div class="eyebrow"><span class="beacon"></span> THE PRACTICE DESK</div>
+          <h1 id="practice-title" class="page-title">Give every idea a <em>risk check.</em></h1>
+          <p class="intro">Enter a hypothetical long setup. This calculates a stress-adjusted estimate, not an actual fill or a guaranteed stop. No broker API is called.</p>
+          <div class="desk-grid">
+            <form id="plan-form" class="panel form-panel" novalidate>
+              <div class="panel-head"><h2>New practice plan</h2><button type="button" class="text-button" id="load-example">Use example values</button></div>
+              <div class="form-grid">
+                <label>Symbol <input name="symbol" id="symbol" maxlength="5" autocomplete="off" placeholder="AAPL" required></label>
+                <label>Setup <select name="setup" id="setup"><option value="Trend continuation">Trend continuation</option><option value="Mean reversion">Mean reversion</option><option value="Opening range">Opening range</option><option value="Other">Other</option></select></label>
+                <label>Virtual notional ($) <input name="notional" id="notional" type="number" min="0.01" max="20" step="0.01" inputmode="decimal" placeholder="10.00" required></label>
+                <label>Reference entry ($) <input name="entry" id="entry" type="number" min="0.01" step="0.01" inputmode="decimal" placeholder="100.00" required></label>
+                <label>Planned stop ($) <input name="stop" id="stop" type="number" min="0.01" step="0.01" inputmode="decimal" placeholder="99.50" required></label>
+                <label>Planned target ($) <input name="target" id="target" type="number" min="0.01" step="0.01" inputmode="decimal" placeholder="101.50" required></label>
+              </div>
+              <label class="wide-label">What is your thesis? <textarea id="thesis" maxlength="500" rows="3" placeholder="What would confirm or invalidate this setup? What would make you walk away?" required></textarea></label>
+              <label class="check-line"><input type="checkbox" id="confirm-plan"> I have a defined exit plan and I am not trying to recover an earlier loss.</label>
+              <div id="plan-messages" class="messages" aria-live="polite"></div>
+              <button class="primary full-width" type="submit">Save local practice plan <span aria-hidden="true">→</span></button>
+              <p class="fineprint">Saving a plan never submits an order. This is educational planning, not investment advice.</p>
+            </form>
+            <div class="panel risk-panel">
+              <div class="panel-head"><h2>Risk preview</h2><span class="pill neutral" id="risk-status">AWAITING INPUT</span></div>
+              <div class="risk-hero"><span>Modeled stressed downside</span><strong id="risk-usd">—</strong><small>Limit: $0.10 per virtual plan</small></div>
+              <div class="calc-row"><span>Reward / risk</span><strong id="risk-rr">—</strong></div>
+              <div class="calc-row"><span>Modeled reward</span><strong id="risk-reward">—</strong></div>
+              <div class="calc-row"><span>Estimated fractional quantity</span><strong id="risk-qty">—</strong></div>
+              <div class="calc-row"><span>Virtual capital ceiling</span><strong>$20.00</strong></div>
+              <div class="risk-note">Estimates include 10 bps modeled adverse slippage and 5 bps cost reserve. Real losses can exceed the estimate; no protective order is placed.</div>
+              <hr>
+              <h3>Session discipline</h3>
+              <p id="session-gate">No saved plans for today.</p>
+              <small>At most two local plans per day. Review the open plan before making another. Self-reported daily losses of $0.20 or more trigger a local hold.</small>
+            </div>
+          </div>
+        </section>
+
+        <section class="view" id="view-journal" aria-labelledby="journal-title" hidden>
+          <div class="eyebrow"><span class="beacon"></span> PRIVATE PRACTICE JOURNAL</div>
+          <h1 id="journal-title" class="page-title">The part the chart <em>can't tell you.</em></h1>
+          <p class="intro">Review your plan, record a hypothetical outcome or choose not to trade. None of these notes are verified broker fills.</p>
+          <div class="toolbar"><button type="button" class="secondary" id="export-journal">Export local journal (.json)</button><button type="button" class="quiet-danger" id="clear-journal">Clear local journal</button></div>
+          <div class="list-panel" id="journal-list" aria-live="polite"><p class="empty">No practice plans yet. Your first plan starts at the practice desk.</p></div>
+        </section>
+
+        <section class="view" id="view-team" aria-labelledby="team-title" hidden>
+          <div class="eyebrow"><span class="beacon"></span> SYSTEMIA / TEAM ARCHITECTURE</div>
+          <h1 id="team-title" class="page-title">Meet the team. <em>Keep the receipts.</em></h1>
+          <p class="intro">This is DayTrade Lens's intended agent structure. These are roles, not live agents currently executing customer tasks in this preview.</p>
+          <div class="mission-board">
+            <article class="agent"><span class="agent-icon">S</span><div><strong>Saban</strong><small>Coordinator</small><p>Freeze hypotheses, assign research, surface disagreements.</p></div><span class="pill neutral">NOT CONNECTED</span></article>
+            <article class="agent"><span class="agent-icon">↗</span><div><strong>Research scouts</strong><small>Market hypotheses</small><p>Document setups and alternate explanations before outcomes.</p></div><span class="pill neutral">NOT CONNECTED</span></article>
+            <article class="agent"><span class="agent-icon">⛨</span><div><strong>Independent Risk</strong><small>Veto authority</small><p>Block unsafe exposure and reject unverified data.</p></div><span class="pill neutral">NOT CONNECTED</span></article>
+            <article class="agent"><span class="agent-icon">R</span><div><strong>Raven</strong><small>Evidence audit</small><p>Reconcile sources, timestamps, order IDs and broker receipts.</p></div><span class="pill neutral">NOT CONNECTED</span></article>
+          </div>
+          <div class="bottom-callout"><div><span class="eyebrow">IMPORTANT BOUNDARY</span><strong>Research is not execution.</strong><p>Agent activity must be independently observed before this product labels anything running, filled or profitable.</p></div><button class="secondary" data-open="evidence">View build gates</button></div>
+        </section>
+
+        <section class="view" id="view-evidence" aria-labelledby="evidence-title" hidden>
+          <div class="eyebrow"><span class="beacon"></span> BUILD &amp; VERIFICATION</div>
+          <h1 id="evidence-title" class="page-title">A claim needs <em>a receipt.</em></h1>
+          <p class="intro">DayTrade Lens's customer-facing practice features are independent from experimental brokerage code. These statuses describe source and reviews, not live runtime certification.</p>
+          <div class="evidence-table">
+            <div class="evidence-row"><div><strong>Product discovery</strong><p>Public capability metadata in Evercraft's catalog.</p></div><span class="pill good">SOURCE PRESENT</span><a href="../chum/products/daytrade-lens/">Open ↗</a></div>
+            <div class="evidence-row"><div><strong>Paper broker preflight</strong><p>Read-only credential and account inspection candidate.</p></div><span class="pill neutral">DRAFT PR</span><a href="https://github.com/jgaethle10/forge-operator/pull/1981" rel="noopener noreferrer">#1981 ↗</a></div>
+            <div class="evidence-row"><div><strong>Order risk and reconciliation</strong><p>Proposal gates and PAPER order readback code.</p></div><span class="pill neutral">DRAFT PR</span><a href="https://github.com/jgaethle10/forge-operator/pull/2025" rel="noopener noreferrer">#2025 ↗</a></div>
+            <div class="evidence-row"><div><strong>Paper one-shot transport</strong><p>Disabled-by-default broker submission candidate.</p></div><span class="pill neutral">DRAFT PR</span><a href="https://github.com/jgaethle10/forge-operator/pull/2110" rel="noopener noreferrer">#2110 ↗</a></div>
+            <div class="evidence-row"><div><strong>Broker-confirmed customer fills</strong><p>No authenticated customer order/fill receipts in this preview.</p></div><span class="pill caution">NOT VERIFIED</span><span>Held</span></div>
+            <div class="evidence-row"><div><strong>Real-money execution</strong><p>Not permitted by this product preview.</p></div><span class="pill caution">DISABLED</span><span>Locked</span></div>
+          </div>
+          <div class="disclosure"><strong>What is evidence here?</strong><p>The customer journal is self-reported local practice. GitHub source and CI results can establish code presence and automated tests, but not deployed broker access, trading performance, payment verification or safe autonomous operation. Human approval remains required for consequential action.</p></div>
+          <div class="bottom-callout"><div><span class="eyebrow">COMMERCIAL STATUS</span><strong>Founding Beta, $19/month planned.</strong><p>Evercraft Payments activation is pending verified production origin, runtime and fulfillment. No paid access is sold by this preview.</p></div><a class="secondary as-link" href="../chum/products/daytrade-lens/">View public record</a></div>
+        </section>
+
+        <footer>© Evercraft LLC · DayTrade Lens · Education and risk discipline, not a brokerage. <a href="../contact/">Contact Evercraft</a></footer>
+      </main>
+    </div>
+  </div>
+</body>
+</html>

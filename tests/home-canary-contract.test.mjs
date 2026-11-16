@@ -117,3 +117,23 @@ test('owned-edge canary reports real Clip UI and checks that anonymous diagnose 
   assert.equal(ownedEdgeWorkflow.includes('page_access_token'),false);
   assert.equal(ownedEdgeWorkflow.includes('pages_manage_posts'),false);
 });
+
+test('owned-edge Payments canary never promotes anonymous denial into payment receipts',()=>{
+  for(const contract of [
+    'payments_executive_anonymous_access_denied:$payments_auth_guard',
+    'payments_executive_route_state:$payments_route_state',
+    'payments_order_feed_verified:false',
+    'api/executive/payments',
+    'payments_exec_auth_guard_verified=false',
+    'payments_exec_route_state=route_unverified',
+    'payments_exec_route_state=anonymous_denied',
+    'session_required',
+  ]){
+    assert.ok(ownedEdgeWorkflow.includes(contract),'missing Payments edge canary evidence '+contract);
+  }
+  // No service readback credentials are passed into a public canary.
+  assert.equal(ownedEdgeWorkflow.includes('EVERCRAFT_HOME_PAYMENTS_READBACK_TOKEN_FILE'),false);
+  assert.equal(ownedEdgeWorkflow.includes('home.payments.read'),false);
+  assert.equal(ownedEdgeWorkflow.includes('gross_settled_cents'),false);
+  assert.equal(ownedEdgeWorkflow.includes('verified_paid_orders'),false);
+});

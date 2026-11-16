@@ -17,6 +17,7 @@ import numpy as np
 from e2e_synthetic_stereo import synthetic_model
 
 KIT=Path(__file__).with_name("stereo_fieldkit.py")
+HELDOUT=Path(__file__).with_name("stereo_heldout.py")
 IMPORTER=Path(__file__).with_name("offline_stereo.py")
 W,H=640,480
 SQUARE=.03
@@ -38,7 +39,8 @@ def generate_board_images(directory):
     pixels=np.array([[0,0],[10*size-1,0],
                      [10*size-1,7*size-1],[0,7*size-1]],np.float32)
     pairs=[]
-    for i in range(16):
+    heldout=[]
+    for i in range(20):
         rotation=np.array([
            .06+.14*np.sin(i*.8),-.09+.12*np.cos(i*.9),.03*np.sin(i*.6)
         ],np.float64)
@@ -58,7 +60,10 @@ def generate_board_images(directory):
             if not cv2.imwrite(str(directory/name),frame):
                 raise RuntimeError("cannot_write_synthetic_board")
             names[side]=name
-        pairs.append(names)
+        if i < 16:
+            pairs.append(names)
+        else:
+            heldout.append(names)
     manifest={
        "schema":"evercraft.spatial-perception.stereo-calibration-input.v1",
        "sourceRights":"authorized_local_use",
@@ -68,7 +73,16 @@ def generate_board_images(directory):
     }
     path=directory/"calibration-input.json"
     path.write_text(json.dumps(manifest))
-    return path
+    heldout_manifest={
+        "schema":"evercraft.spatial-perception.heldout-checkerboards.v1",
+        "sourceRights":"authorized_local_use",
+        "rigId":"SYNTHETIC-CI-ONLY-NO-PHYSICAL-RIG",
+        "checkerboard":{"columns":9,"rows":6,"squareSizeM":SQUARE},
+        "pairs":heldout
+    }
+    heldout_path=directory/"heldout-input.json"
+    heldout_path.write_text(json.dumps(heldout_manifest))
+    return path,heldout_path
 
 
 def synthetic_unrectified_video(path):
@@ -101,11 +115,12 @@ class StereoFieldKitEndToEnd(unittest.TestCase):
         self.folder=tempfile.TemporaryDirectory(prefix="evercraft-v8-fixture-")
         root=Path(self.folder.name)
         self.root=root
-        self.manifest=generate_board_images(root)
+        self.manifest,self.heldout=generate_board_images(root)
         self.source=synthetic_unrectified_video(root/"sbs-unrectified.avi")
         self.calibration=root/"stereo-calibration.json"
         self.rectified=root/"sbs-rectified.avi"
         self.receipt=root/"rectified-receipt.json"
+        self.heldout_report=root/"heldout-quality.json"
 
     def tearDown(self):
         self.folder.cleanup()
@@ -119,6 +134,86 @@ class StereoFieldKitEndToEnd(unittest.TestCase):
                     "--video",self.source,"--output-video",self.rectified,
                     "--receipt",self.receipt,"--max-frames","4",
                     "--authorized-source","--reviewed-calibration")
+    def rectify_field(self):
+        return call(KIT,"rectify","--calibration",self.calibration,
+                    "--video",self.source,"--output-video",self.rectified,
+                    "--receipt",self.receipt,"--max-frames","4",
+                    "--authorized-source","--reviewed-calibration",
+                    "--field-mode","--heldout-report",self.heldout_report)
+
+
+    def heldout_check(self, output=None):
+        return call(HELDOUT,"--calibration",self.calibration,
+            "--heldout",self.heldout,
+            "--output",output or self.heldout_report,
+            "--authorized-source","--independent-holdout-attested")
+
+    def test_heldout_epipolar_alignment_passes_on_unseen_synthetic_poses(self):
+        calibrated=self.calibrate()
+        self.assertEqual(calibrated.returncode,0,calibrated.stderr)
+        checked=self.heldout_check()
+        self.assertEqual(checked.returncode,0,checked.stderr)
+        receipt=json.loads(self.heldout_report.read_text())
+        self.assertEqual(receipt["schema"],
+            "evercraft.spatial-perception.heldout-epipolar.v1")
+        self.assertEqual(receipt["holdoutImageCount"],8)
+        self.assertEqual(receipt["trainingImageCount"],32)
+        self.assertTrue(receipt["heldoutAlignmentGatePassed"])
+        self.assertLessEqual(receipt["verticalEpipolarResidualPx"]["p95AbsVerticalPx"],1.5)
+        self.assertTrue(all(v["cornerCount"]==54 for v in receipt["perPair"]))
+        self.assertFalse(receipt["absoluteDepthAccuracyCertified"])
+        self.assertFalse(receipt["timestampSynchronizationVerified"])
+        self.assertEqual(self.heldout_report.stat().st_mode & 0o777,0o600)
+
+    def test_heldout_vertical_misalignment_emits_failure_receipt(self):
+        calibrated=self.calibrate()
+        self.assertEqual(calibrated.returncode,0,calibrated.stderr)
+        manifest=json.loads(self.heldout.read_text())
+        right=self.root/manifest["pairs"][0]["right"]
+        original=cv2.imread(str(right),cv2.IMREAD_GRAYSCALE)
+        self.assertIsNotNone(original)
+        wrong=cv2.warpAffine(original,
+          np.array([[1,0,0],[0,1,12]],dtype=np.float32),
+          (W,H),borderValue=127)
+        self.assertTrue(cv2.imwrite(str(right),wrong))
+        result=self.heldout_check()
+        self.assertEqual(result.returncode,3,result.stderr)
+        receipt=json.loads(self.heldout_report.read_text())
+        self.assertFalse(receipt["heldoutAlignmentGatePassed"])
+        self.assertEqual(receipt["gateStatus"],
+            "heldout_epipolar_failed_review_required")
+        self.assertGreater(receipt["verticalEpipolarResidualPx"]["p95AbsVerticalPx"],1.5)
+        self.assertFalse(receipt["worldPersistenceAuthorized"])
+        refused=self.rectify_field()
+        self.assertNotEqual(refused.returncode,0)
+        self.assertIn("heldout_receipt_not_accepted",refused.stderr)
+        self.assertFalse(self.rectified.exists())
+
+    def test_field_mode_rejects_missing_or_stale_heldout(self):
+        self.assertEqual(self.calibrate().returncode,0)
+        without=self.rectify_field()
+        self.assertEqual(without.returncode,2)
+        self.assertIn("missing_or_unsafe_heldout_receipt",without.stderr)
+        self.assertEqual(self.heldout_check().returncode,0)
+        # A single changed byte of calibration JSON breaks receipt binding.
+        self.calibration.write_bytes(self.calibration.read_bytes()+b" ")
+        stale=self.rectify_field()
+        self.assertEqual(stale.returncode,2)
+        self.assertIn("heldout_receipt_not_accepted",stale.stderr)
+        self.assertFalse(self.rectified.exists())
+        self.assertFalse(self.receipt.exists())
+
+    def test_heldout_reused_calibration_pair_fails_without_report(self):
+        calibrated=self.calibrate()
+        self.assertEqual(calibrated.returncode,0,calibrated.stderr)
+        train=json.loads(self.manifest.read_text())
+        heldout=json.loads(self.heldout.read_text())
+        heldout["pairs"][0]["left"]=train["pairs"][0]["left"]
+        self.heldout.write_text(json.dumps(heldout))
+        result=self.heldout_check()
+        self.assertEqual(result.returncode,2,result.stderr)
+        self.assertIn("heldout_reuses_calibration_images",result.stderr)
+        self.assertFalse(self.heldout_report.exists())
 
     def test_actual_checkerboard_calibration_and_video_rectification(self):
         result=self.calibrate()
@@ -132,8 +227,10 @@ class StereoFieldKitEndToEnd(unittest.TestCase):
         self.assertFalse(data["realWorldAccuracyCertified"])
         self.assertFalse(data["timestampSyncVerified"])
         self.assertEqual(self.calibration.stat().st_mode & 0o777,0o600)
+        preflight=self.heldout_check()
+        self.assertEqual(preflight.returncode,0,preflight.stderr)
 
-        rect=self.rectify()
+        rect=self.rectify_field()
         self.assertEqual(rect.returncode,0,rect.stderr)
         receipt=json.loads(self.receipt.read_text())
         self.assertEqual(receipt["framesWritten"],4)
@@ -144,6 +241,11 @@ class StereoFieldKitEndToEnd(unittest.TestCase):
         self.assertEqual(receipt["calibrationFileSha256"],
             hashlib.sha256(self.calibration.read_bytes()).hexdigest())
         self.assertFalse(receipt["fieldAccuracyCertified"])
+        self.assertTrue(receipt["fieldModeRequested"])
+        self.assertTrue(receipt["heldoutProvisionalPassBound"])
+        self.assertEqual(receipt["heldoutEpipolarReceiptSha256"],
+            hashlib.sha256(self.heldout_report.read_bytes()).hexdigest())
+        self.assertLessEqual(receipt["heldoutEpipolarP95Px"],1.5)
         cap=cv2.VideoCapture(str(self.rectified))
         observed=0
         while True:

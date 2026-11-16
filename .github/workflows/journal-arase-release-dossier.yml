@@ -1,0 +1,61 @@
+name: Journal Arase Release Readiness Dossier
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/newsroom/arase-release-dossier.mjs'
+      - 'systemia/newsroom/arase-release-dossier.test.mjs'
+      - 'systemia/newsroom/editorial-queue/2026-10-31-arase-radiation-barrier.md'
+      - 'systemia/newsroom/editorial-queue/2026-11-15-arase-claim-input.json'
+      - 'systemia/newsroom/editorial-assets/arase-photo-rights-review-20261115.json'
+      - 'systemia/newsroom/editorial-assets/arase-may-2024-storm-media.json'
+      - '.github/workflows/journal-arase-release-dossier.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/newsroom/arase-release-dossier.mjs'
+      - 'systemia/newsroom/arase-release-dossier.test.mjs'
+      - 'systemia/newsroom/editorial-queue/2026-10-31-arase-radiation-barrier.md'
+      - 'systemia/newsroom/editorial-queue/2026-11-15-arase-claim-input.json'
+      - 'systemia/newsroom/editorial-assets/arase-photo-rights-review-20261115.json'
+      - 'systemia/newsroom/editorial-assets/arase-may-2024-storm-media.json'
+      - '.github/workflows/journal-arase-release-dossier.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Test original sources, claim reactor and missing release authority
+        run: node --test systemia/newsroom/arase-release-dossier.test.mjs
+      - name: Create private review dossier with machine and operator receipts
+        run: |
+          mkdir -p "$RUNNER_TEMP/arase-review-gates"
+          node systemia/newsroom/arase-release-dossier.mjs "$RUNNER_TEMP/arase-review-gates/arase-release-dossier.json" > "$RUNNER_TEMP/arase-review-gates/dossier-run-receipt.json"
+          node --input-type=module -e '
+            import fs from "node:fs";
+            const report=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+"/arase-review-gates/arase-release-dossier.json","utf8"));
+            if(!report.evidence.preflight_ready||report.publication_authority!==false||
+               report.editorial_approval!==false||report.photo.release_approved!==false||
+               report.clip_authorization!==false||report.pending.length<6){
+              throw Error("arase_review_gate_elevated_without_authority");
+            }
+            process.stdout.write("Source-bound scientific review packet produced; publication remains held.\\n");
+          '
+      - name: Do not mutate public edition or Clip
+        run: git diff --exit-code -- public/journal systemia/clip systemia/newsroom/stories
+      - name: Preserve private, human-readable review dossier
+        uses: actions/upload-artifact@v4
+        with:
+          name: arase-independent-editor-review-packet
+          path: ${{ runner.temp }}/arase-review-gates/
+          if-no-files-found: error
+          retention-days: 30

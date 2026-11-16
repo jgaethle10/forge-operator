@@ -151,9 +151,27 @@ test('website audit buyer sees honest, low-friction $49 journey and can choose a
   assert.match(held,/select id="audit-inquiry-goal" name="goal" required/);
   assert.match(held,/Get more quote requests/);
   assert.doesNotMatch(held,/We audited your website|Guaranteed more sales|62%/i);
-  assert.ok(held.indexOf('class="audit-journey"')<held.indexOf('id="audit-order"'));
+  assert.ok(held.indexOf('id="audit-order"')<held.indexOf('class="audit-journey"'),
+    'mobile buyer action must precede the longer illustrative journey');
   const configured=renderOfferPage(offer,{checkoutConfigured:true,auditInquiryAvailable:true});
   assert.match(configured,/id="audit-order" class="checkout-form"/);
   assert.match(configured,/Continue to checkout/);
   assert.doesNotMatch(configured,/class="audit-intake-form"/);
+});
+
+
+test('website audit sells the verified $49 Stripe SKU without weakening free inquiry or native-payment boundaries',()=>{
+  const page=renderOfferPage(offer,{checkoutConfigured:false,auditInquiryAvailable:true});
+  assert.match(page,/href="https:\/\/buy\.stripe\.com\/bJe28kfD885M9SP49n0Jq07"/);
+  assert.match(page,/Start my \$49 audit/);
+  assert.match(page,/including applicable sales tax/);
+  assert.match(page,/Your URL and priority are requested during checkout/);
+  assert.match(page,/human-reviewed report is delivered by email/);
+  assert.match(page,/Not ready to purchase\? Request a free review first/);
+  assert.match(page,/method="post" action="\/api\/website-audit\/inquiry"/);
+  assert.doesNotMatch(page,/tel:\+|onmouseover=|onload=/i);
+  assert.ok(page.indexOf('Start my $49 audit')<page.indexOf('class="audit-intake-form"'));
+  const native=renderOfferPage(offer,{checkoutConfigured:true,auditInquiryAvailable:true});
+  assert.match(native,/Continue to checkout/);
+  assert.doesNotMatch(native,/buy\.stripe\.com\/bJe28k/);
 });

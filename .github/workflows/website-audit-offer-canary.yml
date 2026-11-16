@@ -2,6 +2,8 @@ name: Website audit offer canary
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '19 */4 * * *'
   push:
     branches: [main]
     paths:
@@ -34,7 +36,7 @@ jobs:
           html=Path(sys.argv[1]).read_text(encoding='utf-8')
           readiness=json.loads(Path(sys.argv[2]).read_text(encoding='utf-8'))
           checks={
-            'headline': 'Your website is getting attention' in html,
+            'headline': 'See your website through their eyes.' in html,
             'price': '$49' in html,
             'offer': 'Quick Win Audit' in html,
             'payments_authority': 'Evercraft Payments' in html,
@@ -48,17 +50,35 @@ jobs:
           checks['price_before_preview']=price>=0 and preview>price
           form=html.find('name="customer_ref"')
           inquiry=html.find('class="audit-intake-form"')
+          verified_hosted_url='https://buy.stripe.com/bJe28kfD885M9SP49n0Jq07'
+          hosted_link=html.find('href="'+verified_hosted_url+'"')
           if form>=0:
             mode='native_checkout'
             checks['buyer_action_before_preview']=form<preview
             checks['correct_checkout_route']='/api/offers/website-audit/checkout' in html
+          elif hosted_link>=0:
+            # Exact Stripe URL independently verified as active and owned by
+            # Evercraft LLC. This HTTP check does NOT inspect a payment or
+            # prove that paid-to-human-reviewed fulfillment works.
+            mode='verified_hosted_checkout_with_optional_inquiry'
+            checks['buyer_action_before_preview']=hosted_link<preview
+            checks['correct_checkout_route']=hosted_link>=0 and 'Start my $49 audit' in html
+            checks['stripe_tax_and_scope_disclosed']='including applicable sales tax' in html and 'Your URL and priority are requested during checkout' in html
+            checks['no_autonomous_fulfillment_claim']='Work begins only after verified payment' in html and 'human-reviewed report is delivered by email' in html
+            checks['optional_free_inquiry_separate']=inquiry>=0 and inquiry<preview and '/api/website-audit/inquiry' in html and 'No charge, payment order, or automatic audit starts here.' in html
+            checks['private_intake_ready']=readiness.get('intake_available') is True
+            checks['native_payment_still_held']=readiness.get('payment_ready') is False
           else:
             mode='held_buyer_inquiry'
             checks['buyer_action_before_preview']=inquiry>=0 and inquiry<preview
             checks['correct_checkout_route']='/api/website-audit/inquiry' in html
             checks['no_charge_claim']=('No charge, payment order, or automatic audit starts here.' in html)
             checks['private_intake_ready']=readiness.get('intake_available') is True
-            checks['payment_still_held']=readiness.get('payment_ready') is False
+            checks['native_payment_still_held']=readiness.get('payment_ready') is False
+          artwork=html.find('<div class="offer-visual">')
+          disclosure=html.find('<details class="audit-more-info">')
+          actions=[i for i in (form, hosted_link, inquiry) if i>=0]
+          checks['large_artwork_collapsed_after_buying_action']=bool(actions) and disclosure>min(actions) and preview>disclosure and (artwork<0 or artwork>disclosure)
           for name,passed in checks.items():
             print(f'{name}: {"PASS" if passed else "FAIL"}')
           print('buyer_action_mode:',mode)
@@ -69,5 +89,5 @@ jobs:
             echo "## Website Audit live layout verified"
             echo
             echo "URL: $url"
-            echo "Verified: old poster removed, compact honest preview, controlled buyer action, secure audit inquiry readiness when native checkout held, and unchanged Evercraft Payments boundary."
+            echo "Verified: correct $49 buyer-action ordering, exact known hosted Stripe URL if present, private inquiry readiness and scope disclosures. No purchase, paid order, or fulfilled audit was exercised."
           } >> "$GITHUB_STEP_SUMMARY"

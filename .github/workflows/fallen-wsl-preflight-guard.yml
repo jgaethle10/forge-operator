@@ -1,0 +1,23 @@
+name: Fallen WSL available RAM and Python preflight
+on:
+  push:
+    branches: [fix/fallen-available-ram-guard-20261116]
+    paths:
+      - systemia/media-studio/roman-music-node-preflight.mjs
+      - systemia/media-studio/roman-music-node-preflight.test.mjs
+      - .github/workflows/fallen-wsl-preflight-guard.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test systemia/media-studio/roman-music-node-preflight.test.mjs
+      - name: Verify non-mutating host inspection
+        run: node systemia/media-studio/roman-music-node-preflight.mjs

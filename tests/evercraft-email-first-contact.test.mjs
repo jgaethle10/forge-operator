@@ -7,7 +7,7 @@ test('Only EPS follows the founder emergency email-first contact policy',()=>{
   const s=read('public/eps/index.html');
   assert.match(s,/mailto:jessegaethle10@gmail\.com/);
   assert.doesNotMatch(s,/tel:|sms:|Call \(509\)|Text this request|id="textQuote"/i);
-  assert.match(s,/review and send/i);
+  assert.match(s,/press Send/i);
 });
 test('HAVENLY remains Nikki-controlled and no inquiries are routed to founder email',()=>{
   const s=read('public/havenly/index.html');

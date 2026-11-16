@@ -7,6 +7,9 @@ on:
       - scripts/prepare-noaa-ex2306-track-review.py
       - tests/test_subsea_noaa_audit.py
       - tests/test_subsea_noaa_track_preview.py
+      - scripts/verify-noaa-track-display.py
+      - tests/test_subsea_noaa_display_verification.py
+      - public/subsea-watch/field-archive/track-review/sample-5s.json
       - .github/workflows/subsea-noaa-source-audit.yml
   push:
     branches: [main]
@@ -15,6 +18,9 @@ on:
       - scripts/prepare-noaa-ex2306-track-review.py
       - tests/test_subsea_noaa_audit.py
       - tests/test_subsea_noaa_track_preview.py
+      - scripts/verify-noaa-track-display.py
+      - tests/test_subsea_noaa_display_verification.py
+      - public/subsea-watch/field-archive/track-review/sample-5s.json
       - .github/workflows/subsea-noaa-source-audit.yml
 permissions:
   contents: read
@@ -31,6 +37,8 @@ jobs:
           python3 -m py_compile scripts/audit-noaa-subsea-sources.py tests/test_subsea_noaa_audit.py
           python3 -m unittest discover -s tests -p 'test_subsea_noaa_audit.py' -v
           python3 -m unittest discover -s tests -p 'test_subsea_noaa_track_preview.py' -v
+          python3 -m unittest discover -s tests -p 'test_subsea_noaa_display_verification.py' -v
+          python3 -m py_compile scripts/prepare-noaa-ex2306-track-review.py scripts/verify-noaa-track-display.py
       - name: Inspect original NOAA EX2306 DIVE02 KML and ancillary ZIP
         id: acquisition
         shell: bash
@@ -74,6 +82,28 @@ jobs:
             echo "Original NOAA raw 1Hz clip prepared; NOT a validated dive route." >> "$GITHUB_STEP_SUMMARY"
           fi
           exit 0
+      - name: Verify every public sample against original processed NOAA 1Hz product
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -s artifacts/subsea-noaa/ex2306-dive02-1830-raw-track.json ]; then
+            echo "::warning::SOURCE_VERIFICATION_BLOCKED: original 1Hz source unavailable, cannot verify the 61 public display points."
+            echo "Source-to-display verification: BLOCKED (not verified)" >> "$GITHUB_STEP_SUMMARY"
+          else
+            python3 scripts/verify-noaa-track-display.py \
+              --full artifacts/subsea-noaa/ex2306-dive02-1830-raw-track.json \
+              --display public/subsea-watch/field-archive/track-review/sample-5s.json \
+              --receipt artifacts/subsea-noaa/ex2306-dive02-display-verification.json
+            echo "NOAA 2023 filtered/interpolated/padded track: 61 display points matched source." >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Preserve source-to-display comparison receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: subsea-ex2306-display-verification
+          path: artifacts/subsea-noaa/ex2306-dive02-display-verification.json
+          if-no-files-found: ignore
+          retention-days: 14
       - name: Preserve provisional NOAA review JSON, not its raw ZIP
         if: always()
         uses: actions/upload-artifact@v4

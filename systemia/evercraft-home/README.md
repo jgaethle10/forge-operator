@@ -34,6 +34,72 @@ The first bounded Direct Mode slice is live in source:
 
 This is deliberate. Home is an operating entrance, not a way around Systemia.
 
+## Executive evidence readback (source-verified, read-only)
+
+The founder Executive Floor now requests `GET /api/executive/evidence` **after a valid Home session**. Production passes the existing Evercraft Identity plus Passport `home.read` decision. Local loopback development remains explicitly non-production.
+
+The adapter reads only the on-disk owned `public/journal/index.json`, the exact indexed article, and its Journal publication receipt. It checks the article SHA-256 digest and receipt fields before returning `source_receipt_verified`. A source publication receipt is **not** an independent external HTTPS delivery check.
+
+Clip gets `handoff_source_present` only when the matching on-disk handoff source is present. A handoff does not establish a provider post, permalink, social reach, or automatic publication.
+
+Payments get `canonical_order_feed_not_connected` until an authorized, source-of-truth Evercraft Payments order/settlement read bridge is installed and tested. Paid orders and revenue remain **null / unknown**, never fabricated as zero. A public price page or Stripe return is not a paid receipt. No credentials, provider tokens, private payment records or execution privileges are returned.
+
+The UI refreshes its private readback at Home entry and when the owner clicks **Refresh source receipts**. This call never invokes a payment, social post, mission execution, or account mutation.
+
+Validation: `node --test executive-evidence-adapter.test.mjs`, plus the existing Home test suite. Runtime production release still requires a Home deployment and external authenticated/anonymous probes; a merged GitHub commit alone is not proof of deployment.
+
+## Canonical Evercraft Payments readback (private / P0 integration)
+
+Home now has a separate **GET /api/executive/payments**, which is read-only and requires
+the **home.payments.read** Passport scope after the standard Evercraft Identity session.
+Generic home.read does not grant access to merchant settlement totals.
+
+The optional bridge uses:
+
+- `EVERCRAFT_HOME_PAYMENTS_READBACK_URL`: privately approved HTTPS URL under an Evercraft-controlled origin. Not a checkout page or Stripe callback.
+- `EVERCRAFT_HOME_PAYMENTS_READBACK_TOKEN_FILE`: an absolute, non-symlinked, private 0600 service token file. No token is logged, sent to the browser, or committed.
+- No vars means `canonical_feed_not_connected`, with null totals. An invalid or unresponsive bridge fails closed.
+
+The private Payments owner must implement `POST` action `read_executive_paid_orders` with
+exact rolling-seven-day `window_start`, `window_end`, `currency=USD` and
+`max_orders=500`. Its authenticated result must be a complete, recent,
+non-synthetic, live-mode snapshot with schema
+`evercraft.payments.executive-paid-orders-snapshot.v1`, canonical authority
+`evercraft_payments`, Raven Nexus provider boundary, and source
+`canonical_order_ledger_and_authoritative_settlement_readback`.
+
+Response fields: `complete:true`, `synthetic:false`, `livemode:true`,
+`window_start`, `window_end`, `currency:"USD"`, `verified_at` (fresh ISO),
+`order_count`, `gross_settled_cents`, `orders`, and a canonical digest
+`snapshot_receipt_sha256`. The digest is `sha256:` plus the SHA-256 of the
+UTF-8 bytes of `JSON.stringify` on the ordered subset
+`{schema,authority,provider_boundary,source,complete,synthetic,livemode,currency,window_start,window_end,verified_at,order_count,gross_settled_cents,orders}`.
+This is an integrity check, not an independent cryptographic signature.
+
+Every `orders[]` row must include
+`order_key`, `offer_key`, `amount_cents`, `currency:"USD"`,
+`provider_boundary:"raven_nexus"`, `payment_state:"paid"`,
+`provider_paid_verified:true`, `settlement_verified:true`,
+`synthetic:false`, `livemode:true`,
+`refund_state:"none"`, `dispute_state:"none"`,
+a unique `provider_receipt_id`, and a fresh ISO `provider_verified_at`.
+A complete empty period is the ONLY case in which the UI can display a
+legitimate zero. A partial/paginated response, wrong digest, stale receipt,
+unauthorized provider response, duplicate order, refund, dispute, alternate
+currency, synthetic/test payment, or HTTP 402 is NOT zero: it is UNKNOWN.
+
+**This interface is not yet wired to a live canonical merchant backend.**
+The bridge only reads and attests amounts. It does not create orders,
+charge customers, provision entitlements, issue refunds or publish private
+customer/receipt identifiers. The sum is **gross settled USD**, not profit,
+net proceeds or recognized accounting revenue.
+
+Run `node --test payments-executive-readback.test.mjs` and
+`npm run check` in `systemia/evercraft-home`. In production, grant the
+founder `home.payments.read` with a verifiable Passport authority receipt
+and independently test anonymous/session-expired/scope-denied access
+before any private balance is displayed.
+
 ## Authentication
 
 ### Local development
