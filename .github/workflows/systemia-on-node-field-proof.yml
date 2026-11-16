@@ -7,6 +7,9 @@ on:
       - 'systemia/saban/microseed-native-agent.mjs'
       - 'systemia/saban/microseed-device-quarantine.mjs'
       - 'systemia/saban/microseed-gateway.mjs'
+      - 'systemia/saban/microseed-executor.mjs'
+      - 'systemia/saban/microseed-capability-executor.mjs'
+      - 'tests/saban-microseed-quarantine-core.test.mjs'
       - 'tests/saban-microseed-e2e.test.mjs'
       - 'systemia/saban/microseed-execution-intent-store*.mjs'
       - 'systemia/saban/microseed-signed-receipt-store.mjs'
@@ -19,6 +22,9 @@ on:
       - 'systemia/saban/microseed-native-agent.mjs'
       - 'systemia/saban/microseed-device-quarantine.mjs'
       - 'systemia/saban/microseed-gateway.mjs'
+      - 'systemia/saban/microseed-executor.mjs'
+      - 'systemia/saban/microseed-capability-executor.mjs'
+      - 'tests/saban-microseed-quarantine-core.test.mjs'
       - 'tests/saban-microseed-e2e.test.mjs'
       - 'systemia/saban/microseed-execution-intent-store*.mjs'
       - 'systemia/saban/microseed-signed-receipt-store.mjs'
@@ -43,6 +49,9 @@ jobs:
           node --check systemia/saban/microseed-local-field-proof.mjs
           node --check systemia/saban/microseed-device-quarantine.mjs
           node --check systemia/saban/microseed-gateway.mjs
+          node --check systemia/saban/microseed-executor.mjs
+          node --check systemia/saban/microseed-capability-executor.mjs
+          node --check tests/saban-microseed-quarantine-core.test.mjs
           node --check systemia/saban/microseed-local-field-proof.test.mjs
           node --check systemia/saban/microseed-signed-receipt-store.test.mjs
           node --check systemia/saban/microseed-execution-intent-store.test.mjs
@@ -55,6 +64,7 @@ jobs:
             systemia/saban/microseed-execution-intent-store.test.mjs \
             tests/saban-microseed-signed-receipt-store.test.mjs \
             tests/saban-microseed-e2e.test.mjs \
+            tests/saban-microseed-quarantine-core.test.mjs \
             systemia/control-plane/visualization/passport-signed-device-read.test.mjs
       - name: Package portable Evercraft-owned field kit
         run: |
