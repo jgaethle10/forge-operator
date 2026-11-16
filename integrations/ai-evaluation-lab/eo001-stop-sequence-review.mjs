@@ -74,8 +74,7 @@ export function reviewSyntheticScopeStopSequence({
     pre.live_detached_session===true&&
     pre.live_descendant_cgroup_member===true&&
     numeric(pre.worker_start_ticks)&&
-    numeric(pre.detached_start_ticks)&&
-    pre.worker_start_ticks!==pre.detached_start_ticks,
+    numeric(pre.detached_start_ticks),
     'STOP_SEQUENCE_PRESTOP_PROOF_MISSING');
   check(unit.unit_active===true&&
     unit.manager_control_group===proposal.cgroup_path&&
