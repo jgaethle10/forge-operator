@@ -36,3 +36,18 @@ test('visible direct-email fallback is accessible before optional intake and nev
  assert.match(html,/Your details have NOT been confirmed received/);
  assert.match(html,/No payment at inquiry/);
 });
+
+
+test('unverified $50 Stripe checkout is not advertised or embedded in structured data',()=>{
+ assert.doesNotMatch(html,/4gM5kEd6K40d7ju86w4AU0e/);
+ const linkedData=html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)?.[1];
+ assert.ok(linkedData);
+ const offer=JSON.parse(linkedData).offers;
+ assert.equal(offer.price,'50.00');
+ assert.equal(offer.url,'https://jgaethle10.github.io/forge-operator/commercial-studio/#inquire');
+ assert.match(html,/Already approved a project\? Request payment instructions/);
+ assert.match(html,/Email for verified payment instructions/);
+ assert.match(html,/temporarily held pending verification against our payment account/);
+ assert.match(html,/No payment or booking happens on this page/);
+ assert.match(html,/Do not pay through a forwarded or unverified checkout URL/);
+});
