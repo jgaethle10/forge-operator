@@ -55,7 +55,7 @@ Run its tests: `node --test systemia/evercraft-home/os-outcome-source-audit.test
 
 ## Private owned outcome bridge (source-only readback)
 
-`os-private-outcome-readback.mjs` adds a server-to-server private **read-only** bridge; `GET /api/os/outcome-readback` is available inside Home only after **both** existing Passport scopes, `home.payments.read` **and** `home.systemia.read`, pass. It does not accept a browser order ID, upload, user-selected URL, or arbitrary private job.
+`os-private-outcome-readback.mjs` adds a server-to-server private **read-only** bridge; `GET /api/os/outcome-readback` is available inside Home only after **both** existing Passport scopes, `home.payments.read` **and** `home.systemia.read`, pass, **and** the logged-in subject is the configured Evercraft owner. The local development mode is loopback-only. It does not accept a browser order ID, upload, user-selected URL, or arbitrary private job.
 
 Configuration (no defaults; missing means `not_connected`):
 - `EVERCRAFT_OS_OUTCOME_READBACK_URL`: owned HTTPS URL on the **exact** pinned `fabric.systemiacommandcenters.com` origin, under `/internal/os/outcomes/<service>`; no redirects, custom ports, query parameters or credentials.
