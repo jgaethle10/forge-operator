@@ -35,16 +35,19 @@ respect to the original scope incarnation.
 3. Before and **after** a burned, privately persisted one-use permit,
    re-queries `systemctl --user show` and kernel/procfs identity. It
    rejects discovered replacements or stale manager observations.
-4. Invokes the fixed `/usr/bin/systemctl --user stop <exact-unit>`
-   **by name**. It never numeric-PID/group kills or retries.
-5. Attempts post-stop observer readback even if stop fails or times out.
-   It stores unresolved or missing results as **UNKNOWN**, and never
-   independently attests hardware cleanup.
+4. **The by-name `/usr/bin/systemctl --user stop` host route is now disabled**.
+   Only an explicitly labeled offline synthetic I/O adapter can simulate
+   a fixed stop request. Without one, the controller blocks before permit
+   reservation with `NATIVE_STOP_MANAGER_ATOMIC_BINDING_UNAVAILABLE`.
+5. The synthetic sequence tests post-stop observer readback even if a fake
+   stop fails or times out; unresolved evidence stays **UNKNOWN**, never
+   independently attested hardware cleanup.
 
 **Still unproven:** another principal able to change user manager units
 could replace the named scope *between* the final recheck and the stop.
 No atomic compare-and-stop operation based on the held original cgroup
-identity is implemented. `systemctl` exit status does not prove
+identity is implemented, and **no live stop is currently reachable in the
+provided source**. A future `systemctl` exit status would not prove
 which cgroup instance was affected or that the old detached child died.
 A local replay ledger or source digest does not fix this race.
 
