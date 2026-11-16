@@ -100,6 +100,7 @@ try{
     await page.locator('#sl-loaded').waitFor({state:'visible'});
     assert.match(await page.locator('#sl-status').textContent(),/does not independently authenticate/,profile.name+': observation caveat absent');
     assert.match(await page.locator('#sl-meta').textContent(),/GitHub commit cccccccccccc \(file-reported\)/,profile.name+': source claim label missing');
+    assert.match(await page.locator('#sl-meta').textContent(),/Snapshot ~\d+ d old · device clock/,profile.name+': historical age warning missing');
     assert.equal(await page.locator('#sl-events li').count(),1,profile.name+': policy evidence did not render');
     assert.match(await page.locator('#sl-stats').textContent(),/1,818/,profile.name+': cumulative promise count missing');
     assert.match(await page.locator('#sl-stats').textContent(),/220/,profile.name+': civic project total missing');
