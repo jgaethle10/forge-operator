@@ -21,7 +21,7 @@ const fail=code=>{const e=new Error(code);e.code=code;throw e;};
 const ensure=(ok,code)=>{if(!ok)fail(code);};
 const DIGEST=/^[a-f0-9]{64}$/;
 const MAX_RECEIPT=256*1024;
-const MAX_RECORDS=8;
+const MAX_RECORDS=2;
 const sha=b=>createHash('sha256').update(b).digest('hex');
 const allowedSchema=s=>typeof s==='string'&&(
   /^evercraft\.eo001\.native-stop-(?:prestop|observation)\.v1$/.test(s)||
@@ -83,7 +83,7 @@ function writeExclusive(fd,filename,bytes){
  */
 export function openPrivateOneUseStopLedger({directory}={}){
   const directoryFd=parsePrivateDirectory(directory);
-  let closed=false,reserved=null,next=0,previousRecordDigest=null;
+  let closed=false,reserved=null,next=0,previousRecordDigest=null,firstRecordSchema=null;
   const requireOpen=()=>ensure(!closed,'STOP_LEDGER_CLOSED');
   return Object.freeze({
     reserve(digest){
@@ -111,6 +111,14 @@ export function openPrivateOneUseStopLedger({directory}={}){
         receipt.permit_digest_sha256===reserved,
         'STOP_LEDGER_RECEIPT_UNBOUND');
       ensure(next<MAX_RECORDS,'STOP_LEDGER_RECORD_LIMIT');
+      const preSchema='evercraft.eo001.native-stop-prestop.v1';
+      const blockedSchema='evercraft.eo001.gate1.native-stop-blocked.v1';
+      const outcomeSchema='evercraft.eo001.native-stop-observation.v1';
+      ensure(next===0?(receipt.schema===preSchema||
+        receipt.schema===blockedSchema):(
+        firstRecordSchema===preSchema&&
+        (receipt.schema===outcomeSchema||receipt.schema===blockedSchema)),
+        'STOP_LEDGER_RECEIPT_SEQUENCE_INVALID');
       let encoded;
       try{
         const data=JSON.stringify(receipt);
@@ -134,6 +142,7 @@ export function openPrivateOneUseStopLedger({directory}={}){
       const ok=writeExclusive(directoryFd,filename,encoded);
       ensure(ok,'STOP_LEDGER_RECEIPT_ALREADY_EXISTS');
       previousRecordDigest=sha(encoded);
+      if(next===0)firstRecordSchema=receipt.schema;
       next++;
       return true;
     },
