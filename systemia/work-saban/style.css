@@ -832,3 +832,24 @@ html.office-observe-open,body.office-observe-open{overflow:hidden;height:100%}
 @media(max-width:650px){
   .office-bottom .office-motion-note{font-size:8px;line-height:1.4}
 }
+
+
+/* Mobile wardrobe: both selectors on one compact row, not giant stacked bars. */
+@media(max-width:650px){
+  .office-costume-toolbar{padding:6px 8px}
+  .office-costume-toolbar .spatial-costume-bar{
+    display:flex;flex-wrap:wrap;align-items:center;
+    width:100%;justify-content:space-between;column-gap:6px;row-gap:4px;
+  }
+  .office-costume-toolbar .spatial-costume-choice{
+    flex:1 1 calc(50% - 3px);width:calc(50% - 3px);
+    min-width:0;max-width:calc(50% - 3px);
+    min-height:37px;padding:6px 5px;
+    font-size:9px;letter-spacing:.02em;white-space:nowrap;overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .office-costume-toolbar .spatial-costume-caption{
+    margin:0;max-width:none;width:100%;
+    text-align:center;font-size:7px;line-height:1.2;
+  }
+}
