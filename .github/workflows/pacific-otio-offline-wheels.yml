@@ -1,0 +1,27 @@
+name: Pacific OpenTimelineIO Python 3.13 Wheel Cache
+on:
+  push:
+    branches: [studio/pacific-real-music-audition-20261115]
+    paths: [.github/workflows/pacific-otio-offline-wheels.yml]
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  offline-wheels:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.13"}
+      - name: Resolve native editorial OTIO wheels for local offline install
+        run: |
+          mkdir -p wheels
+          python -m pip download --only-binary=:all: -d wheels 'opentimelineio==0.18.1'
+          sha256sum wheels/* > wheels/sha256sums.txt
+          ls -lh wheels/
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pacific-otio-313-offline-wheels
+          path: wheels/
+          retention-days: 2
+          if-no-files-found: error
