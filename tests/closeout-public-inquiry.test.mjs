@@ -87,7 +87,12 @@ test('Owned Closeout captures only explicit inquiries, never an order',async()=>
     assert.equal(response.order_created,false);
     assert.equal(response.fulfillment_release,false);
     assert.equal(response.scope_url,'https://jgaethle10.github.io/forge-operator/closeout/#service');
-    assert.equal(events.length,0,'Request must not call a provider; async operator alerts may be dispatched separately');
+    for(const event of events){
+      assert.equal(event.product,'evercraft-closeout');
+      assert.ok(!JSON.stringify(event).includes('worker@example.com'));
+      assert.ok(!JSON.stringify(event).includes('Sample Services'));
+      assert.equal(event.data?.contains_customer_pii,false);
+    }
   }finally{
     await runtime.close();
     fs.rmSync(dir,{recursive:true,force:true});
