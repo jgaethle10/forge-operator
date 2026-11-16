@@ -21,7 +21,7 @@ function example(observed=moving){
   // Test-only contract assertions: synthetic patterns ARE NOT documentary footage or verified rights.
   const sources=['a','b','c'].map((id,i)=>({
     id,kind:'original_camera',sha256:String(i+1).repeat(64),
-    independentlyVerified:true,rightsReviewRef:'fixture:license',
+    independentlyVerified:true,embeddedThirdPartyStatus:'none_observed',rightsReviewRef:'fixture:license',
     privacyReviewRef:'fixture:privacy',sourceOriginRef:'fixture:origin'
   }));
   const roles=['orientation','observation','human','evidence','consequence','reflection','observation','consequence'];
@@ -104,4 +104,29 @@ test('identical footage bytes cannot be relabeled as distinct sources',()=>{
   const input=example();input.sources[1].sha256=input.sources[0].sha256;
   assert.equal(check(input).status,'rejected');
   assert.ok(check(input).blockers.includes('source_digest_reused_under_multiple_ids:b'));
+});
+
+test('government-origin file with AFP or unknown embedded footage is never globally cleared',()=>{
+  const suspect=example();
+  suspect.sources[0].embeddedThirdPartyStatus='suspected';
+  const blocked=check(suspect);
+  assert.equal(blocked.status,'rejected');
+  assert.ok(blocked.blockers.includes('embedded_third_party_rights_review_missing_or_blocked:a'));
+  const missing=example();
+  delete missing.sources[0].embeddedThirdPartyStatus;
+  assert.ok(check(missing).blockers.includes('embedded_third_party_rights_review_missing_or_blocked:a'));
+});
+test('shot-specific licensed/cleared footage demands documented per-segment evidence',()=>{
+  const input=example();
+  input.sources[0].embeddedThirdPartyStatus='cleared_per_shot';
+  const r=check(input);
+  assert.equal(r.status,'rejected');
+  assert.ok(r.blockers.includes('third_party_segment_not_independently_cleared:shot-0'));
+  for(const shot of input.shots.filter(s=>s.type==='footage'&&s.sourceId==='a')){
+    shot.segmentRightsReviewed=true;
+    shot.segmentRightsEvidenceRef='private:segment-specific-review';
+  }
+  const after=check(input);
+  assert.equal(after.blockers.includes('third_party_segment_not_independently_cleared:shot-0'),false);
+  assert.equal(after.status,'review_required'); // still no human creative approval
 });
