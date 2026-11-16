@@ -1,0 +1,43 @@
+name: Roman restaurant photo gallery verification
+on:
+  push:
+    branches: [production/roman-merchant-media-scout-20261115]
+    paths: ['.github/workflows/roman-gallery-source-verification.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  gallery:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Fetch additional real-business photo candidates
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p gallery/icy gallery/flame
+          capture () {
+            local out="$1" url="$2"
+            if curl --fail --location --silent --show-error --max-time 25 --max-filesize 10000000 "$url" -o "$out"; then
+              kind="$(file -b --mime-type "$out")"
+              if [[ "$kind" != "image/jpeg" && "$kind" != "image/png" ]]; then rm -f "$out";return; fi
+              echo "$(sha256sum "$out")" >> gallery/SHA256SUMS.txt
+            else rm -f "$out"; fi
+          }
+          capture gallery/icy/icy-detail-01.jpg 'https://cdn7.localdatacdn.com/wa/yakima/3583044/original/KUlS19GIgc.jpg'
+          capture gallery/icy/icy-detail-02.jpg 'https://cdn10.localdatacdn.com/wa/yakima/3365523/original/15oLpdwDOY.jpg'
+          capture gallery/icy/icy-detail-03.jpg 'https://cdn5.localdatacdn.com/wa/yakima/3864241/original/VZ1jSKqa7T.jpg'
+          capture gallery/icy/icy-detail-04.jpg 'https://cdn7.localdatacdn.com/wa/yakima/3613755/original/3GOQJxtbEf.jpg'
+          capture gallery/flame/flame-detail-01.jpg 'https://cdn2.localdatacdn.com/wa/union-gap/272459/original/3Nym3zEbqe.jpg'
+          capture gallery/flame/flame-detail-02.jpg 'https://cdn10.localdatacdn.com/wa/yakima/5599311/original/HX18P5ZUBK.jpg'
+          capture gallery/flame/flame-detail-03.jpg 'https://cdn9.localdatacdn.com/wa/yakima/1260245/original/JdIlqzh4QD.jpg'
+          capture gallery/flame/flame-detail-04.jpg 'https://cdn8.localdatacdn.com/wa/yakima/4975685/original/e9GPpVuyzx.jpg'
+          file gallery/icy/* gallery/flame/* || true
+          printf '%s\n' 'INTERNAL PREVIEW REFERENCE ONLY: publicly listed user photographs are not automatically licensed for advertising. Confirm subject and original rightsholder before client release.' > gallery/RIGHTS_NOTICE.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: roman-restaurant-photo-gallery-review
+          path: gallery
+          retention-days: 7
+          if-no-files-found: warn
