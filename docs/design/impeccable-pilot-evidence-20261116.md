@@ -46,3 +46,19 @@ Do **not** automatically remove gradient headlines, numbered labels, accent bord
 5. Keep the third-party detector confined to optional, ephemeral, separately authorized QA until dependency, license, privacy, security and rollback admission is complete.
 
 This proof supports the Evercraft external-capability strategy: evaluate actual code, measure useful gaps, improve first-party systems, retain product independence. It does not authorize external tool installation, third-party model calls, or production execution.
+
+## Same-engine follow-up, exact revised source
+
+**Verification run:** https://github.com/jgaethle10/forge-operator/actions/runs/43829310022
+**Proposed Work Saban revision:** commit f910f5faf51e1535a6d5cea4d3b1b73076e33e0c, Git blob SHA-1 001b7f53646c52484a19f045c8ab08a689f5305e; both captured and independently checked by the workflow before isolated scanning.
+
+The same pinned Impeccable engine and scan flags reported **21 findings before** and **10 after** on Work Saban source, a reduction of 11 static findings.
+
+- tiny-text: 4 → 0
+- undersized-ui-text: 4 → 0
+- low-contrast advisories: 4 → 1
+- remaining after revision: 3 border-accent-on-rounded, 3 numbered-section-labels, 1 extreme-negative-tracking, 1 hero-eyebrow-chip, 1 kicker-above-heading, 1 low-contrast advisory
+
+These results support that the textual source changes addressed detector-flagged readability risks. The remaining source flags are mostly aesthetic judgments, not validated defects. The Work Saban real-browser acceptance workflow separately completed successfully on the design PR branch; neither test certifies every visual or WCAG criterion. PR #2189 remains unmerged at the time of this entry.
+
+**Learning transferred:** make readability and visual hierarchy an explicit first-party design contract, retain a held-out synthetic fixture, and require a reproducible before/after scan before promoting an external design tool's recommendation.
