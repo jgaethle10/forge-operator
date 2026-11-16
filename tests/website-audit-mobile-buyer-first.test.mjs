@@ -17,8 +17,9 @@ function assertBuyerFirst(page,cta){
   const button=page.indexOf(cta);
   const disclosure=page.indexOf('<details class="audit-more-info">');
   const visual=page.indexOf('<div class="offer-visual">');
-  assert.ok(title>0&&title<price&&price<note&&note<button&&button<disclosure&&disclosure<visual,
-    'headline, price and action must all precede large illustrative graphic');
+  const preview=page.indexOf('class="audit-preview"');
+  assert.ok(title>0&&title<price&&price<note&&note<button&&button<disclosure&&preview>disclosure&&(visual<0||visual>disclosure),
+    'headline, price and action must precede optional graphic and actual preview');
   assert.match(page,/<main class="website-audit-mobile-fix">/);
   assert.match(page,/Quick Win Audit/);
   assert.match(page,/Optional example artwork and other audit options/);
