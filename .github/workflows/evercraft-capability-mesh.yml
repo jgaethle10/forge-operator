@@ -5,12 +5,14 @@ on:
     branches: [main]
     paths:
       - 'systemia/capability-mesh/**'
+      - 'research/open-source/karpathy-candidate-screen-20261116.json'
       - 'registry/public-products.json'
       - 'public/.well-known/evercraft-direct-door-readiness.json'
       - '.github/workflows/evercraft-capability-mesh.yml'
   pull_request:
     paths:
       - 'systemia/capability-mesh/**'
+      - 'research/open-source/karpathy-candidate-screen-20261116.json'
       - 'registry/public-products.json'
       - 'public/.well-known/evercraft-direct-door-readiness.json'
       - '.github/workflows/evercraft-capability-mesh.yml'
@@ -32,3 +34,4 @@ jobs:
           node --test systemia/capability-mesh/mesh.test.mjs
           node systemia/capability-mesh/runtime.mjs --check
           node --test systemia/capability-mesh/runtime.test.mjs
+          node --test systemia/capability-mesh/upstream-research-screen.test.mjs
