@@ -1,0 +1,79 @@
+name: Fallen Roman real recorded music scout
+on:
+  push:
+    branches:
+      - production/roman-live-music-auditions-20261116
+    paths:
+      - .github/workflows/fallen-roman-real-music-scout.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  scout:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Ensure FFmpeg probe is installed before verifying downloaded music
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg
+          ffprobe -version | head -n 1
+      - name: Download original composer's tracks, measure exact files, preserve credits
+        run: |
+          mkdir -p artifacts/roman-real-music
+          python3 - <<'PY'
+          import urllib.request,urllib.parse,urllib.error,hashlib,json,os,subprocess,time
+          from pathlib import Path
+          out=Path('artifacts/roman-real-music')
+          items=[
+            ('icy-funk','C-Funk','USUAN1100001','C-Funk.mp3'),
+            ('icy-brass','I Got a Stick Arr Bryan Teoh','USUAN2200004','I Got a Stick Arr Bryan Teoh.mp3'),
+            ('icy-groove','Funky One','USUAN1100222','Funky One.mp3'),
+            ('flame-blues','OctoBlues','USUAN1500083','OctoBlues.mp3'),
+            ('flame-hustle','Hustle','USUAN1100793','Hustle.mp3'),
+            ('flame-boogie','Boogie Party','USUAN2200002','Boogie Party.mp3'),
+          ]
+          receipts=[];success=0
+          for key,title,isrc,filename in items:
+            src='https://incompetech.com/music/royalty-free/mp3-royaltyfree/'+urllib.parse.quote(filename)
+            item={'key':key,'title':title,'artist':'Kevin MacLeod',
+                  'publisher':'incompetech.com','isrc':isrc,'source_url':src,
+                  'track_details_url':'https://incompetech.com/music/royalty-free/index.html?Search=Search&isrc='+isrc,
+                  'license':'CC BY 4.0','license_url':'https://creativecommons.org/licenses/by/4.0/',
+                  'attribution_required':True,'broadcast_no_attribution_requires_standard_license':True,
+                  'publication_state':'INTERNAL_EDITORIAL_AUDITION_ONLY'}
+            try:
+              req=urllib.request.Request(src,headers={'User-Agent':'EvercraftFallenInternalCommercialPreview/1.0'})
+              with urllib.request.urlopen(req,timeout=30) as response:
+                raw=response.read(25*1024*1024+1)
+                if len(raw)>25*1024*1024: raise ValueError('source_above_size_cap')
+                if not raw or raw[:3]!=b'ID3' and raw[:2]!=b'\xff\xfb' and raw[:2]!=b'\xff\xf3':
+                  raise ValueError('does_not_look_like_mp3')
+              dst=out/(key+'.mp3')
+              dst.write_bytes(raw)
+              probe=subprocess.run(['ffprobe','-v','error','-show_entries','format=duration:stream=codec_name,codec_type,sample_rate,channels','-of','json',str(dst)],capture_output=True,text=True)
+              if probe.returncode:raise ValueError('ffprobe_failed: '+probe.stderr[:120])
+              info=json.loads(probe.stdout)
+              if not any(s.get('codec_type')=='audio' for s in info.get('streams',[])):raise ValueError('audio_missing')
+              item.update(status='VERIFIED_DOWNLOADED',sha256=hashlib.sha256(raw).hexdigest(),
+                bytes=len(raw),duration_seconds=float(info['format']['duration']),probe=info)
+              success+=1
+            except Exception as error:
+              item['status']='FAILED';item['error']=str(error)[:240]
+              print('SOURCE FAIL',title,repr(error),flush=True)
+            receipts.append(item)
+            print('SOURCE',title,item['status'],flush=True)
+          (out/'source_receipts.json').write_text(json.dumps(receipts,indent=2)+'\n')
+          (out/'IMPORTANT_READ_RIGHTS.txt').write_text(
+            'INTERNAL AUDITIONS ONLY; not pre-cleared for TV/radio final use. Music by Kevin MacLeod (incompetech.com), CC BY 4.0. Each track requires visible attribution plus license URL and change notice when edited. For broadcast spots where attribution is impractical, obtain Standard License through composer; do not falsely claim cleared broadcast rights. Some tracks may be content-ID registered. Do not claim artist made a bespoke Fallen composition.\n')
+          print('Downloaded',success,'of',len(items),'music tracks',flush=True)
+          if success<2:raise SystemExit('insufficient_real_music_candidates')
+          PY
+      - name: Preserve actual audio files and provenance
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fallen-roman-recorded-music-candidates
+          path: artifacts/roman-real-music/
+          retention-days: 14
