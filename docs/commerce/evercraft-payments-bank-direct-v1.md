@@ -125,6 +125,45 @@ GitHub, logs or a public test. A reachable buyer page does not prove payment.
    eligibility and integration approval. Do not advertise instant payment
    or use a third-party host without owner authorization.
 
+## Deployment preflight and signed-link revocation (November 15)
+
+The bank-credit rail has an explicit, **read-only release preflight**:
+
+```bash
+export EVERCRAFT_BANK_CREDIT_PRIVATE_CONFIG="$HOME/.local/share/evercraft/private-payments/bank-credit-private.json"
+export EVERCRAFT_BANK_CREDIT_PRIVATE_STATE="$HOME/.local/share/evercraft/private-payments/orders"
+node systemia/payments/bank-credit-preflight.mjs
+```
+
+The diagnostic prints only booleans and named holds, never merchant
+routing/account numbers, operator tokens or HMAC signing keys. It requires a
+private non-symlinked 0600 config outside the repository, private 0700 order
+storage, two distinct strong tokens, an approved bank configuration and
+at least one exact-priced authorized offer.
+
+A green preflight means `LOCAL_STAGING_ONLY`, **not** that the bank has
+independently verified the account, the public route is ready, money arrived,
+or the service is commercially released. A held preflight exits nonzero.
+
+An authorized operator can revoke a particular bank-payment instruction
+using the PRIVATE local operator API. Example request body:
+
+```json
+{"request_id":"bpr_<opaque-request-id>","reason":"buyer_cancelled"}
+```
+
+`POST /v1/operator/bank-requests/revoke` requires the existing private
+operator bearer token. Allowed reasons are `buyer_cancelled`,
+`suspected_link_compromise`, `incorrect_terms`, `merchant_hold`.
+The first revocation is immutable, marked in private 0600 storage, and
+blocks the signed buyer link (HTTP 410) and future idempotent re-issuance.
+The public-only gateway never exposes this route.
+
+**Revocation cannot stop a bank transfer a buyer has already initiated.**
+Bank deposits, returns, refunds, partial amounts and support inquiries must
+still be handled through independently verified merchant-bank records.
+Never delete the original order as a substitute for reconciliation.
+
 ## Safe first-party setup
 
 The source now includes a secrets-only bootstrap for Node001/Node002. It
