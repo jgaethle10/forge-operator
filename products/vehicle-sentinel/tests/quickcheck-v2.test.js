@@ -44,4 +44,5 @@ assert.throws(()=>context.parse({...report,events:[{...report.events[0],note:'x'
 assert.throws(()=>context.parse({...report,events:[{...report.events[0],at:'not-a-date'}]}),/invalid_observation/);
 assert.throws(()=>context.parse({...report,events:Array.from({length:251},()=>report.events[0])}),/unsupported_report/);
 assert.throws(()=>context.parse({...report,schema:'unsupported'}),/unsupported_report/);
+assert.throws(()=>context.parse({...report,id:'VS-../../private'}),/unsupported_report/);
 console.log('PASS: QuickCheck v0.3 memory-only privacy, import sanitization and disclosures');
