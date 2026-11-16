@@ -84,10 +84,19 @@ export function createLocalSignedMicroSeedAdapter({
     if(response.status!==200){
       throw Error('fenced_nodeseed_local_http_status_invalid');
     }
-    const raw=await response.text();
-    if(Buffer.byteLength(raw)>128*1024){
-      throw Error('fenced_nodeseed_local_response_too_large');
+    // Read with a hard byte ceiling instead of response.text(), which
+    // allocates the entire untrusted HTTP body before a size check.
+    const chunks=[];
+    let bytes=0;
+    if(!response.body)throw Error('fenced_nodeseed_local_response_missing');
+    for await(const chunk of response.body){
+      bytes+=chunk.byteLength;
+      if(bytes>128*1024){
+        throw Error('fenced_nodeseed_local_response_too_large');
+      }
+      chunks.push(Buffer.from(chunk));
     }
+    const raw=Buffer.concat(chunks,bytes).toString('utf8');
     let result;
     try{result=JSON.parse(raw);}catch{
       throw Error('fenced_nodeseed_local_response_invalid_json');
