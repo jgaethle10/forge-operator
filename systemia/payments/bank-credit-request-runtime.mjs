@@ -79,6 +79,11 @@ function signature(secret,id){
  return crypto.createHmac('sha256',secret).update('bank-credit-link-v1:'+id).digest('base64url');
 }
 function orderFile(root,id){return path.join(root,id+'.json')}
+function revokedFile(root,id){return path.join(root,id+'.revoked.json')}
+async function requestRevoked(root,id){
+ try{await fs.lstat(revokedFile(root,id));return true}
+ catch(error){if(error?.code==='ENOENT')return false;throw error}
+}
 function receivingAccountKey(signingKey,payee){
  return 'recv_'+crypto.createHmac('sha256',signingKey)
   .update('bank-receiver-v1:'+payee.routing_number+':'+payee.account_number+':'+payee.account_type)
@@ -164,6 +169,8 @@ export async function startBankCreditRequestRuntime({
     let order;
     try{order=JSON.parse(await fs.readFile(orderFile(dir,id),'utf8'))}
     catch{return json(res,404,{ok:false,error:'request_not_found'})}
+    if(await requestRevoked(dir,id))
+      return json(res,410,{ok:false,error:'payment_request_revoked'});
     if(order.schema!==SCHEMA||order.request_id!==id||
       order.state!=='awaiting_bank_transfer'||clock()>Date.parse(order.expires_at)||
       !payeeReady||order.receiving_account_key!==accountKey||!offers.has(order.offer_key))
@@ -205,6 +212,39 @@ export async function startBankCreditRequestRuntime({
          paid_verified:false,fulfillment_release:false});
      }
    }
+   // An operator may immediately revoke a stolen, cancelled, or incorrect
+   // bearer link. Creating the flag is exclusive and durable: the original
+   // financial request remains unchanged for accounting/reconciliation.
+   // Revocation does NOT cancel a transfer already initiated by a bank.
+   if(req.method==='POST'&&url.pathname==='/v1/operator/bank-requests/revoke'){
+    const auth=String(req.headers.authorization||'');
+    if(!auth.startsWith('Bearer ')||!eq(auth.slice(7),operatorToken))
+      return json(res,401,{ok:false,error:'operator_authority_required'});
+    const b=await readJson(req);
+    const id=b.request_id;
+    if(typeof id!=='string'||!/^bpr_[a-f0-9]{32}$/.test(id)||
+      !['buyer_cancelled','suspected_link_compromise','incorrect_terms','merchant_hold'].includes(b.reason))
+      return json(res,422,{ok:false,error:'revocation_request_invalid'});
+    let order;
+    try{order=JSON.parse(await fs.readFile(orderFile(dir,id),'utf8'))}
+    catch(e){if(e?.code==='ENOENT')return json(res,404,{ok:false,error:'payment_request_not_found'});throw e}
+    if(order.schema!==SCHEMA||order.request_id!==id)
+      return json(res,422,{ok:false,error:'payment_request_record_invalid'});
+    const marker={schema:'evercraft.payments.bank-credit-revocation.v1',
+      request_id:id,state:'revoked',reason:b.reason,revoked_at:new Date(clock()).toISOString()};
+    let alreadyRevoked=false;
+    try{
+      await fs.writeFile(revokedFile(dir,id),JSON.stringify(marker)+'\n',
+       {encoding:'utf8',flag:'wx',mode:0o600});
+    }catch(error){
+      if(error?.code!=='EEXIST')throw error;
+      alreadyRevoked=true;
+    }
+    return json(res,200,{ok:true,request_id:id,state:'revoked',
+      already_revoked:alreadyRevoked,paid_verified:false,
+      fulfillment_release:false,
+      note:'This revokes the web instruction only. Transfers already sent through a bank require independent accounting review.'});
+   }
    if(req.method==='POST'&&url.pathname==='/v1/operator/bank-requests'){
     const auth=String(req.headers.authorization||'');
     if(!auth.startsWith('Bearer ')||!eq(auth.slice(7),operatorToken))
@@ -240,6 +280,9 @@ export async function startBankCreditRequestRuntime({
          previous.offer_key!==order.offer_key||
          previous.receiving_account_key!==accountKey)
         return json(res,409,{ok:false,error:'idempotency_conflict'});
+      if(await requestRevoked(dir,id))
+        return json(res,410,{ok:false,error:'payment_request_revoked',
+          paid_verified:false,fulfillment_release:false});
       if(clock()>Date.parse(previous.expires_at))
         return json(res,410,{ok:false,error:'bank_request_expired'});
       return json(res,200,{...safePublic(previous,origin,linkSigningKey),replayed:true});
