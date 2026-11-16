@@ -54,7 +54,7 @@ MIME = {"preview.mp3": "audio/mpeg", "native.wav": "audio/wav",
 
 
 def validate_host(host):
-    if host not in ("127.0.0.1", "::1", "localhost"):
+    if host != "127.0.0.1":
         raise ValueError("LOCALHOST_ONLY_NO_LAN_OR_PUBLIC_BIND")
     return host
 
@@ -325,7 +325,7 @@ main{max-width:1000px;margin:0 auto;padding:40px 22px 70px}
 h1{font-size:clamp(34px,6vw,58px);letter-spacing:-.05em;margin:6px 0}p{line-height:1.55;color:#555}
 .panel{border:1px solid #e5e0df;border-radius:18px;background:#fff;padding:26px;margin-top:24px;box-shadow:0 8px 28px #11111107}
 label{display:block;font-size:13px;font-weight:700;margin:0 0 8px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}select,textarea{width:100%;background:#fff;color:#181818;border:1px solid #d4cbca;border-radius:10px;padding:13px;font:inherit}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.script-field{margin-top:22px}select,textarea{width:100%;background:#fff;color:#181818;border:1px solid #d4cbca;border-radius:10px;padding:13px;font:inherit}
 textarea{min-height:190px;resize:vertical;margin:0}button{background:#9f1230;color:#fff;border:0;padding:15px 24px;border-radius:10px;font-size:15px;font-weight:800;cursor:pointer}
 button:disabled{opacity:.55;cursor:wait}.row{display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap;margin-top:14px}
 .muted{font-size:12px;color:#777}audio{width:100%;margin:18px 0}a{color:#98112d;font-weight:700;margin-right:20px}
@@ -346,7 +346,7 @@ Hear the result using Evercraft's local Kokoro engine.</p>
     <div><label for="language">Language</label><select id="language"></select></div>
     <div><label for="voice">Voice</label><select id="voice"></select></div>
   </div>
-  <div style="margin-top:22px"><label for="script">Your script</label><textarea id="script" maxlength="1500" aria-describedby="scriptHelp"></textarea></div>
+  <div class="script-field"><label for="script">Your script</label><textarea id="script" maxlength="1500" aria-describedby="scriptHelp"></textarea></div>
   <p id="scriptHelp" class="muted">20–1,500 characters. The voice's regional pronunciation is not certified.</p>
   <div class="row"><button id="render">Generate private audition</button>
     <span class="muted" id="progress" role="status" aria-live="polite">Ready to audition</span></div>
