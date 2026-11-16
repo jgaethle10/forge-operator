@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createHash,webcrypto} from 'node:crypto';
-import {validateSocietyObservation,verifySocietyObservationReceipts,OBSERVATION_SCHEMA,RECEIPT_SCHEMA} from '../public/worlds/society-ledger.mjs';
+import {validateSocietyObservation,verifySocietyObservationReceipts,snapshotAgeLabel,OBSERVATION_SCHEMA,RECEIPT_SCHEMA} from '../public/worlds/society-ledger.mjs';
 
 export function fixture(){
  return {
@@ -112,4 +112,14 @@ test('saved cumulative societal outcome totals survive validation, but impossibl
  assert.throws(()=>validateSocietyObservation(source),/Inconsistent saved promise totals/);
  source.snapshot_stats.social.kept=-1;
  assert.throws(()=>validateSocietyObservation(source),/Invalid saved simulation totals/);
+});
+
+test('historical snapshot age label is explicit about device clock, never about live agents',()=>{
+ const stamp='2026-11-16T19:00:00.000Z',at=Date.parse(stamp);
+ assert.match(snapshotAgeLabel(stamp,at),/NOT LIVE/);
+ assert.match(snapshotAgeLabel(stamp,at+10*60_000),/10 min old.*device clock/);
+ assert.match(snapshotAgeLabel(stamp,at+3*60*60_000),/3 h old.*device clock/);
+ assert.match(snapshotAgeLabel(stamp,at+2*24*60*60_000),/2 d old.*device clock/);
+ assert.match(snapshotAgeLabel(stamp,at-15*60_000),/newer than device clock/);
+ assert.throws(()=>snapshotAgeLabel('not-a-date',at),/Invalid snapshot age/);
 });
