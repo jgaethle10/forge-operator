@@ -230,6 +230,15 @@ test('wrong signed node job evidence dead-letters work and cannot be executed ag
   assert.equal(s.calls(),1);
 });
 
+test('unregistered caller adapter cannot run any signed canary work or modify the journal',async()=>{
+  const s=await scenario('arbitrary-adapter-denied');
+  await assert.rejects(runScheduler({
+    ...s,adapter:{runAssignment:async()=>({ok:true})}
+  }),/fenced_scheduler_first_party_local_adapter_binding_denied/);
+  assert.equal(s.calls(),0,'NodeSeed transport must not be contacted');
+  assert.equal(s.journal.inspect({jobKey:s.jobId}).journal_events,0);
+});
+
 test('independent pin missing blocks before any job execution',async()=>{
   const s=await scenario('pin-denied');
   await assert.rejects(runScheduler({...s,fencedNodeSeedPin:null}),/independent_signed_node_pin_required/);
