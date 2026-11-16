@@ -71,3 +71,26 @@ No current production KSS generator, real site plan, licensed imagery pipeline, 
 ## Next controlled step
 
 Search preserved local Node001/Node002 workspaces and independent owner archives for the five original Python filenames; compare hashes and source history, and reconstruct only components shown to be independently reusable. Separately, stage a synthetic *four-sheet* test fixture with real source-code QA, then replace its geospatial base with independently licensed data. Do not call or depend upon retired third-party hosted applications.
+
+
+## Post-recovery execution and structural QA (same-day)
+
+All execution below was performed **locally against byte-exact source copies**, never against the retired hosted system.
+
+- Original `kss-spatial-ingress.mjs` and original `kss-spatial-ingress.test.mjs` were re-created locally with Git blob SHA checks: `1dbd451c...` and `641ce796...` matched exactly.
+- `node --test kss-spatial-ingress.test.mjs` using Node.js 22.16.0: **9 tests passed, 0 failed**.
+- New `scripts/kss_pdf_fidelity_inspect.py` uses PyMuPDF for actual PDF structural inspection, without emitting any source site content. The private FS6 20-page source passed structural checks with the 5×4 roles, 36×24-inch dimensions, 50–327 vector drawing elements per sheet, and all preliminary safety labels. This does **not** count as visual, GIS or engineering QA.
+- A deliberately degraded one-page schematic was rejected with eight specific structural defects, including incorrect page size, absent C101/C102/E101/D501 sequence, missing source/field verification context, weak graphics density and missing construction disclaimer.
+- `scripts/tests/test_kss_pdf_fidelity_inspect.py`: **6 Python synthetic tests passed**, including the positive four-sheet synthetic contract and five negative controls.
+- All tested files were committed and read back using Git blob SHA parity with the local tested versions. Historical FS6 PDF and all site-specific drawings remain outside the public branch.
+
+**Run the new structural gate:**
+
+```bash
+python -m pip install pymupdf
+python scripts/kss_pdf_fidelity_inspect.py <owner-controlled-review-pdf> --expected-sites 5
+python -m unittest discover -s scripts/tests -p test_kss_pdf_fidelity_inspect.py -v
+node --test systemia/graphics-command/kss-spatial-ingress.test.mjs
+```
+
+The inspector checks document structure only and sets `external_release_allowed=false` regardless of the result. It cannot certify visual overlay accuracy or the origin of geospatial imagery. Full current World Engine importer tests and hosted CI have not been verified.
