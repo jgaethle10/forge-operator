@@ -93,6 +93,13 @@ jobs:
           name: fallen-public-domain-video-scout
           path: archive-review/
           retention-days: 7
+      - name: Save original verified Yuma archive for PRIVATE editorial audition
+        uses: actions/upload-artifact@v4
+        with:
+          name: fallen-yuma-2019-original-internal
+          path: /tmp/evercraft-commons/yuma-cbp-2019.webm
+          if-no-files-found: error
+          retention-days: 1
       - name: Enforce at least one real source was retrieved
         run: |
           python3 - <<'PY'
