@@ -147,6 +147,28 @@ function drawLocalNodes(){
     }
     host.append(card);
   }
+  drawIdentityChecks();
+}
+function drawIdentityChecks(){
+  const host=byId('localIdentityChecks');
+  host.replaceChildren();
+  const checks=state.operator?.identity_checks||[];
+  if(!checks.length){
+    host.append(element('p','empty','No owner-pinned signed proof imported. Device identity and health remain unknown.'));
+    return;
+  }
+  for(const node of checks){
+    const card=element('section','reported-lane');
+    card.append(element('h3','',node.node_key==='node001'?'Penguin / Node001':'NextGen / Node002'));
+    const expired=node.verification==='expired'||Date.now()-Date.parse(node.observed_at)>60000;
+    card.append(element('strong','node-observation-state',expired
+      ?'SIGNED IDENTITY CLAIM EXPIRED · CURRENT IDENTITY UNKNOWN'
+      :'OWNER-PINNED SIGNATURE CHECK REPORTED · IMPORT UNVERIFIED'));
+    card.append(element('small','node-observation-detail','Observed '+fmtTime(node.observed_at)));
+    card.append(element('small','node-observation-detail','Verification claim expires after 60 seconds. Import is not browser-authenticated.'));
+    card.append(element('small','node-observation-detail','Does not prove remote connectivity, device health, job execution or payment.'));
+    host.append(card);
+  }
 }
 function sourceStatus(label,type){
   const pill=byId('sourceState');
