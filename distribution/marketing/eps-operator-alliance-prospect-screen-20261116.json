@@ -1,0 +1,111 @@
+{
+  "schema": "evercraft.eps.operator-alliance.research.v1",
+  "as_of": "2026-11-16",
+  "status": "DRAFT_RESEARCH_NO_OUTREACH",
+  "product": "EPS Operator Alliance, extension of existing Evercraft Partners PR #2123",
+  "warnings": [
+    "These businesses have NOT been shown financially distressed or interested in joining EPS",
+    "No partner insurance, registration, equipment, sales capacity or financial position verified",
+    "No operator may borrow EPS registration or acquire EPS territory rights from a web inquiry",
+    "No franchise/trademark rights or revenue percentage fees before qualified legal review",
+    "No customer PII, unconsented outreach, unsanctioned mailing or recruitment rewards"
+  ],
+  "candidates": [
+    {
+      "name": "First Choice Multi-Cleaning Services LLC",
+      "where": "Yakima, Kittitas, Benton, Franklin counties, WA",
+      "fit": "commercial cleaning, deep clean, yard cleanup",
+      "website": "https://www.firstchoicemulticleaning.com/",
+      "email": "info@firstchoiceserv.com",
+      "emailSource": "https://www.firstchoicemulticleaning.com/",
+      "angle": "optional multi-county cleaning/turnover overflow and workflow pilot",
+      "priority": 1,
+      "prior_gmail_exact_name_or_address_match": 0,
+      "proposed_status": "research_only_not_contacted",
+      "next": "individualized permissioned inquiry only after owner, legal and insurance review"
+    },
+    {
+      "name": "Exterior Experts, LLC",
+      "where": "Yakima, Klickitat, Kittitas, Benton counties, WA",
+      "fit": "pressure washing, painting, handyman work",
+      "website": "https://www.yakimacountyhandyman.com/",
+      "email": "ericsoto@exteriorexperts.website",
+      "emailSource": "https://www.yakimacountyhandyman.com/contact",
+      "angle": "property-preparation overflow or mutual referrals",
+      "priority": 2,
+      "prior_gmail_exact_name_or_address_match": 0,
+      "proposed_status": "research_only_not_contacted",
+      "next": "individualized permissioned inquiry only after owner, legal and insurance review"
+    },
+    {
+      "name": "Abel's and Sons Lawn Services LLC",
+      "where": "Yakima County, WA",
+      "fit": "yard cleanups, sod, landscaping",
+      "website": "https://www.abelsandsonslawnservices.com/",
+      "email": null,
+      "emailSource": null,
+      "angle": "local cleanup/landscape reset leads after independent verification",
+      "priority": 3,
+      "prior_gmail_exact_name_or_address_match": 0,
+      "proposed_status": "research_only_not_contacted",
+      "next": "individualized permissioned inquiry only after owner, legal and insurance review"
+    },
+    {
+      "name": "Allende's Lawn Care & Landscaping",
+      "where": "Pasco/Richland/Kennewick, WA",
+      "fit": "seasonal yard cleanup, mowing, aeration",
+      "website": "https://allendeslawncares.com/",
+      "email": null,
+      "emailSource": "https://allendeslawncares.com/contact-us",
+      "angle": "local Tri-Cities property-manager referrals",
+      "priority": 4,
+      "prior_gmail_exact_name_or_address_match": 0,
+      "proposed_status": "research_only_not_contacted",
+      "next": "individualized permissioned inquiry only after owner, legal and insurance review"
+    },
+    {
+      "name": "Columbia Property Maintenance",
+      "where": "Tri-Cities, WA",
+      "fit": "commercial maintenance, asphalt, sweeping, snow",
+      "website": "https://www.cpm-css.com/",
+      "email": null,
+      "emailSource": "https://www.cpm-css.com/",
+      "angle": "possible specialist commercial cross-referrals, no acquisition assumption",
+      "priority": 5,
+      "prior_gmail_exact_name_or_address_match": 0,
+      "proposed_status": "research_only_not_contacted",
+      "next": "individualized permissioned inquiry only after owner, legal and insurance review"
+    }
+  ],
+  "excluded_duplicate_outreach": [
+    {
+      "name": "ServiceMaster 1st Choice",
+      "status": "EPS overflow email already sent Nov 15; wait for response"
+    },
+    {
+      "name": "SERVPRO Gig Harbor",
+      "status": "EPS overflow email already sent Nov 15; wait for response"
+    },
+    {
+      "name": "Josh DeLuna / BBSI",
+      "status": "existing warm BBSI relationship requests Nov 19 meeting; different track"
+    },
+    {
+      "name": "Circle H",
+      "status": "spring 2027 hold"
+    },
+    {
+      "name": "RIVET",
+      "status": "fully paid and closed founder report"
+    }
+  ],
+  "release_gates": [
+    "confirm current WA contractor registration and role",
+    "confirm EPS GL policy with insurer; only support case found",
+    "confirm candidate separate contractor registration, insurance, workers comp, equipment, safety",
+    "written project/legal terms and brand limitations",
+    "verify provider contact and cross-check sent/draft at moment of outreach",
+    "no paid brand network or fees before franchise review",
+    "buyer consent and verified quote/contract/order before marking sale"
+  ]
+}
