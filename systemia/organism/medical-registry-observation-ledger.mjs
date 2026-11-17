@@ -100,6 +100,7 @@ export function updateRegistryObservationLedger({
     historical_preregistration_verified:false});
    continue;
   }
+  const previousObservedAt=entry.last_observed_at;
   entry.last_observed_at=observedAt;
   entry.last_source_receipt=registry.receipt_hash;
   entry.observation_count=(Number(entry.observation_count)||1)+1;
@@ -118,10 +119,7 @@ export function updateRegistryObservationLedger({
    observed_at:observedAt,
    prior_snapshot_digest:entry.last_snapshot.snapshot_digest,
    new_snapshot_digest:candidate.snapshot_digest,
-   prior_evercraft_observed_at:entry.last_observed_at===observedAt
-    ? (Array.isArray(entry.observed_changes)&&entry.observed_changes.length
-       ? entry.observed_changes.at(-1)?.observed_at:entry.first_observed_at)
-    : entry.last_observed_at,
+   prior_evercraft_observed_at:previousObservedAt,
    source_receipt:registry.receipt_hash,
    differences,
    verified_registry_amendment:false,
@@ -263,7 +261,6 @@ export function writeRegistryObservationLedger({
   catch{corrupt=true;previousValue={schema:'invalid_persisted_state'};}
  }
  const result=updateRegistryObservationLedger({registry,previous:previousValue,now,maxRecords});
- if(corrupt)result.report.status='invalid_prior_ledger_hold';
  // Do NOT overwrite corrupt or unverifiable prior state with a fabricated first cycle.
  if(result.can_persist && !corrupt)fs.writeFileSync(stateFile,JSON.stringify(result.state,null,2)+'\n');
  fs.writeFileSync(path.join(outDir,'latest.json'),JSON.stringify(result.report,null,2)+'\n');
