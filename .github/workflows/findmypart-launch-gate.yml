@@ -16,6 +16,7 @@ on:
       - 'tests/findmypart-brand-coherence.test.mjs'
       - 'tests/findmypart-harbor-handoff.test.mjs'
       - 'tests/findmypart-harbor-export.test.mjs'
+      - 'tests/findmypart-harbor-release-boundary.test.mjs'
       - 'systemia/distribution/harbor/**'
       - 'scripts/build-findmypart-harbor-kit.mjs'
       - 'scripts/findmypart-saban-benchmark.mjs'
@@ -91,7 +92,8 @@ jobs:
               tests/findmypart-photo-evidence.test.mjs \
               tests/findmypart-brand-coherence.test.mjs \
               tests/findmypart-harbor-handoff.test.mjs \
-              tests/findmypart-harbor-export.test.mjs
+              tests/findmypart-harbor-export.test.mjs \
+              tests/findmypart-harbor-release-boundary.test.mjs
             echo "::endgroup::"
           done
       - name: Write Saban reproducible benchmark receipt
