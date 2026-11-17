@@ -1,0 +1,122 @@
+{
+  "schema": "evercraft.music.register-normalization.v16",
+  "source_repo": "https://github.com/sgossner/VSCO-2-CE",
+  "source_commit_sha": "440300901dfe9275fd84e0b7763af1f8443ae62e",
+  "license": "CC0-1.0",
+  "exclusive_rights_claimed": false,
+  "original_source_note_convention": "observed +12 semitones relative to standard scientific pitch except harp",
+  "max_allowed_pitch_shift_semitones": 2,
+  "approved_for_publication": false,
+  "original_piano_protected_sha256": "630efc0e8206ec7a6f4f0dac41634ab2a34da7f518f9f90be0b339b4e5a2015e",
+  "notes": "12 upstream Git-blob-pinned samples, 17 score events. Actual F0 must independently pass after each bounded shift; raw and corrected frequencies must be measured, not assumed. No performed legato.",
+  "source_map": [
+    {
+      "role": "cello",
+      "score_pitch": "E3",
+      "source_label": "D2",
+      "semitone_shift": 2,
+      "path": "Strings/Cello Section/susvib/susvib_D2_v1_1.wav",
+      "git_blob_sha1": "8076f809d4f6a8057f3835e12d22751a25e39252",
+      "size_bytes": 2550956
+    },
+    {
+      "role": "cello",
+      "score_pitch": "G3",
+      "source_label": "F2",
+      "semitone_shift": 2,
+      "path": "Strings/Cello Section/susvib/susvib_F2_v1_1.wav",
+      "git_blob_sha1": "78f52c49ddc8a357657d92b05cd89f15beb6c717",
+      "size_bytes": 2186012
+    },
+    {
+      "role": "cello",
+      "score_pitch": "C3",
+      "source_label": "B1",
+      "semitone_shift": 1,
+      "path": "Strings/Cello Section/susvib/susvib_B1_v1_1.wav",
+      "git_blob_sha1": "d6a4a2d1a688c6ccb4e1e1a56b878c9c93df468b",
+      "size_bytes": 2372492
+    },
+    {
+      "role": "violin_section",
+      "score_pitch": "B4",
+      "source_label": "A3",
+      "semitone_shift": 2,
+      "path": "Strings/Violin Section/susVib/VlnEns_susVib_A3_v1.wav",
+      "git_blob_sha1": "ec84b89a4b93ecdc7e23d0c023b897b6f151bca7",
+      "size_bytes": 1890316
+    },
+    {
+      "role": "violin_section",
+      "score_pitch": "G4",
+      "source_label": "F#3",
+      "semitone_shift": 1,
+      "path": "Strings/Violin Section/susVib/VlnEns_susVib_F#3_v1.wav",
+      "git_blob_sha1": "996ca7e6b1d9541d2f2fd7f53ba88294693893e7",
+      "size_bytes": 1585612
+    },
+    {
+      "role": "violin_section",
+      "score_pitch": "E4",
+      "source_label": "D3",
+      "semitone_shift": 2,
+      "path": "Strings/Violin Section/susVib/VlnEns_susVib_D3_v1.wav",
+      "git_blob_sha1": "e47f9a53d487475fb049039ca7846e11c1ff830a",
+      "size_bytes": 2061808
+    },
+    {
+      "role": "violin_section",
+      "score_pitch": "D5",
+      "source_label": "C4",
+      "semitone_shift": 2,
+      "path": "Strings/Violin Section/susVib/VlnEns_susVib_C4_v1.wav",
+      "git_blob_sha1": "6d81fcafba04ca992a8b85665a56e60337929ce0",
+      "size_bytes": 2063320
+    },
+    {
+      "role": "viola_section",
+      "score_pitch": "E4",
+      "source_label": "D3",
+      "semitone_shift": 2,
+      "path": "Strings/Viola Section/susvib/ViolaEns_susvib_D3_v1_1.wav",
+      "git_blob_sha1": "9a3a65b93d871964a666d6a86deec4d29425d828",
+      "size_bytes": 2789648
+    },
+    {
+      "role": "double_bass",
+      "score_pitch": "E2",
+      "source_label": "E1",
+      "semitone_shift": 0,
+      "path": "Strings/Solo Contrabass/SusVib/BKCtbss_SusVib_E1_v1_rr1.wav",
+      "git_blob_sha1": "b1fbaaf4c5226a1ea8447b4e3687fb0539d62b0c",
+      "size_bytes": 2429548
+    },
+    {
+      "role": "flute",
+      "score_pitch": "E5",
+      "source_label": "E4",
+      "semitone_shift": 0,
+      "path": "Woodwinds/Flute/susNV/LDFlute_susNV_E4_v1_1.wav",
+      "git_blob_sha1": "3f351c4623be881464381ac8de2c3cfef99ac646",
+      "size_bytes": 2591256
+    },
+    {
+      "role": "bassoon",
+      "score_pitch": "C3",
+      "source_label": "C2",
+      "semitone_shift": 0,
+      "path": "Woodwinds/Bassoon/sus/PSBassoon_C2_v1_1.wav",
+      "git_blob_sha1": "10ff119e43e0785b606bd4c1586dcb62bf6be6b5",
+      "size_bytes": 1121404
+    },
+    {
+      "role": "harp",
+      "score_pitch": "D4",
+      "source_label": "D4",
+      "semitone_shift": 0,
+      "path": "Strings/Harp/KSHarp_D4_mf.wav",
+      "git_blob_sha1": "342eec5072e2c0a7fb7cb03b6f5b46d84ed6ac69",
+      "size_bytes": 1921690
+    }
+  ]
+}
