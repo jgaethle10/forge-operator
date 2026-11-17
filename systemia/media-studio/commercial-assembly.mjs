@@ -164,7 +164,7 @@ export function compileApprovedCommercial(input){
     title:plan.brand+' | '+plan.offer,
     aspectRatio:format,fps:input.fps,assets,
     tracks:[
-      {id:'picture',kind:'video',name:'Approved source footage',clips:pictureClips},
+      {id:'picture',kind:'video',name:plan.sourceMode==='customer-photographs'?'Approved customer photographs':'Approved source footage',clips:pictureClips},
       {id:'voice',kind:'voice',name:'Approved natural narration',clips:voiceClips},
       {id:'music',kind:'music',name:'Approved original score',clips:musicClips},
       {id:'sfx',kind:'sfx',name:'Approved synchronized effects',clips:sfxClips},
@@ -187,9 +187,11 @@ export function compileApprovedCommercial(input){
   };
   return {schema:'evercraft.fallen.approved-commercial-assembly.v1',
     status:'ready_to_render_not_creatively_approved_by_system',
-    sourceFirstPlanDigest:plan.planDigest,format,durationSec:plan.durationSec,
+    sourceFirstPlanDigest:plan.planDigest,sourceMode:plan.sourceMode,
+    format,durationSec:plan.durationSec,
     deliveryRequest:delivery,
     gates:{sourceFilesHashed:true,reviewReferencesSupplied:true,
+      photoOnlyMotionTruthReviewRequired:plan.releaseGates.photoOnlyMotionTruthReviewRequired===true,
       independentRightsVerificationPerformed:false,
       humanListeningVerifiedBySystem:false,commercialOutputRendered:false,
       publicationAuthorityGranted:false}};
@@ -206,7 +208,8 @@ export function renderApprovedCommercial(input,outputDir){
     qualityMode:out.qualityMode,
     boundaries:{originalFootageSourceVerifiedByHash:true,
       realHumanListenOrVisualReviewNotIndependentlyVerified:true,
-      platformPublished:false,publicationAuthorityGranted:false}};
+      platformPublished:false,publicationAuthorityGranted:false,
+      photoLedRender:compiled.sourceMode==='customer-photographs'}};
 }
 function main(){
   const [inputFile,outputDir,mode]=process.argv.slice(2);
