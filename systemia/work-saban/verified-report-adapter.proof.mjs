@@ -12,6 +12,13 @@ const result=await executeVerifiedReportTask({csvText,localFileReadApproved:true
 assert.equal(result.report.status,'verified_local');
 assert.equal(result.report.model_inference,false);
 assert.equal(result.report.specialist_receipts.length,5);
+assert.deepEqual(new Set(result.report.specialist_receipts.map(r=>r.role)),new Set(['analyst','writer','designer','auditor','coordinator']));
+for(const receipt of result.report.specialist_receipts){
+  assert.equal(receipt.status,'completed');
+  assert.equal(receipt.quality_status,'pass');
+  assert.match(receipt.result_sha256,/^[a-f0-9]{64}$/);
+}
+assert.match(result.report.source_sha256,/^[a-f0-9]{64}$/);
 assert.equal(result.capacity.verified,1);
 assert.equal(result.capacity.failed,0);
 assert.equal(events.filter(e=>e.state==='verified').length,1);
