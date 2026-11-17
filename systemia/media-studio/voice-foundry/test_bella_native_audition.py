@@ -1,5 +1,8 @@
 import tempfile
 import unittest
+import sys
+from types import SimpleNamespace
+from unittest.mock import patch
 from pathlib import Path
 import numpy as np
 import soundfile as sf
@@ -20,6 +23,15 @@ class NoOutput:
 
 
 class BellaNativeTests(unittest.TestCase):
+    def setUp(self):
+        # The real synthesizer needs torch. CI tests only the pipeline
+        # contract using a fake provider and a tiny manual_seed stand-in.
+        self.torch_patch = patch.dict(sys.modules, {
+            'torch': SimpleNamespace(manual_seed=lambda seed: None)
+        })
+        self.torch_patch.start()
+        self.addCleanup(self.torch_patch.stop)
+
     def test_native_voice_and_receipt(self):
         with tempfile.TemporaryDirectory() as d:
             script = Path(d, 'private_script.txt')
