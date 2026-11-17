@@ -1,0 +1,31 @@
+name: Evercraft Worlds owned 3D assets
+on:
+  pull_request:
+    paths:
+      - 'public/worlds/owned-glb.mjs'
+      - 'tests/worlds-owned-glb.test.mjs'
+      - 'scripts/inspect-owned-worlds-glb.mjs'
+      - '.github/workflows/evercraft-worlds-assets.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'public/worlds/owned-glb.mjs'
+      - 'tests/worlds-owned-glb.test.mjs'
+      - 'scripts/inspect-owned-worlds-glb.mjs'
+      - '.github/workflows/evercraft-worlds-assets.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  glb-admission:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Syntax checks
+        run: node --check public/worlds/owned-glb.mjs && node --check scripts/inspect-owned-worlds-glb.mjs && node --check tests/worlds-owned-glb.test.mjs
+      - name: Rights, mesh, GLB and material contract tests
+        run: node --test tests/worlds-owned-glb.test.mjs
