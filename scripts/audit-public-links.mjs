@@ -58,8 +58,19 @@ const overview = Object.fromEntries(Object.entries(groups)
 const findings = [];
 if (probe) {
   // Only explicit, limited, first-party routes. No arbitrary redirects.
-  const candidates = all.filter(x=>x.url.startsWith(site))
-    .filter(x=>x.url.split('/').length <= 7).slice(0,Math.max(0,Math.min(max,500)));
+  // Front-load the founder-reported broken and revenue-critical doors.
+  // Sorting alphabetically alone would bury Clip/Journal beneath generated pages.
+  const priorities = [
+    'clip/', 'evercraft-clip/', 'journal/', 'legacy-rescue-lab/',
+    'mesh/checkout-ready/', 'try/', 'work-saban/', 'findmypart/',
+    'forensiscope/', 'research/', 'fallen-studios/', 'rivet/'
+  ].map(route=>site+route);
+  const eligible = all.filter(x=>x.url.startsWith(site));
+  const selected = new Set();
+  const candidates = [...priorities.map(url=>eligible.find(x=>x.url===url))
+    .filter(Boolean), ...eligible.filter(x=>x.url.split('/').length<=7)]
+    .filter(x=>!selected.has(x.url)&&selected.add(x.url))
+    .slice(0,Math.max(0,Math.min(max,500)));
   for (let i=0;i<candidates.length;i+=8) {
     await Promise.all(candidates.slice(i,i+8).map(async x=>{
       const checked = new Date().toISOString();
