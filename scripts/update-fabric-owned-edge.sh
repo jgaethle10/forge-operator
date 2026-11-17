@@ -13,6 +13,7 @@ ENV_BACKUP=""
 EDGE_ATTESTATION_EXPECTED=false
 VISUAL_INGEST_TOKEN_CREATED=false
 SIGNAL_INTAKE_KEY_CREATED=false
+WEBSITE_AUDIT_INTAKE_CHANGED=false
 PUBLIC_EDGE_SERVICE="evercraft-public-edge.service"
 ROUTER_MAP_SERVICE="evercraft-router-map.service"
 ROUTER_MAP_TIMER="evercraft-router-map.timer"
@@ -210,6 +211,26 @@ write_runtime_release_ref() {
   printf '%s\n' "${release,,}" > "$tmp"
   install -o root -g "$RUN_USER" -m 0640 "$tmp" "$RUNTIME_RELEASE_REF_FILE"
   rm -f "$tmp"
+}
+
+ensure_website_audit_private_intake() {
+  # The resident Fabric service mounts home read-only. Its customer inquiry
+  # inbox must be private, durable, and outside the source checkout.
+  local provision_script="$REPO_ROOT/scripts/provision-website-audit-owned-intake.mjs"
+  [[ -f "$provision_script" ]] || {
+    echo "ERROR: Website Audit private intake provisioner missing" >&2
+    return 1
+  }
+  local output=""
+  output="$(node "$provision_script" --uid "$(id -u "$RUN_USER")" --gid "$(id -g "$RUN_USER")")" || return 1
+  [[ "$output" == *'"state":"private_intake_prepared"'* ]] || return 1
+  WEBSITE_AUDIT_INTAKE_CHANGED=false
+  if [[ "$output" == *'"environment_updated":true'* ||
+        "$output" == *'"directory_created":true'* ||
+        "$output" == *'"outbox_created":true'* ]]; then
+    WEBSITE_AUDIT_INTAKE_CHANGED=true
+  fi
+  echo "Evercraft update: Website Audit private inbox provisioned (payment remains held)"
 }
 
 ensure_signal_private_intake() {
@@ -575,6 +596,22 @@ verify_current_runtime() {
     return 18
   fi
 
+  # An updated page alone does not prove the customer can leave a request.
+  # The audit inquiry store must accept secure writes, but payment remains held.
+  local audit_readiness=""
+  audit_readiness="$(curl --fail --silent --show-error --max-time 5 'http://127.0.0.1:8787/api/website-audit/readiness' 2>/dev/null || true)"
+  if ! runuser -u "$RUN_USER" -- env WEBSITE_AUDIT_READINESS_JSON="$audit_readiness" node -e "
+    try{
+      const r=JSON.parse(process.env.WEBSITE_AUDIT_READINESS_JSON||'null');
+      if(r?.schema!=='evercraft.website-audit.intake-readiness.v1')process.exit(2);
+      if(r.intake_available!==true)process.exit(3);
+      if(r.payment_ready!==false||r.payment_verified!==false)process.exit(4);
+    }catch{process.exit(5)}
+  "; then
+    echo "ERROR: Website Audit resident private intake held" >&2
+    return 19
+  fi
+
   local attestation_code=10
   for attempt in 1 2 3 4 5 6; do
     set +e
@@ -667,9 +704,13 @@ if [[ "$before" == "$target" ]]; then
     echo "ERROR: Signal buyer intake provisioning failed" >&2
     exit 18
   fi
+  if ! ensure_website_audit_private_intake; then
+    echo "ERROR: Website Audit private inbox provisioning failed" >&2
+    exit 19
+  fi
   ensure_visual_ingest_token
   reconcile_edge_attestation_env
-  if [[ -n "$ENV_BACKUP" || "$VISUAL_INGEST_TOKEN_CREATED" == "true" || "$SIGNAL_INTAKE_KEY_CREATED" == "true" ]]; then
+  if [[ -n "$ENV_BACKUP" || "$VISUAL_INGEST_TOKEN_CREATED" == "true" || "$SIGNAL_INTAKE_KEY_CREATED" == "true" || "$WEBSITE_AUDIT_INTAKE_CHANGED" == "true" ]]; then
     if ! systemctl restart "$SERVICE"; then
       restore_edge_attestation_env
       systemctl restart "$SERVICE" || true
@@ -760,6 +801,10 @@ fi
 if ! ensure_signal_private_intake; then
   rollback "signal_private_intake_provision_failed"
   exit 18
+fi
+if ! ensure_website_audit_private_intake; then
+  rollback "website_audit_private_intake_provision_failed"
+  exit 19
 fi
 ensure_visual_ingest_token
 reconcile_edge_attestation_env

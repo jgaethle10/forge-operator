@@ -4,6 +4,8 @@ on:
   pull_request:
     paths:
       - 'scripts/update-fabric-owned-edge.sh'
+      - 'scripts/provision-website-audit-owned-intake.mjs'
+      - 'tests/provision-website-audit-owned-intake.test.mjs'
       - 'scripts/rescue-fabric-journal-edge.sh'
       - 'scripts/classify-fabric-checkout-dirt.mjs'
       - 'scripts/install-fabric-owned-edge.sh'
@@ -20,6 +22,8 @@ on:
     branches: [main]
     paths:
       - 'scripts/update-fabric-owned-edge.sh'
+      - 'scripts/provision-website-audit-owned-intake.mjs'
+      - 'tests/provision-website-audit-owned-intake.test.mjs'
       - 'scripts/rescue-fabric-journal-edge.sh'
       - 'scripts/classify-fabric-checkout-dirt.mjs'
       - 'scripts/install-fabric-owned-edge.sh'
@@ -47,6 +51,8 @@ jobs:
           node-version: '22'
       - name: Prove owned edge install/update contract
         run: node --test tests/fabric-owned-edge-installer.test.mjs tests/fabric-checkout-dirt.test.mjs tests/fabric-journal-rescue.test.mjs
+      - name: Prove private Website Audit intake cannot silently become payment-ready
+        run: node --test tests/provision-website-audit-owned-intake.test.mjs
       - name: Prove ingress diagnosis and bounded recovery policy
         run: node --test tests/public-edge-ingress-watch.test.mjs
       - name: Prove edge doctor cannot mutate router mapping in default diagnostic mode
