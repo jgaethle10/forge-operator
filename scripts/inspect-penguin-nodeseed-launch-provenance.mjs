@@ -167,6 +167,7 @@ if(direct){
     const out=inspectLiveLaunchProvenance();
     console.log(JSON.stringify(out,null,2));
     if(!out.all_source_blobs_match_known_history ||
+       !out.all_source_files_predate_process_start ||
        !out.known_entrypoint_invoked ||
        !out.udp_socket_inventory_available ||
        out.udp_1053_owned_by_nodeseed!==true)
