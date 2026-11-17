@@ -54,7 +54,7 @@ const vector=x=>exact(x,['cpu','memory','pids'])&&
 const triple=x=>Object.freeze({
   cpu:x.cpu,memory:x.memory,pids:x.pids
 });
-const boundedReason=/^EO001_PREFLIGHT_[A-Z_]{3,80}$/;
+const boundedReason=/^EO001_PREFLIGHT_[A-Z0-9_]{3,80}$/;
 
 /**
  * No reported state admits physical access or approvals. The "native"
