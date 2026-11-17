@@ -91,7 +91,7 @@ export interface ClipDeliveryManifest {
     downstreamClipGateRequired:true;
     narrativeFilmAdmissionRequired:boolean;
     commercialAudioQcRequired:boolean;
-    photoOnlyEditorialReviewRequired:boolean;
+    photoOnlyEditorialReviewRequired?:boolean;
   };
   createdAt:string;
 }
