@@ -128,6 +128,8 @@ test('customer photos can lead a truthful source-first commercial with editorial
   brief.sourceAssets[1].evidenceState='observed';
   brief.scenes[0].assetId='source-1';
   brief.scenes[0].mustShowSubjects=['product-detail'];
+  brief.scenes[1].assetId='source-0';
+  brief.scenes[1].mustShowSubjects=['active-cleaning'];
   brief.scenes[0].stillMotionTreatment='editorial-camera-only';
   const plan=planSourceFirstCommercial(brief);
   assert.equal(plan.sourceMode,'customer-photographs');
@@ -142,6 +144,8 @@ test('photo mode cannot be silently enabled for stock, synthetic, or unacknowled
   brief.sourceMode='customer-photographs';
   brief.scenes[0].assetId='source-1';
   brief.scenes[0].mustShowSubjects=['product-detail'];
+  brief.scenes[1].assetId='source-0';
+  brief.scenes[1].mustShowSubjects=['active-cleaning'];
   brief.scenes[0].stillMotionTreatment='editorial-camera-only';
   assert.throws(()=>planSourceFirstCommercial(brief),/photo_led_source_truth_acknowledgment_required/);
   brief.photoSourceTruthAcknowledged=true;
@@ -151,7 +155,7 @@ test('photo mode cannot be silently enabled for stock, synthetic, or unacknowled
   assert.throws(()=>planSourceFirstCommercial(brief),/opening_real_action_required/);
   brief.scenes[0].stillMotionTreatment='editorial-camera-only';
   brief.creativeStandard='relay-floor-v1';
-  assert.throws(()=>planSourceFirstCommercial(brief),/photo_led_cannot_bypass_relay_floor/);
+  assert.throws(()=>planSourceFirstCommercial(brief),/photo_led_cannot_bypass_relay_floor|relay_floor_minimum_five_moving_shots/);
 });
 test('photo mode requires narration planning even if pictures and score map exist',t=>{
   const {brief}=fixture(t);
@@ -160,6 +164,8 @@ test('photo mode requires narration planning even if pictures and score map exis
   brief.sourceAssets[1].evidenceState='observed';
   brief.scenes[0].assetId='source-1';
   brief.scenes[0].mustShowSubjects=['product-detail'];
+  brief.scenes[1].assetId='source-0';
+  brief.scenes[1].mustShowSubjects=['active-cleaning'];
   brief.scenes[0].stillMotionTreatment='editorial-camera-only';
   for(const scene of brief.scenes){scene.voiceLine='';scene.voiceMood='';}
   assert.throws(()=>planSourceFirstCommercial(brief),/photo_led_narration_plan_required/);
