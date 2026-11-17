@@ -1,0 +1,73 @@
+name: Last Light V15 Audible Pitch Integrity Gate
+on:
+  pull_request:
+    paths:
+      - 'systemia/media-studio/last-light-v15-audible-pitch-gate.py'
+      - 'systemia/media-studio/test_last_light_v15_audible_pitch_gate.py'
+      - '.github/workflows/last-light-v15-audible-pitch-gate.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  verified-audible-pitch-rejection:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install real frequency-estimation tools
+        run: python -m pip install --disable-pip-version-check numpy soundfile librosa
+      - name: Download pinned V14 authentic source-stem artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: internal-v14-authentic-eight-section-acoustic-workprint-unapproved
+          path: /tmp/v14-original
+          run-id: 44028113338
+          repository: jgaethle10/forge-operator
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Pack exact source artifact for independent SHA and YIN pitch QA
+        run: |
+          python - <<'PY'
+          import pathlib,zipfile
+          d=pathlib.Path('/tmp/v14-original')
+          names={x.name for x in d.iterdir() if x.is_file()}
+          assert len(names)==13
+          assert 'V14_ACOUSTIC_SOURCE_RECEIPT.json' in names
+          with zipfile.ZipFile('/tmp/v14-pinned-audio.zip','w',zipfile.ZIP_DEFLATED) as archive:
+           for name in sorted(names):
+            archive.write(d/name,name)
+          print('PINNED AUDIO ARTIFACT: 8 section stems, 3 mixes, receipt, README')
+          PY
+      - name: Exercise audible-pitch source gates and actual V14 octave mismatch
+        env:
+          LL_V15_V14_SOURCE_ZIP: /tmp/v14-pinned-audio.zip
+        run: |
+          python -m unittest discover -v -s systemia/media-studio \
+            -p 'test_last_light_v15_audible_pitch_gate.py'
+      - name: Write source-driven audio pitch HOLD receipts
+        run: |
+          python systemia/media-studio/last-light-v15-audible-pitch-gate.py \
+            --v14-artifact /tmp/v14-pinned-audio.zip \
+            --out /tmp/v15-pitch-hold
+          python - <<'PY'
+          import json,pathlib
+          p=pathlib.Path('/tmp/v15-pitch-hold')
+          r=json.loads((p/'V15_AUDIBLE_PITCH_HOLD.json').read_text())
+          assert r['status']=='HOLD_PITCH_MISMATCH'
+          assert r['tallies']['ONE_OCTAVE_ABOVE_SCORE']==16
+          assert r['tallies']['PITCH_REGISTER_MATCH']==1
+          assert r['tallies']['UNRESOLVED_PITCH_MISMATCH']==0
+          assert not r['automatic_release_approved']
+          assert not r['source_audio_resampled_or_fixed']
+          assert len(list(p.iterdir()))==3
+          print('AUDIBLE PITCH RELEASE GATE: HELD. 16 WRONG REGISTERS, 1 MATCH')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: internal-v15-audible-pitch-admission-hold
+          path: /tmp/v15-pitch-hold/
+          retention-days: 14

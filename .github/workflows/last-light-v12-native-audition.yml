@@ -1,0 +1,82 @@
+name: Last Light V12 Genuine Acoustic String Excerpts
+on:
+  pull_request:
+    paths:
+      - 'systemia/media-studio/last-light-v12-native-audition.py'
+      - 'systemia/media-studio/test_last_light_v12_native_audition.py'
+      - 'systemia/media-studio/last-light-v9-conductor-score.json'
+      - 'systemia/media-studio/last-light-v11-acoustic-routing.py'
+      - 'systemia/media-studio/instrument-foundry-v10-source-bank.json'
+      - '.github/workflows/last-light-v12-native-audition.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  original-acoustic-string-excerpts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 22
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install exact source audio tools
+        run: python -m pip install --disable-pip-version-check numpy soundfile
+      - name: Test V12 routing with synthetic fixtures (tests are not acoustic proof)
+        run: |
+          python -m unittest discover -v -s systemia/media-studio \
+            -p 'test_last_light_v12_native_audition.py'
+      - name: Acquire and independently verify genuine CC0 cello/solo-violin WAVs
+        run: |
+          python - <<'PY'
+          import hashlib,json,pathlib,urllib.parse,urllib.request,zipfile
+          meta=json.loads(pathlib.Path('systemia/media-studio/instrument-foundry-v10-source-bank.json').read_text())
+          output=pathlib.Path('/tmp/last-light-v12-original-recordings.zip')
+          def gitblob(b):return hashlib.sha1(b'blob '+str(len(b)).encode()+b'\0'+b).hexdigest()
+          with zipfile.ZipFile(output,'w',compression=zipfile.ZIP_STORED) as z:
+           assert len(meta['files'])==12
+           for record in meta['files']:
+            stem=('Strings/Cello Section/susvib/' if record['instrument']=='cello' else
+                  'Strings/Solo Violin/Arco Vib/')
+            url='https://raw.githubusercontent.com/sgossner/VSCO-2-CE/master/'+urllib.parse.quote(stem+record['filename'],safe='/')
+            request=urllib.request.Request(url,headers={'User-Agent':'Evercraft-Genuine-String-Audition-V12/1.0'})
+            with urllib.request.urlopen(request,timeout=40) as f:
+             if f.status!=200:raise RuntimeError('recorded_source_http_error')
+             raw=f.read(5_000_001)
+            if not 1_000_000<len(raw)<5_000_000:
+             raise RuntimeError('recorded_source_size_out_of_bounds')
+            if hashlib.sha256(raw).hexdigest()!=record['sha256'] or gitblob(raw)!=record['git_blob_sha1']:
+             raise RuntimeError('recorded_source_identity_drift:'+record['filename'])
+            z.writestr(record['filename'],raw)
+            print('ORIGINAL ACOUSTIC SOURCE VERIFIED',record['instrument'],record['pitch'],record['dynamic'])
+          print('ALL 12 ORIGINAL RECORDED WAVS VERIFIED')
+          PY
+      - name: Render 9 original-pitch acoustic note excerpts into independent stems
+        run: |
+          python systemia/media-studio/last-light-v12-native-audition.py \
+            --score systemia/media-studio/last-light-v9-conductor-score.json \
+            --bank systemia/media-studio/instrument-foundry-v10-source-bank.json \
+            --sources /tmp/last-light-v12-original-recordings.zip \
+            --out /tmp/last-light-v12-audition
+          python - <<'PY'
+          import hashlib,json,pathlib
+          out=pathlib.Path('/tmp/last-light-v12-audition')
+          r=json.loads((out/'V12_AUDITION_PROVENANCE.json').read_text())
+          assert r['exact_root_note_events_auditioned']==9
+          assert r['held_score_events']==38
+          assert r['source_samples_original_double_hash_verified'] is True
+          assert r['canonical_piano_imported'] is False
+          assert r['performed_legato'] is False
+          assert r['recorded_orchestra_section'] is False
+          assert r['human_listening_approved'] is False
+          assert len(r['output_sha256'])==6
+          for name,h in r['output_sha256'].items():
+           assert hashlib.sha256((out/name).read_bytes()).hexdigest()==h
+          print('9 EXACT-PITCH GENUINE ACOUSTIC NOTE EXCERPTS IN UNAPPROVED INSTRUMENT-ONLY WORKPRINT')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: internal-v12-real-strings-only-excerpts-unapproved
+          path: /tmp/last-light-v12-audition/
+          retention-days: 14

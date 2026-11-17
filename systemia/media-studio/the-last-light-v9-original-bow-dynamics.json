@@ -1,0 +1,107 @@
+{
+  "schema": "evercraft.the-last-light.v9.native-take-dynamics.v1",
+  "title": "The Last Light | Original Bow Dynamics V9",
+  "status": "founder_artistic_review_pending",
+  "approved_piano": {
+    "sha256": "630efc0e8206ec7a6f4f0dac41634ab2a34da7f518f9f90be0b339b4e5a2015e",
+    "preserve_original_bytes": true,
+    "duration_seconds": 35
+  },
+  "source_license": "CC0",
+  "source_attribution": "VSCO 2 Community Edition",
+  "source_owned_exclusively_by_evercraft": false,
+  "piano_score_rise": {
+    "time_seconds": 17.6,
+    "note": "B4",
+    "orchestral_synchronized": true
+  },
+  "sources": [
+    {
+      "id": "E3_soft",
+      "filename": "susvib_E3_v1_1.wav",
+      "root": "Strings/Cello Section/susvib",
+      "sha256": "d2f961e30bf64021cf4acbd88e0e7a1fd1840943ae78c62a711bcce3d109216e",
+      "git_blob_sha1": "63f4d6df3a25fb95f417b5f8bf6a11107bf"
+    },
+    {
+      "id": "G3_soft",
+      "filename": "susvib_G3_v1_1.wav",
+      "root": "Strings/Cello Section/susvib",
+      "sha256": "8d658346b8d2054fd534b3222b5d7a23196d22a83a68c3a04ffb76b21853a3db",
+      "git_blob_sha1": "7880157fbb8e57fb0b7a694b8569701bc0d942ea"
+    },
+    {
+      "id": "G3_strong",
+      "filename": "susvib_G3_v3_1.wav",
+      "root": "Strings/Cello Section/susvib",
+      "sha256": "17df597c259a849870aa25e9fbfa6093371851f83ba7b9deb9cb9e1ec11463a7",
+      "git_blob_sha1": "732d0c80596fdfc593f55b5a24f65c07cd3191cd"
+    },
+    {
+      "id": "G4_soft",
+      "filename": "LLVln_ArcoVib_G4_p.wav",
+      "root": "Strings/Solo Violin/Arco Vib",
+      "sha256": "ad1ba8442a6b40919093c9c831a8171c7030f7e651fbe075ab87764665deef88",
+      "git_blob_sha1": "7324564c663bf239802020287c217b27c76b8142"
+    },
+    {
+      "id": "G4_strong",
+      "filename": "LLVln_ArcoVib_G4_f.wav",
+      "root": "Strings/Solo Violin/Arco Vib",
+      "sha256": "14e3ea3d5172722d4d2686bae5da3d603800a7a474fa295d98275a9410913822",
+      "git_blob_sha1": "f9c1a5547a7e062eb34ee6bef09e559d3839f46e"
+    }
+  ],
+  "fixed_gain_reference": {
+    "E3_soft": 0.86,
+    "G3_soft": 0.9,
+    "G4_soft": 0.92
+  },
+  "variants": {
+    "soft_rise": [
+      "E3_soft",
+      "G3_soft",
+      "G4_soft"
+    ],
+    "expressive_rise": [
+      "E3_soft",
+      "G3_strong",
+      "G4_strong"
+    ],
+    "expressive_cello_only": [
+      "E3_soft",
+      "G3_strong",
+      "G4_soft"
+    ]
+  },
+  "actual_source_attack_seconds": {
+    "E3_soft": 0.05,
+    "G3_soft": 0.05,
+    "G3_strong": 0.02,
+    "G4_soft": 0.3,
+    "G4_strong": 0.04
+  },
+  "estimated_comparison_results": {
+    "notes_align_to_seconds": 17.6,
+    "source_original_attack_target_error_ms_max": 6,
+    "early_note_rms_difference_soft_vs_strong_db_max": 0.03,
+    "integration_LUFS": {
+      "soft_rise": -22.3,
+      "expressive_rise": -22.2,
+      "expressive_cello_only": -22.3
+    },
+    "peak_dbfs": {
+      "soft_rise": -4.7,
+      "expressive_rise": -4.4,
+      "expressive_cello_only": -4.4
+    },
+    "local_regression_tests_passed": 10
+  },
+  "caveats": [
+    "No real performed legato. Original waveform is performed individual sustained notes, not connected phrase.",
+    "Changing dynamic layer alone does not produce continuous expressive transitions.",
+    "Local comparison kit contains the canonical piano; CI must not reconstruct it from score.",
+    "Source recordings were not originally recorded by Evercraft.",
+    "No orchestral track artistically accepted or approved for commercial release."
+  ]
+}
