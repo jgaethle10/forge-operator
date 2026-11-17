@@ -36,7 +36,7 @@ test('working-customer homepage is genuinely short and action focused',()=>{
   assert.match(landing,/Missing part\./);
   assert.match(landing,/Not the end\./);
   assert.match(landing,/Search parts free/);
-  assert.match(landing,/href="\\/findmypart\\/search\\/"/);
+  assert.ok(landing.includes('href="/findmypart/search/"'));
   assert.match(landing,/Need us to investigate instead/);
   assert.match(landing,/How it works/);
   assert.match(landing,/A simpler way past the dead end/);
