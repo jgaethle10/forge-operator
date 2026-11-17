@@ -14,6 +14,10 @@ on:
       - 'tests/findmypart-provider-ingest.test.mjs'
       - 'tests/findmypart-photo-evidence.test.mjs'
       - 'tests/findmypart-brand-coherence.test.mjs'
+      - 'tests/findmypart-harbor-handoff.test.mjs'
+      - 'tests/findmypart-harbor-export.test.mjs'
+      - 'systemia/distribution/harbor/**'
+      - 'scripts/build-findmypart-harbor-kit.mjs'
       - 'scripts/findmypart-saban-benchmark.mjs'
       - 'systemia/mcp/findmypart-public-inquiry.mjs'
       - 'systemia/mcp/findmypart-private-quote.mjs'
@@ -85,7 +89,9 @@ jobs:
               tests/findmypart-saban-benchmark.test.mjs \
               tests/findmypart-provider-ingest.test.mjs \
               tests/findmypart-photo-evidence.test.mjs \
-              tests/findmypart-brand-coherence.test.mjs
+              tests/findmypart-brand-coherence.test.mjs \
+              tests/findmypart-harbor-handoff.test.mjs \
+              tests/findmypart-harbor-export.test.mjs
             echo "::endgroup::"
           done
       - name: Write Saban reproducible benchmark receipt
@@ -97,6 +103,17 @@ jobs:
         with:
           name: findmypart-saban-benchmark
           path: findmypart-saban-benchmark.json
+          if-no-files-found: ignore
+      - name: Export FindMyPart Harbor review package (never publish)
+        run: |
+          node --check systemia/distribution/harbor/findmypart-launch.mjs
+          node --check scripts/build-findmypart-harbor-kit.mjs
+          node scripts/build-findmypart-harbor-kit.mjs --out findmypart-harbor-review
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: findmypart-harbor-review-only
+          path: findmypart-harbor-review/
           if-no-files-found: ignore
       - name: Check browser search modules are syntactically valid
         run: |
