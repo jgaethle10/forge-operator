@@ -42,6 +42,7 @@ jobs:
           node --check integrations/ai-evaluation-lab/eo001-held-cgroup-kill-alternative.mjs
           node --check integrations/ai-evaluation-lab/eo001-cgroup-kill-readonly-capability.mjs
           node --check integrations/ai-evaluation-lab/eo001-nextgen-readonly-capability-preflight.mjs
+          node --check integrations/ai-evaluation-lab/eo001-nextgen-preflight-receipt-review.mjs
           node --check integrations/ai-evaluation-lab/eo001-held-cgroup-kill-survey-join.mjs
           node --check integrations/ai-evaluation-lab/eo001-lab-interop-reproducer.mjs
           node --check integrations/ai-evaluation-lab/eo001-lab-interop-artifact-verify.mjs
@@ -78,6 +79,8 @@ jobs:
         run: node --test integrations/ai-evaluation-lab/eo001-cgroup-kill-readonly-capability.test.mjs
       - name: Refuse non-cgroup2 and misleading NextGen preflight metadata on a fake mount only
         run: node --test integrations/ai-evaluation-lab/eo001-nextgen-readonly-capability-preflight.test.mjs
+      - name: Review synthetic NextGen preflight receipts without elevating authority or exposing host identity
+        run: node --test integrations/ai-evaluation-lab/eo001-nextgen-preflight-receipt-review.test.mjs
       - name: Refuse mismatched source, boot and cgroup identity across two read-only review views
         run: node --test integrations/ai-evaluation-lab/eo001-held-cgroup-kill-survey-join.test.mjs
       - name: Reproduce the independent Lab 15-vector contract and generate sanitized review JSON
