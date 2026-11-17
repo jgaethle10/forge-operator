@@ -135,3 +135,22 @@ test('Failed job still releases lease without fabricated completion receipt',asy
  }),/classroom_execution_receipt_unverified/);
  assert.equal(f.calls.some(c=>c.url.endsWith('/leases/lease_123/release')),true);
 });
+
+test('Tampered worker identity/hash cannot be called verified execution',async()=>{
+ const f=fixture(),original=f.fetchImpl;
+ const transport=async(url,options)=>{
+  const response=await original(url,options);
+  if(url.endsWith('/v1/jobs')){
+   const data=await response.json();
+   data.worker_receipt.receipt_hash='sha256:'+('0'.repeat(64));
+   return {status:200,json:async()=>data};
+  }
+  return response;
+ };
+ await assert.rejects(()=>dispatchClassroomNode002Probe({
+  yard:f.yard,brokerDeploymentId:DEPLOYMENT,brokerOrigin:ORIGIN,
+  operation:'synthetic_turn',allowLoopbackProof:true,
+  fetchImpl:transport
+ }),/classroom_execution_receipt_unverified/);
+ assert.equal(f.calls.some(c=>c.url.endsWith('/leases/lease_123/release')),true);
+});
