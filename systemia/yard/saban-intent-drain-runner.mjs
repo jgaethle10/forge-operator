@@ -61,7 +61,7 @@ export async function runYardSabanIntentDrain({
       verifiedRoute.origin!==origin.origin ||
       verifiedRoute.verification!=='instance_and_deployment_receipt_match'
     ) throw new Error('unified_dispatch_loopback_route_identity_mismatch');
-  }else if(dispatchQueued===true){
+  }else if(dispatchQueued===true || classroomProbeEnabled===true){
     const route=yard.deploymentStatus(brokerDeploymentId)?.public_route;
     if(route?.scope!=='public_https'||route.verified!==true){
       throw new Error('unified_dispatch_requires_verified_broker_route');
