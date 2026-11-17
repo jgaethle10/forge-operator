@@ -36,7 +36,7 @@ function assertPrivateDirectory(dir) {
   }
   return fs.realpathSync(actual);
 }
-function validateState(state) {
+export function validateState(state) {
   if (state?.schema !== RESIDENT_SCHEMA || !Number.isSafeInteger(state.sequence) || state.sequence < 1
       || !/^[a-f0-9]{64}$/.test(state.digest || '')) throw new Error('Invalid resident state');
   const copy = { ...state };
