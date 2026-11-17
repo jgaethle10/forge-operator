@@ -1,11 +1,16 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
 import {dispatchClassroomNode002Probe} from '../systemia/classroom/dispatch-node002-probe.mjs';
 import {CLASSROOM_NODE_WORKLOAD} from '../systemia/classroom/node002-compute-probe.mjs';
 
 const NODE='evercraft-node002-nextgen';
 const DEPLOYMENT='evercraft-remote-broker-resident';
 const ORIGIN='http://127.0.0.1:8797';
+const stable=v=>Array.isArray(v)?v.map(stable):v&&typeof v==='object'
+ ?Object.fromEntries(Object.keys(v).sort().map(k=>[k,stable(v[k])])):v;
+const digest=v=>'sha256:'+createHash('sha256').update(JSON.stringify(stable(v))).digest('hex');
+
 function fixture({connected=true,authorized=true,supported=true,verified=true}={}){
  const steps=[],calls=[];
  const yard={
@@ -36,14 +41,24 @@ function fixture({connected=true,authorized=true,supported=true,verified=true}={
     lease_id:'lease_123',token:'synthetic-worker-lease'})};
   }
   if(url.endsWith('/v1/jobs')){
+   const operation=input.input.payload.operation;
+   const result={node_id:NODE,operation,provider:'llama.cpp',child_data_used:false,
+    youth_safety_certified:false,model_response_observed:operation==='synthetic_turn',
+    state:operation==='synthetic_turn'?'SYNTHETIC_LOCAL_API_RESPONSE_OBSERVED':'LOCAL_MODEL_METADATA_OBSERVED',
+    source_ref_is_deployment_proof:false,public_endpoint_opened:false,
+    model_id_sha256:'sha256:'+('c'.repeat(64))};
+   const key=input.idempotency_key;
+   const worker={schema:'evercraft.classroom.node002-worker-receipt.v1',
+    node_id:NODE,workload_class:CLASSROOM_NODE_WORKLOAD,
+    idempotency_key:key,
+    request_hash:digest({nodeId:NODE,key,request:input.input.payload}),
+    result,deduplicated:false,registered_workload_only:true,
+    completed_at:'2026-11-16T22:00:00.000Z'};
    return {status:200,json:async()=>({
     ok:true,node_id:NODE,workload_class:CLASSROOM_NODE_WORKLOAD,
-    worker_receipt:{registered_workload_only:true,node_id:NODE,
-     idempotency_key:input.idempotency_key,receipt_hash:'sha256:'+('a'.repeat(64))},
+    worker_receipt:{...worker,receipt_hash:digest(worker)},
     receipt:{receipt_hash:'sha256:'+('b'.repeat(64))},
-    result:{node_id:NODE,provider:'llama.cpp',child_data_used:false,
-     youth_safety_certified:false,model_response_observed:input.input.payload.operation==='synthetic_turn',
-     model_id_sha256:'sha256:'+('c'.repeat(64))}
+    result
    })};
   }
   if(url.endsWith('/leases/lease_123/release')){
