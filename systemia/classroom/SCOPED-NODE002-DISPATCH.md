@@ -25,6 +25,16 @@ Dispatcher module: `systemia/classroom/dispatch-node002-probe.mjs`. It is an API
 
 Node worker: `systemia/classroom/node002-compute-probe.mjs`. It stores **0600** completion receipts in NodeSeed's approved local state, deduplicates identically repeated requests, rejects conflicting replays and never stores raw model replies. In-process concurrent duplicates share a single job. The new NodeSeed route requires the existing device/lease authorization before it can execute.
 
+## Existing resident heartbeat integration
+
+The existing `systemia/yard/saban-intent-drain-runner.mjs` now has a **default-off** classroom lane. It does not alter the content-hash intent drainer's behavior when disabled. Only when the trusted Penguin Systemia resident is explicitly configured with `EVERCRAFT_CLASSROOM_SYSTEMIA_AUTO_PROBE=true` will it verify the canonical broker route, check the exact Node002 capability, and invoke the scoped dispatcher.
+
+- `EVERCRAFT_CLASSROOM_SYSTEMIA_OPERATION=readiness` is the default. Optional `synthetic_turn` uses only the fixed fictional marble prompt, no child data.
+- A successful probe is recorded privately under the existing Saban state root. The resident reuses a fresh readiness result for an hour, or a synthetic-turn result for 24 hours. Held results have a 15-minute retry cooldown.
+- Unsupported operations, unverified routes, device non-admission, server unavailability or unsafe state files hold this **separate** lane without granting general remote control or crashing the normal Saban cycle.
+- Each dispatch still requires an authenticated Yard deployment, exact NextGen identity, authorized device, broker management grant and a fresh registered-workload lease. No direct public listener or third-party host is opened.
+- **Source merge alone is not active execution.** Both the reviewed NextGen process and the trusted Penguin resident must have this capability enabled through their authorized release/configuration process. Only a fresh authenticated **physical Node002 receipt** establishes that the automatic lane actually ran.
+
 ## Deployment and next autonomous step
 
 1. The PR can be merged and CI proven without any human Ubuntu input. This is **source readiness**, not remote execution.
