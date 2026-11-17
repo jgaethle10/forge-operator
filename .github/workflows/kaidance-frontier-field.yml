@@ -14,6 +14,7 @@ on:
       - 'systemia/organism/medical-registry-crosscheck*.mjs'
       - 'systemia/organism/medical-registered-trial-lane*.mjs'
       - 'systemia/organism/medical-outcome-audit*.mjs'
+      - 'systemia/organism/medical-registry-observation-ledger*.mjs'
       - 'systemia/organism/medical-registry-source-probe.mjs'
       - 'systemia/organism/medical-workflow-continuity.test.mjs'
       - 'systemia/organism/medical-abstract-evidence*.mjs'
@@ -35,6 +36,7 @@ on:
       - 'systemia/organism/medical-registry-crosscheck*.mjs'
       - 'systemia/organism/medical-registered-trial-lane*.mjs'
       - 'systemia/organism/medical-outcome-audit*.mjs'
+      - 'systemia/organism/medical-registry-observation-ledger*.mjs'
       - 'systemia/organism/medical-registry-source-probe.mjs'
       - 'systemia/organism/medical-workflow-continuity.test.mjs'
       - 'systemia/organism/kaidance-frontier-proof.mjs'
@@ -71,6 +73,7 @@ jobs:
           path: |
             artifacts/kaidance-frontier/runtime/state.json
             artifacts/medical-evidence-triage/state.json
+            artifacts/medical-registered-trials/history/state.json
           key: kaidance-frontier-state-${{ runner.os }}-${{ github.run_id }}
           restore-keys: |
             kaidance-frontier-state-${{ runner.os }}-
@@ -105,6 +108,9 @@ jobs:
       - name: Prove registered protocol to abstract reviewer comparisons
         run: node systemia/organism/medical-outcome-audit.test.mjs
 
+      - name: Prove longitudinal ClinicalTrials.gov observation ledger
+        run: node systemia/organism/medical-registry-observation-ledger.test.mjs
+
       - name: Run live KAIDANCE frontier field cycle
         run: node systemia/organism/kaidance-frontier-cycle.mjs
 
@@ -115,6 +121,7 @@ jobs:
           path: |
             artifacts/kaidance-frontier/runtime/state.json
             artifacts/medical-evidence-triage/state.json
+            artifacts/medical-registered-trials/history/state.json
           key: kaidance-frontier-state-${{ runner.os }}-${{ github.run_id }}
 
       - name: Upload KAIDANCE frontier receipts
@@ -139,6 +146,7 @@ jobs:
             artifacts/medical-abstract-evidence/index.html
             artifacts/medical-evidence-triage/latest.json
             artifacts/medical-evidence-triage/state.json
+            artifacts/medical-registered-trials/history/state.json
             artifacts/medical-evidence-triage/review-queue.md
             artifacts/medical-evidence-triage/index.html
             artifacts/medical-review-packets/latest.json
@@ -157,6 +165,9 @@ jobs:
             artifacts/medical-registered-trials/outcome-audit/latest.json
             artifacts/medical-registered-trials/outcome-audit/review.md
             artifacts/medical-registered-trials/outcome-audit/index.html
+            artifacts/medical-registered-trials/history/latest.json
+            artifacts/medical-registered-trials/history/review.md
+            artifacts/medical-registered-trials/history/index.html
           if-no-files-found: warn
           retention-days: 14
 
