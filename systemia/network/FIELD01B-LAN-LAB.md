@@ -17,8 +17,9 @@
 ## CI proof
 
     node --test tests/network-field01b-lan-lab.test.mjs
+    node --test tests/network-field01b-two-process.test.mjs
 
-This sends real HTTP packets over localhost and validates queue-retry, signed acknowledgement, replay after process restart, forged sender rejection, wrong pin, corrupted data, request bounds and tampered journal failure. It cannot certify physical LAN, Wi-Fi Direct, BLE, actual phones, 911 or RF coverage.
+The first suite sends real HTTP packets over localhost and validates queue-retry, signed acknowledgement, replay after process restart, forged sender rejection, wrong pin, corrupted data, request bounds and tampered journal failure. The second starts two independent Node operating-system processes with distinct identity stores and exercises offline sender recovery and another delivery after receiver restart. Both remain on one CI computer: neither can certify physically distinct LAN hardware, Wi-Fi Direct, BLE, actual phones, 911 or RF coverage.
 
 ## Optional physical two-host operator test
 
