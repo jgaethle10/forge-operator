@@ -3,12 +3,14 @@
 // trusted identity service. Never reuse private operator Home credentials.
 // Not a token issuer, HTTP server, public login, publisher, or payment gateway.
 import {createHmac, timingSafeEqual} from 'node:crypto';
+import path from 'node:path';
+import {openCreatorMediaStore} from './creator-media-store.mjs';
 import {openCreatorRecordStore} from './creator-record-store.mjs';
 
 const TOKEN_RE=/^hc1\.([A-Za-z0-9_-]{1,3072})\.([A-Za-z0-9_-]{43})$/;
 const REF_RE=/^[A-Za-z0-9:_./-]{1,160}$/;
 const SCOPES=new Set([
-  'creator.submit','creator.read','creator.withdraw',
+  'creator.submit','creator.read','creator.withdraw','creator.media',
   'editor.read','editor.review','editor.list'
 ]);
 const EXPECTED_KEYS=['aud','exp','iat','iss','role','scopes','subject_ref','tenant_ref','v'];
@@ -29,6 +31,7 @@ export function createCreatorAccess({
   if(!validRef(issuer)||!validRef(audience))fail('authority_invalid');
   if(typeof now!=='function')fail('clock_invalid');
   const store=openCreatorRecordStore({root});
+  const media=openCreatorMediaStore({root:path.join(root,'media')});
   function verify(token,scope){
     if(typeof token!=='string')fail('token_required');
     const m=TOKEN_RE.exec(token);
@@ -47,7 +50,7 @@ export function createCreatorAccess({
     if(claims.v!==1||claims.iss!==issuer||claims.aud!==audience)fail('audience_invalid');
     if(!validRef(claims.tenant_ref)||!validRef(claims.subject_ref))fail('identity_invalid');
     if(!['creator','editor'].includes(claims.role))fail('role_invalid');
-    if(!Array.isArray(claims.scopes)||claims.scopes.length<1||claims.scopes.length>3||
+    if(!Array.isArray(claims.scopes)||claims.scopes.length<1||claims.scopes.length>4||
        claims.scopes.some(s=>typeof s!=='string'||!SCOPES.has(s))||
        new Set(claims.scopes).size!==claims.scopes.length)
        fail('scope_invalid');
@@ -63,7 +66,21 @@ export function createCreatorAccess({
     return {tenant_ref:claims.tenant_ref,subject_ref:claims.subject_ref,role:claims.role};
   }
   return Object.freeze({
-    // A caller cannot select a tenant or assert the authenticated creator.
+    // Bounded development storage: caller bytes are never exposed as public URLs.
+    async uploadMedia({token,bytes,declared_mime}={}){
+      const actor=verify(token,'creator.media');
+      return media.ingest({tenant_ref:actor.tenant_ref,creator_ref:actor.subject_ref,bytes,declared_mime});
+    },
+    // Unlike legacy metadata-only submit, a stored owned asset must exist and match
+    // this authenticated tenant/creator before the story can enter the queue.
+    async submitWithMedia({token,story}={}){
+      const actor=verify(token,'creator.submit');
+      if(!story||story.creator_ref!==actor.subject_ref)fail('creator_mismatch');
+      await media.verify({tenant_ref:actor.tenant_ref,creator_ref:actor.subject_ref,asset_ref:story.asset_ref});
+      return store.submit({tenant_ref:actor.tenant_ref,story});
+    },
+    // Metadata-only test path, NOT an accepted production upload/submission.
+    // A production API must expose submitWithMedia, not this synthetic path.
     async submit({token,story}={}){
       const actor=verify(token,'creator.submit');
       if(!story||story.creator_ref!==actor.subject_ref)fail('creator_mismatch');
