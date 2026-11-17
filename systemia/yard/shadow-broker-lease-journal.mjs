@@ -10,7 +10,7 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
-import {randomBytes} from 'node:crypto';
+import {randomBytes,createHash} from 'node:crypto';
 
 const SCHEMA='evercraft.yard.shadow-broker-lease-journal.v1';
 const JOURNAL='lease-journal.json';
@@ -18,6 +18,8 @@ const VALID_PHASES=new Set([
   'created','lease_recorded','submission_uncertain','manual_hold','released',
 ]);
 const O=fs.constants;
+const NODE=/^[A-Za-z0-9._-]{1,128}$/;
+const SHA=/^[a-f0-9]{64}$/;
 
 function requireOk(ok,reason){
   if(!ok)throw Error('shadow_lease_'+reason);
@@ -65,6 +67,7 @@ function readPrivate(dir){
     requireOk(
       state.schema===SCHEMA &&
       VALID_PHASES.has(state.phase) &&
+      NODE.test(String(state.expected_node_id||'')) &&
       state.origin===validateOrigin(state.origin),
       'journal_content_invalid');
     return state;
@@ -88,16 +91,18 @@ function durableWrite(dir,body){
     if(fs.existsSync(tmp))fs.unlinkSync(tmp);
   }
 }
-export function createShadowLeaseJournal({parent,origin}={}){
+export function createShadowLeaseJournal({parent,origin,expectedNodeId}={}){
   requireOk(typeof parent==='string'&&parent.length>0,'parent_required');
   safeDir(parent);
   const endpoint=validateOrigin(origin);
+  requireOk(NODE.test(String(expectedNodeId||'')),'expected_node_id_required');
   const dir=fs.mkdtempSync(path.join(parent,'shadow-canary-'));
   fs.chmodSync(dir,0o700);
   durableWrite(dir,{
     schema:SCHEMA,
     phase:'created',
     origin:endpoint,
+    expected_node_id:expectedNodeId,
     lease:null,
     submission_attempted:false,
     cleanup:'not_started',
@@ -168,8 +173,18 @@ export async function releaseShadowLease({dir,request=fetch}={}){
     });
     if(!response.ok)throw Error('lease_release_non_success');
     const receipt=await response.json();
-    if(receipt.ok!==true || !receipt.receipt?.receipt_hash)
+    const proof=receipt.receipt;
+    if(receipt.ok!==true || !proof || proof.type!=='capacity.lease.released' ||
+       proof.schema!=='evercraft.compute.receipt.v1' ||
+       proof.node_id!==state.expected_node_id ||
+       proof.lease_id!==state.lease.lease_id ||
+       proof.workload_class!=='systemia.remote-capacity-broker.v1' ||
+       !SHA.test(String(proof.receipt_hash||''))) {
       throw Error('lease_release_receipt_invalid');
+    }
+    const {receipt_hash:hash,...body}=proof;
+    const computed=createHash('sha256').update(JSON.stringify(body)).digest('hex');
+    if(computed!==hash)throw Error('lease_release_receipt_hash_mismatch');
 
     durableWrite(dir,{
       ...state,
