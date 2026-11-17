@@ -1,0 +1,54 @@
+name: Public Links Registry (read-only)
+on:
+  workflow_dispatch:
+    inputs:
+      probe:
+        description: "Probe bounded first-party GitHub Pages URLs with GET only"
+        required: false
+        type: boolean
+        default: false
+  pull_request:
+    paths:
+      - 'scripts/audit-public-links.mjs'
+      - '.github/workflows/public-links-registry.yml'
+      - 'public/**'
+  schedule:
+    - cron: '17 17 * * 1'
+permissions:
+  contents: read
+jobs:
+  inventory:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Build source inventory (no network or payments)
+        run: node scripts/audit-public-links.mjs > public-link-inventory.json
+      - name: Validate source inventory
+        run: |
+          node --input-type=module -e "
+          import fs from 'node:fs';
+          const x=JSON.parse(fs.readFileSync('public-link-inventory.json','utf8'));
+          if(x.scope.source_index_pages<1 || x.scope.payment_links_in_snapshot<1)process.exit(1);
+          if(x.mode!=='source_only'||x.no_checkout_attempted!==true||x.no_legacy_provider_contact!==true)process.exit(1);
+          console.log(JSON.stringify(x.scope));
+          "
+      - uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-public-link-inventory
+          path: public-link-inventory.json
+          retention-days: 30
+      - name: Optional read-only first-party GET probes
+        if: github.event_name == 'workflow_dispatch' && inputs.probe
+        env:
+          EVERCRAFT_AUDIT_PROBE_LIMIT: 80
+        run: node scripts/audit-public-links.mjs --probe > public-link-probe.json
+      - uses: actions/upload-artifact@v4
+        if: github.event_name == 'workflow_dispatch' && inputs.probe
+        with:
+          name: evercraft-public-link-probe
+          path: public-link-probe.json
+          retention-days: 30
