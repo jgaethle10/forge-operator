@@ -132,3 +132,65 @@ test('on-camera speech cannot use an unrelated standalone voice take',t=>{
   input.approvedAudio.voices[0].scriptText='A different line, not performed on camera';
   assert.throws(()=>assertRelayLiveDialogueApproval(input),/script_mismatch/);
 });
+
+
+test('photo-led customer brief compiles truthful editorial-still timeline',t=>{
+  const {dir,input}=specimen(t);
+  const images=[];
+  for(let i=0;i<3;i++){
+    const file=path.join(dir,'customer-photo-fixture-'+i+'.png');
+    ffmpeg(['-y','-f','lavfi','-i','color=c='+['red','green','blue'][i]+':s=320x180:r=1',
+      '-frames:v','1','-update','1',file]);
+    images.push({id:'photo'+i,path:file,sha256:sha(file),mediaKind:'image',
+      rights:'owned',evidenceState:'observed',
+      // Synthetic CI fixture only, never an actual client photograph.
+      sourceRefs:['SYNTHETIC_CI_FIXTURE_ONLY:'+i],subjects:['tile-details-'+i]});
+  }
+  input.brief.id='photo-led-ci-test-only';
+  input.brief.sourceMode='customer-photographs';
+  input.brief.photoSourceTruthAcknowledged=true;
+  input.brief.sourceAssets=images;
+  for(let i=0;i<3;i++){
+    input.brief.scenes[i].assetId=images[i].id;
+    input.brief.scenes[i].mustShowSubjects=images[i].subjects;
+  }
+  input.brief.scenes[0].stillMotionTreatment='editorial-camera-only';
+  const plan=compileApprovedCommercial(input);
+  assert.equal(plan.sourceMode,'customer-photographs');
+  assert.equal(plan.gates.photoOnlyMotionTruthReviewRequired,true);
+  assert.equal(plan.gates.publicationAuthorityGranted,false);
+  assert.equal(plan.deliveryRequest.project.tracks[0].name,'Approved customer photographs');
+  assert.equal(plan.deliveryRequest.project.assets.filter(x=>x.kind==='image').length,3);
+  assert.equal(plan.deliveryRequest.project.tracks[0].clips.length,3);
+});
+test('photo-led commercial renders actual H264/AAC from image inputs with approved-audio fixtures', {timeout:180000},t=>{
+  const {dir,input}=specimen(t);
+  const images=[];
+  for(let i=0;i<3;i++){
+    const file=path.join(dir,'still-fixture-'+i+'.png');
+    ffmpeg(['-y','-f','lavfi','-i','color=c='+['red','green','blue'][i]+':s=320x180:r=1',
+      '-frames:v','1','-update','1',file]);
+    images.push({id:'still'+i,path:file,sha256:sha(file),mediaKind:'image',
+      rights:'owned',evidenceState:'observed',
+      sourceRefs:['SYNTHETIC_CI_FIXTURE_ONLY:'+i],subjects:['tile-photo-'+i]});
+  }
+  input.brief.id='photo-led-encode-ci-only';
+  input.brief.sourceMode='customer-photographs';
+  input.brief.photoSourceTruthAcknowledged=true;
+  input.brief.sourceAssets=images;
+  for(let i=0;i<3;i++){
+    input.brief.scenes[i].assetId=images[i].id;
+    input.brief.scenes[i].mustShowSubjects=images[i].subjects;
+  }
+  input.brief.scenes[0].stillMotionTreatment='editorial-camera-only';
+  const result=renderApprovedCommercial(input,path.join(dir,'photo-deliver'));
+  assert.equal(result.status,'rendered_and_technically_qc_accepted');
+  assert.equal(result.boundaries.photoLedRender,true);
+  assert.equal(result.boundaries.publicationAuthorityGranted,false);
+  assert.ok(fs.statSync(result.videoPath).size>4000);
+  const master=JSON.parse(fs.readFileSync(result.audioMasterReceiptPath,'utf8'));
+  assert.equal(master.status,'accepted');
+  const qc=JSON.parse(fs.readFileSync(result.audioQcReceiptPath,'utf8'));
+  assert.equal(qc.status,'accepted');
+  assert.equal(qc.sha256,result.mediaSha256);
+});
