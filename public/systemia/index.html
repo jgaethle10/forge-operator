@@ -29,12 +29,59 @@ section.block{border-top:1px solid var(--line);padding:76px 0}.section-head{disp
 .close{background:linear-gradient(140deg,#16252d,#132a37);border:1px solid #3c6373;border-radius:24px;padding:45px;display:grid;grid-template-columns:1fr 1fr;gap:34px;align-items:center}.close h2{font-size:clamp(34px,4.5vw,56px);line-height:1.08;letter-spacing:-.052em;margin:10px 0 18px}.close p{color:#c5d6dc}.offer{padding:24px;border:1px solid #56717d;border-radius:15px;background:#0c1924}.offer .price{font-size:37px;font-weight:850;letter-spacing:-.06em;color:var(--gold)}.offer h3{margin:2px 0 10px;font-size:22px}.offer p{font-size:13px;margin:8px 0 21px}.offer .btn{width:100%;margin-bottom:11px}.offer .low{font-size:11px;color:#99b4c0}.muted-link{color:var(--ice);font-size:14px}
 .inquiry{display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:start}.inquiry h2{font-size:clamp(32px,4.4vw,55px);letter-spacing:-.055em;line-height:1.08;margin:13px 0}.inquiry p{color:var(--muted)}.inquiry .compose{background:var(--surface);border:1px solid var(--line);padding:25px;border-radius:15px}.compose label{display:block;font-size:13px;font-weight:800;margin-bottom:9px}.compose textarea{display:block;background:#08121c;color:white;border:1px solid #3e5b6b;border-radius:9px;width:100%;padding:14px;resize:vertical;min-height:105px;max-height:240px}.compose .btn{margin-top:13px;width:100%}.compose small{display:block;color:#adbfca;margin-top:12px}.compose #copy-request{border:0;background:none;color:var(--ice);font-size:13px;text-decoration:underline;margin-top:12px;cursor:pointer}.compose #copy-result{font-size:12px;color:var(--mint)}footer{padding:32px 0 55px;border-top:1px solid var(--line);color:#94a7b2;font-size:12px;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}footer a{color:#d4e7f0}
 @keyframes spin{to{transform:rotate(360deg)}}@media(max-width:980px){.hero{grid-template-columns:1fr;min-height:0;padding:68px 0 55px}.presence{min-height:400px;width:min(500px,100%);margin:auto}.orbit{width:340px}.orbit.two{width:275px}.orbit.three{width:190px}.sat.a,.sat.b{right:5px}.sat.c,.sat.d{left:5px}.task-grid{grid-template-columns:1fr 1fr}.close{grid-template-columns:1fr}.workflow{grid-template-columns:1fr}}@media(max-width:620px){.wrap{width:calc(100% - 32px)}.top .wrap{min-height:63px}.top nav{gap:12px}.top nav a{font-size:11px}.top nav a:first-child{display:none}.brand{font-size:11px;letter-spacing:.12em}.brand img{width:31px;height:31px}.hero h1{font-size:clamp(50px,12.5vw,72px)}.hero{gap:0;padding:58px 0 33px}.presence{min-height:340px;margin-top:30px}.orbit{width:275px}.orbit.two{width:220px}.orbit.three{width:155px}.core{width:107px}.core span{font-size:32px}.sat{min-width:104px;padding:8px}.sat b{font-size:10px}.sat small{font-size:9px}.sat.a{top:15%;right:0}.sat.b{bottom:21%;right:0}.sat.c{bottom:20%;left:0}.sat.d{top:22%;left:0}.diagram-caption{font-size:9px}section.block{padding:54px 0}.section-head{display:block}.section-head p{margin-top:14px}.task-grid{grid-template-columns:1fr}.task{padding:23px}.evidence{display:block}.evidence a{display:inline-block;margin-top:17px}.close{padding:24px}.inquiry{grid-template-columns:1fr}footer{padding-bottom:28px}}
+
+/* Systemia mobile refinement / November 2026. Keeps the original orbital identity. */
+.top nav a{display:inline-flex;align-items:center;min-height:44px;padding:8px 3px}
+.top nav .nav-hire{border:1px solid #657586;border-radius:8px;padding:9px 12px;color:#f8fafd;background:linear-gradient(135deg,#23333e,#131e29)}
+.top nav .nav-hire:hover{border-color:var(--gold);background:#20303c}
+.task.featured{position:relative;overflow:hidden;border-color:#9dcfe4aa;background:radial-gradient(circle at 91% 8%,#20607a66,transparent 50%),linear-gradient(145deg,#142b3b,#0a1924);box-shadow:0 0 0 1px #92dfff1c,0 18px 48px #0003}
+.task.featured::before{content:"";position:absolute;inset:0 auto 0 0;width:4px;background:linear-gradient(var(--ice),#6eaff1,var(--gold));border-radius:17px 0 0 17px}
+.task.featured a{padding:12px 16px;border:1px solid #b6e5f4aa;background:#18364a;border-radius:8px;align-self:stretch;text-align:center}
+.task.featured a:hover{background:#235571}
+.task h3{font-weight:760}
+.need-options{border:0;padding:0;margin:0 0 23px;min-width:0;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.need-options legend{padding:0;margin:0 0 10px;font-weight:800;font-size:13px}
+.need-option{display:flex!important;align-items:center;gap:9px;padding:11px 10px;background:#0b1720;border:1px solid #496173;border-radius:9px;min-height:49px;cursor:pointer;font-size:13px!important;font-weight:650!important;margin:0!important}
+.need-option:hover,.need-option:has(input:checked){background:#193446;border-color:#94d8f1;color:#f7feff}
+.need-option input{appearance:none;flex:0 0 16px;width:16px;height:16px;border-radius:50%;border:2px solid #7f9eaf;margin:0;display:grid;place-items:center}
+.need-option input:checked{background:#9fdbef;border:4px solid #244657;box-shadow:0 0 0 1px #9fdbef}
+.need-option:focus-within{outline:2px solid var(--ice);outline-offset:2px}
+@media(max-width:620px){
+  .top .wrap{gap:7px;min-height:69px;flex-wrap:nowrap}
+  .top nav{gap:5px;align-items:center}
+  .top nav a{font-size:12px;min-height:44px;padding:10px 8px;white-space:nowrap}
+  .top nav a:first-child{display:inline-flex}
+  .top nav .nav-how{display:none}
+  .top nav .nav-hire{padding:10px 8px;border-radius:7px}
+  .brand{gap:8px}
+  .hero{padding-top:42px}
+  .hero .lead{line-height:1.54}
+  .hero .note{font-size:13px}
+  .presence{margin-top:12px}
+  .task p{font-size:15px;line-height:1.55}
+  .task a{font-size:15px}
+  .task.featured a{min-height:47px;display:grid;place-items:center}
+  .compose{padding:20px!important}
+  .need-options{gap:7px}
+  .need-option{padding:10px 8px;font-size:12px!important}
+  .sat b{font-size:11px}
+  .sat small{font-size:10px}
+}
+@media(max-width:360px){
+ .brand img{width:27px;height:27px}
+ .brand{font-size:10px}
+ .brand small{font-size:8px}
+ .top nav a{font-size:11px;padding:8px 5px}
+ .top nav .nav-hire{padding:8px 6px}
+ .sat{min-width:91px}
+}
+
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 </style>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
-<header class="top"><div class="wrap"><a class="brand" href="../headquarters/" aria-label="Evercraft Headquarters"><img src="../headquarters/mark.svg" alt=""><span>EVERCRAFT<small>MEET SYSTEMIA</small></span></a><nav aria-label="Navigation"><a href="#what">What it does</a><a href="#try">Try a real tool</a><a href="#work">How it works</a><a href="#hire">Hire Evercraft</a></nav></div></header>
+<header class="top"><div class="wrap"><a class="brand" href="../headquarters/" aria-label="Evercraft Headquarters"><img src="../headquarters/mark.svg" alt=""><span>EVERCRAFT<small>MEET SYSTEMIA</small></span></a><nav aria-label="Navigation"><a class="nav-try" href="#try">Try free</a><a class="nav-how" href="#work">How it works</a><a class="nav-hire" href="#hire">Hire Evercraft</a></nav></div></header>
 <main id="main">
 <div class="wrap"><section class="hero" aria-labelledby="page-title">
 <div>
@@ -58,7 +105,7 @@ section.block{border-top:1px solid var(--line);padding:76px 0}.section-head{disp
 <section class="block" id="try"><div class="wrap">
 <div class="section-head"><div><div class="eyebrow">01 / Real tools, right now</div><h2>Less explaining.<br>More doing.</h2></div><p>Choose a starting point. These are honest, bounded Evercraft tools, not an imaginary demonstration of complete Systemia autonomy.</p></div>
 <div class="task-grid">
-<article class="task"><div class="num">01 / WORK</div><h3>Turn messy sales numbers into a report.</h3><p>Download a sample CSV or bring your own monthly sales CSV. The browser-based reporter processes it locally and creates a readable report.</p><a href="../work-saban/report/?utm_source=systemia_front_door&utm_medium=owned_site&utm_campaign=systemia_launch">Try the free sales reporter ↗</a><div class="state">● Working browser tool</div></article>
+<article class="task featured"><div class="num">01 / START HERE · NO ACCOUNT</div><h3>Turn messy sales numbers into a report.</h3><p>Download a sample CSV or bring your own monthly sales CSV. The browser-based reporter processes it locally and creates a readable report.</p><a href="../work-saban/report/?utm_source=systemia_front_door&utm_medium=owned_site&utm_campaign=systemia_launch">Try the free sales reporter ↗</a><div class="state">● Working browser tool</div></article>
 <article class="task"><div class="num">02 / REASONING</div><h3>See where AI answers disagree.</h3><p>Compare two AI-generated answers and inspect assumptions. The free comparison experience helps make the uncertainty visible.</p><a href="../mesh/ai-boardroom/compare/?utm_source=systemia_front_door&utm_medium=owned_site&utm_campaign=systemia_launch">Try AI answer comparison ↗</a><div class="state">● Available free tool</div></article>
 <article class="task"><div class="num">03 / RESEARCH</div><h3>Turn a vague question into a plan.</h3><p>Frame a clear research question, organize the evidence needed, and see where a paid, human-reviewed engagement could start.</p><a href="../research/?utm_source=systemia_front_door&utm_medium=owned_site&utm_campaign=systemia_launch">Build a research scope ↗</a><div class="state plan">● Planning tool, not full research delivery</div></article>
 </div>
@@ -79,7 +126,7 @@ section.block{border-top:1px solid var(--line);padding:76px 0}.section-head{disp
 <div class="offer"><div class="eyebrow">A simple first project</div><h3>Small business commercial</h3><div class="price">$50</div><p>Introductory scoped social-commercial pilot from Evercraft Fallen Studios. Human-directed work, available materials and rights reviewed before purchase. No filming, advertising budget, or unlimited revisions included.</p><a class="btn main" href="../commercial-studio/?utm_source=systemia_front_door&utm_medium=owned_site&utm_campaign=systemia_launch">See the offer and send a brief ↗</a><div class="low">Project intake first. Pricing, capacity and the exact approved checkout are confirmed individually. No charge from this page.</div></div>
 </div></div></section>
 <section class="block" id="ask"><div class="wrap inquiry"><div><div class="eyebrow">04 / A question for you</div><h2>What keeps landing back on your desk?</h2><p>A weekly report. A campaign that needs research. A process that keeps breaking. Tell us about the outcome, and we'll see if there's a sensible fit.</p><p class="fine">Please do not share customer records, passwords or confidential data in your first message. We do not claim an email inquiry is a booking or a sale.</p></div>
-<div class="compose"><label for="task">Describe the business task</label><textarea id="task" maxlength="1500" placeholder="We spend three hours every Friday building a sales report from a CSV…" aria-describedby="compose-note"></textarea><a class="btn alt" id="email-task" href="mailto:jessegaethle10@gmail.com?subject=Systemia%20%7C%20Business%20task%20inquiry">Open email with my task ↗</a><small id="compose-note">This opens your email app with a prefilled message. It does not upload data or submit anything automatically.</small><button type="button" id="copy-request">Copy my task instead</button><div id="copy-result" role="status" aria-live="polite"></div></div></div></section>
+<div class="compose"><fieldset class="need-options"><legend>What kind of work do you need?</legend><label class="need-option"><input type="radio" name="need" value="monthly_report" checked><span>Repeating reports</span></label><label class="need-option"><input type="radio" name="need" value="research"><span>Research or strategy</span></label><label class="need-option"><input type="radio" name="need" value="commercial"><span>Video commercial</span></label><label class="need-option"><input type="radio" name="need" value="other"><span>Something else</span></label></fieldset><label for="task">Describe the business task</label><textarea id="task" maxlength="1500" placeholder="We spend three hours every Friday building a sales report from a CSV…" aria-describedby="compose-note"></textarea><a class="btn alt" id="email-task" href="mailto:jessegaethle10@gmail.com?subject=Systemia%20%7C%20Business%20task%20inquiry">Open email with my task ↗</a><small id="compose-note">Choose a task, describe the result, and your email app will open a personalized inquiry for review. Nothing uploads or sends automatically.</small><button type="button" id="copy-request">Copy my task instead</button><div id="copy-result" role="status" aria-live="polite"></div></div></div></section>
 </main>
 <div class="wrap"><footer><span>© 2026 Evercraft LLC · Yakima, Washington · No claims of live end-to-end agent delivery</span><span><a href="../headquarters/">Evercraft Headquarters</a> · <a href="../contact/">Contact</a> · <a href="../try/">More free tools</a></span></footer></div>
 <script>
@@ -88,11 +135,20 @@ section.block{border-top:1px solid var(--line);padding:76px 0}.section-head{disp
   const link = document.getElementById('email-task');
   const copy = document.getElementById('copy-request');
   const status = document.getElementById('copy-result');
-  if (!input || !link || !copy || !status) return;
+  const needs = [...document.querySelectorAll('input[name="need"]')];
+  if (!input || !link || !copy || !status || needs.length !== 4) return;
+  const needsMap = {
+    monthly_report: 'Repeating monthly or weekly reports',
+    research: 'Research or strategy',
+    commercial: 'Video commercial',
+    other: 'Another business task',
+  };
+  const selectedNeed = () => needs.find(n => n.checked)?.value || 'other';
   const message = () => [
     'Hello Evercraft,',
     '',
     "I'd like to ask whether Systemia or an existing Evercraft service could help with this business task:",
+    'Type of work: ' + needsMap[selectedNeed()],
     '',
     input.value.trim() || '[Describe the task here]',
     '',
@@ -101,11 +157,12 @@ section.block{border-top:1px solid var(--line);padding:76px 0}.section-head{disp
   const address = 'jessegaethle10@gmail.com';
   const sync = () => {
     link.href = 'mailto:' + address + '?subject=' +
-      encodeURIComponent('Systemia | Business task inquiry') +
+      encodeURIComponent('Systemia | ' + needsMap[selectedNeed()] + ' inquiry') +
       '&body=' + encodeURIComponent(message());
     status.textContent = '';
   };
   input.addEventListener('input', sync);
+  for (const need of needs) need.addEventListener('change', sync);
   link.addEventListener('click', sync);
   copy.addEventListener('click', async () => {
     try {

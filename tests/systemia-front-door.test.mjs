@@ -26,7 +26,7 @@ test('buyer handoff asks for an approved scope before payment',()=>{
   assert.match(page,/before accepting payment/);
   assert.match(page,/Project intake first/);
   assert.match(page,/mailto:jessegaethle10@gmail.com/);
-  assert.match(page,/does not upload data or submit anything automatically/);
+  assert.match(page,/Nothing uploads or sends automatically/i);
   assert.doesNotMatch(page,/<form[^>]*action=["']https?:/i);
 });
 

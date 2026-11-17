@@ -7,6 +7,8 @@ on:
       - 'public/headquarters/index.html'
       - 'public/try/index.html'
       - 'tests/systemia-front-door.test.mjs'
+      - 'tests/systemia-harbor-launch.test.mjs'
+      - 'systemia/distribution/harbor/systemia-launch.mjs'
       - '.github/workflows/systemia-front-door.yml'
   push:
     branches: [main]
@@ -15,6 +17,8 @@ on:
       - 'public/headquarters/index.html'
       - 'public/try/index.html'
       - 'tests/systemia-front-door.test.mjs'
+      - 'tests/systemia-harbor-launch.test.mjs'
+      - 'systemia/distribution/harbor/systemia-launch.mjs'
       - '.github/workflows/systemia-front-door.yml'
 
 permissions:
@@ -30,7 +34,7 @@ jobs:
         with:
           node-version: 22
       - name: Run Systemia truth, links and buyer-handoff tests
-        run: node --test tests/systemia-front-door.test.mjs
+        run: node --test tests/systemia-front-door.test.mjs tests/systemia-harbor-launch.test.mjs
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
