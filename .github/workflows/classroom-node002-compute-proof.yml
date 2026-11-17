@@ -5,6 +5,9 @@ on:
     paths:
       - 'systemia/classroom/node002-compute-probe.mjs'
       - 'systemia/classroom/dispatch-node002-probe.mjs'
+      - 'systemia/classroom/node002-auto-probe-cycle.mjs'
+      - 'systemia/yard/saban-intent-drain-runner.mjs'
+      - 'tests/infinite-classroom-node002-auto-cycle.test.mjs'
       - 'tests/infinite-classroom-node002-dispatch.test.mjs'
       - 'systemia/compute/runtime-node.mjs'
       - 'tests/infinite-classroom-node002-compute.test.mjs'
@@ -15,6 +18,9 @@ on:
     paths:
       - 'systemia/classroom/node002-compute-probe.mjs'
       - 'systemia/classroom/dispatch-node002-probe.mjs'
+      - 'systemia/classroom/node002-auto-probe-cycle.mjs'
+      - 'systemia/yard/saban-intent-drain-runner.mjs'
+      - 'tests/infinite-classroom-node002-auto-cycle.test.mjs'
       - 'tests/infinite-classroom-node002-dispatch.test.mjs'
       - 'systemia/compute/runtime-node.mjs'
       - 'tests/infinite-classroom-node002-compute.test.mjs'
@@ -36,6 +42,8 @@ jobs:
         run: |
           node --check systemia/classroom/node002-compute-probe.mjs
           node --check systemia/classroom/dispatch-node002-probe.mjs
+          node --check systemia/classroom/node002-auto-probe-cycle.mjs
+          node --check systemia/yard/saban-intent-drain-runner.mjs
           node --check systemia/compute/runtime-node.mjs
       - name: Authenticated NodeSeed leased job, no shell, no PII
-        run: node --test tests/infinite-classroom-node002-compute.test.mjs tests/infinite-classroom-node002-dispatch.test.mjs
+        run: node --test tests/infinite-classroom-node002-compute.test.mjs tests/infinite-classroom-node002-dispatch.test.mjs tests/infinite-classroom-node002-auto-cycle.test.mjs
