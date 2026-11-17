@@ -233,3 +233,32 @@ test('denies missing keys, public interface binding and scope confusion', async 
     }), /scope_invalid/);
   } finally { f.clean(); }
 });
+
+
+test('outbox preflight denies symlinks, oversized files and unbounded trial queues before network requests', async () => {
+  const scenarios = ['symlink', 'oversized', 'too-many'];
+  for (const scenario of scenarios) {
+    const f = fresh();
+    try {
+      fs.mkdirSync(f.courierRoot, { recursive: true, mode: 0o700 });
+      const fileName = n => n.toString(16).padStart(64, '0') + '.ecenv.json';
+      if (scenario === 'symlink') {
+        const target = path.join(f.root, 'not-an-envelope.txt');
+        fs.writeFileSync(target, 'outside courier root', { mode: 0o600 });
+        fs.symlinkSync(target, path.join(f.courierRoot, fileName(1)));
+      } else if (scenario === 'oversized') {
+        fs.writeFileSync(path.join(f.courierRoot, fileName(2)),
+          Buffer.alloc(16 * 1024, 0x61), { mode: 0o600 });
+      } else {
+        for (let i = 1; i <= 21; i++) {
+          fs.writeFileSync(path.join(f.courierRoot, fileName(i)),
+            'synthetic fixture', { mode: 0o600 });
+        }
+      }
+      const reason = scenario === 'too-many' ? 'exceeds_bounded_trial' : 'member_unsafe_or_unbounded';
+      await assert.rejects(() => deliverField01BQueued({
+        ...senderOptions(f), target: 'http://127.0.0.1:1/'
+      }), new RegExp(reason), scenario);
+    } finally { f.clean(); }
+  }
+});
