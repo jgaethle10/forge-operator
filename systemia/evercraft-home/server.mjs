@@ -9,12 +9,16 @@ import { EvercraftIdentity, IdentityRateLimiter } from "../identity/identity.mjs
 import { authorizeEvercraftHome, verifyEvercraftSession } from "./identity.mjs";
 import { planSystemiaMission, readSystemiaInventory } from "./systemia-adapter.mjs";
 import { readNetworkOverview, readYardOverview } from "./operations-adapter.mjs";
+import { readExecutiveEvidence } from "./executive-evidence-adapter.mjs";
+import { createExecutivePaymentsReader } from "./payments-executive-readback.mjs";
+import { readLocalVaultReadiness } from "./continuity-adapter.mjs";
 import { readRavenOverview } from "./raven-adapter.mjs";
 import { executeRavenCommand, planRavenCommand } from "./raven-command-adapter.mjs";
 import { askIntelligence, intelligenceOptions } from "./intelligence-router.mjs";
 import { ProviderCredentialVault } from "./credential-vault.mjs";
 import { normalizeProviderCredentialRequest } from "./provider-credentials.mjs";
 import { inspectClipFacebookConnection } from "../clip/facebook-page-connection-diagnostic.mjs";
+import { createMetaPageReconnect } from "./meta-page-reconnect.mjs";
 import {
   journalStoryResourceRef,
   publishJournalStoryFacebookFromHome,
@@ -144,6 +148,7 @@ export async function startEvercraftHomeServer({
   oneBodyConsumerTrustFile = String(process.env.EVERCRAFT_ONE_BODY_CONSUMER_TRUST_FILE || "").trim(),
   clipFacebookFetch = globalThis.fetch,
   clipLinkedInFetch = globalThis.fetch,
+  paymentsReadbackFetch = globalThis.fetch,
 } = {}) {
   const loopback = ["127.0.0.1", "localhost", "::1"].includes(host);
   if (authMode === "local" && !loopback) {
@@ -171,6 +176,15 @@ export async function startEvercraftHomeServer({
     : null;
   const loginLimiter = new IdentityRateLimiter();
   const credentialVault = credentialStateDir ? new ProviderCredentialVault({ stateDir: credentialStateDir }) : null;
+  const metaPageReconnect = createMetaPageReconnect({
+    appId: String(serviceOrigins?.CLIP_META_APP_ID || "").trim(),
+    loginConfigId: String(serviceOrigins?.CLIP_META_LOGIN_CONFIG_ID || "").trim(),
+    appSecretFile: String(serviceOrigins?.CLIP_META_APP_SECRET_FILE || "").trim(),
+    redirectUri: String(serviceOrigins?.CLIP_META_REDIRECT_URI || "").trim(),
+    graphVersion: String(serviceOrigins?.CLIP_META_GRAPH_VERSION || "v27.0").trim(),
+    credentialVault,
+    fetchImpl: clipFacebookFetch,
+  });
   if (ownerClaimSha256 && !/^[a-f0-9]{64}$/.test(ownerClaimSha256)) {
     throw new Error("owner_claim_sha256_invalid");
   }
@@ -185,6 +199,11 @@ export async function startEvercraftHomeServer({
     ? readPrivateRuntimeToken(ravenWorkBridgeTokenFile, "raven_work_bridge")
     : "";
   const ravenReceiptDir = String(serviceOrigins?.EVERCRAFT_RAVEN_RECEIPT_DIR || "").trim();
+  const executivePayments = createExecutivePaymentsReader({
+    readbackUrl: String(serviceOrigins?.EVERCRAFT_HOME_PAYMENTS_READBACK_URL || "").trim(),
+    authorizationTokenFile: String(serviceOrigins?.EVERCRAFT_HOME_PAYMENTS_READBACK_TOKEN_FILE || "").trim(),
+    fetchImpl: paymentsReadbackFetch,
+  });
 
   const lineageControlRoomBridgeUrl = String(
     serviceOrigins?.LINEAGE_CONTROL_ROOM_BRIDGE_URL || ""
@@ -608,6 +627,52 @@ export async function startEvercraftHomeServer({
     if (req.method === "GET" && url.pathname === "/api/session") {
       const session = sessionFor(req);
       return json(res, session.ok ? 200 : session.status, session);
+    }
+
+    // Authenticated one-login Meta Pages connection. Callback receives no Home
+    // session cookie because it originates cross-site: only unguessable,
+    // single-use state is redeemed. Page selection needs the original Passport
+    // session after the owner returns by clicking a first-party link.
+    if (req.method === "GET" && url.pathname === "/api/clip/facebook/oauth/status") {
+      if (authMode !== "passport") return json(res, 403, {ok:false,state:"passport_required"});
+      const session = sessionFor(req, "home.identity.sessions.manage");
+      if (!session.ok) return json(res, session.status, session);
+      return json(res, 200, metaPageReconnect.status(session));
+    }
+    if (req.method === "POST" && url.pathname === "/api/clip/facebook/oauth/start") {
+      if (authMode !== "passport") return json(res, 403, {ok:false,state:"passport_required"});
+      const session = sessionFor(req, "home.identity.sessions.manage");
+      if (!session.ok) return json(res, session.status, session);
+      try { return json(res, 200, metaPageReconnect.start(session)); }
+      catch (error) { return json(res, 409, {ok:false,state:String(error.message||"meta_start_failed")}); }
+    }
+    if (req.method === "GET" && url.pathname === "/api/clip/facebook/oauth/callback") {
+      const outcome = await metaPageReconnect.callback({
+        state: url.searchParams.get("state"),
+        code: url.searchParams.get("code"),
+        error: url.searchParams.get("error"),
+      });
+      const message = outcome.ok
+        ? "Meta authorization received. Return to Evercraft to review your Pages. Nothing has been connected or published yet."
+        : "Meta authorization was not completed. Return to Evercraft and start again. No Pages were connected.";
+      return html(res, outcome.ok ? 200 : 400,
+        '<!doctype html><html><head><meta charset="utf-8"><meta name="referrer" content="no-referrer"><title>Evercraft Clip · Meta authorization</title></head><body style="font:16px system-ui;max-width:640px;margin:70px auto;padding:24px"><h1>Evercraft Clip</h1><p>' + message + '</p><p><a href="' + metaPageReconnect.returnPath + '">Return to Evercraft Connections</a></p></body></html>');
+    }
+    if (req.method === "POST" && url.pathname === "/api/clip/facebook/oauth/commit") {
+      if (authMode !== "passport") return json(res, 403, {ok:false,state:"passport_required"});
+      const session = sessionFor(req, "home.identity.sessions.manage");
+      if (!session.ok) return json(res, session.status, session);
+      try {
+        const body = await readJsonBody(req, 8192);
+        if (!body || typeof body !== "object" || Array.isArray(body) ||
+            Object.keys(body).length !== 1 || !Object.hasOwn(body,"page_ids")) {
+          throw Error("meta_page_selection_invalid");
+        }
+        return json(res, 200, metaPageReconnect.commit(session, body.page_ids));
+      } catch (error) {
+        const state = String(error.message || "meta_page_selection_invalid");
+        return json(res, 409, {ok:false,state,secret_material_returned:false,publishing_enabled:false});
+      }
     }
 
     const providerCredentialMatch = url.pathname.match(
@@ -1188,6 +1253,36 @@ export async function startEvercraftHomeServer({
       const session = sessionFor(req, "home.network.read");
       if (!session.ok) return json(res, session.status, session);
       return json(res, 200, { ok: true, subject: session.subject, ...readNetworkOverview(repoRoot) });
+    }
+
+    if (req.method === "GET" && url.pathname === "/api/executive/payments") {
+      // Separate least-privilege Passport scope: generic Home read cannot expose business settlement totals.
+      const session = sessionFor(req, "home.payments.read");
+      if (!session.ok) return json(res, session.status, session);
+      return json(res, 200, {
+        ok: true, subject: session.subject,
+        ...(await executivePayments.read()),
+      });
+    }
+
+    if (req.method === "GET" && url.pathname === "/api/continuity/status") {
+      const session = sessionFor(req, "home.read");
+      if (!session.ok) return json(res, session.status, session);
+      return json(res, 200, {
+        ok: true, subject: session.subject,
+        ...readLocalVaultReadiness({
+          vaultDir: String(serviceOrigins?.EVERCRAFT_CONTINUITY_VAULT_DIR || "").trim(),
+        }),
+      });
+    }
+
+    if (req.method === "GET" && url.pathname === "/api/executive/evidence") {
+      const session = sessionFor(req, "home.read");
+      if (!session.ok) return json(res, session.status, session);
+      return json(res, 200, {
+        ok: true, subject: session.subject,
+        ...readExecutiveEvidence({ repoRoot }),
+      });
     }
 
     if (req.method === "GET" && url.pathname === "/api/overview") {

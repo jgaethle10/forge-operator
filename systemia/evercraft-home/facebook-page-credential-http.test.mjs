@@ -54,6 +54,38 @@ test('Evercraft Home seals Facebook Page credentials without echoing token mater
   }
 });
 
+test('multiple Facebook Pages remain separately sealed and selectable in the Home vault', async () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'evercraft-home-multipage-'));
+  const runtime = await startEvercraftHomeServer({ host:'127.0.0.1', port:0, authMode:'local', credentialStateDir:root });
+  try {
+    const ids = ['1253915241138545', '150998551441188'];
+    const tokens = ['test-page-one-'+('z'.repeat(40)), 'test-page-two-'+('y'.repeat(40))];
+    const refs = [];
+    for (let i=0; i<ids.length; i++) {
+      const res = await fetch(runtime.url+'/api/credentials/providers/facebook-pages', {
+        method:'POST', headers:{'content-type':'application/json'},
+        body:JSON.stringify({page_id:ids[i],page_access_token:tokens[i]})
+      });
+      assert.equal(res.status,201);
+      const payload = await res.json();
+      assert.equal(JSON.stringify(payload).includes(tokens[i]),false);
+      refs.push(payload.credential.credential_ref);
+    }
+    assert.notEqual(refs[0],refs[1]);
+    const status = await fetch(runtime.url+'/api/credentials/providers/facebook-pages/status');
+    assert.equal(status.status,200);
+    const metadata = await status.json();
+    assert.equal(metadata.credentials.length,2);
+    for (const token of tokens) assert.equal(JSON.stringify(metadata).includes(token),false);
+    const vault = new ProviderCredentialVault({stateDir:root});
+    for (let i=0; i<ids.length; i++) {
+      const value = vault.readSecret(refs[i]);
+      assert.equal(value.api_key_id,ids[i]);
+      assert.equal(value.api_secret,tokens[i]);
+    }
+  } finally { await runtime.close(); fs.rmSync(root,{recursive:true,force:true}); }
+});
+
 test('private Clip diagnostic verifies Page GETs without publishing or exposing a token',async()=>{
   const root=fs.mkdtempSync(path.join(os.tmpdir(),'evercraft-home-clip-diagnostic-'));
   const secret='extremely-sensitive-test-page-token-'+('y'.repeat(48));

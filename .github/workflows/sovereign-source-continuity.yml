@@ -1,0 +1,34 @@
+name: Sovereign Source Continuity
+on:
+  pull_request:
+    paths:
+      - "systemia/continuity/**"
+      - ".github/workflows/sovereign-source-continuity.yml"
+      - "systemia/evercraft-home/**"
+  push:
+    branches: [main]
+    paths:
+      - "systemia/continuity/**"
+      - ".github/workflows/sovereign-source-continuity.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  prove-github-independent-restore:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Syntax-check local source vault
+        run: |
+          node --check systemia/continuity/source-vault.mjs
+          node --check systemia/continuity/offline-hq-drill.mjs
+          node --check systemia/continuity/sealed-transfer.mjs
+          node --check systemia/continuity/device-field-kit.mjs
+      - name: Prove offline Git custody and isolated restore
+        env:
+          GIT_TERMINAL_PROMPT: '0'
+        run: node --test systemia/continuity/source-vault.test.mjs systemia/continuity/offline-hq-drill.test.mjs systemia/continuity/sealed-transfer.test.mjs systemia/continuity/device-field-kit.test.mjs

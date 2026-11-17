@@ -35,6 +35,19 @@ A local history book and contemporary recollections discuss Yakima tunnels and b
 - KATS-FM, “More Haunted Spots Across the Yakima Valley” (2021), local recollection: https://katsfm.com/more-haunted-spots-across-the-yakima-valley/
 
 
+## Yakima Period Lenses · 1899 / circa 1910 / 1920s (November 16, 2026)
+
+- New `yakima-walk/periods.mjs` expresses three **source-backed date categories** from the 1983 Lund Building nomination. Visitors switch on the same 3D street, without changing the modeled street placement or asserting a measured historic floor plan.
+- **1899:** original Alfalfa Saloon and truncated-corner entrance documented. The canopy and door overlay are a deliberately invented visual motif.
+- **Circa 1910:** Chicago Clothing Company retail conversion and plate-glass storefront documented. The panel counts, sizes, signs and door positions are still artistic.
+- **1920s:** metal marquee added to the Yakima Avenue facade during the decade, not assigned an exact installation year; the shown marquee geometry is original illustration.
+- Primary nomination: https://npgallery.nps.gov/GetAsset/34270517-7a19-422d-a0a6-3070adf1befa (NPS NRHP sections 7–8).
+- The same storefront *model objects* are tagged `interpretive` and never marked surveyed. The shared 3D promenade remains physically fictional. No actual below-grade routes or building-to-building passages are visualized. The record's interior doorways are NOT verified tunnels.
+- Source ledger `yakima-evidence-ledger.v1.json` now lists all three lenses, their source URL, date precision and `geometry_verified:false`; there are still seven original evidence records.
+- Tests verify mesh differences, chronology, UI pressed/selected states, screenshots for 1899 and 1920s, script-disabled phone fallback, and that `periods.mjs` is served with valid JavaScript MIME from the owned Worlds vault/HTTPS release gate.
+- The 1920 Sanborn map volume is publicly available at https://www.loc.gov/item/sanborn09381_001/ but its specific Lund sheet and footprint have NOT yet been georeferenced into this model; no parcel accuracy can be claimed from collection availability alone.
+- Public launch still requires genuine owned HTTPS DNS/TLS/route verification and an actual iPhone Safari acceptance receipt (issue #1994). A green GitHub run does not prove it.
+
 ## Yakima 3D Historical Inquiry (November 15, 2026)
 
 - New static-file WebGL2 experience at `/worlds/hidden-world/yakima-walk/`, accessed from the atlas, Yakima Evidence Lab and Lund architecture exhibit; no external JavaScript or graphics host. Continues the original conceptual `yakima-standalone.html` rather than replacing it.

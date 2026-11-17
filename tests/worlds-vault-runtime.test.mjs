@@ -135,7 +135,8 @@ test('vault serves Worlds UI, keeps data private and rejects malformed writes an
  for(const [file,marker] of [
   ['app.mjs','buildYakimaDrawList'],
   ['scene.mjs','evercraft.hidden-world.yakima-streetscape.v1'],
-  ['tour.mjs','YAKIMA_TOUR_SECONDS']
+  ['tour.mjs','YAKIMA_TOUR_SECONDS'],
+  ['periods.mjs','evercraft.hidden-world.yakima-period-lenses.v1']
  ]){
   const resource=await fetch(base+'/worlds/hidden-world/yakima-walk/'+file);
   assert.equal(resource.status,200,file+' must be served by the owned vault');

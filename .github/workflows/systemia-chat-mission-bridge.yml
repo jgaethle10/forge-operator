@@ -1,0 +1,73 @@
+name: Systemia Chat Mission Bridge
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/mission-bridge/**'
+      - '.github/workflows/systemia-chat-mission-bridge.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/mission-bridge/**'
+      - '.github/workflows/systemia-chat-mission-bridge.yml'
+  workflow_dispatch:
+    inputs:
+      mission_id:
+        description: 'Exact allowlisted request filename stem in systemia/mission-bridge/requests'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: systemia-chat-mission-${{ github.ref }}-${{ github.event_name }}
+  cancel-in-progress: false
+
+jobs:
+  admission-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Mission contract and injection-regression tests
+        run: |
+          node --check systemia/mission-bridge/bridge.mjs
+          node --check systemia/mission-bridge/cli.mjs
+          node --test systemia/mission-bridge/bridge.test.mjs
+      - name: Validate the first committed mission without running it
+        run: node systemia/mission-bridge/cli.mjs --plan signal-public-ingress-20261116-001
+
+  bounded-observation:
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    needs: admission-contract
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Admit new source requests and execute only declared read-only specialists
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          MISSION_ID: ${{ inputs.mission_id }}
+        run: |
+          if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
+            node systemia/mission-bridge/cli.mjs --request "$MISSION_ID"
+          else
+            node systemia/mission-bridge/cli.mjs --changed
+          fi
+      - name: Preserve evidence receipt even when the public route is unreachable
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: systemia-chat-mission-observations
+          path: artifacts/systemia-mission-bridge/*.json
+          if-no-files-found: warn
+          retention-days: 21

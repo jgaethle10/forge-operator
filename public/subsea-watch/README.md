@@ -45,13 +45,13 @@ The original EX2306 DIVE02 KML and ROV ancillary ZIP were successfully audited b
 
 This workflow is neither a commercial dive data certification nor approval for live navigation. See engineering issue #1982 for the next acceptance steps.
 
-### Real NOAA observation review (November 15, 2026)
+### NOAA processed-track review and processing lineage (November 15, 2026)
 
-**Preview route:** `/subsea-watch/field-archive/track-review/`. This is a real-data, two-dimensional **evidence reviewer**, NOT a 3D dive reconstruction. It displays independently sourced source-file fields `LAT_DD`, `LON_DD`, `DEPTH` and `UNIXTIME` from the NOAA ROV 1Hz CSV.
+**Preview route:** `/subsea-watch/field-archive/track-review/`. This is a real-data, two-dimensional **evidence reviewer**, NOT a 3D dive reconstruction. It displays selected fields from NOAA's upstream-processed 1 Hz navigation product: `LAT_DD`, `LON_DD`, `DEPTH` and `UNIXTIME` from the NOAA ROV 1Hz CSV.
 
-The source-hash-pinned exporter `scripts/prepare-noaa-ex2306-track-review.py` uses the previously verified original ROV ancillary archive (SHA-256 `b83df8dd9ae8ebeee7e23c5b1d8a2550b192137bbe7f1e394e551ee4124dda61`) and exports a 300-second, 300-observation **provisional** JSON artifact covering 18:30:00–18:34:59 UTC. The original full-resolution JSON can be retrieved from the `Subsea NOAA source byte audit` workflow artifact; no raw archive is published by that workflow.
+The source-hash-pinned exporter `scripts/prepare-noaa-ex2306-track-review.py` uses the previously verified original ROV ancillary archive (SHA-256 `b83df8dd9ae8ebeee7e23c5b1d8a2550b192137bbe7f1e394e551ee4124dda61`) and exports a 300-second, 300-observation **provisional** JSON artifact covering 18:30:00–18:34:59 UTC. The full 300-row processed-export JSON can be retrieved from the `Subsea NOAA source byte audit` workflow artifact; no raw archive is published by that workflow.
 
-For a faster mobile experience, the first-party static review page contains a separate **61-point, rounded display sample** (one point every 5 seconds, plus second 299). It preserves the source signed depth values and lat/lon readings, rounded for preview only. It draws **unconnected dots**: missing readings and movement between observations are not filled or interpolated. It does not calculate world-space X/Y, distance, route safety, obstacles, terrain, or underwater instrument accuracy.
+For a faster mobile experience, the first-party static review page contains a separate **61-point, rounded display sample** (one point every 5 seconds, plus second 299). It preserves the source signed depth values and lat/lon readings, rounded for preview only. It draws **unconnected dots**, without any additional interpolation by Evercraft. This does NOT mean NOAA's source points are independent raw fixes; NOAA's own 1 Hz export has already been filtered, interpolated and last-good-value padded. It does not calculate world-space X/Y, distance, route safety, obstacles, terrain, or underwater instrument accuracy.
 
 **Evidence limitations:** Source-reported geographic coordinates require independent positioning-solution review; signed `DEPTH` requires confirmation of units, sign convention and vertical reference. Having 300 timestamps overlapping a 299-second NOAA video segment does not establish frame synchronization. The live video remains a separate source link. No feature is for underwater navigation, operational safety, dive clearance or certified site surveying.
 

@@ -1,9 +1,11 @@
-name: Worlds Quest Master V0
+name: Worlds Quest Master V1
 on:
   pull_request:
     paths:
       - 'public/worlds/**'
-      - 'tests/worlds-quest-master.test.mjs'
+      - 'systemia/worlds/quest-model-planner.mjs'
+      - 'scripts/worlds-nextgen-quest.mjs'
+      - 'tests/worlds-quest-*.test.mjs'
       - 'systemia/worlds/QUEST_MASTER_V0.md'
       - '.github/workflows/worlds-quest-master.yml'
   workflow_dispatch:
@@ -18,9 +20,11 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Node module syntax
+      - name: Module syntax
         run: |
           node --check public/worlds/quest-master.mjs
           node --check public/worlds/app.mjs
-      - name: Quest authorization and scene proofs
-        run: node --test tests/worlds-quest-master.test.mjs
+          node --check systemia/worlds/quest-model-planner.mjs
+          node --check scripts/worlds-nextgen-quest.mjs
+      - name: Authorization, local adapter and model reply proofs
+        run: node --test tests/worlds-quest-master.test.mjs tests/worlds-quest-model-planner.test.mjs

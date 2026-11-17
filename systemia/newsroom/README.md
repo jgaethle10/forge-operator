@@ -56,3 +56,18 @@ The tool invokes the shared `claim-reactor.mjs` and emits a local JSON **candida
 The chainsaw editorial preview now embeds **two owned SVG illustrations** as `data:image/svg+xml;base64` images, with a portrait version for iPhone and a landscape version for desktop. This avoids the blank hero observed when iOS opened a local HTML attachment that referenced an external Wikimedia JPEG. Both illustrations are **clearly labeled conceptual** artwork, not historical artifact photography. The separate Commons link retains the attributed real osteotome photograph and its public-domain rights documentation.
 
 No browser or phone network access is required to render the preview hero. No remote image is silently presented as an embedded photograph. The renderer rejects SVG script, foreignObject, image and event-handler content, and the newsroom test verifies offline embedding and historical separation. This does not change Journal release authority, publication receipts, or the Clip distribution gate.
+
+## Arase science-release dossier (November 15)
+
+The science feature **The Particle Accelerator Inside Earth's "Impenetrable" Barrier** is a review candidate, not a live story. Its source/article draft, six-claim Claim Reactor packet, NASA photo manifest, and rights assessment remain in `systemia/newsroom/editorial-queue/` and `editorial-assets/`.
+
+Generate a private reviewer handoff:
+
+```bash
+node --test systemia/newsroom/arase-release-dossier.test.mjs
+node systemia/newsroom/arase-release-dossier.mjs /tmp/evercraft-arase-release-dossier.json
+```
+
+This creates a JSON gate report and adjacent Markdown instructions for an independent editorial reviewer. The CI workflow `journal-arase-release-dossier.yml` preserves both as an **unpublished review artifact**. The generator checks the current source index for Arase specifically, so another legitimate live Journal story cannot be mistaken for this one.
+
+**Hard boundary:** A passing Claim Reactor preflight is not 10/10 independent editorial acceptance. The NASA photo's source hash and attributed credit do not establish final asset-specific release permission. A Fallen brief does not equal completed production approval. Neither a local source-index row nor this report replaces a signed Systemia release or independent HTTPS article verification. The report never authorizes Clip distribution. No private signing keys or authorization receipts are stored here.

@@ -169,11 +169,18 @@ export function normalizeProviderCredentialRequest(provider, body = {}) {
   }
 
   if (spec.provider === 'facebook-pages') {
+    const pageId = clean(body.page_id);
+    if (!/^[0-9]{5,30}$/.test(pageId)) {
+      throw new Error('facebook_page_id_invalid');
+    }
+    // The vault's stable credential reference is based on provider, environment
+    // and label. Page-scoped labels prevent sealing Page B from overwriting Page A.
+    // Never take the isolation label from an HTTP caller.
     return {
       provider: spec.provider,
-      environment: clean(body.environment) || spec.environment,
-      label: clean(body.label) || spec.label,
-      apiKeyId: clean(body.page_id),
+      environment: 'live',
+      label: 'evercraft-clip-page-' + pageId,
+      apiKeyId: pageId,
       apiSecret: clean(body.page_access_token),
     };
   }

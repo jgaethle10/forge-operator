@@ -44,6 +44,13 @@ h2{font-size:clamp(2.25rem,5vw,4.4rem);line-height:1.03;letter-spacing:-.061em;m
 .number{font-size:12px;letter-spacing:.15em;color:var(--fire);font-weight:750}
 .show h3{font-size:clamp(2rem,4vw,3.7rem);letter-spacing:-.058em;line-height:1.03;margin:0 0 12px}
 .show p{margin:0;max-width:440px;color:#d0d8ce;font-size:15px}
+.intelligence{background:linear-gradient(115deg,#18251c,#14201b)}
+.engine-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:30px}
+.engine-card{border:1px solid #82a48a55;background:#ffffff07;border-radius:9px;padding:24px}
+.engine-card h3{font-size:clamp(1.55rem,3vw,2.15rem);letter-spacing:-.05em;margin:11px 0}
+.engine-card p{color:#d0d8ce;line-height:1.6;margin:0}
+.engine-label{font-size:11px;letter-spacing:.16em;color:var(--fire);text-transform:uppercase;font-weight:750}
+.engine-tail{color:var(--pale);max-width:770px;margin-top:26px;font-size:15px;line-height:1.7}
 .about{display:grid;grid-template-columns:1.1fr .9fr;gap:8%;align-items:start}
 .about p{font-size:17px;line-height:1.75;color:var(--pale);max-width:740px}
 .note{border-left:2px solid var(--fire);padding:8px 0 8px 22px;font-size:19px;line-height:1.6}
@@ -52,6 +59,7 @@ h2{font-size:clamp(2.25rem,5vw,4.4rem);line-height:1.03;letter-spacing:-.061em;m
 .contact .cta{background:var(--ink);color:white;border-color:var(--ink)}
 footer{padding:26px 0;border-top:1px solid var(--line);color:var(--muted);font-size:12px}
 .foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px}
+@media(max-width:900px){.engine-grid{grid-template-columns:1fr}}
 @media(max-width:740px){.wrap{width:min(100% - 36px,1200px)}.head nav{gap:12px}.hero{padding:76px 0 54px}.hero-foot{margin-top:56px}.section{padding:62px 0}.shows,.about{grid-template-columns:1fr}.show{min-height:244px;padding:23px}.note{margin:8px 0}.head{min-height:66px}h1{font-size:clamp(3.65rem,14vw,6rem)}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 </style>
@@ -75,6 +83,17 @@ footer{padding:26px 0;border-top:1px solid var(--line);color:var(--muted);font-s
 <article class="show"><div class="number">03 / EXPLORE</div><div><h3>Field Notes</h3><p>Wild places, forgotten landmarks, remarkable communities and the stories you only find by going there.</p></div></article>
 <article class="show"><div class="number">04 / DOCUMENT</div><div><h3>Week in Motion</h3><p>A recurring documentary of what we learned, what moved, what broke and what comes next.</p></div></article>
 </div></div></section>
+<section class="section intelligence" id="engine" aria-labelledby="engine-title"><div class="wrap">
+<div class="kicker">Behind the stories · Existing Evercraft systems</div>
+<h2 id="engine-title">Curiosity with an evidence trail.</h2>
+<p class="intro">A story can start with a strange change, a public record, a question in the field, or an engineering test. Evercraft has distinct systems for observing and investigating the world. They inform my work; they don't automatically decide what is true or what deserves publication.</p>
+<div class="engine-grid">
+<article class="engine-card"><div class="engine-label">Observe / Detect change</div><h3>Rockies</h3><p>Public-source observers follow environmental conditions, infrastructure, technology and other evolving systems. They record source context and meaningful differences instead of turning every update into a headline.</p></article>
+<article class="engine-card"><div class="engine-label">Integrate / Compare</div><h3>Worldstate</h3><p>Context Fabric and Reality Delta connect observations, preserve uncertainties and show what materially changed. A signal is a starting point for verification, not a finished story.</p></article>
+<article class="engine-card"><div class="engine-label">Investigate / Challenge</div><h3>TOWI</h3><p>Evidence-controlled research digs into official records, competing claims, technical questions and unresolved gaps. Investigations can begin independently, even without a Rockies signal.</p></article>
+</div>
+<p class="engine-tail">A verified investigation may become a longer Evercraft Journal feature, a Look Closer episode or a field documentary. Fallen Studios helps produce the work, and Evercraft Clip handles distribution only where the publication and account permissions have actually been confirmed. Nothing on this page claims these stories or channels are already live.</p>
+</div></section>
 <section class="section" id="about"><div class="wrap about">
 <div><div class="kicker">The person behind the work</div><h2>I don't have to know the answer to ask a better question.</h2><p>I founded Evercraft to make useful things, but the reason I keep building is bigger than software. I'm interested in why our systems work, why they fail, what we forget, and what is still possible. This space is where those investigations become stories you can follow.</p><p>Evercraft supports the research, production, and engineering. My perspective is my own. Whenever a video uses reconstruction, illustration, or simulation, it should be identified plainly.</p></div>
 <aside class="note">Not every discovery needs to become a product. Not every invention works. The interesting part is finding out.</aside>
