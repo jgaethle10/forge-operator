@@ -18,7 +18,8 @@ test('KAIDANCE state restore and save both include the same medical triage ledge
  const save=step('Save KAIDANCE frontier and medical memory');
  for(const file of [
   'artifacts/kaidance-frontier/runtime/state.json',
-  'artifacts/medical-evidence-triage/state.json'
+  'artifacts/medical-evidence-triage/state.json',
+  'artifacts/medical-registered-trials/history/state.json'
  ]){
   assert.ok(restore.includes(file),'restore missing '+file);
   assert.ok(save.includes(file),'save missing '+file);
@@ -35,5 +36,7 @@ test('source-bound review packet is tested and archived on successful and failed
   assert.ok(artifact.includes('artifacts/medical-review-packets/'+name));
  }
  assert.ok(source.includes("cron: '*/5 * * * *'"));
+ assert.ok(source.includes('node systemia/organism/medical-registry-observation-ledger.test.mjs'));
+ assert.ok(source.includes('artifacts/medical-registered-trials/history/latest.json'));
  assert.ok(source.includes('kaidance-frontier-field-${{ github.ref }}'), 'PR and production runs must have separate concurrency groups');
 });

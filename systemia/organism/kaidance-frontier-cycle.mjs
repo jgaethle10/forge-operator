@@ -141,6 +141,9 @@ const body = {
     registered_trial_outcome_audit_status: registeredTrials.outcome_audit_status,
     registered_trial_outcome_audit_counts: registeredTrials.outcome_audit_counts,
     registered_trial_outcome_audit_receipt: registeredTrials.outcome_audit_receipt,
+    registry_history_status: registeredTrials.registry_observation_ledger_status,
+    registry_history_counts: registeredTrials.registry_observation_ledger_counts,
+    registry_history_receipt: registeredTrials.registry_observation_ledger_receipt,
     publication_disposition: medicalBrief.publication_disposition,
     receipt_hash: medicalBrief.receipt_hash
   },

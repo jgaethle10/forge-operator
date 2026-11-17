@@ -8,6 +8,7 @@ import { parsePubmedEfetch, PUBMED_EFETCH } from './medical-abstract-evidence.mj
 import { buildMedicalReviewPacket, renderMedicalReviewMarkdown } from './medical-review-packet.mjs';
 import { crosscheckClinicalRegistrations, renderRegistryHTML, renderRegistryMarkdown } from './medical-registry-crosscheck.mjs';
 import { writeMedicalOutcomeAudit } from './medical-outcome-audit.mjs';
+import { writeRegistryObservationLedger } from './medical-registry-observation-ledger.mjs';
 
 export const PUBMED_SEARCH='https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi';
 export const REGISTERED_TRIAL_QUERY='clinicaltrials.gov[si]';
@@ -183,6 +184,9 @@ export async function runRegisteredTrialLane({
  const registry=await crosscheckClinicalRegistrations({
   abstracts:source,review,fetcher,now,maxRegistrations:3
  });
+ const historyLedger=writeRegistryObservationLedger({
+  registry,now,outDir:path.join(outDir,'history')
+ });
  const outcomeAudit=writeMedicalOutcomeAudit({
   discovery,source,review,registry,now,
   outDir:path.join(outDir,'outcome-audit')
@@ -194,6 +198,9 @@ export async function runRegisteredTrialLane({
   outcome_audit_receipt:outcomeAudit.receipt_hash,
   outcome_audit_status:outcomeAudit.source_status,
   outcome_audit_counts:outcomeAudit.counts,
+  registry_observation_ledger_receipt:historyLedger.receipt_hash,
+  registry_observation_ledger_status:historyLedger.status,
+  registry_observation_ledger_counts:historyLedger.counts,
   input_receipts:{source:source.receipt_hash,discovery:discovery.receipt_hash},
   reviewed_full_text:0,
   independently_verified_outcomes:0,
