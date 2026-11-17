@@ -78,7 +78,9 @@ export function reconcileSabanArtifacts(ledger, saban, { artifactRoot, now = Dat
       || job.work?.key !== id || job.work?.kind !== p.next_action.kind
       || result?.schema !== SCHEMA || result?.action_kind !== p.next_action.kind
       || result?.publication_performed === true || result?.canon_modified === true
-      || result?.release_claimed === true) {
+      || result?.release_claimed === true
+      || (result?.artifact_kind === 'private_source_inventory' &&
+        result?.work_outcome !== 'SOURCE_EVIDENCE_VERIFIED')) {
       rejected.push({ project_id: id || null, reason: 'job_not_authorized_for_progress' });
       continue;
     }
