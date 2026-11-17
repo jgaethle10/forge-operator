@@ -362,8 +362,9 @@ export async function deliverField01BQueued({
   return {
     schema: 'evercraft.network.field01b.lab-delivery-report.v1',
     observations: results, remaining_queued: courier.list().length,
-    observed_synthetic_http_only: true, verified_physical_devices: false,
-    verified_radio_link: false, verified_cellular_service: false,
-    field01b_qualified: false
+    transport_scope: 'synthetic_private_ip_http_lab',
+    observed_authenticated_http_delivery: results.some(row => row.status === 'DELIVERED'),
+    verified_physical_devices: false, verified_radio_link: false,
+    verified_cellular_service: false, field01b_qualified: false
   };
 }
