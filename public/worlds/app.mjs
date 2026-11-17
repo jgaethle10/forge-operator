@@ -4,7 +4,8 @@ import {QUALITY_KEY,validQualityMode,modeScale,tuneQuality,DEFAULT_QUALITY} from
 import {PORTAL,portalEffect} from './portal-visual.mjs';
 import {SKY_VERTEX_SHADER,SKY_FRAGMENT_SHADER,skyModeIndex} from './sky-atmosphere.mjs';
 import {makeLandscapeGeometry,makeGrassTuftGeometry,makeGrassPatches} from './scenic-landscape.mjs';
-import {loadOwnedSceneMesh} from './owned-asset-client.mjs';
+import {admitOwnedGlb} from './owned-glb.mjs';
+import {createMossmereStoneGlb} from './assets/mossmere-weathered-stone-generator.mjs';
 import {decodeSharedScene,sharedSceneUrl} from './share-scene.mjs';
 import {CLOUD_KEY,validateOwner,vaultAvailable,publishWorld,unpublishWorld,fetchPublishedWorld,publishedWorldUrl} from './cloud-client.mjs';
 const $=id=>document.getElementById(id), canvas=$('world');
@@ -61,9 +62,18 @@ function sphere(lat=12,lon=18){const p=[],n=[];for(let a=0;a<lat;a++)for(let b=0
 function cylinder(seg=22){const p=[],n=[];for(let i=0;i<seg;i++){const a=i*2*Math.PI/seg,b=(i+1)*2*Math.PI/seg;const aa=[Math.cos(a)*.5,Math.sin(a)*.5],bb=[Math.cos(b)*.5,Math.sin(b)*.5];for(const [t,vs]of [[0,[[aa[0],-.5,aa[1]],[bb[0],-.5,bb[1]],[bb[0],.5,bb[1]],[aa[0],.5,aa[1]]]],[1,[[0,.5,0],[aa[0],.5,aa[1]],[bb[0],.5,bb[1]]]],[2,[[0,-.5,0],[bb[0],-.5,bb[1]],[aa[0],-.5,aa[1]]]]]){const ids=vs.length===4?[0,1,2,0,2,3]:[0,1,2];for(const k of ids){const v=vs[k];p.push(...v);n.push(...(t===1?[0,1,0]:t===2?[0,-1,0]:[v[0]*2,0,v[2]*2]));}}}return mesh(p,n);}
 function ring(){const p=[],n=[];const rings=38,sides=8,R=.5,r=.068;for(let i=0;i<rings;i++)for(let j=0;j<sides;j++){const at=(a,b)=>{const theta=a*2*Math.PI/rings,phi=b*2*Math.PI/sides;return [(R+r*Math.cos(phi))*Math.cos(theta),(R+r*Math.cos(phi))*Math.sin(theta),r*Math.sin(phi)];};const verts=[at(i,j),at(i+1,j),at(i+1,j+1),at(i,j+1)];for(const k of [0,1,2,0,2,3]){p.push(...verts[k]);n.push(verts[k][0],verts[k][1],verts[k][2]);}}return mesh(p,n);}
 const terrainMesh=makeLandscapeGeometry(),grassMesh=makeGrassTuftGeometry();
+const MOSS_STONE_RIGHTS={
+ schema:'evercraft.worlds.asset-rights.v1',
+ id:'mossmere-original-weathered-stone',
+ sha256:'ff95fccd4ad06e4ef50caf06952da6db0f7dc0f4225e7c6a409580f87d67a38d',
+ license:'Evercraft-original',
+ creator:'Evercraft Worlds Studio',
+ source:'Reproducible original model authored in public/worlds/assets/mossmere-weathered-stone-generator.mjs',
+ review:'approved_for_worlds'
+};
 // The first original owned GLB is rights/digest checked before WebGL upload.
 // Fail closed to the original primitive pond stones on network or asset errors.
-const verifiedStone=await loadOwnedSceneMesh('mossmere-weathered-stone').catch(()=>null);
+const verifiedStone=await admitOwnedGlb(createMossmereStoneGlb(),MOSS_STONE_RIGHTS).catch(()=>null);
 const stoneMesh=verifiedStone?mesh(verifiedStone.positions,verifiedStone.normals):sphere(9,14);
 const stoneColor=verifiedStone?'#'+[verifiedStone.material.baseColor.r,verifiedStone.material.baseColor.g,verifiedStone.material.baseColor.b]
  .map(v=>Math.round(v*255).toString(16).padStart(2,'0')).join(''):'#b4b1a5';

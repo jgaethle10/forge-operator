@@ -1,11 +1,13 @@
-# Evercraft Worlds | First original GLB in Mossmere
-The file `public/worlds/assets/mossmere-weathered-stone.glb` is original 3D geometry authored for the Mossmere pond and admitted through the new owned GLB importer. It is a 3,016-byte glTF2 binary, 62 source vertices and 120 triangle faces, packed with vertex normals and a matte limestone base material. Rights are declared in the adjacent reviewed manifest with fixed SHA-256 `4ba9870f7f1c376b205cb5d1f697ba1440266c147116a6b572b3a78b21c59694`.
+# Evercraft Worlds | First verified original glTF model in scene
+The source module `public/worlds/assets/mossmere-weathered-stone-generator.mjs` deterministically constructs a real glTF2 binary GLB from original authored vertices, normals, triangles and a rough limestone material. Source-controlled code is the immutable authoring record; the GLB is generated in memory on startup and can be exported to disk independently for later 3D editing.
 
-The browser loads only this named asset from its same-origin `/worlds/assets/` folder, validates rights and SHA-256 using WebCrypto, decodes the bounded GLB into a GPU mesh and uses it for 20 individually placed pond stones. If the asset is unavailable, it falls back to spheres and records this in `window.__worldsAssetTelemetry`; it never loads unapproved external assets. Original source geometry is authored as a stylized weathered boulder, without textures or third-party 3D files.
+The fixed reviewed rights manifest is `mossmere-weathered-stone.rights.json` with SHA-256 `ff95fccd4ad06e4ef50caf06952da6db0f7dc0f4225e7c6a409580f87d67a38d`. Admission uses the existing owned GLB parser and WebCrypto digest check; corruption, unsupported features and unauthorized rights fail closed to the prior spheres.
 
-Verification:
+The renderer instantiates 20 pond stones from the approved original mesh, with no external asset CDN or new scene/save schema. This is the first complete **authored geometry → real GLB → fixed integrity check → WebGL2 mesh** path. Its original source code avoids fragile binary Git uploads.
+
+Testing:
 - `node --test tests/worlds-owned-glb.test.mjs tests/worlds-owned-scene-asset.test.mjs`
-- Worlds browser QA must assert the verified GLB loads on desktop and phone emulation.
-- A green compatibility test is not artistic approval: compare the pond before/after, judge composition and record frame time on real Chromebook/Safari devices before promoting to live. The current shader still uses simple diffuse lighting, not full PBR.
+- Browser conformance checks `window.__worldsAssetTelemetry` on desktop and mobile emulations and fails if the intended original geometry wasn't actually loaded.
+- Real Chromebook/iPhone performance and visual art review are still required before live deployment. The current shader is not full PBR.
 
-No backend migration, cloud-world save/schema change, Caddy edit, paid dependency or live Penguin service change.
+Do not infer final graphics quality from the GLB/geometry test. Substantive materials, textures, authored foliage, character rigs and shadows are still ahead.

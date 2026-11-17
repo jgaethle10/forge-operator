@@ -33,16 +33,5 @@ jobs:
           node-version: '22'
       - name: Syntax checks
         run: node --check public/worlds/owned-glb.mjs && node --check scripts/inspect-owned-worlds-glb.mjs && node --check tests/worlds-owned-glb.test.mjs
-      - name: Print committed binary digest for provenance reconciliation
-        run: sha256sum public/worlds/assets/mossmere-weathered-stone.glb
       - name: Rights, mesh, GLB and material contract tests
         run: node --test tests/worlds-owned-glb.test.mjs tests/worlds-owned-scene-asset.test.mjs
-      - name: Preserve original GLB for binary-level provenance inspection
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: evercraft-worlds-original-glb-proof
-          path: |
-            public/worlds/assets/mossmere-weathered-stone.glb
-            public/worlds/assets/mossmere-weathered-stone.rights.json
-          if-no-files-found: error
