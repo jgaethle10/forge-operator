@@ -1,0 +1,27 @@
+name: Pacific FSRCNN Private Offline Model Retrieval
+on:
+  push:
+    branches: [studio/pacific-real-music-audition-20261115]
+    paths: [.github/workflows/pacific-fsrcnn-model-retrieval.yml]
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  model:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Acquire Apache-2.0 model weights from upstream GitHub
+        run: |
+          mkdir -p model
+          curl -fsSLo model/FSRCNN_x2.pb https://raw.githubusercontent.com/Saafke/FSRCNN_Tensorflow/master/models/FSRCNN_x2.pb
+          curl -fsSLo model/LICENSE.txt https://raw.githubusercontent.com/Saafke/FSRCNN_Tensorflow/master/LICENSE
+          test $(wc -c < model/FSRCNN_x2.pb) -ge 35000
+          grep -q 'Apache License' model/LICENSE.txt
+          sha256sum model/* > model/sha256sums.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pacific-fsrcnn-apache2-offline-model
+          path: model/
+          retention-days: 2
+          if-no-files-found: error
