@@ -158,6 +158,7 @@ test('photo-led customer brief compiles truthful editorial-still timeline',t=>{
   const plan=compileApprovedCommercial(input);
   assert.equal(plan.sourceMode,'customer-photographs');
   assert.equal(plan.gates.photoOnlyMotionTruthReviewRequired,true);
+  assert.equal(plan.deliveryRequest.photoEditorialMode,'source-photographs');
   assert.equal(plan.gates.publicationAuthorityGranted,false);
   assert.equal(plan.deliveryRequest.project.tracks[0].name,'Approved customer photographs');
   assert.equal(plan.deliveryRequest.project.assets.filter(x=>x.kind==='image').length,3);
@@ -187,6 +188,12 @@ test('photo-led commercial renders actual H264/AAC from image inputs with approv
   assert.equal(result.status,'rendered_and_technically_qc_accepted');
   assert.equal(result.boundaries.photoLedRender,true);
   assert.equal(result.boundaries.publicationAuthorityGranted,false);
+  const masterQcPath=path.join(dir,'photo-deliver','commercial-photo-led-encode-ci-only-16x9.master-qc.json');
+  const masterQc=JSON.parse(fs.readFileSync(masterQcPath,'utf8'));
+  assert.equal(masterQc.policy.maxFreezeRatio,1);
+  assert.ok(masterQc.measurements.freezeRatio>0.35);
+  const clipManifest=JSON.parse(fs.readFileSync(result.clipManifestPath,'utf8'));
+  assert.equal(clipManifest.boundaries.photoOnlyEditorialReviewRequired,true);
   assert.ok(fs.statSync(result.videoPath).size>4000);
   const master=JSON.parse(fs.readFileSync(result.audioMasterReceiptPath,'utf8'));
   assert.equal(master.status,'accepted');
