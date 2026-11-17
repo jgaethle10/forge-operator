@@ -1,0 +1,23 @@
+name: Pacific Licensed Illustrative Engine B-roll Recon
+on:
+  push:
+    branches: [studio/pacific-real-music-audition-20261115]
+    paths: [systemia/media-studio/pacific-stock-broll-recon.py,.github/workflows/pacific-stock-broll-recon.yml]
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  public-source:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 9
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg
+      - run: python systemia/media-studio/pacific-stock-broll-recon.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pacific-licensed-engine-broll-private-recon
+          path: pacific-licensed-broll/
+          retention-days: 7
+          if-no-files-found: error
