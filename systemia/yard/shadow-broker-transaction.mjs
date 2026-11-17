@@ -62,6 +62,18 @@ export async function runRehearsalShadowBrokerTransaction({
   requireOk(fs.lstatSync(parent).isDirectory() &&
     (fs.lstatSync(parent).mode&0o077)===0,'journal_root_not_private');
 
+  // Never use caller-supplied metadata to disguise a physical NodeSeed
+  // as a disposable fixture. The root must contain this actual receipt.
+  const recordedReceipt=JSON.parse(fs.readFileSync(
+    path.join(nodeRoot,'nodeseed-receipt.json'),'utf8'
+  ));
+  requireOk(
+    recordedReceipt.root===nodeRoot &&
+    recordedReceipt.node_id===nodeSeedReceipt.node_id &&
+    recordedReceipt.device_fingerprint===nodeSeedReceipt.device_fingerprint &&
+    recordedReceipt.endpoint===nodeSeedReceipt.endpoint,
+    'on_disk_nodeseed_receipt_mismatch'
+  );
   const origin=loopbackFromReceipt(nodeSeedReceipt);
   const capacity=await jsonRequest(request,origin+'/v1/capacity');
   verifyCapacity(nodeSeedReceipt,capacity);
@@ -71,7 +83,7 @@ export async function runRehearsalShadowBrokerTransaction({
   });
 
   let recorded=false;
-  let brokerStarted=false;
+  let brokerResponseReceived=false;
   let verified=false;
   let cleanup=null;
   let failure=null;
@@ -112,7 +124,7 @@ export async function runRehearsalShadowBrokerTransaction({
     const serviceId=String(job?.result?.service_id||'');
     requireOk(/^svc_[a-f0-9]{16}$/i.test(serviceId),
       'service_id_missing');
-    brokerStarted=true;
+    brokerResponseReceived=true;
 
     const health=await jsonRequest(
       request,origin+'/v1/services/'+serviceId+'/health'
@@ -147,7 +159,9 @@ export async function runRehearsalShadowBrokerTransaction({
   return {
     schema:'evercraft.yard.shadow-broker-transaction.v1',
     ok:verified&&cleanup?.ok===true&&!failure,
-    broker_started:brokerStarted,
+    broker_start_confirmed_by_response:brokerResponseReceived,
+    broker_start_outcome_uncertain:
+      !brokerResponseReceived && journal.submission_attempted,
     broker_identity_verified:verified,
     release_confirmed:cleanup?.ok===true,
     journal_phase:journal.phase,
