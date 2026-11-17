@@ -12,7 +12,11 @@ export async function executeVerifiedReportTask({csvText,localFileReadApproved=f
     verify:result=>result?.status==='verified_local'
       &&result.quality?.status==='verified'
       &&result.specialist_receipts?.length===5
-      &&result.specialist_receipts.every(r=>r.status==='completed'&&r.quality_status==='pass')
+      &&new Set(result.specialist_receipts.map(r=>r.role)).size===5
+      &&['analyst','writer','designer','auditor','coordinator'].every(role=>
+        result.specialist_receipts.some(r=>r.role===role&&r.status==='completed'
+          &&r.quality_status==='pass'&&/^[a-f0-9]{64}$/.test(r.result_sha256||'')))
+      &&result.source_sha256&&/^[a-f0-9]{64}$/.test(result.source_sha256)
       &&typeof result.report_markdown==='string'
       &&sha256(result.report_markdown)===result.report_sha256
       &&result.model_inference===false
