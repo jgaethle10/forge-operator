@@ -5,11 +5,13 @@ on:
       - research/eo001-gate1-integrated-offline-20261111
       - research/eo001-gate1-stable-identity-subtree-20261111
       - research/eo001-gate1-readonly-supervisor-20261111
+      - research/eo001-gate1-consolidated-observers-20261115
   pull_request:
     branches:
       - research/eo001-gate1-escaped-session-negative-control-20261110
       - research/eo001-gate1-integrated-offline-20261111
       - research/eo001-gate1-stable-identity-subtree-20261111
+      - research/eo001-gate1-readonly-supervisor-20261111
     paths:
       - 'integrations/ai-evaluation-lab/**'
       - 'systemia/saban/microseed-pairing.mjs'
@@ -32,6 +34,19 @@ jobs:
           node --check integrations/ai-evaluation-lab/eo001-cgroup-supervisor-observer.mjs
           node --check integrations/ai-evaluation-lab/eo001-stable-scope-lifecycle.mjs
           node --check integrations/ai-evaluation-lab/eo001-readonly-supervisor-capture.mjs
+          node --check integrations/ai-evaluation-lab/eo001-cgroup-subtree-cleanup.mjs
+          node --check integrations/ai-evaluation-lab/eo001-supervisor-evidence-join.mjs
+          node --check integrations/ai-evaluation-lab/eo001-exact-scope-stop-review.mjs
+          node --check integrations/ai-evaluation-lab/eo001-stop-sequence-review.mjs
+          node --check integrations/ai-evaluation-lab/eo001-native-scope-stop.mjs
+          node --check integrations/ai-evaluation-lab/eo001-held-cgroup-kill-alternative.mjs
+          node --check integrations/ai-evaluation-lab/eo001-cgroup-kill-readonly-capability.mjs
+          node --check integrations/ai-evaluation-lab/eo001-nextgen-readonly-capability-preflight.mjs
+          node --check integrations/ai-evaluation-lab/eo001-nextgen-preflight-receipt-review.mjs
+          node --check integrations/ai-evaluation-lab/eo001-held-cgroup-kill-survey-join.mjs
+          node --check integrations/ai-evaluation-lab/eo001-lab-interop-reproducer.mjs
+          node --check integrations/ai-evaluation-lab/eo001-lab-interop-artifact-verify.mjs
+          node --check integrations/ai-evaluation-lab/eo001-one-use-stop-ledger.mjs
           node --check integrations/ai-evaluation-lab/eo001-private-evidence-vault.mjs
           node --check integrations/ai-evaluation-lab/eo001-process-group-escape-negative.mjs
           node --check integrations/ai-evaluation-lab/eo001-sovereign-gateway-candidate.mjs
@@ -48,6 +63,54 @@ jobs:
           node --test integrations/ai-evaluation-lab/eo001-cgroup-parent-witness.test.mjs
       - name: Verify stable process identity and recursive subtree evidence, offline only
         run: node --test integrations/ai-evaluation-lab/eo001-stable-scope-lifecycle.test.mjs
+      - name: Verify independently sourced supervisor subtree kernel-readback refusals
+        run: node --test integrations/ai-evaluation-lab/eo001-cgroup-subtree-cleanup.test.mjs
+      - name: Verify source-only join refuses cross-observer identity and clock mismatches
+        run: node --test integrations/ai-evaluation-lab/eo001-supervisor-evidence-join.test.mjs
+      - name: Verify inert exact-unit stop candidate never grants execution
+        run: node --test integrations/ai-evaluation-lab/eo001-exact-scope-stop-review.test.mjs
+      - name: Verify exact-scope stop state machine against simulated manager failures
+        run: node --test integrations/ai-evaluation-lab/eo001-stop-sequence-review.test.mjs
+      - name: Verify signed-approval exact user-unit controller with fake systemd only
+        run: node --test integrations/ai-evaluation-lab/eo001-native-scope-stop.test.mjs
+      - name: Verify held-FD cgroup.kill alternative remains read-only and review gated
+        run: node --test integrations/ai-evaluation-lab/eo001-held-cgroup-kill-alternative.test.mjs
+      - name: Verify native held-FD read-only cgroup capability probe using temp fake mount
+        run: node --test integrations/ai-evaluation-lab/eo001-cgroup-kill-readonly-capability.test.mjs
+      - name: Refuse non-cgroup2 and misleading NextGen preflight metadata on a fake mount only
+        run: node --test integrations/ai-evaluation-lab/eo001-nextgen-readonly-capability-preflight.test.mjs
+      - name: Review synthetic NextGen preflight receipts without elevating authority or exposing host identity
+        run: node --test integrations/ai-evaluation-lab/eo001-nextgen-preflight-receipt-review.test.mjs
+      - name: Refuse mismatched source, boot and cgroup identity across two read-only review views
+        run: node --test integrations/ai-evaluation-lab/eo001-held-cgroup-kill-survey-join.test.mjs
+      - name: Reproduce the independent Lab 15-vector contract and generate sanitized review JSON
+        run: |
+          node --test integrations/ai-evaluation-lab/eo001-lab-interop-reproducer.test.mjs
+          mkdir -p /tmp/eo001-public-review
+          node integrations/ai-evaluation-lab/eo001-lab-interop-reproducer.mjs > /tmp/eo001-public-review/interop.json
+          node -e "const fs=require('fs'); const r=JSON.parse(fs.readFileSync('/tmp/eo001-public-review/interop.json')); if(r.passed_count!==15||r.failure_count!==0||r.kernel_stop_attempted!==false||r.physical_experiment_authorized!==false)process.exit(2)"
+      - name: Independently validate generated Lab JSON against committed source blob
+        run: |
+          node --test integrations/ai-evaluation-lab/eo001-lab-interop-artifact-verify.test.mjs
+          SOURCE=integrations/ai-evaluation-lab/eo001-held-cgroup-kill-survey-join.mjs
+          BLOB="$(git rev-parse "HEAD:$SOURCE")"
+          node integrations/ai-evaluation-lab/eo001-lab-interop-artifact-verify.mjs \
+            /tmp/eo001-public-review/interop.json \
+            "$PWD/$SOURCE" "$BLOB" > /tmp/eo001-public-review/interop-verification.json
+          node -e "const fs=require('fs'); const x=JSON.parse(fs.readFileSync('/tmp/eo001-public-review/interop-verification.json')); if(x.verified_case_count!==15||x.kernel_stop_authorized!==false||x.physical_scope_cleanup_proven!==false)process.exit(2)"
+      - name: Publish source-identified synthetic Lab interop report for external review
+        uses: actions/upload-artifact@v4
+        with:
+          name: eo001-lab-interop-${{ github.sha }}
+          path: |
+            /tmp/eo001-public-review/interop.json
+            /tmp/eo001-public-review/interop-verification.json
+          retention-days: 14
+          if-no-files-found: error
+      - name: Verify local fsynced one-use permit ledger and replay refusals
+        run: node --test integrations/ai-evaluation-lab/eo001-one-use-stop-ledger.test.mjs
+      - name: Audit missing, reordered and tampered private stop receipts without running systemd
+        run: node --test integrations/ai-evaluation-lab/eo001-one-use-stop-audit.test.mjs
       - name: Verify held-FD two-phase supervisor capture without starting/stopping services
         run: node --test integrations/ai-evaluation-lab/eo001-readonly-supervisor-capture.test.mjs
       - name: Verify optional owner-only archive refuses overwrites and unsafe directories
