@@ -44,7 +44,7 @@ test('submission cannot occur without a durably recorded lease',()=>{
   }finally{fs.rmSync(root,{recursive:true,force:true})}
 });
 
-test('new process can release a persisted lease after losing service response',async()=>{
+test('persisted lease journal releases after losing service response',async()=>{
   const root=fixture();
   try{
     const dir=createShadowLeaseJournal({parent:root,origin:'http://127.0.0.1:43218'});
