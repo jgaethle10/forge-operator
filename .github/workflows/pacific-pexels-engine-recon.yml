@@ -1,0 +1,32 @@
+name: Pacific Real Engine B-roll Pexels Private Proof
+on:
+  push:
+    branches: [studio/pacific-real-music-audition-20261115]
+    paths: [systemia/media-studio/pacific-pexels-engine-recon.py,.github/workflows/pacific-pexels-engine-recon.yml]
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get -qq update && sudo apt-get -qq -y install ffmpeg
+      - name: Source and inspect public rights-cleared illustrative insert
+        run: python3 systemia/media-studio/pacific-pexels-engine-recon.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pacific-pexels-private-recon
+          path: pacific_engine_candidate/candidate_5s.mp4
+          retention-days: 3
+          if-no-files-found: ignore
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pacific-pexels-source-receipt
+          path: |
+            pacific_engine_candidate/source_receipt.json
+            pacific_engine_candidate/candidate_frame.jpg
+          retention-days: 3
+          if-no-files-found: warn
