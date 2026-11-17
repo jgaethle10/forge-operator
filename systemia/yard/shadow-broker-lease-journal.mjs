@@ -172,7 +172,10 @@ export async function releaseShadowLease({dir,request=fetch}={}){
       throw Error('lease_release_receipt_invalid');
 
     durableWrite(dir,{
-      ...state,phase:'released',cleanup:'confirmed_lease_release',
+      ...state,
+      phase:'released',
+      lease:{lease_id:state.lease.lease_id,expires_at:state.lease.expires_at},
+      cleanup:'confirmed_lease_release',
       updated_at:new Date().toISOString(),
     });
     return {
