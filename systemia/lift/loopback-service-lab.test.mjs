@@ -1,4 +1,5 @@
 import test from 'node:test';
+import http from 'node:http';
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import os from 'node:os';
@@ -84,8 +85,13 @@ test('health is fictional, no payments route, untrusted Host/Origin rejected',as
       {as:'owner',body:{amount_cents:100}})).status,404);
     assert.equal((await r.request(s,'GET','/health',
       {headers:{origin:'https://attacker.example'}})).status,403);
-    assert.equal((await r.request(s,'GET','/health',
-      {headers:{host:'attacker.example'}})).status,403);
+    const forgedHostStatus=await new Promise((resolve,reject)=>{
+      const req=http.request(s.origin+'/health',{headers:{Host:'attacker.example'}},res=>{
+        res.resume();res.on('end',()=>resolve(res.statusCode));
+      });
+      req.on('error',reject);req.end();
+    });
+    assert.equal(forgedHostStatus,403);
     assert.equal((await r.request(s,'GET','/health?secret=1')).status,400);
   }finally{await s.close();}
 });
