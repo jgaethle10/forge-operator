@@ -1,0 +1,35 @@
+name: Client 001 V3 Public HTTPS Receipt
+on:
+  push:
+    branches: [verify/client001-v3-live-20261116]
+    paths: ['.github/workflows/client001-v3-public-receipt.yml']
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 7
+    steps:
+      - name: Prove On The Go V3 is actually served at its existing URL
+        run: |
+          set -euo pipefail
+          URL='https://jgaethle10.github.io/forge-operator/clients/on-the-go/review/'
+          for attempt in {1..18}; do
+            if curl -fsSL --max-time 20 --retry 2 --retry-delay 1 "$URL" -o /tmp/onthego_v3.html &&
+              grep -Fq 'On The Go Mobile Quick Lube | Client Preview V3' /tmp/onthego_v3.html; then
+              break
+            fi
+            sleep 12
+          done
+          grep -Fq 'On The Go Mobile Quick Lube | Client Preview V3' /tmp/onthego_v3.html
+          grep -Fq 'Customer-supplied oil' /tmp/onthego_v3.html
+          grep -Fq 'semirotation' /tmp/onthego_v3.html
+          grep -Fq 'clientoilrotation' /tmp/onthego_v3.html
+          grep -Fq '509-833-5025' /tmp/onthego_v3.html
+          grep -Fq 'Monday–Friday · 9 AM–5 PM' /tmp/onthego_v3.html
+          grep -Fq 'Cambio de aceite sintético' /tmp/onthego_v3.html
+          ! grep -Fq 'How optional referral tracking would work' /tmp/onthego_v3.html
+          ! grep -Fq 'refCode' /tmp/onthego_v3.html
+          echo 'CLIENT001_V3_PUBLIC_HTTPS_VERIFIED'
+          echo "URL=$URL"
+          wc -c /tmp/onthego_v3.html
