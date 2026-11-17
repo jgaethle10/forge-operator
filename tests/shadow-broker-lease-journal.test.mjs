@@ -61,6 +61,7 @@ test('persisted lease journal releases after losing service response',async()=>{
     assert.equal(calls[0].url,'http://127.0.0.1:43218/v1/leases/lease_shadowproof_12345678/release');
     assert.equal(calls[0].body.token,token);
     assert.equal(inspectShadowLeaseJournal({dir}).phase,'released');
+    assert.equal(fs.readFileSync(path.join(dir,'lease-journal.json'),'utf8').includes(token),false);
     const again=await releaseShadowLease({dir,request:async()=>{throw Error('should not re-release')}});
     assert.equal(again.already_released,true);
     assert.equal(JSON.stringify(inspectShadowLeaseJournal({dir})).includes(token),false);
