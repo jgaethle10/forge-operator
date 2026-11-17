@@ -51,3 +51,24 @@ Open creator-studio-preview.html in a browser to explore the mobile-first creato
 This page deliberately has no authentication, media upload, external data transfer, draft persistence, payment integration, or publication. Its generated identity and asset IDs are labeled unverified local placeholders. The exported metadata is **not** accepted as a trusted approval, real source attestation, verified creator identity, or signed media receipt.
 
 Next required wiring: an owned identity issuer with secure session handling; an authorized uploader that returns scoped, verified media receipts; a server API invoking the restricted creator-access facade; authenticated editorial review; source verification; and separate publisher adapters.
+
+## Nov 16: owned private media ingestion and receipt binding
+
+- `creator-media-store.mjs`: accepts actual Buffer or streaming binary bytes into a **private single-host filesystem**, enforces a 64 MiB default ceiling, computes SHA-256, detects PNG/JPEG/MP4/WebM *file signatures*, fsyncs private temp media, and commits by exclusive link into a creator-and-tenant-isolated content-addressed path. It re-reads and hashes stored bytes on verification, rejects tampering, and returns a receipt with **no public URL**.
+- `creator-media-store.test.mjs`: stream, size, file-type, invalid input, re-open, deduplication, ownership separation, and tamper tests.
+- `creator-access.mjs`: new creator.media permission for `uploadMedia`, plus `submitWithMedia`, which requires a previously ingested verified asset belonging to that same signed tenant and creator before entering the original creator queue.
+- `creator-media-access.test.mjs`: cross-tenant/creator failures, missing media, role/scope failures, typed content and full media-to-queue acceptance.
+- `creator-media-pilot.mjs`: disposable synthetic image-byte proof through signed development token, intake, review, restart, and withdrawal.
+- CI validates the entire proof and denies any pilot claiming publication, provider settlement or payable funds.
+
+### Explicit security and capability boundary
+
+This implementation is **not yet a production upload service**. The original `submit` path remains for metadata-only test fixtures and **MUST NOT be exposed** on a public API; expose only the stronger media-bound path after all publisher/privacy gates exist. The synthetic sample image is signature-level test material, not a validated decodable photograph or real cemetery footage. File signatures are not sufficient malware checks or deep media validation. No transcoding, content inspection, executable sandboxing, quotas across all uploads, DDoS protection, credential issuer, logout/revocation, retention/deletion workflow, redundant durability, object-storage replication, public user interface upload, public video player, copyright verification, or publisher receipt has been added.
+
+The next production engineering gate is an authenticated same-origin upload and submission API with secure session management, MIME-independent deep decoding/scanning, privacy/compliance checks, content quota controls and operational recovery. Keep the creator's footage private until independent review and creator permission authorize distribution. The creator's footage does **not** automatically transfer copyright to Evercraft. Creator share calculations still require verified revenue and signed terms.
+
+Example (Node 22, local sandbox only):
+```sh
+node --test systemia/participation-economy/*.test.mjs
+node systemia/participation-economy/creator-media-pilot.mjs
+```
