@@ -101,3 +101,20 @@ test('inherited authorizations, active nodes, pending enrollments or public rout
     health,record,route:{...route,ok:true,state:'public_route_verified'}
   }));
 });
+
+test('live canary cannot execute even if an approval and token are supplied',async()=>{
+  const {spawnSync}=await import('node:child_process');
+  const {fileURLToPath}=await import('node:url');
+  const entry=fileURLToPath(new URL('../systemia/yard/shadow-broker-one-shot.mjs',import.meta.url));
+  const run=spawnSync(process.execPath,[entry,'--run','--ack-one-shot-canary'],{
+    timeout:5_000,encoding:'utf8',
+    env:{
+      ...process.env,
+      EVERCRAFT_SHADOW_CANARY_APPROVED:'YES',
+      EVERCRAFT_ALLOCATOR_TOKEN:'synthetic-test-only-not-a-credential',
+    },
+  });
+  assert.equal(run.status,3,run.error?.message||run.stderr);
+  assert.match(run.stderr,/live_canary_blocked_pending_partial_deployment_cleanup_proof/);
+  assert.equal(run.stdout,'');
+});
