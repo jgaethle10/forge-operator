@@ -2,7 +2,7 @@
 /**
  * Read-only live NodeSeed resident inventory.
  * Looks at only the systemd MainPID's TCP listeners, then probes a fixed
- * read-only broker health route on loopback. Does not inspect processes'
+ * read-only broker and Edge DNS health routes on loopback. Does not inspect processes'
  * argv/env output, private grant state, broker control tokens, or enrollments.
  */
 import fs from 'node:fs';
@@ -12,6 +12,7 @@ import path from 'node:path';
 
 const RECEIPT='/var/lib/evercraft/nodeseed/nodeseed-receipt.json';
 const UNIT='evercraft-nodeseed.service';
+const DNS_PORT=1053;
 
 export function parseOwnedTcpPorts(output,pid){
   if(!Number.isInteger(pid)||pid<=0)throw Error('nodeseed_pid_invalid');
@@ -46,6 +47,41 @@ export function classifyBrokerHealth(health){
     pending_enrollment_count:Number.isInteger(health.pending_enrollment_requests)?
       health.pending_enrollment_requests:null,
     broker_instance_id_printed:false,
+    secrets_printed:false,
+  };
+}
+
+export function classifyEdgeDnsHealth(health,ownerPorts,httpPort){
+  // The verified Evercraft Edge DNS runtime binds DNS TCP on port 1053
+  // and starts an independent HTTP /health endpoint on a dynamic port.
+  // Require BOTH sockets to belong to NodeSeed's MainPID.
+  const dnsPort=Number(health?.dns_bind_port);
+  if(health?.ok!==true||
+     health.service!=='evercraft-edge-dns'||
+     health.runtime!=='Evercraft Compute'||
+     health.workload_class!=='systemia.evercraft-edge-dns.v1'||
+     health.authoritative!==true||
+     health.recursive!==false||
+     health.dns_tcp!==true||
+     health.dns_udp!==true||
+     !/^edge_dns_[a-f0-9]{16}$/i.test(String(health.instance_id||''))||
+     dnsPort!==DNS_PORT||
+     !Array.isArray(ownerPorts)||
+     !ownerPorts.includes(dnsPort)||
+     !ownerPorts.includes(httpPort)||
+     httpPort===dnsPort){
+    return null;
+  }
+  return {
+    service:'evercraft-edge-dns',
+    workload_class:'systemia.evercraft-edge-dns.v1',
+    dns_tcp_port:dnsPort,
+    health_http_port:httpPort,
+    authoritative:true,
+    recursive:false,
+    udp_confirmed_by_socket_audit:false,
+    instance_id_printed:false,
+    snapshot_contents_printed:false,
     secrets_printed:false,
   };
 }
@@ -116,18 +152,41 @@ export async function inspectLiveResidents(){
   const extra=(ports||[]).filter(p=>p!==nodePort).slice(0,32);
   const sockets=[];
   for(const port of extra){
+    // 1053 is a TCP DNS listener. Do not send HTTP requests to it.
+    if(port===DNS_PORT){
+      sockets.push({port,broker:null,edgeDns:null});
+      continue;
+    }
     let broker=null;
+    let edgeDns=null;
     try{
-      broker=classifyBrokerHealth(
-        await getJson('http://127.0.0.1:'+port,'/v1/remote/health')
+      edgeDns=classifyEdgeDnsHealth(
+        await getJson('http://127.0.0.1:'+port,'/health'),ports,port
       );
     }catch{}
-    sockets.push({port,broker});
+    if(!edgeDns){
+      try{
+        broker=classifyBrokerHealth(
+          await getJson('http://127.0.0.1:'+port,'/v1/remote/health')
+        );
+      }catch{}
+    }
+    sockets.push({port,broker,edgeDns});
   }
 
   const brokers=sockets.filter(x=>x.broker);
+  const dns=sockets.filter(x=>x.edgeDns).map(x=>x.edgeDns);
+  const claimedPorts=new Set([
+    ...brokers.map(x=>x.port),
+    ...dns.map(x=>x.dns_tcp_port),
+    ...dns.map(x=>x.health_http_port),
+  ]);
+  const unclassified=extra.filter(p=>!claimedPorts.has(p));
   const residentCount=Number.isInteger(health.resident_services)?
     health.resident_services:null;
+  const accountedFor=residentCount!==null &&
+    brokers.length+dns.length===residentCount &&
+    unclassified.length===0;
   return {
     schema:'evercraft.penguin.live-resident-inventory.v1',
     read_only:true,
@@ -135,11 +194,11 @@ export async function inspectLiveResidents(){
     node_port:nodePort,
     resident_service_count:residentCount,
     owner_tcp_ports:ports,
-    broker_listeners:brokers,
-    other_tcp_listener_ports:sockets.filter(x=>!x.broker).map(x=>x.port),
+    broker_listeners:brokers.map(({port,broker})=>({port,broker})),
+    edge_dns_services:dns,
+    unclassified_tcp_listener_ports:unclassified,
     socket_audit_error:socketAuditError,
-    service_identity_resolved:
-      residentCount===0 || (brokers.length===residentCount&&residentCount!==null),
+    service_identity_resolved:accountedFor,
     private_grants_inspected:false,
     historical_authority_unchanged:true,
     process_arguments_or_environment_printed:false,
