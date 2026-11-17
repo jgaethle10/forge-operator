@@ -166,3 +166,106 @@ test('real disposable NodeSeed release stops a broker even if service response i
     fs.rmSync(root,{recursive:true,force:true});
   }
 });
+
+
+test('SIGKILL after broker launch leaves a recoverable lease and no orphan after release',
+  {timeout:20_000},async()=>{
+  const {spawn}=await import('node:child_process');
+  const root=fixture();
+  let seed;
+  try{
+    const seedRoot=path.join(root,'compute');
+    const journalParent=path.join(root,'private-journals');
+    fs.mkdirSync(journalParent,{mode:0o700});
+    seed=await startNodeSeed({
+      root:seedRoot,nodeId:'shadow-crash-recovery-node',
+      host:'127.0.0.1',port:0,advertiseHost:'127.0.0.1',
+      allocatorToken:'synthetic-crash-test-allocator',
+      announce:false,
+    });
+
+    const origin=seed.endpoint;
+    const jr=createShadowLeaseJournal({parent:journalParent,origin});
+    const leaseResponse=await fetch(origin+'/v1/leases',{
+      method:'POST',
+      headers:{
+        authorization:'Bearer synthetic-crash-test-allocator',
+        'content-type':'application/json',
+      },
+      body:JSON.stringify({
+        workload_class:'systemia.remote-capacity-broker.v1',
+        requested_ttl_ms:60_000,
+      }),
+    });
+    assert.equal(leaseResponse.status,201);
+    const granted=await leaseResponse.json();
+
+    // Parent persists the lease. A separate child will submit the job and die.
+    recordShadowLease({dir:jr,lease:granted});
+
+    const journalUrl=new URL(
+      '../systemia/yard/shadow-broker-lease-journal.mjs',import.meta.url
+    ).href;
+    const childSource=[
+      'import {recordShadowSubmissionIntent} from '+JSON.stringify(journalUrl)+';',
+      'recordShadowSubmissionIntent({dir:process.env.SHADOW_JOURNAL});',
+      'const response=await fetch(process.env.SHADOW_ORIGIN+"/v1/jobs",{',
+      'method:"POST",headers:{"content-type":"application/json"},',
+      'body:JSON.stringify({',
+      'lease_id:process.env.SHADOW_LEASE_ID,',
+      'token:process.env.SHADOW_LEASE_TOKEN,',
+      'workload_class:"systemia.remote-capacity-broker.v1",',
+      'release_ref:"32656150e433db42d00e0725507601dfa1b5641e",',
+      'input:{state_root:process.env.SHADOW_BROKER_ROOT,port:0,authorized_devices:{}}',
+      '})});',
+      'if(response.status!==200)process.exit(41);',
+      // The Compute server has started the service and sent response headers.
+      // The submitting process is killed BEFORE reading the service receipt.
+      'process.kill(process.pid,"SIGKILL");',
+    ].join('\n');
+
+    const childExit=await new Promise((resolve,reject)=>{
+      const child=spawn(process.execPath,[
+        '--input-type=module','-e',childSource,
+      ],{
+        env:{
+          ...process.env,
+          SHADOW_JOURNAL:jr,
+          SHADOW_ORIGIN:origin,
+          SHADOW_LEASE_ID:granted.lease_id,
+          SHADOW_LEASE_TOKEN:granted.token,
+          SHADOW_BROKER_ROOT:path.join(seedRoot,'shadow-broker'),
+        },
+        stdio:['ignore','ignore','pipe'],
+      });
+      let stderr='';
+      child.stderr.on('data',chunk=>{
+        stderr=(stderr+chunk.toString('utf8')).slice(-1200);
+      });
+      child.on('error',reject);
+      child.on('exit',(code,signal)=>resolve({code,signal,stderr}));
+    });
+
+    assert.equal(childExit.signal,'SIGKILL',
+      'submitting child did not reach the deliberate crash point');
+    assert.equal(inspectShadowLeaseJournal({dir:jr}).phase,'submission_uncertain');
+
+    const before=await (await fetch(origin+'/v1/health')).json();
+    assert.equal(before.resident_services,1);
+
+    // Recovery happens in the still-live parent without the job receipt,
+    // broker instance identity, or service ID from the dead child.
+    const cleanup=await releaseShadowLease({dir:jr});
+    assert.equal(cleanup.ok,true);
+    assert.equal(cleanup.stopped_via_lease_release,true);
+    assert.equal(inspectShadowLeaseJournal({dir:jr}).phase,'released');
+
+    const after=await (await fetch(origin+'/v1/health')).json();
+    assert.equal(after.resident_services,0);
+    const journal=fs.readFileSync(path.join(jr,'lease-journal.json'),'utf8');
+    assert.equal(journal.includes(granted.token),false);
+  }finally{
+    if(seed)await seed.close();
+    fs.rmSync(root,{recursive:true,force:true});
+  }
+});
