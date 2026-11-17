@@ -7,6 +7,7 @@ import {fileURLToPath} from 'node:url';
 import {randomBytes,createHash,timingSafeEqual} from 'node:crypto';
 import {decodeSharedScene,encodeSharedScene} from '../../public/worlds/share-scene.mjs';
 import {createWorldsAdmission} from './worlds-admission.mjs';
+import {createHouseResidentClock} from '../living-worlds/house-resident-clock.mjs';
 
 export const VAULT_SCHEMA='evercraft.worlds.vault.v1';
 const WORLD_ID=/^[a-f0-9]{32}$/;
@@ -56,7 +57,7 @@ function within(root,target){
  const rel=path.relative(root,target);
  return !rel.startsWith('..')&&!path.isAbsolute(rel);
 }
-export async function startWorldsVault({host='127.0.0.1',port=0,publicRoot=path.resolve('public'),dataRoot='',maxWorlds=MAX_WORLDS,publicOrigin=''}={}){
+export async function startWorldsVault({host='127.0.0.1',port=0,publicRoot=path.resolve('public'),dataRoot='',maxWorlds=MAX_WORLDS,publicOrigin='',houseResidentEnabled=false}={}){
  if(!['127.0.0.1','::1','localhost'].includes(host))throw Error('worlds_vault_must_bind_loopback');
  const expectedOrigin=checkedPublicOrigin(publicOrigin);
  if(!dataRoot)throw Error('worlds_vault_data_root_required');
@@ -65,6 +66,8 @@ export async function startWorldsVault({host='127.0.0.1',port=0,publicRoot=path.
  const vaultRoot=await fs.realpath(dataRoot);
  if(within(assetRoot,vaultRoot)||within(vaultRoot,assetRoot))throw Error('worlds_vault_data_must_be_outside_public');
  if(!Number.isInteger(maxWorlds)||maxWorlds<1||maxWorlds>MAX_WORLDS)throw Error('worlds_vault_capacity_invalid');
+ if(typeof houseResidentEnabled!=='boolean')throw Error('house_resident_opt_in_invalid');
+ const residentClock=houseResidentEnabled?await createHouseResidentClock({dataRoot:path.join(vaultRoot,'house-resident')}):null;
  const locks=new Map(),admission=createWorldsAdmission();
  const fileFor=id=>path.join(vaultRoot,id+'.json');
  async function readRecord(id){
@@ -128,6 +131,10 @@ export async function startWorldsVault({host='127.0.0.1',port=0,publicRoot=path.
    const method=req.method||'GET',url=new URL(req.url||'/', 'http://local.invalid');
    const pathname=decodeURIComponent(url.pathname);
    if(pathname==='/worlds/api/health'&&method==='GET')return send(res,200,{schema:VAULT_SCHEMA,ok:true,mode:'owned-durable-vault',unlisted:true,public_origin:expectedOrigin||null});
+   if(pathname==='/worlds/api/house-001/snapshot'&&method==='GET'){
+    if(!residentClock)throw new VaultError(404,'house_resident_not_enabled');
+    return send(res,200,await residentClock.observe());
+   }
    if(pathname==='/worlds/api/worlds'&&method==='POST'){
     assertWriteOrigin(req,expectedOrigin);
     const decision=admission.admit(req,expectedOrigin);
@@ -176,12 +183,13 @@ export async function startWorldsVault({host='127.0.0.1',port=0,publicRoot=path.
  await new Promise((resolve,reject)=>{server.once('error',reject);server.listen(port,host,resolve);});
  const addr=server.address();
  return {url:'http://'+(host==='0.0.0.0'?'127.0.0.1':host)+':'+addr.port,
-  close:()=>new Promise((resolve,reject)=>server.close(e=>e?reject(e):resolve()))};
+  close:async()=>{await residentClock?.close();await new Promise((resolve,reject)=>server.close(e=>e?reject(e):resolve()));}};
 }
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)){
  const arg=name=>{const i=process.argv.indexOf('--'+name);return i<0?'':process.argv[i+1]||'';};
  const config={host:arg('host')||'127.0.0.1',port:Number(arg('port')||8788),
-  publicRoot:arg('public-root')||path.resolve('public'),dataRoot:arg('data-root'),publicOrigin:arg('public-origin')};
+  publicRoot:arg('public-root')||path.resolve('public'),dataRoot:arg('data-root'),publicOrigin:arg('public-origin'),
+  houseResidentEnabled:process.argv.includes('--enable-house-001')};
  startWorldsVault(config).then(s=>{process.stdout.write(JSON.stringify({status:'listening',url:s.url})+'\n');})
  .catch(e=>{process.stderr.write(String(e.message)+'\n');process.exitCode=1;});
 }
