@@ -6,6 +6,7 @@ import path from 'node:path';
 import {spawnSync} from 'node:child_process';
 import test from 'node:test';
 import {compileApprovedCommercial,renderApprovedCommercial,assertRelayLiveDialogueApproval} from './commercial-assembly.mjs';
+import {finalizeStudioDelivery} from './studio-delivery.ts';
 
 function ffmpeg(args){
   const r=spawnSync('ffmpeg',['-nostdin','-hide_banner','-v','error',...args],{encoding:'utf8',maxBuffer:2*1024*1024});
@@ -200,4 +201,13 @@ test('photo-led commercial renders actual H264/AAC from image inputs with approv
   const qc=JSON.parse(fs.readFileSync(result.audioQcReceiptPath,'utf8'));
   assert.equal(qc.status,'accepted');
   assert.equal(qc.sha256,result.mediaSha256);
+});
+
+test('live-action source cannot use the photo-editorial freeze exception',t=>{
+  const {dir,input}=specimen(t);
+  const compiled=compileApprovedCommercial(input);
+  compiled.deliveryRequest.photoEditorialMode='source-photographs';
+  assert.throws(()=>finalizeStudioDelivery({
+    request:compiled.deliveryRequest,outputDir:path.join(dir,'no-bypass')
+  }),/studio_delivery_photo_editorial_sources_invalid/);
 });
