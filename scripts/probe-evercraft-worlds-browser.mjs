@@ -46,6 +46,12 @@ try{
         heap_bytes:performance.memory?.usedJSHeapSize||null
       };
     });
+    const asset=await page.evaluate(()=>window.__worldsAssetTelemetry||null);
+    assert.equal(asset?.asset_id,'mossmere-original-weathered-stone',profile.name+': authored asset missing');
+    assert.equal(asset?.digest_verified,true,profile.name+': original GLB digest not verified');
+    assert.equal(asset?.rights_attested,true,profile.name+': rights manifest not admitted');
+    assert.equal(asset?.triangles,120,profile.name+': expected 120 authored stone triangles');
+    assert.equal(asset?.fallback_used,false,profile.name+': original geometry failed to load');
     assert.equal(pre.webgl2,true,profile.name+': no WebGL2 context');
     assert.ok(pre.width>100&&pre.height>100,profile.name+': canvas has no framebuffer');
     assert.equal(pre.error,0,profile.name+': WebGL error during scene render');

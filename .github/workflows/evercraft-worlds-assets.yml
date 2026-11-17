@@ -3,6 +3,9 @@ on:
   pull_request:
     paths:
       - 'public/worlds/owned-glb.mjs'
+      - 'public/worlds/owned-asset-client.mjs'
+      - 'public/worlds/assets/**'
+      - 'tests/worlds-owned-scene-asset.test.mjs'
       - 'tests/worlds-owned-glb.test.mjs'
       - 'scripts/inspect-owned-worlds-glb.mjs'
       - '.github/workflows/evercraft-worlds-assets.yml'
@@ -10,6 +13,9 @@ on:
     branches: [main]
     paths:
       - 'public/worlds/owned-glb.mjs'
+      - 'public/worlds/owned-asset-client.mjs'
+      - 'public/worlds/assets/**'
+      - 'tests/worlds-owned-scene-asset.test.mjs'
       - 'tests/worlds-owned-glb.test.mjs'
       - 'scripts/inspect-owned-worlds-glb.mjs'
       - '.github/workflows/evercraft-worlds-assets.yml'
@@ -28,4 +34,4 @@ jobs:
       - name: Syntax checks
         run: node --check public/worlds/owned-glb.mjs && node --check scripts/inspect-owned-worlds-glb.mjs && node --check tests/worlds-owned-glb.test.mjs
       - name: Rights, mesh, GLB and material contract tests
-        run: node --test tests/worlds-owned-glb.test.mjs
+        run: node --test tests/worlds-owned-glb.test.mjs tests/worlds-owned-scene-asset.test.mjs

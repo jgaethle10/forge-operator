@@ -1,0 +1,9 @@
+{
+  "schema": "evercraft.worlds.asset-rights.v1",
+  "id": "mossmere-original-weathered-stone",
+  "sha256": "ff95fccd4ad06e4ef50caf06952da6db0f7dc0f4225e7c6a409580f87d67a38d",
+  "license": "Evercraft-original",
+  "creator": "Evercraft Worlds Studio",
+  "source": "Reproducible original model authored in public/worlds/assets/mossmere-weathered-stone-generator.mjs",
+  "review": "approved_for_worlds"
+}
