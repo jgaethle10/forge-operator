@@ -179,6 +179,21 @@ A direct hand-carried JSON transfer is not required **if both physical devices h
 
 **Field gate before using this on Penguin/NextGen**: read each node's remote-operator readiness and broker authorization without revealing tokens, ensure both have a verified live control grant and outbound session, bind the separate pinned PQ fingerprints previously reported by their local operator, and obtain explicit approval for each file write. If either device lacks an authorized Remote Operator session, leave it disconnected and repair only with a separately approved Systemia/Passport enrollment process. The public Evercraft capability-directory plugin cannot itself execute this remote field transfer.
 
+## Node001/Node002 operator transport preflight (read-only)
+
+Run this **only from an isolated PQ lab checkout** on Penguin and on NextGen WSL:
+
+\`\`\`bash
+cd "$HOME/evercraft-pq-lab"
+git pull --ff-only
+"$HOME/.local/opt/evercraft-pq/node-v24.22.1-linux-x64/bin/node" \
+  systemia/crypto/pq-remote-operator-field-readiness.mjs
+\`\`\`
+
+The read-only inspection checks for a local-organism receipt, NodeSeed receipt, user-service activation, configured remote-broker-origin **presence** (never its value), and whether an actual loopback NodeSeed GET advertises Remote Operator as ready. It prints no tokens, keys, file contents, hidden broker URLs or private HTTP responses. It will not use a non-loopback endpoint from a receipt. All output includes explicit \`outbound_agent_authenticated_at_broker: "not_verified"\`, \`broker_control_grant_for_this_node: "not_verified"\` and \`production_ready: false\`. The real broker must separately validate the node identity and grant.
+
+A node that lacks a ready, specifically authorized Remote Operator must **not** be auto-enrolled or have its services restarted by this test. Operator/Passport enrollment and any remote-write approval must be separately reviewed. CI success cannot prove hardware field readiness. An operator or authorized Systemia remote-control principal must execute the bridge transfer after reviewing this evidence.
+
 ## Migration gates
 
 1. Inventory cryptographic key exchange and signatures in Relay, lineage, agents and customer interfaces; identify stored traffic requiring long-term confidentiality.
