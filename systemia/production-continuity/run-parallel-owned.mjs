@@ -5,6 +5,8 @@ import os from 'node:os';
 import path from 'node:path';
 import { leaseNext, complete, fail, expireLeases, summarizeWorkState } from '../saban/work-state.mjs';
 import { runPrivateSourceAudit } from './private-source-worker.mjs';
+import { buildParallelSlate } from './parallel-slate.mjs';
+import { validateState as verifyResidentState } from './resident.mjs';
 
 const WORK_STATE = 'evercraft.saban.work-state.v1';
 const SLATE = 'evercraft.production.parallel-slate.v1';
@@ -69,6 +71,27 @@ export async function runOwnedParallelSourceWave({
       || plan.queue.schema !== WORK_STATE) throw Error('Untrusted private parallel slate');
     const limit = maxInFlight ?? plan.max_in_flight;
     if (!Number.isInteger(limit) || limit < 2 || limit > 12) throw Error('Parallelism must be 2..12');
+    // Honor the latest integrity-checked resident ledger. A previously prepared
+    // slate must never override a fresh canon, rights, or publication hold.
+    const residentFile = path.join(root, 'resident-state.json');
+    const authoritative = fs.existsSync(residentFile)
+      ? verifyResidentState(readPrivate(residentFile)).ledger
+      : readPrivate(path.join(root, 'ledger.json'));
+    const currentlyAllowed = buildParallelSlate(authoritative, { maxInFlight:limit, createdAt:now() });
+    if (currentlyAllowed.queued_count !== plan.queued_count ||
+        currentlyAllowed.held_count !== plan.held_count ||
+        Object.keys(currentlyAllowed.queue.jobs).length !== Object.keys(plan.queue.jobs).length) {
+      throw Error('Private slate is stale against current editorial authority');
+    }
+    for (const [jobId, expected] of Object.entries(currentlyAllowed.queue.jobs)) {
+      const original = plan.queue.jobs[jobId];
+      if (!original || original.agent_id !== expected.agent_id ||
+          original.work?.key !== expected.work?.key ||
+          original.work?.kind !== expected.work?.kind ||
+          original.item?.release_authorized !== false) {
+        throw Error('Project authorization changed; re-admit private queue');
+      }
+    }
 
     const stateFile = path.join(root, 'saban-work-state.json');
     const state = fs.existsSync(stateFile)
