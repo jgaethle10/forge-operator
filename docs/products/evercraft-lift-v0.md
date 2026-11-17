@@ -163,6 +163,22 @@ A reproducible fictional household case can be submitted with a signed session, 
 Next gate: authenticated private Evercraft-owned service with a real encrypted evidence vault, operator-reviewed enrollment, object-level access audit, durable revocation propagation, backup/restore proof, and security/legal signoff. Do not collect personal data or real donations before these are complete.
 
 
+## V0.5 loopback-only authenticated integration service
+
+Added `systemia/lift/loopback-service-lab.mjs` and `loopback-service-lab.test.mjs`. This is a **127.0.0.1-only, synthetic test harness** around the existing Evercraft Identity + Passport + durable journal + AES-GCM fixture-vault integration, not a public endpoint.
+
+- Uses Node HTTP without third-party hosting or a second identity system. Binding to any address other than exact `127.0.0.1` fails. Port 0 supports ephemeral CI tests. It must never be reverse-proxied, tunneled, exposed in production, or configured in a container port mapping.
+- All case, partner and fixture routes require a signed Evercraft Identity bearer session and immediate session revocation check. The existing integration boundary then checks Passport scopes and exact case/partner authorization before state changes.
+- Host header and Origin are restricted to the loopback origin, and cross-site Fetch metadata is refused. No CORS headers, cookies, sessions minted, anonymous case views, unrestricted file uploads, raw document intake or real payment operations are offered.
+- JSON POSTs require a narrow content type and have a 4096-byte body limit; each route enforces an explicit field allowlist before invoking the private lab, which itself accepts only fixed fictional fixtures.
+- Only privacy-safe public-case/directory outputs may be read. All other endpoint responses are intentionally bounded, omit private identifiers, and genericize backend errors.
+- HTTP integration regressions exercise missing/forged sessions, owner impersonation, cross-case scopes, withdrawn evidence, restart persistence, same-origin and host checking, oversized requests and partnership suspension.
+
+**No deployment:** this module is a test-harness service, not the production private assistance API. The prior Identity / Passport integration was exercised using test secrets and synthetic grants only. It is not evidence of a currently running Evercraft-owned service or any enrolled actual partner. Further controls are needed for durable encrypted customer records, rate limits, input security, key lifecycle, incident recovery, accessibility and fully transactional revocation.
+
+**Next production gate:** design a privately authenticated release topology, independent security review, real database and vault with backup/restore, consent revocation propagation to caches and partners, and a supervised fictitious pilot on Evercraft hardware. All real funds remain blocked until legal/compliance and payment reconciliation approvals.
+
+
 ## Release status
 
 **Demo:** ready for local isolated evaluation. **Live assistance:** blocked. **Payments:** blocked. **Verified partners:** none onboarded by this change. **Public deployment:** not authorized by this branch. **Systemia API integration:** pending. The name is provisional pending checks for conflicts.
