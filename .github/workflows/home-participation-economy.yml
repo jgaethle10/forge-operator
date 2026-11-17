@@ -29,8 +29,10 @@ jobs:
           node --check systemia/participation-economy/creator-record-store.mjs
           node --check systemia/participation-economy/creator-queue-pilot.mjs
           node --check systemia/participation-economy/creator-access.mjs
+          node --check systemia/participation-economy/creator-media-store.mjs
+          node --check systemia/participation-economy/creator-media-pilot.mjs
       - name: Run economy and fraud-hold tests
-        run: node --test systemia/participation-economy/engine.test.mjs systemia/participation-economy/journal.test.mjs systemia/participation-economy/creator-intake.test.mjs systemia/participation-economy/creator-record-store.test.mjs systemia/participation-economy/creator-access.test.mjs
+        run: node --test systemia/participation-economy/engine.test.mjs systemia/participation-economy/journal.test.mjs systemia/participation-economy/creator-intake.test.mjs systemia/participation-economy/creator-record-store.test.mjs systemia/participation-economy/creator-access.test.mjs systemia/participation-economy/creator-media-store.test.mjs systemia/participation-economy/creator-media-access.test.mjs
       - name: Prove demo remains read-only
         run: |
           node systemia/participation-economy/pilot.mjs > /tmp/home-participation-pilot.json
@@ -79,4 +81,20 @@ jobs:
             if(/<script[^>]+src=|fetch\s*\(|XMLHttpRequest|sendBeacon|localStorage/.test(html))
               throw Error("Unexpected external transfer or persistent browser storage");
             console.log("Creator Studio local preview contract OK");
+          '
+
+      - name: Verify owned private media receipt to creator queue end-to-end
+        run: |
+          node systemia/participation-economy/creator-media-pilot.mjs > /tmp/home-media-pilot.json
+          node --input-type=module -e '
+            import {readFileSync} from "node:fs";
+            const x=JSON.parse(readFileSync("/tmp/home-media-pilot.json","utf8"));
+            if(x.demonstration!=="synthetic_local_bytes_not_decoded_no_publication_no_payments")process.exit(1);
+            if(!x.media_persisted||!x.story_persisted_after_restart)process.exit(1);
+            if(!x.media_receipt.asset_ref.startsWith("asset:sha256:"))process.exit(1);
+            if(x.media_receipt.public_url!==null||x.media_receipt.malware_scanned!==false)process.exit(1);
+            if(x.submitted.published!==false||x.reviewed.published!==false)process.exit(1);
+            if(x.withdrawn.state!=="withdrawn"||x.withdrawn.published!==false)process.exit(1);
+            if(x.withdrawn.routes.some(r=>r.state!=="held"))process.exit(1);
+            if(x.payouts_enabled!==false||x.payable_cents!==null)process.exit(1);
           '
