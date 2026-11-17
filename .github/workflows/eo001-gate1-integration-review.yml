@@ -43,6 +43,7 @@ jobs:
           node --check integrations/ai-evaluation-lab/eo001-cgroup-kill-readonly-capability.mjs
           node --check integrations/ai-evaluation-lab/eo001-held-cgroup-kill-survey-join.mjs
           node --check integrations/ai-evaluation-lab/eo001-lab-interop-reproducer.mjs
+          node --check integrations/ai-evaluation-lab/eo001-lab-interop-artifact-verify.mjs
           node --check integrations/ai-evaluation-lab/eo001-one-use-stop-ledger.mjs
           node --check integrations/ai-evaluation-lab/eo001-private-evidence-vault.mjs
           node --check integrations/ai-evaluation-lab/eo001-process-group-escape-negative.mjs
@@ -82,11 +83,22 @@ jobs:
           mkdir -p /tmp/eo001-public-review
           node integrations/ai-evaluation-lab/eo001-lab-interop-reproducer.mjs > /tmp/eo001-public-review/interop.json
           node -e "const fs=require('fs'); const r=JSON.parse(fs.readFileSync('/tmp/eo001-public-review/interop.json')); if(r.passed_count!==15||r.failure_count!==0||r.kernel_stop_attempted!==false||r.physical_experiment_authorized!==false)process.exit(2)"
+      - name: Independently validate generated Lab JSON against committed source blob
+        run: |
+          node --test integrations/ai-evaluation-lab/eo001-lab-interop-artifact-verify.test.mjs
+          SOURCE=integrations/ai-evaluation-lab/eo001-held-cgroup-kill-survey-join.mjs
+          BLOB="$(git rev-parse "HEAD:$SOURCE")"
+          node integrations/ai-evaluation-lab/eo001-lab-interop-artifact-verify.mjs \
+            /tmp/eo001-public-review/interop.json \
+            "$PWD/$SOURCE" "$BLOB" > /tmp/eo001-public-review/interop-verification.json
+          node -e "const fs=require('fs'); const x=JSON.parse(fs.readFileSync('/tmp/eo001-public-review/interop-verification.json')); if(x.verified_case_count!==15||x.kernel_stop_authorized!==false||x.physical_scope_cleanup_proven!==false)process.exit(2)"
       - name: Publish source-identified synthetic Lab interop report for external review
         uses: actions/upload-artifact@v4
         with:
           name: eo001-lab-interop-${{ github.sha }}
-          path: /tmp/eo001-public-review/interop.json
+          path: |
+            /tmp/eo001-public-review/interop.json
+            /tmp/eo001-public-review/interop-verification.json
           retention-days: 14
           if-no-files-found: error
       - name: Verify local fsynced one-use permit ledger and replay refusals
