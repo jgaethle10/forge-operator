@@ -1,0 +1,86 @@
+name: Last Light V16 Measured-Pitch Registered Acoustic Orchestra
+on:
+  pull_request:
+    paths:
+      - 'systemia/media-studio/last-light-v16-register-correction-source-pins.json'
+      - 'systemia/media-studio/last-light-v16-register-qa-renderer.py'
+      - 'systemia/media-studio/test_last_light_v16_register_qa_renderer.py'
+      - 'systemia/media-studio/last-light-v15-audible-pitch-gate.py'
+      - 'systemia/media-studio/last-light-v14-real-section-audition.py'
+      - '.github/workflows/last-light-v16-register-qa-renderer.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  v16-register-corrected-real-acoustic:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install acoustic note measurement and transparent pitch-speed correction tools
+        run: python -m pip install --disable-pip-version-check numpy scipy librosa soundfile
+      - name: Test synthetic software fixtures (never claim fixture sound is musical proof)
+        run: |
+          python -m unittest discover -v -s systemia/media-studio \
+            -p 'test_last_light_v16_register_qa_renderer.py'
+      - name: Download twelve git-pinned recorded-register candidates
+        run: |
+          python - <<'PY'
+          import hashlib,json,pathlib,urllib.parse,urllib.request,zipfile,time
+          manifest=json.loads(pathlib.Path('systemia/media-studio/last-light-v16-register-correction-source-pins.json').read_text())
+          assert manifest['source_commit_sha']=='440300901dfe9275fd84e0b7763af1f8443ae62e'
+          assert len(manifest['source_map'])==12
+          def gitblob(b):return hashlib.sha1(b'blob '+str(len(b)).encode()+b'\0'+b).hexdigest()
+          with zipfile.ZipFile('/tmp/v16-recorded-register-sources.zip','w',compression=zipfile.ZIP_STORED) as z:
+           for item in manifest['source_map']:
+            url='https://raw.githubusercontent.com/sgossner/VSCO-2-CE/'+manifest['source_commit_sha']+'/'+urllib.parse.quote(item['path'],safe='/')
+            blob=None
+            for attempt in range(3):
+             try:
+              req=urllib.request.Request(url,headers={'User-Agent':'Evercraft-V16-Acoustic-Pitch-Source-Custody'})
+              with urllib.request.urlopen(req,timeout=40) as response:
+               if response.status!=200:raise RuntimeError('raw_source_unavailable')
+               blob=response.read(item['size_bytes']+1)
+              break
+             except Exception:
+              if attempt==2:raise
+              time.sleep(2)
+            if len(blob)!=item['size_bytes'] or gitblob(blob)!=item['git_blob_sha1']:
+             raise ValueError('PINNED_UPSTREAM_ORIGINAL_SOURCE_CHANGED:'+item['path'])
+            z.writestr(pathlib.Path(item['path']).name,blob)
+            print('VERIFIED ACTUAL SOURCE',item['role'],item['score_pitch'],item['source_label'],'shift',item['semitone_shift'],'SHA256',hashlib.sha256(blob).hexdigest(),flush=True)
+          PY
+      - name: Verify genuine audible fundamentals and render bounded corrections
+        run: |
+          python systemia/media-studio/last-light-v16-register-qa-renderer.py \
+            --score systemia/media-studio/last-light-v9-conductor-score.json \
+            --pins systemia/media-studio/last-light-v16-register-correction-source-pins.json \
+            --sources /tmp/v16-recorded-register-sources.zip \
+            --out /tmp/v16-acoustic-corrected-workprints
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib,json
+          out=Path('/tmp/v16-acoustic-corrected-workprints')
+          r=json.loads((out/'V16_REGISTER_QA_RECEIPT.json').read_text())
+          assert r['status']=='AUDIBLE_PITCH_GATE_PASSED_ARTISTIC_HOLD'
+          assert r['source_mappings_audibly_verified']==12
+          assert r['sample_based_events']==17 and r['held_score_events']==30
+          assert len(r['output_sha256'])==11 and len(r['source_custody'])==12
+          assert sum(n['pitch_shift_semitones']==0 for n in r['accepted_note_events'])==5
+          assert sum(n['pitch_shift_semitones']>0 for n in r['accepted_note_events'])==12
+          assert all(abs(n['corrected_frequency_error_cents'])<=35 for n in r['source_custody'])
+          assert not r['canonical_piano_imported'] and not r['human_listening_approved']
+          assert not r['commercial_release_approved'] and not r['performed_true_legato']
+          for filename,digest in r['output_sha256'].items():
+           assert hashlib.sha256((out/filename).read_bytes()).hexdigest()==digest
+          print('V16 ALL 12 RAW+CORRECTED F0 SOURCE GATES PASS; MUSIC RELEASE STILL HELD')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: internal-v16-audible-pitch-corrected-acoustic-workprint-unapproved
+          path: /tmp/v16-acoustic-corrected-workprints/
+          retention-days: 14
