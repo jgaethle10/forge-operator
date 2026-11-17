@@ -7,6 +7,7 @@ on:
       - 'systemia/network/FIELD01B-LAN-LAB.md'
       - 'systemia/network/field01b-lan-cli.mjs'
       - 'tests/network-field01b-lan-lab.test.mjs'
+      - 'tests/network-field01b-two-process.test.mjs'
       - '.github/workflows/network-field01b-lan-lab.yml'
   push:
     branches:
@@ -31,4 +32,6 @@ jobs:
         with:
           node-version: '22'
       - name: Run real loopback HTTP transport with authenticated synthetic envelopes and durable-replay tests
-        run: node --test tests/network-field01b-lan-lab.test.mjs
+        run: |
+          node --test tests/network-field01b-lan-lab.test.mjs
+          node --test tests/network-field01b-two-process.test.mjs
