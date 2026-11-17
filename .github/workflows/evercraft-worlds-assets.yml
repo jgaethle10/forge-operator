@@ -37,3 +37,12 @@ jobs:
         run: sha256sum public/worlds/assets/mossmere-weathered-stone.glb
       - name: Rights, mesh, GLB and material contract tests
         run: node --test tests/worlds-owned-glb.test.mjs tests/worlds-owned-scene-asset.test.mjs
+      - name: Preserve original GLB for binary-level provenance inspection
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: evercraft-worlds-original-glb-proof
+          path: |
+            public/worlds/assets/mossmere-weathered-stone.glb
+            public/worlds/assets/mossmere-weathered-stone.rights.json
+          if-no-files-found: error
