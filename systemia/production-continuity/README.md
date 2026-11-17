@@ -142,3 +142,53 @@ This creates the private `parallel-slate.json` once, refusing to overwrite exist
 **Safety gates**: canon, rights, external outreach, spending, or publishing actions are explicitly held. Any verified byte-level artifact from a department remains *internal work evidence*, not a finished book, research conclusion, approved film, or public release. Private source files, recovered manuscripts, and the full production ledger remain outside the public repository.
 
 The **production continuity contract** GitHub workflow now runs **39 synthetic tests across four suites**, including parallel fan-out. Passing CI is not proof of on-device installation or autonomous worker dispatch.
+
+
+## Actual owned-node parallel source-audit worker (bounded first integration)
+
+A new read-only **source worker** provides the first artifact-producing path for the 12-lane queue:
+
+- `private-source-worker.mjs`: validates a leased private Saban job against an owner-only per-project source manifest, reads actual source bytes from a private directory, computes SHA-256 and file classification, and writes a separate immutable internal source-audit JSON artifact per job.
+- `run-parallel-owned.mjs`: runs up to six asynchronous local audits concurrently by default. Every job lease is persisted to private `saban-work-state.json` **before** source work; each completion or failure is persisted independently. An interrupted run retains remaining queued/leased work; expired leases can be retried only under the existing Saban attempt limits. The entire wave cannot be silently reset by rebuilding its original queue.
+- The worker re-reads the private ledger (or checks the integrity-bound resident checkpoint, if present) before any lease. Newly protected canon, rights, or publication gates cause the entire stale admission to refuse, requiring a fresh approved private queue.
+- The artifact reconciliation bridge accepts this particular internal source-audit receipt as progress evidence **only** with `SOURCE_EVIDENCE_VERIFIED`, accurate bytes and correct owner/action linkage. Empty/missing-source reports are legitimate completed *audits* but NOT proof that those sources were recovered.
+- No external model generation, public website posting, contacts, canon changes or money movement is performed by this worker.
+
+This is not yet a resident agent service; **run on an owned Linux/WSL node only after** inspecting the private assets and confirming current Saban admission. It is not attached to Node001/Node002 by committing the files.
+
+Private folder tree (all below directory mode 0700; individual files mode 0600):
+
+```text
+~/.local/share/evercraft/production-continuity/
+  ledger.json              # true 12-project private ledger
+  parallel-slate.json      # queued unleased work-state
+  manifests/<project-id>.json
+  sources/<private-file-name>
+  artifacts/               # worker-created source receipts, not releases
+  saban-work-state.json    # created by worker; never reset while live
+  resident-state.json      # optional integrity-bound checkpoint
+```
+
+Required per-project input manifest format (synthetic placeholder):
+
+```json
+{
+  "schema": "evercraft.production.source-input.v1",
+  "project_id": "synthetic-story-001",
+  "source_files": ["private-original.txt"]
+}
+```
+
+After owned private files have been staged and verified, from this branch:
+
+```bash
+node --test tests/production-continuity.test.mjs tests/production-receipt-bridge.test.mjs tests/production-parallel-slate.test.mjs tests/production-resident.test.mjs tests/production-owned-worker.test.mjs
+
+node systemia/production-continuity/run-parallel-owned.mjs \
+  --private-dir "$HOME/.local/share/evercraft/production-continuity"
+
+node systemia/production-continuity/resident-once.mjs \
+  --private-dir "$HOME/.local/share/evercraft/production-continuity"
+```
+
+The owner should see individual **source-audit** receipts, 12 persisted job dispositions, a recovery/blocked distinction and no publication claims. A full autonomous literary/editorial/research system still needs authenticated resident deployment, specialized writing/review providers, ongoing intake/requeue and independent delivered manuscript/report QA.
