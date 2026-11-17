@@ -37,6 +37,7 @@ import { validatePublicEdgeAdmission } from '../network/public-edge-tls.mjs';
 import { transcriptionCapabilityStatus } from '../forensiscope/transcription-engine.mjs';
 import { EvercraftRemoteOperator } from './remote-operator.mjs';
 import { NodeSeedMicroWorkloads, runNodeSeedRegisteredWorkload } from './nodeseed-registered-worker.mjs';
+import {createClassroomNodeProbeWorker,CLASSROOM_NODE_WORKLOAD} from '../classroom/node002-compute-probe.mjs';
 import { detectHardwareCapacity } from './hardware-inventory.mjs';
 
 const CODE_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
@@ -548,6 +549,8 @@ export async function startEvercraftComputeNode({
   remoteOperatorRoots = null,
   remoteOperatorStateDir = '',
   maxStagedBlobBytes = Number(process.env.EVERCRAFT_MAX_STAGED_BLOB_BYTES || 2147483648),
+  classroomProbeEnabled = process.env.EVERCRAFT_CLASSROOM_NODE002_PROBE_ENABLED === 'true',
+  classroomProbePort = Number(process.env.EVERCRAFT_CLASSROOM_LLAMA_PORT || 8080),
 } = {}) {
   if (!root) throw new Error('root is required');
   const loopbackHost = host === '127.0.0.1' || host === '::1' || host === 'localhost';
@@ -912,6 +915,11 @@ export async function startEvercraftComputeNode({
 
   const stagedBlobFor = (leaseId, digest) =>
     stagedBlobs.get(leaseId)?.get(digest) || null;
+  const classroomProbeAdmitted = nodeId === 'evercraft-node002-nextgen' && classroomProbeEnabled === true;
+  const classroomProbe = classroomProbeAdmitted ? createClassroomNodeProbeWorker({
+    nodeId,stateDir:path.join(allowedRoot,'.evercraft','classroom-probe'),
+    port:classroomProbePort,enabled:true,
+  }) : null;
   const supported = new Set([
     'systemia.private-core-origin.v1',
     'systemia.core-supervisor.v1',
@@ -937,6 +945,7 @@ export async function startEvercraftComputeNode({
   for (const workloadClass of NodeSeedMicroWorkloads) {
     supported.add(workloadClass);
   }
+  if (classroomProbeAdmitted) supported.add(CLASSROOM_NODE_WORKLOAD);
   if (browserRuntimeReady) {
     supported.add('systemia.evercraft-web-browser.v1');
   }
@@ -1328,6 +1337,38 @@ export async function startEvercraftComputeNode({
         const workloadClass = String(body.workload_class || lease.workload_class || '');
         if (workloadClass !== lease.workload_class || !supported.has(workloadClass)) {
           return send(res, 422, { error: 'workload_not_admitted' });
+        }
+
+        if (workloadClass === CLASSROOM_NODE_WORKLOAD) {
+          if (!classroomProbe) return send(res, 403, {error:'classroom_workload_disabled'});
+          const idempotencyKey=String(body.idempotency_key||body.input?.idempotency_key||'');
+          let worker;
+          try {
+            worker=await classroomProbe.execute({
+              payload:body.input?.payload??null,
+              idempotencyKey,
+            });
+          } catch(error) {
+            const code=String(error?.message||'classroom_probe_held');
+            return send(res,code==='classroom_idempotency_conflict'?409:422,{
+              error:/^classroom_[a-z0-9_]+$/.test(code)?code:'classroom_probe_held'
+            });
+          }
+          return send(res,200,{
+            ok:true,node_id:nodeId,workload_class:CLASSROOM_NODE_WORKLOAD,
+            result:worker.result,worker_receipt:worker,
+            deduplicated:worker.deduplicated===true,
+            idempotency_key:idempotencyKey,
+            receipt:chain.issue(
+              worker.deduplicated===true?'classroom.probe.reused':'classroom.probe.executed',{
+                lease_id:body.lease_id,
+                workload_class:CLASSROOM_NODE_WORKLOAD,
+                idempotency_key:idempotencyKey,
+                worker_receipt_hash:worker.receipt_hash,
+                student_data_used:false,
+                outbound_execution_granted:false,
+              }),
+          });
         }
 
         if (NodeSeedMicroWorkloads.includes(workloadClass)) {
