@@ -138,7 +138,7 @@ test('forged sender, wrong sender identity, corrupt ciphertext and bad JSON neve
       signature: signedBy(envelope, f.sender.private_key_pem)
     });
     assert.equal(wrongSender.status, 403);
-    const mutated = { ...envelope, ciphertext: envelope.ciphertext.replace(/^./, 'A') };
+    const mutated = { ...envelope, ciphertext: (envelope.ciphertext[0] === 'A' ? 'B' : 'A') + envelope.ciphertext.slice(1) };
     const tampered = await post({
       schema: 'evercraft.network.field01b.lab-delivery.v1',
       sender_id: f.sender.node_id, envelope: mutated,
