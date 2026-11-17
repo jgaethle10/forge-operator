@@ -65,6 +65,14 @@ export function planSourceFirstCommercial(brief,{checkFiles=true}={}){
   if(brief.creativeStandard==='relay-floor-v1'&&!checkFiles)
     throw new Error('relay_floor_requires_file_verification');
   const scenes=ensureArray(brief.scenes,'scenes');
+  const sourceMode=brief.sourceMode||'real-video-first';
+  if(!['real-video-first','customer-photographs'].includes(sourceMode))
+    throw new Error('commercial_source_mode_unsupported');
+  const photoLed=sourceMode==='customer-photographs';
+  if(photoLed && brief.creativeStandard==='relay-floor-v1')
+    throw new Error('commercial_photo_led_cannot_bypass_relay_floor');
+  if(photoLed && brief.photoSourceTruthAcknowledged!==true)
+    throw new Error('commercial_photo_led_source_truth_acknowledgment_required');
   if(scenes.length<3)throw new Error('commercial_brief_minimum_three_scenes');
   if(scenes[0]?.beat!=='hook'||scenes.at(-1)?.beat!=='cta')throw new Error('commercial_brief_hook_cta_required');
 
@@ -106,8 +114,13 @@ export function planSourceFirstCommercial(brief,{checkFiles=true}={}){
     for(const subject of subjects){
       if(!visualSource.subjects.includes(subject))throw new Error('commercial_must_show_not_proven:'+sceneId+':'+subject);
     }
-    // The opening must contain relevant action in real/owned/licensed footage.
-    if(index===0 && (visualSource.mediaKind!=='video'||visualSource.evidenceState==='synthetic_visualization'))
+    // Real-video-first still requires action in real footage. A customer-supplied
+    // photo-led job is an explicit editorial exception, never recorded motion.
+    const realPhotoOpening=photoLed && visualSource.mediaKind==='image' &&
+      visualSource.evidenceState==='observed' &&
+      scene.stillMotionTreatment==='editorial-camera-only';
+    if(index===0 && !realPhotoOpening &&
+        (visualSource.mediaKind!=='video'||visualSource.evidenceState==='synthetic_visualization'))
       throw new Error('commercial_opening_real_action_required');
     if(index>0 && scene.assetId===scenes[index-1].assetId)
       throw new Error('commercial_adjacent_repeated_hero_footage:'+sceneId);
@@ -143,7 +156,9 @@ export function planSourceFirstCommercial(brief,{checkFiles=true}={}){
       sourceRefs:[...visualSource.sourceRefs],rights:visualSource.rights,
       evidenceState:visualSource.evidenceState,
       subjectIds:[...subjects],intent:intention,
-      videoFirst:true,voiceLine,voiceMood,scoreEnergy:energy
+      videoFirst:visualSource.mediaKind==='video',
+      motionOrigin:visualSource.mediaKind==='image'?'editorial-crop-of-still':'source-video',
+      voiceLine,voiceMood,scoreEnergy:energy
     };
     timeline.push(item);
     sabanJobs.push({kind:'fallen_creative_shot',key:id+':'+sceneId,
@@ -151,14 +166,17 @@ export function planSourceFirstCommercial(brief,{checkFiles=true}={}){
         beat:scene.beat,aspectRatio:formats[0],durationSec:time,storyPrompt:brand+': '+offer,
         intent:intention,subjectIds:[...subjects],coverage:subjects.map((subject,i)=>({
           id:sceneId+'-coverage-'+i,subjectId:subject,subjectLabel:subject,
-          preferredTreatment:'real_source_footage',matchedAssetIds:[visualSource.id],
+          preferredTreatment:visualSource.mediaKind==='image'?'editorial-camera-on-still':'real_source_footage',
+          matchedAssetIds:[visualSource.id],
           status:'covered'
         })),sourcePath:visualSource.path,mediaKind:visualSource.mediaKind}});
   }
   if(Math.abs(position-durationSec)>0.01)throw new Error('commercial_total_duration_mismatch');
+  if(photoLed && voiceTakes.length===0)
+    throw new Error('commercial_photo_led_narration_plan_required');
   const result={
     schema:'evercraft.fallen.source-first-commercial-plan.v1',id,brand,audience,offer,durationSec,
-    formats:[...new Set(formats)],timeline,sfxSpots,voiceTakes,musicMap,
+    formats:[...new Set(formats)],sourceMode,timeline,sfxSpots,voiceTakes,musicMap,
     ...(brief.creativeStandard==='relay-floor-v1'?{creativeStandard:brief.creativeStandard,motionObservations}:{}),
     sabanInventory:{jobs:sabanJobs},
     releaseGates:{
@@ -166,6 +184,8 @@ export function planSourceFirstCommercial(brief,{checkFiles=true}={}){
       voiceAuditionsMustBeListenedTo:true,musicStemsMustBeVerified:true,
       soundSyncMustBeApproved:true,visualTournamentRequired:true,
       finalEncodedAudioQcRequired:true,finalClientReviewRequired:true,
+      photoOnlyMotionTruthReviewRequired:photoLed,
+      sourceCameraVideoPresent:assets.some(x=>x.mediaKind==='video'),
       finalVideoMasterCreated:false,publicationAuthority:false
     },
     status:'ready_for_creative_execution_not_final_delivery'
