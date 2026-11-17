@@ -6,7 +6,9 @@ import {CLASSROOM_NODE_WORKLOAD} from './node002-compute-probe.mjs';
 
 const NODE='evercraft-node002-nextgen';
 const SCHEMA='evercraft.classroom.nextgen-probe-request.v1';
-const digest=x=>'sha256:'+createHash('sha256').update(JSON.stringify(x)).digest('hex');
+const stable=value=>Array.isArray(value)?value.map(stable):value&&typeof value==='object'
+ ?Object.fromEntries(Object.keys(value).sort().map(k=>[k,stable(value[k])])):value;
+const digest=x=>'sha256:'+createHash('sha256').update(JSON.stringify(stable(x))).digest('hex');
 function fail(reason){throw Error(reason)}
 function validOrigin(value,allowLoopback){
  const u=new URL(value);
@@ -77,10 +79,31 @@ export async function dispatchClassroomNode002Probe({
    workload_class:CLASSROOM_NODE_WORKLOAD,idempotency_key:key,
    input:{idempotency_key:key,payload:req}
   });
+  const worker=executed.body.worker_receipt;
+  const evidence=executed.body.result;
+  const expectedRequestHash=digest({nodeId:NODE,key,request:req});
+  const originalWorker=worker&&typeof worker==='object'?{
+   ...worker,deduplicated:false
+  }:null;
+  const expectedWorkerReceipt=originalWorker&&'receipt_hash' in originalWorker
+   ?digest(Object.fromEntries(Object.entries(originalWorker).filter(([name])=>name!=='receipt_hash')))
+   :null;
   if(executed.status!==200||
      executed.body.ok!==true||executed.body.node_id!==NODE||
      executed.body.workload_class!==CLASSROOM_NODE_WORKLOAD||
-     executed.body.worker_receipt?.registered_workload_only!==true||
+     worker?.schema!=='evercraft.classroom.node002-worker-receipt.v1'||
+     worker?.registered_workload_only!==true||
+     worker?.workload_class!==CLASSROOM_NODE_WORKLOAD||
+     worker?.request_hash!==expectedRequestHash||
+     worker?.receipt_hash!==expectedWorkerReceipt||
+     digest(worker?.result)!==digest(evidence)||
+     evidence?.operation!==operation||
+     evidence?.state!==(operation==='readiness'
+       ?'LOCAL_MODEL_METADATA_OBSERVED':'SYNTHETIC_LOCAL_API_RESPONSE_OBSERVED')||
+     evidence?.model_response_observed!==(operation==='synthetic_turn')||
+     evidence?.source_ref_is_deployment_proof!==false||
+     evidence?.public_endpoint_opened!==false||
+     worker?.registered_workload_only!==true||
      executed.body.worker_receipt?.node_id!==NODE||
      executed.body.worker_receipt?.idempotency_key!==key||
      !/^sha256:[a-f0-9]{64}$/.test(executed.body.worker_receipt?.receipt_hash||'')||
@@ -90,7 +113,6 @@ export async function dispatchClassroomNode002Probe({
      executed.body.result?.child_data_used!==false||
      executed.body.result?.youth_safety_certified!==false)
     fail('classroom_execution_receipt_unverified');
-  const evidence=executed.body.result;
   result={
    schema:'evercraft.classroom.remote-dispatch-receipt.v1',
    status:'SCOPED_NODE002_MODEL_PROBE_OBSERVED',
