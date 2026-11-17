@@ -1,0 +1,99 @@
+{
+  "schema": "evercraft.music.acoustic-source-pins.v14",
+  "source_repository": "https://github.com/sgossner/VSCO-2-CE",
+  "source_commit_sha": "440300901dfe9275fd84e0b7763af1f8443ae62e",
+  "source_license": "CC0-1.0",
+  "source_recordings_evercraft_exclusively_owned": false,
+  "recording_rights_accepted_for_research": true,
+  "recordings_human_listening_approved": false,
+  "live_performed_legato": false,
+  "artistic_ensemble_approved": false,
+  "pitch_policy": "exact_filename_root_only_zero_resampling_or_pitch_shifting",
+  "notes": "Pinned Git blob SHA1 from GitHub master listing at source commit. Independent artifact build must verify exact bytes and record SHA256. Recorded samples are not a performance of The Last Light score.",
+  "sample_files": [
+    {
+      "instrument": "cello",
+      "pitch": "E3",
+      "path": "Strings/Cello Section/susvib/susvib_E3_v1_1.wav",
+      "git_blob_sha1": "63f4d6df3a25fb95f417b5d45b5f8bf6a11107bf",
+      "size_bytes": 2456672
+    },
+    {
+      "instrument": "cello",
+      "pitch": "G3",
+      "path": "Strings/Cello Section/susvib/susvib_G3_v1_1.wav",
+      "git_blob_sha1": "7880157fbb8e57fb0b7a694b8569701bc0d942ea",
+      "size_bytes": 2431598
+    },
+    {
+      "instrument": "cello",
+      "pitch": "C3",
+      "path": "Strings/Cello Section/susvib/susvib_C3_v1_1.wav",
+      "git_blob_sha1": "73ccb5dc2cc2a07926a1c41aa3c5621b19f420bf",
+      "size_bytes": 2444174
+    },
+    {
+      "instrument": "violin_section",
+      "pitch": "B4",
+      "path": "Strings/Violin Section/susVib/VlnEns_susVib_B4_v1.wav",
+      "git_blob_sha1": "8e22cb66ba5bccb4df68decf98139b3008733e8a",
+      "size_bytes": 2056964
+    },
+    {
+      "instrument": "violin_section",
+      "pitch": "G4",
+      "path": "Strings/Violin Section/susVib/VlnEns_susVib_G4_v1.wav",
+      "git_blob_sha1": "81d3994ebbf467cbbc88bb2d2ad0dd94d96e7e04",
+      "size_bytes": 2330236
+    },
+    {
+      "instrument": "violin_section",
+      "pitch": "E4",
+      "path": "Strings/Violin Section/susVib/VlnEns_susVib_E4_v1.wav",
+      "git_blob_sha1": "838b43d3c9e763898817869d411ab26463b7464f",
+      "size_bytes": 2315540
+    },
+    {
+      "instrument": "violin_section",
+      "pitch": "D5",
+      "path": "Strings/Violin Section/susVib/VlnEns_susVib_D5_v1.wav",
+      "git_blob_sha1": "fa455a7f8fe8c5c00b36c8e131bbc340204ae1c8",
+      "size_bytes": 2116352
+    },
+    {
+      "instrument": "viola_section",
+      "pitch": "E4",
+      "path": "Strings/Viola Section/susvib/ViolaEns_susvib_E4_v1_1.wav",
+      "git_blob_sha1": "c97e8f4eeffe3fd94afeb8a3d32099105ab270d2",
+      "size_bytes": 2044358
+    },
+    {
+      "instrument": "double_bass",
+      "pitch": "E2",
+      "path": "Strings/Solo Contrabass/SusVib/BKCtbss_SusVib_E2_v1_rr1.wav",
+      "git_blob_sha1": "8a7643452697f29cfddba49c23549fdc913a8726",
+      "size_bytes": 1533524
+    },
+    {
+      "instrument": "flute",
+      "pitch": "E5",
+      "path": "Woodwinds/Flute/susNV/LDFlute_susNV_E5_v1_1.wav",
+      "git_blob_sha1": "4017163d62316f9eb0a4a5d375de9f7d110dda64",
+      "size_bytes": 2956800
+    },
+    {
+      "instrument": "bassoon",
+      "pitch": "C3",
+      "path": "Woodwinds/Bassoon/sus/PSBassoon_C3_v1_1.wav",
+      "git_blob_sha1": "346fcf577136aac725b49419a915c92efa078d6a",
+      "size_bytes": 1540544
+    },
+    {
+      "instrument": "harp",
+      "pitch": "D4",
+      "path": "Strings/Harp/KSHarp_D4_mf.wav",
+      "git_blob_sha1": "342eec5072e2c0a7fb7cb03b6f5b46d84ed6ac69",
+      "size_bytes": 1921690
+    }
+  ]
+}
