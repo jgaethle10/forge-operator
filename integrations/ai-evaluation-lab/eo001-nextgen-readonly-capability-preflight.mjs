@@ -28,7 +28,7 @@ const DIR=fs.constants.O_RDONLY|fs.constants.O_DIRECTORY|
 const sha=text=>createHash('sha256').update(text).digest('hex');
 const fail=code=>{const error=new Error(code);error.code=code;throw error;};
 const need=(yes,code)=>{if(!yes)fail(code);};
-function readBounded(io,filename,max){
+function readBounded(io,filename,max,allowEmpty=false){
   let fd;
   try{
     fd=io.openSync(filename,READ);
@@ -36,7 +36,8 @@ function readBounded(io,filename,max){
     need(stat.isFile(),'EO001_PREFLIGHT_CONTROL_NOT_FILE');
     const data=Buffer.alloc(max+1);
     const n=io.readSync(fd,data,0,max+1,null);
-    need(Number.isInteger(n)&&n>0&&n<=max,
+    need(Number.isInteger(n)&&n>=0&&n<=max&&
+      (allowEmpty||n>0),
       'EO001_PREFLIGHT_READ_UNAVAILABLE_OR_OVERSIZED');
     const raw=data.subarray(0,n),value=raw.toString('utf8');
     need(Buffer.from(value,'utf8').equals(raw),
@@ -81,7 +82,8 @@ export function inspectHostCgroupV2ReadOnly({
       BigInt(identity.ino)>0n,'EO001_PREFLIGHT_ROOT_NOT_DIRECTORY');
     const statfs=io.statfsSync('/proc/self/fd/'+fd,{bigint:true});
     need(BigInt(statfs.type)===CGROUP2,'EO001_PREFLIGHT_NOT_CGROUP2');
-    const rootFile=name=>readBounded(io,'/proc/self/fd/'+fd+'/'+name,512);
+    // Empty controller lists are valid capability-negative observations.
+    const rootFile=name=>readBounded(io,'/proc/self/fd/'+fd+'/'+name,512,true);
     const controllers=controllerSet(rootFile('cgroup.controllers'));
     const enabled=controllerSet(rootFile('cgroup.subtree_control'));
     const cgType=rootFile('cgroup.type');
