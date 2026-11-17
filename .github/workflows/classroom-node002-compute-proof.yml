@@ -1,0 +1,36 @@
+name: Classroom NextGen Scoped Compute Capability
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/classroom/node002-compute-probe.mjs'
+      - 'systemia/compute/runtime-node.mjs'
+      - 'tests/infinite-classroom-node002-compute.test.mjs'
+      - 'systemia/classroom/SCOPED-NODE002-DISPATCH.md'
+      - '.github/workflows/classroom-node002-compute-proof.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/classroom/node002-compute-probe.mjs'
+      - 'systemia/compute/runtime-node.mjs'
+      - 'tests/infinite-classroom-node002-compute.test.mjs'
+      - '.github/workflows/classroom-node002-compute-proof.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  bounded-classroom-capability:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Syntax proof
+        run: |
+          node --check systemia/classroom/node002-compute-probe.mjs
+          node --check systemia/compute/runtime-node.mjs
+      - name: Authenticated NodeSeed leased job, no shell, no PII
+        run: node --test tests/infinite-classroom-node002-compute.test.mjs
