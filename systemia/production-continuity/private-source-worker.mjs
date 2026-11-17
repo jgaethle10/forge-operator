@@ -1,5 +1,6 @@
 import crypto from 'node:crypto';
 import fs from 'node:fs/promises';
+import { constants } from 'node:fs';
 import path from 'node:path';
 
 const ID = /^[a-z0-9][a-z0-9._-]{2,79}$/;
@@ -14,11 +15,16 @@ function safeSource(name) {
   return name;
 }
 async function readRegular(file, maxBytes = 50_000_000) {
-  const stat = await fs.lstat(file);
-  if (!stat.isFile() || stat.isSymbolicLink() || stat.size < 1 || stat.size > maxBytes) {
-    throw new Error('Unsafe or empty private source');
-  }
-  return { stat, body: await fs.readFile(file) };
+  const handle = await fs.open(file, constants.O_RDONLY | (constants.O_NOFOLLOW || 0));
+  try {
+    const stat = await handle.stat();
+    if (!stat.isFile() || stat.size < 1 || stat.size > maxBytes) {
+      throw new Error('Unsafe or empty private source');
+    }
+    const body = await handle.readFile();
+    if (body.byteLength !== stat.size) throw new Error('Private source changed during read');
+    return { stat, body };
+  } finally { await handle.close(); }
 }
 function digest(bytes) { return crypto.createHash('sha256').update(bytes).digest('hex'); }
 
@@ -40,6 +46,14 @@ export async function runPrivateSourceAudit(job, { privateDir } = {}) {
   const sourceRoot = path.join(root, 'sources');
   const manifestRoot = path.join(root, 'manifests');
   const artifactRoot = path.join(root, 'artifacts');
+  // Directories are never followed through symlinks; private inputs remain
+  // within the approved root even if a source manifest is malicious.
+  for (const dir of [sourceRoot, manifestRoot]) {
+    const st = await fs.lstat(dir);
+    if (!st.isDirectory() || st.isSymbolicLink() || (st.mode & 0o077) !== 0) {
+      throw new Error('Unsafe private source directory');
+    }
+  }
   const manifestFile = path.join(manifestRoot, id + '.json');
   let manifest;
   try {
@@ -55,6 +69,10 @@ export async function runPrivateSourceAudit(job, { privateDir } = {}) {
     throw new Error('Invalid project source manifest');
   }
   await fs.mkdir(artifactRoot, { recursive: true, mode: 0o700 });
+  const artifactStat = await fs.lstat(artifactRoot);
+  if (!artifactStat.isDirectory() || artifactStat.isSymbolicLink() || (artifactStat.mode & 0o077) !== 0) {
+    throw new Error('Unsafe private artifact directory');
+  }
   const rows = [];
   for (const name of manifest.source_files) {
     safeSource(name);
