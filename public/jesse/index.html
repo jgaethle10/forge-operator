@@ -44,6 +44,15 @@ h2{font-size:clamp(2.25rem,5vw,4.4rem);line-height:1.03;letter-spacing:-.061em;m
 .number{font-size:12px;letter-spacing:.15em;color:var(--fire);font-weight:750}
 .show h3{font-size:clamp(2rem,4vw,3.7rem);letter-spacing:-.058em;line-height:1.03;margin:0 0 12px}
 .show p{margin:0;max-width:440px;color:#d0d8ce;font-size:15px}
+
+.research{background:#17211b}
+.research-feed-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:14px;margin-top:22px}
+.research-card{display:flex;flex-direction:column;align-items:flex-start;gap:15px;padding:26px;border:1px solid #a4bcaa55;background:#213129;border-radius:9px}
+.research-card h3{font-size:clamp(1.5rem,2.8vw,2.3rem);line-height:1.14;letter-spacing:-.04em;margin:0}
+.research-card p{margin:0;color:#cfdbcf;font-size:15px;line-height:1.6}
+.research-eyebrow{text-transform:uppercase;letter-spacing:.12em;color:var(--fire);font-size:11px;font-weight:740}
+.research-link{font-weight:720;color:var(--fire);text-underline-offset:4px;margin-top:auto}
+.research-status{color:var(--pale);border-left:2px solid #a4bcaa88;padding-left:16px;max-width:730px;margin-top:25px}
 .intelligence{background:linear-gradient(115deg,#18251c,#14201b)}
 .engine-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:30px}
 .engine-card{border:1px solid #82a48a55;background:#ffffff07;border-radius:9px;padding:24px}
@@ -83,6 +92,13 @@ footer{padding:26px 0;border-top:1px solid var(--line);color:var(--muted);font-s
 <article class="show"><div class="number">03 / EXPLORE</div><div><h3>Field Notes</h3><p>Wild places, forgotten landmarks, remarkable communities and the stories you only find by going there.</p></div></article>
 <article class="show"><div class="number">04 / DOCUMENT</div><div><h3>Week in Motion</h3><p>A recurring documentary of what we learned, what moved, what broke and what comes next.</p></div></article>
 </div></div></section>
+<section class="section research" id="research" aria-labelledby="research-title"><div class="wrap">
+<div class="kicker">From the Evercraft research desk</div>
+<h2 id="research-title">The evidence behind the questions.</h2>
+<p class="intro">Current research published by Evercraft Journal can surface here when the article is really available. These are independently produced Journal features, not episodes of my personal series. For those, I want to bring the evidence to life with original footage, narration and fieldwork.</p>
+<div id="research-feed" aria-live="polite"><p class="research-status">Checking the current Evercraft Journal edition…</p></div>
+<noscript><p class="research-status">Current article links require JavaScript verification. The creator series remains in development.</p></noscript>
+</div></section>
 <section class="section intelligence" id="engine" aria-labelledby="engine-title"><div class="wrap">
 <div class="kicker">Behind the stories · Existing Evercraft systems</div>
 <h2 id="engine-title">Curiosity with an evidence trail.</h2>
@@ -105,5 +121,6 @@ footer{padding:26px 0;border-top:1px solid var(--line);color:var(--muted);font-s
 </div></section>
 </main>
 <footer><div class="wrap foot"><span>© 2026 Jesse Gaethle · Original reporting and exploration</span><span>Made with Evercraft · No paid endorsement implied</span></div></footer>
+<script type="module" src="./research-shelf.mjs"></script>
 </body>
 </html>

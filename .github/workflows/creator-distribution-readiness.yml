@@ -6,6 +6,7 @@ on:
       - 'public/jesse/**'
       - 'systemia/clip/distribution-readiness.mjs'
       - 'tests/creator-distribution-readiness.test.mjs'
+      - 'tests/creator-research-shelf.test.mjs'
       - 'docs/creator/FOUNDING_DISTRIBUTION_RECOVERY_20261115.md'
       - '.github/workflows/creator-distribution-readiness.yml'
   push:
@@ -15,6 +16,7 @@ on:
       - 'public/jesse/**'
       - 'systemia/clip/distribution-readiness.mjs'
       - 'tests/creator-distribution-readiness.test.mjs'
+      - 'tests/creator-research-shelf.test.mjs'
       - '.github/workflows/creator-distribution-readiness.yml'
   workflow_dispatch:
 
@@ -31,7 +33,7 @@ jobs:
         with:
           node-version: 22
       - name: Test source-to-publication truth and brand isolation
-        run: node --test tests/creator-distribution-readiness.test.mjs
+        run: node --test tests/creator-distribution-readiness.test.mjs tests/creator-research-shelf.test.mjs
       - name: Produce source-only account readiness evidence
         run: |
           node systemia/clip/distribution-readiness.mjs --json > creator-distribution-readiness.json

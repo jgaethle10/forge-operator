@@ -25,7 +25,7 @@ Example story path: an unusual public infrastructure trend is flagged by Rockies
 - TikTok and YouTube do not appear in that campaign queue; they are expansion and account-identification gaps.
 - Owned Facebook Journal publisher exists in source: systemia/clip/GENERAL_JOURNAL_FACEBOOK_PUBLISHING.md. It requires a sealed Page credential, accurate Page identity, Meta write task, Passport release, durable claim and provider readback.
 - Owned LinkedIn company publisher exists in source: systemia/clip/LINKEDIN_OWNED_PUBLISHING.md. It requires a permitted organization OAuth token and actual organization role, distinct from founder personal LinkedIn.
-- The Journal source index dated 2026-11-11 records live_edition=false, three archived stories and zero live stories. Source state is not a fresh outside-HTTP inspection.
+- The Journal source index **refreshed 2026-11-16** now reports `live_edition:true`, **one current** November 15 NVIDIA infrastructure/leadership feature and three archived stories. This is progress from the prior archive-only source state, not independent public HTTPS verification or a social-provider post receipt. Current source can regress or change independently of this note.
 - The connected Metricool brand list exposed ChristmasLightsUSA only on Nov 15; it cannot prove Evercraft or Jesse's performance. Metricool is not the company publishing rail.
 - A new public/jesse/index.html is a creator front-door *source candidate*. Real public delivery requires approved merge, actual Pages deploy and independent browser/HTTPS QA.
 
@@ -60,6 +60,11 @@ Restore the owned Journal by submitting a genuinely fresh eligible feature throu
 Review and ship the Jesse front door with its separate editorial identity. Add personal social links only after handles and account ownership are confirmed. Until a mailing list backend exists, the page uses plain email as a contact, not a fake subscription.
 
 The first creator release should be a verified Look Closer story or real Build Log sequence, not another commercial studio sales pitch.
+
+## Creator research shelf: source → independent article readback
+The `public/jesse/research-shelf.mjs` module reads the **same-origin** `../journal/index.json` on the viewer's device. It does not insert an article into the creator site merely because a source commit says `live_edition:true`. It only displays a current-index story once the matching same-origin `/journal/{slug}/` actually returns HTTP 200 HTML and a matching `evercraft:story_id` meta tag. A missing, stale, blocked, mismatched, or unavailable article yields an honest no-verified-current-article message.
+
+This is a **reader discovery path**, not a new content writer or social publisher. It separates existing Evercraft Journal reports from genuine Jesse original creator episodes; a Journal piece alone does not imply Jesse filmed a video or personally authored it. It uses the existing Pages/owned Journal artifacts, never a Base44 or third-party host. Actual external public visibility must be verified after the page deployment. Tests: `node --test tests/creator-research-shelf.test.mjs`.
 
 ## Evidence required before declaring restored
 Every actual release needs asset and rights provenance, brand/account identity, verified platform permission, real Systemia/Passport account-and-asset scoped authority, a durable provider attempt ledger, a provider post ID/permalink, independent public visibility evidence, and post-level engagement metrics *if accessible*. Source draft, CI green, scheduled item and provider API acceptance are distinct from confirmed public publishing.
