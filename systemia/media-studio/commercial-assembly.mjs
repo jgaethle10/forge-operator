@@ -173,8 +173,11 @@ export function compileApprovedCommercial(input){
     audioMaster:{targetLufs:-16,truePeakDb:-1.5,lra:9,dialogueDucking:true,
       duckThreshold:0.05,duckRatio:8,attackMs:20,releaseMs:350,sampleRate:48000}
   });
+  const photoOnly=plan.sourceMode==='customer-photographs' &&
+    plan.timeline.every(item=>sources.get(item.assetId)?.mediaKind==='image');
   const delivery={
     schema:'evercraft.fallen.studio-delivery-request.v1',id:project.id,
+    ...(photoOnly?{photoEditorialMode:'source-photographs'}:{}),
     slug:project.id,project,
     destinations:[...new Set(input.destinations)],
     metadata:{title:clean(input.title)||project.title,
@@ -209,7 +212,7 @@ export function renderApprovedCommercial(input,outputDir){
     boundaries:{originalFootageSourceVerifiedByHash:true,
       realHumanListenOrVisualReviewNotIndependentlyVerified:true,
       platformPublished:false,publicationAuthorityGranted:false,
-      photoLedRender:compiled.sourceMode==='customer-photographs'}};
+      photoLedRender:compiled.deliveryRequest.photoEditorialMode==='source-photographs'}};
 }
 function main(){
   const [inputFile,outputDir,mode]=process.argv.slice(2);
