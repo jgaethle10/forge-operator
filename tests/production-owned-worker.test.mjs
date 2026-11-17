@@ -21,6 +21,7 @@ function fixture(fn) {
  fs.chmodSync(root,0o700);
  for(const d of ['sources','manifests','artifacts']) fs.mkdirSync(path.join(root,d),{mode:0o700});
  const l=ledger();
+ fs.writeFileSync(path.join(root,'ledger.json'),JSON.stringify(l),{mode:0o600});
  const batch=buildParallelSlate(l,{maxInFlight:6,createdAt:clock});
  fs.writeFileSync(path.join(root,'parallel-slate.json'),JSON.stringify(batch),{mode:0o600});
  for(let n=0;n<12;n++){
@@ -117,4 +118,22 @@ test('private source audit rejects path traversal and symlinked source',async()=
  assert.equal(result.failed_audits,1);
  assert.equal(result.completed_audits,11);
  assert.equal(result.publication_performed,false);
+}));
+
+test('a newly imposed founder canon gate stops outdated source work before leasing',async()=>fixture(async({root})=>{
+ const fresh=ledger();
+ fresh.projects[1].next_action.requires_gate='canon';
+ fs.writeFileSync(path.join(root,'ledger.json'),JSON.stringify(fresh),{mode:0o600});
+ await assert.rejects(()=>runOwnedParallelSourceWave({privateDir:root,now:()=>clock+60000}),/slate is stale/);
+ assert.equal(fs.existsSync(path.join(root,'saban-work-state.json')),false);
+}));
+
+test('a symlinked source directory blocks the affected lane without stopping other projects',async()=>fixture(async({root})=>{
+ const dir=path.join(root,'sources');
+ fs.renameSync(dir,path.join(root,'sources-real'));
+ fs.symlinkSync(path.join(root,'sources-real'),dir);
+ const receipt=await runOwnedParallelSourceWave({privateDir:root,now:()=>clock+60000});
+ assert.equal(receipt.failed_audits,12);
+ assert.equal(receipt.completed_audits,0);
+ assert.equal(receipt.publication_performed,false);
 }));
