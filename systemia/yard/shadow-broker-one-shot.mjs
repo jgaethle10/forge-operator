@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 /**
  * Explicit one-shot, zero-authority broker canary against an existing NodeSeed.
- * --check is read-only. --run requires a second acknowledgement and an
+ * --check is read-only. Live --run is HARD-DISABLED pending partial-deploy
+ * cleanup/lease reconciliation verification. A future run would require an
  * operator-provided allocator credential. Never adopts the legacy deployment,
  * imports grants, enables timers, or authorizes remote devices.
  *
@@ -108,6 +109,12 @@ export function verifyCanaryOutcome({health,record,route}={}){
   };
 }
 async function canary(){
+  // SAFETY HOLD: YardOperator.deployRelease may create a live resident service
+  // before returning its deployment record. If it fails during late health
+  // verification, this caller cannot reliably stop/release that service.
+  // Until partial-deploy cleanup is journaled and proven fail-safe, no actual
+  // physical broker mutation is allowed, even with approval and a token.
+  throw Error('live_canary_blocked_pending_partial_deployment_cleanup_proof');
   exactServiceUser();
   if(process.env.EVERCRAFT_SHADOW_CANARY_APPROVED!=='YES')
     throw Error('explicit_canary_approval_required');
