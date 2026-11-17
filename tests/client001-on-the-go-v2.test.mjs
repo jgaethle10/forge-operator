@@ -5,7 +5,7 @@ import {test} from 'node:test';
 
 const html=fs.readFileSync('public/clients/on-the-go/review/index.html','utf8');
 test('Client001 authentic media and brand review gates',()=>{
- assert.match(html,/<title>On The Go Mobile Quick Lube \| Client Preview V2<\/title>/);
+ assert.match(html,/<title>On The Go Mobile Quick Lube \| Client Preview V3<\/title>/);
  assert.match(html,/noindex,nofollow,noarchive/);
  assert.match(html,/--navy:#0b2342/);
  assert.match(html,/--green:#3bd275/);
