@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import {createHash} from 'node:crypto';
 import {startNodeSeed} from '../systemia/compute/node-seed.mjs';
 import {
   createShadowLeaseJournal,
@@ -17,10 +18,22 @@ function fixture(){
   fs.chmodSync(root,0o700);
   return root;
 }
-function response(ok=true){
+function response(
+  ok=true,nodeId='synthetic-shadow-node',
+  leaseId='lease_shadowproof_12345678',overrides={},forgedHash=null
+){
+  const body={
+    schema:'evercraft.compute.receipt.v1',node_id:nodeId,seq:1,
+    type:'capacity.lease.released',at:'2026-11-16T00:00:00.000Z',
+    previous_hash:'GENESIS',lease_id:leaseId,
+    workload_class:'systemia.remote-capacity-broker.v1',...overrides,
+  };
   return {
     ok,
-    json:async()=>({ok:true,receipt:{receipt_hash:'sha256:'+'b'.repeat(64)}}),
+    json:async()=>({ok:true,receipt:{
+      ...body,receipt_hash:forgedHash||
+        createHash('sha256').update(JSON.stringify(body)).digest('hex'),
+    }}),
   };
 }
 const token='b'.repeat(48);
@@ -33,7 +46,7 @@ const lease=()=>({
 test('submission cannot occur without a durably recorded lease',()=>{
   const root=fixture();
   try{
-    const dir=createShadowLeaseJournal({parent:root,origin:'http://127.0.0.1:43218'});
+    const dir=createShadowLeaseJournal({parent:root,origin:'http://127.0.0.1:43218',expectedNodeId:'synthetic-shadow-node'});
     assert.throws(()=>recordShadowSubmissionIntent({dir}),/submission_requires_recorded_lease/);
     assert.deepEqual(inspectShadowLeaseJournal({dir}).lease_recorded,false);
     recordShadowLease({dir,lease:lease()});
@@ -47,7 +60,7 @@ test('submission cannot occur without a durably recorded lease',()=>{
 test('persisted lease journal releases after losing service response',async()=>{
   const root=fixture();
   try{
-    const dir=createShadowLeaseJournal({parent:root,origin:'http://127.0.0.1:43218'});
+    const dir=createShadowLeaseJournal({parent:root,origin:'http://127.0.0.1:43218',expectedNodeId:'synthetic-shadow-node'});
     recordShadowLease({dir,lease:lease()});
     recordShadowSubmissionIntent({dir});
     const calls=[];
@@ -71,7 +84,7 @@ test('persisted lease journal releases after losing service response',async()=>{
 test('uncertain network release is retained as manual hold rather than success',async()=>{
   const root=fixture();
   try{
-    const dir=createShadowLeaseJournal({parent:root,origin:'http://127.0.0.1:43218'});
+    const dir=createShadowLeaseJournal({parent:root,origin:'http://127.0.0.1:43218',expectedNodeId:'synthetic-shadow-node'});
     recordShadowLease({dir,lease:lease()});
     recordShadowSubmissionIntent({dir});
     const lost=await releaseShadowLease({dir,request:async()=>{throw Error('lost_response')}});
@@ -88,9 +101,9 @@ test('untrusted external origin, unsafe lease and symlink journal are denied',()
   const root=fixture();
   try{
     assert.throws(()=>createShadowLeaseJournal({
-      parent:root,origin:'https://external.example.invalid'
+      parent:root,origin:'https://external.example.invalid',expectedNodeId:'synthetic-shadow-node'
     }),/origin_must_be_exact_loopback/);
-    const dir=createShadowLeaseJournal({parent:root,origin:'http://127.0.0.1:43218'});
+    const dir=createShadowLeaseJournal({parent:root,origin:'http://127.0.0.1:43218',expectedNodeId:'synthetic-shadow-node'});
     assert.throws(()=>recordShadowLease({
       dir,lease:{...lease(),token:'not-a-token'}
     }),/invalid_lease_identity/);
@@ -115,7 +128,7 @@ test('real disposable NodeSeed release stops a broker even if service response i
       announce:false,
     });
     const origin=seed.endpoint;
-    const jr=createShadowLeaseJournal({parent:journalParent,origin});
+    const jr=createShadowLeaseJournal({parent:journalParent,origin,expectedNodeId:seed.node_id});
 
     const newLease=await fetch(origin+'/v1/leases',{
       method:'POST',
@@ -185,7 +198,7 @@ test('SIGKILL after broker launch leaves a recoverable lease and no orphan after
     });
 
     const origin=seed.endpoint;
-    const jr=createShadowLeaseJournal({parent:journalParent,origin});
+    const jr=createShadowLeaseJournal({parent:journalParent,origin,expectedNodeId:seed.node_id});
     const leaseResponse=await fetch(origin+'/v1/leases',{
       method:'POST',
       headers:{
@@ -269,5 +282,32 @@ test('SIGKILL after broker launch leaves a recoverable lease and no orphan after
   }finally{
     if(seed)await seed.close();
     fs.rmSync(root,{recursive:true,force:true});
+  }
+});
+
+
+test('forged or misbound release receipts never clear an unreleased lease',async()=>{
+  const cases=[
+    ()=>response(true,'foreign-shadow-node'),
+    ()=>response(true,'synthetic-shadow-node','lease_foreign_123456'),
+    ()=>response(true,'synthetic-shadow-node','lease_shadowproof_12345678',{},'f'.repeat(64)),
+    ()=>response(true,'synthetic-shadow-node','lease_shadowproof_12345678',
+      {type:'capacity.lease.granted'}),
+  ];
+  for(const fake of cases){
+    const root=fixture();
+    try{
+      const dir=createShadowLeaseJournal({
+        parent:root,origin:'http://127.0.0.1:43218',
+        expectedNodeId:'synthetic-shadow-node',
+      });
+      recordShadowLease({dir,lease:lease()});
+      recordShadowSubmissionIntent({dir});
+      const result=await releaseShadowLease({dir,request:async()=>fake()});
+      assert.equal(result.ok,false);
+      assert.equal(result.manual_reconciliation_required,true);
+      assert.equal(inspectShadowLeaseJournal({dir}).phase,'manual_hold');
+      assert.equal(fs.readFileSync(path.join(dir,'lease-journal.json'),'utf8').includes(token),true);
+    }finally{fs.rmSync(root,{recursive:true,force:true})}
   }
 });
