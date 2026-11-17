@@ -73,3 +73,28 @@ For an operational proof of proposed role execution, run Saban after planning:
     node systemia/saban/multiplier.mjs --software fallen-creative-council --inventory ./artifacts/my-commercial-plan/saban-creative-inventory.json --agents 56 --workers 4 --execute --reconcile
 
 Example above assumes four shots (4 × 14 = 56) and valid owned/local permissions; change agent count when there are more shots.
+
+## Explicit customer-photo commercial mode (not source-camera footage)
+
+A small local business may supply permission-cleared project photographs rather than
+moving video. The default `real-video-first` admission remains unchanged. To plan
+an honest photograph-led commercial, set `sourceMode: "customer-photographs"` and
+`photoSourceTruthAcknowledged: true` in the brief, and choose a genuine observed
+image for the hook (with owner/client rights receipt and SHA-256). Its opening scene
+must declare `stillMotionTreatment: "editorial-camera-only"`.
+
+This is **editorial camera movement across a still photo**, NOT recorded worker motion,
+a before/after assertion, a live-action source, or evidence of generated video.
+The returned timeline records `videoFirst: false` and
+`motionOrigin: "editorial-crop-of-still"`; Saban gets a corresponding
+`editorial-camera-on-still` instruction. The result also requires a narration plan,
+`photoOnlyMotionTruthReviewRequired` and all existing voice, music, sound, client
+and publishing gates. Customer-photo mode is forbidden as a way around the separate
+EPS Relay-floor standard.
+
+For locally owned Bella audio **auditions**, see
+`systemia/media-studio/voice-foundry/bella_native_audition.py`. It requires
+preinstalled native Kokoro and locally cached, reviewed weights and creates only
+private unapproved WAVs and receipts. Do not put customer scripts or photos in
+public GitHub. Finish with approved voice and music in the existing Fallen
+commercial assembly and customer commercial release gate.
