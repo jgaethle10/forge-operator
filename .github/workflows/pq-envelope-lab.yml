@@ -11,6 +11,7 @@ on:
       - 'tests/pq-trust-snapshot.test.mjs'
       - 'tests/pq-field-preflight.test.mjs'
       - 'tests/pq-offline-courier.test.mjs'
+      - 'tests/pq-remote-operator-bridge.test.mjs'
       - 'tests/pq-postgres-fixture/**'
       - '.github/workflows/pq-envelope-lab.yml'
   workflow_dispatch:
@@ -55,6 +56,7 @@ jobs:
           tests/pq-trust-snapshot.test.mjs
           tests/pq-field-preflight.test.mjs
           tests/pq-offline-courier.test.mjs
+          tests/pq-remote-operator-bridge.test.mjs
           tests/pq-postgres-fixture/integration.test.mjs
           tests/pq-postgres-fixture/trust-integration.test.mjs
           tests/pq-postgres-fixture/node-pair.test.mjs
