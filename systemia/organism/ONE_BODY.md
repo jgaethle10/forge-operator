@@ -211,6 +211,50 @@ After real consumer deployment and protected key provisioning, the locally gener
 
 `one-body-enrollment.proof.mjs` covers private/public file modes, candidate state, duplicate rejection, cryptographic compatibility, lane mismatch, and trust revocation. The suite runs under `npm run proof:one-body`.
 
+## Two-host physical field acceptance (operator-gated)
+
+`one-body-two-host-field.proof.mjs` now rehearses **two independent simulated
+machines**, `node001` and `node002`, each with its own private Ed25519 key and
+local consumer inbox, using the real offline enrollment CLI, read-only local
+preflight, One-Body persisted state, consumer CLI and signed-ACK operator
+admission. This is not a test of the real machines or network transport.
+
+The synthetic acceptance requires two distinct routed events, two valid
+inbox acknowledgements, exact signer/lane checks, replay-idempotent operator
+admission, no execution authority, cross-host impersonation rejection and
+a live read-side key revocation that reduces verified count without rewriting
+the stored historical receipts.
+
+**Actual field ceremony (not executed by CI):**
+
+1. At the pinned reviewed source commit on **Penguin Node001**, run the offline
+   enrollment CLI and local preflight for `node001 context_fabric
+   node001:context:v1`. Use a private 0700 directory. Retain the private
+   PEM on Penguin.
+2. Repeat on **NextGen Node002** using `node002 context_fabric
+   node002:context:v1` and a *different* locally generated keypair. Retain
+   that private PEM on NextGen.
+3. Review both public enrollment candidates and their fingerprints over an
+   independently authenticated operator channel. Provision **only public**
+   lane-scoped keys into Systemia's private operator trust file, requiring an
+   explicit owner approval. Neither candidate self-enrolls.
+4. After a canonical One-Body event is durably routed to `context_fabric`,
+   let the legitimate local consumer CLI record inbox acceptance and create
+   its private signed receipt. Transfer **only the signed receipt** through
+   an operator-controlled path. The existing operator `ack` command must
+   validate and persist it against the pinned public registry.
+5. Confirm two independent `consumer_receipt_verified` observations from
+   the Passport-scoped Home snapshot. Revoke one key in a controlled drill
+   and verify its observation becomes unverified on the next read. Confirm
+   that the UI does not claim execution, delivery or revenue.
+
+**Hard gates:** Stop if a source pin changes, host or fingerprint cannot be
+authenticated, private PEM must leave its host, an unauthorized trust update
+is requested, receipt transport is untrusted, Passport access fails, or Home
+does not clear stale data. An unavailable physical machine is a **HOLD**, not
+a synthetic PASS. No auto-install, daemon enrollment, remote dispatch or
+public ingress occurs in this source-only test.
+
 ## Proof
 
 Run:
