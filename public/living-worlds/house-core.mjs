@@ -202,7 +202,7 @@ export function eligibleSocialPeers(s,actorId){
 }
 export function selectModelSocialPartner(s,actorId,peerId,reason){
   if(!validateHouse(s)||typeof reason!=='string'||reason.length<1||reason.length>120||
-     /[\\x00-\\x1F\\x7F]/.test(reason))return false;
+     /[\x00-\x1F\x7F]/.test(reason))return false;
   const a=s.actors.find(actor=>actor.id===actorId);
   const b=s.actors.find(actor=>actor.id===peerId&&actor.id!==actorId);
   if(!a||!b||!eligibleSocialPeers(s,actorId).some(peer=>peer.id===peerId))return false;
