@@ -37,6 +37,9 @@ export interface StudioDeliveryRequest {
   commercialAudioFinishing?:'none'|'two_pass';
   // Explicit technical dynamics floor; opt-in only for cinematic commercials.
   commercialAudioMinLraLu?:number;
+  // Source-truthful photo-led ads keep freeze detection observable, but require
+  // human creative review instead of being treated as defective live-action.
+  photoEditorialMode?:'source-photographs';
 }
 
 export interface ClipDeliveryManifest {
@@ -88,6 +91,7 @@ export interface ClipDeliveryManifest {
     downstreamClipGateRequired:true;
     narrativeFilmAdmissionRequired:boolean;
     commercialAudioQcRequired:boolean;
+    photoOnlyEditorialReviewRequired:boolean;
   };
   createdAt:string;
 }
@@ -169,6 +173,19 @@ function validateRequest(request:StudioDeliveryRequest){
      (qualityMode!=='commercial' || !Number.isFinite(request.commercialAudioMinLraLu) ||
       request.commercialAudioMinLraLu<0 || request.commercialAudioMinLraLu>20)){
     throw new Error('studio_delivery_commercial_dynamics_policy_invalid');
+  }
+  if(request.photoEditorialMode!==undefined){
+    if(request.photoEditorialMode!=='source-photographs'||qualityMode!=='commercial'){
+      throw new Error('studio_delivery_photo_editorial_mode_invalid');
+    }
+    const project=request.project;
+    const assets=new Map(project.assets.map(asset=>[asset.id,asset]));
+    const visualClips=project.tracks
+      .filter(track=>track.kind==='video'||track.kind==='overlay')
+      .flatMap(track=>track.clips);
+    if(!visualClips.length||visualClips.some(clip=>assets.get(clip.assetId)?.kind!=='image')){
+      throw new Error('studio_delivery_photo_editorial_sources_invalid');
+    }
   }
   if(qualityMode==='narrative_film'){
     const validation=validateNarrativeFilmAdmissionForProject({
@@ -279,6 +296,7 @@ export function buildClipDeliveryManifest(input:{
       downstreamClipGateRequired:true,
       narrativeFilmAdmissionRequired:(input.request.qualityMode??'standard')==='narrative_film',
       commercialAudioQcRequired:input.request.qualityMode==='commercial',
+      photoOnlyEditorialReviewRequired:input.request.photoEditorialMode==='source-photographs',
     },
     createdAt:new Date().toISOString(),
   };
@@ -332,7 +350,8 @@ export function finalizeStudioDelivery(input:{
   const masterQc=assessStudioMaster({
     filePath:videoPath,
     expectedSha256:renderReceipt.sha256,
-    policy:{expectedDurationSec:projectDuration(input.request.project)},
+    policy:{expectedDurationSec:projectDuration(input.request.project),
+      ...(input.request.photoEditorialMode==='source-photographs'?{maxFreezeRatio:1}:{} )},
   });
   fs.writeFileSync(
     masterQcReceiptPath,
