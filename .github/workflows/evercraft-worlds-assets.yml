@@ -33,5 +33,7 @@ jobs:
           node-version: '22'
       - name: Syntax checks
         run: node --check public/worlds/owned-glb.mjs && node --check scripts/inspect-owned-worlds-glb.mjs && node --check tests/worlds-owned-glb.test.mjs
+      - name: Print committed binary digest for provenance reconciliation
+        run: sha256sum public/worlds/assets/mossmere-weathered-stone.glb
       - name: Rights, mesh, GLB and material contract tests
         run: node --test tests/worlds-owned-glb.test.mjs tests/worlds-owned-scene-asset.test.mjs
