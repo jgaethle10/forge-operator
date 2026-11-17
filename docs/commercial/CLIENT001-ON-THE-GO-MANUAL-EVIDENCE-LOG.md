@@ -12,7 +12,7 @@ Until a first-party measurement route has the client's approval, Evercraft docum
 | C001-A01 | On The Go English commercial delivered and shared; founder provided Messenger/Facebook screenshots | Creative delivered and public distribution occurred | Customer leads or revenue |
 | C001-A02 | V41 Spanish-language commercial shared with Juan; screenshot shows thanks and positive reaction | Client received additional creative and responded positively | Spanish campaign results or new sales |
 | C001-A03 | Interactive English/Spanish client review linked at https://jgaethle10.github.io/forge-operator/clients/on-the-go/review/ ; founder's message screenshot | Client has a working site preview to review | Approved customer launch or traffic |
-| C001-A04 | Juan replied “Looks amazing bro” and “Good flow easy to understand,” screenshot provided 2026-11-16 | Client approval of general design usability | Approval of prices, promotions, booking operation, or revenue impact |
+| C001-A04 | Founder reports positive usability feedback from Juan privately (do not reproduce private messages in this public repository) | Client approval of general design usability | Approval of prices, promotions, booking operation, or revenue impact |
 
 **Status as of this note:** On The Go customer inquiries specifically caused by Evercraft = **unknown**; paid services from Evercraft marketing = **unknown**; revenue from referrals = **unknown**; total business revenue growth = **unknown**. Never replace “unknown” with 0.
 
@@ -29,7 +29,7 @@ Until a first-party measurement route has the client's approval, Evercraft docum
 
 | When | Channel / asset | Action | Evidence reference | Outcome type | Observed outcome | Proof status |
 | --- | --- | --- | --- | --- | --- | --- |
-| 2026-11-16 (reported) | Messenger · On The Go review link | Juan reviewed bilingual preview | Screenshot shared by founder in chat | Client feedback | “Looks amazing bro”; “Good flow easy to understand” | Reported, visual evidence |
+| 2026-11-16 (reported) | Messenger · On The Go review link | Juan reviewed bilingual preview | Screenshot shared by founder in chat | Client feedback | Positive review of design clarity (private correspondence) | Reported, visual evidence |
 | Pending | Evercraft channels | Next approved promotion | TBD | Distribution | Unknown | Not started |
 | Pending | Customer contact | Referral/booking signal | TBD | Inquiry / booking | Unknown | Not reported |
 | Pending | Juan optional follow-up | Service completed and paid | TBD | Paid outcome | Unknown | Not reported |
