@@ -42,6 +42,7 @@ jobs:
           node --check integrations/ai-evaluation-lab/eo001-held-cgroup-kill-alternative.mjs
           node --check integrations/ai-evaluation-lab/eo001-cgroup-kill-readonly-capability.mjs
           node --check integrations/ai-evaluation-lab/eo001-held-cgroup-kill-survey-join.mjs
+          node --check integrations/ai-evaluation-lab/eo001-lab-interop-reproducer.mjs
           node --check integrations/ai-evaluation-lab/eo001-one-use-stop-ledger.mjs
           node --check integrations/ai-evaluation-lab/eo001-private-evidence-vault.mjs
           node --check integrations/ai-evaluation-lab/eo001-process-group-escape-negative.mjs
@@ -75,6 +76,19 @@ jobs:
         run: node --test integrations/ai-evaluation-lab/eo001-cgroup-kill-readonly-capability.test.mjs
       - name: Refuse mismatched source, boot and cgroup identity across two read-only review views
         run: node --test integrations/ai-evaluation-lab/eo001-held-cgroup-kill-survey-join.test.mjs
+      - name: Reproduce the independent Lab 15-vector contract and generate sanitized review JSON
+        run: |
+          node --test integrations/ai-evaluation-lab/eo001-lab-interop-reproducer.test.mjs
+          mkdir -p /tmp/eo001-public-review
+          node integrations/ai-evaluation-lab/eo001-lab-interop-reproducer.mjs > /tmp/eo001-public-review/interop.json
+          node -e "const fs=require('fs'); const r=JSON.parse(fs.readFileSync('/tmp/eo001-public-review/interop.json')); if(r.passed_count!==15||r.failure_count!==0||r.kernel_stop_attempted!==false||r.physical_experiment_authorized!==false)process.exit(2)"
+      - name: Publish source-identified synthetic Lab interop report for external review
+        uses: actions/upload-artifact@v4
+        with:
+          name: eo001-lab-interop-${{ github.sha }}
+          path: /tmp/eo001-public-review/interop.json
+          retention-days: 14
+          if-no-files-found: error
       - name: Verify local fsynced one-use permit ledger and replay refusals
         run: node --test integrations/ai-evaluation-lab/eo001-one-use-stop-ledger.test.mjs
       - name: Audit missing, reordered and tampered private stop receipts without running systemd
