@@ -4,8 +4,8 @@ import vm from 'node:vm';
 import {test} from 'node:test';
 
 const html=fs.readFileSync('public/clients/on-the-go/review/index.html','utf8');
-test('V2 authentic client media and brand review gates',()=>{
- assert.match(html,/<title>On The Go Mobile Quick Lube \| Client Preview V2<\/title>/);
+test('Client001 authentic media and brand review gates',()=>{
+ assert.match(html,/<title>On The Go Mobile Quick Lube \| Client Preview V3<\/title>/);
  assert.match(html,/noindex,nofollow,noarchive/);
  assert.match(html,/--navy:#0b2342/);
  assert.match(html,/--green:#3bd275/);
@@ -22,6 +22,10 @@ test('V2 authentic client media and brand review gates',()=>{
  assert.doesNotMatch(html,/\bfetch\s*\(|\bXMLHttpRequest\b|\bnavigator\.sendBeacon\b/);
  assert.doesNotMatch(html,/gtag\(|facebook\.com\/tr\//);
  assert.doesNotMatch(html,/beacon|refCode|EC-DIRECT-001|How optional referral tracking|Código de referencia/i,'customer page must not show internal tracking');
+ assert.equal((html.match(/data-service="/g)||[]).length,8,'all eight published services must be selectable');
+ for(const price of ['$74.99','$99.99','$120.99','$35.99','$49.99','$70.00']) assert.ok(html.includes(price),'missing price '+price);
+ assert.match(html,/Monday–Friday · 9 AM–5 PM/);
+ assert.match(html,/Customer-supplied oil &amp; filter change|Customer-supplied oil & filter change/);
 });
 test('English and Spanish selection prepares customer-authored email, no tracking',()=>{
  const src=html.match(/<script>([\s\S]*?)<\/script>/)?.[1];assert.ok(src);
