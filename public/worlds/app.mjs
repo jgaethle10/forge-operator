@@ -4,6 +4,7 @@ import {QUALITY_KEY,validQualityMode,modeScale,tuneQuality,DEFAULT_QUALITY} from
 import {PORTAL,portalEffect} from './portal-visual.mjs';
 import {SKY_VERTEX_SHADER,SKY_FRAGMENT_SHADER,skyModeIndex} from './sky-atmosphere.mjs';
 import {makeLandscapeGeometry,makeGrassTuftGeometry,makeGrassPatches} from './scenic-landscape.mjs';
+import {loadOwnedSceneMesh} from './owned-asset-client.mjs';
 import {decodeSharedScene,sharedSceneUrl} from './share-scene.mjs';
 import {CLOUD_KEY,validateOwner,vaultAvailable,publishWorld,unpublishWorld,fetchPublishedWorld,publishedWorldUrl} from './cloud-client.mjs';
 const $=id=>document.getElementById(id), canvas=$('world');
@@ -60,7 +61,20 @@ function sphere(lat=12,lon=18){const p=[],n=[];for(let a=0;a<lat;a++)for(let b=0
 function cylinder(seg=22){const p=[],n=[];for(let i=0;i<seg;i++){const a=i*2*Math.PI/seg,b=(i+1)*2*Math.PI/seg;const aa=[Math.cos(a)*.5,Math.sin(a)*.5],bb=[Math.cos(b)*.5,Math.sin(b)*.5];for(const [t,vs]of [[0,[[aa[0],-.5,aa[1]],[bb[0],-.5,bb[1]],[bb[0],.5,bb[1]],[aa[0],.5,aa[1]]]],[1,[[0,.5,0],[aa[0],.5,aa[1]],[bb[0],.5,bb[1]]]],[2,[[0,-.5,0],[bb[0],-.5,bb[1]],[aa[0],-.5,aa[1]]]]]){const ids=vs.length===4?[0,1,2,0,2,3]:[0,1,2];for(const k of ids){const v=vs[k];p.push(...v);n.push(...(t===1?[0,1,0]:t===2?[0,-1,0]:[v[0]*2,0,v[2]*2]));}}}return mesh(p,n);}
 function ring(){const p=[],n=[];const rings=38,sides=8,R=.5,r=.068;for(let i=0;i<rings;i++)for(let j=0;j<sides;j++){const at=(a,b)=>{const theta=a*2*Math.PI/rings,phi=b*2*Math.PI/sides;return [(R+r*Math.cos(phi))*Math.cos(theta),(R+r*Math.cos(phi))*Math.sin(theta),r*Math.sin(phi)];};const verts=[at(i,j),at(i+1,j),at(i+1,j+1),at(i,j+1)];for(const k of [0,1,2,0,2,3]){p.push(...verts[k]);n.push(verts[k][0],verts[k][1],verts[k][2]);}}return mesh(p,n);}
 const terrainMesh=makeLandscapeGeometry(),grassMesh=makeGrassTuftGeometry();
-const meshes={cube:cube(),sphere:sphere(),sphereStatic:sphere(9,14),cylinder:cylinder(),cylinderStatic:cylinder(14),ring:ring(),landscape:mesh(terrainMesh.positions,terrainMesh.normals),grass:mesh(grassMesh.positions,grassMesh.normals)};
+// The first original owned GLB is rights/digest checked before WebGL upload.
+// Fail closed to the original primitive pond stones on network or asset errors.
+const verifiedStone=await loadOwnedSceneMesh('mossmere-weathered-stone').catch(()=>null);
+const stoneMesh=verifiedStone?mesh(verifiedStone.positions,verifiedStone.normals):sphere(9,14);
+const stoneColor=verifiedStone?'#'+[verifiedStone.material.baseColor.r,verifiedStone.material.baseColor.g,verifiedStone.material.baseColor.b]
+ .map(v=>Math.round(v*255).toString(16).padStart(2,'0')).join(''):'#b4b1a5';
+window.__worldsAssetTelemetry={
+ asset_id:'mossmere-original-weathered-stone',
+ digest_verified:verifiedStone?.rights?.digest_verified===true,
+ rights_attested:verifiedStone?.rights?.review==='approved_for_worlds',
+ triangles:verifiedStone?.triangleCount||0,
+ fallback_used:!verifiedStone
+};
+const meshes={cube:cube(),sphere:sphere(),sphereStatic:sphere(9,14),cylinder:cylinder(),cylinderStatic:cylinder(14),ring:ring(),landscape:mesh(terrainMesh.positions,terrainMesh.normals),grass:mesh(grassMesh.positions,grassMesh.normals),stone:stoneMesh};
 const col=x=>{const z=x.replace('#','');return [0,2,4].map(i=>parseInt(z.slice(i,i+2),16)/255);};
 const M=(x,y,z,sx,sy,sz,rot=0)=>{const c=Math.cos(rot),s=Math.sin(rot);return new Float32Array([c*sx,0,-s*sx,0,0,sy,0,0,s*sz,0,c*sz,0,x,y,z,1]);};
 const perspective=(fov,aspect,near,far)=>{const f=1/Math.tan(fov/2),o=1/(near-far);return new Float32Array([f/aspect,0,0,0,0,f,0,0,0,0,(far+near)*o,-1,0,0,2*far*near*o,0]);};
@@ -106,7 +120,13 @@ box(-.9,.55,-4.7,1.65,.12,.8,'#bc977a');box(-.9,1.25,-4.82,1.6,1.18,.8,'#72b4c1'
 box(-.9,1.8,-4.82,1.7,.1,.87,'#4e726b');box(-.9,.95,-4.82,1.52,.1,.75,'#9bd2bb',0,.5);
 for(let i=0;i<8;i++){ball(-1.55+random()*1.25,1.02+random()*.12,-5.02+random()*.5,.18,.17,.13,i%2?'#668a7a':'#b8bd96');}
 // Pond, riparian rocks, lily pads.
-tube(7,-.11,-5,8.2,.38,6.8,'#6b8374');tube(7,.07,-5,7.8,.13,6.4,'#589fa4');for(let j=0;j<20;j++){const a=j/20*Math.PI*2,r=1+(j%3)*.1;ball(7+Math.cos(a)*4.02*r,.13,-5+Math.sin(a)*3.37*r,.64,.34,.5,j%2?'#bdbaa4':'#b4b1a5');}
+tube(7,-.11,-5,8.2,.38,6.8,'#6b8374');tube(7,.07,-5,7.8,.13,6.4,'#589fa4');
+for(let j=0;j<20;j++){
+ const a=j/20*Math.PI*2,r=1+(j%3)*.1;
+ staticDraw.push(colored('stone',7+Math.cos(a)*4.02*r,.15,-5+Math.sin(a)*3.37*r,
+  .64+(j%3)*.075,.58+(j%2)*.085,.78+(j%4)*.045,
+  stoneColor,a*.55));
+}
 for(let i=0;i<12;i++){const x=5+random()*4.2,z=-6.9+random()*3.4;tube(x,.16,z,.38,.03,.35,'#7aaf87');}
 // Ferny trees at the edges.
 function tree(x,z,s=1){

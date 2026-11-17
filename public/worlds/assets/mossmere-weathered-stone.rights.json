@@ -1,0 +1,9 @@
+{
+  "schema": "evercraft.worlds.asset-rights.v1",
+  "id": "mossmere-original-weathered-stone",
+  "sha256": "4ba9870f7f1c376b205cb5d1f697ba1440266c147116a6b572b3a78b21c59694",
+  "license": "Evercraft-original",
+  "creator": "Evercraft Worlds Studio",
+  "source": "Original deterministic sculpted stone geometry authored for Evercraft Worlds, November 2026; no third-party textures or models",
+  "review": "approved_for_worlds"
+}
