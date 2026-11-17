@@ -228,8 +228,10 @@ test('SIGKILL after broker launch leaves a recoverable lease and no orphan after
       const child=spawn(process.execPath,[
         '--input-type=module','-e',childSource,
       ],{
+        timeout:10_000,
+        killSignal:'SIGTERM',
         env:{
-          ...process.env,
+          PATH:process.env.PATH||'/usr/bin:/bin',
           SHADOW_JOURNAL:jr,
           SHADOW_ORIGIN:origin,
           SHADOW_LEASE_ID:granted.lease_id,
