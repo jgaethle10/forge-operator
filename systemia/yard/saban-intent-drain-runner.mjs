@@ -5,6 +5,7 @@ import {fileURLToPath} from 'node:url';
 import {YardOperator} from './operator.mjs';
 import {writeSafeNodeSeedInventory} from '../saban/nodeseed-inventory-ingest.mjs';
 import {dispatchAmbientJobsOnce} from '../saban/ambient-job-dispatcher.mjs';
+import {runClassroomAutoProbeCycle} from '../classroom/node002-auto-probe-cycle.mjs';
 
 const MODULE_FILE=fileURLToPath(import.meta.url);
 function arg(name,fallback=''){
@@ -24,6 +25,9 @@ export async function runYardSabanIntentDrain({
   brokerLoopbackOrigin='',
   yardOperator=null,
   dispatchCycle=dispatchAmbientJobsOnce,
+  classroomProbeEnabled=false,
+  classroomProbeOperation='readiness',
+  classroomProbeCycle=runClassroomAutoProbeCycle,
   now=new Date(),
 }={}){
   if(!yardStateDir)throw new Error('yard_state_dir_required');
@@ -94,6 +98,21 @@ export async function runYardSabanIntentDrain({
     allowLoopbackProof:allowLoopbackProof===true,
     now,
   });
+  // Optional, separate narrow lane. Never affect the existing Saban results or
+  // grant general remote execution. Disabled by default.
+  let classroomProbe=null;
+  if(classroomProbeEnabled===true){
+    try{
+      classroomProbe=await classroomProbeCycle({
+        enabled:true,operation:classroomProbeOperation,
+        yard,brokerDeploymentId,verifiedBrokerRoute:verifiedRoute,
+        allowLoopbackProof:allowLoopbackProof===true,
+        stateDir:sabanRoot,now,
+      });
+    }catch{
+      classroomProbe={state:'held',reason:'classroom_cycle_failed',dispatch_attempted:false};
+    }
+  }
   const receipt={
     ...drained,
     schema:'evercraft.yard.saban-intent-drain.v1',
@@ -102,6 +121,7 @@ export async function runYardSabanIntentDrain({
     safe_inventory_receipt_hash:safeInventory.receipt_hash,
     unified_dispatch_enabled:dispatchQueued===true,
     content_hash_only:dispatchQueued===true,
+    classroom_probe:classroomProbe,
     dispatch_cycle:dispatched?{
       considered_jobs:dispatched.considered_jobs,
       handoff_wait:dispatched.handoff_wait,
@@ -132,6 +152,8 @@ async function main(){
     maxJobs:Number(arg('--max-jobs','4')),
     timeoutMs:Number(arg('--timeout-ms','10000')),
     dispatchQueued:process.argv.includes('--dispatch-content-hash-only'),
+    classroomProbeEnabled:process.env.EVERCRAFT_CLASSROOM_SYSTEMIA_AUTO_PROBE==='true',
+    classroomProbeOperation:process.env.EVERCRAFT_CLASSROOM_SYSTEMIA_OPERATION||'readiness',
     allowLoopbackProof:process.argv.includes('--allow-loopback-proof'),
     brokerLoopbackOrigin:arg('--broker-loopback-origin',''),
     now:new Date(),
