@@ -63,13 +63,27 @@ export function loadPublicProductDiscovery({
       entry.authority ? 'Published authority: '+text(entry.authority,470)+'.' : '',
       'Source listing only; production availability, private data access, paid work, booking, rewards and checkout are not verified by this route.',
     ].filter(Boolean).join(' ');
+    // A small set of real, public continuation doors is known independently
+    // from the product listing. These links provide navigation only; they do
+    // not create a job, estimate, referral, reward, payment, or account.
+    const continuation=key==='evercraft-front-door'
+      ? {
+          url:SOURCE_ROOT+'/help/',
+          label:'Browse practical Evercraft and public-resource next steps',
+        }
+      :key==='evercraft-property-services'
+      ? {
+          url:SOURCE_ROOT+'/eps/',
+          label:'Open the owned EPS email-first quote page (customer must send the email)',
+        }
+      :null;
     products.push(discoveryRecord({
       id:'product:'+key,
       name,
       description,
       keywords:[name,...(entry.pain_phrases||[])],
-      website:SOURCE_ROOT+'/chum/products/'+encodeURIComponent(key)+'/',
-      label:name+' product discovery (not a verified live service)',
+      website:continuation?.url||SOURCE_ROOT+'/chum/products/'+encodeURIComponent(key)+'/',
+      label:continuation?.label||name+' product discovery (not a verified live service)',
     }));
   }
   if(includeFirstPartyDoors){
