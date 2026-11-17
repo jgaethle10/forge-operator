@@ -57,6 +57,26 @@ test('actual changed primary outcome text is logged with both source snapshots',
  assert.doesNotMatch(html,/<strong>Different outcome measure<\/strong>/);
  assert.match(renderRegistryHistoryMarkdown(next.report),/historical versions/);
 });
+test('a third unchanged capture retains the documented prior field change',()=>{
+ const first=updateRegistryObservationLedger({registry:registry(raw()),now:t1});
+ const second=updateRegistryObservationLedger({
+  registry:registry(raw('NCT12345678','New endpoint')),
+  previous:first.state,now:t2
+ });
+ const third=updateRegistryObservationLedger({
+  registry:registry(raw('NCT12345678','New endpoint')),
+  previous:second.state,now:new Date('2026-11-17T00:00:00Z')
+ });
+ assert.equal(third.report.counts.unchanged_observations,1);
+ assert.equal(third.report.counts.observed_deltas,0);
+ assert.equal(third.state.records[0].observation_count,3);
+ assert.equal(third.state.records[0].observed_changes.length,1);
+ assert.equal(third.state.records[0].observed_changes[0].differences[0].from[0].measure,'Primary outcome time score');
+ assert.equal(third.state.records[0].observed_changes[0].differences[0].to[0].measure,'New endpoint');
+ assert.equal(third.state.records[0].first_observed_at,t1.toISOString());
+ assert.equal(third.report.counts.verified_outcome_switches,0);
+});
+
 test('source outages, absent IDs and missing outcomes do not remove or change prior evidence',()=>{
  const initial=updateRegistryObservationLedger({registry:registry(raw()),now:t1});
  const error=updateRegistryObservationLedger({registry:null,previous:initial.state,now:t2});
