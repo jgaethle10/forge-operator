@@ -169,11 +169,16 @@ if len(clips)==len(segments):
 else:
     report["workprint"]={"status":"blocked","reason":"Required downloaded sources or clip renders unavailable"}
 (OUT/"assembly.json").write_text(json.dumps(assembly,indent=2))
-# Do not upload entire sourced originals as GH artifacts; originals remain
-# accessible at the cited Wikimedia source pages.
+# Keep compressed low-resolution Wikimedia transfers for this internal
+# source review ONLY. This is not publication clearance and not a true
+# original camera negative or unmodified archival master.
+# GitHub artifacts expire after the workflow retention period.
 for item in SOURCES:
     p=OUT/("source_"+item["id"]+".webm")
-    if p.exists():p.unlink()
+    if p.exists():
+        item.setdefault("working_file",p.name)
+        item["review_transfer_bytes"]=p.stat().st_size
+report["editorial_transfer_notice"]="Internal low-resolution historical film transfers; do not publish without rights and provenance QA."
 with open(OUT/"report.json","w") as h:json.dump(report,h,indent=2)
 
 print(json.dumps({x["id"]:x["status"] for x in report["sources"]}))
