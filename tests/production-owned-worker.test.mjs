@@ -108,7 +108,7 @@ test('tampered work queue cannot silently execute or publish',async()=>fixture(a
  const plan=JSON.parse(fs.readFileSync(file,'utf8'));
  plan.queue.jobs[Object.keys(plan.queue.jobs)[0]].item.release_authorized=true;
  fs.writeFileSync(file,JSON.stringify(plan));
- await assert.rejects(()=>runOwnedParallelSourceWave({privateDir:root}),/job mutation refused|Untrusted private/);
+ await assert.rejects(()=>runOwnedParallelSourceWave({privateDir:root}),/job mutation refused|Untrusted private|Project authorization changed/);
 }));
 
 test('private source audit rejects path traversal and symlinked source',async()=>fixture(async({root})=>{
