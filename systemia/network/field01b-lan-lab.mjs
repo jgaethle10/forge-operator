@@ -84,8 +84,9 @@ function ensurePrivateState(dir) {
   const journal = path.join(dir, 'replay-ledger.jsonl');
   if (fs.existsSync(journal)) {
     const file = fs.lstatSync(journal);
-    if (!file.isFile() || file.isSymbolicLink() || (file.mode & 0o077) !== 0 ||
-        (typeof process.getuid === 'function' && file.uid !== process.getuid())) fail('field_journal_not_private');
+    if (!file.isFile() || file.isSymbolicLink() || file.size > 2 * 1024 * 1024 ||
+        (file.mode & 0o077) !== 0 ||
+        (typeof process.getuid === 'function' && file.uid !== process.getuid())) fail('field_journal_not_private_or_unbounded');
   }
 }
 
@@ -155,6 +156,7 @@ export async function startField01BLanReceiver({
   if (!Number.isInteger(trialMs) || trialMs < 1000 || trialMs > MAX_TRIAL_MS) fail('field_trial_duration_invalid');
   ensurePrivateState(stateDir);
   const replay = new DurableReplayLedger({ root: stateDir });
+  let acceptedThisTrial = 0;
   const server = http.createServer(async (req, res) => {
     if (req.method === 'GET' && req.url === '/health') {
       writeJson(res, 200, { schema: 'evercraft.network.field01b.lab-health.v1',
@@ -163,6 +165,10 @@ export async function startField01BLanReceiver({
     }
     if (req.url !== ENDPOINT || req.method !== 'POST') {
       writeJson(res, 404, { status: 'NO_ROUTE' });
+      return;
+    }
+    if (acceptedThisTrial >= 64) {
+      writeJson(res, 429, { status: 'HELD', reason: 'field_trial_packet_limit' });
       return;
     }
     if (!/^application\/json(?:\s*;|$)/i.test(req.headers['content-type'] || '')) {
@@ -187,6 +193,7 @@ export async function startField01BLanReceiver({
         message_id: envelope.message_id, mission_id: 'field01b-synthetic',
         kind: envelope.kind, irreversible: false, execution_receipt_hash: envelopeHash
       });
+      acceptedThisTrial += 1;
       const ack = {
         schema: ACK_SCHEMA, sender_id: senderNodeId, receiver_id: identity.node_id,
         message_id: envelope.message_id, envelope_sha256: envelopeHash,
@@ -283,8 +290,20 @@ export async function deliverField01BQueued({
   ensurePrivateState(courierRoot);
   const origin = checkField01BTarget(target, { operatorConsent });
   const courier = new FileCourier({ root: courierRoot });
+  const pendingFiles = courier.list();
+  if (pendingFiles.length > 20) fail('field_outbox_exceeds_bounded_trial');
+  // FileCourier's general-purpose import reads each file in full. Before invoking
+  // it for a LAN trial, reject symlinks, oversized files and shared state.
+  for (const fileName of pendingFiles) {
+    const file = fs.lstatSync(path.join(courierRoot, fileName));
+    if (!file.isFile() || file.isSymbolicLink() || file.nlink !== 1 ||
+        file.size === 0 || file.size > MAX_BODY || (file.mode & 0o077) !== 0 ||
+        (typeof process.getuid === 'function' && file.uid !== process.getuid())) {
+      fail('field_outbox_member_unsafe_or_unbounded');
+    }
+  }
   const results = [];
-  for (const entry of courier.importEnvelopes().slice(0, 20)) {
+  for (const entry of courier.importEnvelopes()) {
     const file = entry.file_name;
     if (entry.status !== 'READY') {
       results.push({ file, status: 'HELD_' + entry.status });
