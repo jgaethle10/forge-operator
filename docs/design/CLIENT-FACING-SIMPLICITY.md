@@ -27,3 +27,7 @@ Founder direction: October 28, 2026.
 Before a customer-facing release, ask: **Could a tired person understand what to do next without reading how our systems work?**
 
 If not, simplify it.
+
+## Cross-device release enforcement
+
+The [Customer Experience & Public Release Standard (CX-001)](CUSTOMER-EXPERIENCE-RELEASE-STANDARD.md) implements this simplicity principle as device-specific evidence and release blockers. In particular, a desktop service visitor must have a real non-phone inquiry option; an email CTA requires a visible/copyable address if a mail client is not configured. Every offered language and device breakpoint must be tested as a customer task. Client review feedback is not permission to publish or promote. Static checks alone do not prove rendered usability.
