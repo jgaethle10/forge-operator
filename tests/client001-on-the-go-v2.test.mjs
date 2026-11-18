@@ -6,7 +6,7 @@ import {test} from 'node:test';
 const html=fs.readFileSync('public/clients/on-the-go/review/index.html','utf8');
 
 test('Client 001 V4 remains branded, private-review only and first-party',()=>{
- assert.match(html,/<title>On The Go Mobile Quick Lube \| Client Preview V4<\/title>/);
+ assert.match(html,/<title>On The Go Mobile Quick Lube \| Client Preview V4.1<\/title>/);
  assert.match(html,/noindex,nofollow,noarchive/);
  assert.match(html,/--navy:#0b2342/);
  assert.match(html,/--green:#3bd275/);
@@ -26,6 +26,12 @@ test('Client 001 V4 remains branded, private-review only and first-party',()=>{
  assert.doesNotMatch(html,/<script[^>]*src\s*=/i);
  assert.doesNotMatch(html,/\bfetch\s*\(|\bXMLHttpRequest\b|\bnavigator\.sendBeacon\b/);
  assert.doesNotMatch(html,/gtag\(|facebook\.com\/tr\/|refCode|beaconTitle|EC-DIRECT-001/i);
+ assert.match(html,/<a class="nav-phone" href="#contact" aria-label="Request service from On The Go"/);
+ assert.match(html,/<a class="btn btn-green" href="#contact" data-i18n="callService"/);
+ assert.match(html,/id="copyEmail"/);
+ assert.match(html,/Request service by email/);
+ assert.match(html,/Solicitar servicio por correo/);
+ assert.doesNotMatch(html,/Call Juan|Llamar a Juan|Ask Juan about/);
 });
 
 test('client-side package match is correct, bilingual, email handoff has no technical tags',()=>{
