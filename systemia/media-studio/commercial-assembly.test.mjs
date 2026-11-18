@@ -69,8 +69,6 @@ test('creates editable video, voice, music, sound and captions tracks from actua
   assert.deepEqual(plan.deliveryRequest.project.tracks.map(x=>x.kind),
     ['video','voice','music','sfx','captions']);
   assert.equal(plan.deliveryRequest.project.tracks[0].clips.length,3);
-  assert.deepEqual(plan.deliveryRequest.project.tracks[0].clips.map(x=>x.editorialPhotoMotion),
-    ['slow-push','slow-pull','slow-push']);
   assert.equal(plan.deliveryRequest.project.tracks[1].clips.length,3);
   assert.equal(plan.deliveryRequest.project.tracks[3].clips[0].startSec,1.5);
   assert.equal(plan.deliveryRequest.project.audioMaster.targetLufs,-16);
@@ -166,6 +164,8 @@ test('photo-led customer brief compiles truthful editorial-still timeline',t=>{
   assert.equal(plan.deliveryRequest.project.tracks[0].name,'Approved customer photographs');
   assert.equal(plan.deliveryRequest.project.assets.filter(x=>x.kind==='image').length,3);
   assert.equal(plan.deliveryRequest.project.tracks[0].clips.length,3);
+  assert.deepEqual(plan.deliveryRequest.project.tracks[0].clips.map(x=>x.editorialPhotoMotion),
+    ['slow-push','slow-pull','slow-push']);
 });
 test('photo-led commercial renders actual H264/AAC from image inputs with approved-audio fixtures', {timeout:180000},t=>{
   const {dir,input}=specimen(t);
