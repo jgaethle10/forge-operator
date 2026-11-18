@@ -1,0 +1,30 @@
+name: Network Saban Offline Resilience Tests
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/network/field-outage-lab.mjs'
+      - 'systemia/network/backfill-contact-lab.mjs'
+      - 'systemia/network/secure-envelope.mjs'
+      - 'systemia/network/transport-router.mjs'
+      - 'tests/network-field-outage-lab.test.mjs'
+      - 'tests/network-backfill-contact-lab.test.mjs'
+      - '.github/workflows/network-saban-offline-lab.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  offline-resilience:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run isolated offline network and contact-window tests
+        run: |
+          node --version
+          node --test tests/network-field-outage-lab.test.mjs tests/network-backfill-contact-lab.test.mjs
