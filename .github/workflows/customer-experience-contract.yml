@@ -1,0 +1,39 @@
+name: Customer Experience Source Release Contract
+on:
+  pull_request:
+    paths:
+      - docs/design/CUSTOMER-EXPERIENCE-RELEASE-STANDARD.md
+      - DESIGN.md
+      - docs/design/CLIENT-FACING-SIMPLICITY.md
+      - public/clients/**
+      - systemia/experience/client-experience-contract.mjs
+      - tests/client-experience-contract.test.mjs
+      - .github/workflows/customer-experience-contract.yml
+  push:
+    branches: [main, standards/customer-experience-release-contract-20261117]
+    paths:
+      - docs/design/CUSTOMER-EXPERIENCE-RELEASE-STANDARD.md
+      - DESIGN.md
+      - docs/design/CLIENT-FACING-SIMPLICITY.md
+      - public/clients/**
+      - systemia/experience/client-experience-contract.mjs
+      - tests/client-experience-contract.test.mjs
+      - .github/workflows/customer-experience-contract.yml
+permissions:
+  contents: read
+jobs:
+  static-release-gate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run Client 001 customer experience contract and negative regression fixtures
+        run: node --test tests/client-experience-contract.test.mjs
+      - name: Print bounded read-only source preflight
+        run: node systemia/experience/client-experience-contract.mjs
+      - name: State automated evidence limits
+        run: |
+          echo "SOURCE_CHECK_ONLY. Independent mobile, tablet, desktop browser receipts, exact live HTTPS and client/Passport approval are separate required gates."
