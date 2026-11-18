@@ -6,6 +6,7 @@ import os from 'node:os';
 import path from 'node:path';
 import net from 'node:net';
 import {fileURLToPath} from 'node:url';
+import {sealEnvelope} from '../systemia/network/secure-envelope.mjs';
 
 const tool=fileURLToPath(new URL('../systemia/network/field-outage-lab.mjs',import.meta.url));
 const run=(args,input='')=>{
@@ -36,6 +37,13 @@ test('two local processes: explicit trust, encrypted exchange, outage queue, res
     const received=run(['inbox','--id','beta','--state',b,'--key-file',key]);
     assert.equal(received.messages[0].message,'encrypted hello');
     assert.equal(run(['status','--state',a]).outbox,0);
+    const saved=JSON.parse(fs.readFileSync(path.join(b,'inbox',`${queue.message_id}.json`),'utf8'));
+    const duplicate=await fetch(`http://127.0.0.1:${p}/v1/envelope`,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(saved)});
+    assert.equal(duplicate.status,200);assert.equal((await duplicate.json()).duplicate,true);
+    const changed=sealEnvelope({key:fs.readFileSync(key),key_id:'offline-paired-lab',source:'alpha',destination:'beta',kind:'continuity.message',message_id:queue.message_id,payload:{message:'conflicting ciphertext'},irreversible:false});
+    const conflict=await fetch(`http://127.0.0.1:${p}/v1/envelope`,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(changed)});
+    assert.equal(conflict.status,409);
+    assert.equal(run(['inbox','--id','beta','--state',b,'--key-file',key]).messages[0].message,'encrypted hello');
 
     // Attacker who cannot authenticate the secure envelope is refused.
     const rejected=await fetch(`http://127.0.0.1:${p}/v1/envelope`,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({source:'intruder',destination:'beta',irreversible:false})});
@@ -52,6 +60,6 @@ test('two local processes: explicit trust, encrypted exchange, outage queue, res
     assert.equal(run(['status','--state',a]).outbox,0);
     const sim=run(['simulate']);assert.equal(sim.simulation_only,true);
     assert.equal(sim.admissible.some(x=>x.id==='sim-stranger'),false);
-    console.log(JSON.stringify({schema:'evercraft.network.offline-loopback-test.v1',result:'PASS',two_node_processes:true,distinct_physical_devices:false,initial_delivery:1,queued_during_loss:1,recovered_delivery:1,unauthorized_sender_rejected:true,unconsented_capacity_rejected:true,upstream_access_required:false}));
+    console.log(JSON.stringify({schema:'evercraft.network.offline-loopback-test.v1',result:'PASS',two_node_processes:true,distinct_physical_devices:false,initial_delivery:1,queued_during_loss:1,recovered_delivery:1,unauthorized_sender_rejected:true,conflicting_replay_rejected:true,duplicate_idempotent:true,unconsented_capacity_rejected:true,upstream_access_required:false}));
   }finally{await stop();fs.rmSync(dir,{force:true,recursive:true});}
 });
