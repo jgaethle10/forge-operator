@@ -2,6 +2,8 @@
 import argparse
 import json
 import sqlite3
+from decimal import Decimal, InvalidOperation
+from urllib.parse import urlsplit
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
@@ -10,7 +12,7 @@ STAGES = {"New", "Researching", "Draft ready", "Sent", "Replied", "Negotiating",
 KINDS = {"Lead", "Paid work", "Product offer"}
 FIELDS = """business buyer role contact pain source verified assumption signal product
 offer subject draft status reply objection followup next_action outcome kind amount
-permission relevance external_id""".split()
+permission relevance external_id accepted checkout paid_reference paid_amount""".split()
 
 
 def normalize(data):
@@ -26,6 +28,19 @@ def normalize(data):
         raise ValueError("Business and pain point are required.")
     if record["status"] not in STAGES or record["kind"] not in KINDS:
         raise ValueError("Choose a valid stage and opportunity type.")
+    if record["checkout"]:
+        url = urlsplit(record["checkout"])
+        if url.scheme != "https" or not url.hostname or url.username or url.password:
+            raise ValueError("Enter an HTTPS checkout URL without embedded credentials.")
+    if bool(record["paid_reference"]) != bool(record["paid_amount"]):
+        raise ValueError("Payment requires both a provider receipt reference and the received amount.")
+    if record["paid_amount"]:
+        try:
+            amount = Decimal(record["paid_amount"])
+            if not amount.is_finite() or amount <= 0 or amount.as_tuple().exponent < -2:
+                raise ValueError("Enter a positive received USD amount with up to two decimal places.")
+        except InvalidOperation:
+            raise ValueError("Invalid received amount.") from None
     return record
 
 
@@ -57,7 +72,8 @@ def main():
             count = 0
             for entry in records:
                 record = normalize({**entry, "status": "New", "permission": "", "verified": "",
-                                    "kind": entry.get("kind", "Lead")})
+                                    "kind": entry.get("kind", "Lead"), "accepted": "", "checkout": "",
+                                    "paid_reference": "", "paid_amount": ""})
                 if not record["external_id"] or not record["source"]:
                     raise ValueError("Intake requires external_id and source.")
                 count += db.execute("INSERT OR IGNORE INTO opportunities(external_id, body) VALUES (?, ?)",
