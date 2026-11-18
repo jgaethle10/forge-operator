@@ -28,10 +28,6 @@ export function auditClientExperienceHtml(html,profile=CLIENT001){
     id,pass:Boolean(pass),scope:kind,explanation
   });
   const q=(needle)=>html.includes(needle);
-  const cta=(name,href)=>{
-    const re=new RegExp('<a\\s+[^>]*class="[^"]*'+name+'[^"]*"[^>]*href="'+href.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'"','i');
-    return re.test(html);
-  };
   const nav=html.match(/<a\s+class="nav-phone"\s+href="([^"]+)"[^>]*>/)?.[1]||'';
   const hero=html.match(/<div class="actions">([\s\S]*?)<\/div>/)?.[1]||'';
   const sectionStart=html.indexOf('<div class="contact-card">');
