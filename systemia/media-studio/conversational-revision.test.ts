@@ -86,6 +86,14 @@ test('voice-only wording cannot accidentally regenerate a selected picture clip'
   assert.equal(proposed.audioReviewNeeds.length,1);
 });
 
+test('changing narration in the ending must not regenerate the picture by accident',()=>{
+  const p=project();
+  const proposal=proposeConversationalRevision(p,req(p,'Change the voice in the ending to sound more natural.'));
+  assert.equal(proposal.status,'PROPOSED');
+  assert.equal(proposal.visualCandidatePlan,null);
+  assert.equal(proposal.audioReviewNeeds.length,1);
+});
+
 test('global voice edit cannot silently rewrite preserved first ten seconds',()=>{
   const p=project();
   const proposal=proposeConversationalRevision(p,req(p,'Keep the first 10 seconds, change the voice and make the ending more exciting.'));
