@@ -16,7 +16,7 @@ concurrency:
 
 jobs:
   check:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04 # Pin supported Playwright Chromium host; ubuntu-latest moved to 26.04
     timeout-minutes: 15
 
     steps:
@@ -53,6 +53,9 @@ jobs:
 
       - name: Typecheck and build
         run: npm run check
+
+      - name: Verify Penguin Revenue Desk gates
+        run: node --test tests/penguin-revenue-desk.test.mjs tests/penguin-revenue-scan.test.mjs tests/penguin-revenue-queue.test.mjs
 
       - name: Verify CHUM crawler radar
         run: node tests/chum-crawler-radar.test.mjs
