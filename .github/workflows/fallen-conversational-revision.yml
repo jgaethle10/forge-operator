@@ -4,6 +4,8 @@ on:
     paths:
       - 'systemia/media-studio/conversational-revision.ts'
       - 'systemia/media-studio/conversational-revision.test.ts'
+      - 'systemia/media-studio/timeline-version-vault.mjs'
+      - 'systemia/media-studio/timeline-version-vault.test.mjs'
       - 'systemia/media-studio/studio-agent.ts'
       - 'systemia/media-studio/studio-agent.test.ts'
       - 'systemia/media-studio/timeline.ts'
@@ -14,6 +16,8 @@ on:
     paths:
       - 'systemia/media-studio/conversational-revision.ts'
       - 'systemia/media-studio/conversational-revision.test.ts'
+      - 'systemia/media-studio/timeline-version-vault.mjs'
+      - 'systemia/media-studio/timeline-version-vault.test.mjs'
       - '.github/workflows/fallen-conversational-revision.yml'
   workflow_dispatch:
 permissions:
@@ -32,4 +36,4 @@ jobs:
       - name: Check source syntax and TypeScript contracts
         run: npm run lint
       - name: Exercise real timeline, agent and language-to-proposal boundaries
-        run: node --import tsx --test systemia/media-studio/timeline.test.ts systemia/media-studio/studio-agent.test.ts systemia/media-studio/conversational-revision.test.ts
+        run: node --import tsx --test systemia/media-studio/timeline.test.ts systemia/media-studio/studio-agent.test.ts systemia/media-studio/conversational-revision.test.ts systemia/media-studio/timeline-version-vault.test.mjs
