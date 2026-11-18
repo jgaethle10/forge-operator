@@ -16,7 +16,9 @@ concurrency:
 
 jobs:
   check:
-    runs-on: ubuntu-latest
+    # Playwright 1.58.2 Chromium is not supported on ubuntu-26.04 (current ubuntu-latest).
+    # Pin a supported runner until the owned browser QA runtime can be upgraded.
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
 
     steps:
