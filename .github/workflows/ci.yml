@@ -16,9 +16,8 @@ concurrency:
 
 jobs:
   check:
-    # Playwright 1.58.2 Chromium is not supported on ubuntu-26.04 (current ubuntu-latest).
-    # Pin a supported runner until the owned browser QA runtime can be upgraded.
-    runs-on: ubuntu-24.04
+    # Keep the current runner FFmpeg and align Playwright with Evercraft Browser Worker.
+    runs-on: ubuntu-latest
     timeout-minutes: 15
 
     steps:
@@ -104,7 +103,7 @@ jobs:
 
       - name: Prepare Chromium for EverMaps owned visual QA
         run: |
-          npm install --no-save --no-audit --no-fund playwright@1.58.2
+          npm install --no-save --no-audit --no-fund playwright@1.63.0
           npx playwright install --with-deps chromium
 
       - name: Verify EverMaps desktop, mobile and source-outage browser behavior
