@@ -16,6 +16,7 @@ concurrency:
 
 jobs:
   check:
+    # Keep the current runner FFmpeg and align Playwright with Evercraft Browser Worker.
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
@@ -102,7 +103,7 @@ jobs:
 
       - name: Prepare Chromium for EverMaps owned visual QA
         run: |
-          npm install --no-save --no-audit --no-fund playwright@1.58.2
+          npm install --no-save --no-audit --no-fund playwright@1.63.0
           npx playwright install --with-deps chromium
 
       - name: Verify EverMaps desktop, mobile and source-outage browser behavior
