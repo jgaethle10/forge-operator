@@ -26,4 +26,10 @@ test('both language choices and service inquiry remain with no tracking jargon',
  assert.match(html,/emailSubject:'Consulta de servicio On The Go'/);
  assert.doesNotMatch(html,/beaconTitle|beaconDesc|refCode|EC-DIRECT-001|emailRef|emailSource/);
  assert.doesNotMatch(html,/How optional referral tracking would work/);
+ const start=html.indexOf('<div class="contact-card">');
+ const card=html.slice(start,html.indexOf('</section>',start));
+ assert.ok(start>0&&card.indexOf('id="emailCta"')>=0&&card.indexOf('id="callCta"')>card.indexOf('id="emailCta"'),'desktop contact must put email before call');
+ assert.match(card,/id="copyEmail"/);
+ assert.match(card,/onthegomobileoilchange@outlook\.com/);
+ assert.match(html,/href="#contact" aria-label="Request service from On The Go"/);
 });
