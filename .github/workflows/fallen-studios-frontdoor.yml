@@ -6,6 +6,8 @@ on:
       - 'public/studio-brief-handoff.mjs'
       - 'public/commercial-studio/index.html'
       - 'tests/fallen-studios-one-prompt.test.mjs'
+      - 'systemia/media-studio/customer-director-handoff.mjs'
+      - 'systemia/media-studio/customer-director-handoff.test.mjs'
       - 'systemia/evercraft-web/browser-worker/verify-fallen-mobile.mjs'
       - 'tests/fallen-studios-frontdoor.test.mjs'
       - 'tests/fallen-studios-public-canary.test.mjs'
@@ -18,6 +20,8 @@ on:
       - 'public/studio-brief-handoff.mjs'
       - 'public/commercial-studio/index.html'
       - 'tests/fallen-studios-one-prompt.test.mjs'
+      - 'systemia/media-studio/customer-director-handoff.mjs'
+      - 'systemia/media-studio/customer-director-handoff.test.mjs'
       - 'systemia/evercraft-web/browser-worker/verify-fallen-mobile.mjs'
       - 'tests/fallen-studios-frontdoor.test.mjs'
       - 'tests/fallen-studios-public-canary.test.mjs'
@@ -35,7 +39,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - run: node --test tests/fallen-studios-frontdoor.test.mjs tests/fallen-studios-public-canary.test.mjs tests/fallen-studios-one-prompt.test.mjs
+      - run: node --test tests/fallen-studios-frontdoor.test.mjs tests/fallen-studios-public-canary.test.mjs tests/fallen-studios-one-prompt.test.mjs systemia/media-studio/customer-director-handoff.test.mjs
 
   responsive-browser:
     runs-on: ubuntu-latest
