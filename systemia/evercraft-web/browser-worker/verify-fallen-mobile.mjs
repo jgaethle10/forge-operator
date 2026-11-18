@@ -62,6 +62,24 @@ try{
    assert.ok(result.overflowMask.every(v=>!["hidden","clip"].includes(v)),"horizontal scroll masked instead of fixed");
    assert.deepEqual(errs,[],"browser JavaScript errors");
    if([320,390,430].includes(item.width))await page.screenshot({path:path.join(out,"fallen-"+item.browser+"-"+item.width+".png"),fullPage:true});
+   if(item.browser==="chromium"&&item.width===390){
+    // Verify the customer can describe their video once, then see the exact idea
+    // in the existing owned/consented inquiry. No submission is made by this test.
+    const creativeIdea="Create a 30-second brand commercial for our neighborhood roofing team, using approved on-site footage.";
+    let unexpectedPosts=0;
+    page.on("request",request=>{if(request.method()==="POST")unexpectedPosts++;});
+    await page.locator("#fallen-idea").fill(creativeIdea);
+    await page.locator("#fallen-start").click();
+    await page.waitForURL("**/commercial-studio/#inquire",{timeout:15000});
+    await page.waitForFunction(text=>document.getElementById("goal")?.value===text,creativeIdea);
+    assert.equal(await page.locator("#goal").inputValue(),creativeIdea);
+    assert.equal(await page.locator("#name").inputValue(),"");
+    assert.equal(await page.locator("#email").inputValue(),"");
+    assert.equal(await page.locator("#consent").isChecked(),false);
+    assert.equal(await page.evaluate(()=>sessionStorage.getItem("evercraft.fallen.idea.v1")),null);
+    assert.equal(unexpectedPosts,0,"no creative idea or customer info sent before explicit consented submission");
+    assert.deepEqual(errs,[],"browser errors during creative brief handoff");
+   }
    receipt.cases.push({browser:item.browser,width:item.width,state:"PASS",overscroll:result.overscroll});
   }catch(e){
    const error=String(e?.message||e);
