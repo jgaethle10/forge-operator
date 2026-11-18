@@ -33,3 +33,5 @@ Local reproducible preflight:
 node --test tests/network-field-outage-lab.test.mjs tests/network-backfill-contact-lab.test.mjs
 ```
 Recorded result: 2/2 PASS locally. Backfill trial: 26 encrypted-envelope fragments; window 1 writes 2, window 2 writes 24; gateway custody and receiver ACKs distinct, and duplicate/altered/corrupt inputs held or rejected. This is S1-like deterministic software fault injection; not S2-S5. All raw keys are ephemeral in tests. Only a correctly authorized and **observed physical** contact can promote an actual transport to `verified`.
+
+Additional regression refinement: the first and second simulated contact windows now run in **different Node processes**, with the latter reconstructing prior persisted fragments from disk. Both local tests pass; this still does not validate sudden device power loss, physical RF, satellite backhaul, or true inter-machine transport.
