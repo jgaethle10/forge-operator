@@ -69,6 +69,8 @@ test('creates editable video, voice, music, sound and captions tracks from actua
   assert.deepEqual(plan.deliveryRequest.project.tracks.map(x=>x.kind),
     ['video','voice','music','sfx','captions']);
   assert.equal(plan.deliveryRequest.project.tracks[0].clips.length,3);
+  assert.deepEqual(plan.deliveryRequest.project.tracks[0].clips.map(x=>x.editorialPhotoMotion),
+    ['slow-push','slow-pull','slow-push']);
   assert.equal(plan.deliveryRequest.project.tracks[1].clips.length,3);
   assert.equal(plan.deliveryRequest.project.tracks[3].clips[0].startSec,1.5);
   assert.equal(plan.deliveryRequest.project.audioMaster.targetLufs,-16);
