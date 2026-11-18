@@ -116,7 +116,8 @@ export function proposeConversationalRevision(
   const pictureRequested=/\b(?:change|make|redo|replace|improve|adjust|rework|regenerate)\b/i.test(instruction)&&
     /\b(?:ending|end|final shot|opening|intro|beginning|shot|scene)\b/i.test(instruction);
   let target:Located|null=null;
-  if(request.selectedClipId){
+  const selectedVisualIntent=Boolean(request.selectedClipId)&&/\b(?:visual|picture|footage|cinematic|brighter|darker|exciting|shot|scene|frame|color)\b/i.test(instruction);
+  if(request.selectedClipId&&(pictureRequested||selectedVisualIntent)){
     const matches=all.filter(x=>x.clip.id===request.selectedClipId&&x.track.kind==='video');
     if(matches.length!==1)reasons.push('selected_picture_clip_missing_or_ambiguous');
     else target=matches[0];
@@ -136,7 +137,7 @@ export function proposeConversationalRevision(
   }
   if(target&&isLocked(target))reasons.push('selected_picture_clip_locked');
   if(target&&overlapsProtected(target,protectedSec))reasons.push('selected_picture_clip_overlaps_preserved_time');
-  if(request.selectedClipId&&!pictureRequested&& !/\b(?:more|less|cinematic|brighter|slower|faster|exciting)\b/i.test(instruction))
+  if(request.selectedClipId&&!target&&!voiceRequested&&!reasons.length)
     reasons.push('selected_clip_change_not_understood');
 
   const audioReviewNeeds:RevisionProposal['audioReviewNeeds']=[];
