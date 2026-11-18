@@ -17,7 +17,7 @@ concurrency:
 jobs:
   check:
     runs-on: ubuntu-24.04 # Pin supported Playwright Chromium host; ubuntu-latest moved to 26.04
-    timeout-minutes: 15
+    timeout-minutes: 30
 
     steps:
       - name: Checkout
@@ -28,6 +28,9 @@ jobs:
         with:
           node-version: 22
 
+      - name: Verify Penguin Revenue Desk gates
+        run: node --test tests/penguin-revenue-desk.test.mjs tests/penguin-revenue-scan.test.mjs tests/penguin-revenue-queue.test.mjs
+
       - name: Verify or install media runtime
         run: |
           set -euo pipefail
@@ -36,11 +39,11 @@ jobs:
           else
             echo "FFmpeg missing; attempting bounded package installation."
             export DEBIAN_FRONTEND=noninteractive
-            sudo timeout 180 apt-get update \
+            sudo timeout 600 apt-get update \
               -o Acquire::Retries=1 \
               -o Acquire::http::Timeout=20 \
               -o Acquire::https::Timeout=20
-            sudo timeout 180 apt-get install -y --no-install-recommends ffmpeg \
+            sudo timeout 600 apt-get install -y --no-install-recommends ffmpeg \
               -o Acquire::Retries=1 \
               -o Acquire::http::Timeout=20 \
               -o Acquire::https::Timeout=20
@@ -53,9 +56,6 @@ jobs:
 
       - name: Typecheck and build
         run: npm run check
-
-      - name: Verify Penguin Revenue Desk gates
-        run: node --test tests/penguin-revenue-desk.test.mjs tests/penguin-revenue-scan.test.mjs tests/penguin-revenue-queue.test.mjs
 
       - name: Verify CHUM crawler radar
         run: node tests/chum-crawler-radar.test.mjs
