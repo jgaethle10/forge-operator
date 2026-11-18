@@ -51,3 +51,7 @@ Systemia is the authority for work and release admission. Saban coordinates boun
 `source_pass` means only the tracked source declarations and basic HTML affordances match; `source_fail` means drift or unavailable source. Neither means a site was deployed, visually inspected or sold anything. Do not put a green live/readiness badge on a static pass.
 
 **Source of truth:** This contract complements `docs/design/CLIENT-FACING-SIMPLICITY.md`, the seven-brand-worlds brief and existing experience systems. Where a change is proposed, update the corresponding owned brand source and its explicit design profile in the same reviewed change.
+
+## Customer-visible release acceptance
+
+**Additional binding implementation:** [Evercraft Customer Experience & Public Release Standard (CX-001)](docs/design/CUSTOMER-EXPERIENCE-RELEASE-STANDARD.md). It requires actual desktop/phone/tablet task walkthroughs, a usable non-dialer desktop conversion path, owner-specific business language, bilingual end-to-end testing, verified public HTTPS, and separate approval for customer promotion. Its configurable static source preflight and negative-case tests supplement, but never replace, independent browser/authorization receipts.
