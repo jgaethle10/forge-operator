@@ -42,7 +42,8 @@ const validIp = ip => {
     (o[0] === 10 || (o[0] === 172 && o[1] >= 16 && o[1] <= 31) || (o[0] === 192 && o[1] === 168));
 };
 const assignedIp = ip => ip === '127.0.0.1' || Object.values(os.networkInterfaces()).flat().some(x => x?.family === 'IPv4' && x.address === ip);
-const ensureDirs = root => { for (const d of ['outbox','inbox']) fs.mkdirSync(path.join(root, d), {recursive:true,mode:0o700}); };
+const ensureDirs = root => { for (const d of ['outbox','inbox']) { const dir=path.join(root,d); fs.mkdirSync(dir,{recursive:true,mode:0o700}); const st=fs.lstatSync(dir); if(!st.isDirectory() || (st.mode & 0o077)) throw Error('queue_directory_must_be_private_0700'); } };
+const regularPrivateFile = file => { const st=fs.lstatSync(file); if(!st.isFile() || (st.mode & 0o077)) throw Error('queue_file_must_be_private_regular_file'); return fs.readFileSync(file,'utf8'); };
 const safeFile = (root, folder, id) => path.join(root, folder, `${id}.json`);
 function durableWrite(file, value) {
   const temp = `${file}.${crypto.randomBytes(6).toString('hex')}.tmp`;
@@ -90,10 +91,15 @@ async function serve() {
         if(typeof opened.payload?.message!=='string'||opened.payload.message.length>32000) throw Error('unsupported_message');
         if(!/^[a-z0-9_]{8,64}$/.test(envelope.message_id||''))throw Error('invalid_message_id');
         const file=safeFile(root,'inbox',envelope.message_id);
+        const envelope_hash=digest(JSON.stringify(envelope));
         const duplicate=fs.existsSync(file);
+        if(duplicate && digest(JSON.stringify(JSON.parse(regularPrivateFile(file))))!==envelope_hash) {
+          logReceipt(root,'message.conflicting_duplicate_held',{message_id:envelope.message_id});
+          return respond(res,409,{error:'message_id_payload_conflict'});
+        }
         if(!duplicate) durableWrite(file,envelope);
-        const r=logReceipt(root,duplicate?'message.duplicate_ack':'message.received',{message_id:envelope.message_id,source:expectedPeer});
-        return respond(res,200,{schema:'evercraft.network.delivery-ack.v1',message_id:envelope.message_id,node_id:me,duplicate,proof:mac(key,`ack:${me}:${envelope.message_id}`),receipt_hash:r.receipt_hash});
+        const r=logReceipt(root,duplicate?'message.duplicate_ack':'message.received',{message_id:envelope.message_id,source:expectedPeer,envelope_hash});
+        return respond(res,200,{schema:'evercraft.network.delivery-ack.v1',message_id:envelope.message_id,envelope_hash,node_id:me,duplicate,proof:mac(key,`ack:${me}:${envelope.message_id}:${envelope_hash}`),receipt_hash:r.receipt_hash});
       }
       return respond(res,404,{error:'not_found'});
     }catch(err){respond(res,400,{error:err.message==='request_too_large'?'request_too_large':'invalid_or_unauthenticated_envelope'});}
@@ -131,11 +137,12 @@ async function flush() {
   const files=fs.readdirSync(path.join(root,'outbox')).filter(x=>/^[a-z0-9_]{8,64}\.json$/.test(x)).sort();
   let delivered=0,held=0,expired=0;
   for(const name of files){
-    const file=path.join(root,'outbox',name), env=JSON.parse(fs.readFileSync(file,'utf8'));
+    const file=path.join(root,'outbox',name), env=JSON.parse(regularPrivateFile(file));
     if(Date.parse(env.expires_at)<=Date.now()){expired++;held++;logReceipt(root,'message.expired_hold',{message_id:env.message_id});continue;}
     try{
       const ack=await requestJson(`${parsed.origin}/v1/envelope`,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(env)});
-      if(ack.message_id!==env.message_id||ack.node_id!==peer||!eq(ack.proof,mac(key,`ack:${peer}:${env.message_id}`)))throw Error('ack_authentication_failed');
+      const envelope_hash=digest(JSON.stringify(env));
+      if(ack.message_id!==env.message_id||ack.node_id!==peer||ack.envelope_hash!==envelope_hash||!eq(ack.proof,mac(key,`ack:${peer}:${env.message_id}:${envelope_hash}`)))throw Error('ack_authentication_failed');
       fs.unlinkSync(file);
       const dir=fs.openSync(path.dirname(file),'r');try{fs.fsyncSync(dir);}finally{fs.closeSync(dir);}
       logReceipt(root,'message.delivered',{message_id:env.message_id,peer_id:peer,transport:transport.selected.id});delivered++;
@@ -144,7 +151,7 @@ async function flush() {
   console.log(JSON.stringify({state:held?'PARTIAL':'SYNCHRONIZED',peer_authenticated:true,route:transport.selected.id,delivered,held,expired,field_validated:false}));
 }
 function status(){const root=stateDir();ensureDirs(root);const out=Object.fromEntries(['inbox','outbox'].map(x=>[x,fs.readdirSync(path.join(root,x)).filter(f=>f.endsWith('.json')).length]));console.log(JSON.stringify({schema:'evercraft.network.local-state.v1',...out}));}
-function inbox(){const root=stateDir(), key=keyBytes(), me=nodeId();ensureDirs(root);const rows=fs.readdirSync(path.join(root,'inbox')).filter(f=>f.endsWith('.json')).sort().map(name=>{const e=JSON.parse(fs.readFileSync(path.join(root,'inbox',name),'utf8'));const opened=openEnvelope({envelope:e,key,expected_destination:me});return {message_id:e.message_id,from:e.source,message:opened.payload.message};});console.log(JSON.stringify({messages:rows}));}
+function inbox(){const root=stateDir(), key=keyBytes(), me=nodeId();ensureDirs(root);const rows=fs.readdirSync(path.join(root,'inbox')).filter(f=>f.endsWith('.json')).sort().map(name=>{const e=JSON.parse(regularPrivateFile(path.join(root,'inbox',name)));const opened=openEnvelope({envelope:e,key,expected_destination:me});return {message_id:e.message_id,from:e.source,message:opened.payload.message};});console.log(JSON.stringify({messages:rows}));}
 function initKey(){const file=val('--key-file');if(!file||!path.isAbsolute(file))throw Error('absolute_key_file_required');const fd=fs.openSync(file,'wx',0o600);try{fs.writeSync(fd,crypto.randomBytes(32));fs.fsyncSync(fd);}finally{fs.closeSync(fd);}console.log(JSON.stringify({state:'KEY_GENERATED',path:file,bytes:32,share_out_of_band_only:true}));}
 function simulate(){const offers=[
 {id:'sim-pc',permission:true,reachable:true,watts:18,bandwidth_kbps:2000,reliability:0.9,compute:8},
