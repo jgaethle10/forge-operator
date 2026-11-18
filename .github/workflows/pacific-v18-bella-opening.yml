@@ -1,0 +1,29 @@
+name: Pacific V18 Bella Native Opening Audition
+on:
+  push:
+    branches: [studio/pacific-real-music-audition-20261115]
+    paths: [systemia/media-studio/pacific-v18-bella-opening.py,.github/workflows/pacific-v18-bella-opening.yml]
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  native-bella:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - name: Install original voice runtime
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq espeak-ng libsndfile1
+          python -m pip install --disable-pip-version-check 'kokoro==0.9.4' 'soundfile>=0.12,<1.0'
+      - name: Render three private natural line alternatives
+        env: {HF_HUB_DISABLE_TELEMETRY: "1"}
+        run: python systemia/media-studio/pacific-v18-bella-opening.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pacific-v18-original-bella-private
+          path: pacific-v18-bella-private/
+          retention-days: 7
+          if-no-files-found: error
