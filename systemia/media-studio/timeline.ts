@@ -42,6 +42,8 @@ export interface TimelineClip {
   // Explicit per-format focal position for commercial aspect-ratio reframing.
   focalX?:number;
   focalY?:number;
+  // Editorial camera movement across an actual photograph. NOT source video.
+  editorialPhotoMotion?:'slow-push'|'slow-pull';
   label?:string;
 }
 
@@ -113,6 +115,7 @@ function assertProject(project:FallenTimelineProject){
   if(!project.id?.trim()) throw new Error('timeline_id_missing');
   if(!Number.isFinite(project.fps)||project.fps<=0||project.fps>120) throw new Error('timeline_fps_invalid');
   const assetIds=new Set(project.assets.map(asset=>asset.id));
+  const assetKinds=new Map(project.assets.map(asset=>[asset.id,asset.kind] as const));
   if(assetIds.size!==project.assets.length) throw new Error('timeline_duplicate_asset_id');
   const clipIds=new Set<string>();
   for(const track of project.tracks){
@@ -121,6 +124,11 @@ function assertProject(project:FallenTimelineProject){
       clipIds.add(clip.id);
       if(clip.trackId!==track.id) throw new Error(`timeline_clip_track_mismatch:${clip.id}`);
       if(!assetIds.has(clip.assetId)) throw new Error(`timeline_asset_missing:${clip.assetId}`);
+      if(clip.editorialPhotoMotion &&
+        (assetKinds.get(clip.assetId)!=='image' ||
+         !['slow-push','slow-pull'].includes(clip.editorialPhotoMotion))){
+        throw new Error(`timeline_photo_motion_requires_image:${clip.id}`);
+      }
       if(clip.startSec<0||clip.durationSec<=0) throw new Error(`timeline_clip_timing_invalid:${clip.id}`);
       for(const [key,value] of [['focalX',clip.focalX],['focalY',clip.focalY]] as const){
         if(value!==undefined && (!Number.isFinite(value)||value<0||value>1)){
