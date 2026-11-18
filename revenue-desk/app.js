@@ -35,6 +35,8 @@ function awaitingReply(r) {
   return r.status === 'Sent' && r.sent.length > 0;
 }
 function next(r) {
+  if (r.paid_reference) return r.next_action || 'Deliver the agreed work';
+  if (r.accepted && !closed(r)) return r.checkout ? 'Share the checkout after confirming scope' : 'Prepare checkout for the agreed scope';
   if (closed(r)) return r.outcome || 'Record outcome';
   if (awaitingReply(r)) return r.next_action || 'Check for a reply';
   if (!qualified(r)) return 'Verify evidence, buyer, contact and fit';
@@ -43,12 +45,12 @@ function next(r) {
 function priority(r) {
   if (closed(r)) return 4;
   if ((qualified(r) || awaitingReply(r)) && r.followup && r.followup <= today()) return 0;
-  if (qualified(r) && r.kind === 'Paid work') return 1;
+  if (r.accepted || (qualified(r) && r.kind === 'Paid work')) return 1;
   return qualified(r) ? 2 : 3;
 }
 function render() {
   const open = rows.filter(r => !closed(r));
-  const stats = [[open.filter(qualified).length,'Qualified'],[open.filter(r => priority(r) === 0).length,'Follow-ups due'],[open.filter(r => r.kind === 'Paid work').length,'Direct paid work'],[rows.filter(r => r.status === 'Won').length,'Won']];
+  const stats = [[open.filter(qualified).length,'Qualified'],[open.filter(r => priority(r) === 0).length,'Follow-ups due'],[open.filter(r => r.kind === 'Paid work').length,'Direct paid work'],[money(rows.reduce((total,r) => total + (r.paid_reference ? +r.paid_amount : 0),0)),'Payments recorded']];
   byId('metrics').innerHTML = stats.map(([n,label]) => '<div class="metric"><b>'+n+'</b>'+label+'</div>').join('');
   byId('views').innerHTML = views.map(label => '<button type="button" aria-pressed="'+(label === view)+'">'+label+'</button>').join('');
   byId('toolbar').hidden = view === 'Offer library';
@@ -68,7 +70,7 @@ function render() {
   const list = (view === views[5] ? rows : open).filter(r => match[view](r) && [r.business,r.buyer,r.pain,r.product].some(v => v.toLowerCase().includes(term)));
   const order = byId('order').value;
   list.sort((a,b) => (order === 'amount' ? (+b.amount || 0)-(+a.amount || 0) : order === 'priority' ? priority(a)-priority(b) || (a.followup || '9999').localeCompare(b.followup || '9999') : 0) || b.id-a.id);
-  byId('content').innerHTML = list.length ? '<div class="scroll"><table><thead><tr><th>Business / buyer</th><th>Pain / offer fit</th><th>Stage / evidence</th><th>Proposed value</th><th>Next action</th></tr></thead><tbody>'+list.map(r => '<tr><td><button data-open="'+r.id+'">'+esc(r.business)+'</button><br>'+esc(r.buyer || 'Buyer unknown')+'</td><td>'+esc(r.pain)+'<br><span class="muted">'+esc(r.product)+'</span></td><td>'+esc(r.status)+'<br><span class="muted">'+(qualified(r)?'Qualified':r.verified?'Evidence verified · qualification pending':'Verification pending')+'</span></td><td>'+(r.amount ? esc(money(+r.amount)) : '—')+'</td><td>'+esc(next(r))+'<br><span class="muted">'+esc(r.followup)+'</span></td></tr>').join('')+'</tbody></table></div>' : '<p class="empty">'+(view === views[0] && !rows.length ? 'Capture a real request or import a Systemia signal to start the pipeline.' : 'No opportunities match this view.')+'</p>';
+  byId('content').innerHTML = list.length ? '<div class="scroll"><table><thead><tr><th>Business / buyer</th><th>Pain / offer fit</th><th>Stage / evidence</th><th>Proposed value</th><th>Next action</th></tr></thead><tbody>'+list.map(r => '<tr><td><button data-open="'+r.id+'">'+esc(r.business)+'</button><br>'+esc(r.buyer || 'Buyer unknown')+'</td><td>'+esc(r.pain)+'<br><span class="muted">'+esc(r.product)+'</span></td><td>'+esc(r.paid_reference ? 'Paid' : r.accepted ? 'Accepted' : r.status)+'<br><span class="muted">'+(qualified(r)?'Qualified':r.verified?'Evidence verified · qualification pending':'Verification pending')+'</span></td><td>'+(r.amount ? esc(money(+r.amount)) : '—')+'</td><td>'+esc(next(r))+'<br><span class="muted">'+esc(r.followup)+'</span></td></tr>').join('')+'</tbody></table></div>' : '<p class="empty">'+(view === views[0] && !rows.length ? 'Capture a real request or import a Systemia signal to start the pipeline.' : 'No opportunities match this view.')+'</p>';
 }
 async function refresh() { rows = await api('opportunities'); render(); }
 const form = byId('record');
@@ -87,6 +89,8 @@ function edit(record = {}) {
     section('Buyer and problem',f('business','Business')+f('buyer','Buyer name')+f('role','Role')+f('contact','Contact or reply thread')+f('pain','Pain point')+f('kind','Opportunity type',['Lead','Paid work','Product offer']))+
     section('Evidence and qualification',f('source','Source URL or original message','textarea')+f('verified','Verified evidence and verification date','textarea')+f('signal','Unverified market signal','textarea')+f('assumption','Assumptions to test','textarea')+f('permission','Why this contact path is appropriate')+f('relevance','Specific reason this offer fits this buyer'))+
     section('Offer and outreach',f('product','Evercraft capability',['',...catalog.map(item => item[0])])+f('amount','Proposed value in USD','number')+f('offer','Tailored scope, timing and price','textarea')+f('subject','Subject')+f('draft','Outreach draft','textarea')+'<button type="button" id="draft">Build draft from evidence</button>')+
+    section('Acceptance and payment',f('accepted','Buyer acceptance and agreed scope','textarea')+f('checkout','Checkout URL','url')+f('paid_amount','Received amount in USD','number')+f('paid_reference','Provider receipt or transaction reference')+
+      '<p class="wide">Record the amount after verifying payment with the provider. Bank settlement is tracked by the provider.</p>')+
     section('Progress',f('status','Stage',stages)+f('followup','Next follow-up date','date')+f('next_action','Next action')+f('reply','Replies','textarea')+f('objection','Objections','textarea')+f('outcome','Outcome or loss reason','textarea'));
   notice('',false,'editor-notice');
   byId('history').innerHTML = activeId ? '<h3>Sent history</h3><div id="sent-list">'+record.sent.map(item => '<div class="card"><strong>'+esc(item.recipient)+'</strong> · '+esc(item.channel)+' · '+esc(item.when)+'<br>'+esc(item.subject)+'<pre>'+esc(item.message)+'</pre></div>').join('')+'</div><details><summary>Record a message already sent</summary><form id="sent-form" class="fields">'+field('recipient','Actual recipient',record.contact)+field('channel','Channel','')+field('when','Sent date',today(),'date')+field('subject','Exact subject',record.subject)+field('message','Exact message sent',record.draft,'textarea')+'<button type="submit">Log sent message</button></form></details>' : '';
