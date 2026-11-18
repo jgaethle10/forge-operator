@@ -20,3 +20,9 @@ test('does not promote an unsourced lead into a buyer',()=>{
  assert.equal(result.queue[0].stage,'research_only');
  assert.equal(result.queue[0].buyer_confirmed,false);
 });
+
+test('suppresses prior outreach even when a website draft qualifies',()=>{
+ const result=createRevenueQueue({webProspects:[web],suppressedBusinesses:['example'],now:new Date('2026-11-18T20:00:00Z')});
+ assert.equal(result.summary.total,0);
+ assert.equal(result.summary.suppressed,1);
+});
