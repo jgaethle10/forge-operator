@@ -24,3 +24,12 @@ S4: real approved satcom gateway/account and legal permission, measured link.
 S5: repeated intermittent windows, throughput/energy measurements, final-destination acknowledgments and independent review.
 
 No S1-S5 satellite gateway evidence is claimed for this change; the new paired-LAN test is a prerequisite only. Obtain dated OMM/TLE with source epoch and uncertainty before re-running any satellite orbit model. SGP4 predicts geometry, not permission or functioning payload.
+## 2026-11-18 implemented software preflight: synthetic contact windows
+
+New implementation in `systemia/network/backfill-contact-lab.mjs`; regression in `tests/network-backfill-contact-lab.test.mjs`. This is a **filesystem-only contact-window simulation**, not a real gateway, physical radio or satellite link. Reuses `secure-envelope.mjs` for AES-256-GCM destination encryption. It creates a separately HMAC-authenticated bundle manifest, bounded fragments with local fsync, denies simulated gateways without consent/identity/active-window claims, persists fragments across two simulated windows, rejects corruption and priority tampering, and distinguishes simulated gateway custody acceptance from final-destination acknowledgment. It does not implement BPv7/BPSec on the wire, network traversal, true gateway identity, real field observation or carrier availability.
+
+Local reproducible preflight:
+```bash
+node --test tests/network-field-outage-lab.test.mjs tests/network-backfill-contact-lab.test.mjs
+```
+Recorded result: 2/2 PASS locally. Backfill trial: 26 encrypted-envelope fragments; window 1 writes 2, window 2 writes 24; gateway custody and receiver ACKs distinct, and duplicate/altered/corrupt inputs held or rejected. This is S1-like deterministic software fault injection; not S2-S5. All raw keys are ephemeral in tests. Only a correctly authorized and **observed physical** contact can promote an actual transport to `verified`.
