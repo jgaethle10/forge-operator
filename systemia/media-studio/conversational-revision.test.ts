@@ -78,6 +78,14 @@ test('user voice-only revision proposes an audition, not an unreviewed audio ass
   assert.equal(stage.generationNeeds.length,0);
   assert.equal(stage.boundaries.originalAssetsPreserved,true);
 });
+test('voice-only wording cannot accidentally regenerate a selected picture clip',()=>{
+  const p=project();
+  const proposed=proposeConversationalRevision(p,req(p,'Change the voice to sound warmer and more confident.',{selectedClipId:'ending-clip'}));
+  assert.equal(proposed.status,'PROPOSED');
+  assert.equal(proposed.visualCandidatePlan,null);
+  assert.equal(proposed.audioReviewNeeds.length,1);
+});
+
 test('global voice edit cannot silently rewrite preserved first ten seconds',()=>{
   const p=project();
   const proposal=proposeConversationalRevision(p,req(p,'Keep the first 10 seconds, change the voice and make the ending more exciting.'));
