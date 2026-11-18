@@ -16,7 +16,9 @@ concurrency:
 
 jobs:
   check:
-    runs-on: ubuntu-latest
+    # Playwright 1.58.2 has no dependencies installer for Ubuntu 26.04 yet.
+    # Pin the Forge smoke/browser QA job to supported Ubuntu 24.04.
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
 
     steps:
