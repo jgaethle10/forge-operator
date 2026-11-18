@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Evercraft Revenue Desk</title>
+<style>
+:root{color-scheme:dark;--bg:#101214;--surface:#191c1f;--line:#343a40;--dim:#abb4be;--lime:#d9f886;--ink:#f0f2ed}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,sans-serif}header{display:flex;align-items:center;justify-content:space-between;padding:18px 5vw;border-bottom:1px solid var(--line)}strong.brand{letter-spacing:.18em;font-size:.85rem}main{max-width:1450px;margin:auto;padding:38px 5vw}h1{font-size:clamp(2.5rem,6vw,4.8rem);line-height:1;letter-spacing:-.065em;margin:0 0 14px}h2,h3{line-height:1.25}p{color:var(--dim)}.metrics,.cards,.fields{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr))}.metric,.card{border:1px solid var(--line);background:var(--surface);padding:18px;border-radius:12px}.metric b{display:block;font-size:1.8rem;color:var(--lime)}nav,.toolbar,.actions{display:flex;align-items:center;flex-wrap:wrap;gap:9px;margin:20px 0}button,input,select,textarea{font:inherit;border:1px solid var(--line);border-radius:7px;background:#131618;color:var(--ink);padding:9px 12px}button{cursor:pointer}button:hover,button:focus-visible{border-color:var(--lime)}button[aria-pressed=true],.primary{background:var(--lime);color:#161c0e;border-color:var(--lime);font-weight:700}.toolbar input{flex:1;min-width:180px}.scroll{overflow:auto}table{border-collapse:collapse;width:100%;min-width:720px}th,td{text-align:left;padding:12px;border-bottom:1px solid var(--line);vertical-align:top}th{font-size:.875rem;color:var(--dim)}td button{text-align:left}.muted{color:var(--dim)}.empty{text-align:center;padding:32px;background:var(--surface);border-radius:12px}dialog{width:min(960px,96vw);max-height:92vh;overflow:auto;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:22px}dialog::backdrop{background:#000a}label{display:grid;gap:5px;font-size:.9rem}textarea{min-height:85px;resize:vertical}fieldset{margin:15px 0;border:1px solid var(--line);border-radius:8px}.wide{grid-column:1/-1}pre{white-space:pre-wrap;overflow-wrap:anywhere;font:inherit}#notice{color:var(--lime);min-height:1.5em}.notice-error{color:#ffad9c!important}
+</style>
+<header><strong class="brand">EVERCRAFT / REVENUE</strong><button class="primary" id="new">New opportunity</button></header>
+<main>
+<h1>Revenue Desk</h1>
+<p>Turn real buyer demand into a specific offer and a clear next move.</p>
+<div class="metrics" id="metrics"></div>
+<nav id="views" aria-label="Pipeline views"></nav>
+<div class="toolbar" id="toolbar"><input id="search" type="search" placeholder="Search business, buyer, pain or product" aria-label="Search opportunities"><select id="order" aria-label="Sort opportunities"><option value="priority">Next action first</option><option value="amount">Highest proposed value</option><option value="recent">Recently added</option></select></div>
+<div id="content"></div>
+<p id="notice" role="status"></p>
+</main>
+<dialog id="editor" aria-labelledby="editor-title">
+<form id="record"><h2 id="editor-title">Opportunity</h2><div id="fields"></div>
+<div class="actions"><button class="primary">Save opportunity</button><button type="button" id="close">Close</button></div>
+<div id="editor-notice" role="status"></div></form>
+<section id="history"></section>
+</dialog>
+
+<script src="/app.js" defer></script>
+</html>
