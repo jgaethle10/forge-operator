@@ -40,7 +40,7 @@ test('first private timeline snapshot keeps exactly the original version and doe
   assert.equal(history.schema,VAULT_SCHEMA);
   assert.equal(history.entries.length,1);
   assert.equal(history.head.projectDigest,timelineDigest(project));
-  assert.deepEqual(readTimelineVersion({root,projectId:project.id}),project);
+  assert.deepEqual(readTimelineVersion({root,projectId:project.id}),JSON.parse(JSON.stringify(project)),\n    'JSON snapshots omit optional undefined fields without changing the timeline digest');
   const folder=path.join(root,sha(project.id)),shots=path.join(folder,'snapshots');
   assert.equal(fs.statSync(path.join(folder,'manifest.json')).mode&0o777,0o600);
   assert.equal(fs.statSync(path.join(shots,fs.readdirSync(shots)[0])).mode&0o777,0o600);
