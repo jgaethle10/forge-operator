@@ -104,7 +104,9 @@ export function compileApprovedCommercial(input){
     if(source.mediaKind==='video'&&media.durationSec+0.05<item.durationSec)
       throw new Error('commercial_source_too_short:'+item.id);
     pictureClips.push({id:'picture-'+item.id,trackId:'picture',
-      assetId:'picture-'+item.assetId,startSec:item.startSec,durationSec:item.durationSec});
+      assetId:'picture-'+item.assetId,startSec:item.startSec,durationSec:item.durationSec,
+      ...(plan.sourceMode==='customer-photographs'&&source.mediaKind==='image'?
+        {editorialPhotoMotion:pictureClips.length%2===0?'slow-push':'slow-pull'}:{})});
   }
 
   uniqueKeys(approved.voices,x=>clean(x.sceneId),'voice_scene');
