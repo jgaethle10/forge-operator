@@ -31,6 +31,7 @@ Until a first-party measurement route has the client's approval, Evercraft docum
 | --- | --- | --- | --- | --- | --- | --- |
 | 2026-11-16 (reported) | Messenger · On The Go review link | Juan reviewed bilingual preview | Screenshot shared by founder in chat | Client feedback | Positive review of design clarity (private correspondence) | Reported, visual evidence |
 | 2026-11-17 | Evercraft-owned On The Go review site | Released V4 bilingual two-step package matcher, customer FAQs and selected-service inquiry; live HTTPS verified | PR #2236; release CI #44214671573 / #44214672107; public HTTPS canary #44214826257 | Customer experience | Preview deployed; not promoted or approved as a booking service | Verified technical release; paid revenue unknown |\n| Pending | Evercraft channels | Next approved promotion | TBD | Distribution | Unknown | Not started |
+| 2026-11-17 | On The Go review website | Corrected desktop phone-only navigation and unprofessional 'Call Juan' CTAs; made desktop email first with a copyable business address, kept phone option for mobile | PR #2237; external HTTPS verification #44217721776 | Conversion usability | V4.1 live preview verified; no bookings or revenue claimed | Technical release verified, commercial outcome unknown |
 | Pending | Customer contact | Referral/booking signal | TBD | Inquiry / booking | Unknown | Not reported |
 | Pending | Juan optional follow-up | Service completed and paid | TBD | Paid outcome | Unknown | Not reported |
 
