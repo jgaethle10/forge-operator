@@ -1,0 +1,550 @@
+{
+  "schema": "evercraft.legacy-product-identities.v1",
+  "as_of": "2026-11-17",
+  "source": [
+    "systemia/migrations/base44-exit/estate-snapshot.json",
+    "systemia/migrations/base44-exit/EDUCATION-REBUILD-2026-11-04.md",
+    "docs/education/INFINITE_CLASSROOM_ORIGINAL_FIDELITY_AUDIT_2026-11-09.md"
+  ],
+  "scope": "Named historical products and related owned education initiatives. Not a complete list of every app in the historical 100+ snapshot.",
+  "policy": {
+    "no_retired_provider_contact": true,
+    "independently_branded": true,
+    "existing_names_preserved_unless_founder_approved": true,
+    "provisional_names_require_approval": true,
+    "preview_is_not_product": true,
+    "no_customer_data_in_preview": true,
+    "launch_requires_live_receipts": true,
+    "rivet": "retire public brand, preserve technology and historical artifacts"
+  },
+  "products": [
+    {
+      "id": "systemia-command-center",
+      "name": "Systemia",
+      "tagline": "The orchestration layer",
+      "family": "control",
+      "name_status": "existing",
+      "release_state": "internal",
+      "description": "Systemia coordinates authorized work, evidence and execution.",
+      "identity": {
+        "background": "#141b27",
+        "accent": "#b8e8fb",
+        "typography": "contemporary sans"
+      },
+      "proof": "Historical owned records only; product capability and current public deployment require independent verification",
+      "provider_free_required": true
+    },
+    {
+      "id": "systemia-remote-ops",
+      "name": "Systemia Remote Ops",
+      "tagline": "Run the business before the business runs you.",
+      "family": "business_simulation",
+      "name_status": "existing",
+      "release_state": "concept",
+      "description": "Business strategy simulator for pricing, hiring, payroll, expansion and decisions.",
+      "identity": {
+        "background": "#141c25",
+        "accent": "#d1e6af",
+        "typography": "contemporary sans"
+      },
+      "proof": "Historical owned records only; product capability and current public deployment require independent verification",
+      "provider_free_required": true
+    },
+    {
+      "id": "evercraft-ai-workforce",
+      "name": "Evercraft Work Saban",
+      "tagline": "Give your work a team.",
+      "family": "agent_work",
+      "name_status": "existing",
+      "release_state": "pilot",
+      "description": "Task-to-team work coordination with reviewed deliverables.",
+      "identity": {
+        "background": "#ffffff",
+        "accent": "#a4142f",
+        "typography": "contemporary sans"
+      },
+      "proof": "Historical owned records only; product capability and current public deployment require independent verification",
+      "provider_free_required": true
+    },
+    {
+      "id": "evercraft-internalops",
+      "name": "Evercraft InternalOps",
+      "tagline": "The machinery behind the work.",
+      "family": "operations",
+      "name_status": "existing",
+      "release_state": "internal",
+      "description": "Private company operations, not a consumer storefront.",
+      "identity": {
+        "background": "#182331",
+        "accent": "#b5d1dd",
+        "typography": "contemporary sans"
+      },
+      "proof": "Historical owned records only; product capability and current public deployment require independent verification",
+      "provider_free_required": true
+    },
+    {
+      "id": "systemia-audit-center",
+      "name": "Evercraft Audit Center",
+      "tagline": "Know what happened. Prove what worked.",
+      "family": "evidence",
+      "name_status": "existing",
+      "release_state": "internal",
+      "description": "Evidence and verification for operational claims.",
+      "identity": {
+        "background": "#10252b",
+        "accent": "#86d6c7",
+        "typography": "contemporary sans"
+      },
+      "proof": "Historical owned records only; product capability and current public deployment require independent verification",
+      "provider_free_required": true
+    },
+    {
+      "id": "evercraft-ai-suite",
+      "name": "Evercraft AI Suite",
+      "tagline": "Useful intelligence, without the maze.",
+      "family": "machine_services",
+      "name_status": "existing",
+      "release_state": "discovery",
+      "description": "An umbrella of machine capabilities; individual offers need their own identity.",
+      "identity": {
+        "background": "#1b1b29",
+        "accent": "#d7c6fc",
+        "typography": "contemporary sans"
+      },
+      "proof": "Historical owned records only; product capability and current public deployment require independent verification",
+      "provider_free_required": true
+    },
+    {
+      "id": "evercraft-hq",
+      "name": "Evercraft HQ",
+      "tagline": "One company. A clearer view.",
+      "family": "operations",
+      "name_status": "existing",
+      "release_state": "internal",
+      "description": "Private leadership and company oversight.",
+      "identity": {
+        "background": "#152a31",
+        "accent": "#c7edec",
+        "typography": "contemporary sans"
+      },
+      "proof": "Historical owned records only; product capability and current public deployment require independent verification",
+      "provider_free_required": true
+    },
+    {
+      "id": "raven-nexus",
+      "name": "Raven Nexus",
+      "tagline": "Your systems, on your terms.",
+      "family": "sovereign_connectivity",
+      "name_status": "existing",
+      "release_state": "rebuild",
+      "description": "Governed local and business integrations; no unverified sovereign deployment claims.",
+      "identity": {
+        "background": "#0d1722",
+        "accent": "#9dd8f0",
+        "typography": "contemporary sans"
+      },
+      "proof": "Historical owned records only; product capability and current public deployment require independent verification",
+      "provider_free_required": true
+    },
+    {
+      "id": "forensiscope",
+      "name": "ForensiScope",
+      "tagline": "Follow the evidence.",
+      "family": "media_forensics",
+      "name_status": "existing",
+      "release_state": "rebuild",
+      "description": "Review long-form media and provenance with clear analytical limits.",
+      "identity": {
+        "background": "#131d2a",
+        "accent": "#8dc8f3",
+        "typography": "contemporary sans"
+      },
+      "proof": "Historical owned records only; product capability and current public deployment require independent verification",
+      "provider_free_required": true
+    },
+    {
+      "id": "aliev",
+      "name": "Evercraft EV Intelligence",
+      "tagline": "See the site before the investment.",
+      "family": "ev_site_planning",
+      "name_status": "provisional",
+      "release_state": "rebuild",
+      "description": "EV charging siting and reporting; historical name not a new public launch.",
+      "identity": {
+        "background": "#102520",
+        "accent": "#a9ebb0",
+        "typography": "contemporary sans"
+      },
+      "proof": "Historical owned records only; product capability and current public deployment require independent verification",
+      "provider_free_required": true
+    },
+    {
+      "id": "rivet",
+      "name": "RIVET",
+      "tagline": "Retired name; preserve underlying technology.",
+      "family": "industrial_reporting",
+      "name_status": "retire_public",
+      "release_state": "archive",
+      "description": "Founder instructed retirement of the RIVET public brand; preserve lawful owned IP and dependencies.",
+      "identity": {
+        "background": "#242424",
+        "accent": "#b6b6b6",
+        "typography": "contemporary sans"
+      },
+      "proof": "Historical owned records only; product capability and current public deployment require independent verification",
+      "provider_free_required": true
+    },
+    {
+      "id": "evercraft-rewards",
+      "name": "Evercraft Rewards",
+      "tagline": "Small actions. Real momentum.",
+      "family": "engagement",
+      "name_status": "existing",
+      "release_state": "concept",
+      "description": "Rewards and engagement system; terms and live functionality not verified.",
+      "identity": {
+        "background": "#291c2b",
+        "accent": "#ffc6b8",
+        "typography": "contemporary sans"
+      },
+      "proof": "Historical owned records only; product capability and current public deployment require independent verification",
+      "provider_free_required": true
+    },
+    {
+      "id": "eps-field-pass",
+      "name": "EPS Field Pass",
+      "tagline": "The field, finally organized.",
+      "family": "field_operations",
+      "name_status": "existing",
+      "release_state": "rebuild",
+      "description": "Property field sales and task support.",
+      "identity": {
+        "background": "#19312d",
+        "accent": "#b4e2b5",
+        "typography": "contemporary sans"
+      },
+      "proof": "Historical owned records only; product capability and current public deployment require independent verification",
+      "provider_free_required": true
+    },
+    {
+      "id": "findmypart",
+      "name": "FindMyPart",
+      "tagline": "Missing part. Not the end.",
+      "family": "parts",
+      "name_status": "existing",
+      "release_state": "rebuild",
+      "description": "Evidence-backed sourcing for difficult-to-find repair parts.",
+      "identity": {
+        "background": "#151c25",
+        "accent": "#f16b27",
+        "typography": "contemporary sans"
+      },
+      "proof": "Historical owned records only; product capability and current public deployment require independent verification",
+      "provider_free_required": true
+    },
+    {
+      "id": "skyops-parking",
+      "name": "SkyOps Parking",
+      "tagline": "A clearer way to manage the lot.",
+      "family": "parking",
+      "name_status": "existing",
+      "release_state": "archive_review",
+      "description": "Historical parking operations build; founder does not want an active SkyOps product push.",
+      "identity": {
+        "background": "#253344",
+        "accent": "#c0d3e8",
+        "typography": "contemporary sans"
+      },
+      "proof": "Historical owned records only; product capability and current public deployment require independent verification",
+      "provider_free_required": true
+    },
+    {
+      "id": "evercraft-property-services",
+      "name": "Evercraft Property Services",
+      "tagline": "Work that shows.",
+      "family": "local_services",
+      "name_status": "existing",
+      "release_state": "rebuild",
+      "description": "Property maintenance and field services.",
+      "identity": {
+        "background": "#192c30",
+        "accent": "#bcd8bd",
+        "typography": "contemporary sans"
+      },
+      "proof": "Historical owned records only; product capability and current public deployment require independent verification",
+      "provider_free_required": true
+    },
+    {
+      "id": "guardian-pilot",
+      "name": "Guardian",
+      "tagline": "Safety with boundaries.",
+      "family": "safety",
+      "name_status": "existing",
+      "release_state": "privacy_review",
+      "description": "Safety product; consent and misuse boundaries before any public trial.",
+      "identity": {
+        "background": "#193039",
+        "accent": "#b7e7e0",
+        "typography": "contemporary sans"
+      },
+      "proof": "Historical owned records only; product capability and current public deployment require independent verification",
+      "provider_free_required": true
+    },
+    {
+      "id": "evernest",
+      "name": "EverNest",
+      "tagline": "A home for what matters.",
+      "family": "family",
+      "name_status": "existing",
+      "release_state": "privacy_review",
+      "description": "Family-focused experience; no child or household data should enter a preview.",
+      "identity": {
+        "background": "#f6f0e9",
+        "accent": "#9d7868",
+        "typography": "contemporary sans"
+      },
+      "proof": "Historical owned records only; product capability and current public deployment require independent verification",
+      "provider_free_required": true
+    },
+    {
+      "id": "evercraft-network",
+      "name": "Evercraft Network",
+      "tagline": "Connections you can count on.",
+      "family": "telecom",
+      "name_status": "existing",
+      "release_state": "research",
+      "description": "Cellular-network and resilient connectivity concept; no commercial carrier claims.",
+      "identity": {
+        "background": "#102332",
+        "accent": "#8cd4ed",
+        "typography": "contemporary sans"
+      },
+      "proof": "Historical owned records only; product capability and current public deployment require independent verification",
+      "provider_free_required": true
+    },
+    {
+      "id": "eventwave",
+      "name": "EventWave",
+      "tagline": "Make the moment visible.",
+      "family": "events",
+      "name_status": "existing",
+      "release_state": "rebuild",
+      "description": "Event discovery and organizer tools; promotions require verification.",
+      "identity": {
+        "background": "#24192c",
+        "accent": "#e7b6fb",
+        "typography": "contemporary sans"
+      },
+      "proof": "Historical owned records only; product capability and current public deployment require independent verification",
+      "provider_free_required": true
+    },
+    {
+      "id": "faie",
+      "name": "FAIE",
+      "tagline": "Signals, not speculation.",
+      "family": "research",
+      "name_status": "existing",
+      "release_state": "rebuild",
+      "description": "Evidence-grounded research intelligence.",
+      "identity": {
+        "background": "#142629",
+        "accent": "#91d5cb",
+        "typography": "contemporary sans"
+      },
+      "proof": "Historical owned records only; product capability and current public deployment require independent verification",
+      "provider_free_required": true
+    },
+    {
+      "id": "systemia-radar",
+      "name": "Systemia Radar",
+      "tagline": "See what needs attention.",
+      "family": "monitoring",
+      "name_status": "existing",
+      "release_state": "rebuild",
+      "description": "Monitoring and evidence triage, not unverified live surveillance.",
+      "identity": {
+        "background": "#1b2534",
+        "accent": "#e3b98f",
+        "typography": "contemporary sans"
+      },
+      "proof": "Historical owned records only; product capability and current public deployment require independent verification",
+      "provider_free_required": true
+    },
+    {
+      "id": "nexthire",
+      "name": "NextHire",
+      "tagline": "Hire with more clarity.",
+      "family": "hiring",
+      "name_status": "existing",
+      "release_state": "rebuild",
+      "description": "Decision support and hiring evaluation with human oversight.",
+      "identity": {
+        "background": "#1a2530",
+        "accent": "#b1d2f4",
+        "typography": "contemporary sans"
+      },
+      "proof": "Historical owned records only; product capability and current public deployment require independent verification",
+      "provider_free_required": true
+    },
+    {
+      "id": "files-companion",
+      "name": "Files Companion",
+      "tagline": "Let the documents speak.",
+      "family": "public_records",
+      "name_status": "existing",
+      "release_state": "rebuild",
+      "description": "Source-linked public records library with provenance and careful context.",
+      "identity": {
+        "background": "#1a1c22",
+        "accent": "#e3d2ae",
+        "typography": "contemporary sans"
+      },
+      "proof": "Historical owned records only; product capability and current public deployment require independent verification",
+      "provider_free_required": true
+    },
+    {
+      "id": "systemia-field-library",
+      "name": "Systemia Field Library",
+      "tagline": "Knowledge built for the field.",
+      "family": "knowledge",
+      "name_status": "existing",
+      "release_state": "rebuild",
+      "description": "Field reference and education materials.",
+      "identity": {
+        "background": "#202b25",
+        "accent": "#d4dea8",
+        "typography": "contemporary sans"
+      },
+      "proof": "Historical owned records only; product capability and current public deployment require independent verification",
+      "provider_free_required": true
+    },
+    {
+      "id": "havenly",
+      "name": "Havenly Cleaning",
+      "tagline": "A little more room to breathe.",
+      "family": "cleaning",
+      "name_status": "existing",
+      "release_state": "rebuild",
+      "description": "Cleaning business experience, separate from private command center.",
+      "identity": {
+        "background": "#f3f2ec",
+        "accent": "#8dbcae",
+        "typography": "contemporary sans"
+      },
+      "proof": "Historical owned records only; product capability and current public deployment require independent verification",
+      "provider_free_required": true
+    },
+    {
+      "id": "sunshine-spotless",
+      "name": "Sunshine & Spotless",
+      "tagline": "A brighter clean.",
+      "family": "cleaning",
+      "name_status": "existing",
+      "release_state": "rights_review",
+      "description": "Historical independent business; branding and domain rights require confirmation.",
+      "identity": {
+        "background": "#fff8e8",
+        "accent": "#e6b15b",
+        "typography": "contemporary sans"
+      },
+      "proof": "Historical owned records only; product capability and current public deployment require independent verification",
+      "provider_free_required": true
+    },
+    {
+      "id": "eps-precise-estimator",
+      "name": "EPS Precise Estimator",
+      "tagline": "Clarity before the crew.",
+      "family": "estimation",
+      "name_status": "existing",
+      "release_state": "prototype",
+      "description": "Estimation tool; public service readiness not established.",
+      "identity": {
+        "background": "#192c2b",
+        "accent": "#d2e9ca",
+        "typography": "contemporary sans"
+      },
+      "proof": "Historical owned records only; product capability and current public deployment require independent verification",
+      "provider_free_required": true
+    },
+    {
+      "id": "infinite-classroom",
+      "name": "Infinite Classroom",
+      "tagline": "Follow your curiosity.",
+      "family": "education",
+      "name_status": "existing",
+      "release_state": "prototype",
+      "description": "Six evidenced learning worlds; conversational tutor parity remains unverified.",
+      "identity": {
+        "background": "#f5f1ff",
+        "accent": "#7656c9",
+        "typography": "warm editorial"
+      },
+      "proof": "Historical owned records only; product capability and current public deployment require independent verification",
+      "provider_free_required": true
+    },
+    {
+      "id": "evercraft-circles",
+      "name": "Evercraft Circles",
+      "tagline": "Build trust. Make introductions count.",
+      "family": "referrals",
+      "name_status": "existing",
+      "release_state": "discovery",
+      "description": "Professional relationship and referral network; private introductions require consent.",
+      "identity": {
+        "background": "#f5f0e8",
+        "accent": "#416b65",
+        "typography": "humanist editorial"
+      },
+      "proof": "Historical owned records only; product capability and current public deployment require independent verification",
+      "provider_free_required": true
+    },
+    {
+      "id": "nepal-deep-learning-academy",
+      "name": "Nepal Deep Learning Academy",
+      "tagline": "Learn deeply, wherever you are.",
+      "family": "education",
+      "name_status": "existing",
+      "release_state": "rebuild",
+      "description": "Low-bandwidth learning material, curriculum rights and parity to confirm.",
+      "identity": {
+        "background": "#fcf6e8",
+        "accent": "#bd6b47",
+        "typography": "warm editorial"
+      },
+      "proof": "Historical owned records only; product capability and current public deployment require independent verification",
+      "provider_free_required": true
+    },
+    {
+      "id": "systemia-university",
+      "name": "Systemia University",
+      "tagline": "Learn the systems. Prove the work.",
+      "family": "education",
+      "name_status": "existing",
+      "release_state": "rebuild",
+      "description": "Operator training and evidence-centered learning.",
+      "identity": {
+        "background": "#142234",
+        "accent": "#aac6fb",
+        "typography": "warm editorial"
+      },
+      "proof": "Historical owned records only; product capability and current public deployment require independent verification",
+      "provider_free_required": true
+    },
+    {
+      "id": "ascend",
+      "name": "Ascend",
+      "tagline": "Find your next level.",
+      "family": "athletics",
+      "name_status": "existing",
+      "release_state": "privacy_review",
+      "description": "Athlete development and support; youth privacy controls required.",
+      "identity": {
+        "background": "#15232a",
+        "accent": "#e8b988",
+        "typography": "contemporary sans"
+      },
+      "proof": "Historical owned records only; product capability and current public deployment require independent verification",
+      "provider_free_required": true
+    }
+  ]
+}
