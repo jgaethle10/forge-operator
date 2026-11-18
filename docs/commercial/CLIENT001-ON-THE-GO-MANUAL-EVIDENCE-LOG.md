@@ -30,7 +30,7 @@ Until a first-party measurement route has the client's approval, Evercraft docum
 | When | Channel / asset | Action | Evidence reference | Outcome type | Observed outcome | Proof status |
 | --- | --- | --- | --- | --- | --- | --- |
 | 2026-11-16 (reported) | Messenger · On The Go review link | Juan reviewed bilingual preview | Screenshot shared by founder in chat | Client feedback | Positive review of design clarity (private correspondence) | Reported, visual evidence |
-| Pending | Evercraft channels | Next approved promotion | TBD | Distribution | Unknown | Not started |
+| 2026-11-17 | Evercraft-owned On The Go review site | Released V4 bilingual two-step package matcher, customer FAQs and selected-service inquiry; live HTTPS verified | PR #2236; release CI #44214671573 / #44214672107; public HTTPS canary #44214826257 | Customer experience | Preview deployed; not promoted or approved as a booking service | Verified technical release; paid revenue unknown |\n| Pending | Evercraft channels | Next approved promotion | TBD | Distribution | Unknown | Not started |
 | Pending | Customer contact | Referral/booking signal | TBD | Inquiry / booking | Unknown | Not reported |
 | Pending | Juan optional follow-up | Service completed and paid | TBD | Paid outcome | Unknown | Not reported |
 
