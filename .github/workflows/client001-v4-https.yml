@@ -1,0 +1,38 @@
+name: Client001 V4 Live HTTPS Acceptance
+on:
+  push:
+    branches: [verify/client001-v4-https-20261117]
+    paths: ['.github/workflows/client001-v4-https.yml']
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - name: Verify actual public V4 review page without claiming bookings
+        shell: bash
+        run: |
+          set -euo pipefail
+          URL='https://jgaethle10.github.io/forge-operator/clients/on-the-go/review/'
+          for attempt in {1..21}; do
+            if curl --fail --silent --show-error --location --max-time 25 "$URL" -o /tmp/otg.html &&
+              grep -Fq 'On The Go Mobile Quick Lube | Client Preview V4' /tmp/otg.html; then
+              break
+            fi
+            sleep 12
+          done
+          grep -Fq 'On The Go Mobile Quick Lube | Client Preview V4' /tmp/otg.html
+          grep -Fq 'packageMatrix' /tmp/otg.html
+          grep -Fq 'Find your fit in two taps.' /tmp/otg.html
+          grep -Fq 'Elige tu servicio en dos pasos.' /tmp/otg.html
+          grep -Fq 'Your package' /tmp/otg.html || grep -Fq 'YOUR PACKAGE' /tmp/otg.html
+          grep -Fq 'Can I supply my own oil and filter?' /tmp/otg.html
+          grep -Fq '509-833-5025' /tmp/otg.html
+          grep -Fq 'No complicated forms' /tmp/otg.html
+          grep -Fq 'noindex,nofollow,noarchive' /tmp/otg.html
+          ! grep -Fq 'refCode' /tmp/otg.html
+          ! grep -Fq 'How optional referral tracking would work' /tmp/otg.html
+          echo 'CLIENT001_V4_LIVE_HTTPS_VERIFIED'
+          echo "URL=$URL"
+          wc -c /tmp/otg.html
