@@ -1,0 +1,35 @@
+name: Fallen conversational revision contract
+on:
+  pull_request:
+    paths:
+      - 'systemia/media-studio/conversational-revision.ts'
+      - 'systemia/media-studio/conversational-revision.test.ts'
+      - 'systemia/media-studio/studio-agent.ts'
+      - 'systemia/media-studio/studio-agent.test.ts'
+      - 'systemia/media-studio/timeline.ts'
+      - 'systemia/media-studio/timeline.test.ts'
+      - '.github/workflows/fallen-conversational-revision.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/media-studio/conversational-revision.ts'
+      - 'systemia/media-studio/conversational-revision.test.ts'
+      - '.github/workflows/fallen-conversational-revision.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install existing project dependencies
+        run: npm install --no-audit --no-fund
+      - name: Check source syntax and TypeScript contracts
+        run: npm run lint
+      - name: Exercise real timeline, agent and language-to-proposal boundaries
+        run: node --import tsx --test systemia/media-studio/timeline.test.ts systemia/media-studio/studio-agent.test.ts systemia/media-studio/conversational-revision.test.ts
