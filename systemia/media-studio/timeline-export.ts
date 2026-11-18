@@ -104,10 +104,10 @@ function assertReadyAsset(asset:TimelineAsset,clip:TimelineClip){
   }
 }
 
-function sourceArgs(binding:InputBinding){
+function sourceArgs(binding:InputBinding,fps:number){
   const args:string[]=[];
   if(binding.asset.kind==='image'){
-    args.push('-loop','1','-t',String(binding.clip.durationSec),'-i',binding.asset.path);
+    args.push('-loop','1','-framerate',String(fps),'-t',String(binding.clip.durationSec),'-i',binding.asset.path);
     return args;
   }
   if(binding.clip.trimStartSec&&binding.clip.trimStartSec>0){
@@ -117,7 +117,7 @@ function sourceArgs(binding:InputBinding){
   return args;
 }
 
-function visualFilter(binding:InputBinding,width:number,height:number,label:string){
+function visualFilter(binding:InputBinding,width:number,height:number,fps:number,label:string){
   const clip=binding.clip;
   const shift=clip.startSec;
   if(binding.track.kind==='overlay'){
@@ -132,7 +132,18 @@ function visualFilter(binding:InputBinding,width:number,height:number,label:stri
      !Number.isFinite(focusY)||focusY<0||focusY>1){
     throw new Error(`timeline_visual_focus_invalid:${clip.id}`);
   }
-  return `[${binding.inputIndex}:v]scale=${width}:${height}:force_original_aspect_ratio=increase,crop=${width}:${height}:x=(iw-ow)*${focusX}:y=(ih-oh)*${focusY},setsar=1,setpts=PTS-STARTPTS+${shift}/TB[${label}];`;
+  const base=`[${binding.inputIndex}:v]scale=${width}:${height}:force_original_aspect_ratio=increase,crop=${width}:${height}:x=(iw-ow)*${focusX}:y=(ih-oh)*${focusY},setsar=1`;
+  if(binding.asset.kind==='image' && clip.editorialPhotoMotion){
+    const frameCount=Math.max(1,Math.ceil(clip.durationSec*fps));
+    const step=(0.075/frameCount).toFixed(9);
+    // Bounded 7.5% photographic push/pull. The original pixels are the only
+    // source of picture detail; this is not AI-generated physical motion.
+    const zoom=clip.editorialPhotoMotion==='slow-push'
+      ?`min(1+on*${step},1.075)`
+      :`max(1.075-on*${step},1)`;
+    return `${base},zoompan=z='${zoom}':x='(iw-iw/zoom)*${focusX}':y='(ih-ih/zoom)*${focusY}':d=1:s=${width}x${height}:fps=${fps},setpts=PTS-STARTPTS+${shift}/TB[${label}];`;
+  }
+  return `${base},setpts=PTS-STARTPTS+${shift}/TB[${label}];`;
 }
 
 function audioFilter(binding:InputBinding,label:string){
@@ -184,7 +195,7 @@ export function buildTimelineExportPlan(input:{
         if(asset.kind!=='image'&&asset.kind!=='video') throw new Error(`timeline_export_visual_asset_kind_invalid:${asset.id}`);
         const binding={asset,clip,track,inputIndex};
         visualBindings.push(binding);
-        args.push(...sourceArgs(binding));
+        args.push(...sourceArgs(binding,project.fps));
         inputIndex+=1;
         continue;
       }
@@ -192,7 +203,7 @@ export function buildTimelineExportPlan(input:{
         if(asset.kind!=='audio'&&asset.kind!=='video') throw new Error(`timeline_export_audio_asset_kind_invalid:${asset.id}`);
         const binding={asset,clip,track,inputIndex};
         audioBindings.push(binding);
-        args.push(...sourceArgs(binding));
+        args.push(...sourceArgs(binding,project.fps));
         inputIndex+=1;
       }
     }
@@ -202,7 +213,7 @@ export function buildTimelineExportPlan(input:{
   let currentVideo='base0';
   visualBindings.forEach((binding,index)=>{
     const label=`vclip${index}`;
-    filters.push(visualFilter(binding,width,height,label));
+    filters.push(visualFilter(binding,width,height,project.fps,label));
     const out=`vout${index}`;
     const x=binding.track.kind==='overlay'?(binding.clip.x??0):0;
     const y=binding.track.kind==='overlay'?(binding.clip.y??0):0;
