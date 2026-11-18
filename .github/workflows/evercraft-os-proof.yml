@@ -7,6 +7,20 @@ on:
     paths:
       - "systemia/evercraft-os/**"
       - "systemia/evercraft-home/os-adapter.mjs"
+      - "systemia/evercraft-home/os-integration-adapter.mjs"
+      - "systemia/evercraft-home/os-outcome-source-audit.mjs"
+      - "systemia/evercraft-home/os-private-outcome-readback.mjs"
+      - "systemia/mcp/fabric-private-outcome-readback.mjs"
+      - "systemia/mcp/fabric-outcome-ledger-witness.mjs"
+      - "systemia/shipping/shipping-ledger.mjs"
+      - "systemia/mcp/fabric-local-runtime.mjs"
+      - "tests/fabric-private-outcome-readback.test.mjs"
+      - "systemia/evercraft-home/os-private-outcome-readback.test.mjs"
+      - "systemia/evercraft-home/os-outcome-source-audit.test.mjs"
+      - "systemia/evercraft-home/os-saban-snapshot.mjs"
+      - "systemia/evercraft-home/os-operational-readbacks.test.mjs"
+      - "systemia/evercraft-home/os-integration.test.mjs"
+      - "systemia/evercraft-home/public/os.html"
       - "systemia/evercraft-home/os-status.test.mjs"
       - "systemia/evercraft-home/server.mjs"
       - "systemia/evercraft-home/public/apps.html"
@@ -16,6 +30,20 @@ on:
     paths:
       - "systemia/evercraft-os/**"
       - "systemia/evercraft-home/os-adapter.mjs"
+      - "systemia/evercraft-home/os-integration-adapter.mjs"
+      - "systemia/evercraft-home/os-outcome-source-audit.mjs"
+      - "systemia/evercraft-home/os-private-outcome-readback.mjs"
+      - "systemia/mcp/fabric-private-outcome-readback.mjs"
+      - "systemia/mcp/fabric-outcome-ledger-witness.mjs"
+      - "systemia/shipping/shipping-ledger.mjs"
+      - "systemia/mcp/fabric-local-runtime.mjs"
+      - "tests/fabric-private-outcome-readback.test.mjs"
+      - "systemia/evercraft-home/os-private-outcome-readback.test.mjs"
+      - "systemia/evercraft-home/os-outcome-source-audit.test.mjs"
+      - "systemia/evercraft-home/os-saban-snapshot.mjs"
+      - "systemia/evercraft-home/os-operational-readbacks.test.mjs"
+      - "systemia/evercraft-home/os-integration.test.mjs"
+      - "systemia/evercraft-home/public/os.html"
       - "systemia/evercraft-home/os-status.test.mjs"
       - "systemia/evercraft-home/server.mjs"
       - "systemia/evercraft-home/public/apps.html"
@@ -53,6 +81,16 @@ jobs:
         run: node --test systemia/evercraft-os/systemia-launcher.test.mjs
       - name: Prove Home OS status surface
         run: node --test systemia/evercraft-home/os-status.test.mjs
+      - name: Prove unified OS readback is honest and non-executing
+        run: node --test systemia/evercraft-home/os-integration.test.mjs
+      - name: Prove commercial outcome receipts do not fabricate live authority
+        run: node --test systemia/evercraft-home/os-outcome-source-audit.test.mjs
+      - name: Prove signed private outcome bridge is scoped and replay-safe
+        run: node --test systemia/evercraft-home/os-private-outcome-readback.test.mjs
+      - name: Prove real localhost Fabric to Home readback transport with no customer claims
+        run: node --test tests/fabric-private-outcome-readback.test.mjs
+      - name: Prove private Saban aggregates and scoped commerce projection
+        run: node --test systemia/evercraft-home/os-operational-readbacks.test.mjs
       - name: Emit boot envelope
         run: node systemia/evercraft-os/runtime.mjs
       - name: Emit sanitized device profile

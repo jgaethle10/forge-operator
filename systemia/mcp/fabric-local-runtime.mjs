@@ -3,6 +3,7 @@ import { buyerOrderKey, verifyNativePaymentReturn } from './payment-return.mjs';
 import { publicPaymentOffer } from './public-payment-offers.mjs';
 import {renderForensiScopeBuyerPage} from './forensiscope-sales-page.mjs';
 import { ownedPaymentTransportConfig } from './owned-payment-transport.mjs';
+import { createFabricOutcomeReadback } from './fabric-private-outcome-readback.mjs';
 import http from 'node:http';
 import crypto from 'node:crypto';
 import fs from 'node:fs';
@@ -411,6 +412,12 @@ export async function startFabricLocalRuntime({
   visualIngestToken='',
   sabanCapacityHealthFile='',
   releaseRefFile='',
+  outcomeReadbackTokenFile=process.env.EVERCRAFT_FABRIC_OUTCOME_READBACK_TOKEN_FILE||'',
+  outcomeReadbackSigningKeyFile=process.env.EVERCRAFT_FABRIC_OUTCOME_READBACK_SIGNING_KEY_FILE||'',
+  outcomeReadbackRecordLoader=null,
+  outcomeExecutionEventsFile=process.env.EVERCRAFT_FABRIC_OUTCOME_EXECUTION_EVENTS_FILE||'',
+  outcomeShippingLedgerFile=process.env.EVERCRAFT_FABRIC_OUTCOME_SHIPPING_LEDGER_FILE||'',
+  outcomeReadbackNow=()=>Date.now(),
   purchaseIntentFetch=fetch,
   purchaseIntentUrl=process.env.EVERCRAFT_PURCHASE_INTENT_OWNED_URL||'',
   paymentOpsUrl=process.env.EVERCRAFT_PAYMENT_OPS_OWNED_URL||'',
@@ -493,6 +500,17 @@ export async function startFabricLocalRuntime({
   if(typeof purchaseIntentFetch!=='function'){
     throw new Error('purchase_intent_fetch_invalid');
   }
+  // Private readback is not enabled by a public Fabric health route. It
+  // requires distinct operator-owned secrets and an explicit canonical source
+  // loader. Missing source data keeps the private endpoint in HTTP 503 hold.
+  const privateOutcomeReadback=createFabricOutcomeReadback({
+    tokenFile:outcomeReadbackTokenFile,
+    signatureKeyFile:outcomeReadbackSigningKeyFile,
+    loadAuthorityRecords:outcomeReadbackRecordLoader,
+    executionEventsFile:outcomeExecutionEventsFile,
+    shippingLedgerFile:outcomeShippingLedgerFile,
+    now:outcomeReadbackNow,
+  });
   const commerceTransport=ownedPaymentTransportConfig({purchaseIntentUrl,paymentOpsUrl});
   const purchaseIntentEndpoint=commerceTransport.purchaseIntentEndpoint;
   const directPaymentOpsEndpoint=commerceTransport.paymentOpsEndpoint;
@@ -815,6 +833,10 @@ export async function startFabricLocalRuntime({
         if(req.method==='HEAD')return res.end();
         return res.end(payload);
       }
+
+      // Private internal-only source readback must be handled BEFORE permissive
+      // public OPTIONS and MCP routes. No browser Origin or CORS access.
+      if(await privateOutcomeReadback.handle(req,res))return;
 
       // Public-safe availability signal. Hides unconfigured intake before a
       // buyer tries to submit PII. Never exposes paths, key, identity or volume.

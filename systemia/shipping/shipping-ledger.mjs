@@ -29,10 +29,18 @@ function defaultLedger() {
 }
 
 function atomicWrite(file, value) {
-  fs.mkdirSync(path.dirname(file), { recursive:true });
+  const folder = path.dirname(file);
+  fs.mkdirSync(folder, { recursive:true, mode:0o700 });
+  const directory = fs.lstatSync(folder);
+  if (!directory.isDirectory() || directory.isSymbolicLink())
+    throw new Error('shipping_private_ledger_dir_untrusted');
+  fs.chmodSync(folder, 0o700);
   const temp = file + '.' + process.pid + '.tmp';
-  fs.writeFileSync(temp, JSON.stringify(value, null, 2) + '\n');
+  // Shipment recipient and provider evidence are private. Newly materialized
+  // ledger files must not be world/group-readable on common host umasks.
+  fs.writeFileSync(temp, JSON.stringify(value, null, 2) + '\n', {mode:0o600});
   fs.renameSync(temp, file);
+  fs.chmodSync(file, 0o600);
 }
 
 export function loadShippingLedger(file = 'state/shipping/shipping-ledger.json') {
