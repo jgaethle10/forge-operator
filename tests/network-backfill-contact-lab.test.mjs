@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import {randomBytes} from 'node:crypto';
+import {spawnSync} from 'node:child_process';
 import {makeLabBundle,simulateAuthorizedContact,simulateDestinationDelivery,verifyBackfillAck} from '../systemia/network/backfill-contact-lab.mjs';
 
 test('multiple synthetic authorized contact windows, durable custody and separate destination ACK',()=>{
@@ -17,7 +18,12 @@ test('multiple synthetic authorized contact windows, durable custody and separat
   assert.equal(first.state,'PARTIAL');assert.equal(first.stored_fragments,2);assert.equal(first.ack,null);
   const premature=simulateDestinationDelivery({bundle,key,gateway_root:gateway,destination_root:destination,expected_destination:'beta'});
   assert.equal(premature.state,'HOLD_MISSING_FRAGMENTS');
-  const second=simulateAuthorizedContact({bundle,key,root:gateway,max_fragments:2048,link_observed:true,identity_verified:true,consent_ref:'operator-test-permission'});
+  // Window two runs in a *new Node process*, rebuilding custody state from persisted disk fragments.
+  const moduleUrl=new URL('../systemia/network/backfill-contact-lab.mjs',import.meta.url).href;
+  const script=`import fs from 'node:fs'; import {simulateAuthorizedContact} from '${moduleUrl}'; const payload=JSON.parse(fs.readFileSync(0,'utf8'));payload.key=Buffer.from(payload.key,'base64');console.log(JSON.stringify(simulateAuthorizedContact(payload)));`;
+  const subprocess=spawnSync(process.execPath,['--input-type=module','-e',script],{input:JSON.stringify({bundle,key:key.toString('base64'),root:gateway,max_fragments:2048,link_observed:true,identity_verified:true,consent_ref:'operator-test-permission'}),encoding:'utf8',timeout:5000});
+  assert.equal(subprocess.status,0,subprocess.stderr);
+  const second=JSON.parse(subprocess.stdout.trim());
   assert.equal(second.state,'CUSTODY_ACCEPTED');assert.ok(second.stored_fragments>2);
   assert.equal(verifyBackfillAck({key,receipt:second.ack,bundle,expected_kind:'gateway_custody'}),true);
   assert.throws(()=>verifyBackfillAck({key,receipt:second.ack,bundle,expected_kind:'destination_delivery'}),/ack_claim_mismatch/);
@@ -32,6 +38,6 @@ test('multiple synthetic authorized contact windows, durable custody and separat
   assert.throws(()=>simulateAuthorizedContact({bundle:altered,key,root:gateway,consent_ref:'yes',identity_verified:true,link_observed:true,max_fragments:1}),/unauthenticated_manifest/);
   const corrupted=path.join(gateway,bundle.manifest.bundle_id,'fragment-0.dat');fs.writeFileSync(corrupted,'bad');
   assert.throws(()=>simulateAuthorizedContact({bundle,key,root:gateway,consent_ref:'yes',identity_verified:true,link_observed:true,max_fragments:1}),/conflicting_fragment/);
-  console.log(JSON.stringify({schema:'evercraft.network.backfill-contact-lab.test.v1',status:'PASS',simulation_only:true,physical_satellite_link:false,windows:2,fragments:second.fragment_count,first_window_transferred:2,second_window_transferred:second.transferred_fragments,custody_ack_separate:true,destination_ack_separate:true,corruption_rejected:true,unauthorized_route_rejected:true}));
+  console.log(JSON.stringify({schema:'evercraft.network.backfill-contact-lab.test.v1',status:'PASS',simulation_only:true,physical_satellite_link:false,windows:2,second_window_separate_node_process:true,fragments:second.fragment_count,first_window_transferred:2,second_window_transferred:second.transferred_fragments,custody_ack_separate:true,destination_ack_separate:true,corruption_rejected:true,unauthorized_route_rejected:true}));
  }finally{fs.rmSync(root,{force:true,recursive:true});}
 });
