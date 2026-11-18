@@ -16,9 +16,8 @@ concurrency:
 
 jobs:
   check:
-    # Playwright 1.58.2 has no dependencies installer for Ubuntu 26.04 yet.
-    # Pin the Forge smoke/browser QA job to supported Ubuntu 24.04.
-    runs-on: ubuntu-24.04
+    # Ubuntu-latest runs on 26.04; Playwright >=1.61 provides native support.
+    runs-on: ubuntu-latest
     timeout-minutes: 15
 
     steps:
@@ -104,7 +103,7 @@ jobs:
 
       - name: Prepare Chromium for EverMaps owned visual QA
         run: |
-          npm install --no-save --no-audit --no-fund playwright@1.58.2
+          npm install --no-save --no-audit --no-fund playwright@1.65.1
           npx playwright install --with-deps chromium
 
       - name: Verify EverMaps desktop, mobile and source-outage browser behavior
