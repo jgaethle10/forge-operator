@@ -31,14 +31,18 @@ function notice(message, error = false, target = 'notice') {
   byId(target).textContent = message;
   byId(target).classList.toggle('notice-error', error);
 }
+function awaitingReply(r) {
+  return r.status === 'Sent' && r.sent.length > 0;
+}
 function next(r) {
   if (closed(r)) return r.outcome || 'Record outcome';
+  if (awaitingReply(r)) return r.next_action || 'Check for a reply';
   if (!qualified(r)) return 'Verify evidence, buyer, contact and fit';
   return r.next_action || (r.status === 'Sent' ? 'Set follow-up' : 'Prepare or review the offer');
 }
 function priority(r) {
   if (closed(r)) return 4;
-  if (qualified(r) && r.followup && r.followup <= today()) return 0;
+  if ((qualified(r) || awaitingReply(r)) && r.followup && r.followup <= today()) return 0;
   if (qualified(r) && r.kind === 'Paid work') return 1;
   return qualified(r) ? 2 : 3;
 }
