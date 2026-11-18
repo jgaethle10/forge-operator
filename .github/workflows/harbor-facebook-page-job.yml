@@ -1,0 +1,33 @@
+name: Harbor Facebook Page job
+
+on:
+  workflow_dispatch:
+    inputs:
+      job_path:
+        description: "Repo-relative JSON file under distribution/marketing/"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Validate exact Page and post
+        env:
+          JOB_PATH: ${{ inputs.job_path }}
+        run: |
+          case "$JOB_PATH" in distribution/marketing/*.json) ;; *) exit 1 ;; esac
+          case "$JOB_PATH" in *../*|*//*|*$'\n'*) exit 1 ;; esac
+          git ls-files --error-unmatch -- "$JOB_PATH" >/dev/null
+          test "$(realpath -- "$JOB_PATH")" = "$PWD/$JOB_PATH"
+          node systemia/distribution/harbor/facebook-job.mjs validate "$JOB_PATH"
