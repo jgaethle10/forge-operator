@@ -64,7 +64,7 @@ const gatewayFolder=(root,id)=>{
 function rebuild(bundle,dir){
   const out=[];
   for(let i=0;i<bundle.manifest.fragment_count;i++){
-    const f=path.join(dir,\`fragment-\${i}.dat\`);
+    const f=path.join(dir,`fragment-${i}.dat`);
     if(!fs.existsSync(f))return null;
     const st=fs.lstatSync(f);if(!st.isFile()||(st.mode&0o077))throw Error('unsafe_fragment');
     const b=fs.readFileSync(f),expected=Buffer.from(bundle.fragments[i],'base64');
@@ -93,14 +93,14 @@ export function simulateAuthorizedContact({bundle,key,root,consent_ref,identity_
   const dir=gatewayFolder(root,m.bundle_id);
   // Detect corruption and unsafe files before any new writes, including a prior partial window.
   for(let i=0;i<m.fragment_count;i++){
-    const f=path.join(dir,\`fragment-\${i}.dat\`);
+    const f=path.join(dir,`fragment-${i}.dat`);
     if(fs.existsSync(f)){
       const st=fs.lstatSync(f);if(!st.isFile()||(st.mode&0o077)||!fs.readFileSync(f).equals(Buffer.from(bundle.fragments[i],'base64')))throw Error('conflicting_fragment');
     }
   }
   let transferred=0;
   for(let i=0;i<m.fragment_count&&transferred<max_fragments;i++){
-    const f=path.join(dir,\`fragment-\${i}.dat\`);
+    const f=path.join(dir,`fragment-${i}.dat`);
     if(!fs.existsSync(f)){storeFile(f,Buffer.from(bundle.fragments[i],'base64'));transferred++;}
   }
   const reconstructed=rebuild(bundle,dir);
@@ -115,7 +115,7 @@ export function simulateDestinationDelivery({bundle,key,gateway_root,destination
   const envelope=JSON.parse(bytes.toString('utf8'));
   if(envelope.source!==m.source||envelope.destination!==m.destination||envelope.message_id!==m.bundle_id)throw Error('envelope_manifest_mismatch');
   const opened=openEnvelope({envelope,key,expected_destination});
-  const root=safeRoot(destination_root),file=path.join(root,\`\${m.bundle_id}.json\`);
+  const root=safeRoot(destination_root),file=path.join(root,`${m.bundle_id}.json`);
   const stored={message_id:m.bundle_id,from:m.source,payload:opened.payload};
   const fresh=storeFile(file,Buffer.from(JSON.stringify(stored)));
   return {state:'END_TO_END_DELIVERED',simulation_only:true,duplicate:!fresh,ack:ack(key,'destination_delivery',m)};
