@@ -113,8 +113,8 @@ export function proposeConversationalRevision(
   const protectedSec=keep??0;
   const reasons:string[]=[];
   const voiceRequested=/\b(?:change|replace|redo|new|different|rework|adjust)\b[^.!?]{0,100}\b(?:voice|narration|voiceover)\b|\b(?:voice|narration|voiceover)\b[^.!?]{0,50}\b(?:change|replace|redo|different|rework)\b/i.test(instruction);
-  const pictureRequested=/\b(?:change|make|redo|replace|improve|adjust|rework|regenerate)\b/i.test(instruction)&&
-    /\b(?:ending|end|final shot|opening|intro|beginning|shot|scene)\b/i.test(instruction);
+  // Require the change verb to point at a picture target, not at "voice in the ending".
+  const pictureRequested=/\b(?:change|make|redo|replace|improve|adjust|rework|regenerate)\s+(?:the\s+)?(?:ending|end|final shot|opening|intro|beginning|shot|scene)\b/i.test(instruction);
   let target:Located|null=null;
   const selectedVisualIntent=Boolean(request.selectedClipId)&&/\b(?:visual|picture|footage|cinematic|brighter|darker|exciting|shot|scene|frame|color)\b/i.test(instruction);
   if(request.selectedClipId&&(pictureRequested||selectedVisualIntent)){
