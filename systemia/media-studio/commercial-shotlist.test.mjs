@@ -120,3 +120,46 @@ test('EPS cinematic admission cannot silently omit Relay-floor quality standard'
   brief.creativeStandard='relay-floor-v1';
   assert.throws(()=>planSourceFirstCommercial(brief),/relay_floor_minimum_five_moving_shots/);
 });
+
+test('actual client-owned stills can open a photo-motion commercial only with director evidence',t=>{
+  const {brief}=fixture(t);
+  brief.creativeStandard='source-photo-motion-v1';
+  brief.sourceAssets[1].evidenceState='observed';
+  brief.sourceAssets[1].rights='owned';
+  brief.scenes[0].assetId='source-1';
+  brief.scenes[0].mustShowSubjects=['product-detail'];
+  brief.scenes[0].motionTreatment='macro_push';
+  brief.scenes[1].assetId='source-0';
+  brief.scenes[1].mustShowSubjects=['active-cleaning'];
+  brief.photoMotionApproval={reviewedBy:'actual-director',reviewedAt:'2026-11-16T20:00:00Z',
+    evidenceRef:'private-photo-storyboard-review',noSyntheticAction:true};
+  const plan=planSourceFirstCommercial(brief);
+  assert.equal(plan.creativeStandard,'source-photo-motion-v1');
+  assert.equal(plan.timeline[0].videoFirst,false);
+  assert.equal(plan.timeline[0].photoMotionTreatment,'macro_push');
+  assert.equal(plan.timeline[0].requiresFinalMotionReview,true);
+  assert.equal(plan.releaseGates.photoMotionFinalReviewRequired,true);
+  assert.equal(plan.releaseGates.finalVideoMasterCreated,false);
+  assert.equal(plan.releaseGates.publicationAuthority,false);
+  assert.equal(plan.sabanInventory.jobs[0].shot.coverage[0].preferredTreatment,'authentic_still_motion');
+});
+test('photo-motion cannot bypass real-photo provenance, director review, and deliberate movement',t=>{
+  const {brief}=fixture(t);
+  brief.creativeStandard='source-photo-motion-v1';
+  brief.scenes[0].assetId='source-1';brief.scenes[0].mustShowSubjects=['product-detail'];
+  brief.scenes[1].assetId='source-0';brief.scenes[1].mustShowSubjects=['active-cleaning'];
+  brief.scenes[0].motionTreatment='macro_push';
+  assert.throws(()=>planSourceFirstCommercial(brief),/photo_motion_director_approval_missing/);
+  brief.photoMotionApproval={reviewedBy:'director',reviewedAt:'2026-11-16T20:00:00Z',
+    evidenceRef:'private',noSyntheticAction:true};
+  assert.throws(()=>planSourceFirstCommercial(brief),/opening_real_action_required/);
+  brief.sourceAssets[1].evidenceState='observed';
+  brief.scenes[0].motionTreatment='invented_people_running';
+  assert.throws(()=>planSourceFirstCommercial(brief),/opening_real_action_required/);
+  brief.scenes[0].motionTreatment='subtle_parallax';
+  brief.sourceAssets[1].rights='unknown';
+  assert.throws(()=>planSourceFirstCommercial(brief),/rights_unverified/);
+  brief.sourceAssets[1].rights='owned';
+  brief.photoMotionApproval.noSyntheticAction=false;
+  assert.throws(()=>planSourceFirstCommercial(brief),/photo_motion_director_approval_missing/);
+});

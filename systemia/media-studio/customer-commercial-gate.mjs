@@ -5,6 +5,7 @@ import {fileURLToPath} from 'node:url';
 import {auditCommercialAudio} from './commercial-audio-lab.mjs';
 import {inspectCommercialPicture} from './commercial-visual-qc.mjs';
 import {assessClientCommercialRelease,COMMERCIAL_RELEASE_SCHEMA} from './commercial-release-preflight.mjs';
+import {assessFallenSignatureQuality} from './fallen-signature-gate.mjs';
 
 const SCHEMA='evercraft.fallen.client-commercial-gate-request.v1';
 function requireObject(o,label) {
@@ -100,15 +101,23 @@ export function assembleCustomerCommercialGate({request,renderReceipt,masterQc,c
     renderReceipt,masterQc,clipManifest,audioQc,visualQc,
   };
   const release=assessClientCommercialRelease(releaseInput);
+  // No client-ready state can bypass the exact-master human creative audition.
+  const signatureQuality=assessFallenSignatureQuality({
+    release,review:request.signatureReview,
+    includesNarration:request.order?.includesNarration,
+  });
+  const status=signatureQuality.status==='blocked'?'blocked':release.status;
   return {
     schema:'evercraft.fallen.customer-commercial-gate-report.v1',
     orderId:release.orderId,
-    status:release.status,
+    status,
     masterSha256:release.masterSha256,
+    signatureQualityStatus:signatureQuality.status,
     audioStatus:audioQc.status,
     pictureStatus:visualQc.status,
-    rightsAndCreativeStatus:release.reasons.length?'needs_review':'reviewed',
+    rightsAndCreativeStatus:(release.reasons.length||signatureQuality.reasons.length)?'needs_review':'reviewed',
     release,
+    signatureQuality,
     evidence:{
       audio:audioQc,
       visual:visualQc,
@@ -122,6 +131,7 @@ export function assembleCustomerCommercialGate({request,renderReceipt,masterQc,c
       paymentAuthorityGranted:false,
       deliveryAuthorityGranted:false,
       publicationAuthorityGranted:false,
+      signatureReviewMandatoryForClientReady:true,
     },
   };
 }
@@ -145,7 +155,9 @@ if(process.argv[1] && path.resolve(process.argv[1])===fileURLToPath(import.meta.
     fs.mkdirSync(path.dirname(out),{recursive:true});
     fs.writeFileSync(out,JSON.stringify(result,null,2)+'\n','utf8');
     console.log(JSON.stringify({schema:result.schema,orderId:result.orderId,status:result.status,
-      reasons:result.release.reasons,audioStatus:result.audioStatus,pictureStatus:result.pictureStatus,
+      reasons:[...new Set([...result.release.reasons,...result.signatureQuality.reasons])].sort(),
+      signatureQualityStatus:result.signatureQualityStatus,
+      audioStatus:result.audioStatus,pictureStatus:result.pictureStatus,
       outputPath:out},null,2));
     if(result.status==='blocked')process.exitCode=2;
   }catch(err){console.error(err instanceof Error?err.message:String(err));process.exitCode=1;}

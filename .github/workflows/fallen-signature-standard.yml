@@ -1,0 +1,56 @@
+name: Fallen Signature Standard
+on:
+  pull_request:
+    paths:
+      - 'systemia/media-studio/fallen-signature-gate.mjs'
+      - 'systemia/media-studio/fallen-signature-gate.test.mjs'
+      - 'systemia/media-studio/founder-desk.mjs'
+      - 'systemia/media-studio/founder-desk.html'
+      - 'systemia/media-studio/founder-desk.test.mjs'
+      - 'systemia/media-studio/commercial-shotlist.mjs'
+      - 'systemia/media-studio/commercial-shotlist.test.mjs'
+      - 'systemia/media-studio/customer-commercial-gate.mjs'
+      - 'systemia/media-studio/customer-commercial-gate.test.mjs'
+      - 'systemia/media-studio/FALLEN-SIGNATURE-STANDARD.md'
+      - '.github/workflows/fallen-signature-standard.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/media-studio/fallen-signature-gate.mjs'
+      - 'systemia/media-studio/fallen-signature-gate.test.mjs'
+      - 'systemia/media-studio/founder-desk.mjs'
+      - 'systemia/media-studio/founder-desk.html'
+      - 'systemia/media-studio/founder-desk.test.mjs'
+      - 'systemia/media-studio/commercial-shotlist.mjs'
+      - 'systemia/media-studio/commercial-shotlist.test.mjs'
+      - 'systemia/media-studio/customer-commercial-gate.mjs'
+      - 'systemia/media-studio/customer-commercial-gate.test.mjs'
+      - '.github/workflows/fallen-signature-standard.yml'
+permissions:
+  contents: read
+jobs:
+  release-gate-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install and verify FFmpeg utilities
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y ffmpeg
+          command -v ffmpeg
+          command -v ffprobe
+          ffmpeg -version >/dev/null
+          ffprobe -version >/dev/null
+      - name: Test signature gate and existing release contracts
+        run: |
+          node --test \
+            systemia/media-studio/fallen-signature-gate.test.mjs \
+            systemia/media-studio/founder-desk.test.mjs \
+            systemia/media-studio/commercial-shotlist.test.mjs \
+            systemia/media-studio/customer-commercial-gate.test.mjs \
+            systemia/media-studio/commercial-release-preflight.test.mjs

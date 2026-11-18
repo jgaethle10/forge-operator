@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Fallen Studios | Founder Desk</title>
+<style>
+:root{color-scheme:dark;--bg:#0a0c10;--panel:#15191f;--line:#323a45;--ink:#f7f4eb;--muted:#a6b0bd;--gold:#e9c992}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
+header,main{max-width:1100px;margin:auto;padding:20px}header{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);gap:12px}
+h1{font-size:clamp(25px,4vw,38px);letter-spacing:-.04em;margin:5px 0 0}h2{font-size:22px;margin:0 0 6px}p{margin:6px 0;color:var(--muted)}.eyebrow{font-size:11px;letter-spacing:.17em;font-weight:800;color:var(--gold)}
+button,input,select,textarea{font:inherit}button{border:1px solid #776a50;background:#222323;color:var(--ink);border-radius:8px;padding:10px 13px;cursor:pointer}
+button.primary{background:var(--gold);color:#17150f;font-weight:800}button:disabled{opacity:.4;cursor:not-allowed}
+input,textarea,select{width:100%;padding:10px;background:#090c11;color:var(--ink);border:1px solid var(--line);border-radius:7px}
+textarea{resize:vertical;min-height:70px}label{font-size:12px;color:var(--muted);display:block;margin:10px 0 4px}
+.layout{display:grid;grid-template-columns:minmax(230px,.85fr) minmax(0,1.6fr);gap:16px;margin-top:22px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:19px}
+.jobs{display:flex;flex-direction:column;gap:8px}.job{width:100%;text-align:left;border-color:var(--line);display:block}
+.job.active{border-color:var(--gold);background:#332b20}.job small{display:block;color:var(--muted)}
+.row{display:flex;gap:9px;align-items:center;flex-wrap:wrap}.stack{display:grid;gap:10px}
+.meta{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.muted{color:var(--muted)}
+.steps{background:#0d1117;border:1px solid var(--line);border-radius:8px;padding:15px}.steps ul{margin:8px 0 0 19px;padding:0}.steps li{margin:5px 0;color:#d2d5d8}
+section{margin-top:16px}hr{border:0;border-top:1px solid var(--line);margin:22px 0}
+.fileRow{display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid var(--line);padding:9px 0}
+.fileRow>div{min-width:0;overflow-wrap:anywhere}.fileRow small{color:var(--muted)}.fileRow button{font-size:12px;padding:6px 9px}
+#message{font-size:13px;min-height:22px;color:#f4d393}.guardrail{border-left:3px solid var(--gold);padding:12px 14px;background:#1f2021;color:#ddd9cb;margin:18px 0}
+footer{color:var(--muted);font-size:12px;padding:28px 0}
+@media(max-width:730px){.layout{grid-template-columns:1fr}.meta{grid-template-columns:1fr}header,main{padding:15px}}
+</style>
+</head>
+<body>
+<header>
+  <div><div class="eyebrow">EVERCRAFT / PRIVATE STUDIO OPERATIONS</div><h1>Fallen Founder Desk</h1></div>
+  <div class="eyebrow">LOCAL ONLY · NO AUTO-PUBLISHING</div>
+</header>
+<main>
+<p>One workspace for every commercial. Bring the brief and actual footage, review what is missing, prepare the production packet, then render from a fully approved source-first assembly. No hidden quality exceptions for owner jobs.</p>
+<div class="guardrail">A generated video is not a delivered commercial. Final narration, music, visuals, rights, client approval and the Fallen Signature gate are mandatory before release.</div>
+<div class="row">
+  <input id="newName" aria-label="New commercial business name" placeholder="New client or business name" style="max-width:330px"/>
+  <button id="newJob" class="primary">Create job</button>
+</div>
+<div class="layout">
+  <aside class="panel"><div class="eyebrow">LIVE LOCAL QUEUE</div><h2>Projects</h2><div id="jobs" class="jobs"></div></aside>
+  <article class="panel">
+    <div id="empty"><p>Select a production job.</p></div>
+    <div id="editor" hidden>
+      <div class="eyebrow" id="projectId"></div><h2 id="projectName"></h2>
+      <div class="meta">
+        <div><label for="goal">What should this commercial accomplish?</label><textarea id="goal" placeholder="One sentence describing the customer outcome"></textarea></div>
+        <div><label for="audience">Who should see it?</label><textarea id="audience" placeholder="The actual audience"></textarea></div>
+        <div><label for="offer">What is true about the business?</label><textarea id="offer" placeholder="A verified offer or value statement"></textarea></div>
+        <div><label for="cta">What should viewers do?</label><textarea id="cta" placeholder="Verified contact action. Never invent a number or URL"></textarea></div>
+      </div>
+      <div class="meta"><div><label for="format">Primary format</label><select id="format"><option>9:16</option><option>16:9</option><option>1:1</option></select></div><div><label for="narration">Voice treatment</label><select id="narration"><option value="narrated">Professional narration</option><option value="music_only">Intentional music-only film</option></select></div></div>
+      <label for="notes">Director notes / existing creative direction</label><textarea id="notes" rows="4"></textarea>
+      <section><button id="saveBrief" class="primary">Save brief</button></section>
+      <hr/>
+      <h2>Source materials</h2>
+      <p>Upload actual footage, approved narration and music into the private local workspace. Uploading never proves ownership, licensing or quality.</p>
+      <div class="row">
+        <select id="assetType" aria-label="Asset role" style="max-width:180px"><option value="picture">Picture / footage</option><option value="voice">Narration</option><option value="music">Music</option><option value="captions">Captions</option></select>
+        <input id="mediaFile" type="file" accept=".jpg,.jpeg,.png,.webp,.mp4,.mov,.wav,.mp3,.m4a,.srt" style="max-width:280px"/>
+        <button id="upload">Upload to local job</button>
+      </div>
+      <div id="assets"></div>
+      <hr/>
+      <h2>What Fallen must fix</h2>
+      <div class="steps"><div id="readiness"></div><ul id="blockers"></ul></div>
+      <hr/>
+      <h2>Produce / Review</h2>
+      <p>Export a structured packet for Fallen's source-first planner. Once picture, voice, music, proof and rights have been reviewed, import a valid approved assembly packet and render through the existing Fallen commercial pipeline.</p>
+      <div class="row">
+        <button id="packet">Download production packet</button>
+        <input type="file" accept=".json,application/json" id="assemblyFile" aria-label="Approved assembly JSON" style="max-width:240px"/>
+        <button id="assembly">Import approved assembly</button>
+      </div>
+      <section class="row"><button id="render" class="primary">Render approved assembly</button><small class="muted">Requires local FFmpeg, Node 22, tsx and all approved source files. Does not approve publication.</small></section>
+      <div id="message" role="status" aria-live="polite"></div>
+    </div>
+  </article>
+</div>
+<footer>Founder Desk runs on this computer at 127.0.0.1. All client media and workspaces remain in the configured private data directory. No analytics or third-party scripts.</footer>
+</main>
+<script>
+const TOKEN='__FALLEN_LOCAL_TOKEN__';
+let records=[],active=null,working=false;
+const $=id=>document.getElementById(id);
+async function api(route,method='GET',body,ctype){
+  const headers={'X-Fallen-Token':TOKEN};
+  if(ctype)headers['Content-Type']=ctype;
+  const r=await fetch(route,{method,headers,body});
+  const data=await r.json();if(!r.ok)throw Error(data.error||'Operation failed');return data;
+}
+function say(s){$('message').textContent=s}
+async function refresh(){
+  records=(await api('/api/jobs')).jobs;
+  if(!active)active=records[0]?.id||null;
+  draw();
+}
+function draw(){
+  const box=$('jobs');box.replaceChildren();
+  for(const job of records){
+    const button=document.createElement('button');
+    button.className='job'+(active===job.id?' active':'');
+    const name=document.createElement('strong');name.textContent=job.name;
+    const status=document.createElement('small');status.textContent=job.readiness.state.replaceAll('_',' ');
+    button.append(name,status);button.onclick=()=>{active=job.id;say('');draw()};box.append(button);
+  }
+  const job=records.find(x=>x.id===active);
+  $('empty').hidden=!!job;$('editor').hidden=!job;if(!job)return;
+  $('projectId').textContent=job.id;$('projectName').textContent=job.name;
+  for(const key of ['goal','audience','offer','cta','notes','format','narration'])$(key).value=job[key]||'';
+  $('readiness').textContent=job.technicalRender
+    ?('Technical render exists. Picture scan: '+(job.technicalRender.pictureStatus||'pending')+'. Creative and client release remain blocked.')
+    :'No approved customer-ready master yet.';
+  const ul=$('blockers');ul.replaceChildren();
+  for(const b of job.readiness.blockers){const li=document.createElement('li');li.textContent=b;ul.append(li)}
+  const items=$('assets');items.replaceChildren();
+  for(const asset of job.assets){
+    const line=document.createElement('div');line.className='fileRow';
+    const info=document.createElement('div');
+    const title=document.createElement('strong');title.textContent=asset.name;
+    const more=document.createElement('small');more.textContent=' · '+asset.type+' · '+asset.rights+' · '+Math.round(asset.size/1024)+' KB';
+    info.append(title,more);
+    const btn=document.createElement('button');btn.textContent='Record rights review';
+    btn.onclick=async()=>{
+      const evidence=prompt('Enter the private rights/license evidence reference for '+asset.name);
+      if(!evidence)return;
+      const reviewer=prompt('Who actually reviewed those rights?');
+      if(!reviewer)return;
+      try{await api('/api/jobs/'+job.id+'/rights','POST',JSON.stringify({assetId:asset.id,rights:'reviewed',evidence,reviewer}),'application/json');say('Rights attestation saved. This does not independently verify the license.');await refresh()}
+      catch(e){say(e.message)}
+    };
+    line.append(info,btn);items.append(line);
+  }
+  $('render').disabled=!job.approvedAssembly||working;
+}
+$('newJob').onclick=async()=>{
+  try{const name=$('newName').value.trim();if(!name)return;const r=await api('/api/jobs','POST',JSON.stringify({name}),'application/json');active=r.job.id;$('newName').value='';await refresh();say('New private production job created.')}
+  catch(e){say(e.message)}
+};
+$('saveBrief').onclick=async()=>{
+  try{const patch={};for(const key of ['goal','audience','offer','cta','notes','format','narration'])patch[key]=$(key).value;
+    await api('/api/jobs/'+active+'/update','POST',JSON.stringify(patch),'application/json');
+    say('Brief saved locally.');await refresh();
+  }catch(e){say(e.message)}
+};
+$('upload').onclick=async()=>{
+  const file=$('mediaFile').files[0];if(!file)return say('Choose a real source file first.');
+  working=true;draw();say('Importing real source bytes...');
+  try{
+    const route='/api/jobs/'+active+'/media?type='+encodeURIComponent($('assetType').value)+'&name='+encodeURIComponent(file.name);
+    await api(route,'POST',file,'application/octet-stream');$('mediaFile').value='';
+    await refresh();say('Source file imported. Rights and creative review still required.');
+  }catch(e){say(e.message)}finally{working=false;draw()}
+};
+$('packet').onclick=async()=>{
+  try{const packet=await api('/api/jobs/'+active+'/packet');
+    const blob=new Blob([JSON.stringify(packet,null,2)],{type:'application/json'});
+    const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=active+'-fallen-production-packet.json';a.click();URL.revokeObjectURL(url);
+    say('Production packet exported. It is not a rendered commercial.');
+  }catch(e){say(e.message)}
+};
+$('assembly').onclick=async()=>{
+  const file=$('assemblyFile').files[0];if(!file)return say('Choose an approved assembly JSON file.');
+  try{const raw=await file.text();const value=JSON.parse(raw);
+    await api('/api/jobs/'+active+'/assembly','POST',JSON.stringify(value),'application/json');
+    await refresh();say('Assembly staged. The renderer rechecks source hashes, rights declarations and approved audio before rendering.');
+  }catch(e){say(e.message)}
+};
+$('render').onclick=async()=>{
+  if(!confirm('Render locally from this approved assembly? This may use CPU/GPU capacity. No publication or customer delivery will occur.'))return;
+  working=true;draw();say('Running owned Fallen renderer with technical QC...');
+  try{const r=await api('/api/jobs/'+active+'/render','POST','{}','application/json');
+    await refresh();say(r.ok?'Technical master rendered. Final human Signature review is still required.':'Blocked: '+(r.diagnostics||'render failed'));
+  }catch(e){say(e.message)}finally{working=false;draw()}
+};
+refresh().catch(e=>say(e.message));
+</script>
+</body></html>
