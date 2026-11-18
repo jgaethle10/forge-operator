@@ -1,0 +1,43 @@
+name: Client 001 Desktop Contact Live Acceptance
+on:
+  push:
+    branches: [verify/client001-desktop-contact-live-20261117]
+    paths: ['.github/workflows/client001-desktop-contact-live.yml']
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - name: Confirm live V4.1 desktop contact route, bilingual labels and no jargon
+        shell: bash
+        run: |
+          set -euo pipefail
+          URL='https://jgaethle10.github.io/forge-operator/clients/on-the-go/review/'
+          for i in {1..24}; do
+            if curl --fail --silent --show-error --location --max-time 20 "$URL" -o /tmp/otg.html &&
+              grep -Fq 'On The Go Mobile Quick Lube | Client Preview V4.1' /tmp/otg.html; then break; fi
+            sleep 10
+          done
+          python3 - <<'PY'
+          from pathlib import Path
+          s=Path('/tmp/otg.html').read_text()
+          assert 'Client Preview V4.1' in s
+          assert 'class="nav-phone" href="#contact"' in s
+          assert 'href="#contact" data-i18n="callService"' in s
+          assert 'id="copyEmail"' in s
+          assert "Solicitar servicio por correo" in s
+          assert "Call On The Go" in s
+          assert 'Call Juan' not in s and 'Llamar a Juan' not in s
+          start=s.index('<div class="contact-card">')
+          card=s[start:s.index('</section>',start)]
+          assert 0 <= card.index('id="emailCta"') < card.index('id="callCta"')
+          assert 'mailto:onthegomobileoilchange@outlook.com' in card
+          assert 'tel:+15098335025' in card
+          assert 'noindex,nofollow,noarchive' in s
+          assert 'refCode' not in s
+          print('CLIENT001_DESKTOP_V4_1_PUBLIC_HTTPS_VERIFIED')
+          print('Bytes', len(s))
+          PY
+          echo "URL=$URL"
