@@ -82,3 +82,13 @@ The receipt explicitly marks `real_gems_dataset_used:false`, `official_dti_claim
 **Boundary:** This is a filesystem integrity check, not GeoTIFF semantic validation. A real authorized runner must additionally inspect CRS, grid dimensions, band semantics, nodata, label meanings, and licensing. The registry and expected hashes must be resolved server-side from authenticated records, not supplied by the chat/mission request. It must execute in an isolated private research environment with an approved dataset, and only the path-free receipt may be exported. No official GEMS dataset was accessed by this check.
 
 This code neither creates Passport identity nor dispatches Saban/NextGen/Penguin, and is not a public endpoint. It does not establish that any real-data experiment has run.
+
+## GEMS-001 preserved real GeoTIFF audit (independently run outside GitHub)
+
+`gems/audit_preserved_candidate.py` is a read-only validator for the owner's preserved `gems_001_verified_submission.zip`. It uses Rasterio and NumPy and must run **in a private environment where that archive has already been authorized and mounted**. It does not fetch the competition data, authenticate to DrivenData, submit anything, or touch the original ZIP.
+
+An actual independent local execution on the preserved submitted candidate produced `gems/evidence/gems-001-independent-raster-audit.json`: SHA-256 `3b2360bed8966b4bfdae76bfeb5436bf6dccd16ac9dc5ff402434736bdee57a4`; EPSG:32611; 3292x3730; one float32 band; 100m grid; 5,167,373 finite cells; 7,111,787 NaN; 384,797 positive-valued cells; no out-of-range values. This matched the archived receipt's staged-file digest and the previous local validation counts.
+
+Rows partitioned north-to-south showed positive-valued fractions of valid pixels roughly 4.26%, 12.54%, 9.65% and 7.90%; these are *coverage diagnostics only*, not real fault prevalence or performance metrics. **Important**: the original feature/reference raster was not present, so the official allowed-area mask was NOT independently matched. The archived portal DTI 0.0552 is sourced from a participant-supplied receipt, not a fresh organizer API call. GitHub CI did not run this real-data validator because the private archive was intentionally not uploaded.
+
+For local reproduction with the private ZIP: `python systemia/mission-bridge/gems/audit_preserved_candidate.py /path/to/gems_001_verified_submission.zip`. No GEMS-002 performance claim follows from this format audit.
