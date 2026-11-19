@@ -7,6 +7,7 @@ from pathlib import Path
 import sqlite3
 from tempfile import TemporaryDirectory
 from threading import Thread
+from unittest.mock import patch
 import unittest
 
 MODULE=Path(__file__).resolve().parents[1]/"engineering"/"aiw_national_private_gateway.py"
@@ -16,6 +17,39 @@ spec.loader.exec_module(app)
 
 
 class NationalFirstTests(unittest.TestCase):
+    def test_rejects_wrong_local_leaflet_bits(self):
+        with TemporaryDirectory() as tmp:
+            p=Path(tmp)
+            (p/"leaflet.js").write_bytes(b"wrong javascript")
+            (p/"leaflet.css").write_bytes(b"wrong css")
+            (p/"LICENSE").write_text("test only")
+            with self.assertRaisesRegex(ValueError,"SHA-256"):
+                app.verified_leaflet(p)
+
+    def test_private_map_injects_self_hosted_leaflet(self):
+        with TemporaryDirectory() as tmp:
+            root=Path(tmp)
+            web=root/"map";web.mkdir()
+            (web/"index.html").write_text("<html><head></head><body><h1>National map</h1></body></html>")
+            overlay=root/"drill.js";overlay.write_text("window.deepEvidence=true;")
+            with patch.object(app,"verified_leaflet",return_value={"leaflet.js":b"window.L={};","leaflet.css":b".leaflet-container{}"}):
+                cls=app.make_handler(web,overlay,root/"unused.sqlite",root/"vendor")
+            server=ThreadingHTTPServer(("127.0.0.1",0),cls)
+            worker=Thread(target=server.serve_forever,daemon=True);worker.start()
+            try:
+                c=HTTPConnection("127.0.0.1",server.server_port,timeout=3)
+                c.request("GET","/")
+                r=c.getresponse();html=r.read().decode();c.close()
+                self.assertIn('<script src="/vendor/leaflet.js"></script>',html)
+                self.assertIn('<link rel="stylesheet" href="/vendor/leaflet.css">',html)
+                self.assertLess(html.index("vendor/leaflet.js"),html.index("</head>"))
+                c=HTTPConnection("127.0.0.1",server.server_port,timeout=3)
+                c.request("GET","/vendor/leaflet.js")
+                r=c.getresponse();self.assertEqual(r.status,200)
+                self.assertEqual(r.read(),b"window.L={};");c.close()
+            finally:
+                server.shutdown();server.server_close();worker.join(timeout=3)
+
     def test_national_shell_and_owned_wa_queries(self):
         with TemporaryDirectory() as tmp:
             root=Path(tmp)
