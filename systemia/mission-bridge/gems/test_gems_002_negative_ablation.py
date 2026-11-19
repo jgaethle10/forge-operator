@@ -113,6 +113,8 @@ class NegativeAbalationTests(unittest.TestCase):
              "official_band_count_mismatch"),
             (pack(feature=FakeRaster(19,descriptions=tuple("duplicate - synthetic" for _ in bands))),
              "organizer_feature_band_semantics_mismatch"),
+            (pack(feature=FakeRaster(19,descriptions=tuple(name+" - synthetic" for name in bands[::-1]))),
+             "organizer_feature_band_semantics_mismatch"),
             (pack(labels=FakeRaster(1,width=3291)),
              "organizer_raster_shape_mismatch")
         ]:
