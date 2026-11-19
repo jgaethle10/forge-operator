@@ -86,5 +86,28 @@ class BridgeIntegrationTests(unittest.TestCase):
         self.assertTrue(any(x['type']=='outreach_reported' for x in rec['activity']))
         self.assertFalse(any(x['type']=='delivery_verified' for x in rec['activity']))
 
+class NetworkBoundaryTests(unittest.TestCase):
+    def test_http_redirect_cannot_escape_loopback(self):
+        from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+        from threading import Thread
+        import urllib.error
+        from revenue_desk_bridge import get_json
+        class Redirect(BaseHTTPRequestHandler):
+            def do_GET(self):
+                self.send_response(302)
+                self.send_header('Location', 'https://example.org/capture')
+                self.end_headers()
+            def log_message(self, *_):
+                return
+        srv = ThreadingHTTPServer(('127.0.0.1', 0), Redirect)
+        t = Thread(target=srv.serve_forever, daemon=True); t.start()
+        try:
+            with self.assertRaises(urllib.error.HTTPError) as got:
+                get_json(f'http://127.0.0.1:{srv.server_address[1]}/redirect')
+            self.assertEqual(got.exception.code, 302)
+        finally:
+            srv.shutdown(); srv.server_close(); t.join(timeout=3)
+
+
 if __name__ == '__main__':
     unittest.main()
