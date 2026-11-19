@@ -45,7 +45,6 @@ def handler(db):
             self.send_header("Content-Length", str(len(payload)))
             self.send_header("Cache-Control", "no-store")
             self.send_header("X-Content-Type-Options", "nosniff")
-            self.send_header("Access-Control-Allow-Origin", "null")  # No public cross-origin clients.
             self.end_headers()
             self.wfile.write(payload)
 
