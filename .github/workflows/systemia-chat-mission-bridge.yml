@@ -55,6 +55,7 @@ jobs:
           node --test systemia/mission-bridge/gems/kss-spatial-contract.test.mjs
           python3 -m py_compile systemia/mission-bridge/gems/gems_002_negative_ablation.py
           python3 -m py_compile systemia/mission-bridge/gems/test_gems_002_negative_ablation.py
+          bash -n systemia/mission-bridge/gems/execute_segment_replay.sh
           python3 -m unittest discover -s systemia/mission-bridge/gems -p test_verify_official_input_hashes.py -v
       - name: Run bounded synthetic GEMS computation (not official competition data)
         run: node systemia/mission-bridge/gems/run-synthetic-smoke.mjs
