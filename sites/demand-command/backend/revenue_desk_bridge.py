@@ -32,12 +32,21 @@ def local_url(url, *, allow_path):
     return url.rstrip('/')
 
 
+class NoRedirect(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        # An owned loopback endpoint may not pivot an internal preview to an external URL.
+        return None
+
+
+DIRECT_OPENER = urllib.request.build_opener(urllib.request.ProxyHandler({}), NoRedirect())
+
+
 def get_json(url, token=None):
     headers = {'Accept': 'application/json'}
     if token:
         headers['Authorization'] = 'Bearer ' + token
     req = urllib.request.Request(url, headers=headers, method='GET')
-    with urllib.request.urlopen(req, timeout=8) as resp:
+    with DIRECT_OPENER.open(req, timeout=8) as resp:
         if resp.status != 200:
             raise ValueError('Local source returned HTTP ' + str(resp.status))
         raw = resp.read(MAX_DOWNLOAD + 1)
@@ -54,7 +63,7 @@ def post_json(url, obj, token):
         'Accept': 'application/json',
     })
     try:
-        with urllib.request.urlopen(req, timeout=8) as r:
+        with DIRECT_OPENER.open(req, timeout=8) as r:
             return r.status, json.loads(r.read(MAX_DOWNLOAD))
     except urllib.error.HTTPError as e:
         raw = e.read(8192)
@@ -241,8 +250,17 @@ def main(argv=None):
     text = json.dumps(report, indent=2, ensure_ascii=False)
     if args.receipt:
         args.receipt.parent.mkdir(parents=True, exist_ok=True)
-        args.receipt.write_text(text+'\n', encoding='utf-8')
-        args.receipt.chmod(0o600)
+        fd = os.open(args.receipt, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+        try:
+            os.fchmod(fd, 0o600)
+            with os.fdopen(fd, 'w', encoding='utf-8') as receipt_stream:
+                receipt_stream.write(text + '\n')
+        except BaseException:
+            try:
+                os.close(fd)
+            except OSError:
+                pass
+            raise
     print(text)
     return 0 if not report['rejected'] or not args.apply else 2
 
