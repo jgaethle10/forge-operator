@@ -140,3 +140,23 @@ python3 revenue_desk_bridge.py --receipt="$HOME/.local/state/evercraft/demand-co
 ```
 
 The receipt contains only row numbers/rejection reasons and counts; it is written with owner-only permissions. Share only the printed summary, not the raw `/api/opportunities` JSON. **Do not run `--apply` yet**: first review eligibility, historical outreach, source evidence and cross-channel deduplication.
+
+## Privacy-safe historical-contact triage (v7)
+
+The first NextGen dry-run on **2026-11-19** reported **16 source rows, 16 structurally importable rows, 0 schema rejections, and 16 prior-contact flags**. This is *not* proof that 16 providers delivered messages, that 16 buyers are qualified, or that any revenue arrived. All 16 need correspondence reconciliation before fresh outreach.
+
+The separate `revenue_desk_triage.py` tool produces an **aggregate-only** report of stage counts, prior-send-entry counts, reported buyer replies and objections, due follow-ups, source context, possible repeat business names, and unverified commercial/payment fields. It intentionally emits **no business names, buyer identities, contact details, message text, source IDs or payment references**.
+
+Run the safe inspection in the **existing** NextGen canary directory:
+
+```bash
+git -C "$HOME/evercraft-demand-canary" pull --ff-only
+cd "$HOME/evercraft-demand-canary/sites/demand-command/backend"
+python3 -m unittest -v
+python3 revenue_desk_triage.py \
+  --receipt="$HOME/.local/state/evercraft/demand-command/revenue-desk-triage.json"
+```
+
+The tool reads the existing loopback Revenue Desk service on port 8795. It creates an owner-readable summary receipt but does **not** import opportunities, start a service, send messages, modify the Revenue Desk, or confirm historical delivery or payment. The stage labels are allowlisted; unknown raw status values are grouped as `other_or_empty` to avoid exposing arbitrary source text in the report.
+
+Inspect aggregate output before allowing any `--apply` import. A safe future follow-up workflow must reconcile provider correspondence and source verification per person before any new outbound attempt. This canary is not live Systemia scheduling.
