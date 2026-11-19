@@ -1,0 +1,49 @@
+name: Tile Works Distinct Music Source Proof
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/tileworks-distinct-music-source.yml'
+permissions:
+  contents: read
+jobs:
+  music:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - name: Find source track identity from official Mixkit catalog
+        run: |
+          python -m pip install --disable-pip-version-check requests beautifulsoup4 mutagen
+          mkdir -p music-evidence
+          python - <<'PY'
+          import requests,re,json,html,pathlib
+          from bs4 import BeautifulSoup
+          p=pathlib.Path('music-evidence')
+          url='https://mixkit.co/free-stock-music/indie-pop/'
+          r=requests.get(url,headers={'User-Agent':'Mozilla/5.0'},timeout=22)
+          print('catalog HTTP:',r.status_code,'bytes:',len(r.content))
+          r.raise_for_status()
+          soup=BeautifulSoup(r.text,'html.parser')
+          pieces=[]
+          for node in soup.find_all(string=re.compile(r'Dare Me',re.I)):
+              q=node.parent
+              for i in range(6):
+                  if not q: break
+                  h=str(q)
+                  pieces.append({'level':i,'html':h[:6500]})
+                  q=q.parent
+          raw=r.text
+          for m in list(re.finditer('Dare Me',raw,re.I))[:3]:
+              pieces.append({'level':'raw','html':raw[max(0,m.start()-5500):m.end()+6000]})
+          (p/'catalog_debug.txt').write_text(json.dumps(pieces,indent=2))
+          print('Dare Me matches',len(pieces))
+          for i,v in enumerate(pieces[:4]):
+              print('HTML CONTEXT',i,v['html'][:2500])
+          PY
+      - name: Preserve source inspection receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tileworks-distinct-track-catalog-source
+          path: music-evidence/
+          if-no-files-found: warn
+          retention-days: 1
