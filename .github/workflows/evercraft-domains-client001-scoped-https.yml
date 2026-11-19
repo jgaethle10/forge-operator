@@ -1,0 +1,107 @@
+name: Evercraft Domains Client 001 Scoped HTTPS Lab
+on:
+  pull_request:
+    paths:
+      - 'systemia/evercraft-domains/**'
+      - 'scripts/evercraft-domains-ephemeral-tls-cert.sh'
+      - 'public/clients/on-the-go/review/index.html'
+      - '.github/workflows/evercraft-domains-client001-scoped-https.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/evercraft-domains/**'
+      - 'scripts/evercraft-domains-ephemeral-tls-cert.sh'
+      - 'public/clients/on-the-go/review/index.html'
+      - '.github/workflows/evercraft-domains-client001-scoped-https.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  client001-scoped-https:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Enforce static trust boundaries and shell syntax
+        run: |
+          set -euo pipefail
+          bash -n scripts/evercraft-domains-ephemeral-tls-cert.sh
+          node --check systemia/evercraft-domains/tls-lab-proof.mjs
+          grep -Fq 'bind 127.0.0.1' systemia/evercraft-domains/Client001.Caddyfile.tls-lab
+          grep -Fq 'admin off' systemia/evercraft-domains/Client001.Caddyfile.tls-lab
+          if grep -Eq 'tls internal|reverse_proxy|github.io|base44|:443 \{' systemia/evercraft-domains/Client001.Caddyfile.tls-lab; then
+            echo 'Refusing unsafe TLS lab route' >&2
+            exit 1
+          fi
+          node --test tests/evercraft-domains-private-namespace.test.mjs tests/evercraft-domains-split-resolver.test.mjs tests/evercraft-domains-client001-local-preview.test.mjs
+      - name: Generate ephemeral certs, launch local DNS and owned Caddy and verify scoped HTTPS
+        env:
+          EVERCRAFT_DOMAINS_TLS_EVIDENCE: ${{ runner.temp }}/evercraft-domains-client001-scoped-https-proof.json
+        run: |
+          set -euo pipefail
+          LAB_ROOT="$(mktemp -d "$RUNNER_TEMP/evercraft-domains-tls.XXXXXX")"
+          TLS_DIR="$LAB_ROOT/certs"
+          DNS_PID=""
+          CADDY_CONTAINER="evercraft-domains-tls-lab-$GITHUB_RUN_ID"
+          cleanup() {
+            docker rm -f "$CADDY_CONTAINER" >/dev/null 2>&1 || true
+            if [[ -n "$DNS_PID" ]]; then
+              kill "$DNS_PID" 2>/dev/null || true
+              wait "$DNS_PID" 2>/dev/null || true
+            fi
+            rm -rf -- "$LAB_ROOT"
+          }
+          trap cleanup EXIT
+          bash scripts/evercraft-domains-ephemeral-tls-cert.sh "$TLS_DIR"
+          mkdir -m 0700 "$LAB_ROOT/caddy-config" "$LAB_ROOT/caddy-data"
+          node systemia/evercraft-domains/split-cli.mjs --port 15453 > "$RUNNER_TEMP/evercraft-domains-split-lab.log" 2>&1 &
+          DNS_PID="$!"
+          docker run --detach --name "$CADDY_CONTAINER" \
+            --network host --read-only --cap-drop ALL --security-opt no-new-privileges \
+            --user "$(id -u):$(id -g)" \
+            -v "$PWD/systemia/evercraft-domains/Client001.Caddyfile.tls-lab:/etc/caddy/Caddyfile:ro" \
+            -v "$PWD/public/clients/on-the-go/review:/srv/evercraft/client001:ro" \
+            -v "$TLS_DIR:/run/evercraft-lab/tls:ro" \
+            -v "$LAB_ROOT/caddy-config:/config" -v "$LAB_ROOT/caddy-data:/data" \
+            caddy:2 caddy run --config /etc/caddy/Caddyfile --adapter caddyfile
+          HEALTH_OK=0
+          for i in $(seq 1 25); do
+            if curl --noproxy '*' -fsS --max-time 3 \
+              --cacert "$TLS_DIR/ca.pem" \
+              --resolve onthegoquicklube.evercraft:18443:127.0.0.1 \
+              https://onthegoquicklube.evercraft:18443/healthz >/dev/null; then
+              HEALTH_OK=1
+              break
+            fi
+            sleep 1
+          done
+          if [[ "$HEALTH_OK" -ne 1 ]]; then
+            docker logs "$CADDY_CONTAINER" || true
+            cat "$RUNNER_TEMP/evercraft-domains-split-lab.log" || true
+            echo 'Scoped HTTPS failed to initialize' >&2
+            exit 1
+          fi
+          if ! EVERCRAFT_DOMAINS_TLS_LAB_DIR="$TLS_DIR" \
+            node systemia/evercraft-domains/tls-lab-proof.mjs; then
+            echo 'Scoped HTTPS isolation proof failed; diagnostic local Caddy logs follow' >&2
+            docker logs "$CADDY_CONTAINER" 2>&1 | tail -120 || true
+            exit 1
+          fi
+          echo 'Scoped DNS -> SAN TLS -> exact Client 001 byte equality PASS'
+      - name: Upload redacted receipt only, never root or private key files
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-domains-client001-scoped-https-proof
+          path: ${{ runner.temp }}/evercraft-domains-client001-scoped-https-proof.json
+          if-no-files-found: warn
+          retention-days: 7
+      - name: Publication remains held
+        if: always()
+        run: |
+          echo 'Ephemeral CA trusted only by scoped CI test process. Not system/browser trust.'
+          echo 'No registrar, DNS, home router, customer device, production Caddy or public .evercraft TLD writes.'
+          echo "Juan's content, price and promotion approval remains required."
