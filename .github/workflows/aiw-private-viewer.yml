@@ -1,0 +1,23 @@
+name: AIW loopback operator viewer contract
+on:
+  pull_request:
+    paths:
+      - 'research/infrastructure-watch/operator/private-operations.html'
+      - 'research/infrastructure-watch/engineering/aiw_private_viewer.py'
+      - 'research/infrastructure-watch/tests/test_aiw_private_viewer.py'
+      - '.github/workflows/aiw-private-viewer.yml'
+permissions:
+  contents: read
+jobs:
+  offline-viewer-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Test isolated loopback serving, no-write and stale protections
+        run: |
+          python3 -m py_compile research/infrastructure-watch/engineering/aiw_private_viewer.py
+          python3 -m unittest discover -s research/infrastructure-watch/tests -p test_aiw_private_viewer.py -v
