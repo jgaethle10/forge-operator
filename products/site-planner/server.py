@@ -15,6 +15,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlsplit
 from email.parser import BytesParser
 from email.policy import default
+from report_bridge import fetch_owned_ready_report
 
 ROOT = Path(__file__).resolve().parent
 DATA = Path(os.environ.get('EVERCRAFT_SITE_DATA', str(ROOT / 'data'))).resolve()
@@ -54,6 +55,8 @@ def init():
         CREATE TABLE IF NOT EXISTS evidence(id TEXT PRIMARY KEY,site_id TEXT NOT NULL REFERENCES sites(id),category TEXT NOT NULL,status TEXT NOT NULL,source TEXT,observed_on TEXT,reference_url TEXT,finding TEXT NOT NULL,limitation TEXT,file_name TEXT,file_path TEXT,file_type TEXT,created_at TEXT);
         CREATE TABLE IF NOT EXISTS scenarios(id TEXT PRIMARY KEY,site_id TEXT NOT NULL REFERENCES sites(id),name TEXT NOT NULL,chargers INTEGER,power REAL,layout TEXT,cost REAL,notes TEXT,created_at TEXT);
         CREATE TABLE IF NOT EXISTS reports(id TEXT PRIMARY KEY,site_id TEXT NOT NULL REFERENCES sites(id),created_at TEXT,snapshot_json TEXT NOT NULL,evidence_count INTEGER,scenario_count INTEGER);
+        CREATE TABLE IF NOT EXISTS source_reports(id TEXT PRIMARY KEY,site_id TEXT NOT NULL REFERENCES sites(id),external_report_id TEXT NOT NULL,report_sha256 TEXT NOT NULL,source_sha256 TEXT NOT NULL,report_type TEXT NOT NULL,requested_address TEXT NOT NULL,gateway_schema TEXT NOT NULL,source_coverage_schema TEXT NOT NULL,report_created_at TEXT,verification_basis TEXT NOT NULL,created_at TEXT NOT NULL, UNIQUE(site_id,external_report_id));
+        CREATE TABLE IF NOT EXISTS order_source_links(order_id TEXT PRIMARY KEY REFERENCES orders(id),site_id TEXT NOT NULL REFERENCES sites(id),source_report_id TEXT NOT NULL REFERENCES source_reports(id));
         CREATE TABLE IF NOT EXISTS orders(id TEXT PRIMARY KEY,site_id TEXT NOT NULL REFERENCES sites(id),report_id TEXT NOT NULL REFERENCES reports(id),scenario_id TEXT NOT NULL REFERENCES scenarios(id),scope TEXT,requested_by TEXT,status TEXT NOT NULL DEFAULT 'queued',created_at TEXT);
         CREATE TABLE IF NOT EXISTS plans(id TEXT PRIMARY KEY,site_id TEXT NOT NULL REFERENCES sites(id),order_id TEXT NOT NULL REFERENCES orders(id),report_id TEXT NOT NULL REFERENCES reports(id),title TEXT,reviewer TEXT,status TEXT NOT NULL,notes TEXT,file_name TEXT,file_path TEXT,file_type TEXT,created_at TEXT);
         CREATE TABLE IF NOT EXISTS gaps(id TEXT PRIMARY KEY,site_id TEXT NOT NULL REFERENCES sites(id),type TEXT,severity TEXT,title TEXT,detail TEXT,status TEXT NOT NULL DEFAULT 'open',created_at TEXT);
@@ -63,6 +66,7 @@ def init():
         CREATE INDEX IF NOT EXISTS idx_outbox_state ON outbox(state,created_at);
         CREATE INDEX IF NOT EXISTS idx_evidence_site ON evidence(site_id);
         CREATE INDEX IF NOT EXISTS idx_order_report ON orders(report_id);
+        CREATE INDEX IF NOT EXISTS idx_source_report_site ON source_reports(site_id,external_report_id);
         CREATE INDEX IF NOT EXISTS idx_plan_order ON plans(order_id);
         """)
 
@@ -73,7 +77,7 @@ def getsite(db,sid):
     if not row: raise ValueError('Site not found')
     return dict(row)
 def site_detail(db,sid):
-    return {'site':getsite(db,sid),**{t:rows(db,t,sid) for t in ['evidence','scenarios','reports','orders','plans','gaps']}}
+    return {'site':getsite(db,sid),**{t:rows(db,t,sid) for t in ['evidence','scenarios','reports','orders','plans','gaps','source_reports']}}
 def snapshot(db,sid):
     d=site_detail(db,sid)
     for e in d['evidence']:
@@ -132,8 +136,14 @@ def transition_order(db, site_id, order_id, new_status, actor, reason):
          'reason':str(reason).strip(),'action_id':action_id})
     return dict(db.execute('SELECT * FROM orders WHERE id=?',(order_id,)).fetchone())
 
-def newreport(db,sid):
+def newreport(db,sid,source_report_id=None):
     d=snapshot(db,sid)
+    if source_report_id:
+        source=db.execute('SELECT * FROM source_reports WHERE id=? AND site_id=?',(source_report_id,sid)).fetchone()
+        if source is None: raise ValueError('Imported source report does not belong to this site')
+        if ' '.join(str(source['requested_address']).casefold().split()) != ' '.join(str(getsite(db,sid)['address']).casefold().split()):
+            raise ValueError('Upstream source report does not match the current site address')
+        d['originating_source_report']={key:source[key] for key in ('id','external_report_id','report_sha256','source_sha256','report_type','gateway_schema','source_coverage_schema','verification_basis')}
     rid=uid('RPT')
     db.execute('INSERT INTO reports VALUES(?,?,?,?,?,?)',(rid,sid,now(),json.dumps(d,ensure_ascii=False),len(d['evidence']),len(d['scenarios'])))
     return dict(db.execute('SELECT id,site_id,created_at,evidence_count,scenario_count FROM reports WHERE id=?',(rid,)).fetchone())
@@ -248,6 +258,24 @@ class Handler(BaseHTTPRequestHandler):
             m=re.fullmatch(r'/api/(evidence|plans)/([A-Za-z0-9-]+)/file',p)
             if m:return self.send(201,self.upload(m[1],None,m[2]))
             v=self.body()
+            m=re.fullmatch(r'/api/sites/([A-Za-z0-9-]+)/source-reports/import',p)
+            if m:
+                upstream_id=str(v.get('external_report_id','')).strip()
+                with connect() as db:
+                    site=getsite(db,m[1])
+                    existing=db.execute('SELECT * FROM source_reports WHERE site_id=? AND external_report_id=?',(m[1],upstream_id)).fetchone()
+                    if existing:return self.send(200,dict(existing))
+                verified=fetch_owned_ready_report(upstream_id,site['address'])
+                with connect() as db:
+                    getsite(db,m[1])
+                    existing=db.execute('SELECT * FROM source_reports WHERE site_id=? AND external_report_id=?',(m[1],upstream_id)).fetchone()
+                    if existing:return self.send(200,dict(existing))
+                    sid=uid('SRC')
+                    cols=['external_report_id','report_sha256','source_sha256','report_type','requested_address','gateway_schema','source_coverage_schema','report_created_at','verification_basis']
+                    db.execute('INSERT INTO source_reports ('+','.join(['id','site_id']+cols+['created_at'])+') VALUES ('+','.join(['?']*(len(cols)+3))+')',(sid,m[1])+tuple(verified[k] for k in cols)+(now(),))
+                    append_event(db,m[1],'site.source_report.linked.v1',sid,{'site_id':m[1],'source_report_id':sid,'external_report_id':upstream_id,'report_sha256':verified['report_sha256'],'source_sha256':verified['source_sha256']})
+                    db.commit()
+                    return self.send(201,dict(db.execute('SELECT * FROM source_reports WHERE id=?',(sid,)).fetchone()))
             if p=='/api/sites':
                 if not str(v.get('address','')).strip():raise ValueError('Address required')
                 sid=uid('SITE');t=now()
@@ -278,7 +306,8 @@ class Handler(BaseHTTPRequestHandler):
                 elif kind=='orders':
                     scn=db.execute('SELECT id FROM scenarios WHERE id=? AND site_id=?',(v.get('scenario_id'),sid)).fetchone()
                     if not scn:raise ValueError('Scenario must belong to this site')
-                    rpt=newreport(db,sid)
+                    linked_source_id=str(v.get('source_report_id','')).strip() or None
+                    rpt=newreport(db,sid,linked_source_id)
                     id=uid('ORDER');keys=['report_id','scenario_id','scope','requested_by'];v['report_id']=rpt['id']
                 elif kind=='plans':
                     order=db.execute('SELECT report_id FROM orders WHERE id=? AND site_id=?',(v.get('order_id'),sid)).fetchone()
@@ -291,7 +320,12 @@ class Handler(BaseHTTPRequestHandler):
                 db.execute(f'INSERT INTO {kind} ('+','.join(['id','site_id']+keys+['created_at'])+') VALUES ('+','.join(['?']*(len(keys)+3))+')',(id,sid)+tuple(v.get(k,'') for k in keys)+(now(),))
                 record=dict(db.execute(f'SELECT * FROM {kind} WHERE id=?',(id,)).fetchone())
                 if kind=='orders':
-                    append_event(db,sid,'site.plan.requested.v1',id,{'site_id':sid,'order_id':id,'report_id':record['report_id'],'scenario_id':record['scenario_id'],'scope':record['scope'],'requested_by':record['requested_by']})
+                    payload={'site_id':sid,'order_id':id,'report_id':record['report_id'],'scenario_id':record['scenario_id'],'scope':record['scope'],'requested_by':record['requested_by']}
+                    if linked_source_id:
+                        db.execute('INSERT INTO order_source_links VALUES (?,?,?)',(id,sid,linked_source_id))
+                        src=db.execute('SELECT external_report_id FROM source_reports WHERE id=?',(linked_source_id,)).fetchone()
+                        payload.update({'source_report_id':linked_source_id,'external_report_id':src['external_report_id']})
+                    append_event(db,sid,'site.plan.requested.v1',id,payload)
                 if kind=='plans':
                     append_event(db,sid,'site.plan.registered.v1',id,{'site_id':sid,'plan_id':id,'order_id':record['order_id'],'report_id':record['report_id'],'status':record['status']})
                 db.commit()
