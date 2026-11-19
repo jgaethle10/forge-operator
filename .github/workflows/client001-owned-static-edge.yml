@@ -1,0 +1,89 @@
+name: Client 001 Owned Static Edge Proof
+on:
+  pull_request:
+    paths:
+      - 'infra/evercraft-edge/client001-on-the-go/**'
+      - 'scripts/stage-client001-owned-edge.sh'
+      - 'scripts/client001-domain-rdap.mjs'
+      - 'tests/client001-owned-edge.test.mjs'
+      - '.github/workflows/client001-owned-static-edge.yml'
+      - 'public/clients/on-the-go/review/index.html'
+  push:
+    branches: [main]
+    paths:
+      - 'infra/evercraft-edge/client001-on-the-go/**'
+      - 'scripts/stage-client001-owned-edge.sh'
+      - 'tests/client001-owned-edge.test.mjs'
+      - '.github/workflows/client001-owned-static-edge.yml'
+      - 'public/clients/on-the-go/review/index.html'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  validate-owned-static-host:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Enforce client-owned hostname and no deployment side effects
+        run: node --test tests/client001-owned-edge.test.mjs
+      - name: Parse candidate Caddy host with real Caddy, no DNS or public connection
+        run: |
+          set -euo pipefail
+          docker run --rm --network none \
+            --env CLIENT001_DOMAIN=onthegoquicklube.invalid \
+            -v "$PWD/infra/evercraft-edge/client001-on-the-go/Caddyfile.example:/etc/caddy/Caddyfile:ro" \
+            caddy:2 caddy adapt --config /etc/caddy/Caddyfile --adapter caddyfile --pretty \
+            > "$RUNNER_TEMP/client001-caddy-adapted.json"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import assert from 'node:assert/strict';
+          const v=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/client001-caddy-adapted.json','utf8'));
+          const compact=JSON.stringify(v);
+          assert.ok(v.apps?.http?.servers && Object.keys(v.apps.http.servers).length>0);
+          assert.match(compact,/onthegoquicklube\.invalid/);
+          assert.match(compact,/file_server/);
+          const strings=[];
+          const scan=(v)=>{
+            if(typeof v==='string'){strings.push(v);return;}
+            if(Array.isArray(v)){for(const t of v)scan(t);return;}
+            if(v&&typeof v==='object')for(const t of Object.values(v))scan(t);
+          };
+          scan(v);
+          assert.ok(strings.some(s=>/User-agent:\s*\*\n\s*Disallow:\s*\//.test(s)),'robots response must contain a real newline');
+          assert.doesNotMatch(compact,/reverse_proxy|github\.io|onrender\.com/);
+          console.log('CADDY_ADAPT_PASS: invalid test hostname only, no public TLS or DNS');
+          NODE
+      - name: Test immutable release staging on disposable CI host
+        run: |
+          set -euo pipefail
+          sudo mkdir -p /srv/evercraft/client001/releases
+          sudo chown "$(id -u):$(id -g)" /srv/evercraft/client001/releases
+          test ! -e /srv/evercraft/client001/current
+          bash scripts/stage-client001-owned-edge.sh
+          SOURCE_SHA="$(sha256sum public/clients/on-the-go/review/index.html | cut -d ' ' -f1)"
+          cmp public/clients/on-the-go/review/index.html \
+            "/srv/evercraft/client001/releases/$SOURCE_SHA/index.html"
+          bash scripts/stage-client001-owned-edge.sh
+          test ! -e /srv/evercraft/client001/current
+          if EVERCRAFT_CLIENT001_RELEASE_ROOT="$RUNNER_TEMP/forbidden" bash scripts/stage-client001-owned-edge.sh; then
+            echo 'FAIL: staging outside owned release root accepted' >&2
+            exit 1
+          fi
+          echo 'STAGE_PASS: digest preserved; repeat safe; no active symlink, DNS edit or public deploy'
+      - name: Observe Verisign domain records without spending or editing DNS
+        continue-on-error: true
+        run: node scripts/client001-domain-rdap.mjs --out "$RUNNER_TEMP/client001-domain-rdap.json"
+      - name: Preserve bounded nonproduction Caddy parse artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: client001-owned-edge-source-proof
+          path: |
+            ${{ runner.temp }}/client001-caddy-adapted.json
+            ${{ runner.temp }}/client001-domain-rdap.json
+          if-no-files-found: warn
+          retention-days: 7

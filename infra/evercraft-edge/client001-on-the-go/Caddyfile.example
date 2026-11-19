@@ -1,0 +1,48 @@
+# Client 001 | On The Go Mobile Quick Lube | CANDIDATE ONLY
+# Do not import into shared Caddy without: Juan's approval, confirmed domain
+# ownership/delegated DNS authority, actual public edge/TLS proof, staged
+# source digest and rollback receipt. A missing CLIENT001_DOMAIN intentionally
+# prevents a usable public hostname. Preserve all existing Fabric routes.
+#
+# Configure CLIENT001_DOMAIN through authorized private Caddy environment;
+# e.g. "onthegoquicklube.com" ONLY if actually registered and approved.
+# Copies of the canonical source are served directly from local disk, NOT
+# fetched from GitHub Pages or a third-party runtime.
+#
+# /srv/evercraft/client001/current must be an operator-approved symlink to
+# a verified versioned release directory containing only index.html.
+{$CLIENT001_DOMAIN}, www.{$CLIENT001_DOMAIN} {
+  encode zstd gzip
+  @www host www.{$CLIENT001_DOMAIN}
+  redir @www https://{$CLIENT001_DOMAIN}{uri} 308
+
+  header {
+    X-Content-Type-Options "nosniff"
+    Referrer-Policy "strict-origin-when-cross-origin"
+    X-Frame-Options "DENY"
+    X-Robots-Tag "noindex, nofollow, noarchive"
+    -Server
+  }
+
+  handle / {
+    root * /srv/evercraft/client001/current
+    rewrite * /index.html
+    file_server
+  }
+
+  handle /robots.txt {
+    header Content-Type "text/plain; charset=utf-8"
+    respond <<ROBOTS
+      User-agent: *
+      Disallow: /
+      ROBOTS 200
+  }
+
+  handle /healthz {
+    respond `{"service":"client001-static-edge","release":"owner-review","bookings":false,"payments":false}` 200 {
+      close
+    }
+  }
+
+  respond 404
+}
