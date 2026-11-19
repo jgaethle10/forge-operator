@@ -1,0 +1,43 @@
+name: Fallen Original Licensed Music Retrieval Proof
+on:
+  pull_request:
+    paths: [.github/workflows/fallen-mixkit-licensed-source.yml]
+permissions:
+  contents: read
+jobs:
+  acquire:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    steps:
+      - name: Fetch original official Mixkit Driving Ambition audio (no proxies)
+        run: |
+          set -euo pipefail
+          mkdir -p artifact
+          ok=0
+          for url in \
+            https://assets.mixkit.co/music/32/32.mp3 \
+            https://assets.mixkit.co/music/download/mixkit-driving-ambition-32.mp3
+          do
+            if curl -fsSL --retry 1 --connect-timeout 10 --max-time 28 \
+                -H 'Referer: https://mixkit.co/' -H 'User-Agent: Mozilla/5.0' \
+                "$url" -o artifact/Driving_Ambition_Ahjay_Stelino.mp3 ; then
+              if ffprobe -v error -show_entries format=duration \
+                 -of default=noprint_wrappers=1 artifact/Driving_Ambition_Ahjay_Stelino.mp3 ; then
+                bytes=$(stat -c%s artifact/Driving_Ambition_Ahjay_Stelino.mp3)
+                if [ "$bytes" -gt 100000 ]; then
+                  printf '%s\n' "source_url=$url" "license=https://mixkit.co/license/modal/musicFree/" \
+                    "artist=Ahjay Stelino" > artifact/rights-source.txt
+                  sha256sum artifact/Driving_Ambition_Ahjay_Stelino.mp3 | tee artifact/source-sha256.txt
+                  ok=1
+                  break
+                fi
+              fi
+            fi
+          done
+          test "$ok" -eq 1 || { echo "NO_VERIFIABLE_ORIGINAL_AUDIO"; exit 1; }
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tileworks-driving-ambition-source-review
+          path: artifact/
+          retention-days: 1
+          if-no-files-found: error
