@@ -381,7 +381,7 @@
         <a class="hero-link" href="#investigation">Open the decision room ↓</a>
       </aside>
     </div>
-    <div class="statusbar" id="statusbar"><span class="pill">Checking FAIE runtime…</span><span class="pulse-badge"><i class="pulse-dot" id="runtimePulse" data-health="pending" aria-hidden="true"></i><span id="runtimePulseLabel">Verifying API</span></span></div>
+    <div class="statusbar" id="statusbar"><span class="pill">Checking FAIE runtime…</span></div><div class="pulse-badge" aria-live="polite" style="margin-top:12px"><i class="pulse-dot" id="runtimePulse" data-health="pending" aria-hidden="true"></i><span id="runtimePulseLabel">Verifying API</span></div>
     <div class="intelligence-ribbon" aria-label="Live evidence overview">
       <div class="intelligence-stat"><b id="metricSignals">—</b><span>Admitted signals</span></div>
       <div class="intelligence-stat"><b id="metricFeeds">—</b><span>Healthy official feeds</span></div>
@@ -918,7 +918,7 @@ async function loadState() {
     ).join('') : '<div class="quiet">FAIE is running, but no relevant signals have been admitted yet.</div>';
   } catch (error) {
     setFaieMetrics({error});
-    statusbar.innerHTML = '<span class="pill error">FAIE API unavailable</span><span class="pulse-badge"><i class="pulse-dot" data-health="fail" aria-hidden="true"></i>Last check failed</span>';
+    statusbar.innerHTML = '<span class="pill error">FAIE API unavailable</span>';
     signalsEl.innerHTML = '<div class="quiet error">' + esc(error && error.message ? error.message : error) + '</div>';
   }
 }
