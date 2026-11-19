@@ -132,6 +132,32 @@ Local reproduction on a disposable machine with Caddy Docker, Node 22,
 OpenSSL and curl can use the workflow steps. Never run them against a
 production Node, router, customer device or public edge.
 
+## Isolated Chromium browser trust acceptance (CI only)
+
+The disposable TLS pipeline now exercises Chromium in a wholly
+temporary runner profile, **not** a user's browser or operating system:
+
+- GitHub Actions installs the disposable lab CA into a fresh NSS
+  certificate database under its temporary directory, never into the
+  runner's normal home, the system keychain, or a customer device.
+- Chromium runs with an isolated HOME/profile and a browser-only local
+  hostname map for `onthegoquicklube.evercraft`. No router or system DNS
+  configuration is changed.
+- The browser first attempts HTTPS without the temporary CA and must
+  reject the connection. It then loads the site with that CA explicitly
+  trusted, without any ignore-certificate-errors / insecure-context
+  bypass flags.
+- Real Chromium walks mobile and desktop English/Spanish selection flows
+  and captures a bounded set of screenshots. These are QA artifacts, not
+  customer-facing publication or consent.
+- All disposable trust files are confined to the CI job and destroyed
+  before it exits. Only screenshots and redacted JSON receipts are
+  uploaded; no CA private key or NSS trust database is retained.
+
+This is closer to an actual browser acceptance test, but it still does
+**not** establish an approved phone or off-host network route. Issue
+#2289 remains the required owner/device/network production gate.
+
 ## Controls
 
 - `registry.json` lists a **held candidate identity**. A source commit cannot approve the client's brand, legal ownership, domain charges, DNS edit, customer publication or redirect.
