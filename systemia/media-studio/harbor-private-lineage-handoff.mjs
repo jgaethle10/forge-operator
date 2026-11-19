@@ -83,7 +83,7 @@ function requirePrivateDescriptorFile(file) {
 /** Prepare a private, encrypted, untrusted custody candidate. No upload or job authority. */
 export async function stageHarborEncryptedHandoff({
   manifestPath, assetsDir, storeDir, packagePath, jobRef,
-  recipientPublicKeyPem, expectedCount = maxAssetCount
+  recipientPublicKeyPem, recipientPublicKeyFingerprint, expectedCount = maxAssetCount
 }={}) {
   if (!SAFE_JOB.test(jobRef || '')) fail('job_ref_invalid');
   if (expectedCount < 1 || expectedCount > maxAssetCount) fail('expected_count_invalid');
@@ -93,6 +93,9 @@ export async function stageHarborEncryptedHandoff({
   });
   const sourceManifest=requirePrivateDescriptorFile(manifestPath);
   const recipient=validKey(recipientPublicKeyPem, 'public');
+  if (!HEX.test(recipientPublicKeyFingerprint || '') ||
+    sha256(recipient.export({format:'der',type:'spki'})) !== recipientPublicKeyFingerprint)
+    fail('recipient_key_fingerprint_not_pinned');
   const ephemeral=crypto.generateKeyPairSync('x25519');
   const publicPem=ephemeral.publicKey.export({format:'pem',type:'spki'}).toString();
   const salt=crypto.randomBytes(32), shared=crypto.diffieHellman({privateKey:ephemeral.privateKey, publicKey:recipient});
@@ -156,10 +159,12 @@ export async function pushHarborEncryptedHandoff({packagePath,storeDir,remote,ex
 
 /** Verify, decrypt and atomically quarantine. Does not admit the job or send a preview. */
 export async function receiveHarborEncryptedHandoff({
-  packagePath,storeDir,remote,recipientPrivateKeyPem,outputDir,operatorRef,
+  packagePath,storeDir,remote,recipientPrivateKeyPem,outputDir,operatorRef,expectedJobRef,
   expectedCount=maxAssetCount
 }={}) {
   const pkg=checkPackage(requirePrivateDescriptorFile(packagePath),expectedCount);
+  if (!SAFE_JOB.test(expectedJobRef || '') || pkg.jobRef !== expectedJobRef)
+    fail('recipient_job_binding_mismatch');
   if (!operatorRef || typeof operatorRef!=='string' || operatorRef.length>120) fail('receiving_operator_missing');
   if(await existingPath(outputDir)) fail('output_already_exists');
   const privateKey=validKey(recipientPrivateKeyPem,'private');
