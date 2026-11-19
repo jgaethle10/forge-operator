@@ -598,7 +598,10 @@ export function fabricDirectoryTools(){
       description:'Return the current public-safe Evercraft capability directory. Read-only and non-transactional.',
       inputSchema:{
         type:'object',
-        properties:{limit:{type:'integer',minimum:1,maximum:100,default:25,description:'Maximum number of published capabilities to return.'}},
+        properties:{
+          limit:{type:'integer',minimum:1,maximum:100,default:25,description:'Maximum number of published capabilities to return per page.'},
+          offset:{type:'integer',minimum:0,default:0,description:'Zero-based starting position for explicit read-only directory pagination.'},
+        },
         additionalProperties:false,
       },
       annotations:safe,
@@ -699,7 +702,12 @@ export async function executeFabricDirectoryRpc(rpc,catalog=[]){
 
     if(name==='list_evercraft_capabilities'){
       const limit=Math.max(1,Math.min(100,Number(args.limit||25)));
-      const capabilities=normalized.slice(0,limit);
+      const offset=Number(args.offset??0);
+      if(!Number.isSafeInteger(offset)||offset<0)
+        return rpcError(id,-32602,'offset must be a nonnegative integer');
+      const capabilities=normalized.slice(offset,offset+limit);
+      const nextOffset=offset+capabilities.length<normalized.length
+        ?offset+capabilities.length:null;
       return rpcResult(id,toolResult({
         ok:true,
         directory:'Evercraft Fabric',
@@ -707,6 +715,8 @@ export async function executeFabricDirectoryRpc(rpc,catalog=[]){
         capabilities,
         returned:capabilities.length,
         total:normalized.length,
+        offset,
+        next_offset:nextOffset,
         transactional:false,
         external_action_taken:false,
       }));
