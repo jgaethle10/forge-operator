@@ -19,6 +19,13 @@ class WashingtonImporterTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             mod.classification({"BC01": "unexpected"})
 
+    def test_reviewed_coordinate_exception_is_pinned(self):
+        self.assertEqual(
+            mod.EXPECTED_COORDINATE_EXCEPTIONS,
+            {"0000P06117B1804": (43.4365, -123.896469)}
+        )
+        self.assertTrue(43.4365 < 45.0)
+
     def test_invalid_source_and_no_overwrite(self):
         with TemporaryDirectory() as folder:
             path = Path(folder)
