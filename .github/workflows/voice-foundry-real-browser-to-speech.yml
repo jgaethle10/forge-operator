@@ -1,0 +1,49 @@
+name: Voice Foundry | Real Browser-to-Spanish Speech E2E (private)
+on:
+  push:
+    branches: [feature/bella-actor-lab-20261026]
+    paths:
+      - 'systemia/media-studio/voice-foundry-local-studio.py'
+      - 'systemia/media-studio/voice-foundry-workstation.py'
+      - 'systemia/media-studio/test_voice_foundry_real_browser_smoke.py'
+      - '.github/workflows/voice-foundry-real-browser-to-speech.yml'
+  pull_request:
+    paths:
+      - 'systemia/media-studio/voice-foundry-local-studio.py'
+      - 'systemia/media-studio/voice-foundry-workstation.py'
+      - 'systemia/media-studio/test_voice_foundry_real_browser_smoke.py'
+      - '.github/workflows/voice-foundry-real-browser-to-speech.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  real-spanish-script-to-playback:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    env:
+      HF_HUB_DISABLE_TELEMETRY: '1'
+      TOKENIZERS_PARALLELISM: 'false'
+      PYTHONUNBUFFERED: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Offline HTTP, CSRF, hash, review-scorecard and jobs protocol tests
+        run: |
+          python -m unittest discover -s systemia/media-studio -p test_voice_foundry_local_studio.py -v
+          python -m unittest discover -s systemia/media-studio -p test_voice_foundry_workstation.py -v
+          python -m compileall -q systemia/media-studio/test_voice_foundry_real_browser_smoke.py
+      - name: Install actual Kokoro Spanish frontend, CPU inference and MP3 codec
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq espeak-ng libsndfile1 ffmpeg
+          python -m pip install --disable-pip-version-check 'kokoro==0.9.4' 'soundfile>=0.12,<1.0'
+      - name: Open real studio, submit Spanish script, render, play/download and save private QA
+        run: |
+          python systemia/media-studio/test_voice_foundry_real_browser_smoke.py
+      - name: Assert no speech, scripts, voice identities or private feedback uploaded from E2E
+        run: |
+          test ! -d systemia/media-studio/.local
+          test ! -e private-review.json
+          echo 'PASS: original voice remains held, ephemeral E2E outputs not published'
