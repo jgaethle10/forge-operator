@@ -51,6 +51,19 @@ async function journey(width,language){
   assert.equal(jsErrors.length,0,jsErrors.join('; '));
   assert.equal(writes.length,0,'unexpected outbound writing request');
   if(width<500) assert.equal(await page.locator('.mobile-bar a[href^="tel:"]').count(),1);
+  // Visit the whole page as a real scroller would, so lazy-loaded client images appear.
+  await page.evaluate(async()=>{
+   const step=Math.max(250,Math.floor(window.innerHeight*0.75));
+   for(let y=0;y<document.documentElement.scrollHeight;y+=step){
+    window.scrollTo(0,y);
+    await new Promise(resolve=>setTimeout(resolve,65));
+   }
+   window.scrollTo(0,0);
+  });
+  await page.waitForFunction(
+   ()=>[...document.images].every(img=>img.complete&&img.naturalWidth>0),
+   null,{timeout:10000}
+  );
   const file=path.join(OUT,'onthego-v41-'+width+'-'+language+'.png');
   await page.screenshot({path:file,fullPage:true,animations:'disabled'});
   receipt.screenshots.push(file);
