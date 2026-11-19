@@ -8,6 +8,7 @@ import json
 import os
 import re
 import stat
+import hashlib
 from pathlib import Path
 from urllib.parse import urlsplit, quote
 from urllib.request import Request, urlopen
