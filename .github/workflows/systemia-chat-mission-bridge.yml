@@ -44,6 +44,8 @@ jobs:
           node --test systemia/mission-bridge/gems/research-job-ledger.test.mjs
           node --check systemia/mission-bridge/gems/research-lease-binding.mjs
           node --test systemia/mission-bridge/gems/research-lease-binding.test.mjs
+          node --check systemia/mission-bridge/gems/research-work-claim.mjs
+          node --test systemia/mission-bridge/gems/research-work-claim.test.mjs
       - name: Validate the first committed mission without running it
         run: node systemia/mission-bridge/cli.mjs --plan signal-public-ingress-20261116-001
 
