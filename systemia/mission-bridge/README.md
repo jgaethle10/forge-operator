@@ -74,3 +74,11 @@ Before production use, the private server must additionally implement safe resta
 `gems/synthetic-research-worker.mjs` runs a deterministic **48 x 48 internally generated** geophysical fixture. The experiment compares a sampled unlabeled-as-negative logistic baseline against exclusion of negative samples close to synthetic faults. It evaluates on a held-out synthetic x-region, writes a hashed local receipt, and performs no network calls. The `admission-contract` GitHub Actions PR job runs this proof and publishes `gems-synthetic-research-smoke` as a temporary artifact.
 
 The receipt explicitly marks `real_gems_dataset_used:false`, `official_dti_claimed:false`, and `drivendata_submission_made:false`. The resulting synthetic F1 is a **mechanism test only**, not a validated improvement to GEMS-001 or GEMS-002. It does not call Passport, start a real lease, dispatch a private Saban agent, or obtain the official competition training rasters. Production use still requires the authenticated and separately authorized private gateway.
+
+## Authorized local GEMS raster integrity gate
+
+`gems/private-dataset-integrity.mjs` validates the byte integrity of three files (`features`, `faults`, and `submission_template`) against expected SHA-256 values from a **trusted private dataset registry**. It emits a path-free receipt, refuses unexpected file roles, untrusted registry claims, symlinks, world-writable roots, pathname escape attempts, digest mismatch, and oversized data. The CI tests use tiny **synthetic placeholder bytes**, never the official GEMS download.
+
+**Boundary:** This is a filesystem integrity check, not GeoTIFF semantic validation. A real authorized runner must additionally inspect CRS, grid dimensions, band semantics, nodata, label meanings, and licensing. The registry and expected hashes must be resolved server-side from authenticated records, not supplied by the chat/mission request. It must execute in an isolated private research environment with an approved dataset, and only the path-free receipt may be exported. No official GEMS dataset was accessed by this check.
+
+This code neither creates Passport identity nor dispatches Saban/NextGen/Penguin, and is not a public endpoint. It does not establish that any real-data experiment has run.
