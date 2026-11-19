@@ -38,3 +38,19 @@ jobs:
       - name: Validate cartographic boundaries and dated data contracts
         run: |
           python3 -m unittest discover -s research/infrastructure-watch/tests -p test_aiw_state_first.py -v
+      - name: Convert actual published US Atlas 3.0.1 state boundaries
+        run: |
+          curl -fLsS --retry 2 --connect-timeout 10 --max-time 60             'https://cdn.jsdelivr.net/npm/us-atlas@3.0.1/states-10m.json'             -o /tmp/aiw-us-atlas-states-10m.json
+          python3 research/infrastructure-watch/engineering/aiw_state_geometry.py             --source /tmp/aiw-us-atlas-states-10m.json             --dest /tmp/aiw-us-atlas-states.geojson
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('/tmp/aiw-us-atlas-states.geojson')
+          obj=json.loads(p.read_text())
+          assert obj['type']=='FeatureCollection'
+          assert 50<=len(obj['features'])<=65
+          assert any(f['properties']['name']=='Washington' for f in obj['features'])
+          assert all(f['geometry']['type'] in ('Polygon','MultiPolygon') for f in obj['features'])
+          print('REAL PUBLISHED BOUNDARIES: PASS',len(obj['features']))
+          PY
+
