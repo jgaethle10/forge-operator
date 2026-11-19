@@ -3,7 +3,8 @@
  * This is NOT a generic adapter, remote dispatch, physical field enrollment,
  * or production authority.
  */
-import {createHash} from 'node:crypto';
+import {createHash,randomBytes} from 'node:crypto';
+import {verifyNodeAttestation} from '../compute/device-identity.mjs';
 
 const brands=new WeakMap();
 const REF=/^[A-Za-z0-9][A-Za-z0-9._:-]{0,190}$/;
@@ -37,12 +38,30 @@ export function validateLocalMicroSeedOrigin(endpoint){
   return url.origin;
 }
 
+async function readBoundedLocalJson(response){
+  // Attestation and result payloads have the same streamed byte cap.
+  const chunks=[];
+  let bytes=0;
+  if(!response.body)throw Error('fenced_nodeseed_local_response_missing');
+  for await(const chunk of response.body){
+    bytes+=chunk.byteLength;
+    if(bytes>128*1024)throw Error('fenced_nodeseed_local_response_too_large');
+    chunks.push(Buffer.from(chunk));
+  }
+  try{
+    return JSON.parse(Buffer.concat(chunks,bytes).toString('utf8'));
+  }catch{
+    throw Error('fenced_nodeseed_local_response_invalid_json');
+  }
+}
+
 export function createLocalSignedMicroSeedAdapter({
-  endpoint,leaseToken,nodePin,jobKey,workDigest,
+  endpoint,leaseToken,attestationToken,nodePin,jobKey,workDigest,
   idempotencyKey,payload,timeoutMs=10000
 }={}){
   const origin=validateLocalMicroSeedOrigin(endpoint);
   if(typeof leaseToken!=='string'||leaseToken.length<16 ||
+     typeof attestationToken!=='string'||attestationToken.length<16 ||
      !REF.test(String(jobKey||''))||!DIGEST.test(String(workDigest||''))||
      !REF.test(String(idempotencyKey||''))||
      !nodePin||!REF.test(String(nodePin.node_id||''))||
@@ -67,8 +86,35 @@ export function createLocalSignedMicroSeedAdapter({
        hash(assignment.item?.payload)!==expected.payloadHash){
       throw Error('fenced_nodeseed_local_assignment_mismatch');
     }
-    // No caller URL, HTTP headers, method or arbitrary command is accepted.
-    // This one request uses only the registered content-hash worker.
+    // A fresh, nonce-bound attestation proves that the loopback endpoint
+    // currently controls the independently pinned device key. NodeSeed does
+    // not get to self-assert Yard enrollment or physical field authority.
+    const challenge=randomBytes(24).toString('hex');
+    const attResponse=await fetch(origin+'/v1/attest',{
+      method:'POST',redirect:'error',
+      headers:{
+        'content-type':'application/json',
+        authorization:'Bearer '+attestationToken
+      },
+      body:JSON.stringify({nonce:challenge}),
+      signal:AbortSignal.timeout(timeoutMs)
+    });
+    if(attResponse.status!==200){
+      throw Error('fenced_nodeseed_local_attestation_http_denied');
+    }
+    const attestationResult=await readBoundedLocalJson(attResponse);
+    const verified=verifyNodeAttestation({
+      attestation:attestationResult.attestation,
+      expectedNonce:challenge,expectedNodeId:expected.nodeId,
+      maxAgeMs:30000
+    });
+    if(verified.ok!==true ||
+       verified.device_fingerprint!==expected.deviceFingerprint ||
+       attestationResult.ok!==true){
+      throw Error('fenced_nodeseed_local_attestation_identity_denied');
+    }
+    // No caller URL, headers, method, payload command or redirect is
+    // accepted. Only the registered content-hash worker can be invoked.
     const response=await fetch(origin+'/v1/jobs',{
       method:'POST',redirect:'error',
       headers:{'content-type':'application/json'},
@@ -84,23 +130,7 @@ export function createLocalSignedMicroSeedAdapter({
     if(response.status!==200){
       throw Error('fenced_nodeseed_local_http_status_invalid');
     }
-    // Read with a hard byte ceiling instead of response.text(), which
-    // allocates the entire untrusted HTTP body before a size check.
-    const chunks=[];
-    let bytes=0;
-    if(!response.body)throw Error('fenced_nodeseed_local_response_missing');
-    for await(const chunk of response.body){
-      bytes+=chunk.byteLength;
-      if(bytes>128*1024){
-        throw Error('fenced_nodeseed_local_response_too_large');
-      }
-      chunks.push(Buffer.from(chunk));
-    }
-    const raw=Buffer.concat(chunks,bytes).toString('utf8');
-    let result;
-    try{result=JSON.parse(raw);}catch{
-      throw Error('fenced_nodeseed_local_response_invalid_json');
-    }
+    const result=await readBoundedLocalJson(response);
     if(result?.ok!==true||result?.node_id!==expected.nodeId ||
        result?.workload_class!=='systemia.content-hash.v1'){
       throw Error('fenced_nodeseed_local_response_binding_invalid');
