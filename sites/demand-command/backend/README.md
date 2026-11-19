@@ -74,3 +74,32 @@ Example intake (provided for Systemia integration, but **not currently wired to 
 ## QA
 
 `python3 -m unittest -v` covers authentication, verified evidence requirements, deduplication, optimistic concurrency, event logging and honest delivery state.
+
+## Revenue Desk reconciliation bridge (v5, not deployed)
+
+`revenue_desk_bridge.py` has **no third-party dependencies** and reads only a local `127.0.0.1:8795/api/opportunities` endpoint, or an explicitly supplied JSON export. It never sends email, calls outside localhost or modifies Revenue Desk. Unknown data layouts, missing stable IDs, absent explicit pain descriptions and duplicate IDs are rejected for review.
+
+Preview the live export first on NextGen (do not paste actual buyer data into a chat or a public GitHub issue):
+
+```bash
+cd ~/forge-operator/sites/demand-command/backend
+python3 revenue_desk_bridge.py --receipt="$HOME/.local/state/evercraft/demand-command/revenue-desk-preview.json"
+```
+
+That is **dry-run only** and doesn't require the Demand API token. Use the preview report to check `eligible`, `needs_review`, `contact_history_flags`, and any `rejected` rows. Use a locally exported source when live schema has changed:
+
+```bash
+python3 revenue_desk_bridge.py --input-json=/path/to/private-revenue-desk-export.json
+```
+
+To import reviewed, eligible records into the separate private Demand API at 8796, with `EVERCRAFT_DEMAND_TOKEN` available **only in the process environment**, run:
+
+```bash
+python3 revenue_desk_bridge.py --apply --receipt="$HOME/.local/state/evercraft/demand-command/revenue-desk-apply.json"
+```
+
+This explicitly authorized action creates matching local dossiers only and **cannot send messages**. Records are imported as unverified signals, even when historical source data says verified. Historical `sent` / `replied` statuses become *reported outreach*, never provider-confirmed delivery. A second import skips existing source IDs; differing pain for an existing source ID is **not** silently rewritten. Conflicting business/pain fingerprints are skipped for reconciliation. A write can fail halfway through, leaving a truthful per-record result; rerun is idempotent for completed records. There is no automatic synchronization of edits or deletions.
+
+The `.service.example` and `.timer.example` files define an optional read-only preview every five minutes, running on **Evercraft-owned NextGen** with `systemd --user` after paths and privileges are checked. They are **not** installed or enabled and do not connect Systemia automatically. Install only after verifying the running Revenue Desk service and owned environment paths. Leave the `--apply` operation manual until historical outreach and cross-channel identity reconciliation is approved.
+
+The preview receipts contain source record identifiers for rejected rows, counts and import outcomes, **not full message bodies**. Protect the report directory and SQLite database. This is an integration canary; it is not proof of a live, continuously running production service.
