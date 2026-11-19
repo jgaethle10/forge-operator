@@ -7,6 +7,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { loadPublicProductDiscovery } from '../systemia/mcp/fabric-public-products.mjs';
 const ROOT=path.resolve(fileURLToPath(new URL('../',import.meta.url)));
 const ORIGIN='https://fabric.systemiacommandcenters.com';
 const read=(p)=>JSON.parse(fs.readFileSync(path.join(ROOT,p),'utf8'));
@@ -17,6 +18,38 @@ const htmlRoute=(c)=>{
  return u.hostname==='fabric.systemiacommandcenters.com'&&
   u.pathname===('/capabilities/'+c.public_id);
 };
+
+const DECLARED_PUBLIC_HOSTS=new Set(['fabric.systemiacommandcenters.com','jgaethle10.github.io']);
+// The live Fabric directory intentionally combines native machine capabilities,
+// first-party product discovery and explicitly declared private-pilot supplements.
+// Compare against that *whole source-defined union*, not just the machine list.
+// No runtime-supplied ID is trusted as its own source authorization.
+export function buildDeclaredFabricParitySource({source,supplements,products}={}){
+ if(!source||!Array.isArray(source.capabilities)||
+    !supplements||supplements.schema!=='evercraft.fabric.catalog-supplements.v1'||
+    !Array.isArray(supplements.capabilities)||!Array.isArray(products))
+   throw new Error('declared_fabric_parity_source_invalid');
+ const ids=new Set(source.capabilities.map(row=>row.public_id));
+ const additional=[];
+ for(const entry of [...supplements.capabilities,...products]){
+   const id=String(entry?.public_id||'');
+   const pages=(entry?.connections||[]).filter(c=>c.type==='website');
+   if(!/^[a-z0-9][a-z0-9:._-]{0,159}$/i.test(id)||ids.has(id)||pages.length!==1)
+     throw new Error('declared_fabric_parity_entry_invalid_or_duplicate:'+id);
+   const url=new URL(String(pages[0].url||''));
+   if(url.protocol!=='https:'||!DECLARED_PUBLIC_HOSTS.has(url.hostname)||
+      url.username||url.password)
+     throw new Error('declared_fabric_parity_public_url_not_owned:'+id);
+   ids.add(id);
+   additional.push({
+     public_id:id,
+     public_url:url.toString(),
+     catalog_origin:'explicit_first_party_discovery'
+   });
+ }
+ return {...source,capabilities:[...source.capabilities,...additional]};
+}
+
 
 export function assessFabricParity({
  source,liveIds,health,observations,exceptions,now='2026-10-15T17:00:00Z'
@@ -118,7 +151,11 @@ async function inBatches(items,n,fn){
  const out=[];for(let i=0;i<items.length;i+=n)out.push(...await Promise.all(items.slice(i,i+n).map(fn)));return out;
 }
 export async function collectLiveFabricParity({now=new Date().toISOString()}={}){
- const source=read('public/chum/capabilities.json');
+ const source=buildDeclaredFabricParitySource({
+   source:read('public/chum/capabilities.json'),
+   supplements:read('systemia/mcp/fabric-catalog-supplements.json'),
+   products:loadPublicProductDiscovery(),
+ });
  const exceptions=read('audits/fabric-parity-known-exceptions-2026-10-15.json');
  const [health,liveIds,observations]=await Promise.all([
   getJson(ORIGIN+'/health'),getMcpList(),inBatches(source.capabilities,7,observe)
