@@ -108,6 +108,44 @@ def source_id(obj):
     return ''
 
 
+def historical_sent_count(record):
+    """Count prior entries, without mistaking them for provider delivery receipts."""
+    value = record.get('sent')
+    if not isinstance(value, list):
+        return 0
+    return sum(item not in (None, '', {}, []) for item in value)
+
+
+def original_context(record):
+    """Preserve source claims as labeled notes, never as verified evidence."""
+    labels = (
+        ('external_id', 'Revenue Desk external reference'),
+        ('role', 'Reported buyer role'),
+        ('contact', 'Reported contact detail (not outreach permission)'),
+        ('subject', 'Reported outreach subject'),
+        ('assumption', 'Source assumption'),
+        ('relevance', 'Source relevance rationale'),
+        ('permission', 'Source-reported contact permission (unverified)'),
+        ('verified', 'Source-reported verification (unverified)'),
+        ('next_action', 'Original next action'),
+        ('objection', 'Reported objection'),
+        ('amount', 'Proposed amount (not received revenue)'),
+        ('accepted', 'Source-reported acceptance (unverified)'),
+        ('checkout', 'Source-reported checkout (not payment proof)'),
+        ('paid_amount', 'Source-reported paid amount (not payment proof)'),
+        ('paid_reference', 'Source-reported payment reference (unverified)'),
+    )
+    out = []
+    for key, label in labels:
+        value = one(record, (key,))
+        if value:
+            out.append(label + ': ' + concise(value, 1000))
+    count = historical_sent_count(record)
+    if count:
+        out.append(f'Revenue Desk sent history: {count} reported entries; provider delivery unverified; reconcile before any follow-up.')
+    return out
+
+
 def normalize(record):
     if not isinstance(record, dict):
         return None, 'not_an_object'
@@ -145,7 +183,7 @@ def normalize(record):
         ('offer', ('offer', 'tailored_offer', 'offer_text', 'proposed_scope')),
         ('draft', ('draft', 'outreach_draft', 'message_draft')),
         ('reply', ('reply', 'buyer_reply', 'response_text')),
-        ('sourceText', ('sourceText', 'source_text', 'signal_text', 'original_message', 'buyer_message')),
+        ('sourceText', ('sourceText', 'source_text', 'signal_text', 'signal', 'original_message', 'buyer_message')),
         ('followup', ('followup', 'next_follow_up', 'next_followup', 'follow_up_at')),
         ('outcome', ('outcome', 'disposition', 'lost_reason')),
         ('sent', ('sent_at', 'last_sent_at')),
@@ -154,15 +192,16 @@ def normalize(record):
         if val:
             data[dest] = concise(val)
     # Only explicitly designated categories, no classification by guesswork.
-    raw_category = one(record, ('category', 'opportunity_type', 'queue')).casefold().replace(' ', '_')
-    categories = {'qualified': 'qualified', 'unqualified': 'unqualified', 'paid': 'paid', 'direct_paid_work': 'paid', 'direct_work': 'paid', 'product': 'product', 'product_offer': 'product'}
+    raw_category = one(record, ('category', 'opportunity_type', 'queue', 'kind')).casefold().replace(' ', '_').replace('-', '_')
+    categories = {'qualified': 'qualified', 'unqualified': 'unqualified', 'paid': 'paid', 'direct_paid_work': 'paid', 'direct_work': 'paid', 'paid_work': 'paid', 'job': 'paid', 'product': 'product', 'product_offer': 'product', 'qualified_lead': 'qualified'}
     data['category'] = categories.get(raw_category, 'unqualified')
     statuses = {'qualified': 'qualified', 'drafted': 'drafted', 'sent': 'contacted', 'outreach_sent': 'contacted', 'contacted': 'contacted', 'replied': 'replied', 'responded': 'replied', 'objection': 'objection', 'negotiating': 'negotiating', 'won': 'won', 'lost': 'lost', 'declined': 'lost', 'disqualified': 'disqualified'}
     data['status'] = statuses.get(raw_status, 'researching')
     val = record.get('estimated_value', record.get('value'))
     if isinstance(val, (float, int)) and not isinstance(val, bool) and 0 <= val <= 1e12:
         data['value'] = val  # Potential deal value only, not booked revenue.
-    contact_reported = bool(raw_status in STOP_STATUSES or one(record, ('sent_at', 'last_sent_at', 'outreach_message_id', 'provider_message_id')))
+    data['notes'] = concise('\n'.join(note + original_context(record)))
+    contact_reported = bool(raw_status in STOP_STATUSES or historical_sent_count(record) or one(record, ('sent_at', 'last_sent_at', 'outreach_message_id', 'provider_message_id')))
     return {'record': data, 'origin': source, 'source_stage': raw_status, 'contact_reported': contact_reported}, None
 
 
@@ -177,7 +216,12 @@ def inspect_schema(data):
     except ValueError:
         return report
     report['record_count'] = len(records)
-    report['compatible'] = True
+    report['compatible'] = True  # Structural compatibility only, not readiness to import or send.
+    normalized, rejected = collect(data)
+    report['eligible_count'] = len(normalized)
+    report['needs_review_count'] = len(rejected)
+    report['historical_sent_list_rows'] = sum(bool(historical_sent_count(r)) for r in records if isinstance(r, dict))
+    report['contact_history_flagged_count'] = sum(bool(x['contact_reported']) for x in normalized)
     fields = {}
     for row in records:
         if isinstance(row, dict):
