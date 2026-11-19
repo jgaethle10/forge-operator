@@ -28,6 +28,47 @@ dig @127.0.0.1 -p 15353 onthegoquicklube.evercraft A
 
 The lab returns `127.0.0.1` to prove DNS wire handling ONLY. It does not make Juan's website available at this name, configure his devices, issue trusted certificates, create a domain, or expose a public server. Never configure arbitrary user devices to use the authoritative-only lab endpoint as their whole-system resolver. Production private naming requires an authenticated and approved split-DNS resolver that forwards only `.evercraft` to an isolated authoritative service and leaves all ordinary DNS unchanged.
 
+## New: localhost split-DNS integration (development only)
+
+The test now adds `split-resolver.mjs` and `split-cli.mjs`, retaining the
+existing Evercraft authoritative `.evercraft.` DNS answer engine.
+
+- Exact `.evercraft.` questions stay private and authoritative, including
+  negative answers. There is **no fallback** to ordinary public DNS for
+  unknown private names.
+- Ordinary DNS questions are sent **only** to an explicitly configured
+  loopback DNS upstream. With no upstream, ordinary names return SERVFAIL.
+  The lab never invents a public resolver or contacts external DNS services.
+- All listeners bind `127.0.0.1` on unprivileged ports. Only one standard,
+  uncompressed, IN-class DNS question is supported per request in this
+  bounded lab. TCP and UDP both have real packet acceptance tests.
+- This is **not** a transparent network-wide resolver, authenticated remote
+  resolver, DNSSEC validator, production DNS forwarder, or a device
+  configuration installer. Do not set it as a phone/router's default DNS.
+
+Run standalone, keeping normal OS DNS unchanged:
+
+```bash
+node systemia/evercraft-domains/split-cli.mjs --port 15453
+# Above, all non-.evercraft names receive SERVFAIL.
+# In an isolated lab only, an explicitly approved local DNS upstream may be
+# passed, e.g. --upstream 127.0.0.1:15553
+node --test tests/evercraft-domains-split-resolver.test.mjs
+```
+
+The test suite creates a synthetic loopback public upstream so ordinary
+queries can be forwarded and compared without contacting the internet.
+`onthegoquicklube.evercraft` still returns the synthetic
+`127.0.0.1`, not Juan's production website.
+
+### Important HTTPS limitation
+
+DNS answers alone do not make a custom `.evercraft` HTTPS site trusted.
+Before any real client rollout we must distribute a consented device
+configuration and prove an authenticated private resolver, an isolated
+authorized Caddy site, and a proper device trust model. There is no public
+CA / ICANN delegation claim and no browser-security bypass.
+
 ## Controls
 
 - `registry.json` lists a **held candidate identity**. A source commit cannot approve the client's brand, legal ownership, domain charges, DNS edit, customer publication or redirect.
