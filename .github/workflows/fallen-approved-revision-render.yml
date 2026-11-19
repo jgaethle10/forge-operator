@@ -21,18 +21,23 @@ permissions:
   contents: read
 jobs:
   approved-revision-render:
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
+    runs-on: ubuntu-24.04
+    timeout-minutes: 22
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Verify existing native video tools
+      - name: Verify or install owned video tools
         run: |
-          command -v ffmpeg
-          command -v ffprobe
+          set -euo pipefail
+          if ! command -v ffmpeg >/dev/null 2>&1 || ! command -v ffprobe >/dev/null 2>&1; then
+            export DEBIAN_FRONTEND=noninteractive
+            sudo timeout 180 apt-get update -o Acquire::Retries=1 -o Acquire::http::Timeout=20 -o Acquire::https::Timeout=20
+            sudo timeout 420 apt-get install -y --no-install-recommends ffmpeg -o Acquire::Retries=1 -o Acquire::http::Timeout=20 -o Acquire::https::Timeout=20
+          fi
           ffmpeg -hide_banner -version | head -n 1
+          ffprobe -hide_banner -version | head -n 1
       - name: Install existing owned Evercraft code dependencies
         run: npm install --no-audit --no-fund
       - name: Check TypeScript source contracts
