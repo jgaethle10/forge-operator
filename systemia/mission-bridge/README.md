@@ -187,3 +187,16 @@ python systemia/mission-bridge/gems/audit_candidate_comparison.py \
 ```
 
 Use a new report path; receipts cannot be overwritten. Review possible excessive map coverage and disconnected predictions alongside whole-connected-fault mapped-label validation **before** asking the participant whether to use another scored submission. No automatic submission code is provided.
+
+### One-command candidate + incumbent full-map QC (GEMS-002)
+
+`gems/execute_candidate_qc.sh` is the recommended **single bounded Work execution** once the original GeoDAWN raster bytes are already mounted on an isolated, authorized CPU environment. It first checks that input files exist and output is new and outside the source/data directories; pins the original GEMS-001 model source from the owner-preserved ZIP; runs existing local candidate/comparison scientific tests; builds a full-grid **unsubmitted** 1000m negative-exclusion candidate; reopens and hashes the generated TIFF; runs the incumbent GEMS-001 vs GEMS-002 full-map coverage/topology audit using the exact candidate digest; crosschecks the two evidence receipts and prints a compact summary. Neither script has DrivenData credentials or a submission action. It **does not** use the earlier experimental holdout as a retraining trigger and doesn't invoke Kennedy or private Saban.
+
+```bash
+bash systemia/mission-bridge/gems/execute_candidate_qc.sh \
+  /private/official-geodawn/data \
+  /private/archive/gems_001_verified_submission.zip \
+  /private/outputs/gems-002-candidate-NEW-UNUSED-DIR
+```
+
+Do not rerun into the same output directory or upload the resulting TIFF without a separate submission decision. Archive both evidence JSON files, the untouched GEMS-001 ZIP hash, candidate GeoTIFF hash, scientific-environment versions, and output logs in private evidence storage. After this run, assess prediction footprint/fragmentation, newly covered areas, and independent mapped-fault holdouts. These cannot infer the organizer's newly mapped fault score. If missing authorized TIFF files, stop rather than rebuilding infrastructure or spending money.
