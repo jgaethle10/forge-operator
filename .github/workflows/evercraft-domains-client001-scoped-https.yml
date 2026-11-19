@@ -84,8 +84,12 @@ jobs:
             echo 'Scoped HTTPS failed to initialize' >&2
             exit 1
           fi
-          EVERCRAFT_DOMAINS_TLS_LAB_DIR="$TLS_DIR" \
-          node systemia/evercraft-domains/tls-lab-proof.mjs
+          if ! EVERCRAFT_DOMAINS_TLS_LAB_DIR="$TLS_DIR" \
+            node systemia/evercraft-domains/tls-lab-proof.mjs; then
+            echo 'Scoped HTTPS isolation proof failed; diagnostic local Caddy logs follow' >&2
+            docker logs "$CADDY_CONTAINER" 2>&1 | tail -120 || true
+            exit 1
+          fi
           echo 'Scoped DNS -> SAN TLS -> exact Client 001 byte equality PASS'
       - name: Upload redacted receipt only, never root or private key files
         if: always()
