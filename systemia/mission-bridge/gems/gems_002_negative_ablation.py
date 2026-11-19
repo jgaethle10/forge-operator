@@ -17,6 +17,7 @@ EXPECTED = {
 "example_submission.tif":"2176d08e485aa2cd2860ce8df539db4faf4d76163b38a4dd8c30a40454d35cbc",
 "existing_faults.tif":"7ba308ccdc4418b31a178f4f1ef21aaa6e152e4028f2f6f64b01f7eb25ae4093",
 "gems-geodawn-numerical-features.tif":"4371c82e3b8339b807bdffcf4ef59a225520fe2988d521be208ae33743123bc5"}
+ARCHIVED_GEMS_001_RUN_SHA256="db07aef8eb3edaa78efdc704d867cc8c2cf12ae1c8d17152fd0280238c92ca8b"
 RADII=(0,3,10)
 SEED=306
 def verify_inputs(data):
@@ -76,7 +77,19 @@ def geographic_folds(valid,buffer_pixels=100):
     folds.append((southern_start,int(rows.max())+1,train,test))
     return folds,southern_start
 
+def verify_original_model_source(file):
+    """Refuse any model implementation other than the preserved GEMS-001 run.py."""
+    file=Path(file)
+    if not file.is_file() or file.is_symlink():
+        raise ValueError("original_model_source_missing_or_unsafe")
+    digest=hashlib.sha256(file.read_bytes()).hexdigest()
+    if digest!=ARCHIVED_GEMS_001_RUN_SHA256:
+        raise ValueError("original_model_source_sha256_mismatch")
+    return digest
+
 def main():
+    # Imported model is only trusted after its bytes match the archived source.
+    verify_original_model_source(Path(__file__).with_name("run.py"))
     import run as original
     arg=argparse.ArgumentParser()
     arg.add_argument("--data-dir",type=Path,required=True)
