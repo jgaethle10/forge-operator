@@ -108,3 +108,9 @@ python -m unittest -v test_gems_002_negative_ablation.py
 ```
 
 ChatGPT's current execution container does **not** have the three organizer rasters. The deterministic sampling and leakage test cases passed locally with synthetic small arrays; GitHub CI syntax-checks the script but cannot run the real-data training or dependency-heavy test suite. No actual GEMS-002 proxy scores have been produced by this new experiment yet. A separate gate is required before scored submission and daily UTC quota compliance.
+
+### GEMS-002 integration smoke and source pin (Nov 19)
+
+A local **synthetic GeoTIFF** end-to-end rehearsal using the preserved GEMS-001 source and the packaged v2 experiment ran 11 fold/radius model evaluations and produced an evidence JSON report. A deliberately narrow first fixture (24 columns) correctly failed: the 10-pixel exclusion radius left no eligible negative cells. A wider 512x96 fixture allowed the full pipeline to execute; the generated fixture-only holdout proxy was 0.0940 (baseline) versus 0.1050 (chosen 10-pixel buffer). These numbers are **not** official GEMS DTI and have no demonstrated geological generalization. No actual organizer rasters were loaded.
+
+To prevent accidental model changes, the canonical ablation script now checks the neighboring archived GEMS-001 `run.py` against its original SHA-256 `db07aef8eb3edaa78efdc704d867cc8c2cf12ae1c8d17152fd0280238c92ca8b` **before importing** it. Tampered or symlinked model source is rejected. Run only in an approved private environment with authentic organizer file hashes; never bypass this integrity check to make experiments pass.
