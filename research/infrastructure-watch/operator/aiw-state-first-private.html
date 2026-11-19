@@ -40,6 +40,17 @@ h1{font-size:clamp(31px,4.4vw,59px);line-height:1.08;max-width:820px;margin:10px
 #state-map{height:540px;width:100%;background:linear-gradient(150deg,#e8f4fc,#d9ecfa)}
 .leaflet-container{font:inherit!important}
 .leaflet-interactive:focus-visible{stroke:#0e517f;stroke-width:3px}
+/* A single readable, source-dated preview appears only under a real mouse hover. */
+.leaflet-tooltip.aiw-state-preview{background:#fff;border:1px solid #c3ddea;border-radius:14px;box-shadow:0 12px 30px #153d6333;padding:0;max-width:min(245px,85vw);color:#163d60;white-space:normal;pointer-events:none}
+.leaflet-tooltip-top.aiw-state-preview:before{border-top-color:#c3ddea}
+.aiw-peek{padding:12px 14px;min-width:186px;line-height:1.35}
+.aiw-peek-title{font-size:16px;font-weight:850;letter-spacing:-.025em;color:#123b5c}
+.aiw-peek-vintage{font-size:10px;color:#68859a;margin:3px 0 10px}
+.aiw-peek-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.aiw-peek-stat{padding:8px;background:#f0f7fc;border-radius:9px}
+.aiw-peek-stat b{display:block;font-size:18px;letter-spacing:-.03em}
+.aiw-peek-stat span{display:block;font-size:10px;color:#56768f}
+.aiw-peek-note{font-size:10px;color:#54728b;margin-top:10px}
 .map-guidance{position:absolute;z-index:900;top:17px;left:17px;background:#fffffff2;padding:10px 13px;border:1px solid #cde0ec;border-radius:11px;box-shadow:0 4px 12px #3c759010;color:#557b94;font-size:12px;pointer-events:none}
 .map-foot{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:9px;padding:10px 14px;background:#f4faff;border-top:1px solid #d7e7f1;font-size:11px;color:#617c91}
 .inline{display:flex;gap:7px;flex-wrap:wrap}
@@ -153,6 +164,42 @@ h1{font-size:clamp(31px,4.4vw,59px);line-height:1.08;max-width:820px;margin:10px
     selected:{color:'#064b7b',weight:2.8,fillColor:'#157ab1',fillOpacity:1}
   };
   const isMobile=()=>window.innerWidth<700;
+  // Hover and click share one snapshot resolver, so dates and figures cannot drift.
+  function snapshotFor(name){
+    if(name==='Washington' && wa26?.scope==='WA_only_2026' &&
+       Number.isSafeInteger(wa26.records) && Number.isSafeInteger(wa26.conditions?.P)){
+      return {total:wa26.records,poor:wa26.conditions.P,year:2026};
+    }
+    const s=summaries.get(name);
+    if(s && Number.isSafeInteger(s.bridges_2025) && Number.isSafeInteger(s.poor_2025)){
+      return {total:s.bridges_2025,poor:s.poor_2025,year:2025};
+    }
+    return null;
+  }
+  function hoverPreview(name){
+    const card=document.createElement('div');card.className='aiw-peek';
+    const title=document.createElement('div');title.className='aiw-peek-title';title.textContent=name;
+    card.append(title);
+    const s=snapshotFor(name);
+    const vintage=document.createElement('div');vintage.className='aiw-peek-vintage';
+    vintage.textContent=s?'FHWA bridge inventory · '+s.year:'Bridge inventory summary unavailable';
+    card.append(vintage);
+    if(s){
+      const grid=document.createElement('div');grid.className='aiw-peek-grid';
+      for(const [count,label] of [[s.total,'Bridges'],[s.poor,'Poor-rated']]){
+        const tile=document.createElement('div');tile.className='aiw-peek-stat';
+        const value=document.createElement('b');value.textContent=format(count);
+        const caption=document.createElement('span');caption.textContent=label;
+        tile.append(value,caption);grid.append(tile);
+      }
+      card.append(grid);
+    }
+    const note=document.createElement('div');note.className='aiw-peek-note';
+    note.textContent=s?'Historical conditions · not a danger alert. Click to explore.':'Click to explore available state information.';
+    card.append(note);
+    return card;
+  }
+  const supportsHover=window.matchMedia?.('(hover: hover) and (pointer: fine)').matches === true;
   function showError(message){$('load-note').textContent=message}
   function initialMap(){
     if(typeof L==='undefined'){showError('Map engine unavailable. Choose a state from the list.');return;}
@@ -179,14 +226,13 @@ h1{font-size:clamp(31px,4.4vw,59px);line-height:1.08;max-width:820px;margin:10px
     $('wa-records').hidden=true;$('record-detail').hidden=true;
     highlight(name);
     $('state-name').textContent=name;
-    const s=summaries.get(name);
+    const s=snapshotFor(name);
     if(s){
-      const latest=name==='Washington'&&wa26;
-      const year=latest?2026:2025;
+      const year=s.year;
       $('state-eyebrow').textContent=year+' FHWA bridge inventory';
-      $('state-subtitle').textContent=latest?'2026 Washington data, independently indexed on Evercraft-owned infrastructure.':'Federal state summary from the 2025 inventory.';
-      $('bridges-total').textContent=format(latest?wa26.records:s.bridges_2025);
-      $('bridges-poor').textContent=format(latest?wa26.conditions.P:s.poor_2025);
+      $('state-subtitle').textContent=year===2026?'2026 Washington data, independently indexed on Evercraft-owned infrastructure.':'Federal state summary from the 2025 inventory.';
+      $('bridges-total').textContent=format(s.total);
+      $('bridges-poor').textContent=format(s.poor);
       $('bridges-label').textContent='Recorded bridges · '+year;
       $('poor-label').textContent='Poor-rated · '+year;
       $('state-source').textContent='Source: FHWA '+year+' inventory. Counts describe records, not live safety conditions.';
@@ -281,10 +327,14 @@ h1{font-size:clamp(31px,4.4vw,59px);line-height:1.08;max-width:820px;margin:10px
       onEachFeature:(feature,layer)=>{
         const name=feature.properties.name;
         regionLayers.set(name,layer);
-        layer.on('click',()=>choose(name,selectedName===name));
+        // Desktop: instant figures on hover. Click or tap retains state selection.
+        // The preview never mutates the selected state or triggers an API request.
+        if(supportsHover)layer.bindTooltip(()=>hoverPreview(name),{
+          sticky:true,direction:'top',offset:[0,-12],opacity:1,className:'aiw-state-preview'
+        });
+        layer.on('click',()=>{layer.closeTooltip();choose(name,selectedName===name);});
         layer.on('mouseover',()=>{
           if(selectedName!==name)layer.setStyle(stateStyles.hover);
-          layer.bindTooltip(name,{sticky:true,direction:'top'}).openTooltip();
         });
         layer.on('mouseout',()=>{if(selectedName!==name)layer.setStyle(stateStyles.normal);});
       }
@@ -293,6 +343,7 @@ h1{font-size:clamp(31px,4.4vw,59px);line-height:1.08;max-width:820px;margin:10px
   }
   async function boot(){
     initialMap();
+    $('map-help').textContent=supportsHover?'Hover to see numbers · Click to explore':'Tap a state to explore';
     try{
       const [statesRes,geoRes,waRes]=await Promise.all([
         fetch('/api/states',{cache:'no-store'}),
