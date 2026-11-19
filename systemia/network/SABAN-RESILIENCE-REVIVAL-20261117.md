@@ -66,3 +66,13 @@ No production changes or actual physical-node communication were performed. The 
 **Truth boundary**: a pair of signatures proves consistency of records held by the two signing keys, not independent identity, independent physical machines, proof of real upstream internet outage, radio range, battery endurance, real gateway, live network coverage, or emergency preparedness. It labels these as unverified. Independent physical witness and observed transport/link evidence remain required; never make a field certification from CI or self-attestation.
 
 **Next operator gate**: execute the previously documented authorized isolated LAN exercise on Penguin/NextGen from the same clean branch SHA, collect both private per-node observations with `field-evidence-gate.mjs capture`, compare with `review`, and attach separate witness records for hardware uniqueness, actual WAN isolation, power source, interface reachability, and measured timings. Do not alter host networking/firewall or auto-enroll devices to make a test succeed.
+
+## 2026-11-19 Push 04: harden field-evidence truth and topology readiness
+
+The last completed pre-push Forge run at commit `6972c33f3df42eaa830ba38ac220d5f195ffea83` finished successfully, alongside ten other workflows. This **does not** establish a field network.
+
+Identified false-positive risk: the signed evidence reviewer could count repeated deliveries of one message as multiple independent deliveries, or count two B listener startups that both predated the outage as valid recovery. The reviewer now checks unique message IDs and receiver acceptance, actual per-node event order, the second-message queue, A unreachability between deliveries, and B restart **between its accepted messages**. New negative tests re-sign misleading synthetic reports with valid local Ed25519 fixture keys; signature validity alone does not allow those records through.
+
+Added `systemia/network/field-topology-preflight.mjs` and `tests/network-field-topology-preflight.test.mjs`. The tool reads only local interfaces and guest-environment hints, rejects loopback/public/unassigned IP binds, and emits redacted classifications. It performs zero packet/network probes, does not touch production host settings, and cannot claim another device is reachable. It flags WSL/Crostini NAT uncertainty instead of silently reconfiguring a firewall or router.
+
+Local Node.js 22 regression: **5 PASS, 0 FAIL** across four test files. GitHub branch/CI review is distinct and may lag latest document commits. No live Node001/Node002 shell access, physical outage proof, online carrier access, satcom, or live Systemia DB update was performed; PR stays draft.
