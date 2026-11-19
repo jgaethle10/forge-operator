@@ -106,3 +106,21 @@ test('wrong model identity and incomplete response fail closed',async()=>{
  assert.equal(r.results[0].status,'model_identity_mismatch');
  assert.equal(r.results[1].status,'incomplete_response');
 });
+
+
+test('runtime transport failure opens circuit and holds remaining trials without retry',async()=>{
+ let calls=0;
+ const fetchImpl=async(url)=>{
+  calls++;
+  if(String(url).endsWith('/api/tags'))
+   return response({models:[{name:'qwen3-coder:30b',digest:'fixture:sha256'}]});
+  throw Error('simulated_local_runtime_failure');
+ };
+ const r=await runBenchmark({models:['qwen3-coder:30b'],fetchImpl});
+ assert.equal(calls,2);
+ assert.equal(r.trials_planned,5);
+ assert.equal(r.trials_attempted,1);
+ assert.equal(r.results[0].status,'transport_error');
+ assert.equal(r.results.filter(x=>x.status==='held_after_runtime_failure').length,4);
+ assert.equal(r.model_inference_observed,false);
+});
