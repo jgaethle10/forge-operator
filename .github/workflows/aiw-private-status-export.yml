@@ -1,0 +1,23 @@
+name: AIW private operator status export
+on:
+  pull_request:
+    paths:
+      - 'research/infrastructure-watch/engineering/aiw_private_status_export.py'
+      - 'research/infrastructure-watch/engineering/aiw_kaidance_receipts.py'
+      - 'research/infrastructure-watch/tests/test_aiw_private_status_export.py'
+      - '.github/workflows/aiw-private-status-export.yml'
+permissions:
+  contents: read
+jobs:
+  verify-private-status:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Verify local receipt-to-status export contract
+        run: |
+          python3 -m py_compile research/infrastructure-watch/engineering/aiw_private_status_export.py
+          python3 -m unittest discover -s research/infrastructure-watch/tests -p test_aiw_private_status_export.py -v
