@@ -38,6 +38,8 @@ jobs:
           node --check systemia/mission-bridge/bridge.mjs
           node --check systemia/mission-bridge/cli.mjs
           node --test systemia/mission-bridge/bridge.test.mjs
+          node --check systemia/mission-bridge/gems/private-research-preflight.mjs
+          node --test systemia/mission-bridge/gems/private-research-preflight.test.mjs
       - name: Validate the first committed mission without running it
         run: node systemia/mission-bridge/cli.mjs --plan signal-public-ingress-20261116-001
 
