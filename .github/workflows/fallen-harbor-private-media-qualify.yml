@@ -1,0 +1,41 @@
+name: Fallen private Harbor source qualification
+on:
+  pull_request:
+    paths:
+      - 'systemia/media-studio/harbor-private-media-qualify.mjs'
+      - 'systemia/media-studio/harbor-private-media-qualify.test.mjs'
+      - 'scripts/nextgen/verify-harbor-private-media-import.mjs'
+      - '.github/workflows/fallen-harbor-private-media-qualify.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/media-studio/harbor-private-media-qualify.mjs'
+      - 'systemia/media-studio/harbor-private-media-qualify.test.mjs'
+      - '.github/workflows/fallen-harbor-private-media-qualify.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  private-source-qualification:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Ensure video decoder and frame extraction
+        run: |
+          set -euo pipefail
+          if ! command -v ffmpeg >/dev/null 2>&1 || ! command -v ffprobe >/dev/null 2>&1; then
+            export DEBIAN_FRONTEND=noninteractive
+            sudo timeout 180 apt-get update -o Acquire::Retries=1 -o Acquire::http::Timeout=20 -o Acquire::https::Timeout=20
+            sudo timeout 500 apt-get install -y --no-install-recommends ffmpeg -o Acquire::Retries=1 -o Acquire::http::Timeout=20 -o Acquire::https::Timeout=20
+          fi
+          ffprobe -hide_banner -version | head -n 1
+      - name: Verify transferred private bytes and actual decoders using synthetic footage
+        run: node --test systemia/media-studio/harbor-private-media-qualify.test.mjs
+      - name: Check repository TypeScript boundaries
+        run: |
+          npm install --no-audit --no-fund
+          npm run lint
