@@ -1,6 +1,6 @@
 import unittest
 import numpy as np
-from gems_002_negative_ablation import sample_indices,train_only_distances
+from gems_002_negative_ablation import sample_indices,train_only_distances,geographic_folds
 
 class NegativeAbalationTests(unittest.TestCase):
     def test_reproducible_and_buffered(self):
@@ -35,6 +35,31 @@ class NegativeAbalationTests(unittest.TestCase):
         idx,_=sample_indices(labels,train,distances,0)
         self.assertTrue(np.all(train[idx]))
         self.assertTrue(np.all(idx<4))
+
+    def test_southern_holdout_is_never_used_in_northern_tuning(self):
+        valid=np.ones((1000,12),bool)
+        folds,southern=geographic_folds(valid,buffer_pixels=10)
+        rows=np.where(valid)[0]
+        self.assertEqual(len(folds),4)
+        for lo,hi,train,test in folds[:3]:
+            self.assertTrue(np.all(rows[train]<southern))
+            self.assertTrue(np.all(rows[test]<southern))
+            self.assertFalse(np.any(train&test))
+        lo,hi,train,test=folds[3]
+        self.assertTrue(np.all(rows[train]<southern-10))
+        self.assertTrue(np.all(rows[test]>=southern))
+        self.assertFalse(np.any(train&test))
+
+    def test_irregular_validity_still_locks_southern_region(self):
+        valid=np.ones((1000,8),bool)
+        valid[30:60,:]=False
+        valid[200:300,0:4]=False
+        valid[900:,1:]=False
+        folds,southern=geographic_folds(valid,buffer_pixels=10)
+        rows=np.where(valid)[0]
+        for lo,hi,train,test in folds[:3]:
+            self.assertFalse(np.any(train&(rows>=southern)))
+        self.assertTrue(np.all(rows[folds[-1][3]]>=southern))
 
     def test_unsafe_inputs_fail_closed(self):
         with self.assertRaises(ValueError):
