@@ -29,13 +29,13 @@ espeak-ng --version | head -1
 From a checked-out copy of the branch `feature/bella-actor-lab-20261026`, not a production release:
 
 ```bash
-python3 systemia/media-studio/voice-foundry-local-studio.py --check-only
-python3 systemia/media-studio/voice-foundry-local-studio.py --port 8766
+python3 systemia/media-studio/start-voice-foundry-owned.py --check-only
+python3 systemia/media-studio/start-voice-foundry-owned.py --start --port 8766
 ```
 
 Open **http://127.0.0.1:8766** in a browser **on that same computer**. The interface is intentionally unreachable on a separate iPhone, even while on home Wi-Fi. Stop the server with Ctrl+C. Do not start it as an internet-facing Systemia edge application, open a router port, or reverse-proxy it until dedicated authentication and security testing exist.
 
-If dependencies are absent, install them only in a separate reviewed virtual environment, following the Kokoro documentation for compatible torch, language phonemizer and libsndfile dependencies; rerun native test renders. The studio automatically invokes `voice-foundry-workstation.py` using the currently running Python executable. First render may need access to published model weights; this is not guaranteed fully offline until weights are pre-cached and vendored/verified in the approved Evercraft artifact store.
+If dependencies are absent, install them only in a separate reviewed virtual environment, following the Kokoro documentation for compatible torch, language phonemizer and libsndfile dependencies; rerun native test renders. The **owned-node launcher** refuses missing native dependencies and forces `HF_HUB_OFFLINE=1`, `TRANSFORMERS_OFFLINE=1`, and `HF_DATASETS_OFFLINE=1` before starting the local studio; it does not download weights or install packages. It does **not** confirm required model weights are cached, so the first render fails safely if they are not. The studio invokes `voice-foundry-workstation.py` using the same Python executable. Direct execution of the underlying server bypasses this launcher guard and is not the recommended owned-runtime path. First render may need access to published model weights; this is not guaranteed fully offline until weights are pre-cached and vendored/verified in the approved Evercraft artifact store.
 
 ## API surface, private only
 
@@ -61,3 +61,17 @@ Only use scripts for which Evercraft has rights. All generated audio is **privat
 4. Only then design a **new, separately authenticated, TLS-protected owned mobile edge**, with per-user access, queue limits, rate limits, data retention, and no default public sharing.
 
 **Do not claim phone access or a deployed customer site from this repository-only commit.**
+
+## Private mobile auditions without a public inference service
+
+The verified `voice-foundry-mobile-review-export.py` takes a private workstation render folder containing `native.wav`, `preview.mp3`, and `evidence.json`, rejects changed hashes or missing release holds, and creates a portrait H.264/AAC MP4 with its own source-hash receipt. It does not upload audio or serve an internet endpoint. An authorized operator can place the result into approved private file storage for owner-only iPhone listening. This is **mobile playback**, not an iPhone-accessible text-to-speech studio.
+
+Example (from a reviewed local render):
+
+```bash
+python3 systemia/media-studio/voice-foundry-mobile-review-export.py \
+  --render-folder /absolute/private/render-folder \
+  --output /absolute/private/reviews/spanish-test.mp4
+```
+
+For **interactive iPhone generation**, a separate authenticated, rate-limited, TLS-protected owned edge remains required. No public listener or commercial release is approved.
