@@ -66,8 +66,13 @@ def validate_organizer_grid(data):
             raise ValueError("official_affine_transform_mismatch")
         descriptions=features.descriptions
         prefixes=[(v or "").split(" - ",1)[0] for v in descriptions]
-        expected={"rtp","tmi","iso_grav_anom","det_elev","tc"}
-        if any(not d for d in descriptions) or len(set(prefixes))!=19 or not expected.issubset(prefixes):
+        expected_order=(
+            "mag_anom","rtp","tmi_hg","geod_2ndinv","iso_grav_anom_slope",
+            "tc","geod_shearrate","geod_dilaterate","tmi_vg","deq_n100a15",
+            "iso_grav_anom_vg","det_elev","iso_grav_anom","tmi",
+            "depth_to_base_surf","ieq_n100a15","cond_surf",
+            "iso_grav_anom_hg","det_elev_slope")
+        if tuple(prefixes)!=expected_order:
             raise ValueError("organizer_feature_band_semantics_mismatch")
         return {"crs":"EPSG:32611","width":template.width,"height":template.height,
                 "feature_bands":features.count,
