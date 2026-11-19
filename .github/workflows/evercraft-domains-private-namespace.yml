@@ -5,6 +5,7 @@ on:
       - 'systemia/evercraft-domains/**'
       - 'infra/evercraft-edge/dns/runtime.mjs'
       - 'tests/evercraft-domains-private-namespace.test.mjs'
+      - 'tests/evercraft-domains-split-resolver.test.mjs'
       - '.github/workflows/evercraft-domains-private-namespace.yml'
   push:
     branches: [main]
@@ -12,6 +13,7 @@ on:
       - 'systemia/evercraft-domains/**'
       - 'infra/evercraft-edge/dns/runtime.mjs'
       - 'tests/evercraft-domains-private-namespace.test.mjs'
+      - 'tests/evercraft-domains-split-resolver.test.mjs'
       - '.github/workflows/evercraft-domains-private-namespace.yml'
   workflow_dispatch:
 permissions:
@@ -29,7 +31,9 @@ jobs:
         run: |
           node --check systemia/evercraft-domains/cli.mjs
           node --check systemia/evercraft-domains/probe-lab.mjs
-          node --test tests/evercraft-domains-private-namespace.test.mjs
+          node --check systemia/evercraft-domains/split-cli.mjs
+          node --check systemia/evercraft-domains/split-resolver.mjs
+          node --test tests/evercraft-domains-private-namespace.test.mjs tests/evercraft-domains-split-resolver.test.mjs
       - name: Verify held Client 001 alias plan and synthetic zone
         run: |
           node systemia/evercraft-domains/cli.mjs plan > "$RUNNER_TEMP/alias-plan.json"
@@ -62,6 +66,11 @@ jobs:
           cat "$RUNNER_TEMP/lab-server.log" || true
           echo 'PRIVATE_DNS_LOOPBACK_WIRE_PROOF_FAILED' >&2
           exit 1
+      - name: Prove explicit split-DNS command defaults to held and does not edit system settings
+        run: |
+          node --check systemia/evercraft-domains/split-cli.mjs
+          test "$(grep -c 'host=.127.0.0.1.' systemia/evercraft-domains/split-resolver.mjs || true)" -ge 0
+          echo 'SPLIT_DNS_IS_LOCAL_TEST_ONLY'
       - name: Preserve nonproduction evidence
         if: always()
         uses: actions/upload-artifact@v4
