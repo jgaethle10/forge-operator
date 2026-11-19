@@ -7,6 +7,7 @@ import json
 import mimetypes
 import os
 from pathlib import Path
+from contextlib import contextmanager
 import re
 import secrets
 import sqlite3
@@ -30,12 +31,21 @@ ALLOWED = {'.pdf','.png','.jpg','.jpeg','.webp','.txt','.csv','.dxf','.dwg'}
 
 def now(): return dt.datetime.now(dt.timezone.utc).isoformat(timespec='seconds')
 def uid(prefix): return prefix + '-' + secrets.token_hex(6).upper()
+@contextmanager
 def connect():
+    """Transactional SQLite handle, always closed after use."""
     db=sqlite3.connect(DB,timeout=15)
-    db.row_factory=sqlite3.Row
-    db.execute('PRAGMA foreign_keys=ON')
-    db.execute('PRAGMA journal_mode=WAL')
-    return db
+    try:
+        db.row_factory=sqlite3.Row
+        db.execute('PRAGMA foreign_keys=ON')
+        db.execute('PRAGMA journal_mode=WAL')
+        yield db
+        db.commit()
+    except BaseException:
+        db.rollback()
+        raise
+    finally:
+        db.close()
 
 def init():
     with connect() as db:
