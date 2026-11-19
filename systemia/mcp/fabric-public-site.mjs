@@ -488,12 +488,12 @@ const WEBSITE_AUDIT_SETTLEMENT_URL='https://buy.stripe.com/bJe28kfD885M9SP49n0Jq
 function renderHeldWebsiteAuditInquiryForm(){
   return [
     '<section id="audit-order" class="offer-panel" aria-label="Buy or request the $49 Website Audit">',
-    '<div class="eyebrow">One clear offer · $49 total</div>',
+    '<div class="eyebrow">One clear offer · $49 + applicable tax</div>',
     '<p class="checkout-note"><strong>Evercraft Payments</strong> · Stripe-hosted secure checkout. Payment verification and reviewed report delivery are separate steps.</p>',
     '<h2>Get your five priority fixes.</h2>',
     '<p>Pay securely, enter one public website address and choose the business result you want. We review the public-site findings and email the completed report to the address you use at checkout. No passwords or phone call.</p>',
     '<div class="actions"><a class="btn primary" href="'+escapeHtml(WEBSITE_AUDIT_SETTLEMENT_URL)+'" rel="noreferrer noopener" aria-label="Pay $49 for the Website Quick Win Audit using Stripe">Start my $49 audit · secure checkout</a></div>',
-    '<p class="checkout-note">One-time $49, including applicable sales tax. Stripe processes payment for Evercraft. Your URL and priority are requested during checkout. Purchase does not authorize website changes or guarantee sales results. Work begins only after verified payment, then a human-reviewed report is delivered by email.</p>',
+    '<p class="checkout-note">One-time $49 before any applicable sales tax, calculated at secure checkout. Stripe processes payment for Evercraft. Your URL and priority are requested during checkout. Purchase does not authorize website changes or guarantee sales results. Work begins only after verified payment, then a human-reviewed report is delivered by email.</p>',
     '<details style="margin-top:22px"><summary style="cursor:pointer;font-weight:700">Not ready to purchase? Request a free review first.</summary>',
     '<p>Use the optional form below to ask about fit and availability. This is separate from the live payment link and does not charge you.</p>',
     '<h3>Request your Quick Win Audit</h3>',
