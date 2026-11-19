@@ -116,15 +116,44 @@ function review(){
   if(a.public_key_pem===b.public_key_pem)throw Error('same_report_signer');
   if(a.source.revision!==b.source.revision||FILES.some(f=>a.source.paths[f]!==b.source.paths[f]))throw Error('source_mismatch');
   const av=a.receipt_log.events,bv=b.receipt_log.events;
-  const deliveries=av.map((x,i)=>({...x,i})).filter(x=>x.event==='message.delivered');
-  const receives=bv.filter(x=>x.event==='message.received');
-  const matched=deliveries.filter(x=>x.message_id && /^[0-9a-f]{64}$/.test(x.envelope_hash||'') && receives.some(y=>y.message_id===x.message_id&&y.envelope_hash===x.envelope_hash));
-  const unreachable=av.map((x,i)=>({...x,i})).filter(x=>x.event==='peer.unreachable');
-  const restart=bv.filter(x=>x.event==='node.listener.ready').length>=2;
-  const recovery=matched.length>=2 && unreachable.some(x=>x.i>matched[0].i&&x.i<matched[matched.length-1].i);
-  const status=(matched.length>=2 && restart && recovery)?'CROSS_NODE_SOFTWARE_EVIDENCE_RECONCILED':'HOLD_INSUFFICIENT_EVIDENCE';
+  // Treat receipt events as a sequence of *unique* message identities, not a count
+  // of log lines. Repeated events must never masquerade as independent delivery.
+  const indexed = (rows,kind) => rows.map((row,i)=>({...row,i})).filter(row=>row.event===kind);
+  const deliveries=indexed(av,'message.delivered');
+  const receives=indexed(bv,'message.received');
+  const ids=new Set(),matched=[];
+  let reusedDeliveryId=false,conflictingReceive=false;
+  const receivedById=new Map();
+  for(const r of receives){
+    if(!r.message_id || !/^[0-9a-f]{64}$/.test(r.envelope_hash||''))continue;
+    if(receivedById.has(r.message_id)){
+      // Receiver's normal idempotent retry is logged as duplicate_ack, not received.
+      conflictingReceive=true;
+    } else receivedById.set(r.message_id,r);
+  }
+  for(const d of deliveries){
+    if(!d.message_id||!/^[0-9a-f]{64}$/.test(d.envelope_hash||''))continue;
+    if(ids.has(d.message_id)){reusedDeliveryId=true;continue;}
+    ids.add(d.message_id);
+    const receiver=receivedById.get(d.message_id);
+    if(receiver?.envelope_hash===d.envelope_hash)matched.push({sender:d,receiver});
+  }
+  // Ordering within each node's append-only log, not cross-host wall clocks:
+  // delivery 1 -> unreachable -> delivery 2, and receiving process startup
+  // before delivery 1 -> second startup -> delivery 2.
+  const first=matched[0],last=matched[matched.length-1];
+  const unreachableBetween=matched.length>=2 && indexed(av,'peer.unreachable').some(x=>x.i>first.sender.i&&x.i<last.sender.i);
+  const starts=indexed(bv,'node.listener.ready');
+  const restartBetween=matched.length>=2 && starts.some(x=>x.i<first.receiver.i) && starts.some(x=>x.i>first.receiver.i&&x.i<last.receiver.i);
+  const queueBetween=matched.length>=2 && indexed(av,'message.queued').some(x=>x.message_id===last.sender.message_id&&x.i>first.sender.i&&x.i<last.sender.i);
+  const ordered=matched.length>=2 && first.sender.i<last.sender.i&&first.receiver.i<last.receiver.i;
+  const recovery=unreachableBetween&&restartBetween&&queueBetween&&ordered&&!reusedDeliveryId&&!conflictingReceive;
+  const status=matched.length>=2&&recovery?'CROSS_NODE_SOFTWARE_EVIDENCE_RECONCILED':'HOLD_INSUFFICIENT_EVIDENCE';
   console.log(JSON.stringify({schema:'evercraft.network.field-evidence-review.v1',status,matched_encrypted_delivery_receipts:matched.length,
-    receiver_listener_started_twice:restart,unreachable_between_deliveries:recovery,distinct_signing_keys:true,
+    receiver_listener_started_twice:starts.length>=2,receiver_restart_between_receipts:restartBetween,
+    unreachable_between_deliveries:unreachableBetween,second_message_queued:queueBetween,
+    distinct_delivery_ids:!reusedDeliveryId,unique_receiver_accepts:!conflictingReceive,
+    recovery_sequence_valid:recovery,distinct_signing_keys:true,
     matching_code_revision:a.source.revision,self_attested:true,independent_physical_witness:false,
     upstream_outage_verified:false,distinct_physical_devices_verified:false,radio_or_satellite_verified:false}));
 }
