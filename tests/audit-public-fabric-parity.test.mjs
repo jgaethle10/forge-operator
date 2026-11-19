@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {assessFabricParity} from '../scripts/audit-public-fabric-parity.mjs';
+import {assessFabricParity,buildDeclaredFabricParitySource} from '../scripts/audit-public-fabric-parity.mjs';
 
 const source={capabilities:[
  {public_id:'known-v1',public_url:'https://fabric.systemiacommandcenters.com/capabilities/known-v1'},
@@ -81,4 +81,44 @@ test('scoped, unexpired $250 Workflow X-Ray source-only exception reports missin
  const expired=assessFabricParity({...args,source:extendedSource,observations:observed,exceptions:scopedExceptions,now:'2026-10-22T00:00:00Z'});
  assert.equal(expired.ok,false);
  assert.ok(expired.findings.includes('source_live_exception_expired'));
+});
+
+
+test('declared product discovery and Work Saban pilot count as source while unexpected extras still fail',()=>{
+ const supplements={schema:'evercraft.fabric.catalog-supplements.v1',capabilities:[{
+   public_id:'work-saban-reporting-pilot-v1',
+   connections:[{type:'website',url:'https://jgaethle10.github.io/forge-operator/work-saban/'}],
+ }]};
+ const products=[{public_id:'product:evercraft-clip',
+   connections:[{type:'website',url:'https://jgaethle10.github.io/forge-operator/chum/products/evercraft-clip/'}]}];
+ const expanded=buildDeclaredFabricParitySource({source,supplements,products});
+ assert.equal(expanded.capabilities.length,4);
+ const extraObs=expanded.capabilities.slice(2).map(row=>({
+   public_id:row.public_id,url:row.public_url,status:200,html_identity_verified:null
+ }));
+ const healthy=assessFabricParity({...args,source:expanded,liveIds:[
+   'known-v1','work-saban-reporting-pilot-v1','product:evercraft-clip'
+ ],health:{...health,capability_count:3},observations:[...observations,...extraObs]});
+ assert.equal(healthy.ok,true);
+ assert.equal(healthy.route_checked_count,4);
+ assert.equal(healthy.live_mcp_capabilities,3);
+ assert.equal(healthy.source_only_ids.length,1);
+ assert.equal(healthy.release_lineage_state,'HOLD_MISSING_DEPLOYMENT_LINEAGE');
+ const unexpected=assessFabricParity({...args,source:expanded,liveIds:[
+   'known-v1','work-saban-reporting-pilot-v1','product:evercraft-clip','product:unknown'
+ ],health:{...health,capability_count:4},observations:[...observations,...extraObs]});
+ assert.equal(unexpected.ok,false);
+ assert.ok(unexpected.findings.includes('unexpected_live_catalog_extra:product:unknown'));
+});
+
+test('source parity only admits explicitly declared owned HTTPS discovery and rejects duplicates',()=>{
+ const base={source,supplements:{schema:'evercraft.fabric.catalog-supplements.v1',capabilities:[]}};
+ assert.throws(()=>buildDeclaredFabricParitySource({...base,
+   products:[{public_id:'product:bad',connections:[{type:'website',url:'https://untrusted.example/thing'}]}]
+ }),/public_url_not_owned/);
+ assert.throws(()=>buildDeclaredFabricParitySource({...base,
+   products:[{public_id:'known-v1',connections:[{type:'website',url:'https://jgaethle10.github.io/forge-operator/thing/'}]}]
+ }),/invalid_or_duplicate/);
+ assert.throws(()=>buildDeclaredFabricParitySource({...base,
+   products:[{public_id:'product:malformed',connections:[]}]}),/invalid_or_duplicate/);
 });
