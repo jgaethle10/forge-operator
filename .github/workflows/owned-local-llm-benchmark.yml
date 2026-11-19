@@ -1,0 +1,28 @@
+name: Owned Local LLM 55-Trial Benchmark
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/benchmark-owned-local-llms.mjs'
+      - 'tests/benchmark-owned-local-llms.test.mjs'
+      - '.github/workflows/owned-local-llm-benchmark.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  synthetic-benchmark-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Syntax check
+        run: node --check scripts/benchmark-owned-local-llms.mjs
+      - name: Regression suite (stubbed Ollama, no model downloads)
+        run: node --test tests/benchmark-owned-local-llms.test.mjs
+      - name: Dry-run matrix, zero inference
+        run: node scripts/benchmark-owned-local-llms.mjs
