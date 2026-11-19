@@ -34,6 +34,9 @@ test('two local processes: explicit trust, encrypted exchange, outage queue, res
     const queue=run(['send',...baseA],'encrypted hello');assert.equal(queue.state,'QUEUED');
     const first=run(['flush',...baseA,'--peer-url',`http://127.0.0.1:${p}/`]);
     assert.equal(first.delivered,1);assert.equal(first.peer_authenticated,true);
+    const sendLog=fs.readFileSync(path.join(a,'receipts.jsonl'),'utf8').trim().split('\n').map(JSON.parse);
+    const deliveredReceipt=sendLog.find(x=>x.event==='message.delivered');
+    assert.match(deliveredReceipt?.envelope_hash||'',/^[0-9a-f]{64}$/);
     const received=run(['inbox','--id','beta','--state',b,'--key-file',key]);
     assert.equal(received.messages[0].message,'encrypted hello');
     assert.equal(run(['status','--state',a]).outbox,0);
@@ -57,6 +60,8 @@ test('two local processes: explicit trust, encrypted exchange, outage queue, res
     await start();
     const recovered=run(['flush',...baseA,'--peer-url',`http://127.0.0.1:${p}/`]);
     assert.equal(recovered.delivered,1);assert.equal(run(['status','--state',b]).inbox,2);
+    const recvLog=fs.readFileSync(path.join(b,'receipts.jsonl'),'utf8').trim().split('\n').map(JSON.parse);
+    assert.ok(recvLog.some(x=>x.event==='message.received'&&x.message_id===deliveredReceipt.message_id&&x.envelope_hash===deliveredReceipt.envelope_hash));
     assert.equal(run(['status','--state',a]).outbox,0);
     const sim=run(['simulate']);assert.equal(sim.simulation_only,true);
     assert.equal(sim.admissible.some(x=>x.id==='sim-stranger'),false);
