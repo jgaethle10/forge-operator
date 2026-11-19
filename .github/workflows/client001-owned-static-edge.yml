@@ -4,6 +4,7 @@ on:
     paths:
       - 'infra/evercraft-edge/client001-on-the-go/**'
       - 'scripts/stage-client001-owned-edge.sh'
+      - 'scripts/client001-domain-rdap.mjs'
       - 'tests/client001-owned-edge.test.mjs'
       - '.github/workflows/client001-owned-static-edge.yml'
       - 'public/clients/on-the-go/review/index.html'
@@ -73,11 +74,14 @@ jobs:
             exit 1
           fi
           echo 'STAGE_PASS: digest preserved; repeat safe; no active symlink, DNS edit or public deploy'
+      - name: Observe Verisign domain records without spending or editing DNS
+        continue-on-error: true
+        run: node scripts/client001-domain-rdap.mjs --out "$RUNNER_TEMP/client001-domain-rdap.json"
       - name: Preserve bounded nonproduction Caddy parse artifact
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: client001-owned-edge-source-proof
-          path: ${{ runner.temp }}/client001-caddy-adapted.json
+          path: |\n            ${{ runner.temp }}/client001-caddy-adapted.json\n            ${{ runner.temp }}/client001-domain-rdap.json
           if-no-files-found: warn
           retention-days: 7
