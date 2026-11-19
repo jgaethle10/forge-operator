@@ -46,3 +46,11 @@ The last command performs external **GETs** and writes `artifacts/systemia-missi
 Request: `systemia/mission-bridge/requests/gems-research-evidence-20261118-001.json`. The GitHub observation receipt hashes fixed evidence files and reports whether source is present. It **cannot** attest that a Drive/Library artifact was downloaded by the runner or that DrivenData certified a result. The accepted submission score and model results were supplied by the participant and archived locally; use primary portal evidence for authoritative leaderboard status.
 
 For real private Systemia/Saban execution, a separate authenticated Mission Gateway must enforce identity, Passport capability scopes, agent/compute allowlists, approval gates, bounded resource budgets, replay protection, and externally verifiable receipts. No generic POST-to-execute endpoint, user-supplied commands, direct Node002 dispatch, or public bypass should be added to this Git-source observer. A PR merge is not permission for private remote execution.
+
+## GEMS private research staging (not remote execution)
+
+The GEMS branch includes `gems/private-research-preflight.mjs` and `gems/research-job-ledger.mjs`. An identity/Passport-authorized internal server may use these as **policy-only components** to validate one of three named GEMS workloads and write one exclusive, idempotent staging record into its own private ACL-protected directory.
+
+The ledger never contacts an agent, runs a command, accesses a training dataset, or mints a Passport lease. A `staged_not_dispatched` record is **not** a mission run, and a passing preflight is **not** proof of authenticated identity. The future gateway must source verified context from trusted identity middleware rather than user-provided JSON. Existing GEMS-001 / GEMS-002 evidence remains unchanged.
+
+Tests: `node --test systemia/mission-bridge/gems/private-research-preflight.test.mjs systemia/mission-bridge/gems/research-job-ledger.test.mjs`. Admission CI runs these automatically on the feature PR.
