@@ -20,7 +20,7 @@ jobs:
     # and its media runtime download exceeded the 180-second bounded install.
     # Revisit the migration only after a successful media + browser canary.
     runs-on: ubuntu-24.04
-    timeout-minutes: 15
+    timeout-minutes: 22
 
     steps:
       - name: Checkout
@@ -43,7 +43,10 @@ jobs:
               -o Acquire::Retries=1 \
               -o Acquire::http::Timeout=20 \
               -o Acquire::https::Timeout=20
-            sudo timeout 180 apt-get install -y --no-install-recommends ffmpeg \
+            # Signed Ubuntu packages; 26.04 and 24.04 runner mirrors both exceeded
+            # the former 180s bound while fetching 60+ MB of codec libraries.
+            # Preserve the full media gate with a bounded 420s installation.
+            sudo timeout 420 apt-get install -y --no-install-recommends ffmpeg \
               -o Acquire::Retries=1 \
               -o Acquire::http::Timeout=20 \
               -o Acquire::https::Timeout=20
