@@ -489,6 +489,7 @@ function renderHeldWebsiteAuditInquiryForm(){
   return [
     '<section id="audit-order" class="offer-panel" aria-label="Buy or request the $49 Website Audit">',
     '<div class="eyebrow">One clear offer · $49 total</div>',
+    '<p class="checkout-note"><strong>Evercraft Payments</strong> · Stripe-hosted secure checkout. Payment verification and reviewed report delivery are separate steps.</p>',
     '<h2>Get your five priority fixes.</h2>',
     '<p>Pay securely, enter one public website address and choose the business result you want. We review the public-site findings and email the completed report to the address you use at checkout. No passwords or phone call.</p>',
     '<div class="actions"><a class="btn primary" href="'+escapeHtml(WEBSITE_AUDIT_SETTLEMENT_URL)+'" rel="noreferrer noopener" aria-label="Pay $49 for the Website Quick Win Audit using Stripe">Start my $49 audit · secure checkout</a></div>',
