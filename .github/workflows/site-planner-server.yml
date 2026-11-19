@@ -1,0 +1,25 @@
+name: Site Planner server smoke
+on:
+  push:
+    paths:
+      - 'products/site-planner/server.py'
+      - 'products/site-planner/test_server_smoke.py'
+      - '.github/workflows/site-planner-server.yml'
+  pull_request:
+    paths:
+      - 'products/site-planner/server.py'
+      - 'products/site-planner/test_server_smoke.py'
+      - '.github/workflows/site-planner-server.yml'
+permissions:
+  contents: read
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile owned server
+        run: python3 -m py_compile products/site-planner/server.py
+      - name: Validate SQLite report and event workflow
+        working-directory: products/site-planner
+        run: python3 -m unittest -v test_server_smoke.py
