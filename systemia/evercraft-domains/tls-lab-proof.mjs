@@ -27,8 +27,13 @@ async function request({path='/',method='GET',host=HOST+':'+PORT,trust=true,serv
   const req=https.request({
    hostname:HOST,port:PORT,path,method,servername,
    lookup:(name,opts,callback)=>{
-    if(name!==HOST){callback(Error('unexpected_dns_name'));return;}
-    callback(null,connectAddress,4);
+    const cb=typeof opts==='function'?opts:callback;
+    const settings=typeof opts==='object'&&opts?opts:{};
+    if(name!==HOST){cb(Error('unexpected_dns_name'));return;}
+    // Node 22 may request the multi-address form with {all:true}.
+    // No fallback to system/public DNS is permitted.
+    if(settings.all)cb(null,[{address:connectAddress,family:4}]);
+    else cb(null,connectAddress,4);
    },
    ca:trust?ca:[],
    rejectUnauthorized:true,
