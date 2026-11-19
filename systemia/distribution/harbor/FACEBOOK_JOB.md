@@ -38,5 +38,36 @@ The worker confirms the credential represents the requested Page and uses
 Evercraft Clip's provider adapter. A successful receipt contains the Page ID,
 job hash, Meta post ID and read-back permalink. Repeat runs with the same
 Page and normalized post content are held. For an ambiguous attempt, reconcile
-in the Page before deciding how to proceed. Deploying an automatic pickup
-service requires wiring this entry point into the owned Harbor runtime.
+in the Page before deciding how to proceed.
+
+## Owned automatic pickup
+
+The workflow uploads a `harbor-facebook-validation` artifact after validation.
+On the owned Harbor host, use a checkout containing the released worker, Node 22,
+Git and an authenticated `gh` session with Actions read access. Keep the approval
+file and persistent state outside the checkout. The approval is local operator
+configuration and must contain these string fields:
+
+```json
+{
+  "run_id": "123456789",
+  "commit": "<40-character commit SHA>",
+  "job_path": "distribution/marketing/your-job.json",
+  "job_sha256": "<64-character job SHA-256>",
+  "page_id": "123456789",
+  "credential_ref": "<private vault reference>"
+}
+```
+
+Configure the existing owned Harbor scheduler to run the following from the
+trusted checkout, with the same vault and state environment as above:
+
+```sh
+node systemia/distribution/harbor/facebook-pickup.mjs /absolute/private/approval.json
+```
+
+The worker waits for the approved default-branch dispatch, downloads its receipt,
+and publishes only the Git object matching the local approval. Its stdout is a
+machine-readable status or the provider receipt. Retire the approval after a
+confirmed permalink or a reconciliation hold. GitHub retains validation
+artifacts for seven days. Keep the publish claim state across restarts.
