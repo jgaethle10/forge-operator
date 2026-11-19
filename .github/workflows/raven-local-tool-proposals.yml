@@ -5,6 +5,8 @@ on:
     paths:
       - 'systemia/raven/local-tool-proposal-gate.mjs'
       - 'systemia/raven/local-tool-proposal-gate.test.mjs'
+      - 'scripts/run-raven-local-tool-canary.mjs'
+      - 'scripts/run-raven-local-tool-canary.test.mjs'
       - '.github/workflows/raven-local-tool-proposals.yml'
   workflow_dispatch:
 
@@ -23,4 +25,6 @@ jobs:
       - name: Check module syntax
         run: node --check systemia/raven/local-tool-proposal-gate.mjs
       - name: Run synthetic proposal and safety tests
-        run: node --test systemia/raven/local-tool-proposal-gate.test.mjs
+        run: node --test systemia/raven/local-tool-proposal-gate.test.mjs scripts/run-raven-local-tool-canary.test.mjs
+      - name: Run dry-run without model access
+        run: node scripts/run-raven-local-tool-canary.mjs
