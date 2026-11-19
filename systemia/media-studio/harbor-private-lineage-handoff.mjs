@@ -58,13 +58,16 @@ function checkPackage(p, expectedCount = maxAssetCount) {
   }
   return p;
 }
-async function hashedPipeline(input, crypt, output) {
+async function hashedPipeline(input, crypt, output, meterAfterCrypt = false) {
   const hash=crypto.createHash('sha256');
   let bytes=0;
   const meter=new Transform({ transform(chunk,enc,cb) {
     bytes+=chunk.length; hash.update(chunk); cb(null,chunk);
   }});
-  await pipeline(fs.createReadStream(input), meter, crypt, fs.createWriteStream(output, {flags:'wx',mode:0o600}));
+  const source=fs.createReadStream(input);
+  const dest=fs.createWriteStream(output, {flags:'wx',mode:0o600});
+  if(meterAfterCrypt) await pipeline(source,crypt,meter,dest);
+  else await pipeline(source,meter,crypt,dest);
   return {sha256:hash.digest('hex'),bytes};
 }
 async function existingPath(p) {
@@ -182,7 +185,7 @@ export async function receiveHarborEncryptedHandoff({
       decipher.setAuthTag(Buffer.from(row.authTag,'base64'));
       let result;
       try{
-        result=await hashedPipeline(encrypted,decipher,path.join(assetsDir,row.filename));
+        result=await hashedPipeline(encrypted,decipher,path.join(assetsDir,row.filename),true);
       }finally{key.fill(0);await fsp.rm(encrypted,{force:true});}
       if(result.sha256!==row.sourceSha256 || result.bytes!==row.bytes)fail('decrypted_source_mismatch');
     }
