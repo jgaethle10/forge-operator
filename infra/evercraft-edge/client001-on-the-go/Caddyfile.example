@@ -31,7 +31,11 @@
   }
 
   handle /robots.txt {
-    respond "User-agent: *\nDisallow: /" 200
+    header Content-Type "text/plain; charset=utf-8"
+    respond <<ROBOTS
+      User-agent: *
+      Disallow: /
+      ROBOTS 200
   }
 
   handle /healthz {
