@@ -242,7 +242,23 @@ class API(BaseHTTPRequestHandler):
             db.close()
 
     def do_GET(self):
-        self.handle_api('GET')
+        if self.path.split('?', 1)[0] in ('/', '/console.html'):
+            # The unauthenticated shell contains no customer data. Every API route
+            # still requires the in-memory bearer token and stays loopback-only.
+            path = Path(__file__).with_name('console.html')
+            data = path.read_bytes()
+            self.send_response(200)
+            self.send_header('Content-Type', 'text/html; charset=utf-8')
+            self.send_header('Content-Length', str(len(data)))
+            self.send_header('Cache-Control', 'no-store')
+            self.send_header('X-Content-Type-Options', 'nosniff')
+            self.send_header('X-Frame-Options', 'DENY')
+            self.send_header('Referrer-Policy', 'no-referrer')
+            self.send_header('Content-Security-Policy', "default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'self'; img-src 'none'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'")
+            self.end_headers()
+            self.wfile.write(data)
+        else:
+            self.handle_api('GET')
 
     def do_POST(self):
         self.handle_api('POST')
