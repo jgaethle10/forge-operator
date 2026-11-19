@@ -22,7 +22,16 @@ const ROUTES=Object.freeze({
     worker:'github-actions-readonly',
     checks:SOURCE_FILES
   }),
+  'gems-research-evidence':Object.freeze({
+    specialist:'systemia.gems-source-evidence-observer',
+    worker:'github-actions-readonly',
+    checks:GEMS_FILES
+  }),
 });
+const GEMS_FILES=Object.freeze([
+  'systemia/mission-bridge/gems/gems-001-evidence.json',
+  'systemia/mission-bridge/gems/gems-002-plan.json',
+]);
 const SHA=x=>crypto.createHash('sha256').update(x).digest('hex');
 const REQUEST_KEYS=new Set(['schema','mission_id','objective','route','mode','requested_at']);
 
@@ -111,8 +120,9 @@ export async function runMissionRequest(input,{fetchImpl=fetch,rootDir=process.c
         observations.push({route,valid:false,reason:String(error?.name||'request_failed').slice(0,50)});
       }
     }
-  }else if(admission.route==='forge-source-evidence'){
-    for(const entry of SOURCE_FILES){
+  }else if(admission.route==='forge-source-evidence'||admission.route==='gems-research-evidence'){
+    const entries=admission.route==='gems-research-evidence'?GEMS_FILES:SOURCE_FILES;
+    for(const entry of entries){
       const absolute=path.join(rootDir,entry);
       const boundary=path.relative(rootDir,absolute);
       if(boundary.startsWith('..')||path.isAbsolute(boundary))throw Error('source_path_escape');
@@ -133,7 +143,9 @@ export async function runMissionRequest(input,{fetchImpl=fetch,rootDir=process.c
   const diagnosis=admission.route==='signal-public-ingress'
     ?complete?'external_signal_readiness_and_offer_observed':
       offer?.valid===true&&signalReadiness?.valid!==true?'offer_reachable_api_unverified':'public_signal_path_incomplete'
-    :complete?'allowlisted_forge_source_present':'forge_source_incomplete';
+    :admission.route==='gems-research-evidence'
+      ?complete?'gems_source_evidence_observed_only':'gems_source_evidence_incomplete'
+      :complete?'allowlisted_forge_source_present':'forge_source_incomplete';
   return Object.freeze({
     schema:'evercraft.systemia.chat-mission-observation.v1',
     mission_id:admission.mission_id,request_sha256:admission.request_sha256,
