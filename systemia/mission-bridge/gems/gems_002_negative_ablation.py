@@ -54,6 +54,28 @@ def sample_indices(labels,train,distances,radius,seed=SEED):
       "positive_count":len(positive),"eligible_negative_count":len(negative),
       "sampled_negative_count":len(sampled),"buffer_pixels":radius}
 
+def geographic_folds(valid,buffer_pixels=100):
+    """Three northern development folds, one never-trained southern test."""
+    rows=np.where(valid)[0]
+    if not len(rows):raise ValueError("empty_valid_mask")
+    southern_start=int(np.quantile(rows,.75))
+    north=rows[rows<southern_start]
+    if not len(north):raise ValueError("empty_development_region")
+    cuts=np.quantile(north,[0,1/3,2/3,1]).astype(int)
+    folds=[]
+    for fold,(start,stop) in enumerate(zip(cuts,cuts[1:])):
+        lo=int(start);hi=int(stop)+(fold==2)
+        test=(rows>=lo)&(rows<hi)
+        train=(rows<southern_start)&((rows<lo-buffer_pixels)|(rows>=hi+buffer_pixels))
+        if not train.any() or not test.any():raise ValueError("empty_tuning_fold")
+        if np.any(train&(rows>=southern_start)):raise AssertionError("southern_training_leak")
+        folds.append((lo,hi,train,test))
+    train=(rows<southern_start-buffer_pixels)
+    test=(rows>=southern_start)
+    if not train.any() or not test.any():raise ValueError("empty_southern_fold")
+    folds.append((southern_start,int(rows.max())+1,train,test))
+    return folds,southern_start
+
 def main():
     import run as original
     arg=argparse.ArgumentParser()
@@ -71,12 +93,9 @@ def main():
     matrix=original.features(valid)
     labels=raw[valid]==1
     rows=np.where(valid)[0]
-    edges=np.quantile(rows,[0,.25,.50,.75,1]).astype(int)
+    folds,southern_start=geographic_folds(valid)
     ledger=[]
-    for fold,(lower,upper) in enumerate(zip(edges,edges[1:])):
-        lo=max(0,int(lower));hi=int(upper)+int(fold==3)
-        train=(rows<lo-100)|(rows>=hi+100)
-        test=(rows>=lo)&(rows<hi)
+    for fold,(lo,hi,train,test) in enumerate(folds[:3]):
         # Only training-known fault pixels contribute to buffer distances.
         distances=train_only_distances(raw,valid,train)
         region=valid[lo:hi];truth=raw[lo:hi]==1
@@ -98,15 +117,35 @@ def main():
     tune={str(r):float(np.mean([x["proxy_dti"] for x in ledger
            if x["fold"]<3 and x["radius_pixels"]==r])) for r in RADII}
     selected=max(RADII,key=lambda r:tune[str(r)])
-    holdout={str(r):next(x["proxy_dti"] for x in ledger
-           if x["fold"]==3 and x["radius_pixels"]==r) for r in RADII}
-    report={"schema":"evercraft.gems.negative-ablation.v1",
+    # Candidate is frozen before scoring the southern holdout.
+    lo,hi,train,test=folds[3]
+    distances=train_only_distances(raw,valid,train)
+    region=valid[lo:hi];truth=raw[lo:hi]==1
+    if int(test.sum())!=int(region.sum()):raise ValueError("holdout_geometry_invalid")
+    holdout={}
+    for radius in (0,selected) if selected!=0 else (0,):
+        indices,counts=sample_indices(labels,train,distances,radius)
+        model=HistGradientBoostingClassifier(max_iter=100,learning_rate=.10,
+             max_leaf_nodes=23,early_stopping=False,random_state=SEED)
+        model.fit(matrix[indices],labels[indices])
+        prob=np.zeros(region.shape,np.float32)
+        prob[region]=original.predict(model,matrix,test,matrix.shape[1])
+        pred=original.render(prob,.20,True)
+        score=original.dti(np.pad(pred,3),np.pad(truth,3),
+             np.pad(region,3),original.score_setup(truth,region))
+        holdout[str(radius)]=float(score)
+        ledger.append({"fold":3,"phase":"locked_southern_test","rows":[lo,hi],
+          "radius_pixels":radius,"proxy_dti":float(score),
+          "training_positives":int(counts["positive_count"]),
+          "sampled_negatives":int(counts["sampled_negative_count"])})
+    report={"schema":"evercraft.gems.negative-ablation.v2",
       "official_input_sha256_verified":True,"input_manifest":manifest,
       "experiment":"GEMS-001 multiscale HGB; fixed .20 cutoff with ridge thinning",
       "radii_pixels":list(RADII),"seed":SEED,"negative_ratio":5,
       "selection_folds":[0,1,2],"locked_final_fold":3,
+      "southern_start_row":southern_start,"southern_used_in_tuning_training":False,
       "tuning_proxy_dti":tune,"selected_by_tuning_only":selected,
-      "heldout_proxy_dti":holdout,
+      "heldout_proxy_dti_baseline_and_selected_only":holdout,
       "holdout_delta_vs_baseline":holdout[str(selected)]-holdout["0"],
       "fold_ledger":ledger,"elapsed_seconds":time.monotonic()-started,
       "official_dti_computed":False,"submission_created":False,
