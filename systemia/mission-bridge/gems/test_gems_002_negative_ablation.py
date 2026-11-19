@@ -1,6 +1,8 @@
 import unittest
+import tempfile
+from pathlib import Path
 import numpy as np
-from gems_002_negative_ablation import sample_indices,train_only_distances,geographic_folds
+from gems_002_negative_ablation import sample_indices,train_only_distances,geographic_folds,verify_original_model_source
 
 class NegativeAbalationTests(unittest.TestCase):
     def test_reproducible_and_buffered(self):
@@ -60,6 +62,19 @@ class NegativeAbalationTests(unittest.TestCase):
         for lo,hi,train,test in folds[:3]:
             self.assertFalse(np.any(train&(rows>=southern)))
         self.assertTrue(np.all(rows[folds[-1][3]]>=southern))
+
+    def test_model_source_is_hash_pinned_and_symlinks_denied(self):
+        with tempfile.TemporaryDirectory() as temp:
+            source=Path(temp)/"run.py"
+            source.write_text("def predict(): return 1")
+            with self.assertRaisesRegex(ValueError,"original_model_source_sha256_mismatch"):
+                verify_original_model_source(source)
+            source.unlink()
+            with self.assertRaisesRegex(ValueError,"original_model_source_missing_or_unsafe"):
+                verify_original_model_source(source)
+            source.symlink_to(Path(__file__).resolve())
+            with self.assertRaisesRegex(ValueError,"original_model_source_missing_or_unsafe"):
+                verify_original_model_source(source)
 
     def test_unsafe_inputs_fail_closed(self):
         with self.assertRaises(ValueError):
