@@ -53,6 +53,9 @@ jobs:
       - name: FAIE tests
         run: npm run test:faie
 
+      - name: FAIE intelligence studio experience contract
+        run: node --test tests/faie-intelligence-studio.test.mjs
+
       - name: FAIE Saban swarm proof
         run: npm run proof:saban-faie
 
