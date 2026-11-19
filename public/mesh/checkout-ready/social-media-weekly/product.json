@@ -84,7 +84,7 @@
     "mark_svg": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/social-media-weekly/brand-mark.svg",
     "shared_stylesheet": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/brand-world.css",
     "founder_approved": false,
-    "founder_review_status": "awaiting_founder_review",
+    "founder_review_status": "changes_requested",
     "founder_decision_reference": null,
     "approval_ledger": "https://github.com/jgaethle10/forge-operator/blob/main/docs/branding/approvals/ledger.json",
     "brand_identity_is_final": false
