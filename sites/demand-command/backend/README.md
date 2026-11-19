@@ -75,6 +75,22 @@ Example intake (provided for Systemia integration, but **not currently wired to 
 
 `python3 -m unittest -v` covers authentication, verified evidence requirements, deduplication, optimistic concurrency, event logging and honest delivery state.
 
+## Getting the bridge onto NextGen
+
+The script is committed under `sites/demand-command/backend/revenue_desk_bridge.py`, **not** `/home/coach/revenue_desk_bridge.py`. Running `python3 revenue_desk_bridge.py` from `/home/coach` will fail with *No such file or directory*.
+
+For a safe first inspection, use a separate shallow checkout of the integration branch. This leaves any existing `~/forge-operator` working tree and production services untouched:
+
+```bash
+git clone --depth 1 --single-branch --branch feature/demand-command-site-20261118 \
+  https://github.com/jgaethle10/forge-operator.git \
+  "$HOME/evercraft-demand-canary"
+cd "$HOME/evercraft-demand-canary/sites/demand-command/backend"
+python3 revenue_desk_bridge.py --inspect-schema
+```
+
+If `$HOME/evercraft-demand-canary` already exists, don't reclone over it; inspect its branch and working tree before updating. This invocation is **read-only** and attempts to inspect Revenue Desk at `127.0.0.1:8795`. If it reports *Connection refused*, that is a distinct finding: Revenue Desk isn't listening on that address/port in this WSL session. Do not start or restart services based solely on a port assumption. No tokens or buyer data should be pasted into chats.
+
 ## Revenue Desk reconciliation bridge (v5, not deployed)
 
 `revenue_desk_bridge.py` has **no third-party dependencies** and reads only a local `127.0.0.1:8795/api/opportunities` endpoint, or an explicitly supplied JSON export. It never sends email, calls outside localhost or modifies Revenue Desk. Unknown data layouts, missing stable IDs, absent explicit pain descriptions and duplicate IDs are rejected for review.
