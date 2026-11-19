@@ -7,6 +7,8 @@ separate independently verified 2026 WA index, and the source-reported
 out-of-state coordinate is excluded from mapped queries. Never public.
 """
 import argparse
+import base64
+import hashlib
 from contextlib import closing
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import json
@@ -17,6 +19,28 @@ from urllib.parse import urlsplit, parse_qs
 EXPECTED_HASH="c97fb57339f8f7bd9ae82cb807814443fb7cd8bb9fb99c45adc74f2ae3912c79"
 CONDITIONS={"P","F","G"}
 MAX_PINS=350
+# Official Leaflet 1.9.4 SHA-256 SRI hashes from leafletjs.com.
+# Assets execute from Evercraft-owned loopback, not a third-party CDN.
+LEAFLET_SRI = {
+    "leaflet.js": "20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=",
+    "leaflet.css": "p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=",
+}
+
+def verified_leaflet(folder):
+    if not folder:
+        return None
+    folder=Path(folder)
+    assets={}
+    for name, expected in LEAFLET_SRI.items():
+        data=(folder/name).read_bytes()
+        actual=base64.b64encode(hashlib.sha256(data).digest()).decode()
+        if actual != expected:
+            raise ValueError(f"Local {name} does not match official Leaflet 1.9.4 SHA-256")
+        assets[name]=data
+    if not (folder/"LICENSE").is_file():
+        raise ValueError("Bundled Leaflet license is required")
+    return assets
+
 
 
 def connect(db):
@@ -77,14 +101,23 @@ def filtered_query(connection, args, viewport=False):
     return " WHERE "+" AND ".join(where),values
 
 
-def make_handler(national_dir,overlay,db):
+def make_handler(national_dir,overlay,db,leaflet_dir=None):
     national_dir=Path(national_dir).resolve()
     original=(national_dir/"index.html").read_bytes()
     script=Path(overlay).read_bytes()
+    leaflet=verified_leaflet(leaflet_dir)
     marker=b"</body>"
     if original.count(marker)!=1:
         raise ValueError("National map HTML needs exactly one body closing tag")
     page=original.replace(marker,b'<script src="./owned-wa26-drilldown.js" defer></script>'+marker)
+    if leaflet:
+        head=b"</head>"
+        if original.count(head)!=1:
+            raise ValueError("National map head must have exactly one closing tag")
+        # Load the map library before the original synchronous inline map script.
+        imports=(b'<link rel="stylesheet" href="/vendor/leaflet.css">'
+                 b'<script src="/vendor/leaflet.js"></script>')
+        page=page.replace(head,imports+head)
 
     class Handler(BaseHTTPRequestHandler):
         def reply(self,status,payload,ctype):
@@ -106,6 +139,10 @@ def make_handler(national_dir,overlay,db):
                 return self.reply(200,page,"text/html; charset=utf-8")
             if url.path=="/owned-wa26-drilldown.js" and not url.query:
                 return self.reply(200,script,"application/javascript; charset=utf-8")
+            if leaflet and not url.query and url.path in ("/vendor/leaflet.js", "/vendor/leaflet.css"):
+                name=url.path.rsplit("/",1)[-1]
+                ctype="application/javascript" if name.endswith(".js") else "text/css; charset=utf-8"
+                return self.reply(200,leaflet[name],ctype)
             if url.path in ("/pnw-2026.html","/wa-2026.html","/dc-2026.html"):
                 target=national_dir/url.path.lstrip("/")
                 if target.exists() and target.is_file():
@@ -113,6 +150,7 @@ def make_handler(national_dir,overlay,db):
                 return self.obj(404,{"error":"not_found"})
             if url.path=="/healthz" and not url.query:
                 return self.obj(200,{"status":"ready","national_map":"original_preserved","owned_wa_2026_records":8619,
+                                     "interactive_map_engine":"self_hosted_leaflet_1_9_4" if leaflet else "illustrative_fallback_only",
                                      "public_release_ready":False,"national_2026_complete":False})
             if url.path=="/api/wa26/summary" and not url.query:
                 return self.obj(200,{"scope":"WA_only_2026","records":8619,
@@ -168,10 +206,12 @@ def main():
     p.add_argument("--overlay",required=True)
     p.add_argument("--db",required=True)
     p.add_argument("--port",type=int,default=8792)
+    p.add_argument("--leaflet-dir", default=None,
+                   help="Pinned locally hosted Leaflet 1.9.4 JS/CSS and LICENSE")
     a=p.parse_args()
     if not 1024<=a.port<=65535: p.error("Invalid port")
     validate(a.db)
-    cls=make_handler(a.national_dir,a.overlay,a.db)
+    cls=make_handler(a.national_dir,a.overlay,a.db,a.leaflet_dir)
     server=ThreadingHTTPServer(("127.0.0.1",a.port),cls)
     print(f"Private original U.S. map + verified WA depth at http://127.0.0.1:{a.port}",flush=True)
     server.serve_forever()
