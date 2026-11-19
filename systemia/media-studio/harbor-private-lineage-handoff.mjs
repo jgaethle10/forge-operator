@@ -53,7 +53,7 @@ function checkPackage(p, expectedCount = maxAssetCount) {
       !Number.isSafeInteger(row.bytes) || row.bytes <= 0 || row.bytes > 2*1024**3 ||
       !HEX.test(row.cipherManifestId || '') || ids.has(row.cipherManifestId) ||
       !/^[A-Za-z0-9+/]{16}$/.test(row.nonce || '') ||
-      !/^[A-Za-z0-9+/]{24}$/.test(row.authTag || '')) fail('package_asset_invalid');
+      !/^[A-Za-z0-9+/]{22}==$/.test(row.authTag || '')) fail('package_asset_invalid');
     names.add(row.filename.toLowerCase()); ids.add(row.cipherManifestId);
   }
   return p;
