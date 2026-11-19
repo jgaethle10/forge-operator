@@ -39,6 +39,30 @@ jobs:
           for i,v in enumerate(pieces[:4]):
               print('HTML CONTEXT',i,v['html'][:2500])
           PY
+      - name: Download official, catalogue-identified Dare Me recording and verify it
+        run: |
+          python - <<'PY'
+          import requests,json,hashlib,pathlib
+          from mutagen.mp3 import MP3
+          folder=pathlib.Path('music-evidence')
+          u='https://assets.mixkit.co/music/1135/1135.mp3'
+          r=requests.get(u,headers={'User-Agent':'Mozilla/5.0'},timeout=35)
+          r.raise_for_status()
+          fn=folder/'Dare_Me_Michael_Ramir_C_Mixkit.mp3'
+          fn.write_bytes(r.content)
+          track=MP3(str(fn))
+          length=float(track.info.length)
+          if not (90<=length<=94 and len(r.content)>1500000):
+            raise RuntimeError(f'SOURCE_INVALID: length={length}, bytes={len(r.content)}')
+          receipt={'title':'Dare Me','artist':'Michael Ramir C.',
+                   'source_page':'https://mixkit.co/free-stock-music/indie-pop/',
+                   'download_url':u,'license':'https://mixkit.co/license/#musicFree',
+                   'bytes':len(r.content),'duration_seconds':round(length,3),
+                   'sha256':hashlib.sha256(r.content).hexdigest(),
+                   'release_authority':False}
+          (folder/'rights_receipt.json').write_text(json.dumps(receipt,indent=2)+'\n')
+          print(json.dumps(receipt,indent=2))
+          PY
       - name: Preserve source inspection receipt
         if: always()
         uses: actions/upload-artifact@v4
