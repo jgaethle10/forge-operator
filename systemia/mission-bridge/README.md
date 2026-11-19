@@ -68,3 +68,9 @@ This adapter does not issue Passport grants, start Execution Gate leases, invoke
 `gems/research-work-claim.mjs` adds an exclusive owner-only file claim after the staged request has been matched with a verified started Execution Gate lease. A duplicate claim enters `work_already_claimed_manual_reconciliation_required` instead of replaying automatically. This is a **local state transition only**: it does not run the worker or authorize remote compute. The entire path requires a private authenticated gateway to supply trusted identity and the live Execution Gate object; it must run on an owner-only filesystem, not a shared public mount.
 
 Before production use, the private server must additionally implement safe restart/reconciliation, lease expiration and revocation checks, a registered isolated bounded worker, a resource admission service and authoritative output receipts. A successful unit test with a synthetic gate is not proof of live Passport authority.
+
+## Synthetic-only compute smoke
+
+`gems/synthetic-research-worker.mjs` runs a deterministic **48 x 48 internally generated** geophysical fixture. The experiment compares a sampled unlabeled-as-negative logistic baseline against exclusion of negative samples close to synthetic faults. It evaluates on a held-out synthetic x-region, writes a hashed local receipt, and performs no network calls. The `admission-contract` GitHub Actions PR job runs this proof and publishes `gems-synthetic-research-smoke` as a temporary artifact.
+
+The receipt explicitly marks `real_gems_dataset_used:false`, `official_dti_claimed:false`, and `drivendata_submission_made:false`. The resulting synthetic F1 is a **mechanism test only**, not a validated improvement to GEMS-001 or GEMS-002. It does not call Passport, start a real lease, dispatch a private Saban agent, or obtain the official competition training rasters. Production use still requires the authenticated and separately authorized private gateway.
