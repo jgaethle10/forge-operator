@@ -7,7 +7,7 @@
   if (!mapShell || !mapHead || document.getElementById('aiw-wa26-open')) return;
 
   const style = document.createElement('style');
-  style.textContent = \`
+  style.textContent = `
     #aiw-wa26-open{background:#e4f3ff;color:#084f8b;border:1px solid #a8d0f2;border-radius:11px;padding:9px 13px;font-size:12px;font-weight:800;white-space:normal}
     #aiw-wa26-depth{max-width:1160px;margin:12px auto 24px;padding:18px 22px;background:#fff;border:1px solid #d5e6f4;border-radius:18px;box-shadow:0 8px 26px #143d6312;color:#15395e}
     #aiw-wa26-depth h2{font-size:21px;letter-spacing:-.02em;margin:0 0 5px}
@@ -31,7 +31,7 @@
     #aiw-wa26-depth .wa26-warn{background:#fff6e6;border-left:3px solid #cb9b39;padding:10px 13px;border-radius:8px}
     #aiw-wa26-depth .wa26-disabled{color:#697f91}
     @media(max-width:650px){#aiw-wa26-depth{margin:10px;padding:14px}#aiw-wa26-depth .wa26-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}#aiw-wa26-depth .wa26-tools label{flex:1 1 105px}#aiw-wa26-depth select,#aiw-wa26-depth input{width:100%;max-width:none}}
-  \`;
+  `;
   document.head.append(style);
   const button = document.createElement('button');
   button.type = 'button';
@@ -44,7 +44,7 @@
   panel.id = 'aiw-wa26-depth';
   panel.setAttribute('aria-label','Washington 2026 owned federal bridge evidence');
   panel.hidden = true;
-  panel.innerHTML = \`
+  panel.innerHTML = `
     <div class="wa26-head"><div><span class="eyebrow">DEEP EVIDENCE / VERIFIED STATE IMPORT</span>
     <h2>Washington · 2026 federal bridges</h2><p>Explore the FHWA records behind the national infrastructure map. This is an independently indexed Washington-only source, not a nationwide 2026 import.</p></div>
     <span class="wa26-pill">Owned-source evidence · 2026</span></div>
@@ -64,7 +64,7 @@
     <button class="wa26-action" type="button" id="aiw-wa26-next" disabled>Next</button></div></div>
     <div class="wa26-detail" id="aiw-wa26-detail">Select a record for its bridge ID, source location, and original inventory context.</div>
     <p><a href="https://www.fhwa.dot.gov/bridge/nbi/nbi_data_2026.cfm" target="_blank" rel="noopener noreferrer">Official FHWA 2026 source</a> · Source SHA-256 c97fb57339f8f7bd9ae82cb807814443fb7cd8bb9fb99c45adc74f2ae3912c79 · Private staging only</p>
-  \`;
+  `;
   mapShell.insertAdjacentElement('afterend', panel);
 
   const $ = id => document.getElementById(id);
@@ -86,7 +86,7 @@
     const active = ++token;
     const cond=$('aiw-wa26-condition').value;
     const county=$('aiw-wa26-county').value.trim();
-    if (county && !/^\\d{1,3}$/.test(county)){
+    if (county && !/^\d{1,3}$/.test(county)){
       $('aiw-wa26-message').textContent='County code must contain 1–3 digits.';return;
     }
     const params=new URLSearchParams({limit:'20',offset:String(offset)});
