@@ -32,6 +32,51 @@ def verify_inputs(data):
         audit[name]={"sha256":expected,"bytes":file.stat().st_size}
     return audit
 
+def validate_organizer_grid(data):
+    """Fail closed if all official rasters are not pixel-to-pixel aligned.
+
+    Checks georeferencing AND band semantics before allocating the feature matrix.
+    The expected hashes are separately verified by verify_inputs().
+    """
+    from rasterio.crs import CRS
+    names=("example_submission.tif","existing_faults.tif",
+           "gems-geodawn-numerical-features.tif")
+    opened=[]
+    try:
+        for name in names:
+            opened.append(rasterio.open(data/name))
+        template,labels,features=opened
+        if template.count!=1 or labels.count!=1 or features.count!=19:
+            raise ValueError("official_band_count_mismatch")
+        if template.width!=3292 or template.height!=3730:
+            raise ValueError("official_grid_dimensions_mismatch")
+        if template.crs!=CRS.from_epsg(32611):
+            raise ValueError("official_crs_mismatch")
+        for other in (labels,features):
+            if other.width!=template.width or other.height!=template.height:
+                raise ValueError("organizer_raster_shape_mismatch")
+            if other.crs!=template.crs:
+                raise ValueError("organizer_raster_crs_mismatch")
+            if not np.allclose(tuple(other.transform),tuple(template.transform),
+                               rtol=0,atol=1e-8):
+                raise ValueError("organizer_raster_transform_mismatch")
+        if not np.allclose(tuple(template.transform),
+                           (100.,0.,243350.,0.,-100.,4508550.,0.,0.,1.),
+                           rtol=0,atol=1e-8):
+            raise ValueError("official_affine_transform_mismatch")
+        descriptions=features.descriptions
+        prefixes=[(v or "").split(" - ",1)[0] for v in descriptions]
+        expected={"rtp","tmi","iso_grav_anom","det_elev","tc"}
+        if any(not d for d in descriptions) or len(set(prefixes))!=19 or not expected.issubset(prefixes):
+            raise ValueError("organizer_feature_band_semantics_mismatch")
+        return {"crs":"EPSG:32611","width":template.width,"height":template.height,
+                "feature_bands":features.count,
+                "raster_alignment_verified":True,
+                "feature_names_verified":True}
+    finally:
+        for src in opened:
+            src.close()
+
 def train_only_distances(raw,valid,train):
     if raw.shape!=valid.shape or train.shape!=(int(valid.sum()),):
         raise ValueError("train_geometry_invalid")
@@ -97,6 +142,7 @@ def main():
     opts=arg.parse_args()
     started=time.monotonic()
     manifest=verify_inputs(opts.data_dir)
+    grid_audit=validate_organizer_grid(opts.data_dir)
     opts.evidence_dir.mkdir(parents=True,exist_ok=True)
     original.DATA=opts.data_dir
     original.EVIDENCE=opts.evidence_dir
@@ -153,6 +199,7 @@ def main():
           "sampled_negatives":int(counts["sampled_negative_count"])})
     report={"schema":"evercraft.gems.negative-ablation.v2",
       "official_input_sha256_verified":True,"input_manifest":manifest,
+      "organizer_geospatial_alignment":grid_audit,
       "experiment":"GEMS-001 multiscale HGB; fixed .20 cutoff with ridge thinning",
       "radii_pixels":list(RADII),"seed":SEED,"negative_ratio":5,
       "selection_folds":[0,1,2],"locked_final_fold":3,
