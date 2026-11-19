@@ -3,7 +3,7 @@ from unittest.mock import patch
 from pathlib import Path
 import tempfile
 import numpy as np
-from gems_002_negative_ablation import sample_indices,train_only_distances,geographic_folds,verify_original_model_source,validate_organizer_grid
+from gems_002_negative_ablation import sample_indices,train_only_distances,geographic_folds,verify_original_model_source,validate_organizer_grid,score_pooled_terms,dti_proxy_components
 
 class NegativeAbalationTests(unittest.TestCase):
     def test_reproducible_and_buffered(self):
@@ -121,6 +121,51 @@ class NegativeAbalationTests(unittest.TestCase):
             with patch("rasterio.open",side_effect=altered):
                 with self.assertRaisesRegex(ValueError,error):
                     validate_organizer_grid(Path("/not-used"))
+
+    def test_pooled_dti_is_not_mean_of_fold_ratios(self):
+        small_perfect={"tp":1.0,"fp":0.0,"fn":0.0}
+        large_missed={"tp":0.0,"fp":0.0,"fn":100.0}
+        pooled=score_pooled_terms([small_perfect,large_missed])
+        self.assertAlmostEqual(pooled,1/81)
+        self.assertNotAlmostEqual(pooled,(1+0)/2)
+        # Example where mean fold scores picks A but pooled terms pick B.
+        candidate_a=[{"tp":1.0,"fp":0.0,"fn":0.0},
+                     {"tp":10.0,"fp":0.0,"fn":90.0}]
+        candidate_b=[{"tp":0.0,"fp":0.0,"fn":1.0},
+                     {"tp":30.0,"fp":0.0,"fn":70.0}]
+        mean_a=(1+10/(10+0.8*90))/2
+        mean_b=(0+30/(30+0.8*70))/2
+        self.assertGreater(mean_a,mean_b)
+        self.assertLess(score_pooled_terms(candidate_a),score_pooled_terms(candidate_b))
+
+    def test_component_calculator_matches_reference_proxy_on_synthetic_raster(self):
+        from scipy.ndimage import distance_transform_edt
+        class Reference:
+            @staticmethod
+            def score_setup(truth,valid):
+                weight=np.maximum(0,1-distance_transform_edt(~truth)/3)
+                return (1-weight)[valid].astype("float32")
+            @staticmethod
+            def dti(prob,truth,valid,fp_weight):
+                peaks=np.zeros_like(prob)
+                for dr in range(-2,3):
+                    for dc in range(-2,3):
+                        w=1-np.hypot(dr,dc)/3
+                        np.maximum(peaks,np.roll(prob,(dr,dc),(0,1))*w,out=peaks)
+                tp=peaks[truth].sum(dtype="float64")
+                fp=np.dot(prob[valid].astype("float64"),fp_weight)
+                return float(tp/(tp+.2*fp+.8*(truth.sum()-tp)+1e-12))
+        region=np.ones((10,10),bool)
+        truth=np.zeros((10,10),bool);truth[4,4]=True;truth[7,7]=True
+        prediction=np.zeros((10,10),np.float32)
+        prediction[4,5]=.8;prediction[9,0]=.25
+        terms=dti_proxy_components(Reference,prediction,truth,region)
+        self.assertGreater(terms["tp"],0)
+        self.assertGreater(terms["fp"],0)
+        self.assertGreater(terms["fn"],0)
+        self.assertEqual(score_pooled_terms([terms]),score_pooled_terms([terms]))
+        with self.assertRaisesRegex(ValueError,"dti_proxy_prediction_invalid"):
+            dti_proxy_components(Reference,np.full((10,10),-1.,np.float32),truth,region)
 
     def test_unsafe_inputs_fail_closed(self):
         with self.assertRaises(ValueError):
