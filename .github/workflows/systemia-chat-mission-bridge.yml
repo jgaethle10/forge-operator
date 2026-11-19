@@ -71,6 +71,34 @@ jobs:
       - name: Validate the first committed mission without running it
         run: node systemia/mission-bridge/cli.mjs --plan signal-public-ingress-20261116-001
 
+
+  gems-scientific-unit-tests:
+    # Isolated test runner only: no original data, no upload, no network to competition.
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+          cache-dependency-path: 'systemia/mission-bridge/gems/requirements-test.txt'
+      - name: Install bounded scientific test dependencies
+        run: python -m pip install --disable-pip-version-check -r systemia/mission-bridge/gems/requirements-test.txt
+      - name: Run real Python ablation and raster-guard tests against synthetic arrays
+        working-directory: systemia/mission-bridge/gems
+        run: |
+          python -m unittest -v test_gems_002_negative_ablation.py
+          python -m unittest -v test_verify_official_input_hashes.py
+      - name: Assert no scored submission or production tasks were invoked
+        run: |
+          test ! -e gems_candidate.tif
+          test ! -e systemia/mission-bridge/gems/gems_candidate.tif
+
+
   bounded-observation:
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
     needs: admission-contract
