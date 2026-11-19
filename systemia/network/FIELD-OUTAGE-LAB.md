@@ -40,3 +40,41 @@ Never call a mere local successful process test a two-hardware test. No emergenc
 ## 2026-11-18 replay/ACK hardening
 
 A successful receiver ACK now includes the SHA-256 of the exact encrypted envelope and a keyed authentication proof bound to that hash. The receiver rejects an otherwise valid encrypted packet that reuses an existing message ID with different ciphertext (HTTP 409), rather than silently acknowledging it as the same message. Existing identical encrypted retransmission is idempotently acknowledged. Local 0700 state/queue folders and 0600 regular queue files are required. This is bounded prototype hardening, not production PKI, certificate enrollment, key rotation or externally witnessed field validation. Run the Network-only test workflow or local `node --test tests/network-field-outage-lab.test.mjs tests/network-backfill-contact-lab.test.mjs`.
+
+## Push 03: signed cross-node evidence gate (2026-11-19)
+
+The sender's durable receipt now includes an `envelope_hash` matching the encrypted packet accepted and separately logged by the receiver. `systemia/network/field-evidence-gate.mjs` is a separate offline, local-only collector and reviewer. It makes **no outbound calls**, scans no neighbors and never opens ports. It requires a clean checkout with Git and private 0700 state directories, reads the canonical source SHA-256 hashes, validates each existing receipt hash chain, and signs a redacted observation using an Ed25519 private key **generated and retained on that node** (0600). No message contents, private IPs, network credentials, or private key bytes are exported in observation JSON.
+
+After performing the real two-machine test above, from a clean checkout of the same exact commit on each computer:
+
+On A (alpha, e.g. Penguin if its LAN is actually reachable):
+```bash
+node systemia/network/field-evidence-gate.mjs capture \
+  --id alpha --peer-id beta \
+  --repo "$PWD" \
+  --state "$HOME/evercraft-network-lab/a" \
+  --output "$HOME/evercraft-network-lab/a/alpha-observation.json" \
+  --acknowledge-owned-device
+```
+
+On B (beta, e.g. NextGen, using the real already-provisioned B state):
+```bash
+node systemia/network/field-evidence-gate.mjs capture \
+  --id beta --peer-id alpha \
+  --repo "$PWD" \
+  --state "$HOME/evercraft-network-lab/b" \
+  --output "$HOME/evercraft-network-lab/b/beta-observation.json" \
+  --acknowledge-owned-device
+```
+
+Securely bring **only the two observation JSON files** onto one authorized computer. The receiver's local identity key, pairing secret and underlying private logs stay on their respective devices. Ensure both observation files are 0600 and their containing directory is 0700. Review:
+
+```bash
+node systemia/network/field-evidence-gate.mjs review \
+  --alpha /absolute/private/path/alpha-observation.json \
+  --beta /absolute/private/path/beta-observation.json
+```
+
+The verifier requires matching source revision/digests and different self-generated signing keys; checks signatures; matches at least two A delivery message IDs **and exact encrypted envelope hashes** against B receive records; requires B to have started the listener twice and A to record peer unreachability between those deliveries. If proof is incomplete it returns `HOLD_INSUFFICIENT_EVIDENCE`. Tampering returns `BLOCKED`. A passing software review returns `CROSS_NODE_SOFTWARE_EVIDENCE_RECONCILED`, **never a physical certification**. Two keys or two files alone do not prove two distinct devices: independent physical witness, upstream-disconnection evidence, router/guest networking constraints and measured properties must be recorded separately.
+
+Run `node --test tests/network-field-evidence-gate.test.mjs` to reproduce the synthetic receipt/fraud negatives. Do not upload this sensitive operational material publicly or push private reports to GitHub.
