@@ -7,7 +7,7 @@
   auto_https disable_redirects
 }
 
-https://onthegoquicklube.evercraft:18443 {
+https://:18443 {
   bind 127.0.0.1
   tls /run/evercraft-lab/tls/leaf.pem /run/evercraft-lab/tls/leaf.key
 
@@ -28,6 +28,8 @@ https://onthegoquicklube.evercraft:18443 {
 
   # Caddy can accept a request with valid SNI but a different HTTP Host.
   # Explicit HTTP Host isolation must precede the site file server.
+  # Catch-all loopback binding lets wrong Hosts reach the 421 handler
+  # instead of a Caddy host-scoped no-op 200 with an empty body.
   @wrongHost expression `{http.request.host} != "onthegoquicklube.evercraft" && {http.request.host} != "onthegoquicklube.evercraft:18443"`
   @notRead not method GET HEAD
   route {
