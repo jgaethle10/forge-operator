@@ -46,7 +46,7 @@ export function validateWorkProposal(value, expectedTaskId) {
     target.startsWith('/') || target.startsWith('~') || target.includes('\\') ||
     target.includes(':') || /[\u0000-\u001f]/.test(target) ||
     target.split('/').some(part => !part || part === '.' || part === '..') ||
-    target.split('/').some(part => part.startsWith('.'))) {
+    target.split('/').some(part => !/^[A-Za-z0-9][A-Za-z0-9._-]*$/.test(part))) {
     throw new Error('proposal_target_invalid');
   }
   return { task_id: value.task_id, operation: value.operation, target,
