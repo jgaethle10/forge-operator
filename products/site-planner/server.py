@@ -50,7 +50,7 @@ def connect():
 
 def init():
     with connect() as db:
-        db.executescript("""
+        db.executescript('''
         CREATE TABLE IF NOT EXISTS sites(id TEXT PRIMARY KEY,name TEXT,address TEXT NOT NULL,city TEXT,region TEXT,postal TEXT,country TEXT,owner TEXT,site_type TEXT,goal TEXT,status TEXT NOT NULL DEFAULT 'draft',decision_reason TEXT,created_at TEXT,updated_at TEXT);
         CREATE TABLE IF NOT EXISTS evidence(id TEXT PRIMARY KEY,site_id TEXT NOT NULL REFERENCES sites(id),category TEXT NOT NULL,status TEXT NOT NULL,source TEXT,observed_on TEXT,reference_url TEXT,finding TEXT NOT NULL,limitation TEXT,file_name TEXT,file_path TEXT,file_type TEXT,created_at TEXT);
         CREATE TABLE IF NOT EXISTS scenarios(id TEXT PRIMARY KEY,site_id TEXT NOT NULL REFERENCES sites(id),name TEXT NOT NULL,chargers INTEGER,power REAL,layout TEXT,cost REAL,notes TEXT,created_at TEXT);
@@ -68,7 +68,7 @@ def init():
         CREATE INDEX IF NOT EXISTS idx_order_report ON orders(report_id);
         CREATE INDEX IF NOT EXISTS idx_source_report_site ON source_reports(site_id,external_report_id);
         CREATE INDEX IF NOT EXISTS idx_plan_order ON plans(order_id);
-        """)
+        ''')
 
 def rows(db,table,site_id):
     return [dict(r) for r in db.execute(f'SELECT * FROM {table} WHERE site_id=? ORDER BY created_at DESC',(site_id,))]
@@ -216,7 +216,7 @@ class Handler(BaseHTTPRequestHandler):
                 if p=='/api/outbox':
                     return self.send(200,[dict(r) for r in db.execute('SELECT id,site_id,event_type,aggregate_id,payload_sha256,state,created_at,delivered_at FROM outbox ORDER BY created_at,id')])
                 if p=='/api/sites':
-                    q="""SELECT s.*, (SELECT count(*) FROM orders o WHERE o.site_id=s.id) orders, (SELECT count(*) FROM plans p WHERE p.site_id=s.id) plans FROM sites s ORDER BY updated_at DESC"""
+                    q='''SELECT s.*, (SELECT count(*) FROM orders o WHERE o.site_id=s.id) orders, (SELECT count(*) FROM plans p WHERE p.site_id=s.id) plans FROM sites s ORDER BY updated_at DESC'''
                     return self.send(200,[dict(r) for r in db.execute(q)])
                 m=re.fullmatch(r'/api/sites/([A-Za-z0-9-]+)',p)
                 if m:return self.send(200,site_detail(db,m[1]))
