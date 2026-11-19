@@ -151,3 +151,23 @@ python gems_002_segment_holdouts.py --data-dir /private/official-geodawn --evide
 ```
 
 Use a second isolated evidence directory for a reproducibility replay and independently compare all non-runtime fields. The script refuses overwriting its segment evidence JSON. Never submit, deploy, or change GEMS-001 based on segment proxy results alone.
+
+## GEMS-002 offline full-grid candidate gate (Nov 19)
+
+Owner-supplied Work replay bundle `gems_002_segment_replay.zip`, SHA-256 `128ed665ac261754e75a669a050c3c9b51fdde20de729cd08ba2d4c17c594323`, reports and independently cross-checks three connected fault component folds. Baseline pooled local mapped-fault proxy DTI `0.13944445894661742`; preselected 1000m exclusion `0.15165058139994816`, gain `0.012206122453330748` / `8.75339%`. All three folds favor the 1000m variant; the two JSON ledgers match excluding elapsed runtime. Archived organizer file hash receipts all match the pinned values; source 419MB raster bytes are NOT included in the evidence ZIP and cannot be rehashed in this chat. Historical GEMS-001 contestant remains unchanged; no scored GEMS-002 submission. Compact provenance in `gems/evidence/gems-002-segment-real-replay-20261119.json`.
+
+This result **authorizes preparation only, not competition submission**: connected raster components are not authenticated complete geological faults, corridor-scored mapped fault labels cannot assess whole-area false positives or newly mapped fault discovery.
+
+`gems/gems_002_prepare_candidate.py` creates a new **offline-only**, unsubmitted single-band float32 full-grid GeoTIFF. Fixed science: `SEED=306`, preselected negative exclusion 10 pixels (1000m) using all known fault labels, 5:1 random unlabeled negative cap, original archived 34-feature pipeline, HGB 100 iterations / 0.10 learning rate / 23 leaves, and `render(prob, .20, ridge=True)`. It does not retune or use hidden/leaderboard results. The script SHA-verifies the authentic original `run.py`, each of the 3 organizer TIFFs, 19 band order and georeferencing before training. It refuses existing output directories, writes `gems_002_candidate_UNSUBMITTED.tif` with the official profile, reopens the file to check CRS, affine, dimensions, nodata mask, float32, probability bounds and exact raster pixel roundtrip, and writes candidate-evidence JSON with hashes and density/quantile summaries. No network action or submission code.
+
+For a future **authorized offline Work run**, use the existing isolated participant dataset mount and original SHA-verified `run.py` alongside the script:
+
+```bash
+cd systemia/mission-bridge/gems
+python -m unittest -v test_gems_002_prepare_candidate.py
+python gems_002_prepare_candidate.py \
+  --data-dir /AUTHORIZED/GeoDAWN/data \
+  --output-dir /ISOLATED/NEW/gems-002-candidate-run-a
+```
+
+**Never** upload the candidate to DrivenData or automatically promote it. Before any scored submission: inspect full-area candidate positive coverage and spatial artifacts, compare against preserved GEMS-001 output, validate required format and challenge rules, evaluate competition strategy and user authorization. Two identical model executions may yield different compressed TIFF bytes across GDAL runtimes; separately compare normalized pixel arrays and metadata, not just raw ZIP/TIFF SHA, before making deterministic claims.
