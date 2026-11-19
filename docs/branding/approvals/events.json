@@ -162,6 +162,26 @@
       "evidence": "docs/branding/approvals/BR-001-review-station-v2.md",
       "preview_url": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/social-media-weekly/brand-review/decision/",
       "notes": "An unapproved mobile-responsive local-only review worksheet was created to capture per-dimension feedback and an exact draft report. No submission, candidate selection, founder approval, legal name clearance or Stripe checkout changes were made."
+    },
+    {
+      "event_id": "BR-001-E006",
+      "event_type": "founder_rejected_name_and_logo_shortlist",
+      "date": "2026-11-18",
+      "product_id": "evercraft.commerce.social-media-weekly",
+      "review_packet": "BR-001-ALTERNATES.v1",
+      "source": "Founder message in current ChatGPT Evercraft review conversation, November 18, 2026",
+      "founder_quote": "Those names and logos are so ass fam 😂",
+      "review_status": "awaiting_founder_review",
+      "founder_decision": false,
+      "feedback_scope": "Negative founder decision on the three specific proposed names and SVG logos, not a positive approval or decision on the overall commercial product.",
+      "rejected_candidates": [
+        "Weekkin",
+        "Cadencekeep",
+        "Weekmorrow"
+      ],
+      "evidence": "docs/branding/approvals/BR-001-rejected-shortlist-feedback-20261118.md",
+      "next_step": "new_full_brand_system_exploration",
+      "founder_approved": false
     }
   ]
 }
