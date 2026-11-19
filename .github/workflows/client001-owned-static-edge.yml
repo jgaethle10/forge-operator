@@ -45,6 +45,14 @@ jobs:
           assert.ok(v.apps?.http?.servers && Object.keys(v.apps.http.servers).length>0);
           assert.match(compact,/onthegoquicklube\.invalid/);
           assert.match(compact,/file_server/);
+          const strings=[];
+          const scan=(v)=>{
+            if(typeof v==='string'){strings.push(v);return;}
+            if(Array.isArray(v)){for(const t of v)scan(t);return;}
+            if(v&&typeof v==='object')for(const t of Object.values(v))scan(t);
+          };
+          scan(v);
+          assert.ok(strings.some(s=>/User-agent:\s*\*\n\s*Disallow:\s*\//.test(s)),'robots response must contain a real newline');
           assert.doesNotMatch(compact,/reverse_proxy|github\.io|onrender\.com/);
           console.log('CADDY_ADAPT_PASS: invalid test hostname only, no public TLS or DNS');
           NODE
