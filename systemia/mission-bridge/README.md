@@ -54,3 +54,11 @@ The GEMS branch includes `gems/private-research-preflight.mjs` and `gems/researc
 The ledger never contacts an agent, runs a command, accesses a training dataset, or mints a Passport lease. A `staged_not_dispatched` record is **not** a mission run, and a passing preflight is **not** proof of authenticated identity. The future gateway must source verified context from trusted identity middleware rather than user-provided JSON. Existing GEMS-001 / GEMS-002 evidence remains unchanged.
 
 Tests: `node --test systemia/mission-bridge/gems/private-research-preflight.test.mjs systemia/mission-bridge/gems/research-job-ledger.test.mjs`. Admission CI runs these automatically on the feature PR.
+
+## GEMS started-lease binding (separate from dispatch)
+
+`gems/research-lease-binding.mjs` checks a durable staged request against a live **started** receipt retrieved from the existing Evercraft Execution Gate. It checks receipt hash, Passport actor and scope, exact dataset resource, fixed internal research-worker route, completed one-time permit consumption, and exact request fingerprint. It deliberately returns `dispatch_allowed:false` even after a positive check, because a one-use atomic work claim and an isolated registered worker are not yet implemented.
+
+**Security caveat:** The gate object and verified identity context must be supplied by trusted internal middleware. Passing caller-supplied JSON that impersonates a server context or `getLease` is not authentication. This is a reusable validation component, **not** a network-facing endpoint or a live lease verification service.
+
+This adapter does not issue Passport grants, start Execution Gate leases, invoke the model trainer, interact with DrivenData, or touch Penguin/Node002 production. Its tests exercise simulated immutable lease receipts to prove denial paths; they are not evidence of a live Saban job.
