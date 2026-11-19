@@ -1,0 +1,33 @@
+name: AIW fail-closed release decision
+on:
+  pull_request:
+    paths:
+      - 'research/infrastructure-watch/engineering/aiw_release_gate.py'
+      - 'research/infrastructure-watch/tests/test_aiw_release_gate.py'
+      - '.github/workflows/aiw-release-decision.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  no-go-safety-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Verify gate behavior for missing, stale and unapproved receipts
+        run: |
+          python3 -m py_compile research/infrastructure-watch/engineering/aiw_release_gate.py
+          python3 -m unittest discover -s research/infrastructure-watch/tests -p test_aiw_release_gate.py -v
+      - name: Prove absent production evidence always blocks publishing
+        shell: bash
+        run: |
+          set -euo pipefail
+          printf '{"schema":"evercraft.aiw.release-evidence.v1","gates":{},"founder_publication_approval":false}\n' > "$RUNNER_TEMP/no-evidence.json"
+          if python3 research/infrastructure-watch/engineering/aiw_release_gate.py --manifest "$RUNNER_TEMP/no-evidence.json" > "$RUNNER_TEMP/no-go-result.json"; then
+            echo 'FAIL: empty evidence passed release gate'
+            exit 1
+          fi
+          python3 -c 'import json,sys; x=json.load(open(sys.argv[1])); assert x["decision"]=="NO_GO"; print("PASS: fails closed, no deployment performed")' "$RUNNER_TEMP/no-go-result.json"
