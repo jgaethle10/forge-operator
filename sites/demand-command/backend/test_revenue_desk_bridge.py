@@ -9,7 +9,7 @@ import sys
 import tempfile
 import time
 import unittest
-from revenue_desk_bridge import collect, bridge, local_url, normalize
+from revenue_desk_bridge import collect, bridge, local_url, normalize, inspect_schema
 
 SOURCE = {'opportunities': [
     {'id': 'FMP-001', 'business': 'Example Roofing', 'contact_name': 'Owner', 'pain_point': 'Public message asks for a replacement booking page', 'status': 'sent', 'source_url': 'https://example.org/post/1', 'original_message': 'Need help with booking', 'service': 'Custom website', 'estimated_value': 500},
@@ -40,6 +40,15 @@ class BridgeModelTests(unittest.TestCase):
             collect({'foo': []})
         with self.assertRaises(ValueError):
             bridge(SOURCE, apply=True)
+
+    def test_schema_probe_never_leaks_values(self):
+        probe = inspect_schema(SOURCE)
+        text = json.dumps(probe)
+        self.assertEqual(probe['record_count'], 3)
+        self.assertIn('business', probe['field_types'])
+        self.assertNotIn('Example Roofing', text)
+        self.assertNotIn('FMP-001', text)
+        self.assertNotIn('Need help with booking', text)
 
     def test_requires_stable_id_and_explicit_pain(self):
         self.assertEqual(normalize({'business':'ACME', 'problem':'No checkout'})[1], 'missing_safe_stable_id')
