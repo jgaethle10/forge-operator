@@ -31,9 +31,14 @@ jobs:
       - name: Install owned Browser Worker dependencies
         working-directory: systemia/evercraft-web/browser-worker
         run: npm install --no-audit --no-fund --ignore-scripts
-      - name: Install Chromium
+      - name: Use system Chrome or install Playwright Chromium fallback
         working-directory: systemia/evercraft-web/browser-worker
-        run: npx playwright install --with-deps chromium
+        run: |
+          if command -v google-chrome >/dev/null 2>&1 || command -v google-chrome-stable >/dev/null 2>&1; then
+            echo "Using preinstalled GitHub runner Chrome"
+          else
+            npx playwright install chromium
+          fi
       - name: Browser test exact deployed HTTPS at six widths in both languages
         env:
           CLIENT001_EVIDENCE_DIR: ${{ runner.temp }}/client001-v41-browser
