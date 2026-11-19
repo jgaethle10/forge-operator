@@ -57,6 +57,8 @@ test('held page presents consented audit request, never promises working native 
   assert.match(page,/name="website_url"/);
   assert.match(page,/name="consent" value="yes" required/);
   assert.match(page,/No charge, payment order, or automatic audit starts here/);
+  assert.match(page,/<strong>Evercraft Payments<\/strong> · Stripe-hosted secure checkout/);
+  assert.match(page,/Payment verification and reviewed report delivery are separate steps/);
   assert.doesNotMatch(page,/Continue to checkout/);
   assert.doesNotMatch(page,/Request assisted invoicing/);
   assert.ok(page.indexOf('class="audit-intake-form"')<page.indexOf('class="audit-preview"'));
