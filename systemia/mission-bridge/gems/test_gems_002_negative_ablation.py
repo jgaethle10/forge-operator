@@ -1,8 +1,10 @@
 import unittest
+from unittest.mock import patch
+from pathlib import Path
 import tempfile
 from pathlib import Path
 import numpy as np
-from gems_002_negative_ablation import sample_indices,train_only_distances,geographic_folds,verify_original_model_source
+from gems_002_negative_ablation import sample_indices,train_only_distances,geographic_folds,verify_original_model_source,validate_organizer_grid
 
 class NegativeAbalationTests(unittest.TestCase):
     def test_reproducible_and_buffered(self):
@@ -75,6 +77,49 @@ class NegativeAbalationTests(unittest.TestCase):
             source.symlink_to(Path(__file__).resolve())
             with self.assertRaisesRegex(ValueError,"original_model_source_missing_or_unsafe"):
                 verify_original_model_source(source)
+
+    def test_exact_raster_alignment_contract(self):
+        from rasterio.crs import CRS
+        from rasterio.transform import Affine
+        bands=[
+            "mag_anom","rtp","tmi_hg","geod_2ndinv","iso_grav_anom_slope",
+            "tc","geod_shearrate","geod_dilaterate","tmi_vg",
+            "deq_n100a15","iso_grav_anom_vg","det_elev","iso_grav_anom",
+            "tmi","depth_to_base_surf","ieq_n100a15","cond_surf",
+            "iso_grav_anom_hg","det_elev_slope"
+        ]
+        affine=Affine(100,0,243350,0,-100,4508550)
+        class FakeRaster:
+            def __init__(self,count,transform=affine,crs=CRS.from_epsg(32611),
+                         width=3292,height=3730,descriptions=None):
+                self.count=count;self.transform=transform;self.crs=crs
+                self.width=width;self.height=height
+                self.descriptions=descriptions or tuple()
+            def close(self):pass
+        def pack(feature=None,labels=None,template=None):
+            return [template or FakeRaster(1),labels or FakeRaster(1),
+                feature or FakeRaster(19,descriptions=tuple(name+" - synthetic" for name in bands))]
+        with patch("rasterio.open",side_effect=pack()):
+            found=validate_organizer_grid(Path("/not-used"))
+            self.assertTrue(found["raster_alignment_verified"])
+            self.assertEqual(found["feature_bands"],19)
+        for altered,error in [
+            (pack(feature=FakeRaster(19,transform=Affine(100,0,243450,0,-100,4508550),
+                     descriptions=tuple(name+" - synthetic" for name in bands))),
+             "organizer_raster_transform_mismatch"),
+            (pack(feature=FakeRaster(19,crs=CRS.from_epsg(4326),
+                     descriptions=tuple(name+" - synthetic" for name in bands))),
+             "organizer_raster_crs_mismatch"),
+            (pack(feature=FakeRaster(18,descriptions=tuple(name+" - synthetic" for name in bands[:18]))),
+             "official_band_count_mismatch"),
+            (pack(feature=FakeRaster(19,descriptions=tuple("duplicate - synthetic" for _ in bands))),
+             "organizer_feature_band_semantics_mismatch"),
+            (pack(labels=FakeRaster(1,width=3291)),
+             "organizer_raster_shape_mismatch")
+        ]:
+            with patch("rasterio.open",side_effect=altered):
+                with self.assertRaisesRegex(ValueError,error):
+                    validate_organizer_grid(Path("/not-used"))
 
     def test_unsafe_inputs_fail_closed(self):
         with self.assertRaises(ValueError):
