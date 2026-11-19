@@ -8,6 +8,8 @@ on:
       - 'systemia/media-studio/timeline-version-vault.test.mjs'
       - 'systemia/media-studio/private-preview-desk.mjs'
       - 'systemia/media-studio/private-preview-desk.test.mjs'
+      - 'systemia/media-studio/preview-note-saban-handoff.mjs'
+      - 'systemia/media-studio/preview-note-saban-handoff.test.mjs'
       - 'systemia/media-studio/private-preview.js'
       - 'systemia/media-studio/private-preview.css'
       - 'systemia/media-studio/studio-agent.ts'
@@ -24,6 +26,8 @@ on:
       - 'systemia/media-studio/timeline-version-vault.test.mjs'
       - 'systemia/media-studio/private-preview-desk.mjs'
       - 'systemia/media-studio/private-preview-desk.test.mjs'
+      - 'systemia/media-studio/preview-note-saban-handoff.mjs'
+      - 'systemia/media-studio/preview-note-saban-handoff.test.mjs'
       - 'systemia/media-studio/private-preview.js'
       - 'systemia/media-studio/private-preview.css'
       - '.github/workflows/fallen-conversational-revision.yml'
@@ -44,4 +48,4 @@ jobs:
       - name: Check source syntax and TypeScript contracts
         run: npm run lint
       - name: Exercise real timeline, agent and language-to-proposal boundaries
-        run: node --import tsx --test systemia/media-studio/timeline.test.ts systemia/media-studio/studio-agent.test.ts systemia/media-studio/conversational-revision.test.ts systemia/media-studio/timeline-version-vault.test.mjs systemia/media-studio/private-preview-desk.test.mjs
+        run: node --import tsx --test systemia/media-studio/timeline.test.ts systemia/media-studio/studio-agent.test.ts systemia/media-studio/conversational-revision.test.ts systemia/media-studio/timeline-version-vault.test.mjs systemia/media-studio/private-preview-desk.test.mjs systemia/media-studio/preview-note-saban-handoff.test.mjs
