@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Evercraft | Washington Bridge Evidence</title>
+<style>
+:root{color-scheme:light;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:#123456;background:#edf5fc}
+*{box-sizing:border-box}body{margin:0}header{background:#fff;border-bottom:1px solid #d4e5f2;padding:22px max(20px,calc((100vw - 1200px)/2))}
+.brand{font-size:13px;color:#2d75ae;letter-spacing:.15em;text-transform:uppercase;font-weight:800}.title{font-size:clamp(30px,4vw,48px);margin:7px 0 8px;line-height:1.08;letter-spacing:-.04em}
+.sub{color:#547089;max-width:840px;line-height:1.6;font-size:14px}.wrap{max-width:1200px;margin:26px auto;padding:0 20px}
+.notice{background:#fff9e9;border:1px solid #e9cd83;padding:13px 17px;border-radius:13px;color:#71501e;font-size:13px;line-height:1.5}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:20px 0}.metric{background:white;border:1px solid #d8e8f4;border-radius:15px;padding:20px;box-shadow:0 8px 28px #133f6510}
+.metric b{font-size:32px;display:block;letter-spacing:-.04em}.metric span{color:#59748b;font-size:13px}
+.controls{display:flex;flex-wrap:wrap;gap:12px;background:white;border:1px solid #d8e8f4;padding:16px;border-radius:15px;align-items:flex-end}
+label{display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:700;color:#59748b}select,input{font:inherit;border:1px solid #bfd3e5;background:#f8fbfe;border-radius:9px;padding:11px 13px;min-width:165px;color:#183f62}
+button{border:0;background:#1367a3;color:#fff;border-radius:9px;padding:12px 19px;cursor:pointer;font-weight:750}button:disabled{opacity:.45}
+main{display:grid;grid-template-columns:1.4fr 1fr;gap:18px;margin-top:18px}
+.panel{background:#fff;border:1px solid #d8e8f4;border-radius:16px;overflow:hidden}
+.panel h2{font-size:16px;margin:0;padding:18px;border-bottom:1px solid #e1edf6}
+#map{position:relative;min-height:450px;background:#e0f0fc;overflow:hidden}
+#map svg{position:absolute;width:100%;height:100%;inset:0}#points{position:absolute;inset:0}
+.dot{position:absolute;width:10px;height:10px;border-radius:50%;background:#e89b32;border:1px solid white;box-shadow:0 0 0 1px #98692366;transform:translate(-50%,-50%);padding:0;cursor:pointer}
+.dot.poor{background:#b95f39}.dot.good{background:#308b85}.dot.fair{background:#d49a30}
+#list{max-height:520px;overflow:auto}.row{padding:16px 18px;border-bottom:1px solid #e8f0f7;cursor:pointer}.row:hover,.row:focus{background:#f0f8ff;outline:2px solid #c5e7ff}
+.row strong{display:block;font-size:14px;line-height:1.4;margin-bottom:5px}.row small{display:block;color:#617c92;line-height:1.5}.pill{font-size:11px;font-weight:800;display:inline-block;margin-bottom:7px;padding:4px 8px;border-radius:6px;background:#fff1d7;color:#9a651d}
+.pill.P{background:#fce5da;color:#9b452c}.pill.G{background:#dff4ee;color:#23735f}.pill.F{background:#fff1d7;color:#9a651d}
+.footer{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 18px;border-top:1px solid #e4edf6}
+#status{font-size:13px;color:#58758c}.details{padding:16px;border-top:1px solid #d9e8f5;line-height:1.65;color:#345a77;font-size:13px;min-height:68px}
+@media(max-width:850px){main{grid-template-columns:1fr}.metrics{grid-template-columns:repeat(2,1fr)}#map{min-height:330px}}
+@media(max-width:440px){.metrics{gap:8px}.metric{padding:13px}.metric b{font-size:25px}select,input{min-width:120px;max-width:100%}}
+</style></head>
+<body><header><div class="brand">EVERCRAFT / AMERICAN INFRASTRUCTURE WATCH</div><h1 class="title">Washington Bridge Evidence</h1><div class="sub">Search the independently imported FHWA 2026 Washington inventory. Each result is sourced, dated, and classified by recorded condition, not by immediate safety risk.</div></header>
+<div class="wrap"><div class="notice"><strong>Historical federal inventory, not an emergency alert system.</strong> Poor condition does not establish imminent danger or a road closure. Coordinates are source-reported and not independently surveyed. One geographic outlier is excluded from the map.</div>
+<section class="metrics" aria-label="Inventory totals"><div class="metric"><b>8,619</b><span>Federal bridge records</span></div><div class="metric"><b>4,298</b><span>Good condition</span></div><div class="metric"><b>3,918</b><span>Fair condition</span></div><div class="metric"><b>403</b><span>Poor condition</span></div></section>
+<section class="controls"><label>Condition<select id="condition"><option value="">All conditions</option><option value="P">Poor</option><option value="F">Fair</option><option value="G">Good</option></select></label>
+<label>County code<input id="county" inputmode="numeric" pattern="[0-9]*" maxlength="3" placeholder="Any county"></label><label>Results per page<select id="limit"><option>50</option><option>100</option><option>200</option></select></label>
+<button id="search">Search records</button></section>
+<main><section class="panel"><h2>Bridge locations · source coordinates</h2><div id="map" role="img" aria-label="Illustrative coordinate plot of bridges in the current result page, not a complete geographic map">
+<svg viewBox="0 0 1000 650" preserveAspectRatio="none" aria-hidden="true"><rect width="1000" height="650" fill="#e4f2fc"/><path d="M60 60 L865 60 890 160 850 250 820 350 890 475 820 590 90 590 92 410 55 300Z" fill="#cfe7f7" stroke="#97bdda" stroke-width="3" stroke-dasharray="8 6"/><path d="M300 60V590M540 60V590M730 60V590M60 230H880M60 430H880" stroke="#afd1e9" stroke-width="1"/><text x="90" y="115" fill="#527e9d" font-size="21">WASHINGTON · APPROXIMATE COORDINATE GRID</text><text x="90" y="565" fill="#6c92ae" font-size="18">Only current-page bridges are plotted</text></svg><div id="points"></div></div>
+<div id="detail" class="details">Select a record to view source details.</div></section>
+<section class="panel"><h2>Official bridge records</h2><div id="list" role="list" aria-live="polite"></div><div class="footer"><span id="status">Loading…</span><div><button id="prev" disabled>← Prev</button> <button id="next" disabled>Next →</button></div></div></section></main>
+<p class="sub" style="margin-top:18px">Data: FHWA 2026 Washington SNBI snapshot. Dataset checksum: <code>c97fb57339f8f7bd9ae82cb807814443fb7cd8bb9fb99c45adc74f2ae3912c79</code>. Private owner-only staging; no live inspection or emergency feed.</p></div>
+<script>
+"use strict";
+const $=id=>document.getElementById(id);let offset=0,total=0,limit=50,records=[],requestToken=0;
+const escapeHtml=s=>String(s??"").replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function showRecord(r){const note='Recorded condition is not an immediate safety assessment.';
+$('detail').innerHTML='<strong>'+escapeHtml(r.name||'Unnamed bridge')+'</strong><br>Bridge ID: '+escapeHtml(r.bridge_id)+' · Condition: '+escapeHtml(r.condition)+' · County code: '+escapeHtml(r.county_code??'Unavailable')+'<br>Source coordinates: '+escapeHtml(r.latitude)+', '+escapeHtml(r.longitude)+' · Inspection entries: '+escapeHtml(r.inspection_entry_count)+'<br>'+escapeHtml(note);}
+function render(rows){$('list').replaceChildren();$('points').replaceChildren();
+for(const r of rows){const node=document.createElement('div');node.className='row';node.tabIndex=0;node.setAttribute('role','listitem');node.innerHTML='<span class="pill '+r.condition+'">'+({P:'Poor',F:'Fair',G:'Good'}[r.condition]||'Unknown')+'</span><strong>'+escapeHtml(r.name||'Unnamed bridge')+'</strong><small>ID '+escapeHtml(r.bridge_id)+' · County '+escapeHtml(r.county_code??'not reported')+' · '+escapeHtml(r.latitude)+', '+escapeHtml(r.longitude)+'</small>';node.addEventListener('click',()=>showRecord(r));node.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();showRecord(r)}});$('list').appendChild(node);
+if(r.coordinate_quality==='review_outside_wa_bbox')continue;
+const x=(r.longitude+125)/9*100,y=(50-r.latitude)/5*100;
+if(x<0||x>100||y<0||y>100)continue;
+const dot=document.createElement('button');dot.className='dot '+r.condition;dot.style.left=x+'%';dot.style.top=y+'%';dot.title=(r.name||r.bridge_id)+' · '+r.condition;dot.setAttribute('aria-label','Show '+(r.name||r.bridge_id));dot.onclick=()=>showRecord(r);$('points').appendChild(dot);
+}}
+async function load(reset=false){if(reset)offset=0;const token=++requestToken;const condition=$('condition').value,county=$('county').value.trim();limit=Number($('limit').value);if(county&&!/^\d{1,3}$/.test(county)){$('status').textContent='County must be a numeric code.';return}
+$('status').textContent='Loading official records…';const query=new URLSearchParams({limit:String(limit),offset:String(offset),mapped_only:'1'});if(condition)query.set('condition',condition);if(county)query.set('county',county);
+try{const response=await fetch('/api/bridges?'+query,{cache:'no-store'});if(!response.ok)throw new Error('HTTP '+response.status);const data=await response.json();if(token!==requestToken)return;total=data.total_matches;records=data.bridges;render(records);$('status').textContent=total.toLocaleString()+' matching · '+(records.length?((offset+1)+'–'+(offset+records.length)):'0')+' shown';$('prev').disabled=offset===0;$('next').disabled=offset+records.length>=total;}
+catch(e){$('status').textContent='Unable to load verified evidence ('+String(e.message)+').';$('prev').disabled=true;$('next').disabled=true;}}
+$('search').onclick=()=>load(true);$('county').addEventListener('keydown',e=>{if(e.key==='Enter')load(true)});$('condition').onchange=()=>load(true);$('prev').onclick=()=>{offset=Math.max(0,offset-limit);load()};$('next').onclick=()=>{offset+=limit;load()};load(true);
+</script></body></html>
