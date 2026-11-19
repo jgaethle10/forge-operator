@@ -35,3 +35,20 @@ These are **synthetic tests**, with a stubbed Ollama response. No local model be
 This code is independent Evercraft implementation. The original third-party materials discussed privately are **not included, copied, quoted, stored in GitHub, or redistributed**. The high-level pattern of structured tool calls is a standard model interface; this module does not incorporate another builder's source or branding.
 
 Systemia remains the authorization and orchestration authority. GitHub is canonical. No Base44 or other third-party runtime is introduced, and no costs or production changes are incurred by the synthetic tests.
+
+
+## Optional local machine canary
+
+The script defaults to **dry-run**, which does not even contact Ollama:
+
+    node scripts/run-raven-local-tool-canary.mjs
+
+Once a model is confirmed installed on an owned machine and sufficient capacity is available, an operator can explicitly issue:
+
+    node scripts/run-raven-local-tool-canary.mjs --run --model=qwen3-coder:30b
+
+The script has a fixed harmless objective, one local request, and prints the proposal-only receipt to stdout. It does not download model weights, write any artifacts, request elevated privileges, or dispatch an execution action. A missing model, malformed proposal, or runtime error exits in a blocked state. No real-machine run has been performed or authorized as part of this PR.
+
+The synthetic CLI checks (no networking) are:
+
+    node --test scripts/run-raven-local-tool-canary.test.mjs
