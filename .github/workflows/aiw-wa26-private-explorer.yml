@@ -1,0 +1,23 @@
+name: AIW Washington private visual explorer
+on:
+  pull_request:
+    paths:
+      - 'research/infrastructure-watch/engineering/aiw_wa26_private_explorer.py'
+      - 'research/infrastructure-watch/operator/washington-2026-private.html'
+      - 'research/infrastructure-watch/tests/test_aiw_wa26_private_explorer.py'
+      - '.github/workflows/aiw-wa26-private-explorer.yml'
+permissions:
+  contents: read
+jobs:
+  verify-explorer:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Validate offline loopback explorer contract
+        run: |
+          python3 -m py_compile research/infrastructure-watch/engineering/aiw_wa26_private_explorer.py
+          python3 -m unittest discover -s research/infrastructure-watch/tests -p test_aiw_wa26_private_explorer.py -v
