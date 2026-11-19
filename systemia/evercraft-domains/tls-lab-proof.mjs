@@ -52,6 +52,7 @@ async function request({path='/',method='GET',host=HOST+':'+PORT,trust=true,serv
     cert_fingerprint_sha256:cert.fingerprint256||null
    }));
   });
+  assert.equal(req.getHeader('host'),host,'test client must transmit requested HTTP Host');
   req.on('timeout',()=>req.destroy(Error('tls_test_timeout')));
   req.on('error',reject);
   req.end();
@@ -82,7 +83,7 @@ assert.equal(blockedWrite.status,405,'writes prohibited');
 const blockedPath=await request({path:'/private'});
 assert.equal(blockedPath.status,404,'unrelated paths prohibited');
 const wrongHost=await request({host:'someoneelse.evercraft:'+PORT});
-assert.notEqual(wrongHost.status,200,'wrong Host must not receive client page');
+assert.notEqual(wrongHost.status,200,'wrong Host must not receive client page; observed='+wrongHost.headers['x-evercraft-lab-observed-host']);
 let noTrustRejected=false;
 try{
  await request({trust:false});
