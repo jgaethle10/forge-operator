@@ -19,6 +19,11 @@ SOURCE_SHA256 = "c97fb57339f8f7bd9ae82cb807814443fb7cd8bb9fb99c45adc74f2ae3912c7
 SOURCE_URL = "https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/WA26.json"
 EXPECTED_COUNTS = {"G": 4298, "F": 3918, "P": 403}
 EXPECTED_ROWS = 8619
+# Audited out-of-state coordinate in the official Washington submission.
+# Keep the bridge, but do not treat its position as verified for Washington maps.
+EXPECTED_COORDINATE_EXCEPTIONS = {
+    "0000P06117B1804": (43.4365, -123.896469),
+}
 
 
 def classification(record):
@@ -47,6 +52,7 @@ def validate(source):
     counts = Counter()
     county_missing = 0
     coord_invalid = 0
+    flagged_coordinates = {}
     names_missing = 0
     for row in rows:
         ident = row.get("BID01")
@@ -65,6 +71,7 @@ def validate(source):
         if not (45.0 <= latitude <= 50.0 and -125.0 <= longitude <= -116.0):
             coord_quality = "review_outside_wa_bbox"
             coord_invalid += 1
+            flagged_coordinates[ident] = (latitude, longitude)
         else:
             coord_quality = "numeric_within_wa_bbox_not_geodetically_verified"
         county = row.get("BL02")
@@ -86,11 +93,14 @@ def validate(source):
         counts[official] += 1
         out.append((ident, name, official, county, latitude, longitude,
                     coord_quality, len(inspections)))
-    if dict(counts) != EXPECTED_COUNTS or county_missing != 556 or coord_invalid:
-        raise ValueError(f"Washington baseline mismatch: condition_counts={dict(counts)}, expected={EXPECTED_COUNTS}; county_missing={county_missing}, expected=556; outside_WA_bbox={coord_invalid}, expected=0. No database was created.")
+    if (dict(counts) != EXPECTED_COUNTS or county_missing != 556
+        or flagged_coordinates != EXPECTED_COORDINATE_EXCEPTIONS):
+        raise ValueError(f"Washington baseline mismatch: condition_counts={dict(counts)}, expected={EXPECTED_COUNTS}; county_missing={county_missing}, expected=556; outside_WA_bbox={flagged_coordinates}, expected={EXPECTED_COORDINATE_EXCEPTIONS}. No database was created.")
     return out, {"records": len(out), "condition_counts": dict(counts),
                  "missing_county": county_missing, "missing_bridge_name": names_missing,
-                 "invalid_bbox_coordinates": coord_invalid,
+                 "flagged_outside_wa_bbox": coord_invalid,
+                 "flagged_bridge_ids": sorted(flagged_coordinates),
+                 "mapped_coordinate_verification": "bounds_only_not_geodetic_or_safety",
                  "source_sha256": digest, "source_url": SOURCE_URL,
                  "snapshot_year": 2026,
                  "scope": "WA_only_not_national",
@@ -133,7 +143,8 @@ def build(source, destination):
                 db.execute("INSERT INTO metadata VALUES (?,?)",
                            (key, json.dumps(value, sort_keys=True)))
             db.commit()
-            db.execute("PRAGMA quick_check").fetchone()
+            if db.execute("PRAGMA quick_check").fetchone()[0] != "ok":
+                raise ValueError("SQLite integrity check failed")
         finally:
             db.close()
         os.chmod(tmp, 0o600)
