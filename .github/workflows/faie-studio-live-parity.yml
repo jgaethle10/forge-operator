@@ -1,0 +1,45 @@
+name: FAIE Studio source-to-live parity
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'public/faie/**'
+      - 'scripts/faie-studio-live-parity.mjs'
+      - '.github/workflows/faie-studio-live-parity.yml'
+  workflow_dispatch:
+  schedule:
+    - cron: '17 * * * *'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: faie-studio-live-parity
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Syntax-check read-only parity verifier
+        run: node --check scripts/faie-studio-live-parity.mjs
+      - name: Compare both owned HTTPS views against main source
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts
+          node scripts/faie-studio-live-parity.mjs | tee artifacts/faie-studio-live-parity.json
+      - name: Preserve release parity receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: faie-studio-live-parity
+          path: artifacts/faie-studio-live-parity.json
+          if-no-files-found: warn
+          retention-days: 30
