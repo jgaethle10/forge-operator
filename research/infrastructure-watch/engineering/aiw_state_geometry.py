@@ -35,14 +35,22 @@ def make_geojson(topology):
         if index<0:coords.reverse()
         return coords
     def ring(indices):
+        # TopoJSON permits short/degenerate rings after quantization.
+        # topojson-client closes these by reusing their existing coordinate;
+        # rejecting every <4-position ring discards otherwise valid states.
+        # Padding repeats coordinates only. It never invents land or vertices.
         points=[]
         for idx in indices:
             segment=arc(idx)
-            if not segment:continue
+            if not segment:
+                continue
             points.extend(segment if not points else segment[1:])
-        if not points or len(points)<4:
-            raise ValueError("Invalid state boundary ring")
-        if points[0]!=points[-1]:points.append(points[0])
+        if not points:
+            raise ValueError("State boundary contains an empty arc ring")
+        if points[0]!=points[-1]:
+            points.append(points[0][:])
+        while len(points)<4:
+            points.append(points[0][:])
         return points
     features=[]
     for g in geometries:
