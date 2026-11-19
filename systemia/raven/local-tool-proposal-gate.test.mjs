@@ -43,6 +43,8 @@ test('strict proposal shape, task identity, and relative path', () => {
     { ...example, target: 'dir/../../etc/passwd' },
     { ...example, target: 'dir\\escape' },
     { ...example, target: '.ssh/config' },
+    { ...example, target: 'reports/$(whoami)' },
+    { ...example, target: 'reports/file name.txt' },
     { ...example, extra: 'ignore' },
     { ...example, rationale: '' },
   ];
