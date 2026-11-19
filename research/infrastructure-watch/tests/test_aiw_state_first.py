@@ -52,6 +52,56 @@ class StateFirstTests(unittest.TestCase):
         self.assertEqual(geo["features"][0]["geometry"]["coordinates"][0][0],[-124.0,40.0])
         self.assertEqual(geo["features"][0]["geometry"]["coordinates"][0][-1],[-124.0,40.0])
 
+    def test_quantized_tiny_island_ring_is_not_rejected(self):
+        # Real published TopoJSON can contain degenerate rings after simplifying
+        # small islands. Repeat the actual source vertex, never synthesize land.
+        tiny={
+            "type":"Topology",
+            "transform":{"scale":[0.01,0.01],"translate":[-122,46]},
+            "objects":{"states":{"type":"GeometryCollection","geometries":[
+                {"type":"MultiPolygon","id":key,
+                 "properties":{"name":"Synthetic "+key},
+                 "arcs":[[[0]], [[1]]]} if i==0 else
+                {"type":"Polygon","id":key,
+                 "properties":{"name":"Synthetic "+key},
+                 "arcs":[[0]]}
+                for i,key in enumerate(
+                    ["53","06","36","11","02","15"]+
+                    [str(n).zfill(2) for n in range(1,100)
+                     if str(n).zfill(2) not in {"53","06","36","11","02","15"}][:45]
+                )
+            ]}},
+            "arcs":[
+                [[0,0],[80,0],[0,80],[-80,0],[0,-80]],
+                [[9,9],[0,0]]
+            ]
+        }
+        geo=geometry.make_geojson(tiny)
+        self.assertEqual(len(geo["features"]),51)
+        wa=geo["features"][0]
+        self.assertEqual(wa["geometry"]["type"],"MultiPolygon")
+        ring=wa["geometry"]["coordinates"][1][0]
+        self.assertEqual(len(ring),4)
+        self.assertTrue(all(point==ring[0] for point in ring))
+        self.assertEqual(ring[0],[-121.91,46.09])
+
+    def test_empty_ring_fails_closed(self):
+        # An empty arc has no source vertex and must never be fabricated.
+        tiny={
+            "type":"Topology",
+            "transform":{"scale":[1,1],"translate":[0,0]},
+            "objects":{"states":{"type":"GeometryCollection","geometries":[
+                {"type":"Polygon","id":key,
+                 "properties":{"name":"Synthetic "+key},"arcs":[[1]]}
+                for key in ["53","06","36","11","02","15"]+
+                    [str(n).zfill(2) for n in range(1,100)
+                     if str(n).zfill(2) not in {"53","06","36","11","02","15"}][:45]
+            ]}},
+            "arcs":[[[0,0],[1,0],[0,1]],[]]
+        }
+        with self.assertRaisesRegex(ValueError,"empty arc ring"):
+            geometry.make_geojson(tiny)
+
     def test_refuses_missing_or_misaligned_source_data(self):
         self.assertRaises(ValueError,geometry.make_geojson,{"type":"FeatureCollection"})
         original='const STATES='+json.dumps([
