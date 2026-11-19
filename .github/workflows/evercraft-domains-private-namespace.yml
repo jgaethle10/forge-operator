@@ -6,6 +6,8 @@ on:
       - 'infra/evercraft-edge/dns/runtime.mjs'
       - 'tests/evercraft-domains-private-namespace.test.mjs'
       - 'tests/evercraft-domains-split-resolver.test.mjs'
+      - 'tests/evercraft-domains-client001-local-preview.test.mjs'
+      - 'public/clients/on-the-go/review/index.html'
       - '.github/workflows/evercraft-domains-private-namespace.yml'
   push:
     branches: [main]
@@ -14,6 +16,8 @@ on:
       - 'infra/evercraft-edge/dns/runtime.mjs'
       - 'tests/evercraft-domains-private-namespace.test.mjs'
       - 'tests/evercraft-domains-split-resolver.test.mjs'
+      - 'tests/evercraft-domains-client001-local-preview.test.mjs'
+      - 'public/clients/on-the-go/review/index.html'
       - '.github/workflows/evercraft-domains-private-namespace.yml'
   workflow_dispatch:
 permissions:
@@ -33,7 +37,8 @@ jobs:
           node --check systemia/evercraft-domains/probe-lab.mjs
           node --check systemia/evercraft-domains/split-cli.mjs
           node --check systemia/evercraft-domains/split-resolver.mjs
-          node --test tests/evercraft-domains-private-namespace.test.mjs tests/evercraft-domains-split-resolver.test.mjs
+          node --check systemia/evercraft-domains/client001-preview-bridge.mjs
+          node --test tests/evercraft-domains-private-namespace.test.mjs tests/evercraft-domains-split-resolver.test.mjs tests/evercraft-domains-client001-local-preview.test.mjs
       - name: Verify held Client 001 alias plan and synthetic zone
         run: |
           node systemia/evercraft-domains/cli.mjs plan > "$RUNNER_TEMP/alias-plan.json"
