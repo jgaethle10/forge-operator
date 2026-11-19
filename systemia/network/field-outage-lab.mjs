@@ -145,7 +145,7 @@ async function flush() {
       if(ack.message_id!==env.message_id||ack.node_id!==peer||ack.envelope_hash!==envelope_hash||!eq(ack.proof,mac(key,`ack:${peer}:${env.message_id}:${envelope_hash}`)))throw Error('ack_authentication_failed');
       fs.unlinkSync(file);
       const dir=fs.openSync(path.dirname(file),'r');try{fs.fsyncSync(dir);}finally{fs.closeSync(dir);}
-      logReceipt(root,'message.delivered',{message_id:env.message_id,peer_id:peer,transport:transport.selected.id});delivered++;
+      logReceipt(root,'message.delivered',{message_id:env.message_id,envelope_hash,peer_id:peer,transport:transport.selected.id});delivered++;
     }catch{held++;logReceipt(root,'message.retry_held',{message_id:env.message_id});}
   }
   console.log(JSON.stringify({state:held?'PARTIAL':'SYNCHRONIZED',peer_authenticated:true,route:transport.selected.id,delivered,held,expired,field_validated:false}));
