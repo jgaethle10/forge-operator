@@ -42,6 +42,7 @@ async function journey(width,language){
   assert.equal(await page.locator('#callCta').getAttribute('href'),'tel:+15098335025');
   assert.ok((await page.locator('.contact-email').textContent()).includes(EMAIL));
   await page.locator('#copyEmail').click();
+  await page.waitForFunction(() => document.querySelector('#copyFeedback')?.textContent?.trim().length > 0, null, {timeout:5000});
   const copy=(await page.locator('#copyFeedback').textContent()).trim();
   assert.ok(/copied|copy|copiado|copia/i.test(copy));
   const size=await page.evaluate(()=>({viewport:document.documentElement.clientWidth,content:document.documentElement.scrollWidth}));
