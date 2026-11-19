@@ -43,3 +43,22 @@ All submitted data is user-entered until independently verified. This is screeni
 7. Deploy on approved Evercraft-owned infrastructure, private first; perform mobile and security acceptance.
 
 See `INTEGRATION.md` and `OUTBOX.md` for provenance and dispatch contracts.
+
+
+## v1.4: private existing EV report integration
+
+The upstream Forge/Yard endpoint is documented in `systemia/rivet/http-gateway.mjs`: `GET /api/rivet/reports/:reportId` returns a private `evercraft.rivet.yard-report-record.v1` with report/source SHA-256 identifiers, a source-coverage manifest, and readiness verification fields.
+
+**Configure only on a trusted local Evercraft operator host**, with the existing gateway active:
+```sh
+export EVERCRAFT_SITE_REPORT_GATEWAY_URL='http://127.0.0.1:<actual-owned-gateway-port>'
+export EVERCRAFT_SITE_REPORT_GATEWAY_TOKEN_FILE="$HOME/.config/evercraft/site-planner/rivet-report-gateway.key"
+python3 server.py
+```
+Provision the token through Evercraft's private secret process. The file must be mode `0600` and contain a token of at least 16 bytes; never commit secrets to GitHub. The adapter refuses non-loopback origins and does not accept arbitrary user-provided URLs.
+
+**Workflow:** Create a Site Planner project with the exact requested address. In Reports, import an existing `rivet-yard:<32 hex>` ID. The server fetches the private gateway record, checks the ID, schema, ready status, source/report hash identifiers, source-coverage attestation, and requested address. The import is idempotent per site. In Engineering, select that report to generate an internal immutable snapshot and order tied to its upstream ID and hashes. Invalid cross-site links and stale address associations are rejected. Source linkage is recorded in the pending outbox.
+
+This establishes **gateway-attested provenance only**. The adapter does not independently rehash the upstream report byte stream, prove parcel or engineering facts, charge customers, verify payment, or dispatch work to Systemia. It does not create a new report. Real checkout, signed Systemia delivery, role-based access, upload hardening, and secure public sharing remain launch blockers.
+
+Run `python3 -m unittest -v test_report_bridge.py` for the no-external-network integration proof.
