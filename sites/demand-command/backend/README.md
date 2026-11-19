@@ -126,4 +126,17 @@ If the live Revenue Desk export schema is unfamiliar, run this **privacy-preserv
 python3 revenue_desk_bridge.py --inspect-schema
 ```
 
-It prints only record counts, field names and value **types**, not actual buyer names, messages, contact addresses, payments or IDs. The first real NextGen probe has **not yet been executed** from this environment, so compatibility with the actual 8795 payload remains to be confirmed.
+It prints only counts, field names and value **types**, not actual buyer names, messages, contact addresses, payments or IDs. On **2026-11-19**, an operator-run read-only NextGen probe returned a top-level list of **16 records**, including `sent` as a list and `signal`, `kind`, `contact`, `permission`, `verified`, and `amount` as strings. The `compatible: true` result confirms *structural* compatibility only. No real buyer values were transmitted in that probe.
+
+v6 now recognizes `sent` history without treating it as provider delivery, carries `signal` into source text, and preserves original `kind` and operational context as source-reported, unverified information. No row was imported or contacted by this schema inspection.
+
+**NextGen next step, dry-run only:**
+
+```bash
+git -C "$HOME/evercraft-demand-canary" pull --ff-only
+cd "$HOME/evercraft-demand-canary/sites/demand-command/backend"
+python3 -m unittest -v
+python3 revenue_desk_bridge.py --receipt="$HOME/.local/state/evercraft/demand-command/revenue-desk-preview.json"
+```
+
+The receipt contains only row numbers/rejection reasons and counts; it is written with owner-only permissions. Share only the printed summary, not the raw `/api/opportunities` JSON. **Do not run `--apply` yet**: first review eligibility, historical outreach, source evidence and cross-channel deduplication.
