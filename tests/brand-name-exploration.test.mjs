@@ -50,9 +50,9 @@ test('three alternative creative directions are versioned without becoming appro
 test('review remains at brand 01 and the original $100 commercial product is unchanged',()=>{
  const first=ledger.products[0];
  assert.equal(ledger.founder_reviews_approved,0);
- assert.equal(first.decision.status,'awaiting_founder_review');
+ assert.equal(first.decision.status,'changes_requested');
  assert.equal(first.decision.approved,false);
- assert.equal(first.exploration.state,'unapproved_concept_comparison');
+ assert.equal(first.exploration.state,'rejected_shortlist');
  assert.equal(first.exploration.founder_selected_candidate,null);
  assert.equal(ledger.products.slice(1).every(p=>p.decision.status==='not_reviewed'),true);
  assert.equal(brand.imprint,'The Weekly Signal');
@@ -61,8 +61,12 @@ test('review remains at brand 01 and the original $100 commercial product is unc
  assert.equal(product.checkout.url,verified.links.find(x=>x.key==='weekly-social').url);
  assert.equal(product.price_usd,100);
  assert.equal(product.exact_checkout_product,'Social Media Management · Weekly');
- assert.equal(events.founder_decision_events,0);
+ assert.equal(events.founder_decision_events,1);
  assert.ok(events.entries.some(e=>e.event_id==='BR-001-E004'&&e.founder_decision===false));
+ assert.ok(events.entries.some(e=>e.event_id==='BR-001-E006'&&e.event_type==='founder_decision'&&e.decision==='changes_requested_on_names_and_marks'));
+ assert.ok(review.candidates.every(c=>c.review_outcome==='rejected_by_founder_feedback'&&c.candidate_for_release===false));
+ assert.equal(review.founder_feedback.exact_quote,'Those names and logos are so ass fam 😂');
+ assert.match(html,/ARCHIVED · Founder rejected these three names and proposed logos/);
  const originalProductPage=read(root+'index.html');
  assert.ok(originalProductPage.includes(product.checkout.url));
  assert.ok(originalProductPage.includes('$100'));
