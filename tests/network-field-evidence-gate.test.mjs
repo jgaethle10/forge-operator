@@ -33,6 +33,30 @@ test('two independent self-signed receipt captures reconcile and never promote p
     const x=run(['review','--alpha',ar,'--beta',br]);
     assert.equal(x.status,'CROSS_NODE_SOFTWARE_EVIDENCE_RECONCILED');assert.equal(x.matched_encrypted_delivery_receipts,2);
     assert.equal(x.distinct_physical_devices_verified,false);assert.equal(x.upstream_outage_verified,false);
+    const originalA=JSON.parse(fs.readFileSync(ar,'utf8'));
+    const originalB=JSON.parse(fs.readFileSync(br,'utf8'));
+    const resign=(file,body,privatePem)=>{
+      const copy={...body};delete copy.signature;
+      const key=crypto.createPrivateKey(fs.readFileSync(privatePem));
+      copy.signature=crypto.sign(null,Buffer.from(JSON.stringify(copy)),key).toString('base64');
+      fs.writeFileSync(file,JSON.stringify(copy),{mode:0o600});
+    };
+    // A fully valid signature with a repeated message ID must not count twice.
+    const replayed=structuredClone(originalA);
+    replayed.receipt_log.events[4].message_id=m1;
+    resign(ar,replayed,path.join(a,'field-evidence-ed25519.pem'));
+    const replayReview=run(['review','--alpha',ar,'--beta',br]);
+    assert.equal(replayReview.status,'HOLD_INSUFFICIENT_EVIDENCE');
+    assert.equal(replayReview.distinct_delivery_ids,false);
+    resign(ar,originalA,path.join(a,'field-evidence-ed25519.pem'));
+    // Two restarts before the first receipt do not prove recovery after interruption.
+    const wrongOrder=structuredClone(originalB);
+    [wrongOrder.receipt_log.events[1],wrongOrder.receipt_log.events[2]]=[wrongOrder.receipt_log.events[2],wrongOrder.receipt_log.events[1]];
+    resign(br,wrongOrder,path.join(b,'field-evidence-ed25519.pem'));
+    const orderReview=run(['review','--alpha',ar,'--beta',br]);
+    assert.equal(orderReview.status,'HOLD_INSUFFICIENT_EVIDENCE');
+    assert.equal(orderReview.receiver_restart_between_receipts,false);
+    resign(br,originalB,path.join(b,'field-evidence-ed25519.pem'));
     const original=JSON.parse(fs.readFileSync(ar,'utf8'));
     original.receipt_log.events[1].envelope_hash='b'.repeat(64);
     fs.writeFileSync(ar,JSON.stringify(original),{mode:0o600});
