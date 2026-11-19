@@ -355,3 +355,37 @@ test('held $49 Website Audit may disclose a separate scoped $149 diagnosis, neve
   assert.deepEqual(unrelated.related_independent_services,[]);
   assert.equal(unrelated.buyer_checkout_available,false);
 });
+
+
+test('Fabric MCP paginates the full read-only catalog with verifiable offsets',async()=>{
+  const call=(args)=>executeFabricDirectoryRpc({
+    jsonrpc:'2.0',id:199,method:'tools/call',
+    params:{name:'list_evercraft_capabilities',arguments:args},
+  },catalog);
+  const first=(await call({limit:1,offset:0})).result.structuredContent;
+  assert.equal(first.total,2);
+  assert.equal(first.returned,1);
+  assert.equal(first.offset,0);
+  assert.equal(first.next_offset,1);
+  assert.equal(first.capabilities[0].public_id,catalog[0].public_id);
+  assert.equal(first.transactional,false);
+  assert.equal(first.external_action_taken,false);
+
+  const second=(await call({limit:1,offset:first.next_offset})).result.structuredContent;
+  assert.equal(second.total,2);
+  assert.equal(second.returned,1);
+  assert.equal(second.offset,1);
+  assert.equal(second.next_offset,null);
+  assert.equal(second.capabilities[0].public_id,catalog[1].public_id);
+
+  const pastEnd=(await call({limit:1,offset:2})).result.structuredContent;
+  assert.equal(pastEnd.returned,0);
+  assert.equal(pastEnd.offset,2);
+  assert.equal(pastEnd.next_offset,null);
+  const invalid=await call({limit:1,offset:-1});
+  assert.equal(invalid.error.code,-32602);
+  const listed=await executeFabricDirectoryRpc({jsonrpc:'2.0',id:200,method:'tools/list'},catalog);
+  const spec=listed.result.tools.find(tool=>tool.name==='list_evercraft_capabilities');
+  assert.equal(spec.inputSchema.properties.offset.minimum,0);
+  assert.equal(spec.inputSchema.properties.limit.maximum,100);
+});
