@@ -37,7 +37,8 @@
   "incumbent_from_uploaded_comparison_receipt": {
     "gems_001_sha256": "3b2360bed8966b4bfdae76bfeb5436bf6dccd16ac9dc5ff402434736bdee57a4",
     "cells_ge_0_2": 384797,
-    "cells_ge_0_5": 34010
+    "cells_ge_0_5": 34010,
+    "independently_rehashed_in_current_container": true
   },
   "comparison_from_work_receipt": {
     "cells_ge_0_2_ratio": 1.1545542194975533,
@@ -56,7 +57,31 @@
     "full_area_precision_validated": false,
     "hidden_new_fault_score_known": false
   },
-  "interpretation": "Candidate integrity verified independently from TIFF; comparison to preserved incumbent is grounded in uploaded Work comparison receipt, not freshly recomputed from GEMS-001 bytes in current verification",
+  "interpretation": "Both archived GEMS-001 TIFF and uploaded GEMS-002 TIFF independently SHA-256 checked and pixel-wise compared in current container; corroborates the Work comparison receipt. No labels for hidden newly discovered faults accessible, so scored DTI and full-area precision remain unverified.",
   "recommendation": "Hold for explicit user decision on single official scored submission after documenting leaderboard risk and optional further diagnostic review.",
-  "scored_submission_made": false
+  "scored_submission_made": false,
+  "independently_rehashed_preserved_gems_001_tif": true,
+  "full_grid_independent_pixel_comparison": {
+    "grid_metadata_exact_match": true,
+    "valid_nan_mask_exact_match": true,
+    "valid_cells": 5167373,
+    "threshold_0_2": {
+      "old": 384797,
+      "new": 444269,
+      "intersection": 185133,
+      "union": 643933,
+      "iou": 0.2875035135642994,
+      "new_only": 259136,
+      "old_only": 199664
+    },
+    "threshold_0_5": {
+      "old": 34010,
+      "new": 142571,
+      "intersection": 26584,
+      "union": 149997,
+      "iou": 0.17723021127089209,
+      "new_only": 115987,
+      "old_only": 7426
+    }
+  }
 }
