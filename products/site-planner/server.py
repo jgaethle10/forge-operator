@@ -47,7 +47,9 @@ def init():
         CREATE TABLE IF NOT EXISTS orders(id TEXT PRIMARY KEY,site_id TEXT NOT NULL REFERENCES sites(id),report_id TEXT NOT NULL REFERENCES reports(id),scenario_id TEXT NOT NULL REFERENCES scenarios(id),scope TEXT,requested_by TEXT,status TEXT NOT NULL DEFAULT 'queued',created_at TEXT);
         CREATE TABLE IF NOT EXISTS plans(id TEXT PRIMARY KEY,site_id TEXT NOT NULL REFERENCES sites(id),order_id TEXT NOT NULL REFERENCES orders(id),report_id TEXT NOT NULL REFERENCES reports(id),title TEXT,reviewer TEXT,status TEXT NOT NULL,notes TEXT,file_name TEXT,file_path TEXT,file_type TEXT,created_at TEXT);
         CREATE TABLE IF NOT EXISTS gaps(id TEXT PRIMARY KEY,site_id TEXT NOT NULL REFERENCES sites(id),type TEXT,severity TEXT,title TEXT,detail TEXT,status TEXT NOT NULL DEFAULT 'open',created_at TEXT);
+        CREATE TABLE IF NOT EXISTS engineering_actions(id TEXT PRIMARY KEY,site_id TEXT NOT NULL REFERENCES sites(id),order_id TEXT NOT NULL REFERENCES orders(id),previous_status TEXT NOT NULL,new_status TEXT NOT NULL,actor TEXT NOT NULL,reason TEXT NOT NULL,created_at TEXT NOT NULL);
         CREATE TABLE IF NOT EXISTS outbox(id TEXT PRIMARY KEY,site_id TEXT NOT NULL REFERENCES sites(id),event_type TEXT NOT NULL,aggregate_id TEXT NOT NULL,payload_json TEXT NOT NULL,payload_sha256 TEXT NOT NULL,state TEXT NOT NULL DEFAULT 'pending',created_at TEXT NOT NULL,delivered_at TEXT);
+        CREATE INDEX IF NOT EXISTS idx_engineering_actions ON engineering_actions(order_id,created_at);
         CREATE INDEX IF NOT EXISTS idx_outbox_state ON outbox(state,created_at);
         CREATE INDEX IF NOT EXISTS idx_evidence_site ON evidence(site_id);
         CREATE INDEX IF NOT EXISTS idx_order_report ON orders(report_id);
@@ -78,6 +80,47 @@ def append_event(db, sid, event_type, aggregate_id, payload):
     db.execute('INSERT INTO outbox(id,site_id,event_type,aggregate_id,payload_json,payload_sha256,state,created_at) VALUES (?,?,?,?,?,?,?,?)',
                (event_id,sid,event_type,aggregate_id,wire,hashlib.sha256(wire.encode()).hexdigest(),'pending',now()))
     return event_id
+
+ORDER_STATES = ('queued','assigned','in_review','returned','revision_requested','approved','cancelled')
+ORDER_TRANSITIONS = {
+    'queued': {'assigned','cancelled'},
+    'assigned': {'in_review','cancelled'},
+    'in_review': {'returned','revision_requested'},
+    'returned': {'approved','revision_requested'},
+    'revision_requested': {'assigned','cancelled'},
+    'approved': set(),
+    'cancelled': set(),
+}
+
+def engineering_queue(db, status=None):
+    if status is not None and status not in ORDER_STATES:
+        raise ValueError('Invalid engineering status')
+    q = """SELECT o.id AS order_id,o.site_id,o.report_id,o.scenario_id,
+        o.scope,o.requested_by,o.status,o.created_at,s.address,s.name AS site_name,
+        sc.name AS scenario_name
+        FROM orders o JOIN sites s ON s.id=o.site_id
+        JOIN scenarios sc ON sc.id=o.scenario_id"""
+    return [dict(r) for r in db.execute(q + (' WHERE o.status=?' if status else '') + ' ORDER BY o.created_at,o.id', (status,) if status else ())]
+
+def transition_order(db, site_id, order_id, new_status, actor, reason):
+    """Transactional queue transition with persisted actor and outbox event."""
+    if new_status not in ORDER_STATES or not str(actor or '').strip() or not str(reason or '').strip():
+        raise ValueError('A valid status, actor and reason are required')
+    order = db.execute('SELECT id,status,report_id FROM orders WHERE id=? AND site_id=?',(order_id,site_id)).fetchone()
+    if order is None:
+        raise ValueError('Order does not belong to site')
+    old_status = order['status']
+    if new_status not in ORDER_TRANSITIONS.get(old_status,set()):
+        raise ValueError('Invalid engineering state transition')
+    db.execute('UPDATE orders SET status=? WHERE id=? AND site_id=?',(new_status,order_id,site_id))
+    action_id=uid('ACTION')
+    db.execute('INSERT INTO engineering_actions VALUES (?,?,?,?,?,?,?,?)',
+        (action_id,site_id,order_id,old_status,new_status,str(actor).strip(),str(reason).strip(),now()))
+    append_event(db,site_id,'site.plan.status_changed.v1',order_id,
+        {'site_id':site_id,'order_id':order_id,'report_id':order['report_id'],
+         'previous_status':old_status,'status':new_status,'actor':str(actor).strip(),
+         'reason':str(reason).strip(),'action_id':action_id})
+    return dict(db.execute('SELECT * FROM orders WHERE id=?',(order_id,)).fetchone())
 
 def newreport(db,sid):
     d=snapshot(db,sid)
@@ -148,6 +191,8 @@ class Handler(BaseHTTPRequestHandler):
             if p=='/' or p=='/index.html':return self.send(200,(ROOT/'index.html').read_bytes(),'text/html; charset=utf-8')
             if p=='/api/health':return self.send(200,{'ok':True,'product':'Evercraft Site Planner','mode':'self-hosted'})
             with connect() as db:
+                if p=='/api/engineering/queue':
+                    return self.send(200,engineering_queue(db))
                 if p=='/api/outbox':
                     return self.send(200,[dict(r) for r in db.execute('SELECT id,site_id,event_type,aggregate_id,payload_sha256,state,created_at,delivered_at FROM outbox ORDER BY created_at,id')])
                 if p=='/api/sites':
@@ -169,6 +214,13 @@ class Handler(BaseHTTPRequestHandler):
     def do_PUT(self):
         if not self.authorized():return
         try:
+            m=re.fullmatch(r'/api/sites/([A-Za-z0-9-]+)/orders/([A-Za-z0-9-]+)/status',urlsplit(self.path).path)
+            if m:
+                v=self.body()
+                with connect() as db:
+                    result=transition_order(db,m[1],m[2],v.get('status'),v.get('actor'),v.get('reason'))
+                    db.commit()
+                return self.send(200,result)
             m=re.fullmatch(r'/api/sites/([A-Za-z0-9-]+)',urlsplit(self.path).path)
             if not m: return self.bad('Not found',404)
             v=self.body()
