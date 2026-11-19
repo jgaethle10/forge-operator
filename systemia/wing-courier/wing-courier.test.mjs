@@ -108,3 +108,33 @@ test('broker refuses nonloopback listener',async()=>{
  const fx=temp();try{await assert.rejects(startWingCourierBroker({stateDir:fx.broker,
   wingCredentials:fx.auth,host:'0.0.0.0'}),/must_bind_loopback/)}finally{remove(fx)}
 });
+
+test('verified local custody is rehashed and ACK recovered after interrupted send acknowledgment',async()=>{
+ const fx=temp();const broker=await startWingCourierBroker({stateDir:fx.broker,wingCredentials:fx.auth});fx.url=broker.url;
+ try{
+  await pushEncryptedWingBundle(base(fx));
+  // Simulate crash after decrypt+rename but before the ack reaches the broker.
+  const local=openWingBundle({encryptedFile:fx.bundle,destinationDir:fx.inbox,
+   receiverPrivateKeyFile:path.join(fx.fallen,'decrypt.key'),
+   trustedSenderPublicKeyFile:path.join(fx.harbor,'sign.pub'),expectedFromWing:'harbor',expectedToWing:'fallen'});
+  assert.equal(local.receipt.assets.length,12);
+  assert.equal(JSON.parse(fs.readFileSync(path.join(fx.broker,'packages',fx.info.id,'state.json'))).state,'READY');
+  const outcome=await pollWingInbox(pollArgs(fx));
+  assert.equal(outcome.received,1,JSON.stringify(outcome));
+  assert.equal(JSON.parse(fs.readFileSync(path.join(fx.broker,'packages',fx.info.id,'state.json'))).state,'ACK_REPORTED_BY_RECEIVER');
+ }finally{await broker.close();remove(fx)}
+});
+test('tampered local custody cannot become acknowledged on retry',async()=>{
+ const fx=temp();const broker=await startWingCourierBroker({stateDir:fx.broker,wingCredentials:fx.auth});fx.url=broker.url;
+ try{
+  await pushEncryptedWingBundle(base(fx));
+  openWingBundle({encryptedFile:fx.bundle,destinationDir:fx.inbox,
+   receiverPrivateKeyFile:path.join(fx.fallen,'decrypt.key'),
+   trustedSenderPublicKeyFile:path.join(fx.harbor,'sign.pub'),expectedFromWing:'harbor',expectedToWing:'fallen'});
+  fs.appendFileSync(path.join(fx.inbox,fx.info.id,fx.names[0]),'changed bytes');
+  const outcome=await pollWingInbox(pollArgs(fx));
+  assert.equal(outcome.received,0);
+  assert.equal(outcome.results[0].state,'HELD');
+  assert.equal(JSON.parse(fs.readFileSync(path.join(fx.broker,'packages',fx.info.id,'state.json'))).state,'READY');
+ }finally{await broker.close();remove(fx)}
+});
