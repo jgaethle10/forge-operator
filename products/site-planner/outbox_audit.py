@@ -32,6 +32,12 @@ def audit(path):
                 order = conn.execute('SELECT site_id,report_id,scenario_id FROM orders WHERE id=?', (event['aggregate_id'],)).fetchone()
                 if not order or any(order[k] != payload.get(k) for k in ('site_id','report_id','scenario_id')):
                     problems.append({'event_id': event_id, 'problem': 'order_lineage_mismatch'})
+                if payload.get('source_report_id'):
+                    binding=conn.execute('SELECT os.site_id,os.source_report_id,sr.external_report_id FROM order_source_links os JOIN source_reports sr ON sr.id=os.source_report_id WHERE os.order_id=?',(event['aggregate_id'],)).fetchone()
+                    if (not binding or binding['site_id']!=event['site_id']
+                        or binding['source_report_id']!=payload.get('source_report_id')
+                        or binding['external_report_id']!=payload.get('external_report_id')):
+                        problems.append({'event_id':event_id,'problem':'order_source_report_lineage_mismatch'})
             elif kind == 'site.plan.registered.v1':
                 plan = conn.execute('SELECT site_id,report_id,order_id FROM plans WHERE id=?', (event['aggregate_id'],)).fetchone()
                 if not plan or any(plan[k] != payload.get(k) for k in ('site_id','report_id','order_id')):
@@ -44,6 +50,12 @@ def audit(path):
                            [('site_id','site_id'),('previous_status','previous_status'),('new_status','status'),('actor','actor'),('reason','reason')])
                     or order['site_id'] != event['site_id'] or order['report_id'] != payload.get('report_id')):
                     problems.append({'event_id': event_id, 'problem': 'status_transition_lineage_mismatch'})
+            elif kind == 'site.source_report.linked.v1':
+                source = conn.execute('SELECT site_id,external_report_id,report_sha256,source_sha256 FROM source_reports WHERE id=?', (event['aggregate_id'],)).fetchone()
+                if (not source or source['site_id'] != event['site_id']
+                    or event['aggregate_id'] != payload.get('source_report_id')
+                    or any(source[k] != payload.get(k) for k in ('external_report_id','report_sha256','source_sha256'))):
+                    problems.append({'event_id': event_id, 'problem': 'source_report_lineage_mismatch'})
             elif kind == 'site.report.created.v1':
                 report = conn.execute('SELECT site_id FROM reports WHERE id=?', (event['aggregate_id'],)).fetchone()
                 if not report or report['site_id'] != payload.get('site_id'):
