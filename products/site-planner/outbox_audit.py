@@ -36,6 +36,14 @@ def audit(path):
                 plan = conn.execute('SELECT site_id,report_id,order_id FROM plans WHERE id=?', (event['aggregate_id'],)).fetchone()
                 if not plan or any(plan[k] != payload.get(k) for k in ('site_id','report_id','order_id')):
                     problems.append({'event_id': event_id, 'problem': 'plan_lineage_mismatch'})
+            elif kind == 'site.plan.status_changed.v1':
+                action = conn.execute('SELECT site_id,order_id,previous_status,new_status,actor,reason FROM engineering_actions WHERE id=?', (payload.get('action_id'),)).fetchone()
+                order = conn.execute('SELECT site_id,report_id FROM orders WHERE id=?', (event['aggregate_id'],)).fetchone()
+                if (not action or not order or action['order_id'] != event['aggregate_id']
+                    or any(action[k] != payload.get(v) for k,v in
+                           [('site_id','site_id'),('previous_status','previous_status'),('new_status','status'),('actor','actor'),('reason','reason')])
+                    or order['site_id'] != event['site_id'] or order['report_id'] != payload.get('report_id')):
+                    problems.append({'event_id': event_id, 'problem': 'status_transition_lineage_mismatch'})
             elif kind == 'site.report.created.v1':
                 report = conn.execute('SELECT site_id FROM reports WHERE id=?', (event['aggregate_id'],)).fetchone()
                 if not report or report['site_id'] != payload.get('site_id'):
