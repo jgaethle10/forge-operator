@@ -170,7 +170,7 @@ test('website audit sells the verified $49 Stripe SKU without weakening free inq
   const page=renderOfferPage(offer,{checkoutConfigured:false,auditInquiryAvailable:true});
   assert.match(page,/href="https:\/\/buy\.stripe\.com\/bJe28kfD885M9SP49n0Jq07"/);
   assert.match(page,/Start my \$49 audit/);
-  assert.match(page,/including applicable sales tax/);
+  assert.match(page,/before any applicable sales tax/);
   assert.match(page,/Your URL and priority are requested during checkout/);
   assert.match(page,/human-reviewed report is delivered by email/);
   assert.match(page,/Not ready to purchase\? Request a free review first/);
