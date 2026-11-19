@@ -20,32 +20,38 @@ https://onthegoquicklube.evercraft:18443 {
     -Server
   }
 
+  # Caddy can accept a request with valid SNI but a different HTTP Host.
+  # Explicit HTTP Host isolation must precede the site file server.
+  @wrongHost not host onthegoquicklube.evercraft
   @notRead not method GET HEAD
-  respond @notRead 405
+  route {
+    respond @wrongHost 421
+    respond @notRead 405
 
-  handle / {
-    root * /srv/evercraft/client001
-    rewrite * /index.html
-    file_server
+    handle / {
+      root * /srv/evercraft/client001
+      rewrite * /index.html
+      file_server
+    }
+
+    handle /index.html {
+      root * /srv/evercraft/client001
+      file_server
+    }
+
+    handle /robots.txt {
+      header Content-Type "text/plain; charset=utf-8"
+      respond <<ROBOTS
+        User-agent: *
+        Disallow: /
+        ROBOTS 200
+    }
+
+    handle /healthz {
+      header Content-Type "application/json; charset=utf-8"
+      respond `{"schema":"evercraft.domains.client001.tls-lab.v1","state":"LOOPBACK_ONLY_TEST","production_tls":false,"public_dns":false,"client_approved":false,"site_published":false}` 200
+    }
+
+    respond 404
   }
-
-  handle /index.html {
-    root * /srv/evercraft/client001
-    file_server
-  }
-
-  handle /robots.txt {
-    header Content-Type "text/plain; charset=utf-8"
-    respond <<ROBOTS
-      User-agent: *
-      Disallow: /
-      ROBOTS 200
-  }
-
-  handle /healthz {
-    header Content-Type "application/json; charset=utf-8"
-    respond `{"schema":"evercraft.domains.client001.tls-lab.v1","state":"LOOPBACK_ONLY_TEST","production_tls":false,"public_dns":false,"client_approved":false,"site_published":false}` 200
-  }
-
-  respond 404
 }
