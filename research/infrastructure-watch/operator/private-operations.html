@@ -47,6 +47,22 @@ function render(o){
   el('national').className='card'+(stale||n.state!=='healthy'?' warn':'');
   el('pnw').className='card'+(stale||p.state!=='healthy_snapshot'?' warn':'');
 }
+// This loopback API exists only when launched with aiw_private_viewer.py.
+// Static/offline copies retain the manual file-import experience.
+async function refreshLocalStatus(){
+  if(location.protocol!=='http:'||!['127.0.0.1','localhost'].includes(location.hostname))return;
+  try{
+    const response=await fetch('/api/private-status',{cache:'no-store',credentials:'omit'});
+    if(!response.ok)throw Error('Status unavailable');
+    const data=await response.json();
+    render(data);
+  }catch{
+    el('state').textContent='Private monitoring receipt unavailable. Choose a local JSON export to inspect it.';
+  }
+}
+refreshLocalStatus();
+if(location.protocol==='http:'&&['127.0.0.1','localhost'].includes(location.hostname))
+  setInterval(refreshLocalStatus,30000);
 el('receipt').addEventListener('change',async ev=>{
   try{const file=ev.target.files[0];if(!file)return;if(file.size>200000)throw Error('Receipt is too large');
     const obj=JSON.parse(await file.text());render(obj);
