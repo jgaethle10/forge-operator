@@ -69,6 +69,37 @@ configuration and prove an authenticated private resolver, an isolated
 authorized Caddy site, and a proper device trust model. There is no public
 CA / ICANN delegation claim and no browser-security bypass.
 
+## Client 001: exact private hostname to local website bytes (operator lab)
+
+The Client 001 bridge is **not** a public rollout. It demonstrates that
+Evercraft's exact private DNS name can be connected to our real, canonical
+On The Go V4.1 HTML instead of a placeholder page:
+
+```bash
+node systemia/evercraft-domains/client001-preview-bridge.mjs --port 18081
+# Another shell on the same machine:
+curl -i -H 'Host: onthegoquicklube.evercraft' http://127.0.0.1:18081/
+curl -i -H 'Host: onthegoquicklube.evercraft' http://127.0.0.1:18081/healthz
+node --test tests/evercraft-domains-client001-local-preview.test.mjs
+```
+
+This process binds **only** to `127.0.0.1`, serves read-only canonical
+HTML, and refuses lookalike hosts, POST requests, other clients and
+unrelated paths. No mail or bookings are captured. Existing site images,
+styles and client-side scripts remain embedded in the canonical HTML.
+Source equality is checked byte-for-byte in CI.
+
+The resolver's synthetic private A answer maps this name to
+`127.0.0.1`. The HTTP bridge is on port 18081, not 80 or 443. This is
+usable only on the same host during deliberate testing. It is **not**
+accessible from another machine, a regular customer phone, or public
+internet; there is **no TLS certificate** or authorized customer promotion.
+
+Actual device onboarding requires owner permission, stable private
+service addressing, authenticated DNS delivery, trusted HTTPS, reliability
+review and final customer-facing release. Do not configure personal
+devices' system DNS or a router with these lab endpoints.
+
 ## Controls
 
 - `registry.json` lists a **held candidate identity**. A source commit cannot approve the client's brand, legal ownership, domain charges, DNS edit, customer publication or redirect.
