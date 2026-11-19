@@ -70,6 +70,13 @@ class HttpTests(unittest.TestCase):
 
     def test_full_lifecycle_and_fail_closed(self):
         self.assertEqual(self.request('GET','/api/opportunities',auth=False)[0],401)
+        # UI shell may load, but API data still requires authentication.
+        c = http.client.HTTPConnection('127.0.0.1',self.port,timeout=3)
+        c.request('GET','/')
+        response = c.getresponse()
+        self.assertEqual(response.status,200)
+        self.assertIn(b'Connect to private Demand API',response.read())
+        c.close()
         record={'business':'Test Coffee', 'website':'https://www.testcoffee.example', 'buyer':'Owner', 'pain':'Former contractor has access to the website', 'evidence':'signal', 'category':'paid', 'status':'researching', 'source':'source-thread:7'}
         code,res=self.request('POST','/api/opportunities',record)
         self.assertEqual(code,201)
