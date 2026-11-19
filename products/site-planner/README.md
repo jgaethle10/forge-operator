@@ -132,5 +132,5 @@ public deployment is authorized by this source import.
 Tests:
 ```sh
 python3 -m unittest discover -v
-# Expected local package: 12 tests (10 earlier + 2 upstream bridge checks)
+# Expected local package: 13 tests (10 earlier + 2 upstream bridge checks + 1 server smoke test)
 ```
