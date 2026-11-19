@@ -16,8 +16,10 @@ concurrency:
 
 jobs:
   check:
-    # Keep the current runner FFmpeg and align Playwright with Evercraft Browser Worker.
-    runs-on: ubuntu-latest
+    # Pin supported LTS image: ubuntu-latest moved to 26.04 in Nov 2026,
+    # and its media runtime download exceeded the 180-second bounded install.
+    # Revisit the migration only after a successful media + browser canary.
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
 
     steps:
