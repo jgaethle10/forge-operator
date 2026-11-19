@@ -1,0 +1,22 @@
+name: AIW Kaidance source-cycle receipt contract
+on:
+  pull_request:
+    paths:
+      - 'research/infrastructure-watch/engineering/aiw_kaidance_receipts.py'
+      - 'research/infrastructure-watch/tests/test_aiw_kaidance_receipts.py'
+      - '.github/workflows/aiw-kaidance-receipts.yml'
+permissions:
+  contents: read
+jobs:
+  verify-receipt-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Validate syntax and offline checks
+        run: |
+          python3 -m py_compile research/infrastructure-watch/engineering/aiw_kaidance_receipts.py
+          python3 -m unittest discover -s research/infrastructure-watch/tests -p test_aiw_kaidance_receipts.py -v
