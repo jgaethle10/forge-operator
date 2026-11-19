@@ -12,6 +12,7 @@ The request file is an **inert instruction candidate**. GitHub identity and bran
 
 - `signal-public-ingress`: GET only the exact owned `/health`, `/offers/signal-brief` and `/api/signal/readiness` paths, from the independent GitHub runner. Reports route availability and payment hold truth without an actual customer submission.
 - `forge-source-evidence`: hash a fixed allowlist of repository source files; never inspect secrets or arbitrary paths. Useful for proving software source presence, not production runtime deployment.
+- `gems-research-evidence`: hash two fixed, source-only GEMS checkpoint manifests (accepted entry evidence and GEMS-002 research scope). This does not access DrivenData, verify private account state, train a model, or dispatch Saban.
 
 ## How to submit from ChatGPT, without Penguin
 
@@ -39,3 +40,9 @@ node systemia/mission-bridge/cli.mjs --request signal-public-ingress-20261116-00
 ```
 
 The last command performs external **GETs** and writes `artifacts/systemia-mission-bridge/*.json` locally. It does not deploy or mutate any Evercraft service.
+
+## GEMS checkpoint mission (bounded)
+
+Request: `systemia/mission-bridge/requests/gems-research-evidence-20261118-001.json`. The GitHub observation receipt hashes fixed evidence files and reports whether source is present. It **cannot** attest that a Drive/Library artifact was downloaded by the runner or that DrivenData certified a result. The accepted submission score and model results were supplied by the participant and archived locally; use primary portal evidence for authoritative leaderboard status.
+
+For real private Systemia/Saban execution, a separate authenticated Mission Gateway must enforce identity, Passport capability scopes, agent/compute allowlists, approval gates, bounded resource budgets, replay protection, and externally verifiable receipts. No generic POST-to-execute endpoint, user-supplied commands, direct Node002 dispatch, or public bypass should be added to this Git-source observer. A PR merge is not permission for private remote execution.
