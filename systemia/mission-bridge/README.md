@@ -171,3 +171,19 @@ python gems_002_prepare_candidate.py \
 ```
 
 **Never** upload the candidate to DrivenData or automatically promote it. Before any scored submission: inspect full-area candidate positive coverage and spatial artifacts, compare against preserved GEMS-001 output, validate required format and challenge rules, evaluate competition strategy and user authorization. Two identical model executions may yield different compressed TIFF bytes across GDAL runtimes; separately compare normalized pixel arrays and metadata, not just raw ZIP/TIFF SHA, before making deterministic claims.
+
+### Full-map spatial comparison before any leaderboard submission
+
+The new `gems/audit_candidate_comparison.py` is read-only: compares the complete original GEMS-001 `gems_candidate.tif` (SHA-256 pinned) inside `gems_001_verified_submission.zip` against the offline GEMS-002 full-grid `gems_002_candidate_UNSUBMITTED.tif`. It fails closed on grid/CRS/transform/mask mismatches, altered incumbent bytes, invalid probability values, or an optionally mismatched expected GEMS-002 SHA. It reports >0.05/0.1/0.2/0.3/0.5 coverage, 8-connected positive regions/singletons, row-quartile concentrations, overlap/union and new-only areas, and full-grid prediction-change quantiles. **These diagnostics do not estimate the official newly mapped fault DTI, false-positive rate, or promotion eligibility.**
+
+Once the actual offline candidate and verified saved incumbent ZIP are accessible in an isolated research workspace, run:
+
+```bash
+python systemia/mission-bridge/gems/audit_candidate_comparison.py \
+  --gems-001-archive /PRIVATE/gems_001_verified_submission.zip \
+  --gems-002-tif /PRIVATE/gems-002-candidate-run-a/gems_002_candidate_UNSUBMITTED.tif \
+  --expected-gems-002-sha256 THE_VALUE_IN_CANDIDATE_EVIDENCE_JSON \
+  --receipt /PRIVATE/gems-002-candidate-run-a/full-grid-comparison.json
+```
+
+Use a new report path; receipts cannot be overwritten. Review possible excessive map coverage and disconnected predictions alongside whole-connected-fault mapped-label validation **before** asking the participant whether to use another scored submission. No automatic submission code is provided.
