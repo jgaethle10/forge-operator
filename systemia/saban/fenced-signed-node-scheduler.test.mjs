@@ -29,13 +29,27 @@ const seed=await startNodeSeed({
 const scopes=new Map();
 const proxy=http.createServer(async(req,res)=>{
   try{
-    if(req.method!=='POST'||req.url!=='/v1/jobs'){
+    if(req.method!=='POST'||!['/v1/jobs','/v1/attest'].includes(req.url)){
       res.writeHead(404);res.end();return;
     }
     let raw='';
     for await(const chunk of req){
       raw+=chunk.toString('utf8');
       if(Buffer.byteLength(raw)>64*1024)throw Error('test_payload_too_large');
+    }
+    if(req.url==='/v1/attest'){
+      const attestResponse=await fetch(seed.endpoint+'/v1/attest',{
+        method:'POST',redirect:'error',
+        headers:{
+          'content-type':'application/json',
+          authorization:String(req.headers.authorization||'')
+        },
+        body:raw
+      });
+      const attestationBody=await attestResponse.text();
+      res.writeHead(attestResponse.status,{'content-type':'application/json'});
+      res.end(attestationBody);
+      return;
     }
     const body=JSON.parse(raw);
     const scope=scopes.get(body.idempotency_key);
@@ -173,7 +187,7 @@ async function scenario(name,malform=false,{unconsumed=false,expired=false}={}){
   const scope={goalStateFile,malform,calls:0};
   scopes.set(assignment.idempotency_key,scope);
   const adapter=createLocalSignedMicroSeedAdapter({
-    endpoint:relayEndpoint,leaseToken:lease.token,nodePin:pin,
+    endpoint:relayEndpoint,leaseToken:lease.token,attestationToken:token,nodePin:pin,
     jobKey:jobId,
     workDigest:fencedSchedulerWorkDigest(state.jobs[jobId]),
     idempotencyKey:assignment.idempotency_key,payload
