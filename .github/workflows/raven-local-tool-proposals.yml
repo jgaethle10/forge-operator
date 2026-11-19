@@ -1,0 +1,26 @@
+name: Raven Local Tool Proposal Gate
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/raven/local-tool-proposal-gate.mjs'
+      - 'systemia/raven/local-tool-proposal-gate.test.mjs'
+      - '.github/workflows/raven-local-tool-proposals.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  proposal-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check module syntax
+        run: node --check systemia/raven/local-tool-proposal-gate.mjs
+      - name: Run synthetic proposal and safety tests
+        run: node --test systemia/raven/local-tool-proposal-gate.test.mjs
