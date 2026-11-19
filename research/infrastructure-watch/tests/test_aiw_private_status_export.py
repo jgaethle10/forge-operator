@@ -56,7 +56,7 @@ class StatusExportTests(unittest.TestCase):
             self.assertFalse(result["public_release_ready"])
             self.assertFalse(result["owned_pnw_evidence"]["national_coverage"])
             self.assertFalse(result["owned_pnw_evidence"]["emergency_feed_connected"])
-            self.assertNotIn("sources", json.dumps(result))
+            self.assertNotIn("agency.example", json.dumps(result))
             output = Path(d) / "private.json"
             mod.save_atomic(output, result)
             self.assertEqual(json.loads(output.read_text()), result)
