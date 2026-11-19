@@ -1,0 +1,29 @@
+name: Harbor to Fallen encrypted Lineage handoff
+on:
+  pull_request:
+    paths:
+      - 'systemia/media-studio/harbor-private-lineage-handoff*'
+      - 'systemia/lineage/**'
+      - 'scripts/nextgen/verify-harbor-private-media-import.mjs'
+      - '.github/workflows/harbor-fallen-lineage-handoff.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  synthetic-private-custody:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Confirm no customer data and run exact source tests
+        run: |
+          node --test systemia/media-studio/harbor-private-lineage-handoff.test.mjs
+          node --test systemia/lineage/large-object-remote.test.mjs
+          node --test scripts/nextgen/verify-harbor-private-media-import.test.mjs
