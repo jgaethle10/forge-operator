@@ -137,6 +137,44 @@ def verify_original_model_source(file):
         raise ValueError("original_model_source_sha256_mismatch")
     return digest
 
+def dti_proxy_components(original,pred,truth,region):
+    """Return TP, FP, FN terms so geography can be aggregated like the organizer.
+    The ground truth here is held-out *known* faults, NOT the hidden new faults.
+    """
+    if pred.shape!=truth.shape or truth.shape!=region.shape:
+        raise ValueError("dti_proxy_shape_mismatch")
+    if pred.ndim!=2 or not np.all(np.isfinite(pred)) or np.any(pred<0) or np.any(pred>1):
+        raise ValueError("dti_proxy_prediction_invalid")
+    if not np.any(region) or np.any(truth & ~region):
+        raise ValueError("dti_proxy_region_invalid")
+    padded=np.pad(pred,3)
+    padded_truth=np.pad(truth,3)
+    peaks=np.zeros_like(padded)
+    for dr in range(-2,3):
+        for dc in range(-2,3):
+            weight=1-np.hypot(dr,dc)/3
+            np.maximum(peaks,np.roll(padded,(dr,dc),(0,1))*weight,out=peaks)
+    tp=float(peaks[padded_truth].sum(dtype="float64"))
+    fp_weights=original.score_setup(truth,region)
+    fp=float(np.dot(pred[region].astype("float64"),fp_weights))
+    fn=float(truth.sum()-tp)
+    if fn<0 and fn>-1e-7:fn=0.0
+    if tp<0 or fp<0 or fn<0 or not np.all(np.isfinite([tp,fp,fn])):
+        raise ValueError("dti_proxy_terms_invalid")
+    terms={"tp":tp,"fp":fp,"fn":fn}
+    exact=original.dti(padded,padded_truth,np.pad(region,3),fp_weights)
+    if not np.isclose(score_pooled_terms([terms]),exact,rtol=1e-9,atol=1e-10):
+        raise ValueError("dti_proxy_reference_disagreement")
+    return terms
+
+def score_pooled_terms(terms):
+    tp=sum(row["tp"] for row in terms)
+    fp=sum(row["fp"] for row in terms)
+    fn=sum(row["fn"] for row in terms)
+    if not np.all(np.isfinite([tp,fp,fn])) or min(tp,fp,fn)<0:
+        raise ValueError("dti_proxy_terms_invalid")
+    return float(tp/(tp+0.2*fp+0.8*fn+1e-12))
+
 def main():
     # Imported model is only trusted after its bytes match the archived source.
     verify_original_model_source(Path(__file__).with_name("run.py"))
@@ -173,13 +211,15 @@ def main():
             prob=np.zeros(region.shape,np.float32)
             prob[region]=original.predict(model,matrix,test,matrix.shape[1])
             pred=original.render(prob,.20,True)
-            score=original.dti(np.pad(pred,3),np.pad(truth,3),
-                 np.pad(region,3),original.score_setup(truth,region))
+            terms=dti_proxy_components(original,pred,truth,region)
+            score=score_pooled_terms([terms])
             ledger.append({"fold":fold,"rows":[lo,hi],"radius_pixels":radius,
-             "proxy_dti":float(score),"training_positives":int(counts["positive_count"]),
+             "proxy_dti":float(score),"proxy_terms":terms,
+             "training_positives":int(counts["positive_count"]),
              "sampled_negatives":int(counts["sampled_negative_count"])})
-    tune={str(r):float(np.mean([x["proxy_dti"] for x in ledger
-           if x["fold"]<3 and x["radius_pixels"]==r])) for r in RADII}
+    # Organizer aggregates DTI counts globally; never select by mean of fold ratios.
+    tune={str(r):score_pooled_terms([x["proxy_terms"] for x in ledger
+           if x["fold"]<3 and x["radius_pixels"]==r]) for r in RADII}
     selected=max(RADII,key=lambda r:tune[str(r)])
     # Candidate is frozen before scoring the southern holdout.
     lo,hi,train,test=folds[3]
@@ -195,21 +235,21 @@ def main():
         prob=np.zeros(region.shape,np.float32)
         prob[region]=original.predict(model,matrix,test,matrix.shape[1])
         pred=original.render(prob,.20,True)
-        score=original.dti(np.pad(pred,3),np.pad(truth,3),
-             np.pad(region,3),original.score_setup(truth,region))
+        terms=dti_proxy_components(original,pred,truth,region)
+        score=score_pooled_terms([terms])
         holdout[str(radius)]=float(score)
         ledger.append({"fold":3,"phase":"locked_southern_test","rows":[lo,hi],
-          "radius_pixels":radius,"proxy_dti":float(score),
+          "radius_pixels":radius,"proxy_dti":float(score),"proxy_terms":terms,
           "training_positives":int(counts["positive_count"]),
           "sampled_negatives":int(counts["sampled_negative_count"])})
-    report={"schema":"evercraft.gems.negative-ablation.v2",
+    report={"schema":"evercraft.gems.negative-ablation.v3",
       "official_input_sha256_verified":True,"input_manifest":manifest,
       "organizer_geospatial_alignment":grid_audit,
       "experiment":"GEMS-001 multiscale HGB; fixed .20 cutoff with ridge thinning",
       "radii_pixels":list(RADII),"seed":SEED,"negative_ratio":5,
       "selection_folds":[0,1,2],"locked_final_fold":3,
       "southern_start_row":southern_start,"southern_used_in_tuning_training":False,
-      "tuning_proxy_dti":tune,"selected_by_tuning_only":selected,
+      "tuning_proxy_dti_pooled_terms":tune,"aggregation_method":"pooled_tp_fp_fn","selected_by_tuning_only":selected,
       "heldout_proxy_dti_baseline_and_selected_only":holdout,
       "holdout_delta_vs_baseline":holdout[str(selected)]-holdout["0"],
       "fold_ledger":ledger,"elapsed_seconds":time.monotonic()-started,
