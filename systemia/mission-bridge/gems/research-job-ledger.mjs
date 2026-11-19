@@ -58,7 +58,7 @@ export function stageGemsResearchJob({request,verifiedContext,rootDir}={}){
   });
   const file=path.join(rootDir,record.mission_id+'.json');
   try{
-    fs.writeFileSync(file,JSON.stringify(record,null,2)+'\\n',
+    fs.writeFileSync(file,JSON.stringify(record,null,2)+"\n",
       {flag:'wx',mode:0o600});
     return Object.freeze({state:'staged_not_dispatched',created:true,
       mission_id:record.mission_id,request_fingerprint_sha256:record.request_fingerprint_sha256,
