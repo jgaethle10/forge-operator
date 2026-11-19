@@ -166,6 +166,30 @@ def normalize(record):
     return {'record': data, 'origin': source, 'source_stage': raw_status, 'contact_reported': contact_reported}, None
 
 
+
+def inspect_schema(data):
+    """Only field names, types, and counts. Never serialize source values or buyers."""
+    report = {'schema': 'evercraft.demand-command.revenue-desk-inspection.v1',
+              'top_level_type': type(data).__name__, 'top_level_keys': sorted(str(k) for k in data) if isinstance(data, dict) else [],
+              'record_count': None, 'field_types': {}, 'compatible': False}
+    try:
+        records = entries(data)
+    except ValueError:
+        return report
+    report['record_count'] = len(records)
+    report['compatible'] = True
+    fields = {}
+    for row in records:
+        if isinstance(row, dict):
+            for key, value in row.items():
+                # No values, text snippets, addresses, emails, or IDs in this output.
+                types = fields.setdefault(str(key), {})
+                typ = type(value).__name__
+                types[typ] = types.get(typ, 0) + 1
+    report['field_types'] = dict(sorted(fields.items()))
+    return report
+
+
 def collect(data):
     rows = entries(data)
     staged, rejected = [], []
@@ -237,6 +261,7 @@ def main(argv=None):
     parser.add_argument('--revenue-url', default=REVENUE_URL, help='Only loopback port 8795 is accepted')
     parser.add_argument('--demand-url', default=DEMAND_URL, help='Only loopback port 8796 is accepted')
     parser.add_argument('--apply', action='store_true', help='Explicitly create records in local Demand API; no outreach')
+    parser.add_argument('--inspect-schema', action='store_true', help='Only show field names/types and counts, never contact details')
     parser.add_argument('--receipt', type=Path, help='Optional local summary receipt path (contains no messages)')
     args = parser.parse_args(argv)
     if args.input_json:
@@ -246,6 +271,11 @@ def main(argv=None):
     else:
         local_url(args.revenue_url, allow_path={8795})
         source = get_json(args.revenue_url)
+    if args.inspect_schema:
+        if args.apply:
+            raise ValueError('--inspect-schema and --apply are mutually exclusive')
+        print(json.dumps(inspect_schema(source), indent=2))
+        return 0
     report = bridge(source, args.demand_url, apply=args.apply, token=os.environ.get('EVERCRAFT_DEMAND_TOKEN', ''))
     text = json.dumps(report, indent=2, ensure_ascii=False)
     if args.receipt:
