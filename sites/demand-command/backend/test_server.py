@@ -92,6 +92,9 @@ class HttpTests(unittest.TestCase):
         code,body=self.request('POST',f'/api/opportunities/{oid}/interactions',{'kind':'outreach_reported','note':'Reported email to owner','source':'email:thread:receipt'})
         self.assertEqual(code,201)
         self.assertEqual(body['transport_sent'],False)
+        cc = self.request('GET',f'/api/opportunities/{oid}/contact-check')[1]
+        self.assertTrue(cc['already_contacted_this_opportunity'])
+        self.assertTrue(cc['contact_conflict'])
         self.assertEqual(self.request('POST',f'/api/opportunities/{oid}/interactions',{'kind':'delivery_verified','note':'Provider confirmed sent'})[0],400)
         code,body=self.request('GET',f'/api/opportunities/{oid}')
         self.assertEqual(len(body['activity']),3)
