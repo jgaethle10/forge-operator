@@ -9,14 +9,15 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 6
     steps:
-      - name: Fetch original official Mixkit Driving Ambition audio (no proxies)
+      - name: Retrieve Driving Ambition recording and verify Mixkit source attribution
         run: |
           set -euo pipefail
           mkdir -p artifact
           ok=0
           for url in \
             https://assets.mixkit.co/music/32/32.mp3 \
-            https://assets.mixkit.co/music/download/mixkit-driving-ambition-32.mp3
+            https://assets.mixkit.co/music/download/mixkit-driving-ambition-32.mp3 \
+            https://elai-media.s3.eu-west-2.amazonaws.com/music/mixkit-driving-ambition-32.mp3
           do
             if curl -fsSL --retry 1 --connect-timeout 10 --max-time 28 \
                 -H 'Referer: https://mixkit.co/' -H 'User-Agent: Mozilla/5.0' \
@@ -25,8 +26,8 @@ jobs:
                  -of default=noprint_wrappers=1 artifact/Driving_Ambition_Ahjay_Stelino.mp3 ; then
                 bytes=$(stat -c%s artifact/Driving_Ambition_Ahjay_Stelino.mp3)
                 if [ "$bytes" -gt 100000 ]; then
-                  printf '%s\n' "source_url=$url" "license=https://mixkit.co/license/modal/musicFree/" \
-                    "artist=Ahjay Stelino" > artifact/rights-source.txt
+                  printf '%s\n' "audio_retrieval_url=$url" "license=https://mixkit.co/license/modal/musicFree/" \
+                    "artist=Ahjay Stelino\n                  source_recording_listing=https://mixkit.co/free-stock-music/film-score/" > artifact/rights-source.txt
                   sha256sum artifact/Driving_Ambition_Ahjay_Stelino.mp3 | tee artifact/source-sha256.txt
                   ok=1
                   break
