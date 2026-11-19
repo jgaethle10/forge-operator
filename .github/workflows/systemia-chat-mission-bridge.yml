@@ -49,6 +49,8 @@ jobs:
           node --check systemia/mission-bridge/gems/synthetic-research-worker.mjs
           node --test systemia/mission-bridge/gems/synthetic-research-worker.test.mjs
           node --test systemia/mission-bridge/gems/verify-synthetic-receipt.test.mjs
+          node --check systemia/mission-bridge/gems/private-dataset-integrity.mjs
+          node --test systemia/mission-bridge/gems/private-dataset-integrity.test.mjs
       - name: Run bounded synthetic GEMS computation (not official competition data)
         run: node systemia/mission-bridge/gems/run-synthetic-smoke.mjs
       - name: Independently verify the emitted synthetic receipt artifact
