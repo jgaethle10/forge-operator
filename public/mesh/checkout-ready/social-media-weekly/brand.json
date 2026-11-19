@@ -41,11 +41,17 @@
     "live_traffic_claim": false,
     "paid_sale_claim": false,
     "founder_approved": false,
-    "founder_review_status": "awaiting_founder_review",
+    "founder_review_status": "changes_requested",
     "founder_approval_evidence": null,
     "approval_ledger": "docs/branding/approvals/ledger.json",
     "review_packet": "docs/branding/approvals/BR-001-weekly-signal-v1.md",
-    "production_brand_lock": false
+    "production_brand_lock": false,
+    "rejected_name_logo_shortlist": [
+      "Weekkin",
+      "Cadencekeep",
+      "Weekmorrow"
+    ],
+    "rejection_evidence": "docs/branding/approvals/BR-001-rejected-shortlist-feedback-20261118.md"
   },
   "assets": {
     "original_vector_emblem": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/social-media-weekly/brand-mark.svg",
