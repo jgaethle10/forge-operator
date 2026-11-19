@@ -3,6 +3,7 @@ on:
   pull_request:
     paths:
       - 'systemia/media-studio/harbor-private-lineage-handoff*'
+      - 'systemia/media-studio/harbor-lineage-operator-cli*'
       - 'systemia/lineage/**'
       - 'scripts/nextgen/verify-harbor-private-media-import.mjs'
       - '.github/workflows/harbor-fallen-lineage-handoff.yml'
@@ -25,5 +26,6 @@ jobs:
       - name: Confirm no customer data and run exact source tests
         run: |
           node --test systemia/media-studio/harbor-private-lineage-handoff.test.mjs
+          node --test systemia/media-studio/harbor-lineage-operator-cli.test.mjs
           node --test systemia/lineage/large-object-remote.test.mjs
           node --test scripts/nextgen/verify-harbor-private-media-import.test.mjs
