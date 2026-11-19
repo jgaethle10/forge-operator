@@ -4,6 +4,7 @@ on:
     paths:
       - 'systemia/evercraft-domains/**'
       - 'scripts/evercraft-domains-ephemeral-tls-cert.sh'
+      - 'systemia/evercraft-web/browser-worker/evercraft-domains-client001-trusted-chrome.mjs'
       - 'public/clients/on-the-go/review/index.html'
       - '.github/workflows/evercraft-domains-client001-scoped-https.yml'
   push:
@@ -11,6 +12,7 @@ on:
     paths:
       - 'systemia/evercraft-domains/**'
       - 'scripts/evercraft-domains-ephemeral-tls-cert.sh'
+      - 'systemia/evercraft-web/browser-worker/evercraft-domains-client001-trusted-chrome.mjs'
       - 'public/clients/on-the-go/review/index.html'
       - '.github/workflows/evercraft-domains-client001-scoped-https.yml'
   workflow_dispatch:
@@ -19,7 +21,7 @@ permissions:
 jobs:
   client001-scoped-https:
     runs-on: ubuntu-24.04
-    timeout-minutes: 12
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -37,6 +39,17 @@ jobs:
             exit 1
           fi
           node --test tests/evercraft-domains-private-namespace.test.mjs tests/evercraft-domains-split-resolver.test.mjs tests/evercraft-domains-client001-local-preview.test.mjs
+      - name: Install Browser Worker dependencies and isolated NSS trust tooling
+        run: |
+          set -euo pipefail
+          if ! command -v certutil >/dev/null 2>&1; then
+            sudo apt-get update -qq
+            sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq libnss3-tools
+          fi
+          (cd systemia/evercraft-web/browser-worker && npm install --no-audit --no-fund --ignore-scripts)
+          if ! command -v google-chrome >/dev/null 2>&1 && ! command -v google-chrome-stable >/dev/null 2>&1; then
+            (cd systemia/evercraft-web/browser-worker && npx playwright install chromium)
+          fi
       - name: Generate ephemeral certs, launch local DNS and owned Caddy and verify scoped HTTPS
         env:
           EVERCRAFT_DOMAINS_TLS_EVIDENCE: ${{ runner.temp }}/evercraft-domains-client001-scoped-https-proof.json
@@ -91,17 +104,29 @@ jobs:
             exit 1
           fi
           echo 'Scoped DNS -> SAN TLS -> exact Client 001 byte equality PASS'
+          TEST_HOME="$LAB_ROOT/chrome-home"
+          mkdir -p "$TEST_HOME/.pki/nssdb" "$TEST_HOME/.config" "$TEST_HOME/.cache"
+          certutil -N -d "sql:$TEST_HOME/.pki/nssdb" --empty-password
+          certutil -A -d "sql:$TEST_HOME/.pki/nssdb" \
+            -n 'Evercraft Disposable CI Test Root' \
+            -t 'C,,' -i "$TLS_DIR/ca.pem"
+          EVERCRAFT_DOMAINS_CHROME_HOME="$TEST_HOME" \
+          EVERCRAFT_DOMAINS_CHROME_EVIDENCE_DIR="$RUNNER_TEMP/evercraft-domains-client001-browser" \
+            node systemia/evercraft-web/browser-worker/evercraft-domains-client001-trusted-chrome.mjs
+          echo 'ISOLATED_CHROME_PRIVATE_HTTPS_PASS; no security flags or system trust mutations'
       - name: Upload redacted receipt only, never root or private key files
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: evercraft-domains-client001-scoped-https-proof
-          path: ${{ runner.temp }}/evercraft-domains-client001-scoped-https-proof.json
+          path: |
+            ${{ runner.temp }}/evercraft-domains-client001-scoped-https-proof.json
+            ${{ runner.temp }}/evercraft-domains-client001-browser/**
           if-no-files-found: warn
           retention-days: 7
       - name: Publication remains held
         if: always()
         run: |
-          echo 'Ephemeral CA trusted only by scoped CI test process. Not system/browser trust.'
+          echo 'Ephemeral CA trusted only inside CI Node client and disposable Chrome NSS profile; never OS/user trust.'
           echo 'No registrar, DNS, home router, customer device, production Caddy or public .evercraft TLD writes.'
           echo "Juan's content, price and promotion approval remains required."
