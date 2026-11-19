@@ -17,6 +17,7 @@ const png=Buffer.concat([Buffer.from([137,80,78,71,13,10,26,10]),Buffer.alloc(12
 const keypair=()=>crypto.generateKeyPairSync('x25519');
 const pub=k=>k.publicKey.export({format:'pem',type:'spki'}).toString();
 const priv=k=>k.privateKey.export({format:'pem',type:'pkcs8'}).toString();
+const pubFingerprint=k=>hash(k.publicKey.export({format:'der',type:'spki'}));
 async function setup(){
   const root=await fs.mkdtemp(path.join(os.tmpdir(),'harbor-private-lineage-test-'));
   const assetsDir=path.join(root,'assets');
@@ -37,7 +38,7 @@ async function setup(){
   const remote=new LocalLineageRemote(path.join(root,'owned-remote'));
   await stageHarborEncryptedHandoff({
     manifestPath,assetsDir,storeDir,packagePath,jobRef:'fallen-order-001',
-    recipientPublicKeyPem:pub(recipient),expectedCount:2
+    recipientPublicKeyPem:pub(recipient),recipientPublicKeyFingerprint:pubFingerprint(recipient),expectedCount:2
   });
   return {root,assetsDir,manifestPath,packagePath,storeDir,remote,recipient,items};
 }
@@ -50,7 +51,7 @@ async function receive(s,extra={}){
     packagePath:s.packagePath,storeDir:path.join(s.root,'recipient-store'),
     remote:s.remote,recipientPrivateKeyPem:priv(s.recipient),
     outputDir:path.join(s.root,'quarantine'),
-    operatorRef:'authorized-fallen-operator',expectedCount:2,...extra
+    operatorRef:'authorized-fallen-operator',expectedJobRef:'fallen-order-001',expectedCount:2,...extra
   });
 }
 test('encrypted sources traverse existing owned Lineage and rehash at receiver without release',()=>withSetup(async s=>{
@@ -128,3 +129,26 @@ test('source changes after manifest reject before any package exists',async()=>{
     await assert.rejects(fs.stat(path.join(root,'package.json')),{code:'ENOENT'});
   }finally{await fs.rm(root,{recursive:true,force:true});}
 });
+
+test('unapproved recipient public key cannot be substituted',async()=>{
+  const root=await fs.mkdtemp(path.join(os.tmpdir(),'harbor-pin-'));
+  try {
+    const assetsDir=path.join(root,'assets');await fs.mkdir(assetsDir);
+    await fs.writeFile(path.join(assetsDir,'real.jpg'),jpeg);
+    const manifestPath=path.join(root,'manifest.json');
+    await fs.writeFile(manifestPath,JSON.stringify({schema:'evercraft.harbor.private-media-manifest.v1',
+      assets:[{filename:'real.jpg',bytes:jpeg.length,sha256:hash(jpeg),mediaType:'image/jpeg'}]}));
+    const trusted=keypair(),substituted=keypair();
+    await assert.rejects(stageHarborEncryptedHandoff({manifestPath,assetsDir,
+      storeDir:path.join(root,'store'),packagePath:path.join(root,'package.json'),
+      jobRef:'fallen-req-001',recipientPublicKeyPem:pub(substituted),
+      recipientPublicKeyFingerprint:pubFingerprint(trusted),expectedCount:1
+    }),/recipient_key_fingerprint_not_pinned/);
+  }finally{await fs.rm(root,{recursive:true,force:true});}
+});
+test('receiver denies wrong expected job binding before decrypting',()=>withSetup(async s=>{
+  await pushHarborEncryptedHandoff({packagePath:s.packagePath,storeDir:s.storeDir,
+    remote:s.remote,expectedCount:2});
+  await assert.rejects(receive(s,{expectedJobRef:'fallen-other-job'}),/recipient_job_binding_mismatch/);
+  await assert.rejects(fs.stat(path.join(s.root,'quarantine')),{code:'ENOENT'});
+}));
