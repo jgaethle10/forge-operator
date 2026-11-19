@@ -22,3 +22,11 @@
 - Interactive queues, follow-ups, activity receipts, draft copy, contact-conflict check.
 - Added an advisory check for outreach already recorded on the same opportunity or matching business, even where the status was never manually changed to `contacted`.
 - Browser JavaScript syntax checked with Node 22. Local HTTP/test harness verified; automated Chromium visual QA was blocked by this environment's browser policy, so no claim of visual acceptance is made.
+
+## v5: Revenue Desk bridge (November 19, 2026)
+
+- Added `backend/revenue_desk_bridge.py`: local read-only Revenue Desk intake, schema checks and explicit dry-run/apply modes.
+- Real source ids are retained for idempotency; missing business or concrete pain are blocked for review rather than invented.
+- Every imported record is an **unverified signal**. Historical contact is logged as reported activity, not a verified send receipt. Repeating an import does not create duplicate contacts or messages.
+- Added five-minute `systemd --user` **dry-run** monitor templates; neither installed nor enabled.
+- Added direct bridge integration tests against the Demand API; no changes to Revenue Desk, existing jobs, production workers, or live customer data.
