@@ -6,6 +6,7 @@ import path from 'node:path';
 import {spawnSync} from 'node:child_process';
 import test from 'node:test';
 import {compileApprovedCommercial,renderApprovedCommercial,assertRelayLiveDialogueApproval} from './commercial-assembly.mjs';
+import {finalizeStudioDelivery} from './studio-delivery.ts';
 
 function ffmpeg(args){
   const r=spawnSync('ffmpeg',['-nostdin','-hide_banner','-v','error',...args],{encoding:'utf8',maxBuffer:2*1024*1024});
@@ -131,4 +132,84 @@ test('on-camera speech cannot use an unrelated standalone voice take',t=>{
   assert.doesNotThrow(()=>assertRelayLiveDialogueApproval(input));
   input.approvedAudio.voices[0].scriptText='A different line, not performed on camera';
   assert.throws(()=>assertRelayLiveDialogueApproval(input),/script_mismatch/);
+});
+
+
+test('photo-led customer brief compiles truthful editorial-still timeline',t=>{
+  const {dir,input}=specimen(t);
+  const images=[];
+  for(let i=0;i<3;i++){
+    const file=path.join(dir,'customer-photo-fixture-'+i+'.png');
+    ffmpeg(['-y','-f','lavfi','-i','color=c='+['red','green','blue'][i]+':s=320x180:r=1',
+      '-frames:v','1','-update','1',file]);
+    images.push({id:'photo'+i,path:file,sha256:sha(file),mediaKind:'image',
+      rights:'owned',evidenceState:'observed',
+      // Synthetic CI fixture only, never an actual client photograph.
+      sourceRefs:['SYNTHETIC_CI_FIXTURE_ONLY:'+i],subjects:['tile-details-'+i]});
+  }
+  input.brief.id='photo-led-ci-test-only';
+  input.brief.sourceMode='customer-photographs';
+  input.brief.photoSourceTruthAcknowledged=true;
+  input.brief.sourceAssets=images;
+  for(let i=0;i<3;i++){
+    input.brief.scenes[i].assetId=images[i].id;
+    input.brief.scenes[i].mustShowSubjects=images[i].subjects;
+  }
+  input.brief.scenes[0].stillMotionTreatment='editorial-camera-only';
+  const plan=compileApprovedCommercial(input);
+  assert.equal(plan.sourceMode,'customer-photographs');
+  assert.equal(plan.gates.photoOnlyMotionTruthReviewRequired,true);
+  assert.equal(plan.deliveryRequest.photoEditorialMode,'source-photographs');
+  assert.equal(plan.gates.publicationAuthorityGranted,false);
+  assert.equal(plan.deliveryRequest.project.tracks[0].name,'Approved customer photographs');
+  assert.equal(plan.deliveryRequest.project.assets.filter(x=>x.kind==='image').length,3);
+  assert.equal(plan.deliveryRequest.project.tracks[0].clips.length,3);
+  assert.deepEqual(plan.deliveryRequest.project.tracks[0].clips.map(x=>x.editorialPhotoMotion),
+    ['slow-push','slow-pull','slow-push']);
+});
+test('photo-led commercial renders actual H264/AAC from image inputs with approved-audio fixtures', {timeout:180000},t=>{
+  const {dir,input}=specimen(t);
+  const images=[];
+  for(let i=0;i<3;i++){
+    const file=path.join(dir,'still-fixture-'+i+'.png');
+    ffmpeg(['-y','-f','lavfi','-i','color=c='+['red','green','blue'][i]+':s=320x180:r=1',
+      '-frames:v','1','-update','1',file]);
+    images.push({id:'still'+i,path:file,sha256:sha(file),mediaKind:'image',
+      rights:'owned',evidenceState:'observed',
+      sourceRefs:['SYNTHETIC_CI_FIXTURE_ONLY:'+i],subjects:['tile-photo-'+i]});
+  }
+  input.brief.id='photo-led-encode-ci-only';
+  input.brief.sourceMode='customer-photographs';
+  input.brief.photoSourceTruthAcknowledged=true;
+  input.brief.sourceAssets=images;
+  for(let i=0;i<3;i++){
+    input.brief.scenes[i].assetId=images[i].id;
+    input.brief.scenes[i].mustShowSubjects=images[i].subjects;
+  }
+  input.brief.scenes[0].stillMotionTreatment='editorial-camera-only';
+  const result=renderApprovedCommercial(input,path.join(dir,'photo-deliver'));
+  assert.equal(result.status,'rendered_and_technically_qc_accepted');
+  assert.equal(result.boundaries.photoLedRender,true);
+  assert.equal(result.boundaries.publicationAuthorityGranted,false);
+  const masterQcPath=path.join(dir,'photo-deliver','commercial-photo-led-encode-ci-only-16x9.master-qc.json');
+  const masterQc=JSON.parse(fs.readFileSync(masterQcPath,'utf8'));
+  assert.equal(masterQc.policy.maxFreezeRatio,1);
+  assert.ok(masterQc.measurements.freezeRatio>0.35);
+  const clipManifest=JSON.parse(fs.readFileSync(result.clipManifestPath,'utf8'));
+  assert.equal(clipManifest.boundaries.photoOnlyEditorialReviewRequired,true);
+  assert.ok(fs.statSync(result.videoPath).size>4000);
+  const master=JSON.parse(fs.readFileSync(result.audioMasterReceiptPath,'utf8'));
+  assert.equal(master.status,'accepted');
+  const qc=JSON.parse(fs.readFileSync(result.audioQcReceiptPath,'utf8'));
+  assert.equal(qc.status,'accepted');
+  assert.equal(qc.sha256,result.mediaSha256);
+});
+
+test('live-action source cannot use the photo-editorial freeze exception',t=>{
+  const {dir,input}=specimen(t);
+  const compiled=compileApprovedCommercial(input);
+  compiled.deliveryRequest.photoEditorialMode='source-photographs';
+  assert.throws(()=>finalizeStudioDelivery({
+    request:compiled.deliveryRequest,outputDir:path.join(dir,'no-bypass')
+  }),/studio_delivery_photo_editorial_sources_invalid/);
 });

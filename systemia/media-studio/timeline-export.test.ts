@@ -139,3 +139,33 @@ test('per-shot focal positions govern framing without silently using center crop
   project.tracks[0].clips[0].focalX=1.3;
   assert.throws(()=>buildTimelineExportPlan({project,outputPath:'/tmp/unapproved-crop.mp4'}),/timeline_visual_focus_invalid/);
 });
+
+
+test('opt-in photographic movement uses bounded, focal-safe zoompan without fabricating video',()=>{
+  const project=readyProject();
+  project.tracks[0].clips[0].assetId='logo';
+  project.tracks[0].clips[0].editorialPhotoMotion='slow-push';
+  project.tracks[0].clips[0].focalX=.7;
+  const plan=buildTimelineExportPlan({project,outputPath:'/tmp/source-photo.mp4'});
+  const filter=plan.ffmpegArgs[plan.ffmpegArgs.indexOf('-filter_complex')+1];
+  assert.match(filter,/zoompan=z='min\(1\+on\*[0-9.]+,1\.075\)'/);
+  assert.match(filter,/x='\(iw-iw\/zoom\)\*0\.7'/);
+  assert.match(filter,/d=1:s=1920x1080:fps=30/);
+  assert.ok(plan.ffmpegArgs.includes('-framerate'));
+  assert.ok(plan.ffmpegArgs.includes('30'));
+  const sourceVideoOnly=readyProject();
+  const sourceFilter=buildTimelineExportPlan({
+    project:sourceVideoOnly,outputPath:'/tmp/source-video.mp4'
+  }).ffmpegArgs;
+  const sourceGraph=sourceFilter[sourceFilter.indexOf('-filter_complex')+1];
+  assert.doesNotMatch(sourceGraph,/zoompan=/);
+});
+test('timeline admission rejects camera-on-still labels on filmed video assets',()=>{
+  const original=readyProject();
+  const tracks=JSON.parse(JSON.stringify(original.tracks));
+  tracks[0].clips[0].editorialPhotoMotion='slow-push';
+  assert.throws(()=>makeTimelineProject({
+    id:'invalid-claimed-photo-camera',title:'Video incorrectly labeled as photograph',
+    aspectRatio:'16:9',fps:30,assets:original.assets,tracks
+  }),/timeline_photo_motion_requires_image/);
+});

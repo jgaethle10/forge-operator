@@ -104,7 +104,9 @@ export function compileApprovedCommercial(input){
     if(source.mediaKind==='video'&&media.durationSec+0.05<item.durationSec)
       throw new Error('commercial_source_too_short:'+item.id);
     pictureClips.push({id:'picture-'+item.id,trackId:'picture',
-      assetId:'picture-'+item.assetId,startSec:item.startSec,durationSec:item.durationSec});
+      assetId:'picture-'+item.assetId,startSec:item.startSec,durationSec:item.durationSec,
+      ...(plan.sourceMode==='customer-photographs'&&source.mediaKind==='image'?
+        {editorialPhotoMotion:pictureClips.length%2===0?'slow-push':'slow-pull'}:{})});
   }
 
   uniqueKeys(approved.voices,x=>clean(x.sceneId),'voice_scene');
@@ -164,7 +166,7 @@ export function compileApprovedCommercial(input){
     title:plan.brand+' | '+plan.offer,
     aspectRatio:format,fps:input.fps,assets,
     tracks:[
-      {id:'picture',kind:'video',name:'Approved source footage',clips:pictureClips},
+      {id:'picture',kind:'video',name:plan.sourceMode==='customer-photographs'?'Approved customer photographs':'Approved source footage',clips:pictureClips},
       {id:'voice',kind:'voice',name:'Approved natural narration',clips:voiceClips},
       {id:'music',kind:'music',name:'Approved original score',clips:musicClips},
       {id:'sfx',kind:'sfx',name:'Approved synchronized effects',clips:sfxClips},
@@ -173,8 +175,11 @@ export function compileApprovedCommercial(input){
     audioMaster:{targetLufs:-16,truePeakDb:-1.5,lra:9,dialogueDucking:true,
       duckThreshold:0.05,duckRatio:8,attackMs:20,releaseMs:350,sampleRate:48000}
   });
+  const photoOnly=plan.sourceMode==='customer-photographs' &&
+    plan.timeline.every(item=>sources.get(item.assetId)?.mediaKind==='image');
   const delivery={
     schema:'evercraft.fallen.studio-delivery-request.v1',id:project.id,
+    ...(photoOnly?{photoEditorialMode:'source-photographs'}:{}),
     slug:project.id,project,
     destinations:[...new Set(input.destinations)],
     metadata:{title:clean(input.title)||project.title,
@@ -187,9 +192,11 @@ export function compileApprovedCommercial(input){
   };
   return {schema:'evercraft.fallen.approved-commercial-assembly.v1',
     status:'ready_to_render_not_creatively_approved_by_system',
-    sourceFirstPlanDigest:plan.planDigest,format,durationSec:plan.durationSec,
+    sourceFirstPlanDigest:plan.planDigest,sourceMode:plan.sourceMode,
+    format,durationSec:plan.durationSec,
     deliveryRequest:delivery,
     gates:{sourceFilesHashed:true,reviewReferencesSupplied:true,
+      photoOnlyMotionTruthReviewRequired:plan.releaseGates.photoOnlyMotionTruthReviewRequired===true,
       independentRightsVerificationPerformed:false,
       humanListeningVerifiedBySystem:false,commercialOutputRendered:false,
       publicationAuthorityGranted:false}};
@@ -206,7 +213,8 @@ export function renderApprovedCommercial(input,outputDir){
     qualityMode:out.qualityMode,
     boundaries:{originalFootageSourceVerifiedByHash:true,
       realHumanListenOrVisualReviewNotIndependentlyVerified:true,
-      platformPublished:false,publicationAuthorityGranted:false}};
+      platformPublished:false,publicationAuthorityGranted:false,
+      photoLedRender:compiled.deliveryRequest.photoEditorialMode==='source-photographs'}};
 }
 function main(){
   const [inputFile,outputDir,mode]=process.argv.slice(2);
