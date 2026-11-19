@@ -94,6 +94,7 @@ jobs:
         run: |
           python -m unittest -v test_gems_002_negative_ablation.py
           python -m unittest -v test_gems_002_segment_holdouts.py
+          python -m unittest -v test_gems_002_prepare_candidate.py
           python -m unittest -v test_verify_official_input_hashes.py
       - name: Assert no scored submission or production tasks were invoked
         run: |
