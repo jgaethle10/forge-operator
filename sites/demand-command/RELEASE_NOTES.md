@@ -15,3 +15,10 @@
 - Live Revenue Desk schema inspection, safe two-way integration, Kaidance/Systemia ingestion.
 - Provider-confirmed message delivery + thread-level deduplication and approval policies.
 - Real NextGen deployment receipt + private Evercraft URL.
+
+### Private-console extension
+- Added `backend/console.html` hosted by the loopback API on `/` and `/console.html`.
+- Captures/edits buyer dossiers against SQLite with bearer authentication in session memory only, not localStorage.
+- Interactive queues, follow-ups, activity receipts, draft copy, contact-conflict check.
+- Added an advisory check for outreach already recorded on the same opportunity or matching business, even where the status was never manually changed to `contacted`.
+- Browser JavaScript syntax checked with Node 22. Local HTTP/test harness verified; automated Chromium visual QA was blocked by this environment's browser policy, so no claim of visual acceptance is made.
