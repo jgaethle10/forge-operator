@@ -87,6 +87,7 @@ export async function runBenchmark({
    trials_attempted:0,results:[],summary:[],model_inference_observed:false};
  }
  const results=[];
+ let circuitOpen=false;
  for(const model of models){
   const digest=inventory.get(model)||null;
   for(const t of CASES){
@@ -95,6 +96,9 @@ export async function runBenchmark({
    let row;
    if(!digest){
     row={...baseRow,status:'not_installed',syntax_valid:null,passed:null};
+   }else if(circuitOpen){
+    row={...baseRow,status:'held_after_runtime_failure',syntax_valid:null,passed:null,
+      failure:'runtime_circuit_open'};
    }else{
     const begun=performance.now();
     try{
@@ -126,6 +130,9 @@ export async function runBenchmark({
     }catch(err){
      row={...baseRow,status:category(err),syntax_valid:null,passed:false,
       failure:category(err),elapsed_ms:Math.round(performance.now()-begun)};
+     // Abort the remaining benchmark on timeout/transport loss. Ollama may
+     // still be busy on the server after a client-side timeout.
+     circuitOpen=true;
     }
    }
    results.push(row);onTrial(row);
@@ -133,7 +140,7 @@ export async function runBenchmark({
  }
  const summary=models.map(model=>{
   const rows=results.filter(r=>r.model===model),
-   attempted=rows.filter(r=>r.status!=='not_installed'),
+   attempted=rows.filter(r=>!['not_installed','held_after_runtime_failure'].includes(r.status)),
    passed=attempted.filter(r=>r.passed===true).length;
   return {model,model_digest:rows[0]?.model_digest||null,
    installed:Boolean(rows[0]?.model_digest),attempted:attempted.length,passed,
@@ -144,7 +151,7 @@ export async function runBenchmark({
  return {...core,evidence_state:results.some(r=>r.status!=='not_installed')
    ?'local_model_observed_not_independently_verified':'blocked_no_matching_models',
   completed_at:new Date().toISOString(),
-  trials_attempted:results.filter(r=>r.status!=='not_installed').length,
+  trials_attempted:results.filter(r=>!['not_installed','held_after_runtime_failure'].includes(r.status)).length,
   model_inference_observed:results.some(r=>['passed','failed_contract'].includes(r.status)),
   results,summary};
 }
