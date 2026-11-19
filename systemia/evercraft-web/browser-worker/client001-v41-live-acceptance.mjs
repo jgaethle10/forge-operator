@@ -14,7 +14,8 @@ const receipt={
  client_approval:'unverified',promotion_authorized:false,
  booking_proven:false,email_sent:false,tests:[],failures:[],screenshots:[]
 };
-const browser=await chromium.launch({headless:true,args:['--no-sandbox']});
+const systemChrome=['/usr/bin/google-chrome','/usr/bin/google-chrome-stable','/opt/google/chrome/chrome'].find(p=>fs.existsSync(p));
+const browser=await chromium.launch({headless:true,args:['--no-sandbox'],...(systemChrome?{executablePath:systemChrome}:{})});
 async function journey(width,language){
  const ctx=await browser.newContext({viewport:{width,height:width<500?844:900},isMobile:width<500,reducedMotion:'reduce'});
  const page=await ctx.newPage(), jsErrors=[], writes=[];
