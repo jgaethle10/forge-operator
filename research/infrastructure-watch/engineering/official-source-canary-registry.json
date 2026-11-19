@@ -1,0 +1,16 @@
+{
+  "sources": [
+    {
+      "id": "fhwa-2026-nbi-landing",
+      "url": "https://www.fhwa.dot.gov/bridge/nbi/nbi_data_2026.cfm"
+    },
+    {
+      "id": "epa-echo-downloads-landing",
+      "url": "https://echo.epa.gov/tools/data-downloads"
+    },
+    {
+      "id": "eia-annual-saidi-landing",
+      "url": "https://www.eia.gov/electricity/annual/html/epa_11_02.html"
+    }
+  ]
+}
