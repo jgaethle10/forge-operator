@@ -55,7 +55,7 @@ export function answer(packet,zone){
  if(qd!==1)return Buffer.concat([id,u16(0x8401),u16(0),u16(0),u16(0),u16(0)]);
  const q=readName(packet,12);const qtype=packet.readUInt16BE(q.end),qclass=packet.readUInt16BE(q.end+2);
  const question=packet.subarray(12,q.end+4), origin=zone.origin.toLowerCase();
- if(qclass!==1||!q.name.endsWith(origin))return Buffer.concat([id,u16(0x8405),u16(1),u16(0),u16(0),u16(0),question]);
+ if(qclass!==1||(q.name!==origin&&!q.name.endsWith('.'+origin)))return Buffer.concat([id,u16(0x8405),u16(1),u16(0),u16(0),u16(0),question]);
  const fqdn=r=>r.name==="@"?origin:(String(r.name).endsWith(".")?String(r.name).toLowerCase():String(r.name).toLowerCase()+"."+origin);
  const records=(zone.records||[]).map(r=>({...r,type:String(r.type).toUpperCase()}));
  const exact=records.filter(r=>fqdn(r)===q.name);

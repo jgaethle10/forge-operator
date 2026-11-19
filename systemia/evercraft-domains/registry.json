@@ -1,0 +1,29 @@
+{
+  "schema": "evercraft.domains.registry.v1",
+  "scope": "private_namespace_intent_only",
+  "public_tld_operated": false,
+  "public_top_level_domain_registered": false,
+  "names": [
+    {
+      "client_id": "client001-onthego",
+      "alias": "onthegoquicklube.evercraft",
+      "customer_brand": "On The Go Mobile Quick Lube",
+      "customer_approval": "unverified",
+      "private_binding": "held",
+      "private_dns_published": false,
+      "public_domain_candidate": "onthegoquicklube.com",
+      "registrar_registration": "unverified",
+      "public_dns_delegated": false,
+      "tls_verified": false,
+      "customer_website_live": false
+    }
+  ],
+  "policy": {
+    "origin": "evercraft.",
+    "allowed_scope": "operator_private_network_only",
+    "default_action": "hold",
+    "no_public_dns_mutation": true,
+    "no_external_registrar_mutation": true,
+    "no_customer_publication_without_owner_approval": true
+  }
+}
