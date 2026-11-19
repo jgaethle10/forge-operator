@@ -1,0 +1,56 @@
+name: Client 001 V4.1 Live Browser Acceptance
+on:
+  pull_request:
+    paths:
+      - 'systemia/evercraft-web/browser-worker/client001-v41-live-acceptance.mjs'
+      - '.github/workflows/client001-v41-live-browser.yml'
+      - 'public/clients/on-the-go/review/**'
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/evercraft-web/browser-worker/client001-v41-live-acceptance.mjs'
+      - '.github/workflows/client001-v41-live-browser.yml'
+      - 'public/clients/on-the-go/review/**'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: client001-v41-browser-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  v41-browser:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check existing CX-001 source and Client 001 safety contracts
+        run: node --test tests/client-experience-contract.test.mjs tests/client001-on-the-go-review.test.mjs tests/client001-on-the-go-v2.test.mjs
+      - name: Install owned Browser Worker dependencies
+        working-directory: systemia/evercraft-web/browser-worker
+        run: npm install --no-audit --no-fund --ignore-scripts
+      - name: Use system Chrome or install Playwright Chromium fallback
+        working-directory: systemia/evercraft-web/browser-worker
+        run: |
+          if command -v google-chrome >/dev/null 2>&1 || command -v google-chrome-stable >/dev/null 2>&1; then
+            echo "Using preinstalled GitHub runner Chrome"
+          else
+            npx playwright install chromium
+          fi
+      - name: Browser test exact deployed HTTPS at six widths in both languages
+        env:
+          CLIENT001_EVIDENCE_DIR: ${{ runner.temp }}/client001-v41-browser
+        run: node systemia/evercraft-web/browser-worker/client001-v41-live-acceptance.mjs
+      - name: Preserve screenshots and results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: client001-v41-live-browser-acceptance
+          path: ${{ runner.temp }}/client001-v41-browser/**
+          if-no-files-found: warn
+          retention-days: 7
+      - name: State independent client-approval gate
+        if: always()
+        run: echo "Technical browser evidence is not permission to advertise. Juan's explicit approval of identity, prices, content, and promotion remains required."
