@@ -20,4 +20,4 @@ jobs:
         run: python3 -m py_compile products/site-planner/server.py products/site-planner/outbox_audit.py
       - name: Test provenance, queue state machine, and outbox checks
         working-directory: products/site-planner
-        run: python3 -m unittest -v test_server_smoke.py test_engineering_queue.py test_outbox_audit.py test_api_workflow.py test_report_bridge.py
+        run: python3 -m unittest discover -v
