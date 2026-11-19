@@ -1,64 +1,136 @@
 # Evercraft Site Planner
 
-Self-hosted EV/infrastructure preliminary planning workspace. **No Base44 or third-party application runtime.**
+An Evercraft-owned, mobile-responsive **preliminary EV/infrastructure site planning intake and evidence workflow**, implemented with HTML/CSS/JavaScript and Python standard library plus SQLite. **Not engineering design software.** No map, satellite imagery, geocoding, hydrology, utility, permitting, payment, AI or engineering integration is fabricated.
 
-## Status
-The GitHub branch contains the Python server, responsive working interface, outbox integrity auditor, smoke test and integration specifications. The fuller local package also contains a more extensive interface, workflow tests, and an attachment UI. These are not yet a byte-for-byte source sync. **Do not treat this branch as production-ready or publicly deployed.**
+## Start
 
-## Start locally
-Requires Python 3.11+; no additional Python packages:
-```sh
-cd products/site-planner
+Requires Python 3.11+ and no third-party packages.
+
+```bash
 python3 server.py
-# http://127.0.0.1:8808/
+# Open http://127.0.0.1:8808
 ```
-Set `EVERCRAFT_SITE_DATA` to select a private persistent data folder. The default is `./data` alongside the source. Back up the SQLite database and uploaded files together.
+
+Local data is in `data/site-planner.sqlite3`; uploaded files in `data/uploads/`. Backup both together. Set `EVERCRAFT_SITE_DATA` to select a durable directory. For LAN/proxy binding set `EVERCRAFT_SITE_HOST=0.0.0.0` **and** `EVERCRAFT_SITE_TOKEN` with a long random secret. For production, add owned reverse-proxy TLS, authenticated user sessions/roles, access-controlled uploads, antivirus scanning, limits, auditing and backups. The browser does not currently support bearer-token login UI: do **not** expose it publicly as-is. Behind an owned private access gateway with a secured upstream bearer header is a possible future integration, but not included.
+
+## Workflow
+
+1. Create an address-based site record (user-entered address, not automatically geocoded/verified).
+2. Record evidence with explicit **verified**, **unverified**, or **assumption** state; upload source files, record dates and constraints.
+3. Review parking, driveways, pavement, circulation, islands, chargers, ADA, pads, trenches, utilities, topo, drainage and floodplain in dedicated views.
+4. Compare several *assumption-based* candidate layouts, counts and budgets.
+5. Record a preliminary qualification disposition with missing critical evidence explicitly shown.
+6. Request a preliminary plan by selecting a scenario. Request **automatically creates an immutable origin report snapshot**, then binds order → report → site and scenario.
+7. Register an engineer-returned plan with an uploaded document. Each plan inherits its order's exact report ID.
+8. Download original report JSON. Log workflow/product/data gaps per site.
+
+## Intentional gaps / deployment gates
+
+- No actual parcel matching, aerial imagery or map annotation. Site geometry is evidence-logged, not spatially drawn.
+- No verified parcel boundary, ADA dimensional audit, utility locate, topo survey, flood mapping, drainage engineering or code compliance.
+- No payment/order checkout. Internal queue requests are not paid commercial orders.
+- No role-based engineering approvals, external share links, webhook notifications, Systemia orchestration or existing Evercraft report ingestion yet.
+- No public hosting, infrastructure domain or GitHub commit performed by running locally.
+- Report snapshot is point-in-time; evidence status changes afterward do not rewrite the origin report.
+- App intentionally has no Base44 dependencies, CDN, analytics, or external runtime.
+
+## Canonical migration
+
+Commit the folder to an Evercraft-owned GitHub repository, then deploy to an Evercraft-controlled server. Wire authenticated event delivery to Systemia with durable outbox, retries, provenance and signing. Attach main-report and payment order IDs only after the real upstream contracts are verified. Keep returned deliverables linked to the immutable source report and origin site.
+
+## Verified engineering pass (2026-11-19)
+
+Run the integration test suite with:
+
+```bash
+python3 -m unittest discover -s . -p 'test_*.py' -v
+```
+
+The tests create two independent sites and exercise evidence, scenario, plan ordering, immutable report generation, report JSON export, returned-plan binding and rejection of cross-site plan insertion. A report export serialization bug was fixed during this pass. The tests do not constitute a public-security or geospatial accuracy audit.
+
+GitHub canonical integration contract committed on `feature/evercraft-site-planner-intake-v1` at `products/site-planner/INTEGRATION.md` (commit `b59681160a389b1217285650eb39d58039104e7b`). **The full application source has not yet been committed to GitHub**, and the Systemia adapter is not live. Keep this package private until the documented deployment gates pass.
+
+## Durable local Systemia handoff (engineering pass 2)
+
+The application now inserts `site.report.created.v1`, `site.plan.requested.v1`, and `site.plan.registered.v1` events into a SQLite **outbox in the same transaction** as the corresponding records. Inspect event metadata locally at `GET /api/outbox`. Events remain `pending`: this version deliberately does **not** authenticate to Systemia, dispatch events, create engineering jobs, or infer payment completion. SHA-256 is an integrity checksum, not an authenticated signature.
+
+Canonical documentation: `products/site-planner/OUTBOX.md` on the isolated GitHub feature branch, commit `e9eb0d6be36701815ac820a268a2089c95af2481`. Full application source is still packaged separately pending canonical source upload.
+
+
+## Validation hardening (2026-11-19)
+
+The server now rejects negative/fractional charger counts, non-finite/negative power or cost and invalid content lengths. Additional integration tests verify that rejected cross-site orders leave no report or order behind, and changing the site after snapshot creation does not change the snapshot. Run `python3 -m unittest discover -v` before deploying. This remains a local engineering build: no signed Systemia dispatcher, external address verification, customer login, licensed design verification, payment settlement or published deployment.
+
+## Engineering queue workflow (local v1.3)
+
+The owned API now exposes `GET /api/engineering/queue` (all orders) and
+`PUT /api/sites/{site_id}/orders/{order_id}/status` with JSON `{ "status":
+"assigned", "actor": "Operator", "reason": "Reviewed intake evidence" }`.
+Allowed transitions are `queued → assigned → in_review → returned → approved`,
+with explicit revision and cancellation branches. Illegal transitions,
+missing actor/reason, and cross-site updates are rejected. Each transition
+creates an append-only `engineering_actions` row and a pending
+`site.plan.status_changed.v1` event in the same SQLite transaction. These
+statuses are **operator-recorded**, not independent proof of professional
+approval, Systemia delivery, payment or real engineering completion. The
+local interface includes a status form in Engineering queue.
+
+The event auditor verifies status changes against the action ledger and
+report lineage. A new regression test exercises allowed, rejected, and
+cross-site transitions. Authentication is still a shared local token option;
+**do not expose any of these status controls on the public internet** until
+per-user roles and engineering authorization are in place.
+
+## v1.3.1 verification and GitHub handoff (2026-11-19)
+
+The local package has an HTTP regression test for evidence-file upload/download, report snapshot traceability, cross-site plan rejection, and unauthorized state-skip rejection. `test_api_workflow.py` supplements the engineering state machine tests. SQLite connections close deterministically after success or failure. As of this build, `python3 -m unittest discover -v` passes 10 local tests.
+
+Canonical review: https://github.com/jgaethle10/forge-operator/pull/2281 (DRAFT; **not deployed**). The GitHub branch includes server, responsive interface, pending Systemia event outbox, audit, tests, and CI checks. The larger local package interface has more dedicated evidence-condition views than the GitHub interface; they remain intentionally distinguished until full source parity is proven. The latest GitHub UI supports evidence and plan uploads; storage remains unsuitable for untrusted public users until per-user authorization, file scanning, durable backup and safe download review are completed.
+
+Public access, real Systemia delivery, payments, source imagery, engineering approval, and existing external EV report linkage are NOT verified or enabled.
+
+## v1.4: Existing Evercraft report → preliminary plan provenance
+
+This version includes a **private read-only import** for an existing Forge/Yard EV
+opportunity report. The upstream owned gateway contract was inspected in
+`systemia/rivet/http-gateway.mjs`: `GET /api/rivet/reports/:reportId` returns
+`evercraft.rivet.yard-report-record.v1`, a ready report, report/source hashes,
+and source coverage receipts. The Site Planner **does not create a new paid
+report** or infer payment status from report readiness.
+
+To enable the import on a trusted local machine:
 
 ```sh
-python3 -m unittest -v test_server_smoke.py test_outbox_audit.py
-python3 outbox_audit.py data/site-planner.sqlite3
-```
-Run the auditor only after the SQLite database has been initialized by the server. It operates read-only.
-
-## Customer workflow
-Create a site with a real address; record aerial-visible and documentary findings as **verified**, **unverified**, or **assumption**; compare charger/equipment/circulation scenarios; generate an immutable report; request a preliminary plan, which snapshots its originating report; register the returned plan against the persisted order; inspect structured workflow gaps.
-
-All submitted data is user-entered until independently verified. This is screening and evidence collection, **not stamped engineering or a verified geospatial analysis**. Plan orders are not payment confirmations.
-
-## Technical boundaries
-- `server.py` serves the same-origin UI and local API; binds `127.0.0.1:8808` by default.
-- SQLite contains sites, evidence, scenarios, reports, orders, returned plans, gaps, and a pending event outbox.
-- No Systemia dispatcher is running. Pending outbox events require a signed transport and receipts before state changes.
-- `EVERCRAFT_SITE_TOKEN` adds an optional shared bearer-token check for API requests; **the current browser UI does not provide an authenticated sign-in flow**. It is suitable only for a trusted local operator, not public access.
-- Uploaded files need malware scanning, content verification, tenancy checks, and private object storage before production.
-- Payment verification, public report sharing, parcel/geocoding imagery, and external engineering tools are not integrated.
-
-## Launch gates
-1. Sync the complete richer local source and comprehensive workflow tests.
-2. Confirm repository CI actually passes.
-3. Implement identity, roles, per-site permissions, CSRF defenses, signed private shares, and secure file handling.
-4. Connect canonical EV report identifiers and licensed geospatial source retrieval.
-5. Connect Systemia authenticated event delivery, retries, idempotency and acknowledgments.
-6. Connect Evercraft Payments order settlement receipts without equating queueing with paying.
-7. Deploy on approved Evercraft-owned infrastructure, private first; perform mobile and security acceptance.
-
-See `INTEGRATION.md` and `OUTBOX.md` for provenance and dispatch contracts.
-
-
-## v1.4: private existing EV report integration
-
-The upstream Forge/Yard endpoint is documented in `systemia/rivet/http-gateway.mjs`: `GET /api/rivet/reports/:reportId` returns a private `evercraft.rivet.yard-report-record.v1` with report/source SHA-256 identifiers, a source-coverage manifest, and readiness verification fields.
-
-**Configure only on a trusted local Evercraft operator host**, with the existing gateway active:
-```sh
-export EVERCRAFT_SITE_REPORT_GATEWAY_URL='http://127.0.0.1:<actual-owned-gateway-port>'
+# The report gateway must already be running on the same device or a
+# separately authorized loopback tunnel to Evercraft-owned Forge/Yard.
+export EVERCRAFT_SITE_REPORT_GATEWAY_URL='http://127.0.0.1:<actual-gateway-port>'
 export EVERCRAFT_SITE_REPORT_GATEWAY_TOKEN_FILE="$HOME/.config/evercraft/site-planner/rivet-report-gateway.key"
+# Create and protect the token file through your owned secret deployment process.
+# Permissions must be 0600, token at least 16 bytes. Do not commit it.
 python3 server.py
 ```
-Provision the token through Evercraft's private secret process. The file must be mode `0600` and contain a token of at least 16 bytes; never commit secrets to GitHub. The adapter refuses non-loopback origins and does not accept arbitrary user-provided URLs.
 
-**Workflow:** Create a Site Planner project with the exact requested address. In Reports, import an existing `rivet-yard:<32 hex>` ID. The server fetches the private gateway record, checks the ID, schema, ready status, source/report hash identifiers, source-coverage attestation, and requested address. The import is idempotent per site. In Engineering, select that report to generate an internal immutable snapshot and order tied to its upstream ID and hashes. Invalid cross-site links and stale address associations are rejected. Source linkage is recorded in the pending outbox.
+In the **Reports** tab, provide the existing `rivet-yard:<32-hex>` report ID.
+Site Planner retrieves the record using the private Bearer token, checks its
+schema, ready state, report/source SHA-256 **identifiers**, coverage receipts,
+and requested-address match. These checks establish **gateway provenance**, not
+independent cryptographic rehashing of the upstream report bytes, survey
+accuracy, civil engineering compliance, or a settled customer transaction.
 
-This establishes **gateway-attested provenance only**. The adapter does not independently rehash the upstream report byte stream, prove parcel or engineering facts, charge customers, verify payment, or dispatch work to Systemia. It does not create a new report. Real checkout, signed Systemia delivery, role-based access, upload hardening, and secure public sharing remain launch blockers.
+Imported records become site-scoped `source_reports` rows with an idempotent
+`(site_id,external_report_id)` key. In **Engineering queue**, optionally select
+that imported source report before requesting a plan. The local immutable report
+snapshot stores the upstream report ID and both SHA-256 values; the order gets
+an `order_source_links` record and a pending Systemia event with that lineage.
+An imported report from another site or a now-changed site address is rejected.
 
-Run `python3 -m unittest -v test_report_bridge.py` for the no-external-network integration proof.
+Outbox events are not delivered to Systemia yet. Direct customer checkout,
+settlement verification, plan engineering, customer login/roles, content scanning,
+and secure sharing remain blocked pending their separate integration gates. No
+public deployment is authorized by this source import.
+
+Tests:
+```sh
+python3 -m unittest discover -v
+# Expected local package: 12 tests (10 earlier + 2 upstream bridge checks)
+```
