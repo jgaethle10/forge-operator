@@ -111,7 +111,8 @@ def duplicate_contact(db, record, exclude_id=None):
         if r['id'] == exclude_id:
             continue
         old = json.loads(r['payload'])
-        if old.get('status') in {'contacted', 'replied', 'objection', 'negotiating', 'won'}:
+        had_delivery_activity = db.execute("SELECT 1 FROM events WHERE opportunity_id=? AND kind IN ('outreach_reported','delivery_verified') LIMIT 1", (r['id'],)).fetchone()
+        if old.get('status') in {'contacted', 'replied', 'objection', 'negotiating', 'won'} or had_delivery_activity:
             return r['id']
     return None
 
@@ -194,7 +195,8 @@ class API(BaseHTTPRequestHandler):
                 old = json.loads(row['payload'])
                 if method == 'GET' and action == '/contact-check':
                     blocker = duplicate_contact(db, old, exclude_id=oid)
-                    return self.reply(200, {'contact_conflict': bool(blocker), 'other_opportunity_id': blocker, 'requires_human_review': True, 'delivery_authorized': False})
+                    own_activity = bool(db.execute("SELECT 1 FROM events WHERE opportunity_id=? AND kind IN ('outreach_reported','delivery_verified') LIMIT 1", (oid,)).fetchone())
+                    return self.reply(200, {'contact_conflict': bool(blocker) or own_activity, 'already_contacted_this_opportunity': own_activity, 'other_opportunity_id': blocker, 'requires_human_review': True, 'delivery_authorized': False})
                 if method == 'PATCH' and action is None:
                     patch = self.body()
                     if not isinstance(patch, dict) or 'version' not in patch:
