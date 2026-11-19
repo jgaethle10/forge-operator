@@ -50,6 +50,44 @@ class BridgeModelTests(unittest.TestCase):
         self.assertNotIn('FMP-001', text)
         self.assertNotIn('Need help with booking', text)
 
+    def test_actual_nextgen_field_shape_without_claiming_delivery(self):
+        source = [{
+            'id': 17, 'business': 'Test Business', 'buyer': 'Person One',
+            'pain': 'Needs faster appointment intake', 'sent': [
+                {'at': '2026-11-18T15:00:00Z', 'channel': 'email'},
+                {'at': '2026-11-19T09:00:00Z', 'channel': 'email'},
+            ], 'signal': 'Public request for a booking system', 'source': 'public-post-17',
+            'verified': 'yes', 'permission': 'unknown', 'role': 'Owner',
+            'kind': 'direct_paid_work', 'amount': '$500', 'assumption': 'May need fast turnaround',
+            'relevance': 'Requires owned software', 'next_action': 'Confirm buyer',
+            'objection': 'Concerned about timeline', 'contact': 'person@example.org',
+            'status': 'drafted', 'paid_reference': 'source-only-claim',
+        }]
+        staged, rejected = collect(source)
+        self.assertEqual(rejected, [])
+        one = staged[0]
+        self.assertEqual(one['origin'], 'revenue-desk:opportunity:17')
+        self.assertEqual(one['record']['category'], 'paid')
+        self.assertEqual(one['record']['evidence'], 'signal')
+        self.assertEqual(one['record']['sourceText'], 'Public request for a booking system')
+        self.assertEqual(one['record']['status'], 'drafted')
+        self.assertTrue(one['contact_reported'])
+        self.assertIn('provider delivery unverified', one['record']['notes'])
+        self.assertIn('Source-reported verification (unverified)', one['record']['notes'])
+        self.assertNotIn('verification_receipt', one['record'])
+        preview = bridge(source)
+        self.assertEqual(preview['contact_history_flags'], 1)
+        self.assertEqual(preview['provider_deliveries_verified'], 0)
+        schema = inspect_schema(source)
+        self.assertEqual(schema['eligible_count'], 1)
+        self.assertEqual(schema['historical_sent_list_rows'], 1)
+        self.assertNotIn('person@example.org', json.dumps(schema))
+
+    def test_empty_sent_list_does_not_count_as_outreach(self):
+        normalized, reason = normalize({'id': 19, 'business': 'Sample', 'pain': 'No checkout', 'sent': []})
+        self.assertIsNone(reason)
+        self.assertFalse(normalized['contact_reported'])
+
     def test_requires_stable_id_and_explicit_pain(self):
         self.assertEqual(normalize({'business':'ACME', 'problem':'No checkout'})[1], 'missing_safe_stable_id')
         self.assertEqual(normalize({'id':'33','business':'ACME','description':'Some offer'})[1], 'missing_explicit_problem')
