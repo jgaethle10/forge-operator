@@ -11,6 +11,11 @@ https://onthegoquicklube.evercraft:18443 {
   bind 127.0.0.1
   tls /run/evercraft-lab/tls/leaf.pem /run/evercraft-lab/tls/leaf.key
 
+  log {
+    output stdout
+    format json
+  }
+
   header {
     X-Content-Type-Options "nosniff"
     X-Frame-Options "DENY"
