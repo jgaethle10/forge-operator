@@ -63,7 +63,7 @@ jobs:
             mode='verified_hosted_checkout_with_optional_inquiry'
             checks['buyer_action_before_preview']=hosted_link<preview
             checks['correct_checkout_route']=hosted_link>=0 and 'Start my $49 audit' in html
-            checks['stripe_tax_and_scope_disclosed']='including applicable sales tax' in html and 'Your URL and priority are requested during checkout' in html
+            checks['stripe_tax_and_scope_disclosed']='before any applicable sales tax' in html and 'Your URL and priority are requested during checkout' in html
             checks['no_autonomous_fulfillment_claim']='Work begins only after verified payment' in html and 'human-reviewed report is delivered by email' in html
             checks['optional_free_inquiry_separate']=inquiry>=0 and inquiry<preview and '/api/website-audit/inquiry' in html and 'No charge, payment order, or automatic audit starts here.' in html
             checks['private_intake_ready']=readiness.get('intake_available') is True
