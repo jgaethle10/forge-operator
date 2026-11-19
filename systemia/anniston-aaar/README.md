@@ -52,3 +52,28 @@ A GitHub reference is evidence of a file, not of a successful experiment or phys
 `python tests/smoke.py` (requires Python Playwright and a Chromium browser for development tests only). Tests assert desktop registry rendering, lifecycle filtering, local work-order idempotency, comparison views, export, and 390px mobile navigation.
 
 **Tracked engineering issue:** https://github.com/jgaethle10/forge-operator/issues/2285
+
+### Private owner API candidate (v0.3)
+
+The bundled `service/server.py` is a **Python standard-library-only** loopback API. It has authenticated registry snapshots with optimistic revision guards, append-only-in-memory/locally persisted audit entries, atomic disk replacement, and idempotent review-only work requests. The UI now has an explicit bottom-right Connect / Pull / Save registry / Submit review queue control. It does not automatically upload browser data. The operator token stays in JavaScript memory, not localStorage.
+
+Run from repo root on a controlled Evercraft-owned node:
+
+```sh
+export AAAR_TOKEN="$(python3 -c 'import secrets;print(secrets.token_urlsafe(48))')"
+export AAAR_HOST=127.0.0.1
+export AAAR_PORT=8876
+python3 systemia/anniston-aaar/service/server.py
+# Open http://127.0.0.1:8876/ on that node.
+```
+
+Use an owner-approved authenticated reverse proxy before accessing from other devices. Do **not** bind directly to a public interface. The default private data file lives at `~/.local/state/evercraft/aaar/private-registry.json`; do not commit that private file to a public repo. Operator actions are **locally persisted only**. GitHub canonical synchronization, review approval policy, Systemia job acceptance and owned private Sites deployment remain blocked until their own integration is verified.
+
+Smoke tests (Python 3, no packages):
+
+```sh
+cd systemia/anniston-aaar/service
+python3 -m unittest -v test_server
+```
+
+These test authentication, stale revision conflicts, atomic write path, duplicate work order suppression, misleading execution-state prevention, and malformed input. **No flight, drone or robot commands are exposed.**
