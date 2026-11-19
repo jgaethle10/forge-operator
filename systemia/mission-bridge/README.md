@@ -62,3 +62,9 @@ Tests: `node --test systemia/mission-bridge/gems/private-research-preflight.test
 **Security caveat:** The gate object and verified identity context must be supplied by trusted internal middleware. Passing caller-supplied JSON that impersonates a server context or `getLease` is not authentication. This is a reusable validation component, **not** a network-facing endpoint or a live lease verification service.
 
 This adapter does not issue Passport grants, start Execution Gate leases, invoke the model trainer, interact with DrivenData, or touch Penguin/Node002 production. Its tests exercise simulated immutable lease receipts to prove denial paths; they are not evidence of a live Saban job.
+
+## GEMS single-use local claim (still no compute dispatch)
+
+`gems/research-work-claim.mjs` adds an exclusive owner-only file claim after the staged request has been matched with a verified started Execution Gate lease. A duplicate claim enters `work_already_claimed_manual_reconciliation_required` instead of replaying automatically. This is a **local state transition only**: it does not run the worker or authorize remote compute. The entire path requires a private authenticated gateway to supply trusted identity and the live Execution Gate object; it must run on an owner-only filesystem, not a shared public mount.
+
+Before production use, the private server must additionally implement safe restart/reconciliation, lease expiration and revocation checks, a registered isolated bounded worker, a resource admission service and authoritative output receipts. A successful unit test with a synthetic gate is not proof of live Passport authority.
