@@ -63,6 +63,7 @@ export function createRavenReadOnlyTeamAdapter({
     // Capability runtime admits only explicit read-only adapters on this non-durable path.
     // Execution still requires an owned Nexus bridge and cannot publish or mutate state.
     authority: "read-only",
+    authority_boundary: "systemia+passport+bounded-nexus",
     human_gate_required: false,
 
     async execute({ work, goal, context }) {

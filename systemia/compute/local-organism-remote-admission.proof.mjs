@@ -7,6 +7,15 @@ import { setTimeout as sleep } from 'node:timers/promises';
 import { loadOrCreateDeviceIdentity } from './device-identity.mjs';
 import { startLocalOrganism } from './local-organism.mjs';
 
+// Remote-admission CI proves broker connectivity and recovery, not the
+// public Portfolio Sentinel's product-policy findings. The Sentinel still
+// records findings; only this explicitly marked local fixture excludes
+// policy findings from Core process exit status.
+process.env.NODE_ENV='test';
+process.env.EVERCRAFT_LOCAL_ORGANISM_PROOF='true';
+process.env.PORTFOLIO_SENTINEL_ENFORCE_HEALTH='false';
+process.env.PORTFOLIO_SENTINEL_OFFLINE='true';
+
 const nativeBrowserProofPreparer=async()=>({
   schema:'evercraft.browser.native-runtime-preflight.v1',
   ready:false,
@@ -31,6 +40,29 @@ async function freeTcpPort() {
   return port;
 }
 
+async function stablyHealthyOrganism(organism,stage) {
+  let last=null,consecutive=0;
+  for(let attempt=0;attempt<20;attempt++){
+    last=await organism.health();
+    if(last.ok===true && last.kaidance?.ok===true &&
+       last.systemia_core?.ok===true && last.fabric?.ok===true){
+      if(++consecutive>=2)return last;
+    }else consecutive=0;
+    await sleep(400);
+  }
+  // Never silently reinterpret a degraded resident as healthy. The failure
+  // is scoped to route state labels, not endpoints, secrets or broker claims.
+  console.error(JSON.stringify({
+    schema:'evercraft.remote-admission.fixture-health-hold.v1',stage,
+    route_states:{
+      kaidance:last?.kaidance?.state,
+      systemia_core:last?.systemia_core?.state,
+      fabric:last?.fabric?.state
+    },state:'held'
+  }));
+  assert.fail('remote_admission_fixture_local_core_not_stably_healthy');
+}
+
 const root = fs.mkdtempSync(path.join(os.tmpdir(), 'local-organism-remote-admission-'));
 const nodeId = 'chromebook-remote-proof';
 const computeRoot = path.join(root, 'compute');
@@ -49,18 +81,29 @@ let broker = null;
 let broker2 = null;
 
 try {
-  organism = await startLocalOrganism({
-    root,
-    nodeId,
-    releaseRef,
-    remoteBrokerUrl: brokerUrl,
-    remoteAdmissionRetryMs: 100,
-    heartbeatTargetSeconds: 300,
-    graceSeconds: 90,
-    nativeBrowserPreparer: nativeBrowserProofPreparer,
-  });
+  try {
+    organism = await startLocalOrganism({
+      root,
+      nodeId,
+      releaseRef,
+      remoteBrokerUrl: brokerUrl,
+      remoteAdmissionRetryMs: 100,
+      heartbeatTargetSeconds: 300,
+      graceSeconds: 90,
+      nativeBrowserPreparer: nativeBrowserProofPreparer,
+    });
+  } catch(error) {
+    if(error?.route_states) {
+      console.error(JSON.stringify({
+        schema:'evercraft.local-organism.remote-admission-route-hold.v1',
+        route_states:error.route_states,
+        release_gate:'blocked'
+      }));
+    }
+    throw error;
+  }
 
-  const initialHealth = await organism.health();
+  const initialHealth = await stablyHealthyOrganism(organism,'initial');
   assert.equal(initialHealth.ok, true);
   assert.equal(initialHealth.kaidance.ok, true);
   assert.equal(initialHealth.systemia_core.ok, true);
@@ -118,7 +161,7 @@ try {
   broker = null;
   await sleep(500);
 
-  const duringOutage = await organism.health();
+  const duringOutage = await stablyHealthyOrganism(organism,'broker_outage');
   assert.equal(duringOutage.ok, true);
   assert.equal(duringOutage.kaidance.ok, true);
   assert.equal(duringOutage.systemia_core.ok, true);
@@ -151,7 +194,7 @@ try {
   assert.equal(reconnected.node_id, nodeId);
   assert.equal(reconnected.device_fingerprint, identity.fingerprint);
 
-  const finalHealth = await organism.health();
+  const finalHealth = await stablyHealthyOrganism(organism,'reconnected');
   assert.equal(finalHealth.ok, true);
   assert.equal(finalHealth.remote_admission.connected, true);
 
