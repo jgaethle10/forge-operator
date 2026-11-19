@@ -1,0 +1,58 @@
+#!/usr/bin/env python3
+"""Read-only integrity and lineage audit for Site Planner's pending Systemia events."""
+import argparse
+import hashlib
+import json
+import sqlite3
+from pathlib import Path
+
+
+def audit(path):
+    problems = []
+    counts = {}
+    conn = sqlite3.connect(f'file:{Path(path).resolve()}?mode=ro', uri=True)
+    conn.row_factory = sqlite3.Row
+    try:
+        events = conn.execute('SELECT * FROM outbox ORDER BY created_at,id').fetchall()
+        for event in events:
+            event_id = event['id']
+            counts[event['state']] = counts.get(event['state'], 0) + 1
+            try:
+                payload = json.loads(event['payload_json'])
+            except (TypeError, ValueError):
+                problems.append({'event_id': event_id, 'problem': 'invalid_json'})
+                continue
+            digest = hashlib.sha256(event['payload_json'].encode('utf-8')).hexdigest()
+            if digest != event['payload_sha256']:
+                problems.append({'event_id': event_id, 'problem': 'hash_mismatch'})
+            if payload.get('site_id') != event['site_id']:
+                problems.append({'event_id': event_id, 'problem': 'site_mismatch'})
+            kind = event['event_type']
+            if kind == 'site.plan.requested.v1':
+                order = conn.execute('SELECT site_id,report_id,scenario_id FROM orders WHERE id=?', (event['aggregate_id'],)).fetchone()
+                if not order or any(order[k] != payload.get(k) for k in ('site_id','report_id','scenario_id')):
+                    problems.append({'event_id': event_id, 'problem': 'order_lineage_mismatch'})
+            elif kind == 'site.plan.registered.v1':
+                plan = conn.execute('SELECT site_id,report_id,order_id FROM plans WHERE id=?', (event['aggregate_id'],)).fetchone()
+                if not plan or any(plan[k] != payload.get(k) for k in ('site_id','report_id','order_id')):
+                    problems.append({'event_id': event_id, 'problem': 'plan_lineage_mismatch'})
+            elif kind == 'site.report.created.v1':
+                report = conn.execute('SELECT site_id FROM reports WHERE id=?', (event['aggregate_id'],)).fetchone()
+                if not report or report['site_id'] != payload.get('site_id'):
+                    problems.append({'event_id': event_id, 'problem': 'report_lineage_mismatch'})
+            else:
+                problems.append({'event_id': event_id, 'problem': 'unknown_event_type'})
+            if event['state'] == 'delivered' and not event['delivered_at']:
+                problems.append({'event_id': event_id, 'problem': 'delivery_receipt_missing'})
+        return {'ok': not problems, 'total_events': len(events), 'states': counts, 'problems': problems}
+    finally:
+        conn.close()
+
+
+if __name__ == '__main__':
+    p = argparse.ArgumentParser(description=__doc__)
+    p.add_argument('database', help='Path to site-planner.sqlite3')
+    args = p.parse_args()
+    result = audit(args.database)
+    print(json.dumps(result, indent=2))
+    raise SystemExit(0 if result['ok'] else 1)
