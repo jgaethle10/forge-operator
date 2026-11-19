@@ -46,5 +46,5 @@ test('preview is self-contained and unapproved for customer promotion',()=>{
  assert.doesNotMatch(review,/<script[^>]*\bsrc\s*=/i);
  assert.match(readme,/NOT DEPLOYED; DOMAIN UNSELECTED; DNS\/TLS\/PUBLICATION HOLD/);
  assert.match(readme,/owner.*approval|Juan.*explicit/i);
- assert.match(readme,/not.*existing website|does.*not.*change.*existing site/i);
+ assert.match(readme,/does\s+\*\*not\*\*\s+change\s+Juan's\s+existing\s+site/i);
 });
