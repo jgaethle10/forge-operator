@@ -6,6 +6,8 @@ on:
       - 'research/infrastructure-watch/engineering/aiw_state_first_gateway.py'
       - 'research/infrastructure-watch/operator/aiw-state-first-private.html'
       - 'research/infrastructure-watch/operator/aiw-state-first-nextgen.sh'
+      - 'research/infrastructure-watch/operator/aiw-state-hover-nextgen.sh'
+      - 'research/infrastructure-watch/tests/test_aiw_state_hover.mjs'
       - 'research/infrastructure-watch/tests/test_aiw_state_first.py'
       - '.github/workflows/aiw-state-first.yml'
 permissions:
@@ -23,7 +25,9 @@ jobs:
         with:
           node-version: '22'
       - name: Validate operator staging shell
-        run: bash -n research/infrastructure-watch/operator/aiw-state-first-nextgen.sh
+        run: |
+          bash -n research/infrastructure-watch/operator/aiw-state-first-nextgen.sh
+          bash -n research/infrastructure-watch/operator/aiw-state-hover-nextgen.sh
       - name: Validate exact browser JavaScript inside private HTML
         run: |
           python3 - <<'PY'
@@ -35,6 +39,8 @@ jobs:
           Path('/tmp/aiw-state-first-ui.js').write_text(snippets[0])
           PY
           node --check /tmp/aiw-state-first-ui.js
+          node --check research/infrastructure-watch/tests/test_aiw_state_hover.mjs
+          node research/infrastructure-watch/tests/test_aiw_state_hover.mjs
       - name: Validate cartographic boundaries and dated data contracts
         run: |
           python3 -m unittest discover -s research/infrastructure-watch/tests -p test_aiw_state_first.py -v
