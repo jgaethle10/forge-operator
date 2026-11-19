@@ -1,0 +1,51 @@
+# Evercraft Domains | Client 001 | DISPOSABLE LOOPBACK TLS LAB ONLY
+# This file is never installed into Node001/Node002 production Caddy.
+# Certificates are generated in CI and never checked into GitHub.
+# The test authority is trusted only by an explicitly scoped test client.
+{
+  admin off
+  auto_https disable_redirects
+}
+
+https://onthegoquicklube.evercraft:18443 {
+  bind 127.0.0.1
+  tls /run/evercraft-lab/tls/leaf.pem /run/evercraft-lab/tls/leaf.key
+
+  header {
+    X-Content-Type-Options "nosniff"
+    X-Frame-Options "DENY"
+    X-Robots-Tag "noindex, nofollow, noarchive"
+    Referrer-Policy "no-referrer"
+    Cache-Control "no-store"
+    -Server
+  }
+
+  @notRead not method GET HEAD
+  respond @notRead 405
+
+  handle / {
+    root * /srv/evercraft/client001
+    rewrite * /index.html
+    file_server
+  }
+
+  handle /index.html {
+    root * /srv/evercraft/client001
+    file_server
+  }
+
+  handle /robots.txt {
+    header Content-Type "text/plain; charset=utf-8"
+    respond <<ROBOTS
+      User-agent: *
+      Disallow: /
+      ROBOTS 200
+  }
+
+  handle /healthz {
+    header Content-Type "application/json; charset=utf-8"
+    respond `{"schema":"evercraft.domains.client001.tls-lab.v1","state":"LOOPBACK_ONLY_TEST","production_tls":false,"public_dns":false,"client_approved":false,"site_published":false}` 200
+  }
+
+  respond 404
+}
