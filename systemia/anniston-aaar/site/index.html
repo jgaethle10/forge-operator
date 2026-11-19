@@ -76,7 +76,7 @@
         <section class="view hidden" id="view-reviews"><div class="page-intro"><div><div class="eyebrow">06 / MISSION CADENCE</div><h1>Keep the work<br/><em>in motion.</em></h1><p>A repeatable review rhythm and a transparent queue of next engineering decisions.</p></div><button class="btn btn-dark" data-jump="workorders">View mission queue ↗</button></div><div class="review-stats" id="reviewStats"></div><div class="two-column"><div><div class="subheading">Upcoming / overdue reviews</div><div class="review-list" id="reviewList"></div></div><div><div class="subheading">What needs attention next</div><div class="attention-list" id="attentionList"></div></div></div><div class="editorial-note"><span class="editorial-icon">i</span><div><strong>Heartbeat not connected.</strong><p>Reviews update in your local browser preview. Scheduling recurring Systemia/Kaidance jobs requires deployment to Evercraft-owned infrastructure.</p></div></div></section>
         <section class="view hidden" id="view-workorders"><div class="page-intro"><div><div class="eyebrow">07 / SYSTEMIA HANDOFF</div><h1>One action.<br/><em>Tracked to completion.</em></h1><p>Create reviewable mission requests for Systemia without implying a remote job has started.</p></div><button class="btn btn-dark" id="exportOrders">Export work orders ↗</button></div><div class="workorder-intro"><div class="workorder-status"><span class="signal-dot"></span> HANDOFF DISCONNECTED</div><h3>Ready to orchestrate.<br/>Not pretending to be connected.</h3><p>Press <b>Push next action</b> on a program to record an idempotent local work request. Once AAAR's owned API is installed, Systemia can accept and receipt those requests.</p></div><div class="subheading" id="workOrderHeading">Pending mission requests</div><div class="orders-list" id="ordersList"></div></section>
       </main>
-      <footer class="page-footer"><div><span class="footer-glyph">▲</span> ANNISTON <span>© EVERCRAFT LLC</span></div><div>GITHUB CANONICAL <span>·</span> SYSTEMIA ORCHESTRATED <span>·</span> OWNED RUNTIME ONLY</div><div>BUILD <b>AAAR / 0.2 PROTOTYPE</b></div></footer>
+      <footer class="page-footer"><div><span class="footer-glyph">▲</span> ANNISTON <span>© EVERCRAFT LLC</span></div><div>GITHUB CANONICAL <span>·</span> SYSTEMIA ORCHESTRATED <span>·</span> OWNED RUNTIME ONLY</div><div>BUILD <b>AAAR / 0.3 OWNER API CANDIDATE</b></div></footer>
     </div>
   </div>
   <div class="modal-backdrop hidden" id="drawerBackdrop"><aside class="detail-drawer" role="dialog" aria-modal="true" aria-labelledby="drawerTitle"><div class="drawer-header"><span class="eyebrow" id="drawerKicker">AAAR / PROGRAM RECORD</span><button class="icon-button" id="closeDrawer" aria-label="Close details">✕</button></div><div class="drawer-scroll"><div id="drawerTitleWrap"><h2 id="drawerTitle"></h2><p id="drawerSubtitle"></p></div><div class="drawer-tabs"><button class="drawer-tab active" data-dtab="mission">Mission</button><button class="drawer-tab" data-dtab="evidence">Evidence / QA</button><button class="drawer-tab" data-dtab="market">Market / review</button></div><form id="programForm" novalidate><input name="id" type="hidden" /><div id="formMission" class="form-section"><div class="form-row"><label>Program name<input name="name" required maxlength="160" /></label><label>Engineering domain<select name="domain"><option>Aerospace</option><option>Aerodynamics</option><option>Aircraft safety</option><option>UAV / Drones</option><option>Robotics</option><option>Physical autonomy</option><option>Space</option></select></label></div><div class="form-row"><label>Lifecycle<select name="lifecycle"><option>Recovery</option><option>Active</option><option>Dormant</option><option>Resurrected</option><option>Proposed</option></select></label><label>Current build maturity<select name="maturity"><option>Concept</option><option>Documented design</option><option>Software prototype</option><option>Simulation validated</option><option>Independent review</option><option>Physical validation</option></select></label></div><label>Verified build status / current state<textarea name="build" rows="3" placeholder="What has actually been built, and how do we know?"></textarea></label><label>One next engineering action<textarea name="next" rows="2" required placeholder="A specific, verifiable task for one team or operator"></textarea></label><label>Blockers & dependencies<textarea name="blocker" rows="2"></textarea></label></div><div id="formEvidence" class="form-section hidden"><div class="form-row"><label>Source confidence<select name="confidence"><option>Unverified</option><option>Source documented</option><option>Independent reproduction</option></select></label><label>Safety boundary<select name="gate"><option>Not assessed</option><option>Simulation only</option><option>Independent review required</option><option>Controlled test review pending</option></select></label></div><label>Evidence / receipt summary<textarea name="evidence" rows="3" placeholder="Source files, hashes, logs and direct links"></textarea></label><label>Primary GitHub / source URL<input name="github" type="url" placeholder="https://github.com/..." /></label><label>Simulation and QA observations<textarea name="qa" rows="3" placeholder="Executed vs planned; test inputs, outputs and reproduction status"></textarea></label><label>Test-plan next milestone<input name="testNext" placeholder="e.g. Run proof twice on pinned commit" /></label></div><div id="formMarket" class="form-section hidden"><label>Commercial pathway<textarea name="revenue" rows="3" placeholder="Potential customer, specific problem, deliverable and demand evidence"></textarea></label><div class="form-row"><label>Buyer validation<select name="buyer"><option>Unvalidated hypothesis</option><option>Market signal seen</option><option>Buyer conversation</option><option>Paid commitment</option></select></label><label>Strategic impact (1–5)<input name="impact" type="number" min="1" max="5" value="3" /></label></div><div class="form-row"><label>Readiness (1–5)<input name="readiness" type="number" min="1" max="5" value="1" /></label><label>Review cadence<select name="cadence"><option>Weekly</option><option>Biweekly</option><option>Monthly</option><option>Quarterly</option></select></label></div><label>Next review<input name="review" type="date" /></label><label>Systemia handoff reference<input name="work" placeholder="Not connected in local prototype" /></label></div><div class="form-actions"><button type="button" class="btn btn-line" id="deleteProgram">Delete</button><div><button type="button" class="btn btn-line" id="drawerPush">Push next action ↗</button><button type="submit" class="btn btn-dark">Save program</button></div></div></form><p class="drawer-caution">Saved locally in this prototype. Physical testing requires separate operator and regulatory approval. Saving a form never constitutes an independent engineering certification.</p></div></aside></div>
@@ -167,6 +167,58 @@
   $('#programSearch').addEventListener('input',e=>{query=e.target.value;renderRegistry()});$('#programDomain').addEventListener('change',e=>{domain=e.target.value;renderRegistry()});$('#programEvidence').addEventListener('change',e=>{proofFilter=e.target.value;renderRegistry()});
   $('#compareA').addEventListener('change',renderComparisonResult);$('#compareB').addEventListener('change',renderComparisonResult);
   $('#exportTop').addEventListener('click',exportAll);$('#importTop').addEventListener('click',()=>$('#importFile').click());$('#importFile').addEventListener('change',importAll);$('#exportOrders').addEventListener('click',exportOrders);
+
+  // Explicit private-owner API handoff. Never auto-sends local data or commands.
+  let ownerToken='', ownerRevision=null;
+  const syncBar=document.createElement('div');
+  syncBar.id='ownerSyncBar';
+  syncBar.setAttribute('role','region');
+  syncBar.setAttribute('aria-label','Owned API synchronization');
+  syncBar.style.cssText='position:fixed;bottom:14px;right:14px;z-index:99;background:#101e2b;color:white;border:1px solid #b2c9d0;border-radius:14px;padding:10px 12px;max-width:min(92vw,470px);box-shadow:0 8px 30px #0005;display:flex;gap:8px;flex-wrap:wrap;align-items:center;font:12px system-ui';
+  syncBar.innerHTML='<span id="ownerSyncStatus" style="flex:1 0 100%;opacity:.85">LOCAL PREVIEW · OWNER API NOT CONNECTED</span><button type="button" id="ownerConnect">Connect</button><button type="button" id="ownerPull" disabled>Pull</button><button type="button" id="ownerSave" disabled>Save registry</button><button type="button" id="ownerOrders" disabled>Submit review queue</button>';
+  document.body.append(syncBar);
+  for(const b of syncBar.querySelectorAll('button'))b.style.cssText='border:1px solid #85adb2;border-radius:7px;padding:8px 10px;background:#153746;color:white;cursor:pointer';
+  const status=(x)=>{document.getElementById('ownerSyncStatus').textContent=x};
+  async function request(path,method='GET',body){
+    const response=await fetch(path,{method,headers:{Authorization:'Bearer '+ownerToken,...(body?{'Content-Type':'application/json'}:{})},body:body?JSON.stringify(body):undefined,cache:'no-store'});
+    const value=await response.json();
+    if(!response.ok)throw Error(`${response.status}: ${value.error||'API rejected request'}${value.current_revision!==undefined?' (remote revision '+value.current_revision+')':''}`);
+    return value;
+  }
+  async function refreshRevision(){const v=await request('/api/state');ownerRevision=v.revision;return v}
+  document.getElementById('ownerConnect').addEventListener('click',async()=>{
+    const candidate=prompt('Private AAAR operator API token (never saved in browser storage):');
+    if(!candidate)return;
+    ownerToken=candidate;
+    try {const remote=await refreshRevision();syncBar.querySelectorAll('button').forEach(b=>b.disabled=false);status(`OWNER API CONNECTED · REV ${remote.revision} · LOCAL ONLY, GITHUB NOT SYNCED`);toast('Private owner API connected. Pull or Save explicitly.');}
+    catch(e){ownerToken='';ownerRevision=null;status('OWNER API CONNECTION FAILED');toast(String(e.message).slice(0,160))}
+  });
+  document.getElementById('ownerPull').addEventListener('click',async()=>{
+    try{const r=await refreshRevision();if(!confirm(`Replace this browser's ${data.programs.length} programs with ${r.programs.length} programs from owner API revision ${r.revision}? Export local data first if needed.`))return;
+      data={programs:r.programs.map(normalize),orders:(r.orders||[]).map(o=>({...o,program_name:data.programs.find(p=>p.id===o.program_id)?.name||o.program_id})),history:r.history||[]};persist();render();status(`OWNER API LOADED · REV ${r.revision} · NOT GITHUB SYNCED`);toast('Owner API snapshot loaded into this browser.');}
+    catch(e){toast('Pull failed: '+e.message)}
+  });
+  document.getElementById('ownerSave').addEventListener('click',async()=>{
+    try{if(ownerRevision===null)throw Error('Not connected');
+      const yes=confirm(`Save ${data.programs.length} local programs to the private AAAR API at revision ${ownerRevision}? This does NOT commit to GitHub.`);
+      if(!yes)return;
+      const response=await request('/api/state','POST',{expected_revision:ownerRevision,state:{schema:SCHEMA,programs:data.programs,history:data.history.slice(-500)}});
+      ownerRevision=response.revision;status(`OWNER API SAVED · REV ${ownerRevision} · GITHUB COMMIT PENDING`);toast('Saved to private owner service, not yet GitHub.');}
+    catch(e){toast('Save failed: '+e.message+'; Pull before retrying if revisions differ.');}
+  });
+  document.getElementById('ownerOrders').addEventListener('click',async()=>{
+    const pending=data.orders.filter(o=>o.status==='Pending local');
+    if(!pending.length){toast('No local review requests to submit.');return}
+    if(!confirm(`Queue ${pending.length} review-only requests on your local owner service? No Systemia jobs or devices will execute.`))return;
+    try{let accepted=0;for(const order of pending){
+      const source=`${order.program_id}:${order.action}`;
+      const hashBytes=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(source));
+      const key=Array.from(new Uint8Array(hashBytes)).map(b=>b.toString(16).padStart(2,'0')).join('');
+      const r=await request('/api/orders','POST',{program_id:order.program_id,action:order.action,idempotency_key:key});
+      order.status='Queued for Systemia review';order.canonical_sync='Owner API saved; GitHub pending';order.remote_id=r.order.id;accepted++;
+    }persist();render();await refreshRevision();status(`OWNER API · REV ${ownerRevision} · ${accepted} REVIEW REQUESTS · NO EXECUTION`);toast(`${accepted} requests queued locally, no physical commands.`);}
+    catch(e){persist();render();toast('Queue interrupted: '+e.message)}
+  });
   render();
 })();
 
