@@ -37,18 +37,19 @@
         "version": "v1.0-proposal"
       },
       "decision": {
-        "status": "awaiting_founder_review",
+        "status": "changes_requested",
         "approved": false,
-        "reviewed_by": null,
+        "reviewed_by": "Evercraft founder (direct statement)",
         "approval_quote": null,
-        "decision_date": null,
-        "evidence_reference": null,
+        "decision_date": "2026-11-18",
+        "evidence_reference": "docs/branding/approvals/BR-001-rejected-shortlist-feedback-20261118.md",
         "decision_commit": null,
         "accepted_dimensions": [],
         "changes_requested": [
           "Reject all three candidate names and their associated provisional marks; initiate a new, more distinctive creative iteration."
         ],
-        "reason": "Founder gave clear negative feedback on the latest naming and logo shortlist, without approving an alternative or rejecting the underlying service."
+        "reason": "Founder gave clear negative feedback on the latest naming and logo shortlist, without approving an alternative or rejecting the underlying service.",
+        "rejection_quote": "Those names and logos are so ass fam 😂"
       },
       "release": {
         "brand_mark_approved": false,
