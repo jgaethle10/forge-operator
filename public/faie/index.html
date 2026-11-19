@@ -170,9 +170,187 @@
     .activity-actions button[hidden]{display:none}
     footer{border-top:1px solid var(--line);padding:28px 0 52px;color:var(--soft);font-size:.84rem;line-height:1.6}
     a{color:var(--water)}
+
+    /* FAIE EXPERIENCE REVAMP 2026-11-19: owned, responsive intelligence studio */
+    :root{
+      --bg:#070e0c;--panel:#101c18;--panel2:#172820;--line:#304239;
+      --text:#f5f5eb;--muted:#c1cbc2;--soft:#a1b1a5;--leaf:#c1e4ac;
+      --gold:#e3cc93;--water:#8bced5;--warn:#ecc58d;--bad:#f4a4a1;
+      color-scheme:dark;
+    }
+    html{scroll-behavior:smooth;scroll-padding-top:98px}
+    body{background:radial-gradient(ellipse at 86% -9%,rgba(161,207,167,.14),transparent 43%),
+      radial-gradient(ellipse at 10% 23%,rgba(23,84,68,.18),transparent 45%),#070e0c;
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      -webkit-font-smoothing:antialiased}
+    .shell{width:min(1340px,calc(100% - 56px))}
+    ::selection{background:#bfe6a9;color:#0a170e}
+    :focus-visible{outline:2px solid #d9e9b5;outline-offset:4px}
+    .topnav{position:relative;z-index:8;border-bottom:1px solid rgba(196,232,201,.13);background:rgba(9,19,15,.9);backdrop-filter:blur(22px)}
+    .nav-inner{height:78px;display:flex;align-items:center;justify-content:space-between;gap:28px}
+    .brand{display:inline-flex;align-items:center;gap:13px;text-decoration:none;color:var(--text);min-width:0}
+    .brandmark{display:grid;place-items:center;width:38px;height:38px;flex:none;border:1px solid #789c80;
+      border-radius:12px;background:radial-gradient(circle at 30% 20%,#315c45,#10251c 75%);box-shadow:inset 0 0 0 3px rgba(8,19,12,.38)}
+    .brandmark svg{width:25px;height:25px}
+    .brandcopy strong{display:block;font-size:.92rem;letter-spacing:.22em;font-weight:800;line-height:1.1}
+    .brandcopy small{font-size:.64rem;letter-spacing:.11em;text-transform:uppercase;color:var(--soft)}
+    .nav-links{display:flex;align-items:center;gap:29px}
+    .nav-links a{font-size:.78rem;letter-spacing:.02em;text-decoration:none;color:#cfdbcf;transition:color .2s}
+    .nav-links a:hover{color:#fff}
+    .nav-links a.nav-cta{color:#0c1c12;background:var(--leaf);padding:12px 17px;border-radius:999px;font-weight:800}
+    header{position:relative;isolation:isolate;overflow:hidden;padding:95px 0 31px;border-bottom:1px solid rgba(187,213,193,.13)}
+    header::before{content:"";position:absolute;z-index:-1;pointer-events:none;top:-65px;right:-170px;
+      width:790px;height:790px;border-radius:50%;opacity:.58;background:repeating-radial-gradient(circle at center,
+      transparent 0,transparent 54px,rgba(159,204,173,.085) 55px,rgba(159,204,173,.085) 56px,transparent 57px,transparent 93px);
+      transform:rotate(-21deg) scaleX(1.4)}
+    header::after{content:"";position:absolute;z-index:-1;inset:0;opacity:.24;pointer-events:none;
+      background-image:linear-gradient(rgba(155,201,164,.08) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(155,201,164,.08) 1px,transparent 1px);
+      background-size:94px 94px;mask-image:linear-gradient(90deg,transparent 16%,#000 100%)}
+    .hero-grid{grid-template-columns:minmax(0,1.28fr) minmax(300px,.72fr);gap:64px;align-items:center}
+    .eyebrow,.section-kicker{letter-spacing:.19em;color:var(--leaf);font-weight:750}
+    .eyebrow{display:inline-flex;align-items:center;gap:10px}
+    .eyebrow::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--leaf);box-shadow:0 0 15px rgba(193,228,172,.6)}
+    h1{font-size:clamp(6.25rem,15vw,12.8rem);font-weight:400;letter-spacing:-.105em;line-height:.85;margin:.2em 0 .15em;
+      text-shadow:0 11px 50px rgba(12,37,24,.5)}
+    .lede{max-width:720px;font-size:clamp(1.06rem,1.8vw,1.35rem);color:#c9d5ca;line-height:1.65}
+    .lede strong{color:#f1efd7;font-weight:650}
+    .hero-card{position:relative;overflow:hidden;min-height:385px;padding:35px 32px;border:1px solid rgba(179,215,178,.27);
+      border-radius:28px;background:linear-gradient(148deg,rgba(34,67,49,.9),rgba(12,29,22,.97) 55%,rgba(8,19,15,.99));
+      box-shadow:0 35px 100px rgba(0,0,0,.36),inset 0 1px 0 rgba(242,255,236,.08)}
+    .hero-card::before{content:"";position:absolute;width:365px;height:365px;right:-126px;top:-137px;
+      border:1px solid rgba(213,240,196,.22);border-radius:50%;box-shadow:0 0 0 36px rgba(206,233,194,.025),
+      0 0 0 77px rgba(206,233,194,.035),0 0 0 118px rgba(206,233,194,.025);pointer-events:none}
+    .hero-card>*{position:relative}
+    .hero-card-title{font-size:clamp(2rem,3vw,2.75rem);letter-spacing:-.04em;max-width:320px}
+    .hero-card p{color:#b9cabc}
+    .watch-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+    .watch-grid span{padding:10px 3px;background:rgba(8,19,13,.42);border-color:rgba(194,220,185,.16);color:#d7e7d2}
+    .hero-link{color:var(--leaf);text-decoration:underline;text-decoration-color:rgba(193,228,172,.4);text-underline-offset:5px}
+    .proof-line span{border-color:rgba(161,203,171,.2);background:rgba(2,17,8,.2);color:#c2d8c5}
+    .promise-grid{gap:10px;margin-top:30px}
+    .promise{min-height:102px;padding:18px;background:rgba(12,28,20,.7);border-color:rgba(178,217,186,.16);border-radius:17px}
+    .promise b{font-size:.91rem}.promise span{font-size:.79rem;color:#aebeb1}
+    .hero-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:25px 0 0}
+    .hero-primary,.hero-secondary{display:inline-flex;align-items:center;justify-content:center;min-height:46px;
+      border-radius:999px;padding:12px 20px;font-size:.86rem;font-weight:800;text-decoration:none}
+    .hero-primary{color:#0b1d14;background:#c1e4ac;box-shadow:0 8px 30px rgba(128,197,131,.12)}
+    .hero-secondary{color:#eaf2e6;border:1px solid #4b6c55;background:rgba(13,32,21,.5)}
+    .hero-primary:hover,.hero-secondary:hover{transform:translateY(-2px);filter:brightness(1.07)}
+    .statusbar{margin-top:34px;gap:7px}
+    .pill,.tag{background:rgba(11,26,17,.75);border-color:#344c3d}
+    .pill{font-size:.75rem}
+    .pulse-badge{display:inline-flex;align-items:center;gap:8px;margin-left:auto;color:#d4dfd1;font-size:.75rem}
+    .pulse-dot{width:8px;height:8px;background:#d4aa8d;border-radius:50%;box-shadow:0 0 0 5px rgba(212,170,141,.08)}
+    .pulse-dot[data-health="ok"]{background:#bce3a4;box-shadow:0 0 0 5px rgba(188,227,164,.09)}
+    .pulse-dot[data-health="fail"]{background:#f4a4a1}
+    .intelligence-ribbon{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;margin-top:20px;
+      background:rgba(193,218,193,.16);border:1px solid rgba(193,218,193,.16);border-radius:18px;overflow:hidden}
+    .intelligence-stat{background:#0d1b15;padding:18px 22px;min-width:0}
+    .intelligence-stat b{display:block;font-family:Georgia,"Times New Roman",serif;font-weight:500;
+      color:#eaf2df;font-size:clamp(1.3rem,2.5vw,2rem);line-height:1.1}
+    .intelligence-stat span{display:block;color:#aabdb0;font-size:.67rem;letter-spacing:.08em;text-transform:uppercase;margin-top:7px}
+    main{padding-top:40px}
+    .layout{grid-template-columns:minmax(0,.82fr) minmax(0,1.18fr);gap:20px;align-items:start}
+    .panel{padding:28px;background:linear-gradient(150deg,rgba(20,36,27,.93),rgba(12,24,18,.98));
+      border:1px solid rgba(185,211,189,.16);border-radius:24px;box-shadow:0 26px 70px rgba(0,0,0,.12)}
+    .panel h2{font-size:clamp(1.75rem,2.5vw,2.25rem);letter-spacing:-.025em}
+    .panel-topline{margin-bottom:17px}
+    .panel-topline .tag{white-space:normal;text-align:right}
+    textarea,input,select{background:rgba(5,16,10,.75);border-color:#395145;border-radius:13px;
+      transition:border-color .2s,background .2s,box-shadow .2s;min-height:48px}
+    textarea{min-height:125px}
+    textarea:hover,input:hover,select:hover{border-color:#55765b}
+    textarea:focus,input:focus,select:focus{border-color:#b6d79d;background:#0c1d13;box-shadow:0 0 0 4px rgba(177,226,160,.09)}
+    label{color:#e3ebdf}
+    button{min-height:44px;transition:filter .18s,transform .18s,background .18s;border-color:#bfdcb1;background:#c1e4ac}
+    button:hover:not(:disabled){transform:translateY(-1px);filter:brightness(1.06)}
+    button:active:not(:disabled){transform:translateY(1px)}
+    .run-pilot{background:#e4cd93!important;border-color:#f0dbad!important}
+    .lens-tray{margin:20px 0 7px;padding:16px;border:1px solid #385142;border-radius:18px;background:rgba(5,18,11,.36)}
+    .lens-tray p{color:var(--soft);margin:0 0 11px;font-size:.8rem;line-height:1.4}
+    .lens-grid{display:flex;gap:7px;flex-wrap:wrap}
+    .lens-grid button{margin:0;padding:8px 12px;min-height:36px;border-color:#4d6b55;background:#173123;
+      color:#d8ebd7;font-size:.74rem}
+    .lens-grid button[data-active="true"]{background:#c1e4ac;color:#092012;border-color:#c1e4ac}
+    .empty-packet{min-height:240px;display:flex;flex-direction:column;justify-content:center;
+      padding:30px;border-radius:22px;background:radial-gradient(circle at 92% 7%,rgba(191,225,176,.06),transparent 55%),rgba(6,18,11,.44)}
+    .empty-packet::before{content:"◉";color:#8ebc97;font-size:1.8rem;margin-bottom:15px}
+    .empty-packet strong{font-size:1.8rem}
+    .result-head h2{max-width:390px}
+    .finding{padding:22px 0}
+    .finding p{font-size:.95rem}
+    .signal{padding:20px 0}
+    .signal p{line-height:1.6}
+    .acquisition{background:linear-gradient(135deg,#101f17,#18291f)}
+    .partner-room{border-color:#6a6343;box-shadow:0 30px 110px rgba(0,0,0,.22)}
+    .partner-step{min-height:145px}
+    .activity-hud{border-color:#58745f}
+    footer{background:#09130e}
+    @media(max-width:1120px){
+      .hero-grid{gap:34px}
+      .hero-card{padding:25px}
+      .promise-grid{grid-template-columns:1fr 1fr}
+      .nav-links{gap:15px}
+    }
+    @media(max-width:900px){
+      header{padding-top:58px}
+      .hero-grid,.layout{grid-template-columns:1fr}
+      .hero-card{min-height:auto}
+      .statusbar{margin-top:24px}
+      .pulse-badge{margin-left:0}
+      .intelligence-ribbon{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .hero-card-title{max-width:520px}
+      .nav-links a:not(.nav-cta){display:none}
+    }
+    @media(max-width:620px){
+      .shell{width:min(100% - 28px,1340px)}
+      .nav-inner{height:66px}
+      .brandmark{width:34px;height:34px}
+      .brandcopy strong{font-size:.82rem}.brandcopy small{font-size:.53rem}
+      .nav-links a.nav-cta{padding:10px 12px;font-size:.73rem}
+      header{padding-top:40px}
+      h1{font-size:clamp(5.6rem,22vw,9rem)}
+      .lede{font-size:1.04rem}
+      .promise-grid{grid-template-columns:1fr;gap:7px}
+      .promise{min-height:auto}
+      .hero-card{border-radius:20px}
+      .watch-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+      .intelligence-stat{padding:15px 13px}
+      main{padding-top:18px}
+      .panel{padding:20px;border-radius:19px}
+      .partner-room{padding:20px}
+      .statusbar .pill{font-size:.66rem}
+      .activity-hud{right:12px;bottom:12px;width:calc(100vw - 24px)}
+    }
+    @media(prefers-reduced-motion:reduce){
+      html{scroll-behavior:auto}
+      button,.hero-primary,.hero-secondary{transition:none}
+    }
+
   </style>
 </head>
 <body>
+
+<nav class="topnav" aria-label="FAIE navigation">
+  <div class="shell nav-inner">
+    <a class="brand" href="/faie/" aria-label="FAIE home">
+      <span class="brandmark" aria-hidden="true"><svg viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="15" cy="15" r="12.5" stroke="#C7E4B6" stroke-opacity=".55"/>
+        <path d="M5 19.5c5.2-8 9.9 2.8 20-8.1M5.5 14c6.3-7 10.7 5.1 19.1-3" stroke="#E5D49C" stroke-width="1.65" stroke-linecap="round"/>
+        <circle cx="15" cy="15" r="2.8" fill="#C7E4B6"/>
+      </svg></span>
+      <span class="brandcopy"><strong>FAIE</strong><small>Evercraft · Field Intelligence</small></span>
+    </a>
+    <div class="nav-links">
+      <a href="#investigation">Investigate</a>
+      <a href="#field">Evidence field</a>
+      <a href="#comparison">Compare</a>
+      <a class="nav-cta" href="#investigation">Open decision room ↗</a>
+    </div>
+  </div>
+</nav>
+
 <header>
   <div class="shell">
     <div class="hero-grid">
@@ -180,6 +358,11 @@
         <div class="eyebrow">Evercraft / Systemia · physical-world intelligence</div>
         <h1>FAIE</h1>
         <div class="lede"><strong>Underwrite the world beneath the thesis.</strong> Evidence for the physical world, built to test food-infrastructure decisions against what is actually happening in water, soil, climate, energy, labor, logistics, policy and production.</div>
+
+        <div class="hero-actions">
+          <a class="hero-primary" href="#investigation">Start an investigation ↗</a>
+          <a class="hero-secondary" href="#field">Explore the evidence field</a>
+        </div>
         <div class="promise-grid">
           <div class="promise"><b>Sense reality</b><span>Separate current evidence from assumption, model and noise.</span></div>
           <div class="promise"><b>Attack assumptions</b><span>Expose what could weaken, contradict or invalidate the thesis.</span></div>
@@ -198,7 +381,14 @@
         <a class="hero-link" href="#investigation">Open the decision room ↓</a>
       </aside>
     </div>
-    <div class="statusbar" id="statusbar"><span class="pill">Loading FAIE runtime…</span></div>
+    <div class="statusbar" id="statusbar"><span class="pill">Checking FAIE runtime…</span><span class="pulse-badge"><i class="pulse-dot" id="runtimePulse" data-health="pending" aria-hidden="true"></i><span id="runtimePulseLabel">Verifying API</span></span></div>
+    <div class="intelligence-ribbon" aria-label="Live evidence overview">
+      <div class="intelligence-stat"><b id="metricSignals">—</b><span>Admitted signals</span></div>
+      <div class="intelligence-stat"><b id="metricFeeds">—</b><span>Healthy official feeds</span></div>
+      <div class="intelligence-stat"><b id="metricRegion">—</b><span>Active evidence profile</span></div>
+      <div class="intelligence-stat"><b id="metricChecked">—</b><span>Last API check</span></div>
+    </div>
+
   </div>
 </header>
 
@@ -243,6 +433,18 @@
         <button class="preset secondary" id="agnormalPreset" type="button">Load AgNormal pilot scope</button>
       </div>
       <div class="pilot-note" id="pilotNote">The AgNormal pilot loads a Yakima Valley food-infrastructure thesis into the live engine. Edit anything before running it. No canned answer is substituted.</div>
+
+
+      <div class="lens-tray" aria-label="Investigation starting points">
+        <div class="section-kicker" style="margin-bottom:8px">Start with a lens</div>
+        <p>Pick a question to load it into the same live FAIE engine. Review and edit before you run.</p>
+        <div class="lens-grid">
+          <button type="button" data-faie-lens="water">Water reality</button>
+          <button type="button" data-faie-lens="soil">Soil &amp; site</button>
+          <button type="button" data-faie-lens="resilience">Climate resilience</button>
+          <button type="button" data-faie-lens="operations">Operating readiness</button>
+        </div>
+      </div>
 
       <form id="form">
         <label for="question">Question</label>
@@ -300,7 +502,7 @@
   </div>
 
   <div class="grid2">
-    <section class="panel">
+    <section class="panel" id="field">
       <div class="section-kicker">Live field</div>
       <h2>Current evidence field</h2>
       <div class="meta">Newest admitted physical-world evidence held by the owned runtime right now.</div>
@@ -320,7 +522,7 @@
     </section>
   </div>
 
-  <section class="panel" style="margin-top:18px">
+  <section class="panel" id="comparison" style="margin-top:18px">
     <div class="panel-topline"><div class="section-kicker">03 / Compare</div><span class="tag">same rubric · no hidden weighting</span></div>
     <h2>Compare candidate regions</h2>
     <div class="meta">Run the same FAIE rubric across two candidates. The ordering measures evidence readiness only. A better packet does not mean a better site.</div>
@@ -701,7 +903,7 @@ async function loadState() {
     statusbar.innerHTML = [
       ['View', document.body.dataset.pilot === 'agnormal' ? 'AGNORMAL PILOT' : 'PUBLIC'],
       ['Fabric', health.fabric_native ? 'OWNED' : 'CHECK'],
-      ['Registry', 'PUBLISHED'],
+      ['MCP route', health.public_mcp === '/mcp/faie' ? 'EXPOSED' : 'UNVERIFIED'],
       ['Resident', health.resident ? 'ON' : 'OFF'],
       ['Signals', health.signal_count || 0],
       ['Official feeds', sourceLabel],
@@ -709,12 +911,14 @@ async function loadState() {
       ['Radar bridge', health.radar_bridge ? 'CONNECTED' : 'IDLE']
     ].map((row) => '<span class="pill">' + esc(row[0]) + ': <strong>' + esc(row[1]) + '</strong></span>').join('');
 
+    setFaieMetrics({health});
     const rows = Array.isArray(state.signals) ? state.signals : [];
     signalsEl.innerHTML = rows.length ? rows.map((signal) =>
       '<article class="signal"><div class="tags"><span class="tag ' + cls(signal.evidence_state) + '">' + esc(signal.evidence_state) + '</span><span class="tag">' + esc((signal.dimensions || []).slice(0,2).join(' · ')) + '</span></div><p>' + esc(signal.summary) + '</p><div class="meta">' + esc(signal.source_family) + ' · ' + esc(fmt(signal.observed_at)) + '</div></article>'
     ).join('') : '<div class="quiet">FAIE is running, but no relevant signals have been admitted yet.</div>';
   } catch (error) {
-    statusbar.innerHTML = '<span class="pill error">FAIE API unavailable</span>';
+    setFaieMetrics({error});
+    statusbar.innerHTML = '<span class="pill error">FAIE API unavailable</span><span class="pulse-badge"><i class="pulse-dot" data-health="fail" aria-hidden="true"></i>Last check failed</span>';
     signalsEl.innerHTML = '<div class="quiet error">' + esc(error && error.message ? error.message : error) + '</div>';
   }
 }
@@ -918,6 +1122,47 @@ document.getElementById('form').addEventListener('submit', async (event) => {
     button.textContent = 'Build decision packet';
   }
 });
+
+
+/* FAIE EXPERIENCE REVAMP 2026-11-19: truthful observability and quick-start lenses. */
+const faieLensQuestions = {
+  water:'What current source evidence and open questions affect irrigation reliability, water availability, and agricultural continuity in the Yakima Valley?',
+  soil:'What mapped soil, drainage, and site evidence is available for agricultural infrastructure in the Yakima Valley, and what requires field verification?',
+  resilience:'What current weather, drought, heat, smoke, freeze, and infrastructure evidence could challenge food-production resilience in the Yakima Valley?',
+  operations:'What water, labor, utilities, energy, transportation, and permitting evidence must be checked before expanding regional food-production infrastructure in the Yakima Valley?'
+};
+document.querySelectorAll('[data-faie-lens]').forEach((button)=>{
+  button.addEventListener('click',()=>{
+    document.querySelectorAll('[data-faie-lens]').forEach((other)=>{other.dataset.active=String(other===button)});
+    document.getElementById('question').value=faieLensQuestions[button.dataset.faieLens]||'';
+    if(!document.getElementById('region').value.trim()) document.getElementById('region').value='yakima-wa';
+    document.getElementById('question').focus({preventScroll:true});
+    document.getElementById('form').scrollIntoView({behavior:'smooth',block:'start'});
+  });
+});
+const faieMetrics={
+  signal:document.getElementById('metricSignals'),
+  feeds:document.getElementById('metricFeeds'),
+  region:document.getElementById('metricRegion'),
+  checked:document.getElementById('metricChecked'),
+  pulse:document.getElementById('runtimePulse'),
+  pulseLabel:document.getElementById('runtimePulseLabel')
+};
+function setFaieMetrics({health,error}={}){
+  faieMetrics.checked.textContent=new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+  if(error){
+    faieMetrics.pulse.dataset.health='fail';
+    faieMetrics.pulseLabel.textContent='API unavailable';
+    for(const key of ['signal','feeds','region']) faieMetrics[key].textContent='Unavailable';
+    return;
+  }
+  const sources=health.official_collectors||{};
+  faieMetrics.signal.textContent=String(health.signal_count??health.observation_count??0);
+  faieMetrics.feeds.textContent=String(sources.healthy_source_count??0)+' / '+String(sources.configured_source_count??0);
+  faieMetrics.region.textContent=String(sources.region_profile_id||'Not configured').replaceAll('-',' ');
+  faieMetrics.pulse.dataset.health=health.ok===true?'ok':'fail';
+  faieMetrics.pulseLabel.textContent=health.ok===true?'API responding':'Runtime needs attention';
+}
 
 loadState();
 setInterval(loadState, 60000);
