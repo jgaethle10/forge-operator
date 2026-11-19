@@ -17,12 +17,13 @@ https://onthegoquicklube.evercraft:18443 {
     X-Robots-Tag "noindex, nofollow, noarchive"
     Referrer-Policy "no-referrer"
     Cache-Control "no-store"
+    X-Evercraft-Lab-Observed-Host "{http.request.host}"
     -Server
   }
 
   # Caddy can accept a request with valid SNI but a different HTTP Host.
   # Explicit HTTP Host isolation must precede the site file server.
-  @wrongHost not host onthegoquicklube.evercraft
+  @wrongHost expression `{http.request.host} != "onthegoquicklube.evercraft" && {http.request.host} != "onthegoquicklube.evercraft:18443"`
   @notRead not method GET HEAD
   route {
     respond @wrongHost 421
