@@ -87,7 +87,7 @@ def validate(source):
         out.append((ident, name, official, county, latitude, longitude,
                     coord_quality, len(inspections)))
     if dict(counts) != EXPECTED_COUNTS or county_missing != 556 or coord_invalid:
-        raise ValueError("Washington baseline counts/geography differ from independently audited result")
+        raise ValueError(f"Washington baseline mismatch: condition_counts={dict(counts)}, expected={EXPECTED_COUNTS}; county_missing={county_missing}, expected=556; outside_WA_bbox={coord_invalid}, expected=0. No database was created.")
     return out, {"records": len(out), "condition_counts": dict(counts),
                  "missing_county": county_missing, "missing_bridge_name": names_missing,
                  "invalid_bbox_coordinates": coord_invalid,
