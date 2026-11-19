@@ -20,7 +20,7 @@ test('first founder review remains unapproved and must preserve the exact $100 S
  assert.equal(ledger.current_review_order,1);
  assert.equal(ledger.products.length,7);
  assert.equal(ledger.products[0].decision.approved,false);
- assert.equal(ledger.products[0].decision.status,'awaiting_founder_review');
+ assert.equal(ledger.products[0].decision.status,'changes_requested');
  assert.equal(ledger.products.slice(1).every(x=>x.decision.status==='not_reviewed'),true);
  assert.equal(ledger.products[0].exploration.review_station.version,'BR-001.R2');
  assert.equal(ledger.products[0].exploration.review_station.automatically_records_approval,false);
@@ -30,8 +30,10 @@ test('first founder review remains unapproved and must preserve the exact $100 S
  assert.equal(product.price_usd,100);
  assert.equal(product.checkout.url,original.links.find(x=>x.key==='weekly-social').url);
  assert.equal(product.checkout.reconciliation,'manual_unverified_automated_sync');
- assert.equal(history.founder_decision_events,0);
+ assert.equal(history.founder_decision_events,1);
  assert.ok(history.entries.some(x=>x.event_id==='BR-001-E005'&&x.founder_decision===false));
+ assert.ok(history.entries.some(x=>x.event_id==='BR-001-E006'&&x.founder_decision===true));
+ assert.ok(station.includes('ARCHIVED REJECTED SHORTLIST'));
 });
 
 test('review station is non-submitting, mobile-aware, and keeps a documented local draft',()=>{
