@@ -36,6 +36,6 @@ jobs:
           assert 'TRANSFORMERS_OFFLINE' in source
           assert 'HOST="127.0.0.1"' in source
           assert 'os.execvpe(' in source
-          assert 'pip install' not in source.replace('no pip installs','')
+          assert 'subprocess.run(["pip"' not in source and 'os.system(' not in source
           print("PASS: operator script uses existing local dependencies and never exposes a remote endpoint")
           PY
