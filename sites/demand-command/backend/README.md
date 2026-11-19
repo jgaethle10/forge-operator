@@ -21,6 +21,8 @@ export EVERCRAFT_DEMAND_DB="$HOME/.local/state/evercraft/demand-command.sqlite"
 python3 server.py
 ```
 
+Open `http://127.0.0.1:8796/` on the same machine to use the API-backed private console. Enter the secret from the secure environment in the connection box. The UI stores the secret only in memory and does not persist records to localStorage. Do not publish the raw loopback server to the open internet.
+
 From an **authorized local terminal**:
 
 ```bash
@@ -33,6 +35,7 @@ Never paste the generated secret into chat or a commit. Use a private `Environme
 
 | Method | Route | Function |
 |---|---|---|
+| `GET` | `/` | Browser console shell, with no opportunity data until authenticated |
 | `GET` | `/api/heartbeat` | Liveness, record count, due count, latest write |
 | `GET` | `/api/opportunities` | All records with interaction timeline |
 | `GET` | `/api/opportunities/:id` | One dossier |
