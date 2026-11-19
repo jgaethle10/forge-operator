@@ -99,3 +99,12 @@ The first-party transport accepts only literal `http://127.0.0.1:PORT` or `http:
 A dedicated test rejects forged adapter objects, changed job keys, payloads, lease or device pins, and malformed origins. The actual Saban → Passport → Systemia → NodeSeed integration test now uses an isolated loopback HTTP relay for controlled signature corruption and observation of the pre-HTTP durable Goal Store checkpoint; it does not use arbitrary adapter code in the signed canary.
 
 **Remaining limits:** A literal loopback destination is not an OS-level seccomp/network namespace sandbox, and it does not prove the port belongs to the intended physical device. The source-only test adapter is not a Yard-authorized physical worker, a founder-authenticated production grant, an allowed external effect, or customer delivery. No Node001/Node002 activation, checkout, remote job, or production merge is authorized by this work.
+
+
+### November 18 | Fresh pinned device challenge before localhost MicroSeed execution
+
+The first-party localhost adapter now obtains a **fresh NodeSeed attestation** from the existing `POST /v1/attest` endpoint **before** `POST /v1/jobs`. It generates a new unpredictable 192-bit nonce, sends an authenticated localhost request with a separately supplied allocator attestation token, validates NodeSeed's Ed25519 signature and nonce through `verifyNodeAttestation`, enforces a 30-second freshness bound, and compares the independently pinned node ID and public-key fingerprint. Only if the identity check passes may the registered content-hash job proceed. The later signed execution receipt is still independently validated as before.
+
+Both responses use the bounded streaming JSON reader, a strict local origin, redirect denial, timeouts and a 128 KiB cap. The signed-integration test routes attestation and execution through an ephemeral localhost relay into the actual test NodeSeed. Negative tests prove that an attestation signed by a different device cannot trigger any job request; an oversized job response still fails after a valid device challenge.
+
+This establishes **current control of a pinned NodeSeed identity key at the local HTTP endpoint**. It does not prove that key belongs to Node001/Node002, that a physical field operator approved the device, or that the device has an enrolled Yard field record. Production/remote dispatch, permissions, payments and customer effects remain held.
