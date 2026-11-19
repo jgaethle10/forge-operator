@@ -100,6 +100,38 @@ service addressing, authenticated DNS delivery, trusted HTTPS, reliability
 review and final customer-facing release. Do not configure personal
 devices' system DNS or a router with these lab endpoints.
 
+## Scoped HTTPS proof (ephemeral local CI only)
+
+The Caddy TLS lab in `Client001.Caddyfile.tls-lab` proves a **real TLS
+handshake and exact certificate hostname**, rather than claiming that DNS
+alone makes the website browser-ready.
+
+- Uses the actual canonical `public/clients/on-the-go/review/index.html`;
+  no copy, redirect to GitHub Pages, external web host, or live client edit.
+- The test creates a short-lived CA and a leaf certificate with an exact
+  SAN for `onthegoquicklube.evercraft` **inside an isolated runner**.
+  No root or private key is committed, uploaded, or installed into an
+  operating system or browser trust store.
+- Starts only an unprivileged `127.0.0.1:18443` Caddy test listener. A
+  separate local split-DNS listener returns the private alias to loopback.
+- A Node.js HTTPS client explicitly trusts the temporary CA *for that
+  request only*, checks the real certificate hostname, site bytes,
+  noindex/robots, method restrictions, and negative tests proving the
+  site cannot be loaded without that scoped trust.
+- The CI evidence artifact contains only a JSON receipt: hostname, TLS
+  verified status, body digest, and negative-test status. No private keys.
+
+This is not a trusted Chrome/Safari/Firefox client-device session. Actual
+phone and laptop access requires Juan's permission, authenticated private
+routing and a consented, OS-supported TLS trust installation or other
+authorized naming strategy. `tls internal`, certificate error bypasses
+and silent root authority installation are **not** acceptable substitutes.
+
+CI workflow: `.github/workflows/evercraft-domains-client001-scoped-https.yml`.
+Local reproduction on a disposable machine with Caddy Docker, Node 22,
+OpenSSL and curl can use the workflow steps. Never run them against a
+production Node, router, customer device or public edge.
+
 ## Controls
 
 - `registry.json` lists a **held candidate identity**. A source commit cannot approve the client's brand, legal ownership, domain charges, DNS edit, customer publication or redirect.
