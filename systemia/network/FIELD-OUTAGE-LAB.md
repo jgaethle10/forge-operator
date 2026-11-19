@@ -78,3 +78,25 @@ node systemia/network/field-evidence-gate.mjs review \
 The verifier requires matching source revision/digests and different self-generated signing keys; checks signatures; matches at least two A delivery message IDs **and exact encrypted envelope hashes** against B receive records; requires B to have started the listener twice and A to record peer unreachability between those deliveries. If proof is incomplete it returns `HOLD_INSUFFICIENT_EVIDENCE`. Tampering returns `BLOCKED`. A passing software review returns `CROSS_NODE_SOFTWARE_EVIDENCE_RECONCILED`, **never a physical certification**. Two keys or two files alone do not prove two distinct devices: independent physical witness, upstream-disconnection evidence, router/guest networking constraints and measured properties must be recorded separately.
 
 Run `node --test tests/network-field-evidence-gate.test.mjs` to reproduce the synthetic receipt/fraud negatives. Do not upload this sensitive operational material publicly or push private reports to GitHub.
+
+## Push 04: inspect local interfaces before the physical trial (2026-11-19)
+
+A no-network, read-only topology preflight has been added at `systemia/network/field-topology-preflight.mjs`. It is specifically designed to catch false confidence from loopback-only tests or private addresses that belong to a different host/NAT namespace. It emits only counts and classifications, **never the actual IP, hostname, interface name, device serial, or secret**.
+
+On each authorized Penguin or NextGen **local shell**, inspect interfaces privately (`ip -4 addr`). Pick the address actually assigned to that local Linux environment on an operator-owned private test LAN. Do not invent, copy, or publish sample addresses. Then run:
+
+```bash
+node systemia/network/field-topology-preflight.mjs --bind "$LOCAL_ASSIGNED_PRIVATE_IPV4"
+```
+
+Results: `LOCAL_BIND_CANDIDATE` means only that Linux sees the address, **not** another physical machine, working LAN reachability, or loss of upstream internet. `REVIEW_VIRTUAL_GUEST_REACHABILITY` warns that WSL/Crostini guest NAT or host routing needs operator examination. `HOLD_LOOPBACK_ONLY` and `HOLD_BIND_NOT_ASSIGNED_PRIVATE_IPV4` refuse to treat a loopback or invented private address as a LAN proof. There is no automatic router configuration, port forwarding, firewall change, peer scan or ping. A nonzero exit code on HOLD must not be ignored.
+
+Perform the already documented consent-gated two-host encrypted messaging/restart sequence only after the operator confirms a safe reachable private LAN. The new receipt reviewer additionally requires **two distinct message IDs**, a second message queued after first delivery, an unreachable event between deliveries on sender A, and a receiver B listener restart **between its two accepted messages**. Repeated message IDs or restart events on the wrong side of delivery now yield `HOLD_INSUFFICIENT_EVIDENCE`, even with valid self-signed records. The tool still does not certify distinct hardware, actual WAN loss, measured signal reach, or emergency readiness.
+
+Run the combined local regression:
+
+```bash
+node --test tests/network-field-outage-lab.test.mjs tests/network-backfill-contact-lab.test.mjs tests/network-field-evidence-gate.test.mjs tests/network-field-topology-preflight.test.mjs
+```
+
+Push 04 local result: 5 tests PASS, 0 FAIL (Node.js 22). Separate GitHub CI must be checked for the exact branch SHA before promotion. Existing services on Node001/Node002 were not modified.
