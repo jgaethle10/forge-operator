@@ -121,18 +121,44 @@ async function getJson(url){
  return r.json();
 }
 async function getMcpList(){
- const r=await fetch(ORIGIN+'/mcp',{
-  method:'POST',headers:{'content-type':'application/json','accept':'application/json','user-agent':'Evercraft-ReadOnly-ParityCanary/1.0'},
-  body:JSON.stringify({jsonrpc:'2.0',id:1,method:'tools/call',params:{name:'list_evercraft_capabilities',arguments:{limit:100}}}),
-  signal:timeout(16000),
- });
- if(!r.ok)throw new Error('mcp_http_'+r.status);
- const body=await r.json();
- const out=body?.result?.structuredContent;
- if(body?.error||body?.result?.isError||out?.transactional!==false||out?.external_action_taken!==false||
-   !Array.isArray(out.capabilities))throw new Error('mcp_read_only_catalog_unverified');
- return out.capabilities.map(c=>c.public_id);
+ // The directory can exceed the 100-entry page limit. An incomplete page is
+ // not a canonical parity snapshot: require explicit offset and total echoes.
+ // This stays strictly read-only and bounded by Fabric's 256-entry catalog cap.
+ const ids=[];
+ let offset=0;
+ let total=null;
+ for(let page=0;page<4;page++){
+   const r=await fetch(ORIGIN+'/mcp',{
+     method:'POST',headers:{'content-type':'application/json','accept':'application/json','user-agent':'Evercraft-ReadOnly-ParityCanary/1.0'},
+     body:JSON.stringify({jsonrpc:'2.0',id:page+1,method:'tools/call',
+       params:{name:'list_evercraft_capabilities',arguments:{limit:100,offset}}}),
+     signal:timeout(16000),
+   });
+   if(!r.ok)throw new Error('mcp_http_'+r.status);
+   const body=await r.json();
+   const out=body?.result?.structuredContent;
+   if(body?.error||body?.result?.isError||out?.transactional!==false||
+      out?.external_action_taken!==false||!Array.isArray(out?.capabilities))
+     throw new Error('mcp_read_only_catalog_unverified');
+   if(!Number.isSafeInteger(out.total)||out.total<0||out.total>256)
+     throw new Error('mcp_directory_total_invalid');
+   if(total===null)total=out.total;
+   if(total!==out.total||out.offset!==offset||
+      out.returned!==out.capabilities.length||
+      out.capabilities.length>100||ids.length+out.capabilities.length>total)
+     throw new Error('mcp_directory_pagination_unverified');
+   if(out.capabilities.length===0&&ids.length<total)
+     throw new Error('mcp_directory_page_empty_before_end');
+   ids.push(...out.capabilities.map(c=>c.public_id));
+   const expectedNext=ids.length<total?ids.length:null;
+   if(out.next_offset!==expectedNext)
+     throw new Error('mcp_directory_next_offset_unverified');
+   if(expectedNext===null)return ids;
+   offset=expectedNext;
+ }
+ throw new Error('mcp_directory_pagination_exceeded_bound');
 }
+
 async function observe(row){
  try{
   const requested=new URL(row.public_url);
