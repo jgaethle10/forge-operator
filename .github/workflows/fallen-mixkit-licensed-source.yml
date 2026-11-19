@@ -13,6 +13,7 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p artifact
+          python -m pip install --disable-pip-version-check mutagen
           ok=0
           for url in \
             https://assets.mixkit.co/music/32/32.mp3 \
@@ -22,12 +23,11 @@ jobs:
             if curl -fsSL --retry 1 --connect-timeout 10 --max-time 28 \
                 -H 'Referer: https://mixkit.co/' -H 'User-Agent: Mozilla/5.0' \
                 "$url" -o artifact/Driving_Ambition_Ahjay_Stelino.mp3 ; then
-              if ffprobe -v error -show_entries format=duration \
-                 -of default=noprint_wrappers=1 artifact/Driving_Ambition_Ahjay_Stelino.mp3 ; then
+              if python -c "from mutagen.mp3 import MP3; p=MP3('artifact/Driving_Ambition_Ahjay_Stelino.mp3'); print(round(p.info.length,2)); assert 80<p.info.length<130" ; then
                 bytes=$(stat -c%s artifact/Driving_Ambition_Ahjay_Stelino.mp3)
                 if [ "$bytes" -gt 100000 ]; then
                   printf '%s\n' "audio_retrieval_url=$url" "license=https://mixkit.co/license/modal/musicFree/" \
-                    "artist=Ahjay Stelino\n                  source_recording_listing=https://mixkit.co/free-stock-music/film-score/" > artifact/rights-source.txt
+                    "artist=Ahjay Stelino" "source_recording_listing=https://mixkit.co/free-stock-music/film-score/" > artifact/rights-source.txt
                   sha256sum artifact/Driving_Ambition_Ahjay_Stelino.mp3 | tee artifact/source-sha256.txt
                   ok=1
                   break
