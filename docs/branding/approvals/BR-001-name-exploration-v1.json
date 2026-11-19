@@ -6,7 +6,7 @@
   "source_service_name": "Social Media Management · Weekly",
   "listed_price_usd": 100,
   "current_working_imprint": "The Weekly Signal",
-  "decision_status": "awaiting_founder_review",
+  "decision_status": "rejected_shortlist",
   "explicit_founder_approval": false,
   "purpose": "Founder review alternatives only. Names, color palettes, prototype copy, and marks are not official launch identities.",
   "screen_date": "2026-11-11",
@@ -77,7 +77,9 @@
         "legal_clearance": "not_performed",
         "trademark_cleared": false,
         "domain_verified": false
-      }
+      },
+      "review_outcome": "rejected_by_founder_feedback",
+      "candidate_for_release": false
     },
     {
       "id": "BR-001-ALT-B",
@@ -112,7 +114,9 @@
         "legal_clearance": "not_performed",
         "trademark_cleared": false,
         "domain_verified": false
-      }
+      },
+      "review_outcome": "rejected_by_founder_feedback",
+      "candidate_for_release": false
     },
     {
       "id": "BR-001-ALT-C",
@@ -147,13 +151,15 @@
         "legal_clearance": "not_performed",
         "trademark_cleared": false,
         "domain_verified": false
-      }
+      },
+      "review_outcome": "rejected_by_founder_feedback",
+      "candidate_for_release": false
     }
   ],
   "recommendation": {
-    "candidate": "Weekkin",
-    "scope": "Working lead for discussion only",
-    "reason": "The human support story is more differentiated from a generic newsletter. The product descriptor must remain visible to communicate the actual one-week service; candidate still needs independent name clearance."
+    "candidate": null,
+    "scope": "withdrawn",
+    "reason": "Earlier assistant recommendation withdrawn after explicit founder rejection."
   },
   "commercial_boundaries": {
     "canonical_existing_product": "Social Media Management · Weekly",
@@ -163,5 +169,13 @@
     "no_external_marketing_publication_without_approval": true,
     "manual_payment_reconciliation": true
   },
-  "approved_candidate": null
+  "approved_candidate": null,
+  "founder_feedback": {
+    "date": "2026-11-18",
+    "source": "current conversation founder response to BR-001 review concepts",
+    "exact_quote": "Those names and logos are so ass fam 😂",
+    "result": "all_three_names_and_corresponding_proposed_emblems_rejected",
+    "scope_limit": "This does not reject the original $100 commercial product, decide a new name, or judge every individual brand component.",
+    "decision_record": "docs/branding/approvals/BR-001-rejected-shortlist-feedback-20261118.md"
+  }
 }

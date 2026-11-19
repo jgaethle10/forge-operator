@@ -37,16 +37,19 @@
         "version": "v1.0-proposal"
       },
       "decision": {
-        "status": "awaiting_founder_review",
+        "status": "changes_requested",
         "approved": false,
-        "reviewed_by": null,
+        "reviewed_by": "Evercraft founder (direct statement)",
         "approval_quote": null,
-        "decision_date": null,
-        "evidence_reference": null,
+        "decision_date": "2026-11-18",
+        "evidence_reference": "docs/branding/approvals/BR-001-rejected-shortlist-feedback-20261118.md",
         "decision_commit": null,
         "accepted_dimensions": [],
-        "changes_requested": [],
-        "reason": null
+        "changes_requested": [
+          "Reject all three candidate names and their associated provisional marks; initiate a new, more distinctive creative iteration."
+        ],
+        "reason": "Founder gave clear negative feedback on the latest naming and logo shortlist, without approving an alternative or rejecting the underlying service.",
+        "rejection_quote": "Those names and logos are so ass fam 😂"
       },
       "release": {
         "brand_mark_approved": false,
@@ -82,7 +85,7 @@
       ],
       "exploration": {
         "version": "BR-001-ALTERNATES.v1",
-        "state": "unapproved_concept_comparison",
+        "state": "rejected_shortlist",
         "review_file": "docs/branding/approvals/BR-001-name-exploration-v1.md",
         "structured_file": "docs/branding/approvals/BR-001-name-exploration-v1.json",
         "preview_url": "https://jgaethle10.github.io/forge-operator/mesh/checkout-ready/social-media-weekly/brand-review/",
@@ -99,8 +102,17 @@
           "source_path": "public/mesh/checkout-ready/social-media-weekly/brand-review/decision/index.html",
           "documentation": "docs/branding/approvals/BR-001-review-station-v2.md",
           "automatically_records_approval": false,
-          "founder_decision_received": false
-        }
+          "founder_decision_received": false,
+          "archived_from_active_decision": true
+        },
+        "candidates_rejected": [
+          "Weekkin",
+          "Cadencekeep",
+          "Weekmorrow"
+        ],
+        "rejection_evidence": "docs/branding/approvals/BR-001-rejected-shortlist-feedback-20261118.md",
+        "original_founder_quote": "Those names and logos are so ass fam 😂",
+        "revision_required": true
       }
     },
     {
