@@ -11,6 +11,10 @@ const SOURCE_FILES=Object.freeze([
   'systemia/mission-bridge/bridge.mjs',
   'systemia/mcp/signal-public-inquiry.mjs',
 ]);
+const GEMS_FILES=Object.freeze([
+  'systemia/mission-bridge/gems/gems-001-evidence.json',
+  'systemia/mission-bridge/gems/gems-002-plan.json',
+]);
 const ROUTES=Object.freeze({
   'signal-public-ingress':Object.freeze({
     specialist:'systemia.signal-public-edge-observer',
@@ -28,10 +32,6 @@ const ROUTES=Object.freeze({
     checks:GEMS_FILES
   }),
 });
-const GEMS_FILES=Object.freeze([
-  'systemia/mission-bridge/gems/gems-001-evidence.json',
-  'systemia/mission-bridge/gems/gems-002-plan.json',
-]);
 const SHA=x=>crypto.createHash('sha256').update(x).digest('hex');
 const REQUEST_KEYS=new Set(['schema','mission_id','objective','route','mode','requested_at']);
 
