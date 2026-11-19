@@ -155,7 +155,7 @@ export function openWingBundle({encryptedFile,destinationDir,receiverPrivateKeyF
   if(ephemeral.asymmetricKeyType!=='x25519')fail('ephemeral_key_invalid');
   const key=derive(receiver,ephemeral,salt,h.id,h.fromWing,h.toWing);
   const decipher=crypto.createDecipheriv('aes-256-gcm',key,nonce);decipher.setAAD(header);decipher.setAuthTag(tag);
-  stage=path.join(destinationDir,'.wing-stage-'+h.id);
+  stage=path.join(destinationDir,'.wing-stage-'+h.id+'-'+crypto.randomBytes(8).toString('hex'));
   fs.mkdirSync(stage,{mode:0o700});const stageStat=fs.lstatSync(stage);
   if(!stageStat.isDirectory()||stageStat.isSymbolicLink())fail('stage_invalid');
   let prefix=Buffer.alloc(0),meta=Buffer.alloc(0),mlen=null,m=null,assetIx=0,remaining=0,assetHash=null;
