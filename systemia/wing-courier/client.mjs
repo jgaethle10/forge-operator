@@ -62,6 +62,35 @@ export async function pushEncryptedWingBundle({baseUrl,tokenFile,metaFile,bundle
   plaintextExposedToBroker:false,receiverAcknowledged:admitted.state==='ACK_REPORTED_BY_RECEIVER',
   studioJobAccepted:false,externalCustomerSendAuthorized:false};
 }
+// A receiver may have authenticated and persisted the package, then lost the
+// connection before the broker acknowledged it. Verify local custody and resume ACK
+// rather than downloading or importing the same data twice.
+function recoverLocalCustody({root,item,wing}){
+ const dir=path.join(root,item.id);
+ if(!fs.existsSync(dir))return null;
+ const ds=fs.lstatSync(dir);if(!ds.isDirectory()||ds.isSymbolicLink()||(ds.mode&0o077))fail('existing_custody_not_private');
+ const receiptFile=path.join(dir,'receipt.json'),st=fs.lstatSync(receiptFile);
+ if(!st.isFile()||st.isSymbolicLink()||(st.mode&0o077))fail('existing_receipt_not_private');
+ const receipt=JSON.parse(fs.readFileSync(receiptFile,'utf8'));
+ if(receipt?.schema!=='evercraft.systemia.wing-receive-receipt.v1'||
+ receipt?.state!=='AUTHENTICATED_BYTES_RECEIVED'||receipt.id!==item.id||
+ receipt.fromWing!==item.fromWing||receipt.toWing!==wing||
+ receipt.ciphertextSha256!==item.ciphertextSha256||
+ !Array.isArray(receipt.assets)||!receipt.assets.length||receipt.assets.length>256)
+  fail('existing_custody_receipt_mismatch');
+ const seen=new Set();
+ for(const a of receipt.assets){
+  const n=a?.filename;
+  if(typeof n!=='string'||n!==path.basename(n)||n.includes('\\')||n.includes('/')||
+   n.startsWith('.')||seen.has(n.toLowerCase())||!HEX.test(a.sha256||'')||
+   !Number.isSafeInteger(a.bytes)||a.bytes<1)fail('existing_asset_identity_invalid');
+  seen.add(n.toLowerCase());const file=path.join(dir,n);
+  if(fs.lstatSync(file).size!==a.bytes||hashFileSync(file)!==a.sha256)fail('existing_asset_changed');
+ }
+ if(fs.readdirSync(dir).filter(x=>x!=='receipt.json'&&x!=='intake-offer.json').length!==receipt.assets.length)
+  fail('existing_custody_extra_files');
+ return {directory:dir,receipt,recovered:true};
+}
 export async function pollWingInbox({baseUrl,tokenFile,wing,destinationDir,receiverPrivateKeyFile,
  senderVerifyPublicKeys}){
  if(!/^[a-z][a-z0-9-]{1,47}$/.test(wing||''))fail('wing_invalid');
@@ -79,13 +108,16 @@ export async function pollWingInbox({baseUrl,tokenFile,wing,destinationDir,recei
   const encrypted=path.join(root,'.inbound-'+id+'.wing');
   let imported;
   try{
-   if(!fs.existsSync(encrypted)){
-    const obj=await request(base,token,'GET','/v1/envelopes/'+id+'/blob');
-    const outfile=fs.createWriteStream(encrypted,{mode:0o600,flags:'wx'});
-    await pipeline(Readable.fromWeb(obj.body),outfile);
+   if(!fs.existsSync(path.join(root,id))){
+    if(!fs.existsSync(encrypted)){
+     const obj=await request(base,token,'GET','/v1/envelopes/'+id+'/blob');
+     const outfile=fs.createWriteStream(encrypted,{mode:0o600,flags:'wx'});
+     await pipeline(Readable.fromWeb(obj.body),outfile);
+    }
+    if(fs.statSync(encrypted).size!==item.bytes||hashFileSync(encrypted)!==item.ciphertextSha256)fail('transport_digest_mismatch');
    }
-   if(fs.statSync(encrypted).size!==item.bytes||hashFileSync(encrypted)!==item.ciphertextSha256)fail('transport_digest_mismatch');
-   imported=openWingBundle({encryptedFile:encrypted,destinationDir:root,
+   imported=recoverLocalCustody({root,item,wing}) || openWingBundle({
+     encryptedFile:encrypted,destinationDir:root,
      receiverPrivateKeyFile,trustedSenderPublicKeyFile:signer,
      expectedFromWing:item.fromWing,expectedToWing:wing});
    const receiptDigest=sha(Buffer.from(JSON.stringify(imported.receipt)));
