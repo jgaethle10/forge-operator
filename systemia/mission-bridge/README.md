@@ -92,3 +92,19 @@ An actual independent local execution on the preserved submitted candidate produ
 Rows partitioned north-to-south showed positive-valued fractions of valid pixels roughly 4.26%, 12.54%, 9.65% and 7.90%; these are *coverage diagnostics only*, not real fault prevalence or performance metrics. **Important**: the original feature/reference raster was not present, so the official allowed-area mask was NOT independently matched. The archived portal DTI 0.0552 is sourced from a participant-supplied receipt, not a fresh organizer API call. GitHub CI did not run this real-data validator because the private archive was intentionally not uploaded.
 
 For local reproduction with the private ZIP: `python systemia/mission-bridge/gems/audit_preserved_candidate.py /path/to/gems_001_verified_submission.zip`. No GEMS-002 performance claim follows from this format audit.
+
+## GEMS-002 controlled negative-label ablation (real-data runnable, not executed here)
+
+`gems/gems_002_negative_ablation.py` implements a fixed-seed experiment against the **three organizer rasters already obtained by the authorized entrant**. It imports the preserved GEMS-001 `run.py` implementation (must be alongside the script in the private workspace), checks the **exact SHA-256 hashes** recorded in the archived official input manifest, uses the same multiscale HistGradientBoosting model/seed, and varies only the exclusion radius around `training-known` fault pixels: **0, 3, or 10 pixels** (100 meters per pixel). All variants use the original 5:1 sampled-negative cap, threshold 0.20, and ridge thinning. The training buffer cannot see geographic holdout labels.
+
+The first three geographically buffered folds determine the selected candidate; the southern fourth fold is reported independently and must never control candidate selection. Output: `evidence/gems-002-negative-buffer-ablation.json`, with all fold results, per-file organizer digests, fixed settings, and no submission. It does not modify GEMS-001, write a candidate GeoTIFF, submit to DrivenData, or auto-promote a new model. The score is the **archived local mapped-fault proxy**, not the organizer's official public DTI for newly mapped faults.
+
+Run only in an isolated authorized environment with the official data and locally installed Python, NumPy, Rasterio, SciPy, scikit-learn:
+
+```sh
+# Copy the preserved GEMS-001 run.py into this directory before invoking.
+python gems_002_negative_ablation.py --data-dir /private/official-data --evidence-dir /private/research-evidence
+python -m unittest -v test_gems_002_negative_ablation.py
+```
+
+ChatGPT's current execution container does **not** have the three organizer rasters. The deterministic sampling and leakage test cases passed locally with synthetic small arrays; GitHub CI syntax-checks the script but cannot run the real-data training or dependency-heavy test suite. No actual GEMS-002 proxy scores have been produced by this new experiment yet. A separate gate is required before scored submission and daily UTC quota compliance.
