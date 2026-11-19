@@ -4,6 +4,8 @@ on:
     branches: [production/tileworks-bella-20261119]
     paths: [.github/workflows/fallen-tileworks-native-bella.yml]
   workflow_dispatch:
+  pull_request:
+    paths: [.github/workflows/fallen-tileworks-native-bella.yml]
 permissions:
   contents: read
 jobs:
@@ -72,6 +74,16 @@ jobs:
           PY
           mkdir -p artifacts/tileworks-bella
           cp /tmp/tileworks-bella/{tileworks_bella_continuous.wav,bella_scene_*.wav,receipt.json,checkpoint-hashes.txt} artifacts/tileworks-bella/
+      - name: Retrieve licensed Driving Ambition music for sync-review only
+        continue-on-error: true
+        run: |
+          mkdir -p artifacts/tileworks-bella
+          curl -fL --retry 2 --connect-timeout 15 --max-time 60 \
+            https://assets.mixkit.co/music/download/mixkit-driving-ambition-32.mp3 \
+            -o artifacts/tileworks-bella/Driving_Ambition_Ahjay_Stelino_Mixkit.mp3
+          ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1 \
+            artifacts/tileworks-bella/Driving_Ambition_Ahjay_Stelino_Mixkit.mp3
+          sha256sum artifacts/tileworks-bella/Driving_Ambition_Ahjay_Stelino_Mixkit.mp3
       - name: Upload private-review Bella audio takes
         uses: actions/upload-artifact@v4
         with:
