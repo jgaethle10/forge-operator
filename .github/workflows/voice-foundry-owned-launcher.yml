@@ -1,0 +1,41 @@
+name: Voice Foundry | Owned Node Offline Launcher Safety
+on:
+  push:
+    branches: [feature/bella-actor-lab-20261026]
+    paths:
+      - 'systemia/media-studio/start-voice-foundry-owned.py'
+      - 'systemia/media-studio/test_start_voice_foundry_owned.py'
+      - '.github/workflows/voice-foundry-owned-launcher.yml'
+  pull_request:
+    paths:
+      - 'systemia/media-studio/start-voice-foundry-owned.py'
+      - 'systemia/media-studio/test_start_voice_foundry_owned.py'
+      - '.github/workflows/voice-foundry-owned-launcher.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  offline-operator-preflight:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Verify owned-only launcher without contacting any model host
+        run: |
+          python -m unittest discover -s systemia/media-studio -p test_start_voice_foundry_owned.py -v
+          python systemia/media-studio/start-voice-foundry-owned.py --check-only
+      - name: Ensure no public listen or customer release
+        run: |
+          python - <<'PY'
+          import pathlib
+          source=pathlib.Path('systemia/media-studio/start-voice-foundry-owned.py').read_text()
+          assert 'HF_HUB_OFFLINE' in source
+          assert 'TRANSFORMERS_OFFLINE' in source
+          assert 'HOST="127.0.0.1"' in source
+          assert 'os.execvpe(' in source
+          assert 'pip install' not in source.replace('no pip installs','')
+          print("PASS: operator script uses existing local dependencies and never exposes a remote endpoint")
+          PY
