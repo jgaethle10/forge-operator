@@ -1,0 +1,26 @@
+name: Evercraft Wing Courier | encrypted handoff contracts
+on:
+  push:
+    paths:
+      - 'systemia/wing-courier/**'
+      - '.github/workflows/evercraft-wing-courier.yml'
+  pull_request:
+    paths:
+      - 'systemia/wing-courier/**'
+      - '.github/workflows/evercraft-wing-courier.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  encrypted-handoff:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Wing-to-wing confidential delivery and adversarial tests
+        run: node --test systemia/wing-courier/wing-courier.test.mjs
