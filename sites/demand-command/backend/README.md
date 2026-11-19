@@ -103,3 +103,11 @@ This explicitly authorized action creates matching local dossiers only and **can
 The `.service.example` and `.timer.example` files define an optional read-only preview every five minutes, running on **Evercraft-owned NextGen** with `systemd --user` after paths and privileges are checked. They are **not** installed or enabled and do not connect Systemia automatically. Install only after verifying the running Revenue Desk service and owned environment paths. Leave the `--apply` operation manual until historical outreach and cross-channel identity reconciliation is approved.
 
 The preview receipts contain source record identifiers for rejected rows, counts and import outcomes, **not full message bodies**. Protect the report directory and SQLite database. This is an integration canary; it is not proof of a live, continuously running production service.
+
+If the live Revenue Desk export schema is unfamiliar, run this **privacy-preserving inspector** before attempting a bridge run:
+
+```bash
+python3 revenue_desk_bridge.py --inspect-schema
+```
+
+It prints only record counts, field names and value **types**, not actual buyer names, messages, contact addresses, payments or IDs. The first real NextGen probe has **not yet been executed** from this environment, so compatibility with the actual 8795 payload remains to be confirmed.
