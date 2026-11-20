@@ -87,7 +87,7 @@ test('read-only live offer contract matches buyer choices without creating leads
   assert.equal(contract.intake_acceptance_proved,false);
   assert.equal(contract.production_authority,false);
   assert.equal(contract.payment_authority,false);
-  assert.doesNotMatch(JSON.stringify(contract),/casey@example\\.test|customer_name|private_dir|token/);
+  assert.doesNotMatch(JSON.stringify(contract),/casey@example\.test|customer_name|private_dir|token/);
   assert.equal((await fetch(url,{method:'POST'})).status,405);
   assert.equal(fs.existsSync(path.join(dir,'inquiries.ndjson')),false);
  }finally{await runtime.close();fs.rmSync(dir,{force:true,recursive:true});}
