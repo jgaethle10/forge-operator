@@ -158,3 +158,36 @@ test('email addresses cannot be persisted as Passport contact references',()=>{
   assert.equal(inspectReservations({stateDir:c.stateDir}).count,0);
  }finally{dispose(c);}
 });
+
+
+test('corrupt persisted reservation cannot change shared quota or impersonate a provider confirmation',()=>{
+ const c=setup();
+ try{
+  const first=reserveColdOutreach(c.kwargs);
+  assert.equal(first.state,'reserved_not_sent');
+  const file=path.join(c.stateDir,'reservation-events.jsonl');
+  const valid=JSON.parse(fs.readFileSync(file,'utf8').trim());
+  for(const [label,mutation] of [
+   ['negative capacity debit',{units:-999}],
+   ['fractional capacity debit',{units:0.001}],
+   ['missing capacity debit',{units:null}],
+   ['invalid reservation clock',{reserved_at:'not-a-timestamp'}],
+   ['fabricated provider success',{provider_confirmed:true}],
+   ['fabricated send event',{send_performed:true,state:'sent'}],
+   ['swapped contact reference',{contact_ref:'not-a-hmac'}],
+   ['altered message fingerprint',{message_fingerprint:'sha256:unverified'}],
+   ['missing passport permit',{passport_permit_id:null}],
+  ]){
+   fs.writeFileSync(file,JSON.stringify({...valid,...mutation})+'\\n',{mode:0o600});
+   assert.throws(()=>inspectReservations({stateDir:c.stateDir}),
+    /corrupt_outreach_reservation_record/,label+' audit must hold');
+   assert.throws(()=>reserveColdOutreach(c.kwargs),
+    /corrupt_outreach_reservation_record/,label+' send reservation must hold');
+  }
+  fs.writeFileSync(file,JSON.stringify(valid)+'\\n',{mode:0o600});
+  assert.equal(inspectReservations({stateDir:c.stateDir}).count,1);
+  const repeat=reserveColdOutreach(c.kwargs);
+  assert.equal(repeat.state,'held');
+  assert.deepEqual(repeat.reasons,['contact_or_opportunity_already_reserved']);
+ }finally{dispose(c);}
+});
