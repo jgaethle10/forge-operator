@@ -56,8 +56,12 @@ function keyHash(file){
   safeArg(file);inspectParents(file);
   const st=inspectFile(file);
   if(st.size<40||st.size>4096)deny('key_size');
+  const publicPem=fs.readFileSync(file,'utf8');
+  // createPublicKey() also accepts a private PEM and derives its public half.
+  // Never allow a wing's private signer to be accidentally stored on the broker.
+  if(!/^-----BEGIN PUBLIC KEY-----\\r?\\n/.test(publicPem))deny('private_key_at_broker_forbidden');
   let key;
-  try{key=crypto.createPublicKey(fs.readFileSync(file));}
+  try{key=crypto.createPublicKey(publicPem);}
   catch{deny('key_invalid');}
   if(key.asymmetricKeyType!=='ed25519')deny('key_not_ed25519');
   return crypto.createHash('sha256').update(
@@ -170,6 +174,7 @@ export async function installWingBroker({
   inspectDir(home,false);
   const dir=path.join(home,'.config/systemd/user');
   fs.mkdirSync(dir,{recursive:true,mode:0o700});
+  inspectParents(path.join(dir,'unit.marker'));
   const st=fs.lstatSync(dir);
   if(!st.isDirectory()||st.isSymbolicLink())deny('unit_dir_invalid');
   const unit=path.join(dir,SERVICE);
