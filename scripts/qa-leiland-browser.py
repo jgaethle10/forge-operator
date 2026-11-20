@@ -84,6 +84,10 @@ try:
             assert response and response.status==200,"Leiland source page did not load"
             page.wait_for_timeout(1050 if not reduced else 250)
             assert page.locator("canvas#brain-canvas").is_visible()
+            if name=="iphone":
+                first_stage=page.locator("#brain-stage").bounding_box()
+                assert first_stage and first_stage["y"]<290,(
+                    f"Cinematic canvas is buried below the phone fold: {first_stage}")
             assert page.locator("#status-lamp").count()==1
             assert page.locator("#collider-state").inner_text()=="Not connected",(
                 "A missing public pulse must not be reported as a live heartbeat.")
