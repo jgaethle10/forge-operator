@@ -67,6 +67,28 @@ input[type=range]{width:100%;accent-color:#c5f4ad;cursor:pointer;min-height:23px
 .museum-passport button{color:#b5dfe3;background:transparent;border:1px solid #4e7481;border-radius:9px;padding:8px 10px;font-size:12px}
 .pass-state{font-variant-numeric:tabular-nums;color:#bbefcb}
 @media(max-width:460px){.quest-panel h3{font-size:25px}.quest-intro{align-items:start}.museum-passport{align-items:start;flex-direction:column}}
+
+.comparison{margin-top:23px;background:linear-gradient(125deg,#0b2839,#123c43);border:1px solid #4d8888;border-radius:23px;padding:clamp(18px,3vw,29px)}
+.comparison h2{font:500 clamp(29px,4vw,41px)/1.12 Georgia,serif;letter-spacing:-.04em;margin:8px 0}
+.comparison p{color:#c4dce1;font-size:14px;max-width:790px;margin:0 0 14px;line-height:1.6}
+.compare-tools{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin:14px 0}
+.compare-tools button{min-height:44px;padding:10px 15px;border:1px solid #8fc9bb;border-radius:11px;background:#c4f7db;color:#082c32;font-weight:900;font-size:13px}
+.compare-tools button:disabled{opacity:.46;cursor:not-allowed}
+.compare-tools button.subtle{color:#dbf2f2;background:#173e4a;border-color:#53868e}
+.predict-picks{display:flex;flex-wrap:wrap;gap:9px;margin-top:11px}
+.predict-picks button{padding:10px 13px;min-height:44px;border:1px solid #658e97;color:#def6f4;background:#173d4b;border-radius:999px;font-weight:800;font-size:13px}
+.predict-picks button[aria-pressed=true]{background:#c4f7db;color:#0b3030;border-color:#c4f7db}
+.predict-picks button:disabled{opacity:.4;cursor:not-allowed}
+.comparison-chart{display:grid;gap:13px;margin:17px 0;border:1px solid #427785;background:#082230;border-radius:16px;padding:18px}
+.compare-row{display:grid;grid-template-columns:minmax(80px,.32fr) minmax(0,1fr);gap:14px;align-items:center}
+.compare-row strong{font-size:12px;color:#dbf1f4}
+.compare-row small{font-size:12px;color:#e3ebce}
+.compare-bar-track{height:28px;border-radius:6px;background:#163f4e;position:relative;overflow:hidden}
+.compare-bar{height:100%;border-radius:6px;background:linear-gradient(90deg,#4aafc0,#c5e8e0)}
+.compare-row:nth-child(2) .compare-bar{background:linear-gradient(90deg,#a9cf7a,#f8dfa2)}
+.compare-foot{color:#e6f6f3;font-size:13px;font-variant-numeric:tabular-nums}
+.compare-feedback{font-size:14px;color:#e5eebc;min-height:24px}
+@media(max-width:460px){.compare-row{grid-template-columns:1fr;gap:4px}.comparison-chart{padding:13px}}
 </style>
 </head>
 <body>
@@ -116,6 +138,25 @@ input[type=range]{width:100%;accent-color:#c5f4ad;cursor:pointer;min-height:23px
     <label><input type="checkbox" id="rememberPass">Remember discoveries on this device</label>
     <button type="button" id="clearPass">Clear museum passport</button>
   </div>
+</section>
+
+<section class="comparison" aria-labelledby="compareHeading">
+ <p class="eyebrow">SCIENCE MUSEUM · INVESTIGATION BENCH</p>
+ <h2 id="compareHeading">Run two trials. Find the cause.</h2>
+ <p>Capture a first experiment, change at least one control, then predict how the measurement will respond. Run the second trial to compare the actual model outputs.</p>
+ <div class="compare-tools">
+  <button type="button" id="trialA">1 · Capture Trial A</button>
+  <button type="button" id="trialB" disabled>3 · Run Trial B</button>
+  <button type="button" class="subtle" id="clearComparison">Reset comparison</button>
+ </div>
+ <p id="predictPrompt">2 · First capture Trial A. Then predict whether the measurement will increase, decrease or stay similar.</p>
+ <div class="predict-picks" aria-label="Predict the model result">
+  <button type="button" data-predict="higher" aria-pressed="false" disabled>Increase ↑</button>
+  <button type="button" data-predict="lower" aria-pressed="false" disabled>Decrease ↓</button>
+  <button type="button" data-predict="same" aria-pressed="false" disabled>Stay similar ≈</button>
+ </div>
+ <div class="comparison-chart" id="compareChart" aria-label="Trial A and Trial B measurement bars"></div>
+ <p class="compare-feedback" id="compareFeedback" role="status" aria-live="polite">Your first trial hasn't been captured yet. Change the experiment above as freely as you like.</p>
 </section>
 <section class="concept" aria-labelledby="conceptTitle">
 <div><p class="eyebrow">UNDERSTAND THE MODEL</p><h2 id="conceptTitle">The arc is not magic.</h2><p id="conceptText">Without air resistance, horizontal speed stays constant while gravity changes vertical speed. Try keeping your speed fixed and changing only the launch angle.</p></div>
@@ -368,6 +409,84 @@ function checkQuest(){
  }else $('questFeedback').textContent='Not quite yet. '+q.hint;
 }
 
+// Scientific method comparison bench: capture A, predict, vary a model input,
+// then measure B. Readouts are deterministic ideal-model values, not sensors.
+const COMPARE_MODELS={
+ launch:{label:'Predicted range',unit:'m',metric:r=>r.range},
+ pendulum:{label:'Approximate period',unit:'s',metric:r=>r.period},
+ wave:{label:'Wavelength',unit:'m',metric:r=>r.wavelength}
+};
+let compareA=null,compareB=null,comparePrediction=null;
+function measurement(){
+ return {mode,values:values(),result:COMPARE_MODELS[mode].metric(currentResult())};
+}
+function compareRow(label,value,scale,unit){
+ const row=document.createElement('div');row.className='compare-row';
+ const title=document.createElement('strong');title.textContent=label+' · '+fmt(value)+' '+unit;
+ const track=document.createElement('div');track.className='compare-bar-track';
+ const bar=document.createElement('div');bar.className='compare-bar';
+ bar.style.width=Math.max(4,value/scale*100)+'%';track.append(bar);row.append(title,track);return row;
+}
+function renderComparison(){
+ const chart=$('compareChart');chart.replaceChildren();
+ if(compareA){
+  const model=COMPARE_MODELS[compareA.mode];
+  const largest=Math.max(compareA.result,compareB?.result||0,.00001);
+  chart.append(compareRow('TRIAL A',compareA.result,largest,model.unit));
+  if(compareB){
+   chart.append(compareRow('TRIAL B',compareB.result,largest,model.unit));
+   const difference=compareB.result-compareA.result;
+   const delta=document.createElement('div');delta.className='compare-foot';
+   delta.textContent=model.label+': '+(difference>=0?'+':'')+fmt(difference)+' '+model.unit
+     +' · ratio B/A = '+fmt(compareB.result/compareA.result)+'×';
+   chart.append(delta);
+  }
+ }else{
+  const empty=document.createElement('span');empty.className='compare-foot';
+  empty.textContent='Your trial measurements will appear here as two comparable bars.';
+  chart.append(empty);
+ }
+ for(const pick of document.querySelectorAll('[data-predict]')){
+  pick.disabled=!compareA||!!compareB;
+  pick.setAttribute('aria-pressed',String(comparePrediction===pick.dataset.predict));
+ }
+ $('trialB').disabled=!compareA||!comparePrediction||!!compareB;
+ $('predictPrompt').textContent=compareA
+  ?'2 · Now change one or more sliders, predict the result, then run Trial B.'
+  :'2 · Capture Trial A first. Then predict increase, decrease or no meaningful change.';
+}
+function resetComparison(){
+ compareA=null;compareB=null;comparePrediction=null;
+ $('compareFeedback').textContent='Ready to explore. Capture the current model as Trial A.';
+ renderComparison();
+}
+function captureTrialA(){
+ compareA=measurement();compareB=null;comparePrediction=null;
+ $('compareFeedback').textContent='Trial A recorded at '+fmt(compareA.result)+' '+COMPARE_MODELS[mode].unit+'. Change a slider and choose your prediction.';
+ renderComparison();
+}
+function captureTrialB(){
+ if(!compareA||!comparePrediction||compareB)return;
+ const next=measurement();
+ if(next.mode!==compareA.mode){resetComparison();return;}
+ if(next.values.every((n,i)=>Math.abs(n-compareA.values[i])<.000001)){
+  $('compareFeedback').textContent='Change at least one slider to run a meaningful second trial.';
+  return;
+ }
+ compareB=next;
+ const tolerance=Math.max(.05,compareA.result*.01),delta=compareB.result-compareA.result;
+ const outcome=Math.abs(delta)<=tolerance?'same':delta>0?'higher':'lower';
+ const word={higher:'increased',lower:'decreased',same:'stayed nearly the same'}[outcome];
+ const explanation={
+  launch:'Ideal level-ground range follows speed squared, launch angle and inverse gravity.',
+  pendulum:'The small-angle period increases with length and decreases with gravity; starting angle does not enter this approximation.',
+  wave:'Wavelength depends on speed divided by frequency; amplitude does not change it in this model.'
+ }[mode];
+ $('compareFeedback').textContent=(outcome===comparePrediction?'✓ Your prediction matched. ':'Your prediction was different. ')
+  +'The modeled '+COMPARE_MODELS[mode].label.toLowerCase()+' '+word+'. '+explanation;
+ renderComparison();
+}
+
 function refresh(){
  const x=currentResult();$('resultLabel').textContent=x.label;$('resultValue').textContent=x.value;$('resultDetail').textContent=x.detail;
  for(let i=0;i<3;i++)$('value'+['A','B','C'][i]).textContent=formatValue(i,values()[i]);
@@ -376,6 +495,7 @@ function refresh(){
 function select(next){
  if(!Object.hasOwn(MODES,next))return;
  mode=next;clock=0;last=0;
+ if(compareA&&compareA.mode!==next)resetComparison();
  const m=MODES[next];$('stageName').textContent=m.heading;$('stageHint').textContent=m.hint;
  $('controlTitle').textContent=m.title;$('stageQuestion').textContent=m.question;
  $('conceptTitle').textContent=m.concept;$('conceptText').textContent=m.explain;$('formula').textContent=m.formula;$('limits').textContent=m.limits;
@@ -402,6 +522,12 @@ window.addEventListener('resize',resize,{passive:true});
 $('tryQuest').addEventListener('click',checkQuest);
 $('nextQuest').addEventListener('click',refreshQuest);
 passportInit();
+$('trialA').addEventListener('click',captureTrialA);
+$('trialB').addEventListener('click',captureTrialB);
+$('clearComparison').addEventListener('click',resetComparison);
+for(const btn of document.querySelectorAll('[data-predict]'))
+ btn.addEventListener('click',()=>{if(!compareA||compareB)return;comparePrediction=btn.dataset.predict;renderComparison()});
+resetComparison();
 select('launch');resize();requestAnimationFrame(step);
 })();
 </script>
