@@ -34,7 +34,7 @@ test('Passport collects a real proximity and altitude-qualified flyover only onc
  assert.equal(api.observe({condition:'GROUND_CONTACT',x:100,z:0,y:300}),null);
  assert.equal(api.observe({condition:'FLYING',paused:true,x:100,z:0,y:300}),null);
  assert.equal(api.observe({condition:'FLYING',x:1000,z:0,y:300}),null);
- assert.equal(api.observe({condition:'FLYING',x:100,z:0,y:300}),'Space Needle');
+ assert.equal(api.observe({condition:'FLYING',x:100,z:0,y:300}).kind,'both');
  assert.equal(api.observe({condition:'FLYING',x:100,z:0,y:300}),null);
  assert.equal(api.snapshot({x:0,z:0}).count,1);
  assert.equal(api.snapshot({x:0,z:0}).dailyComplete,true);
@@ -44,13 +44,13 @@ test('Passport is persisted locally without requiring sign-in and rotates spotli
  const data=new Map();
  const first=harness(1,data);
  assert.equal(first.api.snapshot({x:0,z:0}).daily,'Pike Place Market');
- assert.equal(first.api.observe({condition:'FLYING',x:-200,z:60,y:120}),'Pike Place Market');
+ assert.equal(first.api.observe({condition:'FLYING',x:-200,z:60,y:120}).kind,'both');
  const returnDay=harness(2,data);
  assert.equal(returnDay.api.snapshot({x:0,z:0}).count,1);
  assert.equal(returnDay.api.snapshot({x:0,z:0}).daily,'Seattle Great Wheel');
  assert.equal(returnDay.api.snapshot({x:0,z:0}).target,'Seattle Great Wheel');
- assert.equal(returnDay.api.observe({condition:'FLYING',x:-400,z:150,y:120}),'Seattle Great Wheel');
- assert.equal(returnDay.api.observe({condition:'FLYING',x:100,z:0,y:320}),'Space Needle');
+ assert.equal(returnDay.api.observe({condition:'FLYING',x:-400,z:150,y:120}).kind,'both');
+ assert.equal(returnDay.api.observe({condition:'FLYING',x:100,z:0,y:320}).kind,'landmark');
  assert.equal(returnDay.api.snapshot({x:0,z:0}).complete,true);
 });
 test('Passport handles blocked local storage and untrusted saved names',()=>{
@@ -61,9 +61,27 @@ test('Passport handles blocked local storage and untrusted saved names',()=>{
  const window={get localStorage(){throw new Error('Blocked')}};
  vm.runInNewContext(match[1],{window,Date,Math,Set,Array,JSON});
  const privateMode=window.AAARCreateSkyPassport(world,()=>0);
- assert.equal(privateMode.observe({condition:'FLYING',x:100,z:0,y:300}),'Space Needle');
+ assert.equal(privateMode.observe({condition:'FLYING',x:100,z:0,y:300}).kind,'both');
  assert.equal(privateMode.snapshot({x:0,z:0}).count,1);
 });
+test('Completed passport still offers fresh local-day sky quests and retains same-day completion',()=>{
+ const data=new Map();
+ const day0=harness(0,data);
+ assert.equal(day0.api.observe({condition:'FLYING',x:100,z:0,y:300}).kind,'both');
+ assert.equal(day0.api.observe({condition:'FLYING',x:-200,z:60,y:120}).kind,'landmark');
+ assert.equal(day0.api.observe({condition:'FLYING',x:-400,z:150,y:120}).kind,'landmark');
+ assert.equal(day0.api.snapshot({x:0,z:0}).complete,true);
+ assert.equal(day0.api.snapshot({x:0,z:0}).dailyComplete,true);
+ const replayDay1=harness(1,data);
+ assert.equal(replayDay1.api.snapshot({x:0,z:0}).count,3);
+ assert.equal(replayDay1.api.snapshot({x:0,z:0}).dailyComplete,false);
+ assert.equal(replayDay1.api.snapshot({x:0,z:0}).target,'Pike Place Market');
+ assert.equal(replayDay1.api.observe({condition:'FLYING',x:-200,z:60,y:120}).kind,'daily');
+ assert.equal(replayDay1.api.snapshot({x:0,z:0}).count,3);
+ assert.equal(harness(1,data).api.snapshot({x:0,z:0}).dailyComplete,true);
+ assert.equal(harness(2,data).api.snapshot({x:0,z:0}).dailyComplete,false);
+});
+
 test('Sky Passport uses existing Seattle world and both rendering modes, without external services',()=>{
  assert.match(page,/id="skyQuest"/);
  assert.match(page,/const skyPassport=seattle\?window\.AAARCreateSkyPassport\(seattle\):null/);
