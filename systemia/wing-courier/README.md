@@ -141,8 +141,9 @@ On the **authorized NextGen user account**, when its secrets and genuine owned T
 ```bash
 node systemia/wing-courier/install-resident.mjs --config /path/to/private/fallen.json
 # Dry-run report: local files valid, NOT proof the remote route exists.
-node systemia/wing-courier/install-resident.mjs --config /path/to/private/fallen.json --activate
-# Explicit opt-in creates and starts a user-scoped systemd service.
+node systemia/wing-courier/install-resident.mjs --config /path/to/private/fallen.json --activate --confirm-owned-host
+# Only an approved owner on the actual NextGen machine may opt in after dry run.
+# Pre-existing service files and symlinked systemd paths HOLD without overwrite.
 ```
 
 The second command is **not authorized by publication of this README or by a GitHub CI pass**. Actual deployment requires the named owner-controlled operator, private credentials and a verified broker endpoint; the publisher must never auto-run activation from a PR. No root, no public incoming NextGen port, no Tailscale requirement. Whether the service remains connected requires an independent private-machine + external TLS receipt.
