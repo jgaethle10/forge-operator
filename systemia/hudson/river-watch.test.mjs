@@ -61,3 +61,29 @@ test('river topology has seven named confluences and multi-channel currents',()=
  assert.match(code,/createEdge\(e\[0\],e\[1\],e\[2\]\)/);
  assert.match(code,/drawWatershed\(\);drawRivers\(\);drawParticles\(dt\);drawConfluences\(\)/);
 });
+
+test('the explorer has eight short jointed legs rather than a straight trailing filament fan',()=>{
+ assert.match(code,/function explorerLegGeometry\(size,leg,phase\)/);
+ assert.match(code,/for\(var leg=0;leg<8;leg\+\+\)/);
+ assert.match(code,/quadraticCurveTo\(.*g\.kneeX,g\.kneeY\)/);
+ assert.match(code,/quadraticCurveTo\(.*g\.footX,g\.footY\)/);
+ assert.doesNotMatch(code,/for\(var ray=0;ray<26;ray\+\+\)/);
+ assert.doesNotMatch(code,/for\(var leg=0;leg<12;leg\+\+\)/);
+ const i=code.indexOf('function explorerLegGeometry(');
+ const j=code.indexOf('function spider(',i);
+ assert.ok(i>=0&&j>i);
+ const legFn=new vm.Script(code.slice(i,j)+';explorerLegGeometry').runInNewContext({Math});
+ for(let leg=0;leg<8;leg++){
+  const g=legFn(20,leg,.43);
+  assert.equal(g.side,leg%2===0?-1:1);
+  assert.ok(Math.abs(g.footX)<=25,'front/rear foot reach stays compact');
+  assert.ok(Math.abs(g.footY)<=26,'the lateral leg spread is bounded');
+  assert.ok(Math.hypot(g.footX-g.startX,g.footY-g.startY)<=35,'limbs remain shorter than the original rays');
+  assert.notDeepEqual(
+    [legFn(20,leg,.43).footX,legFn(20,leg,.43).footY],
+    [legFn(20,leg,1.43).footX,legFn(20,leg,1.43).footY],
+    'articulated feet should move with gait'
+  );
+ }
+ assert.match(code,/Math\.max\(15,Math\.min\(28,width\*\.044\)\)/);
+});
