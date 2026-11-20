@@ -56,6 +56,8 @@ def _fetch(url, max_bytes, opener):
 def _point(address, opener):
     if not isinstance(address, str) or not 10 <= len(address.strip()) <= 200:
         raise ValueError("Enter a complete U.S. street address (10–200 characters)")
+    if "://" in address or "@" in address:
+        raise ValueError("A postal address is required, not a URL or email")
     if any(ord(c) < 32 for c in address):
         raise ValueError("Control characters are not allowed in the address")
     url = CENSUS_ORIGIN + CENSUS_PATH + "?" + urllib.parse.urlencode({
