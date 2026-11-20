@@ -12,9 +12,9 @@ import {spawnSync} from 'node:child_process';
 
 const SCHEMA='evercraft.aaar.single-asset-release.v1';
 const REPO='jgaethle10/forge-operator';
-const PIN='31dfd02bbaaa6064b62268963043ba9feb799d21';
+const PIN='b153f905be977fa0e0bc60668271159f299d10b6';
 const RELEASE='public/worlds/flight/index.html';
-const EXPECTED='8649cef17aae99d06c158d6dad87a8e1dcadf16a20e16c374a73a1b6d3d16568';
+const EXPECTED='0a8e52a1b3a765e7f1861489950ce98c0250cc110f2a3bc87d3cfd5a04e0fb80';
 const ALLOWED_OLD='5314b21f6572a177aa02da8e18624985019d2d7d5f8f81674db7413b56733825';
 const ORIGIN='https://worlds.systemiacommandcenters.com';
 const apply=process.argv.includes('--apply');
