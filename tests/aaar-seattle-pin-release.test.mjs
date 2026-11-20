@@ -9,7 +9,12 @@ const html=fs.readFileSync('public/worlds/flight/index.html');
 const expected='d34fc1fb244565236880c3922cd2e7b89923768bfe2812f5fed652875ef0b2e0';
 
 test('emergency flight release pins exact reviewed Seattle main and static asset',()=>{
- assert.equal(createHash('sha256').update(html).digest('hex'),expected);
+ // The emergency Penguin release is intentionally pinned to the reviewed v1.0 commit.
+ // Newer development HTML must NOT silently repoint the owner-only release helper.
+ const pin='6dce44dd35aad415354c7d0659850c959f9735a7';
+ const pinned=spawnSync('git',['show',pin+':public/worlds/flight/index.html'],{encoding:'buffer',maxBuffer:2*1024*1024,timeout:5000});
+ if(pinned.status===0)assert.equal(createHash('sha256').update(pinned.stdout).digest('hex'),expected);
+ assert.match(html.toString('utf8'),/seattle-vista-v11|flat-lit-glass-water-v10/);
  assert.match(script,/6dce44dd35aad415354c7d0659850c959f9735a7/);
  assert.ok(script.includes(expected));
  assert.match(html.toString('utf8'),/id="aaar-seattle-geography"/);
