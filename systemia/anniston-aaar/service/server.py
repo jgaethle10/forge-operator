@@ -8,6 +8,7 @@ A successful HTTP write is NOT a canonical GitHub sync or Systemia execution.
 import hashlib
 import hmac
 import json
+import math
 import os
 from pathlib import Path
 import secrets
@@ -45,13 +46,50 @@ def validate_state(value):
             raise ValueError('Each program needs a name')
     if not isinstance(value.get('history', []), list) or len(value.get('history', [])) > 500:
         raise ValueError('History limit exceeded')
-    return {'schema': SCHEMA, 'programs': programs, 'history': value.get('history', [])}
+    experiments=value.get('experiments', [])
+    if not isinstance(experiments,list) or len(experiments)>100:
+        raise ValueError('Experiments must be at most 100 screening or gameplay records')
+    ids=set()
+    for e in experiments:
+        if not isinstance(e,dict):
+            raise ValueError('Experiment must be an object')
+        if not isinstance(e.get('id'),str) or not e['id'] or len(e['id'])>100 or e['id'] in ids:
+            raise ValueError('Experiment IDs must be unique and nonempty')
+        ids.add(e['id'])
+        if not isinstance(e.get('created_at'),str):
+            raise ValueError('Experiment must include a date')
+        if e.get('program_id','') and e['program_id'] not in seen:
+            raise ValueError('Experiment references a missing program')
+        if e.get('schema')=='evercraft.aaar.aero-screening.v1':
+            if e.get('model_state')!='UNVALIDATED_SCREENING':
+                raise ValueError('Analytical studies must remain unvalidated screening records')
+            if not isinstance(e.get('params'),dict) or not isinstance(e.get('results'),dict):
+                raise ValueError('Analytical studies require parameters and outputs')
+            if e.get('state') not in ('WITHIN_SCREENING_RANGE','OUTSIDE_SCREENING_RANGE'):
+                raise ValueError('Unsupported analytical screening state')
+        elif e.get('schema')=='evercraft.aaar.worlds-flight.v1':
+            if e.get('model_state')!='GAME_SIMULATION_ONLY' or e.get('evidence_state')!='UNVALIDATED_GAMEPLAY' or e.get('canonical_sync')!='local_preview_only':
+                raise ValueError('Worlds flights cannot be promoted to validated engineering evidence')
+            if e.get('world')!='anniston-cedar-basin-synthetic-v1' or e.get('aircraft') not in ('trainer','jet','glider'):
+                raise ValueError('Unsupported flight-world reference')
+            for field,maximum in [('flight_time_seconds',14400),('distance_m',3000000),('max_altitude_m',100000),('max_speed_mps',250),('checkpoints',3)]:
+                metric=e.get(field)
+                if isinstance(metric,bool) or not isinstance(metric,(int,float)) or not math.isfinite(metric) or not 0<=metric<=maximum:
+                    raise ValueError('Invalid gameplay metric: '+field)
+            track=e.get('track',[])
+            if not isinstance(track,list) or len(track)>300 or any(not isinstance(point,dict) or any(not isinstance(point.get(k),(int,float)) or isinstance(point.get(k),bool) or not math.isfinite(point[k]) or abs(point[k])>150000 for k in ('x','y','z')) for point in track):
+                raise ValueError('Malformed gameplay flight track')
+            if not isinstance(e.get('events',[]),list) or len(e.get('events',[]))>20:
+                raise ValueError('Malformed gameplay events')
+        else:
+            raise ValueError('Unsupported experiment kind')
+    return {'schema': SCHEMA, 'programs': programs, 'history': value.get('history', []), 'experiments': experiments}
 
 
 def load(db):
     if db.exists():
         return json.loads(db.read_text('utf8'))
-    return {'schema': SCHEMA, 'revision': 0, 'updated_at': now(), 'programs': [], 'history': [], 'orders': [], 'audit': []}
+    return {'schema': SCHEMA, 'revision': 0, 'updated_at': now(), 'programs': [], 'history': [], 'orders': [], 'audit': [], 'experiments': []}
 
 
 def save(db, value):
@@ -125,7 +163,7 @@ def make_handler(db, token, site_dir):
             if path == '/api/state':
                 with LOCK:
                     data=load(db)
-                return self.reply(200, {'schema':SCHEMA,'revision':data['revision'],'updated_at':data['updated_at'],'programs':data['programs'],'history':data['history'],'orders':data['orders'],'canonical_sync':'pending_git_commit'})
+                return self.reply(200, {'schema':SCHEMA,'revision':data['revision'],'updated_at':data['updated_at'],'programs':data['programs'],'history':data['history'],'experiments':data.get('experiments',[]),'orders':data['orders'],'canonical_sync':'pending_git_commit'})
             if path == '/api/audit':
                 with LOCK:
                     data=load(db)
@@ -169,7 +207,7 @@ def make_handler(db, token, site_dir):
                     else:
                         return self.reply(404, {'error':'unknown_path'})
                     data['revision']+=1;data['updated_at']=now()
-                    data['audit'].append({'kind':kind,'revision':data['revision'],'at':data['updated_at'],'content_sha256':digest({'programs':data['programs'],'orders':data['orders']})})
+                    data['audit'].append({'kind':kind,'revision':data['revision'],'at':data['updated_at'],'content_sha256':digest({'programs':data['programs'],'orders':data['orders'],'experiments':data.get('experiments',[])})})
                     data['audit']=data['audit'][-1000:]
                     save(db,data)
                     receipt['revision']=data['revision']
