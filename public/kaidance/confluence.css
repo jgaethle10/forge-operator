@@ -1,0 +1,101 @@
+/* KAIDANCE V04: immersive confluence theater, evidence remains a separate layer.
+   The entire first screen is the scene. No fake operational flow is implied. */
+#shell{max-width:1800px;padding-left:0;padding-right:0}
+.hero{display:none!important}
+.observatory-layout{display:block!important;border:0!important;box-shadow:none!important;background:#020a12!important;min-height:0!important}
+.stage{width:100%;height:calc(100dvh - 76px);min-height:670px;overflow:hidden;
+  background:#020a12!important;isolation:isolate}
+#currentField{position:absolute;inset:0;display:block;z-index:4;width:100%;height:100%;
+ pointer-events:auto;touch-action:manipulation}
+#colliderField{display:none}
+body.reactor #colliderField{display:block!important}
+body.reactor #currentField{display:none!important}
+#visualField{display:none}
+.scene-light,.scene-index,.scene-note,.stage-bottom{display:none!important}
+.stage:before{display:none}
+.stage:after{pointer-events:none;z-index:6;border-color:#84c5db20}
+.stage-top{top:26px;left:clamp(18px,3vw,45px);right:clamp(18px,3vw,45px);z-index:11;pointer-events:none}
+.stage-label{color:#e9ffff;text-shadow:0 2px 11px #00111f;font-size:clamp(14px,1.5vw,19px)}
+.stage-label small{font-size:9px}
+.readout{font-size:8px;background:#071c28d2;max-width:165px;text-align:right;border-color:#75b1b24b}
+.field-ui{position:absolute;inset:0;z-index:12;pointer-events:none}
+.field-ui button{pointer-events:auto}
+.field-controls{position:absolute;right:clamp(14px,3vw,45px);top:93px;display:flex;gap:7px;flex-wrap:wrap;max-width:82%;justify-content:flex-end}
+.field-controls button{border:1px solid #a1eddd6b;border-radius:999px;color:#dafff5;background:#0a2934db;
+ font-size:10px;font-weight:750;letter-spacing:.045em;padding:9px 13px;min-width:70px;backdrop-filter:blur(10px)}
+.field-controls button:hover,.field-controls button:focus-visible{background:#20516a;outline-color:#9df6d9}
+.field-source{position:absolute;top:100px;left:clamp(18px,3vw,45px);
+ font-size:9px;font-weight:750;letter-spacing:.14em;color:#a2c9ce;text-shadow:0 2px 8px #00151c;
+ max-width:200px;line-height:1.6}
+.field-source i{display:inline-block;width:6px;height:6px;margin-right:7px;background:#f3bc7d;border-radius:50%}
+.field-story{position:absolute;bottom:193px;left:clamp(16px,3vw,45px);padding:10px 15px 12px;
+ max-width:min(380px,68vw);background:linear-gradient(100deg,#071e2bdb,#081b296e);
+ border-left:2px solid #9cf6dd;backdrop-filter:blur(7px);text-shadow:0 2px 6px #000}
+.field-story small{display:block;color:#a2e7db;font-size:9px;font-weight:780;letter-spacing:.15em;margin-bottom:5px}
+.field-story strong{font-size:clamp(16px,2vw,24px);letter-spacing:.06em;display:block;line-height:1.2}
+.field-story p{margin-top:7px;font-size:10px;color:#c5dfdf;line-height:1.5;max-width:310px}
+.field-drawer{position:absolute;z-index:30;left:50%;top:50%;transform:translate(-50%,-50%);
+ width:min(92vw,440px);max-height:80%;overflow:auto;padding:23px 25px;
+ background:linear-gradient(145deg,#09283a,#071723 90%);border:1px solid #7fdcc89a;
+ border-radius:18px;box-shadow:0 40px 90px #000d;pointer-events:auto}
+.field-drawer[hidden]{display:none}
+.field-drawer h3{font-size:26px;margin:5px 0 7px;line-height:1.16}
+.field-drawer p{font-size:12px;line-height:1.7;color:#a5c9cb}
+#fieldClose{position:absolute;right:13px;top:10px;background:none;border:0;color:#d4fdf2;font-size:25px}
+#fieldTopics{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:20px}
+#fieldTopics button{border:1px solid #79aea78c;background:#112f3d;color:#e0fff8;padding:13px;
+ border-radius:10px;font-size:10px;letter-spacing:.07em;text-align:left}
+#fieldTopics button:hover{background:#235369}
+.stage-headline{z-index:14;left:clamp(14px,3vw,45px);right:clamp(14px,3vw,45px);bottom:17px;
+ max-width:850px;min-height:132px;border-radius:17px;padding:15px 20px;
+ background:linear-gradient(130deg,#071a25ee,#0a1c2bea);border:1px solid #8ad1cd66;
+ box-shadow:0 12px 60px #0007,inset 2px 0 0 #abf7e6}
+.headline-bar{font-size:8px}.headline-bar span:last-child{color:#cbb5f4}
+.stage-headline h2{font-size:clamp(20px,2.7vw,31px)}
+.headline-bottom{font-size:10px}
+.telemetry{display:grid!important;grid-template-columns:1.1fr 1fr;column-gap:40px;row-gap:10px;
+ padding:38px max(20px,calc((100vw - 1280px)/2)) 50px;border-left:0;border-top:1px solid #325d68;
+ background:#071421}
+.telemetry .panel-heading{grid-column:1;grid-row:1}
+.telemetry .timebox{grid-column:2;grid-row:1;margin-top:0}
+.telemetry .metrics{grid-column:1/-1;display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
+.telemetry .verification,.telemetry .refresh-stage{grid-column:1/-1}
+.telemetry .metrics>div{border-right:1px solid #385261}
+.record,.about,footer{max-width:1280px;margin-left:auto;margin-right:auto}
+.record{padding-top:70px}
+.portrait-proof{z-index:15!important}
+body.portrait .stage{height:100%!important;min-height:0!important}
+body.portrait .observatory-layout{height:100%!important;display:block!important}
+body.portrait .stage-top{top:calc(env(safe-area-inset-top,0px) + 66px);left:7%;right:7%}
+body.portrait .readout{max-width:128px;font-size:7px}
+body.portrait .field-controls{top:calc(env(safe-area-inset-top,0px) + 120px);right:7%;max-width:90%}
+body.portrait .field-controls button{font-size:9px;padding:8px 11px}
+body.portrait .field-source{top:calc(env(safe-area-inset-top,0px) + 166px);left:8%;font-size:8px;max-width:180px}
+body.portrait .field-story{bottom:29%;left:7%;max-width:78%;background:#071a27a8}
+body.portrait .field-story p{font-size:9px}
+body.portrait .portrait-proof{bottom:9%;min-height:120px}
+body.portrait .stage-headline{display:none}
+body.portrait .telemetry{display:none!important}
+@media(max-width:760px){
+ .stage{height:calc(100dvh - 68px);min-height:630px}
+ .stage-top{top:20px;left:15px;right:15px}
+ .stage-label{font-size:13px}.stage-label small{font-size:8px}
+ .readout{font-size:7px;max-width:143px}
+ .field-controls{top:78px;right:14px;gap:5px}
+ .field-controls button{padding:8px 10px;min-width:0;font-size:9px}
+ .field-source{top:84px;left:14px;font-size:7px;max-width:140px}
+ .field-story{bottom:171px;left:14px;padding:8px 11px;max-width:72vw}
+ .field-story small{font-size:7px;letter-spacing:.11em}
+ .field-story strong{font-size:15px}
+ .field-story p{font-size:8px}
+ .stage-headline{bottom:11px;left:10px;right:10px;max-width:none;min-height:144px;padding:14px}
+ .stage-headline h2{font-size:22px}
+ .telemetry{display:block!important;padding:25px 20px 35px}
+ .telemetry .metrics{display:grid;grid-template-columns:1fr 1fr}
+ .telemetry .timebox{margin-top:25px}
+ .record{padding:48px 15px 20px}
+ .about,footer{padding-left:15px;padding-right:15px}
+}
+@media(prefers-reduced-motion:reduce){
+ .field-controls button{transition:none}
+}
