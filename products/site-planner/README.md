@@ -237,3 +237,13 @@ Capabilities currently implemented:
 This is a **manual pre-engineering illustration tool**, not an automated parcel analysis. There is no survey control, georeferencing, authoritative site location, certified scale, traffic model, clearance check, electrical study, ADA compliance approval, utility plan, stamped drawing, or public deployment. Users must supply authorized images and have an appropriately qualified reviewer inspect all output before any client reliance. Do not use this to claim a verified plan based on its appearance. Existing commercial quote and Stripe payment holds remain unchanged.
 
 `test_plan_studio.py` exercises the protected HTTP route, non-mutating sample access, JavaScript editing and undo, conduit placement, supplied aerial display and automatic clearing of sample marks. Run `python3 -m unittest discover -v` locally.
+
+## v2.0: source-bound reference calibration and evidence export
+
+The owned Kennedy studio now provides **📏 Reference** measurement: enter a genuine known distance (feet) visible in the uploaded **site** image, then tap two endpoints. The operator-entered reference establishes a provisional on-screen image-plane conversion, **not surveyed scale, georeferencing, or geographic coordinates**. Reference clicks are refused without a real uploaded aerial, with missing/invalid distances, or with too-short baselines. Calibrated proposed conduit route lengths are marked as estimates.
+
+The tool exports `Evercraft-Site-Concept-Evidence.json` with source filenames and byte SHA-256 hashes (when browser-supported), image-plane calibration endpoints/known feet, conceptual marks, approximate route lengths and explicit verification limits. It deliberately excludes raw image bytes and cannot prove the images' locations, rights, dimensions or correctness. Users must retain authorized originals for review.
+
+Replacing the site aerial clears all overlays and measurements to prevent cross-property carryover; switching tools cancels an unfinished calibration. The editor remains **private and local**; no customer-facing claims of engineering validity, sales, paid orders or Systemia dispatch. See `CALIBRATION.md` for limitations and tests.
+
+`test_calibration.py` adds a Node VM regression test. The complete local v2.0 suite contains 22 tests.
