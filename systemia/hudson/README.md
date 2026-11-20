@@ -162,3 +162,16 @@ Exact new public marker: \`river-current-v9-archive-ship\`. The GitHub native un
 Founder rejected the oversized, opaque illustration in v9. v10 completely replaces its renderer with a compact, translucent **ghost ship made of sea mist, aurora, and glittering stardust**. The small dark luminous hull, three paired soft cloud sails, faint cloud-figurehead, drifting vapor pockets and 35 bounded deterministic sparkles are drawn directly in the first-party canvas. The design scales down on a phone so the ship is a discovery *inside* the river, not a foreground poster.
 
 Most importantly, \`shipPathPose(from,to,t)\` obtains both center and smooth tangent from the canonical 91-sample river path. Rendering translates to that **exact point** and rotates to its angle; no \`drawX\` / \`drawY\` screen-edge clamping can detach the ship from the line. Size is capped by both viewport and distance to edges, with path-bounded wake geometry also scaled from the same pose. This preserves route confluences, genuine touch selection, film view, user pause/reduced-motion, hidden-tab suspension, ~30fps target, and public Git-source truth labels. New cosmetics remain scenic and do not claim live missions, AI cognition, private data or verified deployments. The exact v10 release canary rejects v9 until Penguin deploys and external HTTPS/source feed pass.
+
+
+## HUDSON Watch v11: Spectral Navigator (November 20, 2026)
+
+The tiny luminous mark in v10 is replaced with a legible path-scale **spectral ship**. It retains a small, canonical route-attached footprint and heading, but now has a carved crescent keel, three independent breathing aurora sails with pearlescent seams, sculpted raised stern, glowing prow, bridge windows, 19 drifting bounded cloud pockets and 42 prismatic star sparks. Behind the ship, a 3-thread curved wake with 23 bounded motes follows the past samples of the SAME route. These elements are scenic, not live mission or private system data. No external assets or network calls; pause/reduced motion, hidden-tab stop, and ~30fps budget are unchanged. Exact release marker `river-current-v11-spectral-navigator` is required by public checks; GitHub merger is not owned-server deployment.
+
+
+### v11 cinematic browser-QA revision
+Sharpened the three sail outlines to avoid a petal silhouette, deepened the hull, added fixed shrouds, raised aftcastle and gold railings. Five slow spectral-weather veils plus 38 bounded background starlets now enrich otherwise empty space. Actual 390 × 844 and 1440 × 900 browser captures were reviewed with no page errors before this patch. The new optics remain scenic and intentionally do not claim live mission activity.
+
+
+### v11 dedicated film scene
+Broadcast-oriented `?film=1` mode now removes the large full-width readout panel while retaining a small always-readable public replay/scenery disclosure and a small Exit Film control. It is a local display preference, not a streaming publisher; the normal information-rich interactive view is unchanged and all source-admission policies remain in force.

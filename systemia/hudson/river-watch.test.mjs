@@ -12,7 +12,7 @@ const code=watch.match(/<script>([\s\S]*?)<\/script>/)?.[1];
 test('river Watch is an interactive site and not an image stand-in',()=>{
  assert.match(home,/href="\.\/watch\/"/);
  assert.match(home,/Enter the Current/);
- assert.match(watch,/hudson-watch-release" content="river-current-v10-mistbound-ship"/);
+ assert.match(watch,/hudson-watch-release" content="river-current-v11-spectral-navigator"/);
  assert.match(watch,/canvas id="current"/);
  assert.match(watch,/id="explore"/);
  assert.match(watch,/id="pause"/);
@@ -21,6 +21,7 @@ test('river Watch is an interactive site and not an image stand-in',()=>{
  assert.match(watch,/CURRENT|RIVER|SCENIC CURRENT/);
  assert.ok(code);
  assert.doesNotThrow(()=>new vm.Script(code));
+ assert.match(code,/function drawDepthVeils\(\)/);
  assert.match(code,/function drawWatershed\(/);
  assert.match(code,/function drawRivers\(/);
  assert.match(code,/function drawParticles\(/);
@@ -77,6 +78,11 @@ test('v7 scenic junctions branch only toward their current destination',()=>{
  }
 });
 test('film-mode is reversible and remains evidence honest',()=>{
+ assert.match(watch,/body\.film-mode #story,body\.film-mode #story-sub/);
+ assert.match(watch,/body\.film-mode \.facts,body\.film-mode #receipt,body\.film-mode #next/);
+ assert.match(watch,/body\.film-mode #film:hover,body\.film-mode #film:focus-visible/);
+ assert.match(watch,/Immersive Watch: scenery occupies the canvas/);
+
  assert.match(watch,/id="film" type="button" aria-pressed="false"/);
  assert.match(watch,/body\.film-mode/);
  assert.match(code,/function setFilmMode\(on\)/);
@@ -93,45 +99,55 @@ test('river topology has seven named confluences and multi-channel currents',()=
  assert.match(code,/drawWatershed\(field\);drawRivers\(\);drawParticles\(dt\);drawConfluences\(\)/);
 });
 
-test('mistbound ship stays centered on the actual current and follows its tangent',()=>{
+test('spectral ship stays attached to the canonical current and points down its tangent',()=>{
  assert.match(code,/function shipPathPose\(from,to,t\)/);
  assert.match(code,/var pos=locate\(from,to,t\)/);
  assert.match(code,/var angle=Math\.atan2\(dy,dx\)/);
  assert.match(code,/ctx\.translate\(pose\.x,pose\.y\)/);
  assert.match(code,/ctx\.rotate\(pose\.angle\)/);
  assert.doesNotMatch(code,/var drawX=clamp\(/);
- assert.doesNotMatch(code,/var drawY=clamp\(/);
  const a=code.indexOf('function shipPathPose(from,to,t){');
  const b=code.indexOf('function drawMistySail(',a);
- const f=new vm.Script(code.slice(a,b)+';shipPathPose').runInNewContext({
+ const pose=new vm.Script(code.slice(a,b)+';shipPathPose').runInNewContext({
   Math,width:390,height:844,clamp:(v,l,h)=>Math.max(l,Math.min(h,v)),
   locate:(_a,_b,v)=>({x:47+v*290,y:205+v*426})
  });
  for(const v of [.02,.15,.5,.83,.97]){
-  const s=f('discovery','hudson',v);
+  const s=pose('discovery','hudson',v);
   assert.ok(Math.abs(s.x-(47+v*290))<1e-9);
   assert.ok(Math.abs(s.y-(205+v*426))<1e-9);
   assert.ok(Math.abs(s.angle-Math.atan2(426,290))<.001);
-  assert.ok(s.size>9&&s.size<=28);
-  const clearance=Math.min(s.x,390-s.x,s.y,844-s.y);
-  assert.ok(s.size*2.85<=clearance+.01);
+  assert.ok(s.size>=9&&s.size<=32);
+  const c=Math.min(s.x,390-s.x,s.y,844-s.y);
+  assert.ok(s.size*2.90<=c+.01);
  }
 });
-test('mist ship is compact glowing cloud, sails and sparkling stardust',()=>{
- assert.match(code,/MISTBOUND SHIP/);
- assert.match(code,/function drawMistySail\(x,span,side,swell,tint\)/);
- assert.match(code,/for\(var fog=0;fog<10;fog\+\+\)/);
- assert.match(code,/for\(var spark=0;spark<35;spark\+\+\)/);
- assert.match(code,/for\(var mastIndex=0;mastIndex<3;mastIndex\+\+\)/);
- assert.match(code,/Three rising cloud-sails create a ship silhouette/);
- assert.doesNotMatch(code,/drawMistySail\(mast.x,mast.s\*breathe,1/);
- assert.match(code,/A faint tapering cloud-figurehead/);
- assert.match(code,/Narrow dark keel and luminous rim/);
- assert.match(code,/shipPathPose\(trip.from,trip.to,end\).size/);
- assert.doesNotMatch(code,/function drawRoyalSail\(/);
- assert.doesNotMatch(code,/Massive timber-and-gold keel/);
- assert.doesNotMatch(code,/var drawX=clamp\(/);
+test('Spectral Navigator adds dimensional cloud sails, reflective carved keel and prismatic stars',()=>{
+ assert.match(code,/Spectral Navigator v11/);
+ assert.match(code,/function drawMistySail\(x,span,wind,tint\)/);
+ assert.match(code,/function drawShipStardustWake\(trip\)/);
+ assert.match(code,/for\(var cloud=0;cloud<19;cloud\+\+\)/);
+ assert.match(code,/for\(var star=0;star<42;star\+\+\)/);
+ assert.match(code,/drawMistySail\(-\.07,1\.64/);
+ assert.match(code,/Rigging lines connect the upper cloud spires/);
+ assert.match(code,/A carved aftcastle and starlit deck/);
+ assert.match(code,/for\(var prong=0;prong<9;prong\+\+\)/);
+ assert.match(code,/Three wind-filled aurora sails, mounted on ONE side/);
+ assert.match(code,/Crescent keel/);
+ assert.match(code,/drawFoldingWake\(trip\);drawShipStardustWake\(trip\)/);
  assert.match(code,/drawTraveler\(trip\.from,trip\.to,\.04\+trip\.t\*\.92\)/);
+ assert.doesNotMatch(code,/function drawRoyalSail\(/);
+});
+test('sparkle wake traces the existing water, not fake activity',()=>{
+ const a=code.indexOf('function drawShipStardustWake(trip){');
+ const b=code.indexOf('function drawTraveler(from,to,t){',a);
+ assert.ok(a>=0&&b>a);
+ const w=code.slice(a,b);
+ assert.match(w,/shipPathPose\(trip\.from,trip\.to,front\)/);
+ assert.match(w,/locate\(trip\.from,trip\.to,/);
+ assert.match(w,/for\(var thread=0;thread<3;thread\+\+\)/);
+ assert.match(w,/for\(var star=0;star<23;star\+\+\)/);
+ assert.doesNotMatch(w,/Math\.random\(\)/);
 });
 test('v8 currents and confluences have different silhouettes and optical depth',()=>{
  assert.match(code,/Braided bands instead of hairline pipes/);
@@ -168,8 +184,8 @@ test('traveler ribbons evolve in length, twist, transparency and confluence beha
   assert.ok(f.opacity>=.20&&f.opacity<=.78);
   assert.ok(Number.isFinite(f.bend)&&Number.isFinite(f.angle));
  }
- const atPhone=390*.062;
- assert.ok(atPhone>=20&&atPhone<=28,'phone-size mist ship must fit the path');
+ const atPhone=390*.072;
+ assert.ok(atPhone>=24&&atPhone<=32,'phone-size spectral ship must fit the path');
 });
 test('slow river camera moves the whole field and tap positions use its inverse',()=>{
  const start=code.indexOf('function riverCamera(){');
