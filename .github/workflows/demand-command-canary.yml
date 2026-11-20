@@ -1,0 +1,26 @@
+name: Demand Command owned canary
+on:
+  pull_request:
+    paths:
+      - "sites/demand-command/**"
+      - ".github/workflows/demand-command-canary.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  static-and-local-canary:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify owner-only deployment scripts (no external runtime)
+        run: |
+          bash -n sites/demand-command/deploy/install-nextgen-resident.sh
+          node --test sites/demand-command/deploy/test-release-contract.mjs
+      - name: Verify private API and source adapters on synthetic data
+        working-directory: sites/demand-command/backend
+        run: |
+          python3 -m unittest discover -v
+          node --test test_console_source_pulse.mjs
