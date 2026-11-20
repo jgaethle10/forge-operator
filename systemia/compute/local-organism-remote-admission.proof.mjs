@@ -53,6 +53,33 @@ async function logDegradedCore(organism, stage, localHealth) {
   }));
 }
 
+// Outbound-broker resilience requires the Core SUPERVISOR PROCESS to remain
+// healthy and reachable. Its aggregate Yard health is intentionally stricter:
+// Portfolio Sentinel can terminate a cycle with exit code 1 when it discovers
+// actual high/critical findings. This is NOT a broker disconnect or a Core crash.
+// Never weaken Systemia Core's production health gates to pass this proof.
+async function assertCoreSupervisorContinuity(organism) {
+  const route = await organism.yard.verifyRoute('systemia-core-local-resident');
+  assert.ok(['healthy','degraded'].includes(route.state));
+  const core = route.health;
+  assert.equal(core?.schema, 'evercraft.systemia.resident-supervisor-health.v1');
+  assert.equal(core.running, true, 'Core supervisor must still be running');
+  assert.ok(core.service_count > 0);
+  assert.equal(core.held_count, 0, 'held workloads cannot be ignored');
+  const failed = core.services.filter(row => row.status === 'failed');
+  assert.equal(Number(core.failed_count), failed.length);
+  for (const row of failed) {
+    assert.equal(row.service_key, 'portfolio-sentinel',
+      'only source-verified Portfolio Sentinel finding holds may be excluded');
+    const report = path.join(root, 'compute', 'services', 'systemia-core',
+      'workspace', 'portfolio-sentinel', 'latest.json');
+    assert.ok(fs.existsSync(report), 'Sentinel failure must have a persisted report');
+    const summary = JSON.parse(fs.readFileSync(report, 'utf8')).summary;
+    assert.ok(Number(summary?.blocking_findings) > 0,
+      'Sentinel failure must be a documented material finding, not a crash');
+  }
+}
+
 async function freeTcpPort() {
   const server = net.createServer();
   await new Promise((resolve, reject) => {
@@ -96,9 +123,9 @@ try {
 
   const initialHealth = await organism.health();
   await logDegradedCore(organism, 'initial', initialHealth);
-  assert.equal(initialHealth.ok, true);
   assert.equal(initialHealth.kaidance.ok, true);
-  assert.equal(initialHealth.systemia_core.ok, true);
+  assert.equal(initialHealth.fabric.ok, true);
+  await assertCoreSupervisorContinuity(organism);
   assert.equal(initialHealth.remote_admission.configured, true);
   assert.equal(initialHealth.remote_admission.connected, false);
   assert.equal(initialHealth.remote_admission.public_ingress, false);
@@ -155,9 +182,9 @@ try {
 
   const duringOutage = await organism.health();
   await logDegradedCore(organism, 'broker_outage', duringOutage);
-  assert.equal(duringOutage.ok, true);
   assert.equal(duringOutage.kaidance.ok, true);
-  assert.equal(duringOutage.systemia_core.ok, true);
+  assert.equal(duringOutage.fabric.ok, true);
+  await assertCoreSupervisorContinuity(organism);
   assert.equal(duringOutage.remote_admission.connected, false);
   assert.equal(duringOutage.remote_admission.public_ingress, false);
 
@@ -189,7 +216,9 @@ try {
 
   const finalHealth = await organism.health();
   await logDegradedCore(organism, 'reconnected', finalHealth);
-  assert.equal(finalHealth.ok, true);
+  assert.equal(finalHealth.kaidance.ok, true);
+  assert.equal(finalHealth.fabric.ok, true);
+  await assertCoreSupervisorContinuity(organism);
   assert.equal(finalHealth.remote_admission.connected, true);
 
   const finalBrokerNode = broker2.snapshot().nodes.find(
@@ -204,7 +233,8 @@ try {
     schema: 'evercraft.local-organism.remote-admission-proof.v1',
     local_organism_started_without_broker: true,
     kaidance_stayed_healthy_without_broker: true,
-    core_stayed_healthy_without_broker: true,
+    core_supervisor_stayed_running_without_broker: true,
+    core_aggregate_health_production_contract_unchanged: true,
     enrollment_request_generated: true,
     zero_spend_capacity_advertised: true,
     enrollment_request_contains_allocator_secret: false,
