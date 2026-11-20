@@ -130,6 +130,11 @@ function showEvent(){
  $('heroEventMeta').textContent=e.detail+' · '+labelTime(e.time)+' · PUBLIC GITHUB';
  $('heroEventLink').href=e.url;
  $('heroEventLink').hidden=false;
+ // The interactive field may illustrate which public Evercraft topic was
+ // recorded. This does NOT report a live mission, agent, or Collider cycle.
+ document.dispatchEvent(new CustomEvent('kaidance:public-record',{
+   detail:{title:e.title,kind:e.kind,recorded_at:e.time}
+ }));
  state.eventStart=Date.now();
 }
 function renderEventList(){
