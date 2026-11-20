@@ -83,7 +83,7 @@ class PublicUsgsCaptureTests(unittest.TestCase):
                     capture.assert_official_url(url)
         with self.assertRaisesRegex(ValueError, 'usgs_unexpected_redirect'):
             capture.NoRedirects().redirect_request(None, None, 302,
-                                                    'redirect', None, 'https://elsewhere', None)
+                                                    'redirect', None, 'https://elsewhere')
 
     def test_unbalanced_or_oversized_budget_rejected(self):
         for n in (0, 16, -1, True, '2'):
