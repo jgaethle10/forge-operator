@@ -171,4 +171,42 @@ elif [[ "$public_part_status" == 'unreachable' ]]; then
 else
   printf 'findmypart_diagnosis=route_not_yet_proven\n'
 fi
+# Aiden's Lab: split resident-source drift from outside HTTPS ingress drift.
+# No customer data or secrets are read, and no service is restarted.
+aidens_source_present=false
+if [[ -f "$REPO_ROOT/public/aiden-lab/index.html" ]] &&
+   [[ -f "$REPO_ROOT/scripts/probe-aiden-lab-resident.mjs" ]] &&
+   grep -Fq 'serveAidenLab(req,res' "$REPO_ROOT/systemia/mcp/fabric-local-runtime.mjs" 2>/dev/null; then
+  aidens_source_present=true
+fi
+printf 'aidens_lab_source_route_present=%s\\n' "$aidens_source_present"
+aidens_home_http="$(local_probe '/aiden-lab/')"
+aidens_app_http="$(local_probe '/aiden-lab/app.mjs')"
+aidens_catalog_http="$(local_probe '/aiden-lab/catalog.mjs')"
+aidens_css_http="$(local_probe '/aiden-lab/styles.css')"
+aidens_mark_http="$(local_probe '/aiden-lab/mark.svg')"
+printf 'aidens_lab_local_home_http=%s\\n' "$aidens_home_http"
+printf 'aidens_lab_local_app_http=%s\\n' "$aidens_app_http"
+printf 'aidens_lab_local_catalog_http=%s\\n' "$aidens_catalog_http"
+printf 'aidens_lab_local_css_http=%s\\n' "$aidens_css_http"
+printf 'aidens_lab_local_mark_http=%s\\n' "$aidens_mark_http"
+aidens_marker_present=false
+if curl --silent --show-error --max-time 5 --dump-header - --output /dev/null \\
+     'http://127.0.0.1:8787/aiden-lab/index.html' 2>/dev/null \\
+     | tr -d '\\r' | grep -Fqi 'x-evercraft-static-program: aidens-lab-v1'; then
+  aidens_marker_present=true
+fi
+printf 'aidens_lab_local_owned_route_marker=%s\\n' "$aidens_marker_present"
+if [[ "$aidens_home_http" == '200' && "$aidens_app_http" == '200' &&
+      "$aidens_catalog_http" == '200' && "$aidens_css_http" == '200' &&
+      "$aidens_mark_http" == '200' && "$aidens_marker_present" == 'true' ]]; then
+  printf 'aidens_lab_diagnosis=resident_routes_present_public_https_and_exact_hash_proof_still_required\\n'
+elif [[ "$aidens_source_present" == 'true' && "$aidens_home_http" == '404' ]]; then
+  printf 'aidens_lab_diagnosis=merged_source_present_but_resident_runtime_route_missing\\n'
+  printf 'aidens_lab_next=inspect_updater_hold_release_ref_and_service_execstart\\n'
+elif [[ "$aidens_home_http" == 'unreachable' ]]; then
+  printf 'aidens_lab_diagnosis=resident_fabric_unreachable\\n'
+else
+  printf 'aidens_lab_diagnosis=local_route_or_assets_unverified\\n'
+fi
 printf 'doctor_mutation_performed=false\n'
