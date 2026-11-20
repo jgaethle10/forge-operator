@@ -131,12 +131,12 @@ test('Harbor and Fallen enrollment paths and replay state are separated',async t
   expectedSha256:crypto.createHash('sha256').update(bytes).digest('hex')};
  assert.notEqual(HARBOR_BOOTSTRAP_PATH,BOOTSTRAP_PATH);
  const harbor=createHarborBootstrap(f.opts),fallen=createFallenBootstrap(fallenOptions);
- const hs=await serverFor(harbor),fsrv=await serverFor(fallen);
- try{
-  const crossHarbor=await fetch(hs.url+BOOTSTRAP_PATH,{
-   headers:{'x-test-host':'fabric.systemiacommandcenters.com'}});
-  // Unknown routes in a real Fabric runtime pass through to normal 404;
-  // the bootstrap handler returns false and doesn't expose data.
-  assert.equal(crossHarbor.status,200); // test HTTP server fallback behavior below
- }finally{await hs.close();await fsrv.close()}
+ assert.equal(await harbor.handle({url:BOOTSTRAP_PATH},{}),false);
+ assert.equal(await fallen.handle({url:HARBOR_BOOTSTRAP_PATH},{}),false);
+ assert.throws(()=>createHarborBootstrap({...f.opts,
+  packageFile:fallenPackage,expectedSha256:fallenOptions.expectedSha256}),
+  /recipient_binding_invalid/);
+ assert.throws(()=>createFallenBootstrap({...fallenOptions,
+  packageFile:f.opts.packageFile,expectedSha256:f.expectedSha256}),
+  /recipient_binding_invalid/);
 });
