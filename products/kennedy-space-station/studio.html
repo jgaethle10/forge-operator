@@ -91,7 +91,7 @@ if(underlay && underlay.siteId===sid() && $('show-underlay').checked){
  }
 }
 for(const obj of model.objects){const ox=x+obj.x*s,oz=y+obj.z*s,ow=obj.width*s,od=obj.depth*s;
-const r=svgNode('rect',{x:ox,y:oz,width:ow,height:od,fill:kinds[obj.kind]||'#ccc',stroke:obj.id===selected?'#4c2dc8':'#696c8d','stroke-width':obj.id===selected?4:2,'fill-opacity':underlay&&$('show-underlay').checked?.72:1,'data-id':obj.id,class:'shape',rx:2});svg.append(r);
+const r=svgNode('rect',{x:ox,y:oz,width:ow,height:od,fill:kinds[obj.kind]||'#ccc',stroke:obj.id===selected?'#4c2dc8':'#696c8d','stroke-width':obj.id===selected?4:2,'fill-opacity':(underlay&&$('show-underlay').checked)?0.72:1,'data-id':obj.id,class:'shape',rx:2});svg.append(r);
 if(ow>50&&od>26){svg.append(svgNode('text',{x:ox+ow/2,y:oz+od/2,'text-anchor':'middle','dominant-baseline':'middle','font-size':Math.min(14,Math.max(8,ow/10)),fill:'#293153','pointer-events':'none','font-weight':700},obj.label||labels[obj.kind]))}}
 svg.append(svgNode('text',{x:32,y:35,'font-size':15,'font-weight':800,fill:'#4d5478'},'PRELIMINARY STUDY · NOT GEOREFERENCED'));
 svg.append(svgNode('text',{x:32,y:632,'font-size':13,fill:'#6c7494'},'LOCAL X →  |  LOCAL Z ↓  ·  USER-ENTERED SCALE'));

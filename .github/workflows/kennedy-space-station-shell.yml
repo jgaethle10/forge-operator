@@ -116,6 +116,8 @@ jobs:
           path: /tmp/kss-sheet-proof/
           if-no-files-found: error
           retention-days: 14
+      - name: Verify private aerial canvas alignment, rotations, and skew
+        run: node products/kennedy-space-station/test_overlay_math.mjs
       - name: Validate embedded private studio JavaScript syntax
         run: |
           python3 - <<'PY'
