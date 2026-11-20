@@ -136,6 +136,9 @@ export function inspectOwnedCommercialLoop({
  intakeReadActorRef,hostname=os.hostname()
 }={}){
  assertNoRoot();
+ // Order identity, buyer Page and thread are private authority inputs too.
+ // Keep the descriptor in an owned directory, not just a 0600 filename.
+ privateDir(path.dirname(orderFile));
  const order=privateJson(orderFile);
  if(order?.schema!==COMMERCIAL_LOOP_ORDER_SCHEMA)fail('order_schema_invalid');
  // Validate order before using it as a filesystem path.
