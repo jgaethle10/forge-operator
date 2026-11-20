@@ -28,7 +28,7 @@ test('HUDSON is served read-only by the owned Fabric runtime with a functioning 
   assert.match(watch.headers.get('content-security-policy'),/connect-src 'self'/);
   const river=await watch.text();
   assert.match(river,/HUDSON \| Enter the Current/);
-  assert.match(river,/hudson-watch-release" content="river-current-v1"/);
+  assert.match(river,/hudson-watch-release" content="river-current-v2-jointed-explorer"/);
   assert.match(river,/id="current"/);
   assert.match(river,/spider\(from,to,t\)/);
   assert.match(river,/PUBLIC GIT HISTORY · REPLAY/);
