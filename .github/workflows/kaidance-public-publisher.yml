@@ -1,0 +1,47 @@
+name: KAIDANCE Approved Public Publisher Contract
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/collider/public-publisher.mjs'
+      - 'systemia/collider/public-readback.mjs'
+      - 'systemia/collider/public-projection.mjs'
+      - 'systemia/collider/deploy/**'
+      - 'public/kaidance/**'
+      - 'tests/kaidance-public-publisher.test.mjs'
+      - 'tests/kaidance-public-readback.test.mjs'
+      - '.github/workflows/kaidance-public-publisher.yml'
+  push:
+    paths:
+      - 'systemia/collider/public-publisher.mjs'
+      - 'systemia/collider/public-readback.mjs'
+      - 'systemia/collider/public-projection.mjs'
+      - 'systemia/collider/deploy/**'
+      - 'public/kaidance/**'
+      - 'tests/kaidance-public-publisher.test.mjs'
+      - 'tests/kaidance-public-readback.test.mjs'
+      - '.github/workflows/kaidance-public-publisher.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  public-publication-boundary:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate private pulse publication / external readback / observatory
+        run: |
+          node --test \
+            tests/kaidance-public-observatory.test.mjs \
+            tests/kaidance-public-publisher.test.mjs \
+            tests/kaidance-public-readback.test.mjs
+      - name: Existing Collider source-level proofs
+        run: |
+          node systemia/collider/proof.mjs
+          node systemia/collider/pulse-proof.mjs

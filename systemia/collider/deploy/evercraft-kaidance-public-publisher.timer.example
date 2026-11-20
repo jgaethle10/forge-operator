@@ -1,0 +1,13 @@
+# EXAMPLE ONLY. This refreshes the projection, not the Collider heartbeat itself.
+[Unit]
+Description=Refresh operator-approved KAIDANCE public pulse
+
+[Timer]
+OnBootSec=30s
+OnUnitActiveSec=30s
+AccuracySec=5s
+Persistent=true
+Unit=evercraft-kaidance-public-publisher.service
+
+[Install]
+WantedBy=timers.target

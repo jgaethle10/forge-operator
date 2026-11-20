@@ -10,3 +10,24 @@ footer{border-top:1px solid var(--line);padding:24px clamp(20px,5vw,80px) 35px;d
 @media(max-width:650px){.top{height:68px;padding:0 17px}.topcaption,.issue{display:none}.identity{font-size:11px}.identity small{font-size:7px}.mark{width:32px;height:32px;font-size:23px}.status-badge{font-size:8px;padding:9px}.status-badge span{max-width:120px;white-space:normal}.hero{padding:32px 0 27px}.eyebrow{font-size:8px;letter-spacing:.14em}.hero h1{font-size:clamp(45px,11.6vw,72px);margin:21px 0 13px}.hero p{font-size:12px}.stage{min-height:520px}.stage-top{top:20px;left:18px;right:18px}.stage-label{font-size:11px}.stage-label .cross{font-size:24px}.stage-label small{font-size:7px}.readout{font-size:7px;max-width:121px}.vertical-label{left:10px;font-size:7px}.collider{width:95%;top:44%}.core-letter{font-size:65px}.stage-bottom{left:20px;right:20px;bottom:20px}.stage-caption strong{font-size:24px}.stage-caption>span:last-child{max-width:210px;font-size:9px}.cycle-box strong{font-size:49px}.cycle-box span:last-child{font-size:7px}.telemetry{display:block;padding:27px 22px}.timebox{margin-top:19px;border-top:1px solid #405465}.timebox>strong{font-size:68px}.metrics{grid-template-columns:1fr 1fr}.metrics>div:nth-child(2){border-right:0!important}.metrics>div:nth-child(3){border-right:1px solid #405465!important}.record{padding:60px 0}.record-title{display:block}.record-status{display:inline-block;margin-top:21px}.event-grid{grid-template-columns:1fr}.event-spotlight{min-height:310px}.about{grid-template-columns:1fr;gap:10px}.about a{grid-column:auto}.record-title h2{font-size:36px}}
 body.portrait{background:#000}body.portrait #shell{height:100dvh;max-width:none;overflow:hidden}body.portrait .top,body.portrait .hero,body.portrait .telemetry,body.portrait .record,body.portrait .about{display:none}body.portrait main{padding:0;height:calc(100dvh - 55px)}body.portrait .observatory-layout{display:block;border:0;height:100%;min-height:0}body.portrait .stage{height:100%;min-height:0}body.portrait .collider{width:min(98vw,62vh);top:41%}body.portrait .stage-top{top:4.5%;left:6%;right:6%}body.portrait .stage-bottom{bottom:15%;left:7%;right:7%}body.portrait .stage-caption strong{font-size:clamp(28px,6vw,45px)}body.portrait .cycle-box strong{font-size:clamp(45px,10vw,85px)}body.portrait .portrait-footer{display:flex;position:absolute;bottom:5%;left:7%;right:7%;justify-content:space-between;gap:15px;color:var(--muted);font-size:9px;letter-spacing:.12em;font-weight:750}body.portrait footer{height:55px;padding:8px 10px;background:#050a13}body.portrait footer>span{display:none}body.portrait footer>div{width:100%;justify-content:center}body.portrait footer button{padding:10px 12px}
 @media(max-aspect-ratio:9/16){body.portrait .collider{top:43%;width:min(100vw,54vh)}body.portrait .stage-bottom{bottom:16%}}@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.orbital,.core-halo,.collider.beat .pulse-flash{animation:none!important}}
+
+/* Source-backed events stay on-screen in the dedicated 9:16 broadcast composition. */
+.portrait-proof{display:none}
+body.portrait .stage-bottom{bottom:27%}
+body.portrait .portrait-proof{
+  display:flex;flex-direction:column;gap:8px;position:absolute;
+  left:7%;right:7%;bottom:10%;min-height:100px;padding:14px 16px;
+  border:1px solid #5f93ac8a;background:linear-gradient(115deg,#0a2237f2,#071423ee);
+  box-shadow:0 14px 45px #0007;z-index:4;
+}
+body.portrait .portrait-proof-label{font-size:9px;letter-spacing:.16em;color:#e1be90;font-weight:900}
+body.portrait .portrait-proof strong{font-size:clamp(15px,4vw,24px);line-height:1.25;font-weight:690;letter-spacing:-.025em;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
+body.portrait .portrait-proof small{font-size:9px;line-height:1.5;color:#bfd1de;display:block}
+body.portrait .portrait-proof-line{display:block;height:2px;background:#345670;overflow:hidden}
+body.portrait .portrait-proof-line i{display:block;height:100%;width:0;background:#b6eeff}
+body.portrait .portrait-footer{bottom:5%;font-size:8px}
+@media(max-height:670px){
+ body.portrait .collider{width:min(82vw,50vh);top:35%}
+ body.portrait .stage-bottom{bottom:31%}
+ body.portrait .portrait-proof{bottom:10%;min-height:85px;gap:5px;padding:10px 12px}
+}

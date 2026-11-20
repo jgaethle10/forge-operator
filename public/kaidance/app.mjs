@@ -78,6 +78,7 @@ async function refreshPulse(){
    const raw=await res.json();
    const assessed=assessPublicPulse(raw,Date.now());
    if(!assessed.ok)throw Error('Pulse rejected');
+   if(state.cycleSeen!==null&&assessed.cycle_number<state.cycleSeen)throw Error('Collider cycle rolled back');
    if(state.cycleSeen!==null&&assessed.cycle_number>state.cycleSeen&&assessed.verified)triggerBeat();
    if(state.cycleSeen===null||assessed.cycle_number>=state.cycleSeen){
      state.cycleSeen=assessed.cycle_number;
@@ -101,6 +102,10 @@ function showEvent(){
    $('eventMeta').textContent='No simulated commits, reviews, or tests will appear.';
    $('eventAge').textContent='WAITING FOR SOURCE';
    $('eventLink').hidden=true;
+   $('portraitEventKind').textContent='PUBLIC SOURCE UNAVAILABLE';
+   $('portraitEventTitle').textContent='No verified engineering event';
+   $('portraitEventMeta').textContent='Collider data is shown separately; no activity is being invented.';
+   $('portraitProofProgress').style.width='0%';
    $('eventProgress').style.width='0%';
    return;
  }
@@ -110,6 +115,9 @@ function showEvent(){
  $('eventMeta').textContent=e.detail+' · '+e.source;
  $('eventAge').textContent='RECORDED '+labelTime(e.time);
  $('eventLink').href=e.url;$('eventLink').hidden=false;
+ $('portraitEventKind').textContent=e.kind+' · PUBLIC GITHUB';
+ $('portraitEventTitle').textContent=e.title;
+ $('portraitEventMeta').textContent=e.state+' · Recorded '+labelTime(e.time)+' · Not a Collider event';
  state.eventStart=Date.now();
 }
 function renderEventList(){
@@ -162,7 +170,9 @@ function eventTicker(){
  if(!state.events.length)return;
  const elapsed=Date.now()-state.eventStart;
  if(elapsed>=EVENT_MS){state.current=(state.current+1)%state.events.length;showEvent()}
- $('eventProgress').style.width=Math.min(100,100*(Date.now()-state.eventStart)/EVENT_MS)+'%';
+ const progress=Math.min(100,100*(Date.now()-state.eventStart)/EVENT_MS)+'%';
+ $('eventProgress').style.width=progress;
+ $('portraitProofProgress').style.width=progress;
 }
 $('portraitBtn').addEventListener('click',()=>{
  const active=document.body.classList.toggle('portrait');
