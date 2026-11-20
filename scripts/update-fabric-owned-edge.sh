@@ -15,6 +15,7 @@ VISUAL_INGEST_TOKEN_CREATED=false
 SIGNAL_INTAKE_KEY_CREATED=false
 WEBSITE_AUDIT_INTAKE_CHANGED=false
 STUDIO_INTAKE_CHANGED=false
+FAIE_HISTORY_ENV_CHANGED=false
 PUBLIC_EDGE_SERVICE="evercraft-public-edge.service"
 ROUTER_MAP_SERVICE="evercraft-router-map.service"
 ROUTER_MAP_TIMER="evercraft-router-map.timer"
@@ -196,6 +197,7 @@ NETWORK_OBSERVER_INSTALLER="$REPO_ROOT/scripts/install-fabric-network-observer.s
 ROUTER_MAP_INSTALLER="$REPO_ROOT/scripts/install-fabric-router-map-resident.sh"
 SABAN_CAPACITY_INSTALLER="$REPO_ROOT/scripts/install-saban-capacity-organism.sh"
 HOME_EDGE_INSTALLER="$REPO_ROOT/scripts/install-evercraft-home-edge.sh"
+FAIE_HISTORY_PROVISIONER="$REPO_ROOT/scripts/provision-faie-owned-history.mjs"
 
 mkdir -p "$STATE_DIR"
 chown root:"$RUN_USER" "$STATE_DIR"
@@ -293,6 +295,50 @@ ensure_visual_ingest_token() {
   rm -f "$tmp"
   VISUAL_INGEST_TOKEN_CREATED=true
   echo "Evercraft update: Visual Desk ingest credential initialized"
+}
+
+ensure_faie_owned_history_state() {
+  # Independent owned-history durability is required before the public
+  # archive can be described as verified. Never map private visitor points.
+  [[ -f "$FAIE_HISTORY_PROVISIONER" && -f "$FABRIC_ENV" ]] || {
+    echo "HOLD: FAIE owned history provisioning requires the existing Fabric env" >&2
+    return 1
+  }
+  FAIE_HISTORY_ENV_CHANGED=false
+  # The provisioner only creates the canonical private directory when no
+  # FAIE state directory has been configured. Snapshot the current env once
+  # so an unsuccessful service update can restore the previous bytes.
+  if ! grep -Eq '^FAIE_EDGE_STATE_DIR=/' "$FABRIC_ENV"; then
+    # The old unconfigured Fabric edge may already have public history in
+    # a systemd-private /tmp directory. Starting a new /var/lib archive would
+    # strand it. Require a reviewed online backup/migration instead of a
+    # silent reset of previously sourced land history.
+    local prior_history_health=""
+    prior_history_health="$(curl -fsS --max-time 5 'http://127.0.0.1:8787/api/faie/health' 2>/dev/null || true)"
+    if ! runuser -u "$RUN_USER" -- env FAIE_PRIOR_HISTORY_HEALTH_JSON="$prior_history_health" node -e "
+      try {
+        const h=JSON.parse(process.env.FAIE_PRIOR_HISTORY_HEALTH_JSON||'null');
+        if(h?.ok!==true||h.fabric_native!==true)process.exit(2);
+        const count=h.land_history_archive?.archived_records;
+        if(!Number.isSafeInteger(count)||count<0)process.exit(3);
+        if(count>0)process.exit(4);
+      } catch { process.exit(5); }
+    "; then
+      echo "HOLD: previous FAIE archive is nonempty or unverified; preserve and migrate it before choosing new storage" >&2
+      return 1
+    fi
+  fi
+  if ! grep -Eq '^FAIE_EDGE_STATE_DIR=/' "$FABRIC_ENV" && [[ -z "$ENV_BACKUP" ]]; then
+    ENV_BACKUP="$STATE_DIR/fabric.env.before-faie-history"
+    install -o root -g root -m 0600 "$FABRIC_ENV" "$ENV_BACKUP"
+  fi
+  local output=""
+  output="$(node "$FAIE_HISTORY_PROVISIONER" --uid "$(id -u "$RUN_USER")" --gid "$(id -g "$RUN_USER")" --apply --confirm-owned-host)" || return 1
+  [[ "$output" == *'"root_is_owner_managed":true'* ]] || return 1
+  if [[ "$output" == *'"environment_updated":true'* ]]; then
+    FAIE_HISTORY_ENV_CHANGED=true
+  fi
+  echo "Evercraft update: FAIE durable history state verified (env_changed=$FAIE_HISTORY_ENV_CHANGED)"
 }
 
 reconcile_edge_attestation_env() {
@@ -566,6 +612,25 @@ verify_current_runtime() {
         reject('earthworks_simulator_authority',9);
     " || return 9
 
+  # Exact local runtime proof: an env key alone is not durable history.
+  # This read-only health check must observe the archive actually mounted in
+  # the resident service before accepting the new release.
+  local faie_history_health=""
+  faie_history_health="$(curl -fsS --max-time 5 'http://127.0.0.1:8787/api/faie/health' 2>/dev/null || true)"
+  if ! runuser -u "$RUN_USER" -- env FAIE_HISTORY_HEALTH_JSON="$faie_history_health" node -e "
+    try {
+      const h=JSON.parse(process.env.FAIE_HISTORY_HEALTH_JSON||'null');
+      if(h?.ok!==true||h.fabric_native!==true)process.exit(2);
+      if(h.edge_state_persistence!=='configured_persistent_or_operator_managed')process.exit(3);
+      if(h.land_history_archive?.status!=='active')process.exit(4);
+      if(h.land_history_archive?.public_region_history_only!==true)process.exit(5);
+      if(h.land_history_archive?.visitor_point_queries_persisted!==false)process.exit(6);
+    } catch { process.exit(7); }
+  "; then
+    echo "ERROR: FAIE owner-managed history archive is not resident and privacy-verified" >&2
+    return 23
+  fi
+
   local earthworks_page=""
   earthworks_page="$(curl -fsS --max-time 5 "http://127.0.0.1:8787/earthworks" 2>/dev/null || true)"
   [[ -n "$earthworks_page" ]] || return 14
@@ -734,7 +799,12 @@ if [[ "$before" == "$target" ]]; then
   fi
   ensure_visual_ingest_token
   reconcile_edge_attestation_env
-  if [[ -n "$ENV_BACKUP" || "$VISUAL_INGEST_TOKEN_CREATED" == "true" || "$SIGNAL_INTAKE_KEY_CREATED" == "true" || "$WEBSITE_AUDIT_INTAKE_CHANGED" == "true" || "$STUDIO_INTAKE_CHANGED" == "true" ]]; then
+  if ! ensure_faie_owned_history_state; then
+    restore_edge_attestation_env
+    echo "HOLD: FAIE persistent archive is not safely configured" >&2
+    exit 21
+  fi
+  if [[ -n "$ENV_BACKUP" || "$FAIE_HISTORY_ENV_CHANGED" == "true" || "$VISUAL_INGEST_TOKEN_CREATED" == "true" || "$SIGNAL_INTAKE_KEY_CREATED" == "true" || "$WEBSITE_AUDIT_INTAKE_CHANGED" == "true" || "$STUDIO_INTAKE_CHANGED" == "true" ]]; then
     if ! systemctl restart "$SERVICE"; then
       restore_edge_attestation_env
       systemctl restart "$SERVICE" || true
@@ -847,6 +917,10 @@ if ! ensure_studio_private_intake; then
 fi
 ensure_visual_ingest_token
 reconcile_edge_attestation_env
+if ! ensure_faie_owned_history_state; then
+  rollback "faie_owned_history_state_hold"
+  exit 21
+fi
 write_runtime_release_ref "$target"
 
 if ! systemctl restart "$SERVICE"; then

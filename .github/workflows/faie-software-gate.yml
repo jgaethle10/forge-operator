@@ -104,6 +104,11 @@ jobs:
       - name: FAIE NFIP statewide Fabric route, source bounds and privacy tests
         run: node --test systemia/mcp/fabric-faie-nfip-history.test.mjs
 
+      - name: FAIE owner-managed durable archive provisioning, symlink, env safety and rollback contract
+        run: |
+          node --check scripts/provision-faie-owned-history.mjs
+          node --test tests/faie-owned-history-provisioning.test.mjs
+
       - name: FAIE Saban swarm proof
         run: npm run proof:saban-faie
 

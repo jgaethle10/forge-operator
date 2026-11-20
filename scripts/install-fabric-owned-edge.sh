@@ -80,6 +80,11 @@ EVERCRAFT_VISUAL_ORIGIN=https://$DOMAIN/visuals
 EVERCRAFT_VISUAL_INGEST_TOKEN_FILE=$VISUAL_INGEST_TOKEN_FILE
 EOF
 sudo chmod 0600 /etc/evercraft/fabric.env
+# The archive must not inherit ephemeral /tmp state: give the resident Fabric
+# user its own private /var/lib history root before starting the service.
+sudo "$NODE_BIN" "$REPO_ROOT/scripts/provision-faie-owned-history.mjs" \
+  --uid "$(id -u "$RUN_USER")" --gid "$(id -g "$RUN_USER")" \
+  --apply --confirm-owned-host
 
 sudo tee /etc/evercraft/public-edge.env >/dev/null <<EOF
 EVERCRAFT_PUBLIC_HOST=$DOMAIN
