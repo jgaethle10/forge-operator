@@ -232,15 +232,24 @@ class Handler(BaseHTTPRequestHandler):
                     if pilot_file.is_file():
                         try:
                             record=json.loads(pilot_file.read_text(encoding='utf-8'))
+                            founding=record.get('founding_five') or {}
+                            standard=record.get('standard') or {}
                             if (record.get('schema')=='evercraft.site-planner.stripe-catalog-snapshot.v1'
                                 and record.get('product_key')=='evercraft-site-planner-concept-pilot-v1'
                                 and record.get('payment_link_active_at_verification') is False
-                                and record.get('product_active_at_verification') is False):
+                                and record.get('product_active_at_verification') is False
+                                and standard.get('last_verified_link_active') is False
+                                and founding.get('last_verified_link_active') is False
+                                and standard.get('unit_amount_cents')==49900
+                                and founding.get('unit_amount_cents')==34900
+                                and founding.get('checkout_completed_session_limit')==5):
                                 pilot={'catalog_recorded':True,'merchant_name':record.get('merchant_name'),
                                        'currency':record.get('price_currency'),
-                                       'unit_amount_cents':record.get('unit_amount_cents'),
-                                       'price_status':record.get('price_status'),
-                                       'link_status_at_last_verification':'inactive',
+                                       'unit_amount_cents':standard['unit_amount_cents'],
+                                       'founding_five_unit_amount_cents':founding['unit_amount_cents'],
+                                       'founding_five_completed_session_limit':5,
+                                       'price_status':'provisional_two_tier_pricing',
+                                       'link_status_at_last_verification':'both_inactive',
                                        'live_stripe_status_checked_by_server':False}
                         except (ValueError,OSError):
                             pilot={}
