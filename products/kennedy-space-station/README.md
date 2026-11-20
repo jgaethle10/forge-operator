@@ -6,22 +6,22 @@ Kennedy Space Station is the spatial-planning and visualization product. Evercra
 
 ## Run the owned preview
 
-Requires Python 3.11+ and a checkout of the whole repository including \`products/site-planner\`. No Base44, third-party runtime, CDN, or external service is required.
+Requires Python 3.11+ and a checkout of the whole repository including `products/site-planner`. No Base44, third-party runtime, CDN, or external service is required.
 
-\`\`\`bash
+```bash
 cd products/kennedy-space-station
 python3 server.py
 # open http://127.0.0.1:8811/
-\`\`\`
+```
 
 The landing page has real create-site, list-sites, and open-site actions through the existing local Site Planner API. The visual plan toggles are labeled **concept-only illustration**, not source data or generated engineered site geometry.
 
-- \`/\`: Kennedy's own welcoming home and operator actions
-- \`/workspace\`: connected, separately branded Site Planner operating interface
-- \`/api/sites\`: canonical Site Planner API, not a KSS duplicate
-- \`/api/health\`: truthful integration and deployment readiness flags
+- `/`: Kennedy's own welcoming home and operator actions
+- `/workspace`: connected, separately branded Site Planner operating interface
+- `/api/sites`: canonical Site Planner API, not a KSS duplicate
+- `/api/health`: truthful integration and deployment readiness flags
 
-Underlying site records, evidence, reports, and queue are kept in the existing Site Planner SQLite database and uploaded-file storage. To share the same local project records with an existing Site Planner deployment, point both processes at an approved, durable \`EVERCRAFT_SITE_DATA\` directory. Apply backups, access controls, and one-writer/migration discipline before any production use.
+Underlying site records, evidence, reports, and queue are kept in the existing Site Planner SQLite database and uploaded-file storage. To share the same local project records with an existing Site Planner deployment, point both processes at an approved, durable `EVERCRAFT_SITE_DATA` directory. Apply backups, access controls, and one-writer/migration discipline before any production use.
 
 ## Architecture and product boundaries
 
