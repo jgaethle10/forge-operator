@@ -86,7 +86,7 @@ export function projectCommercialLoop({
     previewSendRequest.job?.id!==assignment.jobId||
     previewSendRequest.job?.producerId!==assignment.producerId||
     previewSendRequest.job?.systemiaAdmissionRef!==assignment.systemiaAdmissionRef||
-    previewSendRequest.job?.sourceManifestSha256!==receipt.ciphertextSha256||
+    previewSendRequest.job?.sourceManifestSha256!==assetIdentity||
     previewSendRequest.destination?.threadId!==order.threadId||
     previewSendRequest.destination?.pageId!==order.pageId||
     previewSendRequest.artifact?.sha256!==previewSha)
@@ -94,8 +94,22 @@ export function projectCommercialLoop({
       ['release_packet_binding_invalid']);
   // The existing preview-send guard is authoritative as a source-level policy,
   // but NOT a replacement for mediated provider-side enforcement.
+  let provenPreviewLedgerEntry=null;
+  if(providerPreview){
+    // A completed authorized send must remain visible on replay. It is the
+    // *one* provider readback matching the exact previous send, not a new send.
+    provenPreviewLedgerEntry=Array.isArray(providerSends)?providerSends.find(row=>
+      row?.providerMessageId===providerPreview.providerMessageId &&
+      row?.orderId===order.orderId && row?.threadId===order.threadId &&
+      row?.mediaSha256===previewSha && row?.pageId===order.pageId):null;
+    if(!provenPreviewLedgerEntry)return hold('PREVIEW_SEND_CONFLICT',
+      'RECONCILE_PROVIDER_LEDGER_AND_EXACT_MESSAGE',
+      ['sender_ledger_missing_exact_provider_receipt']);
+  }
+  const precedingSends=provenPreviewLedgerEntry?
+    providerSends.filter(row=>row!==provenPreviewLedgerEntry):providerSends;
   let guard;
-  try{guard=assessHarborCommercialPreviewSend(previewSendRequest,{providerSends});}
+  try{guard=assessHarborCommercialPreviewSend(previewSendRequest,{providerSends:precedingSends});}
   catch{return hold('PREVIEW_RELEASE_HELD','REVIEW_INVALID_PREVIEW_SEND_PACKET',['guard_rejected_input']);}
   if(guard.status!=='ELIGIBLE_FOR_AUTHORIZED_SENDER')
     return hold('PREVIEW_RELEASE_HELD','RESOLVE_PREVIEW_SEND_GUARD',guard.reasons);
