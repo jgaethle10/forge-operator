@@ -142,7 +142,7 @@ jobs:
             cat artifacts/faie-partner-end-to-end.json >&2
             exit "$code"
           done
-          test "$(jq -r '.state' artifacts/faie-partner-end-to-end.json)" = 'PARTNER_GATE_PASSED'
+          test "$(jq -r '.state' artifacts/faie-partner-end-to-end.json)" = 'PARTNER_TECHNICAL_GATE_PASSED'
 
       - name: Test partner journey in a real browser
         id: browser
@@ -165,7 +165,7 @@ jobs:
           set -euo pipefail
           if [ "$VERIFY_OUTCOME" = "success" ] && [ "$PARTNER_OUTCOME" = "success" ] && [ "$BROWSER_OUTCOME" = "success" ]; then
             state="success"
-            description="FAIE AgNormal UI, real API, and browser journey verified"
+            description="FAIE technical UI/API/browser verified; partnership source scope separate"
           else
             state="failure"
             stage="verify=$VERIFY_OUTCOME partner=$PARTNER_OUTCOME browser=$BROWSER_OUTCOME"

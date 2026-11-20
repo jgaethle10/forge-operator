@@ -97,3 +97,11 @@ test('optional comparison starter connects to the real comparison flow', () => {
   assert.match(html, /document\.getElementById\('compareRun'\)\.click\(\)/);
   assert.match(html, /body\[data-pilot="agnormal"\] \.pilot-actions/);
 });
+
+test('comparison explicitly distinguishes absent evidence from an unsuitable site', () => {
+  assert.match(html, /hasMatchingSources = Number\(candidate\.independent_source_family_count/);
+  assert.match(html, /no matching source coverage/);
+  assert.match(html, /Not yet assessed/);
+  assert.match(html, /<strong>not<\/strong>/);
+  assert.match(html, /not.*evidence that this location is unsuitable/);
+});

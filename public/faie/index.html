@@ -893,15 +893,17 @@ function renderComparison(comparison) {
     .sort((a,b) => (order.get(a.candidate_id) || 99) - (order.get(b.candidate_id) || 99))
     .forEach((candidate) => {
       const rank = order.get(candidate.candidate_id) || '?';
+      const hasMatchingSources = Number(candidate.independent_source_family_count || 0) > 0;
       const missing = Array.isArray(candidate.missing_dimensions) ? candidate.missing_dimensions : [];
       html += '<article class="panel" style="padding:17px">';
-      html += '<div class="tags"><span class="tag">evidence rank ' + esc(rank) + '</span><span class="tag">' + esc(candidate.decision_readiness || 'unknown') + '</span></div>';
+      html += '<div class="tags"><span class="tag">' + (hasMatchingSources ? 'evidence rank ' + esc(rank) : 'no matching source coverage') + '</span><span class="tag">' + esc(candidate.decision_readiness || 'unknown') + '</span></div>';
       html += '<h2 style="font-size:1.25rem">' + esc(candidate.label) + '</h2>';
       html += '<div class="coverage">';
-      html += '<span class="pill">Evidence readiness: <strong>' + Math.round((Number(candidate.evidence_readiness_score)||0)*100) + '%</strong></span>';
+      html += '<span class="pill">Evidence readiness: <strong>' + (hasMatchingSources ? Math.round((Number(candidate.evidence_readiness_score)||0)*100) + '%' : 'Not yet assessed') + '</strong></span>';
       html += '<span class="pill">Sources: <strong>' + esc(candidate.independent_source_family_count || 0) + '</strong></span>';
       html += '<span class="pill">Strong: <strong>' + esc(candidate.strong_finding_count || 0) + '</strong></span>';
       html += '</div>';
+      if (!hasMatchingSources) html += '<div class="quiet" style="margin-top:12px">FAIE has no matching admitted evidence for this region. That is a data-coverage gap, <strong>not</strong> evidence that this location is unsuitable.</div>';
       if (missing.length) {
         html += '<div class="meta" style="margin-top:10px">Missing decision dimensions</div><div class="tags" style="margin-top:8px">';
         missing.forEach((dimension) => { html += '<span class="tag reported">' + esc(dimension) + '</span>'; });
