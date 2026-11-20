@@ -122,6 +122,7 @@ class AerialProviderTests(unittest.TestCase):
                         self.assertEqual(rsp.status,200)
                         self.assertEqual(json.load(rsp)["match_class"],"census_address_range_not_parcel")
                         self.assertEqual(rsp.headers.get("Cache-Control"),"no-store")
+                        self.assertIn("img-src 'self' data: blob:",rsp.headers.get("Content-Security-Policy",""))
                     self.assertEqual(preview.call_count,1)
                     with server.connect() as db:
                         for tab in ("sites","orders","outbox","evidence"):
