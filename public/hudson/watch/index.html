@@ -525,7 +525,7 @@ function drawTraveler(from,to,t){
  var bob=Math.sin(clock*1.06)*.017;
  // Safe mobile/desktop stage framing: the bow and stern remain visible.
  // This cinematic offset never modifies the canonical route or tap geometry.
- var drawX=clamp(pos.x,size*1.70,Math.max(size*1.70,width-size*1.70));
+ var drawX=clamp(pos.x,size*1.95,Math.max(size*1.95,width-size*1.95));
  var drawY=clamp(pos.y,size*2.12+12,Math.max(size*2.12+12,height-size*.67-12));
  ctx.save();
  ctx.translate(drawX,drawY+size*bob);
