@@ -92,3 +92,14 @@ Additional Worldstate/Sentinel feeds can enter the same evidence pipeline withou
 All four require `Authorization: Bearer <TOWI_INTERNAL_TOKEN>` with a strong 32-256 character URL-safe token. Without it the routes return 503/401 and the resident cannot auto-start. Owner-host service auto-start is **opt-in only**, requiring both an authenticated private token and `TOWI_RESIDENT_ENABLED=true`. It never starts solely because the Forge app runs in production. Keep the token inside the existing private owner-managed secrets system; do not commit, paste, print or email it.
 
 A restored kernel does **not** independently scrape original research records, validate source-ownership at a laboratory standard, store an institutional outreach ledger, contact institutions, or publish. Its current candidate scores require actual independent review and a properly verified Systemia -> Harbor handoff. The previous PR #735's public `/towi/` pages and public case APIs are **not enabled**, because raw working dossiers are not public-release-safe. An authorized operator must independently verify the live service, source custody, required environment and actual resident cycle before marking it operating.
+
+
+### Recover an existing Radar edition without starting a resident
+
+On an **authorized owned operator host** that already stores private Radar editions, run:
+
+```bash
+node systemia/towi/once.mjs --from-radar
+```
+
+The command reads only `${RADAR_STATE_DIR:-.runtime/radar}/latest-edition.json`, requires a private regular non-symlink source file with the actual Radar v1 schema and a timestamp no older than 48 hours, and writes one owner-private dossier cycle to `${TOWI_STATE_DIR:-.runtime/towi}`. It does not collect another feed, open any network socket, run a service, contact an institution, notify Harbor or publish anything. Missing, stale, unsafe and corrupt evidence fail closed without creating a replacement investigation. A successful synthetic CI test proves code behavior only; an actual run on Penguin/NextGen is required before we count an operating cycle.
