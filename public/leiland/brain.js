@@ -176,3 +176,6 @@ universe=createNeuralUniverse({
  initialFocus:selected
 });
 chooseRegion(selected);
+// A direct, shareable portrait-only link for a broadcast capture device.
+// The opt-in query flag changes presentation, not publisher trust or data.
+if(new URLSearchParams(window.location.search).get('view')==='live')setBroadcast(true);
