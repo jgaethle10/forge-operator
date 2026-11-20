@@ -3,7 +3,8 @@ import assert from 'node:assert/strict';
 import {planHeartbeatAdvisories,executeAdvisory} from './heartbeat-advisory.mjs';
 import {createRavenAdvisoryInvoker} from './raven-invoker.mjs';
 import {reserveAdvisoryAttempt,loadAdvisoryHistory} from './advisory-ledger.mjs';
-import {runAdvisoryHeartbeatOnce} from './heartbeat-runner.mjs';
+import {runAdvisoryHeartbeatOnce,packetAuth} from './heartbeat-runner.mjs';
+import {createHmac} from 'node:crypto';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -106,4 +107,36 @@ test('private heartbeat runner starts shadow-only and activates both approved ad
   const repeat=await runAdvisoryHeartbeatOnce({...settings,execute:true});
   assert.equal(repeat.state,'quiet');assert.equal(calls,2);
  }finally{fs.rmSync(root,{recursive:true,force:true});}
+});
+
+test('only a time-bounded signed Systemia mission packet can enable live advisor calls',()=>{
+ const root=fs.mkdtempSync(path.join(os.tmpdir(),'council-auth-'));
+ try{
+   const key=Buffer.from('fixture-locked-supervisor-private-key-material-32-chars');
+   const secretFile=path.join(root,'admission.key');
+   fs.writeFileSync(secretFile,key,{mode:0o600});
+   const nowMs=Date.parse('2026-11-19T19:30:00Z');
+   const packet={schema:'evercraft.systemia.private-mission-delta.v1',
+     origin:'systemia-admitted',issued_at:'2026-11-19T19:29:00Z',
+     expires_at:'2026-11-19T19:34:00Z',missions:[mission()]};
+   const signature=createHmac('sha256',key).update(JSON.stringify(packet)).digest('hex');
+   assert.equal(packetAuth({...packet,admission_signature:signature},{secretFile,nowMs,requireSignature:true}),true);
+   assert.throws(()=>packetAuth({...packet,admission_signature:'0'.repeat(64)},{secretFile,nowMs,requireSignature:true}),/signature_mismatch/);
+   assert.throws(()=>packetAuth({...packet,admission_signature:signature},{secretFile,nowMs:nowMs+600000,requireSignature:true}),/expired/);
+   assert.throws(()=>packetAuth({...packet,admission_signature:signature},{nowMs,requireSignature:true}),/key_missing/);
+   assert.equal(packetAuth(packet,{requireSignature:false}),true);
+ }finally{fs.rmSync(root,{recursive:true,force:true});}
+});
+test('multimodel council is an optional heartbeat cycle in canonical owned supervisor, not a second scheduler',()=>{
+ const services=JSON.parse(fs.readFileSync(new URL('../../core/resident-services.json',import.meta.url),'utf8')).services;
+ const service=services.find(s=>s.service_key==='model-council-heartbeat');
+ const managed=JSON.parse(fs.readFileSync(new URL('../../core/supervisor.evercraft.compute.json',import.meta.url),'utf8'));
+ const manifest=JSON.parse(fs.readFileSync(new URL('../../organism/model-council-heartbeat.workflow.json',import.meta.url),'utf8'));
+ assert.ok(service);assert.equal(service.mode,'cycle');
+ assert.equal(service.cadence_seconds,300);assert.equal(service.optional_when_unconfigured,true);
+ assert.equal(service.env_args['--packet-file'],'SYSTEMIA_ADVISORY_MISSION_PACKET_FILE');
+ assert.equal(service.env_args['--ledger-dir'],'SYSTEMIA_ADVISORY_LEDGER_DIR');
+ assert.equal(manifest.authority.customer_outreach,'held');
+ assert.equal(manifest.safety.default_execute,false);
+ assert.ok(managed.supervised_workflows.includes(service.service_key));
 });
