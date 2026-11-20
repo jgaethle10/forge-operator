@@ -25,6 +25,10 @@ test('Leiland is Systemia-managed and disabled without explicit field configurat
   '--release-sha':'LEILAND_RELEASE_SHA'
  });
  const manifest=JSON.parse(fs.readFileSync(path.join(root,row.manifest),'utf8'));
+ const compute=JSON.parse(fs.readFileSync(path.join(root,'systemia/core/supervisor.evercraft.compute.json'),'utf8'));
+ assert.deepEqual([...compute.supervised_workflows].sort(),c.services.map(x=>x.service_key).sort(),
+  'Evercraft Compute and Systemia Core must enumerate identical resident services');
+
  assert.equal(manifest.schema,'evercraft.systemia.workflow-manifest.v1');
  assert.equal(manifest.runtime,'systemia-core-resident');
  assert.equal(manifest.authority.publish_kaidance_cycles,false);
