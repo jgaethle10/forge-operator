@@ -45,6 +45,14 @@ try:
    assert not errors,f"browser JS errors: {errors}"
    page.screenshot(path=str(OUTPUT/(name+".png")),full_page=True)
    if name=="iphone":
+    headline=page.locator("#heroEventTitle").bounding_box()
+    assert headline and headline["y"]<height-40,f"first-screen activity still buried: {headline}"
+    stage=page.locator("#stage").bounding_box()
+    assert stage
+    for selector in [".orbit-label-2",".orbit-label-4"]:
+     label=page.locator(selector).bounding_box()
+     assert label and label["x"]>=stage["x"]-1 and label["x"]+label["width"]<=stage["x"]+stage["width"]+1, f"clipped network label: {selector} {label}"
+
     page.locator("#portraitBtn").click()
     assert page.locator("body.portrait").count()==1
     assert page.locator("#portraitEventTitle").is_visible()
@@ -52,6 +60,10 @@ try:
     page.screenshot(path=str(OUTPUT/"iphone-live.png"),full_page=False)
     page.goto(HOST+"?view=live",wait_until="domcontentloaded",timeout=15000)
     assert page.locator("body.portrait").count()==1,"shareable live view not applied"
+    page.wait_for_timeout(1200)
+    for selector in [".orbit-label-2",".orbit-label-4"]:
+     label=page.locator(selector).bounding_box()
+     assert label and label["x"]>=-1 and label["x"]+label["width"]<=width+1, f"clipped broadcast label: {selector} {label}"
     page.screenshot(path=str(OUTPUT/"iphone-direct-live.png"),full_page=False)
    page.close()
   browser.close()
