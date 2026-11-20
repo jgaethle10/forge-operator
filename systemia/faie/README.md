@@ -158,6 +158,18 @@ Pilot acceptance gate:
 - one-click Yakima Valley food-infrastructure scope is available on the real UI
 - human review remains required before consequential action
 
+### NOAA NCEI historic station context (optional, Yakima pilot)
+
+The owned edge exposes `POST /api/faie/climate/history` for **explicitly supplied coordinates** within 40 km of NOAA's Yakima Airport GHCN-Daily station `USW00024243` (NOAA record 46.56398, -120.53488). It is **not a nearest-station search**: points outside the verified station radius receive a 422 hold. The user interface keeps history behind an optional action, separate from the fast soil + NWS forecast scan.
+
+The source is the official NOAA NCEI Access Data Service `/access/services/data/v1`, dataset `daily-summaries`, station `USW00024243`, complete calendar years **2023 and 2024**, daily `TMAX`, `TMIN`, `PRCP`, standard Fahrenheit/inches, with available quality attributes. Both years must be available; an official response with no trustworthy data, sparse coverage, unexpected station ID, invalid dates or quality-flagged readings is never promoted into a complete historical sample. A 70% valid-day coverage requirement applies separately to each of the three measures. Counts are not divided by missing days.
+
+The report provides **observed** counts and actual denominators for station maximum temperature >=95°F, station minimum temperature <=32°F and precipitation >=0.01 inch; station distance, period, missing/quality-excluded readings, official source URLs and downloadable JSON. Two years are **not 30-year climate normals**, a forecast, a site microclimate, or evidence of crop or investment viability. No site approval or rights inference is ever made.
+
+The endpoint uses a low-volume public rate limit, single concurrent NOAA archive scan and bounded fixed official URLs. It never persists user coordinates or results in FAIE regional observations, investigations or comparisons. User coordinates are used to check the nearby official station, but the NOAA request itself is station-bound and contains **no customer coordinates**. The public live acceptance gate uses only the already-public Yakima sample point 46.6021, -120.5059 and requires actual NCEI observations to pass.
+
+QA: `systemia/faie/ncei-climate-history.test.mjs`, `systemia/mcp/fabric-faie-climate-history.test.mjs`, source UI contract, and external `scripts/faie-climate-live-acceptance.mjs`. Source metadata: https://www.ncei.noaa.gov/cdo-web/datasets/GHCND/stations/GHCND%3AUSW00024243/detail . API documentation: https://www.ncei.noaa.gov/access/search/documentation/data-service/ .
+
 ### FAIE V12 point-operating site scan
 
 The public, owned-Evercraft `POST /api/faie/site/scan` is a **user-initiated, point-scoped** scan. It combines **two distinct official products** without treating them as one fake confidence score:
