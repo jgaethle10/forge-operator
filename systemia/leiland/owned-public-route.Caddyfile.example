@@ -1,0 +1,19 @@
+# STAGED EXAMPLE ONLY. DO NOT IMPORT INTO CADDY WITHOUT VERIFIED HOST AUTHORITY,
+# EXISTING YARD/COMPUTE DEPLOYMENT RECEIPT, DNS/TLS, OPERATOR APPROVAL, AND ROLLBACK.
+# The .invalid name is intentionally NOT a deployable hostname.
+# Replace only through the existing Evercraft edge authority, never an ad-hoc DNS cutover.
+
+leiland.example.invalid {
+  encode zstd gzip
+  # Public static content and already-sanctioned JSON only.
+  # There are no externally accessible operator or AI inference endpoints.
+  reverse_proxy 127.0.0.1:8795 {
+    header_up -Authorization
+    header_up -Cookie
+  }
+  header {
+    X-Content-Type-Options "nosniff"
+    Referrer-Policy "no-referrer"
+    -Server
+  }
+}
