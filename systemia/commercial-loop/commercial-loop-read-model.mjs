@@ -87,6 +87,7 @@ export function projectCommercialLoop({
     previewSendRequest.job?.producerId!==assignment.producerId||
     previewSendRequest.job?.systemiaAdmissionRef!==assignment.systemiaAdmissionRef||
     previewSendRequest.job?.sourceManifestSha256!==assetIdentity||
+    sha(previewSendRequest.fallenGate)!==sha(fallenGate)||
     previewSendRequest.destination?.threadId!==order.threadId||
     previewSendRequest.destination?.pageId!==order.pageId||
     previewSendRequest.artifact?.sha256!==previewSha)
