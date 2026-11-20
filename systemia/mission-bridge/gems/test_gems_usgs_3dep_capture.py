@@ -55,6 +55,10 @@ class PublicUsgsCaptureTests(unittest.TestCase):
         self.assertEqual(result['balanced_queries_per_group'], 1)
         self.assertEqual(result['competition_submissions'], 0)
         self.assertEqual(result['raster_files_downloaded'], 0)
+        self.assertTrue(result['all_three_groups_have_index_matches'])
+        self.assertTrue(result['index_counts_are_not_comparable_dem_area'])
+        self.assertEqual([result['index_summary_by_group'][group]['unique_usgs_index_objectids'] for group in GROUPS], [1, 1, 1])
+        self.assertTrue(all(not result['index_summary_by_group'][group]['actual_dem_pixel_coverage_verified'] for group in GROUPS))
         self.assertFalse(result['competition_use_or_sponsor_share_rights_verified'])
         self.assertTrue(all(r['retrieved_at_utc'].startswith('2026-11-20T00:00:00')
                             for r in result['responses']))
@@ -62,6 +66,16 @@ class PublicUsgsCaptureTests(unittest.TestCase):
                          ['r01c00', 'r01c01', 'r01c02'])
         self.assertTrue(all(c.args[0].startswith(capture.SERVICE + '?')
                             for c in transport.call_args_list))
+
+    def test_no_index_matches_still_not_a_fault_or_raster_conclusion(self):
+        result = capture.capture(
+            atlas(), allow_public_query=True, pause=lambda _: None,
+            transport=lambda _: {'features': [], 'exceededTransferLimit': False})
+        self.assertFalse(result['all_three_groups_have_index_matches'])
+        self.assertTrue(result['index_counts_are_not_comparable_dem_area'])
+        self.assertTrue(all(result['index_summary_by_group'][group]['unique_usgs_index_objectids'] == 0 for group in GROUPS))
+        self.assertFalse(result['fault_truth_observed'])
+        self.assertEqual(result['competition_submissions'], 0)
 
     def test_reject_truncated_and_error_responses(self):
         for payload in ({'error': {'message': 'failed'}},
