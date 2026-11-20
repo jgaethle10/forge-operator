@@ -1146,8 +1146,12 @@ document.getElementById('siteScanExample').addEventListener('click',()=>{
   document.getElementById('soilLongitude').value='-120.5059';
   runSiteScan();
 });
-document.getElementById('heroSiteScanJump').addEventListener('click',()=>{
-  document.getElementById('soilPreviewPanel').open=true;
+document.getElementById('heroSiteScanJump').addEventListener('click',(event)=>{
+  event.preventDefault();
+  const panel=document.getElementById('soilPreviewPanel');
+  panel.open=true;
+  panel.scrollIntoView({behavior:'smooth',block:'start'});
+  document.getElementById('soilLatitude').focus({preventScroll:true});
 });
 document.getElementById('siteScanDownload').addEventListener('click',()=>{
   if(!latestSiteScan)return;
