@@ -178,13 +178,13 @@ test('corrupt persisted reservation cannot change shared quota or impersonate a 
    ['altered message fingerprint',{message_fingerprint:'sha256:unverified'}],
    ['missing passport permit',{passport_permit_id:null}],
   ]){
-   fs.writeFileSync(file,JSON.stringify({...valid,...mutation})+'\\n',{mode:0o600});
+   fs.writeFileSync(file,JSON.stringify({...valid,...mutation})+'\n',{mode:0o600});
    assert.throws(()=>inspectReservations({stateDir:c.stateDir}),
     /corrupt_outreach_reservation_record/,label+' audit must hold');
    assert.throws(()=>reserveColdOutreach(c.kwargs),
     /corrupt_outreach_reservation_record/,label+' send reservation must hold');
   }
-  fs.writeFileSync(file,JSON.stringify(valid)+'\\n',{mode:0o600});
+  fs.writeFileSync(file,JSON.stringify(valid)+'\n',{mode:0o600});
   assert.equal(inspectReservations({stateDir:c.stateDir}).count,1);
   const repeat=reserveColdOutreach(c.kwargs);
   assert.equal(repeat.state,'held');
