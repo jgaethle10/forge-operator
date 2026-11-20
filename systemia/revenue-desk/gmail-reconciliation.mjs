@@ -6,7 +6,6 @@ const VALID_MAIL_DIRECTIONS=new Set(['inbound','outbound']);
 const VALID_STAGES=new Set(['researched','verified','contact_ready','sent','replied','quoted','accepted','invoiced','paid','fulfilled']);
 const BLOCK_STATES=new Set(['opted_out','bounced','blocked','do_not_contact','customer_hold','declined']);
 const clean=v=>String(v??'').trim();
-function hour(ms){return ms/3600000;}
 function parseTime(value,field){
  const t=Date.parse(clean(value));
  if(!Number.isFinite(t))throw Error(field+'_invalid');
@@ -109,7 +108,7 @@ export function reconcileGmailOutreach({
   const stage=VALID_STAGES.has(p.stage)?p.stage:'researched';
   const inbound=mail.filter(m=>m.direction==='inbound'&&m.sender_key===emailKey&&!m.is_auto_reply&&!m.is_bounce);
   const latestBuyerReply=inbound.sort((a,b)=>b.time-a.time)[0]||null;
-  const cooldown=Boolean(latest&&clock-latest.time<hour(1)*minimumCooldownHours);
+  const cooldown=Boolean(latest&&clock-latest.time<3600000*minimumCooldownHours);
   const priorContact=Boolean(latest);
   const suppressed=BLOCK_STATES.has(status)||p.opted_out===true;
   const reasons=[];
@@ -127,7 +126,7 @@ export function reconcileGmailOutreach({
   if(p.passport_exact_message_permit_verified!==true)reasons.push('passport_permit_missing');
   // A permit record in source data is NOT a live Passport execution permit.
   keyedProspects.push({
-    prospect_key:prospectKey,contact_ref:emailKey,source_ref:clean(p.source_ref)||null,
+    prospect_key:prospectKey,contact_ref:emailKey,source_ref_hash:clean(p.source_ref)?digest(hmacKey,clean(p.source_ref)):null,
     stage:latestBuyerReply?'replied':priorContact?'sent':stage,
     last_contact_ref:latest?'gmail:'+latest.id:null,
     last_contact_at:latest?new Date(latest.time).toISOString():null,
