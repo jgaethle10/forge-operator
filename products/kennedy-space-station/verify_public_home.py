@@ -84,7 +84,7 @@ def inspect():
         errors.append("Missing standalone interactive Discovery World")
     else:
         scene = EXPLORE.read_text(encoding="utf-8")
-        scripts = re.findall(r"<script\\b[^>]*>(.*?)</script>", scene, re.S | re.I)
+        scripts = re.findall(r"<script\b[^>]*>(.*?)</script>", scene, re.S | re.I)
         if len(scripts) != 1:
             errors.append("Discovery World must be a single inline, self-contained script")
         if not all(token in scene for token in (
@@ -119,8 +119,6 @@ def inspect():
             errors.append("Homepage and Explorer need separate restrictive policies")
         if "reverse_proxy" in active or "handle /api" in active or "root * /ABSOLUTE/OWNED/REPO/products/kennedy-space-station/public" not in active:
             errors.append("Explorer gateway cannot route outside the static public directory")
-        if False:
-            errors.append("Strict public CSP missing")
         if "@static_pages path /index.html /favicon.svg" not in active or "handle /explore.html" not in active:
             errors.append("Public Caddy routes must be restricted")
     return errors
