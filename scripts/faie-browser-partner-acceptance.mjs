@@ -57,7 +57,7 @@ try{
     return txt.includes('No source-backed historical records') ||
       txt.includes('Source family:') ||
       txt.includes('historical archive is unavailable');
-  },{timeout:16000});
+  },null,{timeout:16000});
   const historyText=await page.locator('#landHistoryResult').innerText();
   mark('land_history_public_source_boundary',
     historyText.includes('No source-backed historical records')||
