@@ -27,6 +27,7 @@ export EVERCRAFT_DEMAND_DB="$HOME/.local/state/evercraft/demand-command.sqlite"
 if [ -z "${EVERCRAFT_DEMAND_TOKEN:-}" ]; then
   export EVERCRAFT_DEMAND_TOKEN="$(python3 -c 'import secrets; print(secrets.token_urlsafe(48))')"
 fi
+printf 'Demand Command private browser token (never share it): %s\n' "$EVERCRAFT_DEMAND_TOKEN"
 python3 server.py
 ```
 
