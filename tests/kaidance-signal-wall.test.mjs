@@ -31,6 +31,8 @@ test('the lower page becomes connected source-linked evidence, not fake mission 
  assert.match(signal,/prefers-reduced-motion/);
  assert.match(app,/a\.href=e\.url/);
  assert.match(app,/a\.dataset\.state=safeState/);
+ assert.match(app,/const supporting=state\.events\.filter\(\(_,i\)=>i!==featuredIndex\)/);
+ assert.match(app,/renderEventList\(\); \/\/ Keep supporting signals distinct/);
  assert.match(app,/publicStatus=e\.state/);
  assert.match(app,/textContent=e\.title/);
  assert.match(css,/\.event::before/);
