@@ -25,14 +25,18 @@ test('provider adapters require explicitly configured model and secret',()=>{
  assert.equal(configuredProviders({}).length,0);
  const got=configuredProviders({OPENAI_API_KEY:'secret',BOARDROOM_OPENAI_MODEL:'model-a',ANTHROPIC_API_KEY:'secret',BOARDROOM_ANTHROPIC_MODEL:'model-b'});
  assert.deepEqual(got.map(x=>x.id),['openai','anthropic']);
+ const withXai=configuredProviders({ANTHROPIC_API_KEY:'a',BOARDROOM_ANTHROPIC_MODEL:'am',XAI_API_KEY:'x',BOARDROOM_XAI_MODEL:'grok-4.7'});
+ assert.deepEqual(withXai.map(x=>x.id),['anthropic','xai']);
 });
 test('calls official OpenAI, Anthropic and Gemini API endpoints with server-side keys',async()=>{
  const seen=[];
- const fake=async(url,opts)=>{seen.push({url,opts});return {ok:true,json:async()=>url.includes('openai')?{choices:[{message:{content:'OpenAI response'}}]}:url.includes('anthropic')?{content:[{type:'text',text:'Anthropic response'}]}:{candidates:[{content:{parts:[{text:'Gemini response'}]}}]}}};
- const got=configuredProviders({OPENAI_API_KEY:'o',BOARDROOM_OPENAI_MODEL:'om',ANTHROPIC_API_KEY:'a',BOARDROOM_ANTHROPIC_MODEL:'am',GOOGLE_API_KEY:'g',BOARDROOM_GOOGLE_MODEL:'gm'},fake);
+ const fake=async(url,opts)=>{seen.push({url,opts});return {ok:true,json:async()=>url.includes('openai')?{choices:[{message:{content:'OpenAI response'}}]}:url.includes('anthropic')?{content:[{type:'text',text:'Anthropic response'}]}:url.includes('x.ai')?{output:[{type:'message',content:[{type:'output_text',text:'Grok response'}]}]}:{candidates:[{content:{parts:[{text:'Gemini response'}]}}]}}};
+ const got=configuredProviders({OPENAI_API_KEY:'o',BOARDROOM_OPENAI_MODEL:'om',ANTHROPIC_API_KEY:'a',BOARDROOM_ANTHROPIC_MODEL:'am',GOOGLE_API_KEY:'g',BOARDROOM_GOOGLE_MODEL:'gm',XAI_API_KEY:'x',BOARDROOM_XAI_MODEL:'grok-4.7'},fake);
  for(const adapter of got){const r=await adapter.respond({system:'check',user:'question',maxTokens:100});assert.ok(r.text.includes('response'));}
- assert.equal(seen.length,3);
+ assert.equal(seen.length,4);
  assert.ok(seen[0].opts.headers.authorization.startsWith('Bearer '));
- assert.equal(seen[2].opts.headers['x-goog-api-key'],'g');
+ assert.equal(seen[2].opts.headers.authorization,'Bearer x');
+ assert.equal(JSON.parse(seen[2].opts.body).store,false);
+ assert.equal(seen[3].opts.headers['x-goog-api-key'],'g');
  assert.ok(!seen.some(x=>x.url.includes('key=')));
 });
