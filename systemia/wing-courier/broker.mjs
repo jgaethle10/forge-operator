@@ -112,7 +112,7 @@ export async function startWingCourierBroker({stateDir,wingCredentials,host='127
       createdAt:new Date().toISOString(),ack:null};
     atomicJson(stateFile,record);return reply(res,201,{id,state:'STAGED',idempotent:false});
    }
-   const senderStatus=/^\\/v1\\/envelopes\\/([a-f0-9]{32})\\/status$/.exec(url.pathname);
+   const senderStatus=/^\/v1\/envelopes\/([a-f0-9]{32})\/status$/.exec(url.pathname);
    if(senderStatus && req.method==='GET'){
     if(url.search)throw fail('unexpected_query');
     const {state}=location(senderStatus[1]);
