@@ -12,7 +12,7 @@ const code=watch.match(/<script>([\s\S]*?)<\/script>/)?.[1];
 test('river Watch is an interactive site and not an image stand-in',()=>{
  assert.match(home,/href="\.\/watch\/"/);
  assert.match(home,/Enter the Current/);
- assert.match(watch,/hudson-watch-release" content="river-current-v9-archive-ship"/);
+ assert.match(watch,/hudson-watch-release" content="river-current-v10-mistbound-ship"/);
  assert.match(watch,/canvas id="current"/);
  assert.match(watch,/id="explore"/);
  assert.match(watch,/id="pause"/);
@@ -93,24 +93,43 @@ test('river topology has seven named confluences and multi-channel currents',()=
  assert.match(code,/drawWatershed\(field\);drawRivers\(\);drawParticles\(dt\);drawConfluences\(\)/);
 });
 
-test('Archive Ship is a recognizably majestic vessel, not a generic abstract shape',()=>{
- assert.match(code,/HUDSON'S ARCHIVE SHIP/);
- assert.match(code,/function drawTraveler\(from,to,t\)/);
- assert.match(code,/function drawRoyalSail\(x,top,bottom,beam,wind,index\)/);
- assert.match(code,/var masts=\[/);
- assert.match(code,/drawRoyalSail\(-\.09,-1\.95,-1\.57/);
- assert.match(code,/A distinct forward triangular staysail/);
- assert.match(code,/Massive timber-and-gold keel/);
- assert.match(code,/Raised quarterdeck, handrails, golden galleries and ten warm windows/);
- assert.match(code,/for\(var windowIndex=0;windowIndex<10;windowIndex\+\+\)/);
- assert.match(code,/var size=width<=620\?clamp\(width\*\.19,70,93\):clamp\(width\*\.105,105,163\)/);
- assert.match(code,/ctx\.scale\(size\*facing,size\)/);
- assert.match(code,/var drawX=clamp\(pos\.x,size\*1\.95/);
- assert.match(code,/var drawY=clamp\(pos\.y,size\*2\.12\+12/);
- assert.match(code,/A royal swallowtail streams from the high central mast/);
+test('mistbound ship stays centered on the actual current and follows its tangent',()=>{
+ assert.match(code,/function shipPathPose\(from,to,t\)/);
+ assert.match(code,/var pos=locate\(from,to,t\)/);
+ assert.match(code,/var angle=Math\.atan2\(dy,dx\)/);
+ assert.match(code,/ctx\.translate\(pose\.x,pose\.y\)/);
+ assert.match(code,/ctx\.rotate\(pose\.angle\)/);
+ assert.doesNotMatch(code,/var drawX=clamp\(/);
+ assert.doesNotMatch(code,/var drawY=clamp\(/);
+ const a=code.indexOf('function shipPathPose(from,to,t){');
+ const b=code.indexOf('function drawMistySail(',a);
+ const f=new vm.Script(code.slice(a,b)+';shipPathPose').runInNewContext({
+  Math,width:390,height:844,clamp:(v,l,h)=>Math.max(l,Math.min(h,v)),
+  locate:(_a,_b,v)=>({x:47+v*290,y:205+v*426})
+ });
+ for(const v of [.02,.15,.5,.83,.97]){
+  const s=f('discovery','hudson',v);
+  assert.ok(Math.abs(s.x-(47+v*290))<1e-9);
+  assert.ok(Math.abs(s.y-(205+v*426))<1e-9);
+  assert.ok(Math.abs(s.angle-Math.atan2(426,290))<.001);
+  assert.ok(s.size>9&&s.size<=28);
+  const clearance=Math.min(s.x,390-s.x,s.y,844-s.y);
+  assert.ok(s.size*2.85<=clearance+.01);
+ }
+});
+test('mist ship is compact glowing cloud, sails and sparkling stardust',()=>{
+ assert.match(code,/MISTBOUND SHIP/);
+ assert.match(code,/function drawMistySail\(x,span,side,swell,tint\)/);
+ assert.match(code,/for\(var fog=0;fog<10;fog\+\+\)/);
+ assert.match(code,/for\(var spark=0;spark<35;spark\+\+\)/);
+ assert.match(code,/for\(var mastIndex=0;mastIndex<3;mastIndex\+\+\)/);
+ assert.match(code,/A faint tapering cloud-figurehead/);
+ assert.match(code,/Narrow dark keel and luminous rim/);
+ assert.match(code,/shipPathPose\(trip.from,trip.to,end\).size/);
+ assert.doesNotMatch(code,/function drawRoyalSail\(/);
+ assert.doesNotMatch(code,/Massive timber-and-gold keel/);
+ assert.doesNotMatch(code,/var drawX=clamp\(/);
  assert.match(code,/drawTraveler\(trip\.from,trip\.to,\.04\+trip\.t\*\.92\)/);
- assert.doesNotMatch(code,/The Fold: angular living architecture/);
- assert.doesNotMatch(code,/A rotating jagged rift interrupts the colored veils/);
 });
 test('v8 currents and confluences have different silhouettes and optical depth',()=>{
  assert.match(code,/Braided bands instead of hairline pipes/);
@@ -147,8 +166,8 @@ test('traveler ribbons evolve in length, twist, transparency and confluence beha
   assert.ok(f.opacity>=.20&&f.opacity<=.78);
   assert.ok(Number.isFinite(f.bend)&&Number.isFinite(f.angle));
  }
- const atPhone=390*.19;
- assert.ok(atPhone>=70&&atPhone<=93,'phone-size ship must be recognizable');
+ const atPhone=390*.062;
+ assert.ok(atPhone>=20&&atPhone<=28,'phone-size mist ship must fit the path');
 });
 test('slow river camera moves the whole field and tap positions use its inverse',()=>{
  const start=code.indexOf('function riverCamera(){');
