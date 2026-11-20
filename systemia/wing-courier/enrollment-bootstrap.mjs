@@ -59,6 +59,18 @@ export function createWingBootstrap({wing,enabled=false,packageFile='',signerPub
   const parsed=JSON.parse(payload.toString('utf8'));
   if(parsed.schema!=='evercraft.'+wing+'.receiver-enrollment.v1'||parsed.recipientFingerprint!==recipientFingerprint)
    throw Error('recipient_binding_invalid');
+  // Harbor must not be allowed to serve a JSON object with a plaintext
+  // credential under an otherwise valid recipient fingerprint.
+  if(wing==='harbor'&&(
+    parsed.format!=='x25519-hkdf-sha256-aes256gcm-v1'||
+    !['ephemeralPublicKeySpkiBase64','saltBase64','nonceBase64',
+      'ciphertextBase64','tagBase64'].every(k=>typeof parsed[k]==='string'&&
+      parsed[k].length>0)||
+    Object.keys(parsed).sort().join(',')!==[
+      'schema','format','recipientFingerprint','ephemeralPublicKeySpkiBase64',
+      'saltBase64','nonceBase64','ciphertextBase64','tagBase64'
+    ].sort().join(',')
+   ))throw Error('harbor_ciphertext_envelope_required');
  }
  async function handle(req,res){
   const route=new URL(String(req.url||'/'),'http://fabric.local');
