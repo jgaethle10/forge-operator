@@ -189,6 +189,14 @@
     .scope-hint strong{color:#e0e8d7}
     .compare-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
     .compare-actions button{margin-top:18px}
+    .soil-preview{margin:16px 0 0;padding:15px;border:1px solid #3d5844;background:rgba(4,24,13,.4);border-radius:14px}
+    .soil-preview summary{cursor:pointer;font-size:.86rem;font-weight:730;color:#e2eddc}
+    .soil-preview-form{margin:15px 0 12px}
+    .soil-preview-result{font-size:.83rem;line-height:1.6}
+    .soil-mapunit{border:1px solid #3d5844;border-radius:12px;padding:12px;margin:9px 0}
+    .soil-mapunit strong{display:block;font-size:.9rem}
+    .soil-mapunit p{color:#b5c4b5;font-size:.75rem;margin:5px 0}
+    .soil-preview button{margin:12px 0}
     .source-ledger{margin:26px 0 20px}
     .source-ledger-head{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;flex-wrap:wrap}
     .source-ledger-head h2{margin:6px 0}
@@ -558,6 +566,24 @@
     <div id="sourceLedger" class="source-ledger-grid" aria-live="polite"><div class="quiet">Loading source status…</div></div>
     <div class="source-ledger-guidance" id="sourceExtraConnections">Systemia Radar: checking connection. Worldstate: authenticated intake route, not proof of a live delivery. USDA soil: only acquired on authorized coordinates, not a continuous feed.</div>
     <div class="source-ledger-guidance">A successful check may return zero observations. A missing or failed feed never becomes a verified finding. Region-level evidence does not establish conditions at a particular property or water right.</div>
+    <details class="soil-preview" id="soilPreviewPanel">
+      <summary>Have a specific location? Look up its USDA mapped soils</summary>
+      <p class="source-ledger-guidance">Enter coordinates you are authorized to use (contiguous United States only). This queries USDA Soil Data Access on demand. Coordinates are sent to USDA, but FAIE does not save this public lookup to the shared investigation archive. Soil maps are not field tests.</p>
+      <form id="soilPreviewForm" class="soil-preview-form">
+        <div class="two">
+          <div>
+            <label for="soilLatitude">Latitude</label>
+            <input type="number" id="soilLatitude" min="24" max="50" step="any" required placeholder="46.6021">
+          </div>
+          <div>
+            <label for="soilLongitude">Longitude</label>
+            <input type="number" id="soilLongitude" min="-125" max="-66" step="any" required placeholder="-120.5059">
+          </div>
+        </div>
+        <button id="soilPreviewRun" type="submit">Check official soil maps ↗</button>
+      </form>
+      <div class="soil-preview-result" id="soilPreviewResult" role="status" aria-live="polite">No location checked yet.</div>
+    </details>
   </section>
 
   <div class="grid2">
@@ -989,6 +1015,60 @@ function renderFaieSourceLedger(health) {
       +'<p>'+esc(status.detail+time)+'</p></article>';
   }).join('');
 }
+
+async function runSoilPreview(event) {
+  event.preventDefault();
+  const button=document.getElementById('soilPreviewRun');
+  const result=document.getElementById('soilPreviewResult');
+  const latitude=Number(document.getElementById('soilLatitude').value);
+  const longitude=Number(document.getElementById('soilLongitude').value);
+  if(!Number.isFinite(latitude)||!Number.isFinite(longitude)||
+     latitude<24||latitude>50||longitude< -125||longitude> -66){
+    result.textContent='Enter valid coordinates inside the contiguous United States.';
+    return;
+  }
+  button.disabled=true;
+  button.textContent='Checking USDA maps…';
+  result.textContent='Requesting mapped soil information from USDA. No report is claimed until a valid response returns.';
+  try{
+    const response=await fetchWithTimeout('/api/faie/soil/preview',{
+      method:'POST',
+      headers:{'content-type':'application/json','accept':'application/json'},
+      body:JSON.stringify({latitude,longitude})
+    },20000);
+    if(!response.ok) throw new Error(response.status===429
+      ? 'Soil preview is rate limited. Try again later.'
+      : 'Official soil preview unavailable. No soil result was inferred.');
+    const data=await response.json();
+    if(data?.schema!=='evercraft.faie.public-soil-preview.v1'||
+       data.evidence_state!=='REPORTED'||data.request_persisted!==false||
+       data.site_suitability_verdict!==null||!Array.isArray(data.mapunits)) {
+      throw new Error('The soil response did not meet the source and privacy contract.');
+    }
+    let html='<div class="meta"><strong>Official USDA mapped-soil context</strong> · '+esc(data.evidence_state)
+      +' · '+esc(String(data.mapunit_count))+' map unit(s)</div>';
+    if(!data.mapunits.length) html+='<p>No mapped soil unit was returned for this point. That does not establish that the location has no soil.</p>';
+    for(const row of data.mapunits) {
+      html+='<div class="soil-mapunit"><strong>'+esc(row.name||'Unnamed map unit')+'</strong>';
+      html+='<p>Survey: '+esc(row.survey_area_name||'Not provided')+' · Updated: '+esc(row.survey_updated_at||data.source_updated_at||'Unknown')+'</p>';
+      html+='<p>Farmland classification: '+esc(row.farmland_classification||'Not available')+'</p>';
+      if(Array.isArray(row.components)) for(const component of row.components) {
+        html+='<p>Mapped component: '+esc(component.name||'Unknown')
+          +' · '+esc(component.percentage??'unknown')+'% · mapped slope '+esc(component.slope_percent??'unknown')+'%</p>';
+      }
+      html+='</div>';
+    }
+    html+='<p><strong>Important:</strong> '+esc(data.warning||'Mapped soils are not field tests or site approval.')+'</p>';
+    html+='<p><a href="https://sdmdataaccess.nrcs.usda.gov/WebServiceHelp.aspx" target="_blank" rel="noopener noreferrer">USDA NRCS source and methodology ↗</a></p>';
+    result.innerHTML=html;
+  } catch(error){
+    result.textContent=error?.message||'Soil preview could not be verified.';
+  } finally{
+    button.disabled=false;
+    button.textContent='Check official soil maps ↗';
+  }
+}
+document.getElementById('soilPreviewForm').addEventListener('submit',runSoilPreview);
 
 async function loadState() {
   const statusbar = document.getElementById('statusbar');
