@@ -11,7 +11,7 @@ const source = (name) => fs.readFileSync(path.join(repoRoot, 'public/aiden-lab',
 
 test('strictly allowlists five exact science assets', () => {
   assert.deepEqual(Object.keys(AIDEN_LAB_FILES).sort(), [
-    'app.mjs','catalog.mjs','index.html','learning-worlds.mjs','mark.svg','styles.css'
+    'app.mjs','catalog.mjs','index.html','learning-worlds.mjs','mark.svg','styles.css','universe.mjs'
   ]);
   for (const file of Object.keys(AIDEN_LAB_FILES))
     assert.equal(resolveAidenLabRequest('/aiden-lab/' + file).name, file);
