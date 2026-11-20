@@ -28,10 +28,12 @@ test('HUDSON is served read-only by the owned Fabric runtime with a functioning 
   assert.match(watch.headers.get('content-security-policy'),/connect-src 'self'/);
   const river=await watch.text();
   assert.match(river,/HUDSON \| Enter the Current/);
-  assert.match(river,/hudson-watch-release" content="river-current-v3-anomaly"/);
+  assert.match(river,/hudson-watch-release" content="river-current-v4-living-pulse"/);
   assert.match(river,/id="current"/);
   assert.match(river,/drawAnomaly\(from,to,t\)/);
   assert.match(river,/anomalyFilament\(time,index\)/);
+  assert.match(river,/presencePulse\(time\)/);
+  assert.match(river,/drawPresenceRipple\(from,to,t\)/);
   assert.doesNotMatch(river,/function explorerLegGeometry\(/);
   assert.match(river,/PUBLIC GIT HISTORY · REPLAY/);
   assert.match(river,/SCENIC CURRENT · NOT A LIVE MISSION/);
