@@ -36,7 +36,19 @@ function readRecords(dir){
   throw Error('unsafe_reservation_ledger');
  return fs.readFileSync(file,'utf8').split('\n').filter(Boolean).map(line=>{
   const r=JSON.parse(line);
-  if(r.schema!=='evercraft.systemia.outreach-reservation.v1'||!OPAQUE.test(r.contact_ref)||!OPAQUE.test(r.opportunity_ref))
+  // A tampered, truncated or partially upgraded row must never undercount
+  // the shared 24-hour quota. Until provider finalization is implemented,
+  // the only valid persisted event is an unconfirmed, single-recipient hold.
+  if(r.schema!=='evercraft.systemia.outreach-reservation.v1'||
+    !OPAQUE.test(r.contact_ref)||!OPAQUE.test(r.opportunity_ref)||
+    typeof r.reservation_id!=='string'||!/^outreach_[0-9a-f-]{36}$/i.test(r.reservation_id)||
+    typeof r.reserved_at!=='string'||!Number.isFinite(Date.parse(r.reserved_at))||
+    r.units!==1||r.state!=='reserved_not_sent'||
+    r.provider_confirmed!==false||r.send_performed!==false||
+    typeof r.message_fingerprint!=='string'||!/^sha256:[0-9a-f]{64}$/i.test(r.message_fingerprint)||
+    typeof r.passport_permit_id!=='string'||!r.passport_permit_id.startsWith('permit_outreach_')||
+    typeof r.ledger_subject_ref!=='string'||!/^contact:[A-Za-z0-9_.:-]{1,120}$/.test(r.ledger_subject_ref)||
+    typeof r.actor_ref!=='string'||!r.actor_ref.includes(':')||r.actor_ref.includes('@'))
    throw Error('corrupt_outreach_reservation_record');
   return r;
  });
