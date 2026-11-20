@@ -406,7 +406,8 @@
         "--credential-state-dir": "RAVEN_PROVIDER_CREDENTIAL_STATE_DIR",
         "--rolling-budget-cents": "SYSTEMIA_ADVISORY_ROLLING_BUDGET_CENTS",
         "--admission-key-file": "SYSTEMIA_ADVISORY_ADMISSION_KEY_FILE",
-        "--execute": "SYSTEMIA_ADVISORY_EXECUTE"
+        "--execute": "SYSTEMIA_ADVISORY_EXECUTE",
+        "--receipts-dir": "SYSTEMIA_ADVISORY_PRIVATE_RECEIPT_DIR"
       }
     }
   ]
