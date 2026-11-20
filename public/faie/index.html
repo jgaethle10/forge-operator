@@ -1201,13 +1201,20 @@ async function runNfipHistory(){
     latestNfipHistory=data;
     const count=data.claim_transactions;
     const paid=data.total_paid_usd;
+    const recorded=data.known_payment_components_usd;
+    const missing=data.payment_coverage?.records_with_missing_components;
     if(data.status==='insufficient_area_records_suppressed'){
       result.textContent='Too few published claim transactions to disclose a historical total. No property loss is inferred.';
-    }else if(data.status==='area_aggregate_available'&&Number.isFinite(count)&&Number.isFinite(paid)){
+    }else if(data.status==='area_aggregate_available'&&Number.isInteger(count)&&count>=11&&
+             Number.isFinite(recorded)&&Number.isInteger(missing)&&missing>=0&&
+             (data.payment_completeness==='complete'||data.payment_completeness==='partial')&&
+             (data.payment_completeness==='complete'?(missing===0&&Number.isFinite(paid)):(missing>0&&paid===null))){
       const dollars=new Intl.NumberFormat(undefined,{style:'currency',currency:'USD',maximumFractionDigits:0});
       result.innerHTML='<div class="fema-flood-list">'
         +'<div class="fema-flood-record"><strong>'+esc(count.toLocaleString())+'</strong><span>NFIP claim transactions, Washington statewide, losses in 2023–2024</span></div>'
-        +'<div class="fema-flood-record"><strong>'+esc(dollars.format(paid))+'</strong><span>Nominal NFIP payments across those published transactions, not total flood damage</span></div></div>'
+        +'<div class="fema-flood-record"><strong>'+esc(dollars.format(data.payment_completeness==='complete'?paid:recorded))+'</strong><span>'+esc(data.payment_completeness==='complete'
+          ? 'Complete recorded payment components (nominal USD), not total flood damage'
+          : 'Known recorded payment components only. Not a complete payout total; '+missing+' records have missing payment fields.')+'</span></div></div>'
         +'<p>Source: <a target="_blank" rel="noopener noreferrer" href="https://www.fema.gov/openfema-data-page/nfip-redacted-claims-v3">FEMA OpenFEMA NFIP Claims v3 ↗</a>. Retrieved '+esc(fmt(data.retrieved_at))+'. Statewide evidence only. Does not establish anything about your property.</p>';
     }else throw Error('FEMA did not return a complete, usable statewide aggregate.');
     download.hidden=false;
