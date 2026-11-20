@@ -1,5 +1,5 @@
 {
-  "schema": "evercraft.harbor.gravity-flywheel-plan.v2",
+  "schema": "evercraft.harbor.gravity-flywheel-plan.v3",
   "mission": "gravity-flywheel-cadence-20261119",
   "date_pacific": "2026-11-19",
   "state": "PROPOSED_NOT_SENT_NOT_SCHEDULED",
@@ -259,5 +259,79 @@
     "comment_receipts_generated_by_plan": 0,
     "journal_pages_generated_by_plan": 0,
     "schedules_created_by_plan": 0
+  },
+  "mission_type": "PERMANENT_OPERATIONS_NO_END_DATE",
+  "standing_mission_issue": "https://github.com/jgaethle10/forge-operator/issues/2348",
+  "media_network_scope": "ALL_CURRENTLY_APPROVED_PAGES_PLUS_FUTURE_FOUNDER_APPROVED_PAGES",
+  "dynamic_page_registry": {
+    "source": "current owner-verified provider Page and founder-approved brand register; never hardcode 22 as permanent target count",
+    "scopes": [
+      "FACEBOOK",
+      "INSTAGRAM",
+      "OTHER_VERIFIED_PROVIDER"
+    ],
+    "exclusions_override_all": true,
+    "activation_states": [
+      "CANDIDATE",
+      "FOUNDER_APPROVED_PENDING_SETUP",
+      "IDENTITY_AND_PERMISSION_VERIFIED",
+      "FIRST_PUBLICATION_PROOF_PENDING",
+      "ACTIVE",
+      "HELD",
+      "FROZEN",
+      "EXCLUDED",
+      "RETIRED"
+    ],
+    "required_per_page_fields": [
+      "provider",
+      "page_id",
+      "current_name",
+      "approval_reference",
+      "audience",
+      "beats",
+      "status",
+      "identity_last_readback",
+      "allowed_post_formats",
+      "allowed_comment_scopes",
+      "journal_franchise",
+      "license_and_media_rules",
+      "last_successful_publication",
+      "owner_operator"
+    ],
+    "current_existing_baseline": {
+      "last_known_page_count": 22,
+      "live_page_count_as_of_handoff": "UNRECHECKED",
+      "actual_active_pages": "MUST_VERIFY_BEFORE_PUBLISH"
+    },
+    "new_page_rule": "Founder-approved identity and coverage mission plus provider Page ID readback, live scopes, rights, original media, safe source feeds, initial authorizations and real publish receipts",
+    "gaps_to_review": [
+      "unserved_topic",
+      "unserved_geography",
+      "new_product_public_launch",
+      "high_quality_story_with_no_fit",
+      "audience_request_pattern"
+    ],
+    "never_autocreate_pages": true
+  },
+  "coverage_operations": {
+    "service_horizon": "PERPETUAL_24_7_TARGET",
+    "actual_24_7_transport_status": "NOT_PROVEN",
+    "normal_tick_minutes_goal": 5,
+    "allowed_source_candidate_work": "Continuous deduplicated evidence and original/rights-approved media sourcing; only publish through verified Harbor account permissions",
+    "cadence_commercial": "Sparse, source/offer-driven, never broadcast to unrelated audiences",
+    "weekly_review": "Coverage-gap register, new product page candidates, franchise placement, reach and audience-retention, real attribution, trust/correction quality",
+    "failsafe": "Hold stale/badly sourced stories and any mismatched or unknown Page; continue read-only intake and retry after authorization",
+    "publication_requirements": [
+      "proper_page_status_ACTIVE",
+      "evidence_sources",
+      "claims_reviewed",
+      "rights_known",
+      "native_asset_or_link_choice",
+      "dedup",
+      "authorized_media_and_comment_tools",
+      "post_id_public_readback"
+    ],
+    "journal_comments": "Related live Journal record in first authorized comment with exact receipt; otherwise original source link and JOURNAL_PENDING",
+    "never_auto_harbor_publish_without_live_authenticated_pipeline": true
   }
 }
