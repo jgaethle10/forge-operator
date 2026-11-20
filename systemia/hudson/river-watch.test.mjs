@@ -87,3 +87,36 @@ test('the explorer has eight short jointed legs rather than a straight trailing 
  }
  assert.match(code,/Math\.max\(15,Math\.min\(28,width\*\.044\)\)/);
 });
+
+test('explorer silhouette remains readable in bright water without additive overexposure',()=>{
+ const start=code.indexOf('function spider(from,to,t){');
+ const end=code.indexOf('function routeAt(){',start);
+ assert.ok(start>=0&&end>start);
+ const body=code.slice(start,end);
+ assert.match(body,/ctx\.globalCompositeOperation="source-over"/);
+ assert.doesNotMatch(body,/ctx\.globalCompositeOperation="lighter"/);
+ assert.match(body,/dark under-stroke separates each articulated leg/i);
+ assert.match(body,/ctx\.lineWidth=4\.5;ctx\.strokeStyle="rgba\(2,23,33,\.9\)"/);
+ assert.match(body,/ctx\.lineWidth=leg<4\?1\.95:1\.7/);
+ assert.match(body,/rgba\(194,255,230,\.13\)/);
+ assert.doesNotMatch(body,/ctx\.shadowBlur=14/);
+});
+test('slow river camera moves the whole field and tap positions use its inverse',()=>{
+ const start=code.indexOf('function riverCamera(){');
+ const end=code.indexOf('function paint(dt){',start);
+ assert.ok(start>=0&&end>start);
+ const fn=new vm.Script(code.slice(start,end)+';riverCamera').runInNewContext({Math,width:390,height:844,clock:47});
+ const c=fn();
+ assert.ok(Math.abs(c.dx)<6,'phone river drift remains subtle');
+ assert.ok(Math.abs(c.dy)<8,'phone vertical drift remains subtle');
+ assert.ok(c.zoom>1&&c.zoom<1.04,'avoid clipping peripheral labels');
+ const point={x:83,y:329};
+ const screen={x:(point.x-390/2+c.dx)*c.zoom+390/2,y:(point.y-844/2+c.dy)*c.zoom+844/2};
+ const recovered={x:(screen.x-390/2)/c.zoom+390/2-c.dx,y:(screen.y-844/2)/c.zoom+844/2-c.dy};
+ assert.ok(Math.abs(recovered.x-point.x)<1e-9);
+ assert.ok(Math.abs(recovered.y-point.y)<1e-9);
+ assert.match(code,/ctx\.translate\(-width\/2\+camera\.dx,-height\/2\+camera\.dy\)/);
+ assert.match(code,/x=\(ev\.clientX-rect\.left-width\/2\)\/camera\.zoom\+width\/2-camera\.dx/);
+ assert.match(code,/ctx\.restore\(\);[\s\n]*\}/);
+ assert.match(code,/This is ambient scenery, not evidence of a new mission/);
+});
