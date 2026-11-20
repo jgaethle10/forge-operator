@@ -60,9 +60,25 @@ try:
    assert not errors,f"browser JS errors: {errors}"
    page.screenshot(path=str(OUTPUT/(name+".png")),full_page=True)
    if name=="desktop":
-    before=page.locator("#colliderField").evaluate("el=>el.toDataURL('image/png')")
+    def sample_reactor():
+     return page.locator("#colliderField").evaluate("""el=>{
+       const c=el.getContext('2d'), w=el.width,h=el.height;
+       let hash=2166136261;
+       for(let k=0;k<24;k++){
+         const x=Math.max(0,Math.min(w-6,Math.floor(w*(.2+.6*((k*7)%24)/24))));
+         const y=Math.max(0,Math.min(h-6,Math.floor(h*(.17+.5*((k*11)%24)/24))));
+         const data=c.getImageData(x,y,6,6).data;
+         for(let j=0;j<data.length;j+=4){
+           hash=Math.imul(hash^data[j],16777619);
+           hash=Math.imul(hash^data[j+1],16777619);
+           hash=Math.imul(hash^data[j+2],16777619);
+         }
+       }
+       return hash>>>0;
+     }""")
+    before=sample_reactor()
     page.wait_for_timeout(850)
-    after=page.locator("#colliderField").evaluate("el=>el.toDataURL('image/png')")
+    after=sample_reactor()
     assert before!=after,"Collider renderer should animate, not remain a static picture"
     page.screenshot(path=str(OUTPUT/"desktop-collider.png"),full_page=False)
    if name=="iphone":
