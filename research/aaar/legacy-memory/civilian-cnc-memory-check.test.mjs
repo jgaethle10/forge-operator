@@ -1,0 +1,11 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import {readFileSync} from "node:fs";
+import {assessCncMemoryCase} from "./civilian-cnc-memory-check.mjs";
+const demo=JSON.parse(readFileSync(new URL("./civilian-cnc-reference-2026-11-19.json",import.meta.url),"utf8"));
+test("published Siemens 8MB limit flags listed 256MB memory",()=>{let r=assessCncMemoryCase(demo);assert.equal(r.manual_capacity_ceiling_mb,8);assert.equal(r.candidates.length,2);assert.ok(r.candidates.every(c=>c.review_state==="PUBLISHED_LIMIT_EXCEEDED_HOLD"));});
+test("within published capacity still not qualified",()=>{const d=JSON.parse(JSON.stringify(demo));d.public_candidates[0].capacity_mb=8;const r=assessCncMemoryCase(d);assert.equal(r.candidates[0].review_state,"FURTHER_EQUIPMENT_REVIEW_REQUIRED");assert.equal(r.candidates[0].approved_replacement,false);});
+test("unknown capacity stays unverified",()=>{const d=JSON.parse(JSON.stringify(demo));d.public_candidates[0].capacity_mb=null;const r=assessCncMemoryCase(d);assert.ok(r.candidates[0].flags.includes("CANDIDATE_CAPACITY_UNDOCUMENTED"));});
+test("untrusted evidence URL is rejected",()=>{const d=JSON.parse(JSON.stringify(demo));d.equipment_reference.source_url="file:///bad";assert.throws(()=>assessCncMemoryCase(d),/missing_verified_reference/);});
+test("bad schema rejected",()=>assert.throws(()=>assessCncMemoryCase({}),/invalid_case_schema/));
+test("no assessment ever authorizes a purchase, quote or replacement",()=>{const r=assessCncMemoryCase(demo);assert.equal(r.purchasing_authorized,false);assert.ok(r.candidates.every(c=>!c.customer_quote_authorized&&!c.approved_replacement));});
