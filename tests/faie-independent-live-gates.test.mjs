@@ -13,14 +13,15 @@ test('FAIE external launch reruns when owner-managed archive installation or upd
   ])assert.ok(workflow.includes("- '"+source+"'"),source+' launch trigger missing');
 });
 test('a stale design partner page does not hide independent source evidence',()=>{
+  const steps=workflow.split(/\n      - name: /);
   for(const stage of ['partner','browser','soil','site_scan','climate_history','land_history','fema_flood','nfip_area']){
-    const found=workflow.match(new RegExp('\\bid: '+stage+'\\n([\\s\\S]*?)\\n\\s*shell: bash'));
-    assert.ok(found,stage+' missing');
-    assert.match(found[1],/\bcontinue-on-error: true\b/,stage+' needs diagnostic continuation');
+    const matched=steps.filter(section=>section.includes('id: '+stage+'\n'));
+    assert.equal(matched.length,1,stage+' missing or repeated');
+    assert.match(matched[0],/continue-on-error: true/,stage+' needs diagnostic continuation');
   }
-  const verify=workflow.match(/\bid: verify\n([\s\S]*?)\n\s*shell: bash/);
-  assert.ok(verify);
-  assert.doesNotMatch(verify[1],/continue-on-error: true/, 'root/identity verification cannot be bypassed');
+  const root=steps.filter(section=>section.includes('id: verify\n'));
+  assert.equal(root.length,1,'root verifier missing');
+  assert.doesNotMatch(root[0],/continue-on-error: true/, 'root/identity verification cannot be bypassed');
 });
 test('diagnostic continuation never changes the aggregate release gate from failure to success',()=>{
   assert.match(workflow,/- name: Publish FAIE launch status\n\s*if: always\(\)/);
