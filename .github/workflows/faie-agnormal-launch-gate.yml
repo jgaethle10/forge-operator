@@ -129,8 +129,12 @@ jobs:
             fi
             stage="$(jq -r '.stage_failed // ""' artifacts/faie-partner-end-to-end.json)"
             error="$(jq -r '.error // ""' artifacts/faie-partner-end-to-end.json)"
-            if [ "$stage" = "public_pages" ] && [[ "$error" == source_live_parity_* ]] && [ "$attempt" -lt 15 ]; then
-              echo "FAIE public UI has not converged to checked-out source ($attempt/15); waiting for verified updater."
+            if [ "$attempt" -lt 15 ] && { \
+              { [ "$stage" = "public_pages" ] && [[ "$error" == source_live_parity_* ]]; } || \
+              { [[ "$stage" == "public_pages" || "$stage" == "live_health" ]] && \
+                [[ "$error" == "fetch failed" || "$error" == *"TimeoutError"* || "$error" == *"_http_502" || "$error" == *"_http_503" ]]; }; \
+            }; then
+              echo "FAIE partner gate retry for deployment convergence/transient edge ($stage: $error; $attempt/15)."
               sleep 15
               continue
             fi
