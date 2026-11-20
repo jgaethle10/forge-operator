@@ -160,3 +160,25 @@ python3 revenue_desk_triage.py \
 The tool reads the existing loopback Revenue Desk service on port 8795. It creates an owner-readable summary receipt but does **not** import opportunities, start a service, send messages, modify the Revenue Desk, or confirm historical delivery or payment. The stage labels are allowlisted; unknown raw status values are grouped as `other_or_empty` to avoid exposing arbitrary source text in the report.
 
 Inspect aggregate output before allowing any `--apply` import. A safe future follow-up workflow must reconcile provider correspondence and source verification per person before any new outbound attempt. This canary is not live Systemia scheduling.
+
+
+## v7 contact-evidence review queue (2026-11-19)
+
+The first *real* NextGen dry run identified **16/16 structurally eligible records**, **16/16 marked sent**, **one reported `sent` entry per record**, no recorded buyer replies or objections, **6 named buyers**, **16 contact fields**, and **16 source references**. Only **10 follow-ups were reported as due by the initial UTC-based triage**, not validated against actual provider delivery or local Pacific business dates. The triage default now uses `America/Los_Angeles`; rerun to get the correct local-day count.
+
+**Do not assume any of these were actually delivered or that every recipient may be contacted again.** Stage `sent`, contact detail, and a historical sent-list element are source claims, not independent delivery, permission, reply, or payment receipts.
+
+The new `revenue_desk_action_queue.py` is a **read-only**, local-only review tool. It emits anonymized row **ordinals**, classifications, missing-evidence checks and structural indicators for reported `sent` entries. Even if a sent entry contains a provider ID/status, this proves only that the source claims such a field, **not** that the provider validated it. The output intentionally excludes contact values, source IDs, buyer names and message content. Ordinals are not stable IDs across reordered source lists.
+
+Run on NextGen from this backend directory:
+
+```bash
+git pull --ff-only
+python3 -m unittest -v
+python3 revenue_desk_action_queue.py \
+  --receipt="$HOME/.local/state/evercraft/demand-command/action-queue-local.json" \
+  | python3 -c 'import sys,json;d=json.load(sys.stdin);print(json.dumps({k:d[k] for k in ("as_of_local_date","source_rows","tier_counts","sent_structure_counts","outreach_approved","delivery_verified","payment_verified")},indent=2))'
+```
+
+The full local receipt is owner-only and contains no names or contact fields. Do not paste raw Revenue Desk API JSON into chat/GitHub. Human review should occur against the existing private Revenue Desk records, including original source messages and outbound provider history. The queue cannot authorize sends, promises, quoting or payment claims. Nothing is synchronized to Demand API until review is complete.
+
