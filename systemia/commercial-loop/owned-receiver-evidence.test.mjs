@@ -162,3 +162,13 @@ test('read-only adapter does not create any intake or payment records on observa
  assert.deepEqual(fs.readdirSync(f.intakeStateDir),[]);
  assert.deepEqual(fs.readdirSync(f.passportStateDir),[]);
 });
+
+test('private order descriptor cannot be read from world-accessible parent folder',t=>{
+ const f=fixture(t);
+ const outer=path.join(f.dir,'exposed');
+ fs.mkdirSync(outer,{mode:0o755});
+ const moved=path.join(outer,'order.json');
+ fs.renameSync(f.orderFile,moved);
+ assert.throws(()=>inspectOwnedCommercialLoop({...f.args,orderFile:moved}),
+   /private_directory_required/);
+});
