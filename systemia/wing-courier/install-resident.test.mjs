@@ -247,4 +247,4 @@ test('world-readable or symlinked goal checkpoint directory fails before service
  fx.cfg.goalStateDir=link;fx.write();
  assert.throws(()=>evaluateWingResidentConfig({configPath:fx.file}),
   /untrusted_private_directory/);
-});
+}));
