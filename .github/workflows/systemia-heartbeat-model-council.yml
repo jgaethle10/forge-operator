@@ -1,0 +1,43 @@
+name: Systemia Claude Grok Heartbeat Advisory Contract
+on:
+  pull_request:
+    paths:
+      - 'systemia/mission-bridge/model-council/**'
+      - 'systemia/raven/inference-gateway.mjs'
+      - 'systemia/raven/inference-gateway.test.mjs'
+      - 'systemia/raven/seal-inference-key.mjs'
+      - 'systemia/evercraft-home/provider-credentials.mjs'
+      - 'systemia/boardroom/providers.mjs'
+      - '.github/workflows/systemia-heartbeat-model-council.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/mission-bridge/model-council/**'
+      - 'systemia/raven/inference-gateway.mjs'
+      - 'systemia/boardroom/providers.mjs'
+      - '.github/workflows/systemia-heartbeat-model-council.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  model-council-offline-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Syntax check
+        run: |
+          node --check systemia/mission-bridge/model-council/heartbeat-advisory.mjs
+          node --check systemia/raven/inference-gateway.mjs
+          node --check systemia/boardroom/providers.mjs
+      - name: Offline specialist selection and vault provider tests
+        run: |
+          node --test \
+            systemia/mission-bridge/model-council/heartbeat-advisory.test.mjs \
+            systemia/raven/inference-gateway.test.mjs \
+            systemia/raven/seal-inference-key.test.mjs \
+            systemia/evercraft-home/provider-credentials.test.mjs \
+            tests/boardroom-runtime.test.mjs
