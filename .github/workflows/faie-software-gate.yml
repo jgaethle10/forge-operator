@@ -11,6 +11,7 @@ on:
       - 'systemia/mcp/fabric-faie-site-scan.test.mjs'
       - 'systemia/mcp/fabric-faie-climate-history.test.mjs'
       - 'systemia/mcp/fabric-faie-flood-preview.test.mjs'
+      - 'systemia/mcp/fabric-faie-flood-preview.test.mjs'
       - 'public/faie/**'
       - 'systemia/sentinel/sources/**'
       - 'systemia/sentinel/region-profile.mjs'
@@ -30,6 +31,7 @@ on:
       - 'systemia/mcp/fabric-faie-soil-preview.test.mjs'
       - 'systemia/mcp/fabric-faie-site-scan.test.mjs'
       - 'systemia/mcp/fabric-faie-climate-history.test.mjs'
+      - 'systemia/mcp/fabric-faie-flood-preview.test.mjs'
       - 'systemia/mcp/fabric-faie-flood-preview.test.mjs'
       - 'public/faie/**'
       - 'systemia/sentinel/sources/**'
@@ -75,6 +77,7 @@ jobs:
           node --check scripts/faie-browser-partner-acceptance.mjs
           node --check scripts/faie-soil-live-acceptance.mjs
           node --check scripts/faie-climate-live-acceptance.mjs
+          node --check scripts/faie-fema-flood-live-acceptance.mjs
 
       - name: FAIE USDA mapped soil public preview source, privacy and rate-limit tests
         run: node --test systemia/mcp/fabric-faie-soil-preview.test.mjs
