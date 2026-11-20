@@ -281,3 +281,15 @@ Both lookup paths reject ambiguous or unavailable sources **without changing the
 The browser now permits local `data:` imagery under a narrowly scoped image Content Security Policy. No arbitrary URL fetching, unknown third-party API, address tracking, public hosting, or hosted checkout has been enabled.
 
 `test_aerial_sources.py` and `test_aerial_ui.py` test the federal-source client and the private browser flow using fake providers. **Real provider connectivity from the Evercraft operator host still requires live acceptance.** See [FEDERAL-IMAGERY.md](./FEDERAL-IMAGERY.md) for provider contracts, privacy and verification boundaries.
+
+## v2.4 live federal evidence and automatic *screening* scale
+
+The actual Census plus USGS two-image workflow was successfully exercised in GitHub Actions on **2026-11-20** using a public Census test address. Two JPEG sources were received and SHA-256 fingerprints recorded. See [LIVE-FEDERAL-ACCEPTANCE-2026-11-20.md](./LIVE-FEDERAL-ACCEPTANCE-2026-11-20.md). This test was run on GitHub's network, **not Penguin or NextGen**; Evercraft-host reachability and individual site-quality review remain open gates. The live diagnostic is now opt-in instead of running on every PR update.
+
+The Kennedy editor computes an **approximate source-image screening conversion** from the USGS EPSG:3857 site bbox and matched latitude. This lets the operator see provisional conduit-route lengths immediately after address lookup, without navigating advanced measurement controls. At this point the numbers are **Web Mercator ground-distance approximations**, not surveyed or certified geometry, parking dimensions, utility measurements, or legal parcel boundaries. A manually entered, source-supported reference overrides this screening conversion where available; no guessed distances are accepted for manual calibration.
+
+A changed address now invalidates both previously loaded government aerials and their estimated scale, preventing the user from silently relabeling another parcel's drawing. Changing a manually uploaded image likewise clears the old government scale. Draft JSON does not preserve independently verified imagery geolocation, and the source images still need to be retained privately.
+
+The provider's published imagery metadata describes USGS/NAIP imagery which may date back many years, including NAIP collections from 2017–2021 in the conterminous U.S. Never treat a recent API response as proof of current site conditions.
+
+The local-only app is not public, cannot issue approvals, and keeps the $349/$499 Stripe links inactive. Run `python3 -m unittest discover -v` for the complete safety regression suite.
