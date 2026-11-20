@@ -75,9 +75,12 @@ export async function probeHudsonPublic({origin=HUDSON_ORIGIN,fetchImpl=fetch,no
  try{
   watch=await getText(url+'watch/',fetchImpl);
   checks.watch_river=watch.status===200&&/^text\/html/i.test(watch.type)&&
-    watch.content.includes('name="hudson-watch-release" content="river-current-v4-living-pulse"')&&
+    watch.content.includes('name="hudson-watch-release" content="river-current-v5-responsive-watershed"')&&
     watch.content.includes('function presencePulse(time)')&&
     watch.content.includes('function drawPresenceRipple(from,to,t)')&&
+    watch.content.includes('function presenceCurrentField(trip)')&&
+    watch.content.includes('function deflectCurrent(x,y,field)')&&
+    watch.content.includes('function shapeRiverChannels(field)')&&
     watch.content.includes('function anomalyFilament(time,index)')&&
     watch.content.includes('function drawAnomaly(from,to,t)')&&
     !watch.content.includes('function explorerLegGeometry(')&&
@@ -87,7 +90,7 @@ export async function probeHudsonPublic({origin=HUDSON_ORIGIN,fetchImpl=fetch,no
     watch.content.includes('SCENIC CURRENT · NOT A LIVE MISSION')&&
     watch.content.includes('function anomalyForm(time)')&&
     watch.content.includes('credentials:"omit"');
-  checks.watch_river_version=checks.watch_river?'river-current-v4-living-pulse':null;
+  checks.watch_river_version=checks.watch_river?'river-current-v5-responsive-watershed':null;
   if(!checks.watch_river)errors.push('public_hudson_river_watch_not_verified');
  }catch(e){checks.watch_river=false;checks.watch_error_class=classifyPublicFetchFailure(e);errors.push('hudson_river_watch_unreachable')}
  try{

@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#040b13">
-<meta name="hudson-watch-release" content="river-current-v4-living-pulse"><meta name="description" content="Watch HUDSON's flowing knowledge currents and source-linked replay on Evercraft's owned public observatory.">
+<meta name="hudson-watch-release" content="river-current-v5-responsive-watershed"><meta name="description" content="Watch HUDSON's flowing knowledge currents and source-linked replay on Evercraft's owned public observatory.">
 <title>HUDSON | Enter the Current</title>
 <style>
 :root{color-scheme:dark;--aqua:#9affdc;--chalk:#e2f7f1;--soft:#9ebabb}
@@ -123,6 +123,45 @@ function sceneSize(){
  scene.lights=Array.from({length:count},function(_,i){return {edge:i%EDGES.length,t:seeded(i*11+3),lane:(seeded(i*9+5)-.5)*37,speed:.018+seeded(i*6+2)*.05,r:.38+seeded(i*2+33)*1.1}});
  scene.stars=Array.from({length:width<=620?210:310},function(_,i){return{x:seeded(i*29+3)*width,y:seeded(i*67+2)*height,r:.3+seeded(i*31+2)*1.05,a:.13+seeded(i*9)*.34}});
 }
+// Local pressure travels WITH the Presence. It is sculpted into the actual
+// current geometry, not an overlaid circular graphic or live mission claim.
+function presenceCurrentField(trip){
+ var position=locate(trip.from,trip.to,.04+trip.t*.92),beat=presencePulse(clock);
+ var nearness=Math.pow(clamp((trip.t-.73)/.27,0,1),2);
+ return {
+  x:position.x,y:position.y,
+  radius:Math.max(67,Math.min(width*.21,158)),
+  strength:(2.4+beat.energy*(width<=620?11:17))*(1+nearness*.33),
+  swirl:.24+Math.sin(clock*.29)*.085,
+  energy:beat.energy
+ };
+}
+function deflectCurrent(x,y,field){
+ var dx=x-field.x,dy=y-field.y,r2=field.radius*field.radius,d2=dx*dx+dy*dy;
+ if(d2>r2*3.6)return {x:x,y:y};
+ var distance=Math.sqrt(d2),falloff=Math.exp(-d2/r2);
+ // A small dark-flow pressure lifts the water away from the center while
+ // the tangential term makes the nearby channels curl around the mystery.
+ var force=Math.min(25,field.strength*falloff),inv=1/Math.max(12,distance);
+ var outward=force*.84,curl=force*field.swirl;
+ return {
+  x:x+dx*inv*outward-dy*inv*curl,
+  y:y+dy*inv*outward+dx*inv*curl
+ };
+}
+function shapeRiverChannels(field){
+ // Cache the 91 source points for each channel ONCE per frame. All seven
+ // river lanes and flowing particles share the exact same displaced water.
+ for(var i=0;i<scene.edges.length;i++){
+  var edge=scene.edges[i],points=edge.points,warped=edge.warpedPoints;
+  if(!warped || warped.length!==points.length){
+   warped=edge.warpedPoints=new Array(points.length);
+  }
+  for(var j=0;j<points.length;j++){
+   warped[j]=deflectCurrent(points[j].x,points[j].y,field);
+  }
+ }
+}
 function strokeSamples(points,offset){
  ctx.beginPath();for(var j=0;j<points.length;j++){var p=points[j],a=points[Math.max(0,j-1)],b=points[Math.min(points.length-1,j+1)],dx=b.x-a.x,dy=b.y-a.y,m=Math.hypot(dx,dy)||1;var x=p.x-dy/m*offset,y=p.y+dx/m*offset;if(j===0)ctx.moveTo(x,y);else ctx.lineTo(x,y)}ctx.stroke();
 }
@@ -132,7 +171,7 @@ function drawBackdrop(){
  var f=ctx.createRadialGradient(width*.5,height*.52,6,width*.5,height*.52,Math.max(width,height)*.60);f.addColorStop(0,"rgba(14,90,89,.23)");f.addColorStop(.35,"rgba(16,64,88,.11)");f.addColorStop(1,"rgba(0,0,0,0)");ctx.fillStyle=f;ctx.fillRect(0,0,width,height);
  for(var i=0;i<scene.stars.length;i++){var p=scene.stars[i],w=.55+.45*Math.sin(clock*.4+i*3.1);ctx.fillStyle="rgba(160,232,238,"+(p.a*w).toFixed(3)+")";ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,7);ctx.fill()}
 }
-function drawWatershed(){
+function drawWatershed(field){
  // Long translucent streamlines form a river-shaped atmospheric current.
  // These are generated geometry, never live mission activity.
  var number=width<=620?43:78,segments=44;
@@ -155,7 +194,8 @@ function drawWatershed(){
     var strength=Math.exp(-(dx*dx+dy*dy)/(range*range));
     y+=Math.sin((dx+dy)/range*3+clock*.12+k*.16)*strength*7;
    }
-   if(j===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
+   var curved=deflectCurrent(x,y,field);
+   if(j===0)ctx.moveTo(curved.x,curved.y);else ctx.lineTo(curved.x,curved.y);
   }
   ctx.stroke();
  }
@@ -163,13 +203,13 @@ function drawWatershed(){
 }
 function drawRivers(){
  for(var i=0;i<scene.edges.length;i++){
-  var e=scene.edges[i],rgb=e.color,major=i<6;
+  var e=scene.edges[i],rgb=e.color,major=i<6,water=e.warpedPoints||e.points;
   ctx.save();ctx.globalCompositeOperation="lighter";
-  ctx.strokeStyle=rgba(rgb,major?.055:.03);ctx.lineWidth=major?56:30;ctx.shadowBlur=major?28:12;ctx.shadowColor=rgba(rgb,.22);strokeSamples(e.points,0);
+  ctx.strokeStyle=rgba(rgb,major?.055:.03);ctx.lineWidth=major?56:30;ctx.shadowBlur=major?28:12;ctx.shadowColor=rgba(rgb,.22);strokeSamples(water,0);
   ctx.shadowBlur=0;
   for(var lane=-3;lane<=3;lane++){
    var shift=lane*(major?7:5)+Math.sin(clock*.12+i*.9+lane)*1.4;
-   ctx.lineWidth=lane===0?1.65:.55;ctx.strokeStyle=rgba(rgb,lane===0?.46:major?.13:.09);strokeSamples(e.points,shift);
+   ctx.lineWidth=lane===0?1.65:.55;ctx.strokeStyle=rgba(rgb,lane===0?.46:major?.13:.09);strokeSamples(water,shift);
   }
   ctx.restore();
  }
@@ -179,7 +219,8 @@ function drawParticles(dt){
  for(var i=0;i<scene.lights.length;i++){
   var p=scene.lights[i],e=scene.edges[p.edge];if(!e)continue;
   if(!paused)p.t=(p.t+dt*p.speed)%1;
-  var j=Math.min(89,Math.floor(p.t*90)),u=p.t*90-j,a=e.points[j],b=e.points[j+1],dx=b.x-a.x,dy=b.y-a.y,m=Math.hypot(dx,dy)||1;
+  var water=e.warpedPoints||e.points;
+  var j=Math.min(89,Math.floor(p.t*90)),u=p.t*90-j,a=water[j],b=water[j+1],dx=b.x-a.x,dy=b.y-a.y,m=Math.hypot(dx,dy)||1;
   var x=a.x+(b.x-a.x)*u-dy/m*p.lane,y=a.y+(b.y-a.y)*u+dx/m*p.lane;
   var pulse=.35+.65*Math.pow(Math.sin(p.t*Math.PI),.4),radius=p.r*pulse;
   ctx.fillStyle=rgba(e.color,clamp(.2+pulse*.55,0,.8));ctx.beginPath();ctx.arc(x,y,radius,0,7);ctx.fill();
@@ -380,8 +421,10 @@ function paint(dt){
  ctx.save();
  ctx.translate(width/2,height/2);ctx.scale(camera.zoom,camera.zoom);
  ctx.translate(-width/2+camera.dx,-height/2+camera.dy);
- drawWatershed();drawRivers();drawParticles(dt);drawConfluences();
- var trip=routeAt();drawPresenceRipple(trip.from,trip.to,.04+trip.t*.92);drawAnomaly(trip.from,trip.to,.04+trip.t*.92);
+ var trip=routeAt(),field=presenceCurrentField(trip);
+ shapeRiverChannels(field);
+ drawWatershed(field);drawRivers();drawParticles(dt);drawConfluences();
+ drawPresenceRipple(trip.from,trip.to,.04+trip.t*.92);drawAnomaly(trip.from,trip.to,.04+trip.t*.92);
  if(clock<flashUntil){
   var p=coordinates(trip.to);ctx.strokeStyle="rgba(182,255,220,"+((flashUntil-clock)/3*.7)+")";ctx.lineWidth=2;ctx.beginPath();ctx.arc(p.x,p.y,40+(3-(flashUntil-clock))*30,0,7);ctx.stroke();
  }
