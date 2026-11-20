@@ -82,11 +82,8 @@ test('operator approval must remain private, current and explicitly allow publis
   await assert.rejects(()=>inspectLeilandField(args),/operator_approval_file_insecure/);
  });
 });
-test('a stopped local host does not count as ready even with a healthy source',async()=>{
- await fixture(async({args,server})=>{
-  await server.close();
-  // Avoid double-close on teardown: close is idempotent within test cleanup? We
-  // only need to prove a failed fetch using a port that never existed.
+test('an unreachable local host does not count as ready even with a healthy source',async()=>{
+ await fixture(async({args})=>{
   await assert.rejects(()=>inspectLeilandField({...args,loopbackOrigin:'http://127.0.0.1:1'}),/local_owned_host_health_unverified/);
  });
 });
