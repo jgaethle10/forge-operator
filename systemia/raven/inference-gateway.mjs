@@ -258,7 +258,7 @@ export function createInferenceEngine({
       headers: { "content-type": "application/json", authorization: "Bearer " + secret.api_secret },
       body: JSON.stringify({
         model: modelKey, input: [{ role: "user", content: input }],
-        store: false, tools: [], parallel_tool_calls: false,
+        store: false, tools: [], parallel_tool_calls: false, max_output_tokens: 1000,
       }),
     }, { fetchImpl, timeoutMs });
     const text = openAIText(body);
