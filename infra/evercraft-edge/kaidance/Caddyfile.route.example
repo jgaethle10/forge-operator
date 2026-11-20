@@ -1,0 +1,42 @@
+# KAIDANCE public-owned static route fragment (STAGED, NOT INSTALLED).
+# Import INSIDE an existing, independently verified authorized Caddy site block.
+# Do not create a new public host, DNS record, port, or listener from this example.
+# The route serves only sanitized static observatory files from this owned host.
+# The publisher writes /srv/evercraft/public/kaidance/pulse.json separately.
+#
+# Preconditions:
+# - /srv/evercraft/public/kaidance is an owner-reviewed directory, not a symlink
+# - file tree contains only the reviewed public/kaidance app and approved pulse.json
+# - private Yard, logs, approvals, environment, secrets and runtime never live below this root
+# - operator separately verifies HTTPS ingress, rollback, field identity and approval
+#
+# Paste the following into the matching existing Caddy hostname block.
+
+@kaidanceExact path /kaidance
+redir @kaidanceExact /kaidance/ 308
+
+@kaidancePulse path /kaidance/pulse.json
+handle @kaidancePulse {
+  root * /srv/evercraft/public
+  header Cache-Control "no-store, no-cache, must-revalidate"
+  header X-Content-Type-Options "nosniff"
+  header Referrer-Policy "no-referrer"
+  header X-Robots-Tag "noindex, nofollow, noarchive"
+  header Content-Security-Policy "default-src 'none'; base-uri 'none'"
+  file_server
+}
+
+# Hidden files, temporary writes, private file types and source documentation
+# must not be served as Kaidance assets.
+@kaidanceDenied path_regexp kaidanceDenied ^/kaidance/(?:\.|.*(?:/\.|\.tmp$|\.jsonl$|\.md$|\.yaml$|\.yml$|\.env$|\.bak$|\.key$|\.pem$|\.log$|\.sh$))
+respond @kaidanceDenied 404
+
+handle /kaidance/* {
+  root * /srv/evercraft/public
+  header Cache-Control "no-store, no-cache, must-revalidate"
+  header X-Content-Type-Options "nosniff"
+  header Referrer-Policy "no-referrer"
+  header X-Frame-Options "DENY"
+  header -Server
+  file_server
+}
