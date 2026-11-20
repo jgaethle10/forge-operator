@@ -100,6 +100,13 @@ test('private config, token and public-key identity checks reject bad setup',t=>
   f.wings[1].ackVerifyPublicKeyFile=f.wings[0].ackVerifyPublicKeyFile;
   f.write();
   assert.throws(()=>evaluateWingBrokerConfig({configPath:f.configPath}),/reused_ack_identity/);
+  const {privateKey}=crypto.generateKeyPairSync('ed25519');
+  const privatePem=privateKey.export({format:'pem',type:'pkcs8'});
+  const leaked=path.join(f.keyDir,'unintended-private-ack.key');
+  fs.writeFileSync(leaked,privatePem,{mode:0o600});
+  f.cfg.wings[1].ackVerifyPublicKeyFile=leaked;
+  f.write();
+  assert.throws(()=>evaluateWingBrokerConfig({configPath:f.configPath}),/private_key_at_broker_forbidden/);
   const symlink=path.join(f.dir,'alias.json');
   fs.symlinkSync(f.configPath,symlink);
   assert.throws(()=>evaluateWingBrokerConfig({configPath:symlink}),/untrusted_file/);
