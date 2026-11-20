@@ -1,5 +1,6 @@
 /* Leiland / Evercraft. Visualization is an architectural illustration, never a raw model activation trace. */
 import {projectLeilandPulse} from './pulse-bridge.mjs';
+import {createNeuralUniverse,REGIONS} from './neural-universe.mjs';
 const $=id=>document.getElementById(id);
 const systems={
  systemia:{label:'COORDINATION / MISSION CONTROL',name:'Systemia',description:'Systemia coordinates missions, boundaries, and evidence. It distinguishes proposed work from authorized, completed, and verified work.',url:'https://github.com/jgaethle10/forge-operator/tree/main/systemia'},
@@ -9,16 +10,25 @@ const systems={
  passport:{label:'SAFETY / AUTHORIZATION',name:'Passport',description:'Passport defines who may perform which actions. An attractive public observatory must never become a path to internal controls.',url:'https://github.com/jgaethle10/forge-operator/tree/main/systemia/passport'}
 };
 let selected='systemia', sourceEvents=[], developmentEvents=[], sourceFresh=false;
-let lastAttestedCycle=null, pulseFlashUntil=0;
-for(const button of document.querySelectorAll('[data-system]')){
- button.addEventListener('click',()=>{
-  selected=button.dataset.system;
-  for(const b of document.querySelectorAll('[data-system]')){
-   const active=b===button;b.classList.toggle('selected',active);b.setAttribute('aria-pressed',String(active));
-  }
-  const s=systems[selected];
-  $('system-label').textContent=s.label;$('system-name').textContent=s.name;$('system-description').textContent=s.description;$('system-evidence').href=s.url;
- });
+let lastAttestedCycle=null, universe=null;
+function chooseRegion(region){
+ if(!REGIONS.includes(region))return;
+ selected=region;
+ for(const button of document.querySelectorAll('[data-system],[data-region]')){
+  const active=(button.dataset.system||button.dataset.region)===region;
+  button.classList.toggle('selected',active);
+  button.setAttribute('aria-pressed',String(active));
+ }
+ const system=systems[region];
+ $('system-label').textContent=system.label;
+ $('system-name').textContent=system.name;
+ $('system-description').textContent=system.description;
+ $('system-evidence').href=system.url;
+ $('current-region').textContent=system.name.toUpperCase();
+ universe?.setFocus(region);
+}
+for(const button of document.querySelectorAll('[data-system],[data-region]')){
+ button.addEventListener('click',()=>chooseRegion(button.dataset.system||button.dataset.region));
 }
 const broadcast=$('broadcast');
 function setBroadcast(enabled){
@@ -29,7 +39,7 @@ function setBroadcast(enabled){
   const exit=document.createElement('button');exit.type='button';exit.id='broadcast-exit';exit.className='broadcast-exit';exit.textContent='Exit broadcast view ×';
   exit.addEventListener('click',()=>setBroadcast(false));document.body.append(exit);
  }
- resize();
+ universe?.resize();
 }
 broadcast.addEventListener('click',()=>setBroadcast(!document.body.classList.contains('broadcast')));
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.body.classList.contains('broadcast'))setBroadcast(false)});
@@ -113,6 +123,7 @@ async function loadFeed(){
   $('source-caption').textContent='Feed failed closed. Visual motion is conceptual only.';
  }
  $('visual-truth').textContent=sourceFresh?'ABSTRACT VISUAL · SOURCE-ALIGNED PUBLIC EVENTS':'CONCEPTUAL ANIMATION · NOT MODEL ACTIVATIONS';
+ universe?.setPublicEventCount(sourceFresh?sourceEvents.length:0);
  renderEvents();
 }
 // Public GitHub development history is separate from private inference activity.
@@ -138,7 +149,7 @@ async function loadKaidancePulse(){
   const pulse=projectLeilandPulse(JSON.parse(raw),Date.now());
   const attested=pulse.state==='source_attested';
   if(attested&&lastAttestedCycle!==null&&pulse.cycle_number>lastAttestedCycle){
-    pulseFlashUntil=performance.now()+1700;
+    universe?.acknowledgeCycle();
   }
   if(attested&&(lastAttestedCycle===null||pulse.cycle_number>=lastAttestedCycle))lastAttestedCycle=pulse.cycle_number;
   $('collider-state').textContent=attested?'Field-attested public pulse':pulse.state==='stale'?'Heartbeat stale':pulse.state==='unverified'?'Attestation pending':'Not connected';
@@ -155,85 +166,13 @@ setInterval(loadKaidancePulse,20000);
 setInterval(loadFeed,30000);
 setInterval(loadPublicDevelopment,600000);
 setInterval(()=>{const at=$('observation-age');if(sourceFresh||at.textContent.includes('ago'))loadFeed()},60000);
-// Deterministic, abstract visualization of a network. Motion is always illustrative.
-// Only the small event flare is keyed to a fresh publisher-reported public event.
-const canvas=$('brain-canvas'),ctx=canvas.getContext('2d',{alpha:true});
+// Visual depth and ambient paths are synthetic. Only the existing source-attested
+// cycle gate above may request a short, separately identified acknowledgement.
 const reduce=window.matchMedia('(prefers-reduced-motion: reduce)');
-let w=800,h=520,dpr=1,frame=0,lastFrame=0,visible=true;
-let seed=19092026;
-const rand=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296};
-const nodes=[];
-for(let i=0;i<208;i++){
- let x,y,tries=0;
- do{x=(rand()*2-1)*1.02;y=(rand()*2-1)*.82;tries++}
- while(tries<200&&!((Math.pow((x+(x<0?.33:-.33))/.78,2)+Math.pow(y/.76,2)<1) && !(Math.abs(x)<.065&&y<-.28)));
- nodes.push({x,y,phase:rand()*6.283,rad:rand()*1.45+.55,side:x<0?0:1});
-}
-function zone(n){if(n.y<-.16&&Math.abs(n.x)<.36)return 'systemia';if(n.x<-.12&&n.y<.27)return 'raven';if(n.x>=.12&&n.y<.27)return 'saban';return n.x<0?'compute':'passport';}
-const links=[];const seen=new Set();
-for(let i=0;i<nodes.length;i++){
- const ranked=nodes.map((p,j)=>({j,d:(nodes[i].x-p.x)**2+(nodes[i].y-p.y)**2})).filter(o=>o.j!==i).sort((a,b)=>a.d-b.d).slice(0,3);
- for(const o of ranked){if(o.d>.09)continue;const a=Math.min(i,o.j),b=Math.max(i,o.j),key=a+':'+b;if(!seen.has(key)){seen.add(key);links.push([a,b]);}}
-}
-function resize(){
- const r=$('brain-stage').getBoundingClientRect();
- w=Math.max(1,r.width);h=Math.max(1,r.height);dpr=Math.min(2,window.devicePixelRatio||1);
- canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);
-}
-const observer=new ResizeObserver(resize);observer.observe($('brain-stage'));resize();
-document.addEventListener('visibilitychange',()=>{visible=!document.hidden;if(visible)requestAnimationFrame(draw)});
-function pos(n,t){
- const breathe=reduce.matches?0:Math.sin(t*.00027+n.phase)*.006;
- const size=Math.min(w*.43,h*.52);
- return {x:w/2+(n.x+breathe)*size,y:h/2+n.y*size+Math.sin(t*.00039+n.phase)*size*.007};
-}
-function draw(t){
- if(!visible)return;
- if(t-lastFrame<26){requestAnimationFrame(draw);return}
- lastFrame=t;ctx.clearRect(0,0,w,h);
- const points=nodes.map(n=>pos(n,t));
- const size=Math.min(w*.43,h*.52);
- const halo=ctx.createRadialGradient(w/2,h/2,10,w/2,h/2,size*1.35);
- halo.addColorStop(0,'rgba(27,94,147,.11)');halo.addColorStop(.6,'rgba(26,91,143,.065)');halo.addColorStop(1,'rgba(0,0,0,0)');
- ctx.fillStyle=halo;ctx.fillRect(0,0,w,h);
- for(let i=0;i<links.length;i++){
-  const [a,b]=links[i],p=points[a],q=points[b],left=nodes[a].side===0;
-  const focused=zone(nodes[a])===selected||zone(nodes[b])===selected;
-  const v=reduce.matches?(focused?.42:.09):focused?.28+.20*(1+Math.sin(t*.001+i*.7))/2:.07;
-  ctx.strokeStyle=left?'rgba(102,216,225,'+v+')':'rgba(155,153,254,'+v+')';
-  ctx.lineWidth=.75;ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(q.x,q.y);ctx.stroke();
-  if(!reduce.matches && i%8===0){
-   const phase=(t*.00012+i*.037)%1,px=p.x+(q.x-p.x)*phase,py=p.y+(q.y-p.y)*phase;
-   ctx.beginPath();ctx.arc(px,py,1.5,0,Math.PI*2);ctx.fillStyle=left?'rgba(100,239,229,.8)':'rgba(177,176,255,.8)';ctx.fill();
-  }
- }
- for(let i=0;i<points.length;i++){
-  const p=points[i],n=nodes[i];
-  const focused=zone(n)===selected;
-  const glow=reduce.matches?(focused?.82:.22):focused?.58+.36*(1+Math.sin(t*.0016+n.phase))/2:.16+.10*(1+Math.sin(t*.0016+n.phase))/2;
-  ctx.fillStyle=n.side===0?'rgba(125,235,228,'+glow+')':'rgba(170,177,255,'+glow+')';
-  ctx.beginPath();ctx.arc(p.x,p.y,n.rad*(focused?1.38:.86),0,Math.PI*2);ctx.fill();
- }
- // Slow perimeter sweep is a purely illustrative broadcast visual.
- if(!reduce.matches){
-  const theta=t*.00016,rad=size*.95;
-  const xx=w/2+Math.cos(theta)*rad,yy=h/2+Math.sin(theta)*rad*.73;
-  const gradient=ctx.createRadialGradient(xx,yy,0,xx,yy,32);
-  gradient.addColorStop(0,'rgba(103,241,216,.23)');gradient.addColorStop(1,'rgba(103,241,216,0)');
-  ctx.fillStyle=gradient;ctx.beginPath();ctx.arc(xx,yy,32,0,Math.PI*2);ctx.fill();
- }
- if(t<pulseFlashUntil){
-  const scale=Math.min(1,Math.max(0,(pulseFlashUntil-t)/1700));
-  ctx.strokeStyle='rgba(112,241,208,'+(.7*scale)+')';ctx.lineWidth=2+2*scale;
-  ctx.beginPath();ctx.arc(w/2,h/2,Math.min(w*.43,h*.52)*(.32+.22*(1-scale)),0,Math.PI*2);ctx.stroke();
- }
- if(sourceFresh && sourceEvents.length){
-  const index=(Math.floor(t/2800)*37)%nodes.length,p=points[index];
-  const radius=reduce.matches?10:9+7*(1+Math.sin(t*.004))/2;
-  ctx.strokeStyle='rgba(245,215,164,.8)';ctx.lineWidth=1.7;
-  ctx.beginPath();ctx.arc(p.x,p.y,radius,0,Math.PI*2);ctx.stroke();
- }
- frame++;if(!reduce.matches)requestAnimationFrame(draw);
-}
-requestAnimationFrame(draw);
-reduce.addEventListener('change',()=>{resize();requestAnimationFrame(draw)});
+universe=createNeuralUniverse({
+ canvas:$('brain-canvas'),
+ stage:$('brain-stage'),
+ reduce,
+ initialFocus:selected
+});
+chooseRegion(selected);
