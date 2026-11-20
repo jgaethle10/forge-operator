@@ -132,6 +132,22 @@ This reference implementation is **not yet a hardened internet-facing service**:
 Related existing contracts: `systemia/intake-fabric/README.md`, `systemia/passport/README.md`, `systemia/shipping/README.md`, `systemia/media-studio/client-commercial-preflight.md`, issues #2280 (real customer handoff) and #2284 (customer incident).
 
 
+## Owned broker activation | Penguin local operator only
+
+The existing loopback-only Wing Courier ciphertext broker now has a dry-run-first
+owner-side installer, `install-broker.mjs`. It checks the actually approved
+private two-wing configuration, distinct sender/receiver tokens, pinned Ed25519
+acknowledgment **public** keys, fixed local port and private storage before
+considering installation. It never generates or prints credentials, transfers
+customer bytes, or enables the public Fabric route. On the actual owned host,
+a separately authorized operator may use both `--activate` and
+`--confirm-owned-host` to create a non-root user service and run local
+unauthenticated denial canaries. **Source merge is not host activation.**
+
+See `docs/commercial/wing-courier-owned-broker-activation-20261119.md`.
+The separately opted-in Fabric route, device enrollment, external authentication
+checks, and first 12/12 customer-file receipt remain **HELD** under #2294.
+
 ## Owned NextGen resident bootstrap, no founder media copying
 
 `install-resident.mjs` provides a **dry-run-first local host activation gate**. It does not connect to Meta, create keys, publish routes or move customer files. It refuses to install unless a real local operator supplies a 0600 private config with pinned Harbor public signing key, private Fallen recipient decrypt+ACK signing keys, private received-assets directory and a real HTTPS origin. It does not log secret contents.
