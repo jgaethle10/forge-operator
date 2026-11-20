@@ -1,5 +1,6 @@
 import { TOPICS, CATEGORIES, STATE_LABELS } from './catalog.mjs';
 import { LEARNING_WORLDS, WORLD_STATES } from './learning-worlds.mjs';
+import './universe.mjs';
 
 const $ = (id) => document.getElementById(id);
 const grid = $('topicGrid');
@@ -24,29 +25,60 @@ function node(tag, className, content) {
   return element;
 }
 
+let chosenWorldId = 'infinite-classroom';
+let showAllTopics = false;
+
+function selectWorld(id, { scroll = false } = {}) {
+  const world = LEARNING_WORLDS.find((entry) => entry.id === id);
+  if (!world) return;
+  chosenWorldId = id;
+  const spotlight = $('worldSpotlight');
+  if (!spotlight) return;
+  spotlight.dataset.world = world.id;
+  $('spotlightIcon').textContent = world.icon;
+  $('spotlightKind').textContent = world.kind.toUpperCase();
+  $('worldSpotlightTitle').textContent = world.title;
+  $('spotlightDescription').textContent = world.description;
+  $('spotlightStatus').textContent = WORLD_STATES[world.state];
+  $('spotlightEvidence').textContent = world.evidence;
+  const action = $('spotlightLink');
+  action.textContent = world.action + ' ↗';
+  action.href = world.url;
+  if (world.url.startsWith('https://')) {
+    action.target = '_blank';
+    action.rel = 'noopener noreferrer';
+  } else {
+    action.removeAttribute('target');
+    action.removeAttribute('rel');
+  }
+  for (const button of document.querySelectorAll('[data-world-id]')) {
+    button.setAttribute('aria-pressed', String(button.dataset.worldId === id));
+  }
+  if (scroll) spotlight.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'center' });
+}
+
 function buildLearningWorlds() {
   const host = $('learningWorldGrid');
   if (!host) return;
   host.replaceChildren();
   for (const world of LEARNING_WORLDS) {
-    const card = node('article', 'learning-world-card');
-    card.dataset.state = world.state;
-    const icon = node('div', 'learning-world-icon', world.icon);
+    const tile = node('button', 'learning-world-tile');
+    tile.type = 'button';
+    tile.dataset.worldId = world.id;
+    tile.dataset.state = world.state;
+    tile.setAttribute('aria-label', 'Discover ' + world.title + '. ' + WORLD_STATES[world.state]);
+    const icon = node('span', 'tile-planet', world.icon);
     icon.setAttribute('aria-hidden', 'true');
-    const eyebrow = node('p', 'world-kind', world.kind);
-    const title = node('h4', '', world.title);
-    const excerpt = node('p', 'learning-world-description', world.description);
-    const state = node('p', 'world-state', WORLD_STATES[world.state]);
-    const note = node('p', 'world-evidence', world.evidence);
-    const action = node('a', 'world-link', world.action + ' ↗');
-    action.href = world.url;
-    if (world.url.startsWith('https://')) {
-      action.target = '_blank';
-      action.rel = 'noopener noreferrer';
-    }
-    card.append(icon, eyebrow, title, excerpt, state, note, action);
-    host.append(card);
+    const name = node('strong', 'tile-name', world.title);
+    const kind = node('small', 'tile-subtitle', world.kind);
+    tile.append(icon, name, kind);
+    tile.addEventListener('click', () => selectWorld(world.id, { scroll: true }));
+    host.append(tile);
   }
+  for (const button of document.querySelectorAll('.universe-node')) {
+    button.addEventListener('click', () => selectWorld(button.dataset.worldId, { scroll: true }));
+  }
+  selectWorld('infinite-classroom');
 }
 
 function persistShelf() {
@@ -139,10 +171,15 @@ function render() {
   $('savedCount').textContent = String(saved.size);
   $('resultsCount').textContent = items.length + (items.length === 1 ? ' science room' : ' science rooms') + ' to explore';
   $('empty').hidden = items.length !== 0;
-  grid.replaceChildren(...items.map(buildCard));
+  const view = showAllTopics || selectedCategory !== 'All' || savedOnly || search.value.trim() ? items : items.slice(0, 6);
+  grid.replaceChildren(...view.map(buildCard));
+  const more = $('showMoreTopics');
+  more.hidden = view.length === items.length;
+  more.textContent = 'Explore all ' + items.length + ' science rooms ↗';
 }
 
 $('savedFilter').addEventListener('click', () => { savedOnly = !savedOnly; render(); });
+$('showMoreTopics').addEventListener('click', () => { showAllTopics = true; render(); });
 search.addEventListener('input', render);
 $('surprise').addEventListener('click', () => {
   const pool = visibleTopics();
@@ -154,6 +191,7 @@ $('reset').addEventListener('click', () => {
   selectedCategory = 'All';
   savedOnly = false;
   search.value = '';
+  showAllTopics = false;
   buildFilters();
   render();
   search.focus();

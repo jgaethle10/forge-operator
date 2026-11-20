@@ -44,6 +44,37 @@ a sign-in, network model, or learner analytics. It is not allowed to acquire
 new inference authority, save children’s identifiable answers, or claim
 personalized AI tutoring merely by appearing in Aiden's Lab.
 
+## Living universe visual redesign (November 19, 2026)
+
+The founding experience is **a navigable universe, not a long list of product
+descriptions**. Feedback from a real iPhone screen recording showed a polished
+but repetitive stack of narrow status cards and no reason to explore visually.
+
+The redesigned Aiden's Lab includes:
+
+- A larger first-screen introduction and a first-party ambient universe
+  animation in `public/aiden-lab/universe.mjs`, with luminous paths and
+  decorative moving stars. **This is artwork, not live Systemia activity**.
+- Six accessible, touchable orbital world buttons that select an actual
+  matching world in the existing evidence-bound learning registry.
+- Nine smaller, uniquely colored world portal buttons in a compact grid.
+  Selecting one reveals a single large spotlight: what it does, its exact
+  current readiness, preserved evidence and a working appropriate action.
+- One prominent Infinite Classroom **practice** entry, not a claim of original
+  conversational tutoring parity.
+- A shorter initial science catalog with a real "Explore all" action and
+  existing search, category filtering, saved shelf and source dialogs.
+- Mobile-first size, native button focus, reduced-motion support, canvas
+  visibility pausing, a frame budget and a capped display pixel ratio.
+- No new CDN, framework, tracker, network call, external service, child
+  profile or fabricated product status.
+
+The private owned Fabric server serves the reviewed `universe.mjs` through
+its existing restrictive public allowlist. The exact source-to-resident and
+source-to-public probes must verify **eight** source files (including the
+standalone Classroom practice page) before public release is accepted.
+A source merge is not a deployment receipt.
+
 ## What works in this proposed release
 
 - Accessible, responsive static public interface in public/aiden-lab/
@@ -74,7 +105,7 @@ Before adding a clinical conclusion, independently inspect full source methods a
 
 From repository root, with Node 18 or newer:
 
-  node --test tests/aiden-lab-public.test.mjs
+  node --test tests/aiden-lab-public.test.mjs tests/aiden-lab-living-universe.test.mjs
   node --test tests/aiden-lab-fabric-route.test.mjs tests/aiden-lab-owned-public.test.mjs tests/aiden-lab-resident-release.test.mjs
 
 For manual preview, serve the repository's public directory with an existing local static file server and open /aiden-lab/. ES modules do not necessarily load from a file:// URL. Check mobile, search, reading shelf, keyboard navigation, dialog Escape, reduced-motion preference and every evidence link.

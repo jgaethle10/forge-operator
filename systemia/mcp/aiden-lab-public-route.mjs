@@ -10,6 +10,7 @@ export const AIDEN_LAB_FILES = Object.freeze({
   'index.html': 'text/html; charset=utf-8',
   'app.mjs': 'text/javascript; charset=utf-8',
   'learning-worlds.mjs': 'text/javascript; charset=utf-8',
+  'universe.mjs': 'text/javascript; charset=utf-8',
   'catalog.mjs': 'text/javascript; charset=utf-8',
   'styles.css': 'text/css; charset=utf-8',
   'mark.svg': 'image/svg+xml'
