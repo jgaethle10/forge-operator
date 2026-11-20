@@ -556,6 +556,7 @@
     </div>
     <div id="sourceLedgerSummary" class="source-ledger-summary" aria-live="polite">Checking source receipts.</div>
     <div id="sourceLedger" class="source-ledger-grid" aria-live="polite"><div class="quiet">Loading source status…</div></div>
+    <div class="source-ledger-guidance" id="sourceExtraConnections">Systemia Radar: checking connection. Worldstate: authenticated intake route, not proof of a live delivery. USDA soil: only acquired on authorized coordinates, not a continuous feed.</div>
     <div class="source-ledger-guidance">A successful check may return zero observations. A missing or failed feed never becomes a verified finding. Region-level evidence does not establish conditions at a particular property or water right.</div>
   </section>
 
@@ -955,6 +956,9 @@ function renderFaieSourceLedger(health) {
   const ledger = document.getElementById('sourceLedger');
   const summary = document.getElementById('sourceLedgerSummary');
   const last = document.getElementById('sourceLedgerCycle');
+  const extra = document.getElementById('sourceExtraConnections');
+  const radarSeen = Number(cycle?.radar_signals_seen ?? 0);
+  extra.textContent='Systemia Radar: '+(health.radar_bridge ? 'bridge configured; '+radarSeen+' candidate(s) seen in last cycle' : 'bridge not configured')+'. Worldstate: authenticated intake route exists, but delivery is not certified by these collector receipts. USDA soil: on-demand only for authorized exact coordinates; not a background feed.';
   if (!health.ok) {
     last.textContent='Runtime needs attention';
     summary.textContent='The engine did not report healthy operation. These receipts must not be treated as current verified coverage.';
@@ -1028,6 +1032,7 @@ async function loadState() {
     const ledger=document.getElementById('sourceLedger');
     document.getElementById('sourceLedgerCycle').textContent='Not verified';
     document.getElementById('sourceLedgerSummary').textContent='Source activity cannot be confirmed while FAIE is unavailable.';
+    document.getElementById('sourceExtraConnections').textContent='Radar, Worldstate and soil acquisition status are not verified while the runtime is unavailable.';
     ledger.innerHTML='<div class="quiet error">Source receipts unavailable. Do not interpret previous counts as live.</div>';
     statusbar.innerHTML = '<span class="pill error">FAIE API unavailable</span>';
     signalsEl.innerHTML = '<div class="quiet error">' + esc(error && error.message ? error.message : error) + '</div>';
