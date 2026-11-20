@@ -99,3 +99,17 @@ test('no external contact or publication command is included in any candidate', 
   assert.ok(!('contact' in result.candidate));
   assert.equal(result.candidate.customer_delivery_authority, false);
 });
+
+test('trusted privacy projection must bind exact content, not just an artifact ID', () => {
+  const anchored = record();
+  const exactProjection = {
+    ...trusted,
+    verifyPublicProjection: (identity, payload) => identity.artifact_id === anchored.artifact_id
+      && payload.summary === anchored.public_safe_summary
+      && JSON.stringify(payload.claims) === JSON.stringify(anchored.claims.map(claim => ({ ...claim })))
+  };
+  assert.equal(prepareSystemiaHarborCandidate(anchored, exactProjection).action, 'staged_for_harbor_review');
+  const tampered = record();
+  tampered.claims[0].text = 'A stronger claim not present in the approved source.';
+  assert.equal(prepareSystemiaHarborCandidate(tampered, exactProjection).reason, 'privacy_projection_not_verified');
+});
