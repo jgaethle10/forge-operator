@@ -33,7 +33,7 @@ function fixture(t){
       ackVerifyPublicKeyFile,sendTokenFile,receiveTokenFile};
   });
   const configPath=path.join(dir,'broker.json');
-  const cfg={stateDir,port:8791,wings};
+  const cfg={stateDir,port:8851,wings};
   const write=()=>fs.writeFileSync(configPath,JSON.stringify(cfg),{mode:0o600});
   write();
   return {dir,keyDir,stateDir,configPath,cfg,wings,write};
@@ -44,6 +44,7 @@ test('owner-local broker dry-run verifies two scoped wing keys, no secrets or se
   assert.equal(plan.schema,BROKER_PREFLIGHT_SCHEMA);
   assert.equal(plan.readyForOwnedLocalActivation,true);
   assert.equal(plan.mode,'DRY_RUN');
+  assert.equal(plan.port,8851);
   assert.equal(plan.scope,'harbor<->fallen only');
   assert.equal(plan.separateTokens,4);
   assert.equal(plan.privateStorageChecked,true);
@@ -83,7 +84,9 @@ test('wrong port, wing route and reused tokens fail closed',t=>{
   const f=fixture(t);
   f.cfg.port=8792;f.write();
   assert.throws(()=>evaluateWingBrokerConfig({configPath:f.configPath}),/config_or_port_invalid/);
-  f.cfg.port=8791;f.cfg.wings[0].allowedDestinations=['fallen','outside'];f.write();
+  f.cfg.port=8791;f.write();
+  assert.throws(()=>evaluateWingBrokerConfig({configPath:f.configPath}),/config_or_port_invalid/);
+  f.cfg.port=8851;f.cfg.wings[0].allowedDestinations=['fallen','outside'];f.write();
   assert.throws(()=>evaluateWingBrokerConfig({configPath:f.configPath}),/wing_scope_invalid/);
   f.cfg.wings[0].allowedDestinations=['fallen'];f.write();
   fs.writeFileSync(f.wings[1].sendTokenFile,fs.readFileSync(f.wings[0].sendTokenFile));

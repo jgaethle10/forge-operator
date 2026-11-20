@@ -76,7 +76,7 @@ export function evaluateWingBrokerConfig({configPath}={}){
   try{config=JSON.parse(fs.readFileSync(configPath,'utf8'));}
   catch{deny('config_invalid');}
   if(!config||typeof config!=='object'||Array.isArray(config)||
-     (config.port!==undefined&&config.port!==8791))deny('config_or_port_invalid');
+     (config.port!==undefined&&config.port!==8851))deny('config_or_port_invalid');
   if(!Array.isArray(config.wings)||config.wings.length!==2||
      config.wings.filter(w=>w?.wing==='harbor').length!==1||
      config.wings.filter(w=>w?.wing==='fallen').length!==1)
@@ -98,7 +98,7 @@ export function evaluateWingBrokerConfig({configPath}={}){
   if(new Set(allTokens).size!==4)deny('reused_bearer_token');
   if(new Set(ackKeys).size!==2)deny('reused_ack_identity');
   return {schema:BROKER_PREFLIGHT_SCHEMA,mode:'DRY_RUN',
-    readyForOwnedLocalActivation:true,host:'127.0.0.1',port:8791,
+    readyForOwnedLocalActivation:true,host:'127.0.0.1',port:8851,
     scope:'harbor<->fallen only',wingCount:2,separateTokens:4,
     distinctEd25519ReceiverAckKeys:true,privateStorageChecked:true,
     unitInstalled:false,publicRouteActivatedByThisTool:false,externalTlsObserved:false,
@@ -140,7 +140,7 @@ async function localRequest({port,path:route,method='GET',body}){
 /** Tests actual loopback HTTP contract, never sends a bearer token or customer data.
  * Does not independently prove broker process identity or external TLS routing.
  */
-export async function observeLocalWingBroker({port=8791}={}){
+export async function observeLocalWingBroker({port=8851}={}){
   if(!Number.isInteger(port)||port<1||port>65535)deny('probe_port_invalid');
   const a=await localRequest({port,path:'/health'});
   let h;

@@ -231,7 +231,7 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
    sendToken:getSecret(w.sendTokenFile),receiveToken:getSecret(w.receiveTokenFile),
    ackVerifyPublicKeyFile:w.ackVerifyPublicKeyFile}));
   const svc=await startWingCourierBroker({
-   stateDir:cfg.stateDir,wingCredentials:wings,port:cfg.port??8791,host:'127.0.0.1'});
+   stateDir:cfg.stateDir,wingCredentials:wings,port:cfg.port??8851,host:'127.0.0.1'});
   process.stdout.write(JSON.stringify({ready:true,loopback:svc.url,encryptedOnly:true,externalTransportReady:false})+'\n');
  }catch(e){console.error(e.message);process.exitCode=1}
 }

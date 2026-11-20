@@ -7,7 +7,7 @@ import http from 'node:http';
 import {Transform} from 'node:stream';
 
 export const WING_COURIER_FABRIC_PREFIX='/api/internal/wing-courier';
-const BROKER_HOST='127.0.0.1',BROKER_PORT=8791;
+const BROKER_HOST='127.0.0.1',BROKER_PORT=8851;
 const EXPECTED_HOST='fabric.systemiacommandcenters.com';
 const ID=/^[a-f0-9]{32}$/;
 const WING=/^[a-z][a-z0-9-]{1,47}$/;
