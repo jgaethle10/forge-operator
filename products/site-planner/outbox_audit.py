@@ -50,6 +50,18 @@ def audit(path):
                            [('site_id','site_id'),('previous_status','previous_status'),('new_status','status'),('actor','actor'),('reason','reason')])
                     or order['site_id'] != event['site_id'] or order['report_id'] != payload.get('report_id')):
                     problems.append({'event_id': event_id, 'problem': 'status_transition_lineage_mismatch'})
+            elif kind == 'site.plan.commercial_hold.v1':
+                order = conn.execute('SELECT site_id,report_id FROM orders WHERE id=?',(event['aggregate_id'],)).fetchone()
+                control = conn.execute('SELECT site_id,product_key,lane,payment_state,fulfillment_release_state FROM order_controls WHERE order_id=?',(event['aggregate_id'],)).fetchone()
+                if (not order or not control or order['site_id']!=event['site_id']
+                    or order['report_id']!=payload.get('report_id')
+                    or control['site_id']!=event['site_id'] or control['lane']!='commercial_quote'
+                    or control['product_key']!='evercraft-site-planner' or control['payment_state']!='checkout_unconfigured'
+                    or control['fulfillment_release_state']!='held'
+                    or payload.get('fulfillment_authorized') is not False
+                    or payload.get('payment_state')!='checkout_unconfigured'
+                    or payload.get('fulfillment_release_state')!='held'):
+                    problems.append({'event_id':event_id,'problem':'commercial_hold_lineage_mismatch'})
             elif kind == 'site.source_report.linked.v1':
                 source = conn.execute('SELECT site_id,external_report_id,report_sha256,source_sha256 FROM source_reports WHERE id=?', (event['aggregate_id'],)).fetchone()
                 if (not source or source['site_id'] != event['site_id']
