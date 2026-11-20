@@ -27,6 +27,9 @@ jobs:
           bash -n research/infrastructure-watch/release/aiw-beta-public-edge-audit.sh
           bash -n research/infrastructure-watch/release/aiw-beta-prepare-public-route.sh
           bash -n research/infrastructure-watch/release/aiw-beta-cutover-penguin.sh
+          python3 -m py_compile research/infrastructure-watch/release/aiw-beta-brand-hotfix-penguin.py
+          grep -Fq 'services_restarted=false' research/infrastructure-watch/release/aiw-beta-brand-hotfix-penguin.py
+          grep -Fq 'atomic_pointer(BASE)' research/infrastructure-watch/release/aiw-beta-brand-hotfix-penguin.py
           grep -Fq 'MODE="--check"' research/infrastructure-watch/release/aiw-beta-cutover-penguin.sh
           grep -Fq 'trap rollback EXIT' research/infrastructure-watch/release/aiw-beta-cutover-penguin.sh
           grep -Fq 'await_edge_healthy || fail' research/infrastructure-watch/release/aiw-beta-cutover-penguin.sh
@@ -80,6 +83,8 @@ jobs:
         run: |
           python3 -m py_compile research/infrastructure-watch/release/aiw_caddy_candidate.py
           python3 -m unittest discover -s research/infrastructure-watch/tests -p 'test_aiw_caddy_candidate.py' -v
+      - name: Evercraft mark and brand-only rollback contract
+        run: python3 -m unittest discover -s research/infrastructure-watch/tests -p 'test_aiw_brand_hotfix.py' -v
       - name: Verify immutable hover -> static public beta contract
         run: python3 -m unittest discover -s research/infrastructure-watch/tests -p 'test_aiw_public_beta_bundle.py' -v
       - name: Verify no third-party executable hosting introduced
