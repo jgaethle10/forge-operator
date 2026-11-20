@@ -12,7 +12,7 @@ const code=watch.match(/<script>([\s\S]*?)<\/script>/)?.[1];
 test('river Watch is an interactive site and not an image stand-in',()=>{
  assert.match(home,/href="\.\/watch\/"/);
  assert.match(home,/Enter the Current/);
- assert.match(watch,/hudson-watch-release" content="river-current-v7-cinematic-confluences"/);
+ assert.match(watch,/hudson-watch-release" content="river-current-v8-undertow-cathedral"/);
  assert.match(watch,/canvas id="current"/);
  assert.match(watch,/id="explore"/);
  assert.match(watch,/id="pause"/);
@@ -93,22 +93,32 @@ test('river topology has seven named confluences and multi-channel currents',()=
  assert.match(code,/drawWatershed\(field\);drawRivers\(\);drawParticles\(dt\);drawConfluences\(\)/);
 });
 
-test('phase traveler is an unmistakable moving form, not a tiny bug or orbiting dot',()=>{
- assert.match(code,/function travelerState\(time,progress\)/);
- assert.match(code,/function ribbonForm\(time,layer,state\)/);
+test('The Fold is a high-contrast phase rift with sculptural wings, not an insect',()=>{
  assert.match(code,/function drawTraveler\(from,to,t\)/);
+ assert.match(code,/The Fold: angular living architecture/);
+ assert.match(code,/var size=width<=620\?clamp\(width\*\.205,73,99\):clamp\(width\*\.112,112,188\)/);
  assert.match(code,/for\(var layer=0;layer<5;layer\+\+\)/);
- assert.match(code,/var size=width<=620\?clamp\(width\*\.155,54,76\):clamp\(width\*\.092,84,124\)/);
- assert.match(code,/var shades=\[/);
- assert.match(code,/ctx\.bezierCurveTo\(span\*\.18/);
- assert.match(code,/A partially hidden aperture, never a fixed eye/);
- assert.match(code,/Briefly assemble from water on departure and unravel on arrival/);
- assert.doesNotMatch(code,/function anomalyFilament/);
- assert.doesNotMatch(code,/function anomalyForm/);
- assert.doesNotMatch(code,/function drawAnomaly/);
+ assert.match(code,/ribbonForm\(clock,layer,state\)/);
+ assert.match(code,/state\.integrity/);
+ assert.match(code,/var shadow=ctx\.createRadialGradient/);
+ assert.match(code,/rgba\(0,2,12,\.99\)/);
+ assert.match(code,/A rotating jagged rift interrupts the colored veils/);
+ assert.match(code,/It cannot be mistaken for a bug, jellyfish, eye or a live AI thought/);
+ assert.doesNotMatch(code,/function drawAnomaly\(/);
  assert.doesNotMatch(code,/function spider\(/);
- assert.doesNotMatch(code,/function explorerLegGeometry/);
+ assert.doesNotMatch(code,/function explorerLegGeometry\(/);
  assert.match(code,/drawTraveler\(trip\.from,trip\.to,\.04\+trip\.t\*\.92\)/);
+});
+test('v8 currents and confluences have different silhouettes and optical depth',()=>{
+ assert.match(code,/Braided bands instead of hairline pipes/);
+ assert.match(code,/function drawConfluences\(\)/);
+ assert.match(code,/Each confluence is a suspended deep-water lens/);
+ assert.match(code,/Large atmospheric wells give every basin its own volume/);
+ assert.match(code,/ctx\.setLineDash\(\[2,14,1,38\]\)/);
+ assert.match(code,/glass\.addColorStop\(0,"rgba\(1,6,20,\.99\)"\)/);
+ assert.match(code,/var facets=central\?11:7/); // design contract: if changed, update acceptance
+ assert.match(code,/var wells=\[\[/);
+ assert.doesNotMatch(code,/for\(var ring=0;ring<7;ring\+\+\)/);
 });
 test('traveler ribbons evolve in length, twist, transparency and confluence behavior',()=>{
  const begin=code.indexOf('function presencePulse(time){');
@@ -134,8 +144,8 @@ test('traveler ribbons evolve in length, twist, transparency and confluence beha
   assert.ok(f.opacity>=.20&&f.opacity<=.78);
   assert.ok(Number.isFinite(f.bend)&&Number.isFinite(f.angle));
  }
- const atPhone=390*.155;
- assert.ok(atPhone>=54&&atPhone<=76,'phone-size traveler must be visible');
+ const atPhone=390*.205;
+ assert.ok(atPhone>=73&&atPhone<=99,'phone-size Fold must be visible');
 });
 test('slow river camera moves the whole field and tap positions use its inverse',()=>{
  const start=code.indexOf('function riverCamera(){');
