@@ -67,6 +67,12 @@ export function prepareSystemiaHarborCandidate(record, checks = {}) {
       uncertainty: claim.uncertainty
     });
   }
+  // Bind the exact public-facing text and every claim to the trusted source revision.
+  // A source receipt which validates only mission/artifact IDs is insufficient.
+  const publicPayload = Object.freeze({
+    summary: record.public_safe_summary.trim(),
+    claims: claims.map((claim) => ({...claim}))
+  });
   const receiptIdentity = Object.freeze({
     source_department: department, mission_id: record.mission_id,
     artifact_id: record.artifact_id, revision: record.revision,
@@ -76,7 +82,7 @@ export function prepareSystemiaHarborCandidate(record, checks = {}) {
     // False by default. Untrusted booleans on record never satisfy these gates.
     if (checks.isRegisteredProducer?.(department) !== true) return hold('producer_not_verified');
     if (checks.verifySourceReceipt?.(receiptIdentity) !== true) return hold('source_receipt_not_verified');
-    if (checks.verifyPublicProjection?.(receiptIdentity) !== true) return hold('privacy_projection_not_verified');
+    if (checks.verifyPublicProjection?.(receiptIdentity, publicPayload) !== true) return hold('privacy_projection_not_verified');
   } catch {
     return hold('trusted_verifier_failed');
   }
