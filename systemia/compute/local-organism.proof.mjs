@@ -161,6 +161,17 @@ try {
     named_cloud_required: false,
   }, null, 2));
 } finally {
+  // Test-only deadline: fail fast if the proof completed but cleanup or a
+  // lingering handle keeps the Node process alive. Production close untouched.
+  const teardownWatchdog = setTimeout(() => {
+    const types=(process.getActiveResourcesInfo?.()||[]).reduce((acc,key)=>{
+      if(/^[A-Za-z][A-Za-z0-9]{0,50}$/.test(key))acc[key]=(acc[key]||0)+1;
+      return acc;
+    },{});
+    console.error('LOCAL_ORGANISM_PROOF_TEARDOWN_TIMEOUT',JSON.stringify({resource_types:types}));
+    process.exit(1);
+  },45000);
+  teardownWatchdog.unref();
   // Diagnose harness teardown separately from the successful proof body.
   // Do not print runtime roots, ports, authority refs or private health data.
   if (first) {
