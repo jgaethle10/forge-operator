@@ -57,7 +57,7 @@ function restoreDraft(d){
   if(!calibration)throw Error('Invalid reference baseline');
  }
  // Validate ALL fields and image bindings before changing the active drawing.
- state.marks=marks;state.calibration=calibration;state.calibrationPending=null;state.pending=null;
+ state.marks=marks;state.history=[];state.selectedMarkIndex=null;state.calibration=calibration;state.calibrationPending=null;state.pending=null;
  $('siteName').value=p.name;$('address').value=p.address;$('rev').value=p.revision;$('sourceText').value=p.imagery_rights_note;
  draw();return marks.length;
 }
