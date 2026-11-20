@@ -1,0 +1,53 @@
+name: Aiden's Lab owned public route proof
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/probe-aiden-lab-public.mjs'
+      - 'tests/aiden-lab-owned-public.test.mjs'
+      - '.github/workflows/aiden-lab-owned-public.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'public/aiden-lab/**'
+      - 'scripts/probe-aiden-lab-public.mjs'
+      - 'tests/aiden-lab-owned-public.test.mjs'
+      - '.github/workflows/aiden-lab-owned-public.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-public:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout canonical source
+        uses: actions/checkout@v4
+      - name: Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test source parity and spoof-resistance
+        run: node --test tests/aiden-lab-owned-public.test.mjs
+      - name: Independently probe the owned HTTPS origin
+        if: github.event_name != 'pull_request'
+        id: probe
+        continue-on-error: true
+        env:
+          AIDENS_LAB_PUBLIC_CANARY_RECEIPT: ${{ runner.temp }}/aidens-lab-public-parity.json
+        run: node scripts/probe-aiden-lab-public.mjs --gate
+      - name: Preserve release check receipt
+        if: github.event_name != 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: aidens-lab-public-parity
+          path: ${{ runner.temp }}/aidens-lab-public-parity.json
+          if-no-files-found: error
+          retention-days: 30
+      - name: Fail closed if public route or source parity is not proven
+        if: github.event_name != 'pull_request' && steps.probe.outcome != 'success'
+        run: |
+          echo 'Aiden Lab public release: HOLD. No independent source-to-owned-HTTPS parity proof.'
+          exit 1
