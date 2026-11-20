@@ -6,7 +6,8 @@ import {
   emptyFaieState,
   ingestFaieObservation,
   ingestWorldstateDispatch,
-  publicFaieSnapshot
+  publicFaieSnapshot,
+  reconcileFaieSourceDimensions
 } from './core.mjs';
 
 const NOW = '2026-09-30T20:00:00.000Z';
@@ -254,4 +255,39 @@ test('explicit local geography is a hard evidence boundary even when words match
   },{now:NOW}).investigation;
   assert.equal(inside.findings.length,1);
   assert.equal(inside.decision_authority,false);
+});
+
+
+test('USDM caveats never imply soil, water-right, or crop measurements', () => {
+  const input = observation({
+    observation_id: 'usdm:yakima:test',
+    source_family: 'us-drought-monitor-ndmc',
+    domains: ['environment'],
+    kind: 'usdm_county_weekly_drought_assessment',
+    evidence_state: 'reported',
+    summary: 'County drought classification; does not establish site soil condition, irrigation reliability, water rights, crop viability or buildability.',
+    facts: {metric_metadata: {map_date:'2026-09-30',county_fips:'53077'}}
+  });
+  const admitted = ingestFaieObservation(emptyFaieState(), input,{now:NOW});
+  assert.equal(admitted.decision.action,'admitted');
+  assert.deepEqual(admitted.decision.signal.dimensions,['resilience']);
+  assert.equal(admitted.decision.signal.evidence_state,'REPORTED');
+
+  const staleState=structuredClone(admitted.state);
+  staleState.signals[admitted.decision.signal.signal_id].dimensions=['water','soil','crop_health','resilience'];
+  const repaired=reconcileFaieSourceDimensions(staleState);
+  assert.equal(repaired.corrected,1);
+  assert.deepEqual(repaired.state.signals[admitted.decision.signal.signal_id].dimensions,['resilience']);
+  assert.deepEqual(staleState.signals[admitted.decision.signal.signal_id].dimensions,['water','soil','crop_health','resilience']);
+  assert.equal(reconcileFaieSourceDimensions(repaired.state).corrected,0);
+
+  const inv=buildFaieInvestigation(repaired.state, {
+    question:'What water and soil evidence supports regional food infrastructure?',
+    region_keys:['yakima-wa'],
+    horizon_days:90
+  },{now:NOW}).investigation;
+  assert.ok(inv.coverage.covered_dimensions.includes('resilience'));
+  assert.ok(!inv.coverage.covered_dimensions.includes('soil'));
+  assert.ok(!inv.coverage.covered_dimensions.includes('water'));
+  assert.ok(inv.coverage.missing_dimensions.includes('soil'));
 });

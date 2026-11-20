@@ -132,7 +132,8 @@ jobs:
             if [ "$attempt" -lt 15 ] && { \
               { [ "$stage" = "public_pages" ] && [[ "$error" == source_live_parity_* ]]; } || \
               { [[ "$stage" == "public_pages" || "$stage" == "live_health" ]] && \
-                [[ "$error" == "fetch failed" || "$error" == *"TimeoutError"* || "$error" == *"_http_502" || "$error" == *"_http_503" ]]; }; \
+                [[ "$error" == "fetch failed" || "$error" == *"TimeoutError"* || "$error" == *"_http_502" || "$error" == *"_http_503" ]]; } || \
+              { [ "$stage" = "real_water_investigation" ] && [ "$error" = "usdm_drought_not_misclassified_as_soil_or_crop_evidence" ]; }; \
             }; then
               echo "FAIE partner gate retry for deployment convergence/transient edge ($stage: $error; $attempt/15)."
               sleep 15
