@@ -247,6 +247,14 @@ html.seattle-mode .sky-haze{
  background:linear-gradient(180deg,#c2dce910 5%,transparent 31%,#e8bc8a24 55%,#f1d4ae12 75%,transparent 93%)
 }
 </style>
+<style id="aaar-sky-passport-style">
+#skyQuest{display:none;position:absolute;bottom:96px;left:50%;transform:translateX(-50%);z-index:2;padding:8px 12px;min-width:245px;max-width:330px;pointer-events:none;background:#061927bf;border:1px solid #c6eac16c;border-radius:10px;box-shadow:0 8px 32px #001b2a78;backdrop-filter:blur(12px);text-align:center;line-height:1.5}
+.seattle-mode #skyQuest{display:flex;flex-direction:column;gap:1px}
+#skyQuest strong{font:850 10px ui-monospace,monospace;letter-spacing:.15em;color:#ffd9a1}
+#skyQuest span{font:750 10px ui-monospace,monospace;color:#e0f8ef;white-space:nowrap}
+@media(max-width:750px){#skyQuest{bottom:175px;min-width:0;width:204px;max-width:53vw;padding:5px 6px}#skyQuest strong{font-size:8px}#skyQuest span{font-size:8px;white-space:normal}}
+@media(max-height:520px){#skyQuest{bottom:73px;max-width:200px;left:49%}}
+</style>
 </head><body>
 <div class="flight-shell" id="flightShell">
  <canvas id="flightCanvas" tabindex="0" aria-label="Playable 3D Anniston flight range. Use W/S for pitch, A/D for bank, Shift/Ctrl for throttle, C to switch camera, R reset."></canvas><div class="sky-sun"></div><div class="sky-haze"></div><div class="scanlines"></div>
@@ -255,7 +263,7 @@ html.seattle-mode .sky-haze{
    <aside class="hud-side"><div class="mission-box glass"><span class="overline">MISSION / 001</span><h1>Valley transit.</h1><p>Fly through three training gates. Try a new aircraft, switch cameras, then save a flight record to Anniston.</p><div class="mission-progress" id="gateProgress"><i></i><i></i><i></i></div><div class="mission-target" id="nextGate">NEXT: RUNWAY DEPARTURE · 0 / 3</div></div><div class="plane-select glass"><label class="model-label" for="planeType">FLYABLE AIRCRAFT</label><select id="planeType"><option value="trainer">A-01 Kestrel · Trainer</option><option value="glider">A-02 Albatross · Glider</option><option value="jet">A-03 Peregrine · Jet</option></select><small>Changing aircraft starts a fresh local flight.</small><a id="worldSwitch" href="./#seattle">✈ Seattle Sky Tour</a></div></aside>
    <div class="hud-center"><div class="flight-reticle"><span class="nose-cue"></span></div></div>
    <aside class="flight-telemetry glass" aria-label="Flight instruments"><div class="telemetry-row"><span>AIRSPEED</span><div><strong id="speedOut">—</strong> <em>KTS</em></div></div><div class="telemetry-row"><span>ALTITUDE</span><div><strong id="altOut">—</strong> <em>FT</em></div></div><div class="telemetry-row"><span>HEADING</span><div><strong id="headOut">—</strong> <em>°</em></div></div><div class="telemetry-row"><span>PITCH</span><div><strong id="pitchOut">—</strong> <em>°</em></div></div><div class="telemetry-row"><span>BANK</span><div><strong id="bankOut">—</strong> <em>°</em></div></div><div class="telemetry-row"><span>THROTTLE</span><div><strong id="throttleOut">—</strong> <em>%</em></div></div></aside>
-   <div class="floating-alert" id="flightAlert" role="status" aria-live="polite"></div>
+   <div class="floating-alert" id="flightAlert" role="status" aria-live="polite"></div><div id="skyQuest" role="status" aria-label="Seattle Sky Passport"><strong id="skyQuestCount">0 / 8 LANDMARKS DISCOVERED</strong><span id="skyQuestTarget">TODAY'S SKY QUEST · SEARCHING</span></div>
    <div class="mobile-panel" aria-label="Touch flight controls"><div class="flight-stick" id="flightStick" role="group" tabindex="0" aria-label="Flight stick: drag up for pitch up, sideways to bank, release to center"><span class="flight-stick-knob" id="flightStickKnob" aria-hidden="true"></span><span class="flight-stick-label">PITCH / BANK</span></div><div class="touch-group"><button type="button" data-touch="pitchUp" aria-label="Pitch up">↑</button><button type="button" data-touch="left" aria-label="Bank left">↶</button><button type="button" data-touch="pitchDown" aria-label="Pitch down">↓</button><button type="button" data-touch="right" aria-label="Bank right">↷</button></div><div class="touch-throttle"><label for="flightThrottleRange" class="flight-throttle-label">THR</label><div class="flight-throttle-rail"><input type="range" id="flightThrottleRange" min="0" max="100" step="1" value="68" aria-label="Engine throttle percent"></div><output class="flight-throttle-value" id="flightThrottleValue" for="flightThrottleRange">68%</output><button type="button" data-touch="throttleUp">THR +</button><button type="button" data-touch="throttleDown">THR −</button></div></div>
    <div class="license">ENTERTAINMENT MODEL / NOT CFD / NOT FLIGHT TRAINING / NO PHYSICAL CONTROL</div>
    <div class="flight-bottom"><div class="flight-controls"><div class="control-guide"><b>W / S</b> Pitch <b>A / D</b> Bank <b>Q / E</b> Rudder <b>SHIFT / CTRL</b> Throttle <b>C</b> Camera <b>P</b> Pause <b>R</b> Reset</div></div><div class="action-row"><button id="openFoundry" class="foundry-launch" type="button">✦ Design machine</button><button id="cameraToggle" type="button">◉ Chase view</button><button id="pauseToggle" type="button">Ⅱ Pause</button><button id="resetFlight" type="button">↺ Restart</button><button id="saveFlight" class="primary" type="button">Save flight ↗</button><button id="fullscreenToggle" type="button">⤢</button><button id="mobileHudToggle" type="button" aria-label="Show all flight instruments" aria-pressed="false">HUD</button><button id="mobileMoreToggle" type="button" aria-label="Aircraft selection and more flight actions" aria-expanded="false">More</button></div></div>
@@ -483,6 +491,45 @@ return Object.freeze({SCHEMA,G,bounds,presets,preset,validate,analyze,startState
   spawn:{x:-1720,y:320,z:-380,yaw:1.18},sceneVersion:'seattle-sky-tour-2026-11-preview',totalSourceFootprints:rects.length});
 })();
 </script>
+<script id="aaar-sky-passport-model">
+/* Sky Passport 1.2: local-only discovery; UTC-day spotlight, no account or GPS. */
+(()=>{
+'use strict';
+const KEY='evercraft-aaar-seattle-sky-passport-v1',DAY_MS=86400000;
+window.AAARCreateSkyPassport=(world,now=()=>Date.now())=>{
+ if(!world?.enabled||!Array.isArray(world.landmarks)||!world.landmarks.length)return null;
+ const landmarks=world.landmarks;
+ const todayIndex=((Math.floor(now()/DAY_MS)%landmarks.length)+landmarks.length)%landmarks.length;
+ const daily=landmarks[todayIndex],known=new Set(landmarks.map(l=>l.name)),seen=new Set();
+ try{
+  const record=JSON.parse(window.localStorage.getItem(KEY)||'{}');
+  if(record?.version===1&&Array.isArray(record.names))
+   for(const name of record.names)if(typeof name==='string'&&known.has(name))seen.add(name);
+ }catch{/* Storage may be unavailable; discoveries still work this session. */}
+ function save(){try{window.localStorage.setItem(KEY,JSON.stringify({version:1,names:[...seen]}));}catch{}}
+ function target(){return !seen.has(daily.name)?daily:landmarks.find(l=>!seen.has(l.name))||daily;}
+ function observe(s){
+  if(!s||s.paused||s.condition!=='FLYING')return null;
+  for(const l of landmarks){
+   if(seen.has(l.name))continue;
+   const horizontal=Math.hypot(s.x-l.x,s.z-l.z),minimum=world.ground(l.x,l.z)+l.h+25;
+   if(horizontal<360&&s.y>=minimum&&s.y<980){
+    seen.add(l.name);save();return l.name;
+   }
+  }
+  return null;
+ }
+ function snapshot(s){
+  const l=target(),dx=l.x-(s?.x||0),dz=l.z-(s?.z||0);
+  return {count:seen.size,total:landmarks.length,target:l.name,daily:daily.name,
+   dailyComplete:seen.has(daily.name),complete:seen.size===landmarks.length,
+   distanceM:Math.round(Math.hypot(dx,dz)),
+   bearingDeg:Math.round((Math.atan2(dx,dz)*180/Math.PI+360)%360)};
+ }
+ return Object.freeze({observe,snapshot,dayIndex:todayIndex,storage:'LOCAL_BROWSER_ONLY'});
+};
+})();
+</script>
 <script>/* AAAR Worlds Flight Range core v0.5. Entertainment/simulation training only.
  * Designed for reproducible browser preview, not CFD, avionics, or certification.
  * This file contains no networking or hardware interfaces.
@@ -576,15 +623,16 @@ const seattle=window.AAARSeattle?.enabled?window.AAARSeattle:null;
 if(seattle){
  document.querySelector('.flight-brand small').textContent='SEATTLE SKY TOUR · SIMULATED CITY';
  document.querySelector('.mission-box h1').textContent='Seattle flyover.';
- document.querySelector('.mission-box p').textContent='Explore the Space Needle, waterfront and downtown skyline. Buildings follow Seattle 2023 GIS footprints; heights are synthetic.';
+ document.querySelector('.mission-box p').textContent='Explore Seattle and collect eight Sky Passport landmarks. Today’s spotlight rotates daily on this device. Footprint locations are source-linked; heights are synthetic.';
  document.querySelector('#startScreen .start-card h2').innerHTML='SEATTLE<br/>IS <em>YOURS.</em>';
- document.querySelector('#startScreen .start-card > p').textContent='Fly over the Space Needle, Pike Place Market and downtown Seattle. City building positions use official 2023 footprint data, but heights, coastline and physics are approximate gameplay.';
+ document.querySelector('#startScreen .start-card > p').textContent='Find eight Seattle landmarks to complete your Sky Passport, with a featured discovery each day. Progress stays on this device. 2023 building footprints are sourced; heights, water, terrain and flight physics are approximate gameplay.';
  document.getElementById('beginFlight').textContent='FLY OVER SEATTLE ↗';
  document.getElementById('worldSwitch').href='./';
  document.getElementById('worldSwitch').textContent='← Cedar Basin';
 }
 const THREE_NEEDED='WebGL2 is unavailable in this browser. Open in a WebGL2-capable browser or device.';
-let state=core.start('trainer'),running=false,view='chase',mode='mission',last=0,frames=0,lastHUD=0,lastDraw=0,alertUntil=0;
+let state=core.start('trainer'),running=false,view='chase',mode='mission',last=0,frames=0,lastHUD=0,lastDraw=0,lastQuest=0,alertUntil=0;
+const skyPassport=seattle?window.AAARCreateSkyPassport(seattle):null;
 const held=new Set(),touch=new Set();
 const stickInput={pitch:0,bank:0}; let stickPointer=null;
 function resetThumbStick(){stickPointer=null;stickInput.pitch=0;stickInput.bank=0;const knob=document.getElementById("flightStickKnob");if(knob){knob.style.setProperty("--stick-x","0px");knob.style.setProperty("--stick-y","0px");}const pad=document.getElementById("flightStick");if(pad)delete pad.dataset.active;}
@@ -654,7 +702,15 @@ function buildMeshes(){
   w.cone(x,y+h*.23,z,r,h,[.12+t*.04,.27+t*.09,.21+t*.06]);
  }
  }
- // Flight gate rings: original synthetic geometry rather than flight-path authority.
+ // Sky Passport floating marker halos. Synthetic collectibles, not navigational aids.
+  if(seattle)for(const l of seattle.landmarks){
+   const y=seattle.ground(l.x,l.z)+l.h+110,r=39,r2=34,col=[.96,.78,.49];
+   for(let i=0;i<24;i++){
+    const a=i*Math.PI/12,b=(i+1)*Math.PI/12;
+    w.quad([l.x+r*Math.cos(a),y,l.z+r*Math.sin(a)],[l.x+r*Math.cos(b),y,l.z+r*Math.sin(b)],[l.x+r2*Math.cos(b),y,l.z+r2*Math.sin(b)],[l.x+r2*Math.cos(a),y,l.z+r2*Math.sin(a)],col);
+   }
+  }
+  // Flight gate rings: original synthetic geometry rather than flight-path authority.
  for(let i=0;i<core.gates.length;i++){
   const g=core.gates[i],r=52,inner=r-4,col=i===0?[1,.64,.37]:[.60,.97,.80];
   for(let s=0;s<64;s++){const a=s*Math.PI/32,b=(s+1)*Math.PI/32;
@@ -1090,7 +1146,16 @@ function render2D(){
  ctx.save();ctx.globalAlpha=.18;const haz=ctx.createLinearGradient(0,h*.48,0,h*.84);haz.addColorStop(0,'#e4ddaf');haz.addColorStop(1,'#daeac500');ctx.fillStyle=haz;ctx.fillRect(0,h*.42,w,h*.4);ctx.restore();
  // World training gates are projected in 3D; draw ring paths with depth-sensitive line weight.
  core.gates.forEach((g,i)=>{const p=project([g.x,g.y,g.z]);if(!p)return;const r=52*focal/p.d;if(r<2||r>h*6)return;ctx.save();ctx.globalAlpha=i<state.checkpoints?.22:.92;ctx.lineWidth=Math.min(6,Math.max(1,3.2*focal/p.d));ctx.strokeStyle=i<state.checkpoints?'#b2dec4':i===state.checkpoints?'#ffbf77':'#a6f3db';ctx.shadowColor=ctx.strokeStyle;ctx.shadowBlur=17;ctx.beginPath();ctx.ellipse(p.u,p.v,r,r,0,0,Math.PI*2);ctx.stroke();ctx.restore();});
- if(seattle)scenePerf.cityLabels=labelSeattleLandmarks(ctx,project,w,h);
+ if(seattle){scenePerf.cityLabels=labelSeattleLandmarks(ctx,project,w,h);
+  for(const l of seattle.landmarks){
+   const p=project([l.x,seattle.ground(l.x,l.z)+l.h+110,l.z]);
+   if(!p||p.d>4200||p.u<-80||p.u>w+80||p.v<-80||p.v>h+80)continue;
+   const r=Math.max(3,Math.min(45,39*focal/p.d));
+   ctx.save();ctx.strokeStyle='#ffda9c';ctx.globalAlpha=.84;ctx.lineWidth=Math.max(1,2*focal/p.d);
+   ctx.shadowColor='#ffd2a0';ctx.shadowBlur=14;
+   ctx.beginPath();ctx.ellipse(p.u,p.v,r,r*.65,0,0,Math.PI*2);ctx.stroke();ctx.restore();
+  }
+ }
  // Aircraft follows the 3D flight state; cockpit view hides the chase airplane.
  if(view!=='cockpit'&&state.craft==='custom'){drawCustom2D(ctx,w,h,state.design,state.bank);}
  else if(view!=='cockpit'){
@@ -1138,7 +1203,7 @@ function render(){
  }
  if(view!=='cockpit')drawMesh(meshes[state.craft],planeModel(state));
 }
-function hud(){const round=n=>Math.round(n).toLocaleString('en-US');$('speedOut').textContent=round(state.speed*1.94384);$('altOut').textContent=round(state.y*3.28084);$('headOut').textContent=String(Math.round((state.yaw*180/Math.PI+3600)%360)).padStart(3,'0');$('pitchOut').textContent=(state.pitch*180/Math.PI).toFixed(0);$('bankOut').textContent=(state.bank*180/Math.PI).toFixed(0);$('throttleOut').textContent=round(state.throttle*100);const slider=$('flightThrottleRange');if(slider&&document.activeElement!==slider)slider.value=String(Math.round(state.throttle*100));const lever=$('flightThrottleValue');if(lever)lever.textContent=round(state.throttle*100)+'%';$('pauseToggle').dataset.paused=String(state.paused);const sec=Math.floor(state.flightTime);$('flightTime').textContent='T+ '+String(Math.floor(sec/60)).padStart(2,'0')+':'+String(sec%60).padStart(2,'0');$('gateProgress').querySelectorAll('i').forEach((el,i)=>el.classList.toggle('done',i<state.checkpoints));const next=core.gates[state.checkpoints];$('nextGate').textContent=next?`NEXT: ${next.title} · ${state.checkpoints} / 3`:'MISSION COMPLETE · 3 / 3';$('flightStatus').textContent=state.condition==='BUILDING_CONTACT'?'CITY CONTACT':state.condition==='GROUND_CONTACT'?'GROUND CONTACT':state.paused?'PAUSED':state.craft==='custom'?'FOUNDRY FLIGHT / SCREENING':'SIMULATION ACTIVE';$('pauseToggle').textContent=state.paused?'▶ Resume':'Ⅱ Pause';$('cameraToggle').textContent=view==='chase'?'◉ Chase view':'◉ Cockpit view';}
+function hud(){const round=n=>Math.round(n).toLocaleString('en-US');$('speedOut').textContent=round(state.speed*1.94384);$('altOut').textContent=round(state.y*3.28084);$('headOut').textContent=String(Math.round((state.yaw*180/Math.PI+3600)%360)).padStart(3,'0');$('pitchOut').textContent=(state.pitch*180/Math.PI).toFixed(0);$('bankOut').textContent=(state.bank*180/Math.PI).toFixed(0);$('throttleOut').textContent=round(state.throttle*100);const slider=$('flightThrottleRange');if(slider&&document.activeElement!==slider)slider.value=String(Math.round(state.throttle*100));const lever=$('flightThrottleValue');if(lever)lever.textContent=round(state.throttle*100)+'%';$('pauseToggle').dataset.paused=String(state.paused);const sec=Math.floor(state.flightTime);$('flightTime').textContent='T+ '+String(Math.floor(sec/60)).padStart(2,'0')+':'+String(sec%60).padStart(2,'0');$('gateProgress').querySelectorAll('i').forEach((el,i)=>el.classList.toggle('done',i<state.checkpoints));if(skyPassport){const q=skyPassport.snapshot(state);$('skyQuestCount').textContent=q.complete?'SEATTLE PASSPORT COMPLETE · '+q.total+' / '+q.total:q.count+' / '+q.total+' LANDMARKS DISCOVERED';$('skyQuestTarget').textContent=(q.dailyComplete?'NEXT':'TODAY')+': '+q.target.toUpperCase()+' · '+q.distanceM+' M · '+String(q.bearingDeg).padStart(3,'0')+'°';}const next=core.gates[state.checkpoints];$('nextGate').textContent=next?`NEXT: ${next.title} · ${state.checkpoints} / 3`:'MISSION COMPLETE · 3 / 3';$('flightStatus').textContent=state.condition==='BUILDING_CONTACT'?'CITY CONTACT':state.condition==='GROUND_CONTACT'?'GROUND CONTACT':state.paused?'PAUSED':state.craft==='custom'?'FOUNDRY FLIGHT / SCREENING':'SIMULATION ACTIVE';$('pauseToggle').textContent=state.paused?'▶ Resume':'Ⅱ Pause';$('cameraToggle').textContent=view==='chase'?'◉ Chase view':'◉ Cockpit view';}
 function controls(){const has=(...a)=>a.some(k=>held.has(k));const t=k=>touch.has(k);const limit=v=>Math.max(-1,Math.min(1,v));return {pitch:limit(stickInput.pitch+(has('w','arrowup')||t('pitchUp')?1:0)-(has('s','arrowdown')||t('pitchDown')?1:0)),bank:limit(stickInput.bank+(has('d','arrowright')||t('right')?1:0)-(has('a','arrowleft')||t('left')?1:0)),rudder:(has('e')?1:0)-(has('q')?1:0),throttle:(has('shift')||t('throttleUp')?1:0)-(has('control')||t('throttleDown')?1:0)};}
 function notify(message,seconds=3){$('flightAlert').textContent=message;$('flightAlert').classList.add('active');alertUntil=performance.now()+seconds*1000;$('flightA11y').textContent=message;}
 function frame(timestamp){if(!running)return;const dt=Math.min(.05,(timestamp-last)/1000||.016);last=timestamp;
@@ -1153,6 +1218,7 @@ function frame(timestamp){if(!running)return;const dt=Math.min(.05,(timestamp-la
    notify('CITY OBSTACLE CONTACT · RESET FLIGHT',5);
   }
  }
+ if(skyPassport&&timestamp-lastQuest>350){lastQuest=timestamp;const newName=skyPassport.observe(state);if(newName){const progress=skyPassport.snapshot(state);notify(progress.complete?'SEATTLE PASSPORT COMPLETE · ALL LANDMARKS DISCOVERED':'SKY PASSPORT · '+newName.toUpperCase()+' DISCOVERED · '+progress.count+'/'+progress.total,4);}}
  if(was!==state.checkpoints)notify(state.checkpoints>=3?'MISSION COMPLETE · SAVE YOUR FLIGHT':`GATE ${state.checkpoints} CLEARED`,4);
  if(prior!==state.condition&&state.condition==='GROUND_CONTACT'){state.paused=true;notify('GROUND CONTACT · RESTART OR SAVE FLIGHT',5);}
  if((state.craft==='custom'?state.aero?.stall:state.aeroFlight?.stallMargin<0)&&!state.paused&&Math.floor(timestamp/800)!==Math.floor((timestamp-16)/800))notify('LOW AIRSPEED · SIMULATED STALL',1.0);
