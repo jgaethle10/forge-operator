@@ -8,6 +8,9 @@ on:
       - 'systemia/mcp/fabric-faie-runtime.mjs'
       - 'systemia/faie/**'
       - 'scripts/faie-agnormal-external-canary.mjs'
+      - 'scripts/faie-browser-partner-acceptance.mjs'
+      - 'scripts/faie-partner-end-to-end.mjs'
+      - 'scripts/faie-soil-live-acceptance.mjs'
       - '.github/workflows/faie-agnormal-launch-gate.yml'
       - 'tests/faie-agnormal-external-canary-contract.test.mjs'
   workflow_dispatch:
