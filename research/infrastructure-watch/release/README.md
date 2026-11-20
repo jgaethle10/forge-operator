@@ -31,6 +31,10 @@ The archive is **not a website launch**.
 
 Transfer the exact archive through an authorized owner-controlled transfer mechanism to **Node001/Penguin**, which hosts the existing Fabric Caddy edge. Do not assume ssh/scp endpoints, credentials or public ports; never upload the raw private SQLite file to an unrelated host.
 
+**Implemented GitHub courier (preferred):** On NextGen run `aiw-beta-courier-nextgen.sh` from an immutable reviewed release kit commit. It verifies the full public-safe static archive, creates a separate `release/aiw-beta-payload-270291e8a8c3` branch only if absent, and uploads only the historical public-data tarball plus a SHA-256 receipt into GitHub canonical storage. GitHub is only a file courier; it never serves the production site or runs a third-party product runtime. An exact matching branch may be safely reused; no force-push.
+
+On Penguin fetch the immutable reviewed `aiw-beta-receive-penguin.sh` from the same release kit commit and run it with that SHA. It fetches the courier branch, verifies the independent SHA-256 receipt, audits existing Fabric/Caddy status read-only, then invokes the private stage script with `sudo`. **Neither script publishes or reloads Caddy.** Do not claim the transfer completed unless the NextGen output explicitly shows a successful GitHub push and the Penguin output shows SHA match and private staging.
+
 On Node001, run `aiw-beta-edge-preflight.sh` read-only and review the existing `/etc/evercraft/Caddyfile` and `evercraft-public-edge.service`.
 
 After transfer, run `sudo bash aiw-beta-stage-owned-edge.sh /path/to/archive.tar.gz`. This stages a verified content-addressed directory under `/srv/evercraft/infrastructure-watch/releases/`, preserving other services and any existing `current` pointer. It does not change the public edge.
