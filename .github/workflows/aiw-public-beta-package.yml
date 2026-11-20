@@ -26,6 +26,11 @@ jobs:
           bash -n research/infrastructure-watch/release/aiw-beta-edge-preflight.sh
           bash -n research/infrastructure-watch/release/aiw-beta-public-edge-audit.sh
           bash -n research/infrastructure-watch/release/aiw-beta-prepare-public-route.sh
+          bash -n research/infrastructure-watch/release/aiw-beta-cutover-penguin.sh
+          grep -Fq 'MODE="--check"' research/infrastructure-watch/release/aiw-beta-cutover-penguin.sh
+          grep -Fq 'trap rollback EXIT' research/infrastructure-watch/release/aiw-beta-cutover-penguin.sh
+          grep -Fq 'PUBLIC_INTERNET_HTTPS=NOT_YET_INDEPENDENTLY_VERIFIED' research/infrastructure-watch/release/aiw-beta-cutover-penguin.sh
+          ! grep -Eq 'systemctl restart (evercraft-fabric|evercraft-worlds)' research/infrastructure-watch/release/aiw-beta-cutover-penguin.sh
           grep -Fq 'live_caddy_unchanged=true' research/infrastructure-watch/release/aiw-beta-prepare-public-route.sh
           grep -Fq 'publication_activated=false' research/infrastructure-watch/release/aiw-beta-prepare-public-route.sh
           grep -Fq 'services_restarted=false' research/infrastructure-watch/release/aiw-beta-public-edge-audit.sh
