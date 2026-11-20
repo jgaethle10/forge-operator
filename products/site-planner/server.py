@@ -223,6 +223,7 @@ class Handler(BaseHTTPRequestHandler):
         try:
             if p=='/' or p=='/index.html':return self.send(200,(ROOT/'index.html').read_bytes(),'text/html; charset=utf-8')
             if p=='/sample' or p=='/sample.html':return self.send(200,(ROOT/'sample.html').read_bytes(),'text/html; charset=utf-8')
+            if p=='/plan-studio' or p=='/plan-studio.html':return self.send(200,(ROOT/'plan-studio.html').read_bytes(),'text/html; charset=utf-8')
             if p=='/api/health':return self.send(200,{'ok':True,'product':'Evercraft Site Planner','mode':'self-hosted'})
             with connect() as db:
                 if p=='/api/engineering/queue':
