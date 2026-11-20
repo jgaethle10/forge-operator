@@ -1,0 +1,30 @@
+name: Rockies existing official-source bridge
+on:
+  pull_request:
+    paths:
+      - 'systemia/rockies/official-bridge*'
+      - 'systemia/rockies/official-probe.mjs'
+      - '.github/workflows/rockies-official-bridge.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/rockies/official-bridge*'
+      - 'systemia/rockies/official-probe.mjs'
+      - '.github/workflows/rockies-official-bridge.yml'
+permissions:
+  contents: read
+jobs:
+  test-official-bridge:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --check systemia/rockies/official-bridge.mjs
+      - run: node --test systemia/rockies/official-bridge.test.mjs
+      - name: Original range allocation proof
+        run: node systemia/rockies/expansion.proof.mjs

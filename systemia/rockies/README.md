@@ -44,3 +44,23 @@ Scale-out must preserve source-family diversity. Spawning ten copies against one
 ## Safety and authority
 
 Rockies may read authorized public sources, normalize evidence, compare state, request corroboration, and feed internal context. They do not bypass authentication, scrape through access controls, publish unsupported conclusions, move money, mutate production, contact external parties, or trigger emergency actions directly.
+
+
+## Owned official-source recovery canary (November 20, 2026)
+
+The 99 / 26 / 384 figures above describe logical allocations, **not a verified live deployment**. To start recovering existing observation lanes without claiming a fictional fleet, `official-bridge.mjs` directly reuses the current owned Radar collectors for:
+
+- **Seismic:** official USGS M4.5+ GeoJSON feed (`usgs-earthquakes`).
+- **Space weather:** official NOAA SWPC alert feed (`noaa-space-weather`).
+
+These are **two bounded collector lanes**, not two installed Rockies workers. They run only when an authorized owner process calls `runRockiesOfficialSourceCycle()`. The bridge requires an exact source receipt and official collector identity, rejects source mismatches, propagates only candidate observations to **in-memory Context Fabric**, and deduplicates identical repeat feed states. Context Fabric offers these observations to existing downstream subscribers including TOWI and Journal; this is **not** proof TOWI consumed them or Harbor received them. Failures are marked failed/unknown, not silently converted into healthy readings. The bridge has no persistence, publishing, institutional outreach or human-alert privileges.
+
+Read-only owner probe:
+
+```bash
+node systemia/rockies/official-probe.mjs --design  # no network; roster declaration
+node systemia/rockies/official-probe.mjs --live    # bounded official USGS + NOAA source reads
+node --test systemia/rockies/official-bridge.test.mjs
+```
+
+The live probe prints aggregate range coverage and holds. It does not write to the real Context Fabric, install a resident, or activate 99 workers. An operator must separately verify an owned resident's actual private storage, receipt trail, publisher boundaries and real downstream intake before claiming deployment or nightly full-spectrum coverage.
