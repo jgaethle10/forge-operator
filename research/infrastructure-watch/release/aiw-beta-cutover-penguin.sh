@@ -98,6 +98,9 @@ echo "release_receipt=PASS"
 echo "Fabric_and_Caddy_active=true"
 
 if [[ "$MODE" == "--check" ]]; then
+  [[ "$(edge_health_status || true)" == "200" ]] ||
+    fail "Original Caddy edge is not serving local HTTPS /health; rollback recovery not proven"
+  echo "original_public_edge_https=PASS"
   echo "preflight=PASS"
   echo "publication_activated=false"
   echo "activation_requires_explicit_--activate=true"
