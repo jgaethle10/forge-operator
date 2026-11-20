@@ -92,7 +92,7 @@ def evaluate(item):
         sample=src.read(1,window=window,
                         out_shape=(min(256,y1-y0),min(256,x1-x0)),
                         masked=True)
-        nonempty=bool(np.any(np.isfinite(sample.filled(np.nan))))
+        nonempty=bool(np.any(np.isfinite(sample.astype("float64").filled(np.nan))))
         result["bounded_sample_contains_finite_values"]=nonempty
         result["bounded_sample_is_full_coverage_proof"]=False
         if not nonempty:
