@@ -513,7 +513,7 @@ window.AAARCreateSkyPassport=(world,now=()=>Date.now())=>{
   for(const l of landmarks){
    if(seen.has(l.name))continue;
    const horizontal=Math.hypot(s.x-l.x,s.z-l.z),minimum=world.ground(l.x,l.z)+l.h+25;
-   if(horizontal<360&&s.y>=minimum&&s.y<980){
+   if(horizontal<200&&s.y>=minimum&&s.y<980){
     seen.add(l.name);save();return l.name;
    }
   }
