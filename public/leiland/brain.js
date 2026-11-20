@@ -195,6 +195,12 @@ function draw(t){
   gradient.addColorStop(0,'rgba(103,241,216,.23)');gradient.addColorStop(1,'rgba(103,241,216,0)');
   ctx.fillStyle=gradient;ctx.beginPath();ctx.arc(xx,yy,32,0,Math.PI*2);ctx.fill();
  }
+ if(sourceFresh && sourceEvents.length){
+  const index=(Math.floor(t/2800)*37)%nodes.length,p=points[index];
+  const radius=reduce.matches?10:9+7*(1+Math.sin(t*.004))/2;
+  ctx.strokeStyle='rgba(245,215,164,.8)';ctx.lineWidth=1.7;
+  ctx.beginPath();ctx.arc(p.x,p.y,radius,0,Math.PI*2);ctx.stroke();
+ }
  frame++;if(!reduce.matches)requestAnimationFrame(draw);
 }
 requestAnimationFrame(draw);
