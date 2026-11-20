@@ -15,12 +15,27 @@ function ensureDir(dir) {
 }
 
 function readJson(file, fallback) {
+  // Existing investigation state is never silently replaced with an empty desk.
+  // A corrupt or unsafe file requires operator recovery from the evidence ledger.
   if (!fs.existsSync(file)) return structuredClone(fallback);
-  try {
-    return JSON.parse(fs.readFileSync(file, 'utf8'));
-  } catch {
-    return structuredClone(fallback);
+  const stat = fs.lstatSync(file);
+  if (!stat.isFile() || stat.isSymbolicLink()) {
+    throw new Error('TOWI_STATE_UNSAFE_EXISTING_FILE');
   }
+  let state;
+  try {
+    state = JSON.parse(fs.readFileSync(file, 'utf8'));
+  } catch {
+    throw new Error('TOWI_STATE_CORRUPT_RECOVERY_REQUIRED');
+  }
+  if (state?.schema !== 'evercraft.towi.state.v1'
+      || !state.dossiers || typeof state.dossiers !== 'object'
+      || Array.isArray(state.dossiers)
+      || !Array.isArray(state.processed_editions)
+      || !Array.isArray(state.receipts)) {
+    throw new Error('TOWI_STATE_SCHEMA_RECOVERY_REQUIRED');
+  }
+  return state;
 }
 
 function atomicWrite(file, value) {
