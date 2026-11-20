@@ -24,6 +24,27 @@ function syntheticListenerSources() {
     .map(handle => listenerOrigins.get(handle) || 'unattributed').sort();
 }
 
+function verifyCoreProofRoute(route, root) {
+  assert.ok(['healthy','degraded'].includes(route?.state));
+  const core=route.health;
+  assert.equal(core?.schema,'evercraft.systemia.resident-supervisor-health.v1');
+  assert.equal(core.running,true);
+  assert.ok(Number(core.service_count)>0);
+  assert.equal(Number(core.held_count),0,'core resident holds are not ignorable');
+  const failed=core.services.filter(row=>row.status==='failed');
+  assert.equal(Number(core.failed_count),failed.length);
+  for(const row of failed){
+    assert.equal(row.service_key,'portfolio-sentinel',
+      'unexpected supervised failure must fail this proof');
+    const snapshot=path.join(root,'compute','services','systemia-core',
+      'workspace','portfolio-sentinel','latest.json');
+    assert.ok(fs.existsSync(snapshot),'failing sentinel must have a report');
+    const report=JSON.parse(fs.readFileSync(snapshot,'utf8'));
+    assert.ok(Number(report.summary?.blocking_findings)>0,
+      'sentinel failure must reflect verified high/critical findings');
+  }
+}
+
 const nativeBrowserProofPreparer=async()=>({
   schema:'evercraft.browser.native-runtime-preflight.v1',
   ready:false,
@@ -70,9 +91,9 @@ try {
   assert.equal(first.pulse.field_attestation.state, 'not_verified');
 
   const firstHealth = await first.health();
-  assert.equal(firstHealth.ok, true);
   assert.equal(firstHealth.kaidance.ok, true);
-  assert.equal(firstHealth.systemia_core.ok, true);
+  assert.equal(firstHealth.fabric.ok, true);
+  verifyCoreProofRoute(await first.yard.verifyRoute('systemia-core-local-resident'),root);
   assert.equal(first.core.result.raven_private_runtime_configured, true);
   assert.equal(first.core.result.raven_inference_gateway_configured, true);
   assert.equal(first.core.result.raven_inference_provider, 'ollama');
@@ -132,7 +153,9 @@ try {
   assert.notEqual(second.core.receipt.receipt_hash, firstCoreReceipt);
 
   const secondHealth = await second.health();
-  assert.equal(secondHealth.ok, true);
+  assert.equal(secondHealth.kaidance.ok, true);
+  assert.equal(secondHealth.fabric.ok, true);
+  verifyCoreProofRoute(await second.yard.verifyRoute('systemia-core-local-resident'),root);
 
   const allocatorSecret = fs.readFileSync(
     path.join(root, '.secrets', 'allocator-token'),
