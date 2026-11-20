@@ -1324,14 +1324,83 @@ function airportStructures(emitBox){
    i%2?[.87,.73,.46]:[.30,.58,.70],[.26,.37,.42]);
  }
 }
+function airportVistaDetails(box,focus=null){
+ if(!seattle||!window.AAARGroundOps?.enabled)return 0;
+ const ops=window.AAARGroundOps;let count=0;
+ for(const f of ops.fields){
+  const side=f.code==='KSEA'?-1:1,start=-f.length/2,half=f.width/2,y=f.level;
+  const b=(u,v,cy,w,h,d,color,nearColor=null)=>{
+   const p=ops.point(f,u*side,v);
+   if(focus&&Math.hypot(p.x-focus.x,p.z-focus.z)>3900)return;
+   box(p.x,y+cy,p.z,w,h,d,color,nearColor||color);count++;
+  };
+  // Larger, differently shaped silhouettes: Boeing maintenance base versus SEA's gates.
+  if(f.code==='KBFI'){
+   for(let h=0;h<5;h++){
+    const u=half+300+h*101,v=start+340+h*170;
+    b(u,v,31,95,60,100,[.59,.64,.68],[.30,.39,.44]);
+    b(u,v,61.5,105,3.5,110,[.26,.37,.44],[.25,.34,.40]);
+    // Tall ribbed hangar doors rather than anonymous grey blocks.
+    for(let k=0;k<7;k++)b(u-36+k*12.4,v-52,27,10.5,48,2.5,
+      k%2?[.31,.46,.50]:[.25,.37,.42]);
+    b(u+52,v+15,12,12,20,24,[.74,.76,.72],[.30,.40,.42]);
+   }
+  }else{
+   // Broad terminal with gate spurs and visible blue-glass curtain walls.
+   for(let wing=0;wing<3;wing++){
+    const u=half+330+wing*80,v=start+550+wing*420;
+    b(u,v,29,140,56,245,[.70,.75,.74],[.33,.42,.46]);
+    b(u,v,58,151,4,253,[.28,.39,.45],[.24,.34,.40]);
+    for(let q=0;q<9;q++)b(u-66+q*16,v-124,35,10.5,22,3,
+      q%2?[.34,.60,.71]:[.25,.48,.61]);
+    for(let gate=0;gate<5;gate++){
+     const gv=v-105+gate*50;
+     b(u-98,gv,11,76,10,13,[.73,.79,.79],[.30,.39,.41]); // jet bridge
+     b(u-143,gv,7,15,12,18,[.38,.53,.57],[.34,.44,.46]);
+     b(u-169,gv,4,48,8,13,[.89,.91,.89],[.65,.73,.75]); // parked jet body
+     b(u-169,gv,7,13,3,65,[.87,.91,.92],[.68,.73,.78]); // swept wing silhouette
+     b(u-147,gv,11,3,13,9,[.34,.52,.65],[.33,.47,.59]); // tail
+    }
+   }
+  }
+  // Ground lighting poles, small vehicles, and roof skylights create scale cues.
+  for(let j=0;j<14;j++){
+   const v=start+125+j*180;if(v>f.length/2-60)break;
+   const u=half+124+((j%3)*25);
+   b(u,v,13,1.4,26,1.4,[.62,.69,.71]);
+   b(u,v,26,8,2,5,[.94,.91,.76],[.87,.84,.68]);
+  }
+  for(let j=0;j<(f.code==='KSEA'?13:9);j++){
+   const u=half+150+(j%4)*48,v=start+145+Math.floor(j/4)*115+(j%2)*24;
+   const paint=j%4===0?[.84,.71,.43]:j%4===1?[.32,.56,.70]:j%4===2?[.75,.78,.77]:[.91,.87,.78];
+   b(u,v,3,22,5,12,paint,[.32,.40,.46]);
+   b(u,v-2.5,6,12,4.2,9,[.32,.45,.50],[.26,.38,.41]);
+   for(const a of [-1,1])for(const z of [-1,1])
+    b(u+a*9,v+z*4,1.4,3.4,2.8,2.5,[.14,.18,.21]);
+  }
+  // Small stationary planes parked near maintenance apron at Boeing Field.
+  if(f.code==='KBFI')for(let j=0;j<7;j++){
+   const u=half+158+(j%3)*64,v=start+120+Math.floor(j/3)*210;
+   b(u,v,5,6,7,36,[.92,.92,.88],[.62,.68,.71]);
+   b(u,v,5.5,36,2.6,8,[.79,.86,.87],[.35,.53,.65]);
+   b(u,v-14,7.5,15,2.5,5,[.83,.86,.84],[.40,.52,.58]);
+   b(u,v+14,7,4,9,4,[.33,.52,.65],[.33,.52,.65]);
+  }
+ }
+ return count;
+}
 function addRunwaySoftware(quad,project,ctx,w,h){
- airportStructures((x,y,z,wid,hei,dep,color,roof)=>{
+ const toHex=c=>'#'+c.map(v=>Math.max(0,Math.min(255,Math.round(v*255))).toString(16).padStart(2,'0')).join('');
+ const drawBox=(x,y,z,wid,hei,dep,color,roof)=>{
   const ax=x-wid/2,bx=x+wid/2,az=z-dep/2,bz=z+dep/2,top=y+hei/2,bottom=y-hei/2;
-  const toHex=c=>'#'+c.map(v=>Math.round(v*255).toString(16).padStart(2,'0')).join('');
+  // Culling prevents faraway gate-detail boxes from burdening Canvas2D.
+  if(Math.hypot(x-state.x,z-state.z)>3900)return;
   quad([ax,bottom,az],[bx,bottom,az],[bx,top,az],[ax,top,az],toHex(color));
   quad([bx,bottom,az],[bx,bottom,bz],[bx,top,bz],[bx,top,az],toHex(color));
   quad([ax,top,az],[bx,top,az],[bx,top,bz],[ax,top,bz],toHex(roof));
- });
+ };
+ airportStructures(drawBox);
+ airportVistaDetails(drawBox,state);
  for(const f of window.AAARGroundOps.fields){
   const p=project([f.x,f.level+95,f.z]);
   if(!p||p.d>4000||p.u<65||p.u>w-65||p.v<26||p.v>h-35)continue;
@@ -1349,6 +1418,10 @@ function addRunwayWebGL(w){
  airportStructures((x,y,z,width,height,depth,color,roof)=>{
   w.box(x,y,z,width,height,depth,color,1);
   w.box(x,y+height*.5+1,z,width+3,2,depth+3,roof);
+ });
+ airportVistaDetails((x,y,z,width,height,depth,color,roof)=>{
+  w.box(x,y,z,width,height,depth,color,1);
+  if(roof!==color)w.box(x,y+height*.5+.9,z,width+1,1.8,depth+1,roof);
  });
  for(const f of window.AAARGroundOps.fields){
   const ops=window.AAARGroundOps,half=f.width/2;
