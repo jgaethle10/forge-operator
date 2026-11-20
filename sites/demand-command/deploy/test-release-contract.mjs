@@ -26,7 +26,7 @@ test('public edge is an inert placeholder requiring two auth gates and reverse t
 });
 test('deployment notes distinguish intended target from verified live URL',()=>{
   assert.match(readme,/NOT LIVE/);
-  assert.match(readme,/no public/i);
+  assert.match(readme,/not a public multiuser CRM|does not publish an HTTPS link|never opens a WAN port/i);
   assert.match(readme,/no verified|no.*proof|Stop conditions/i);
   assert.match(readme,/NextGen/);
   assert.match(readme,/Penguin/);
