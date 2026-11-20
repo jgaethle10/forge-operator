@@ -167,3 +167,7 @@ Most importantly, \`shipPathPose(from,to,t)\` obtains both center and smooth tan
 ## HUDSON Watch v11: Spectral Navigator (November 20, 2026)
 
 The tiny luminous mark in v10 is replaced with a legible path-scale **spectral ship**. It retains a small, canonical route-attached footprint and heading, but now has a carved crescent keel, three independent breathing aurora sails with pearlescent seams, sculpted raised stern, glowing prow, bridge windows, 19 drifting bounded cloud pockets and 42 prismatic star sparks. Behind the ship, a 3-thread curved wake with 23 bounded motes follows the past samples of the SAME route. These elements are scenic, not live mission or private system data. No external assets or network calls; pause/reduced motion, hidden-tab stop, and ~30fps budget are unchanged. Exact release marker `river-current-v11-spectral-navigator` is required by public checks; GitHub merger is not owned-server deployment.
+
+
+### v11 cinematic browser-QA revision
+Sharpened the three sail outlines to avoid a petal silhouette, deepened the hull, added fixed shrouds, raised aftcastle and gold railings. Five slow spectral-weather veils plus 38 bounded background starlets now enrich otherwise empty space. Actual 390 × 844 and 1440 × 900 browser captures were reviewed with no page errors before this patch. The new optics remain scenic and intentionally do not claim live mission activity.
