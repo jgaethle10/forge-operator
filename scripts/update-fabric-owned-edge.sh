@@ -308,6 +308,26 @@ ensure_faie_owned_history_state() {
   # The provisioner only creates the canonical private directory when no
   # FAIE state directory has been configured. Snapshot the current env once
   # so an unsuccessful service update can restore the previous bytes.
+  if ! grep -Eq '^FAIE_EDGE_STATE_DIR=/' "$FABRIC_ENV"; then
+    # The old unconfigured Fabric edge may already have public history in
+    # a systemd-private /tmp directory. Starting a new /var/lib archive would
+    # strand it. Require a reviewed online backup/migration instead of a
+    # silent reset of previously sourced land history.
+    local prior_history_health=""
+    prior_history_health="$(curl -fsS --max-time 5 'http://127.0.0.1:8787/api/faie/health' 2>/dev/null || true)"
+    if ! runuser -u "$RUN_USER" -- env FAIE_PRIOR_HISTORY_HEALTH_JSON="$prior_history_health" node -e "
+      try {
+        const h=JSON.parse(process.env.FAIE_PRIOR_HISTORY_HEALTH_JSON||'null');
+        if(h?.ok!==true||h.fabric_native!==true)process.exit(2);
+        const count=h.land_history_archive?.archived_records;
+        if(!Number.isSafeInteger(count)||count<0)process.exit(3);
+        if(count>0)process.exit(4);
+      } catch { process.exit(5); }
+    "; then
+      echo "HOLD: previous FAIE archive is nonempty or unverified; preserve and migrate it before choosing new storage" >&2
+      return 1
+    fi
+  fi
   if ! grep -Eq '^FAIE_EDGE_STATE_DIR=/' "$FABRIC_ENV" && [[ -z "$ENV_BACKUP" ]]; then
     ENV_BACKUP="$STATE_DIR/fabric.env.before-faie-history"
     install -o root -g root -m 0600 "$FABRIC_ENV" "$ENV_BACKUP"
