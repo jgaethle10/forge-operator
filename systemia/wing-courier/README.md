@@ -124,6 +124,32 @@ node systemia/wing-courier/resident.mjs /private/fallen-config.json
 ```
 A genuine `intake.write.agent` Passport grant is required before any candidate is accepted into Intake Fabric. Without a real grant the already-private received bytes remain held and the resident retries admission. No step automatically initiates a render.
 
+## Authenticated read-only receiver route canary (NextGen, pre-transfer)
+
+After the owner-operated private broker and Fabric route are separately provisioned,
+the **authorized NextGen local operator** can verify the existing HTTPS route
+using the genuine private Fallen receiver configuration. This canary first sends
+an **anonymous GET**, requiring 401/403; it only then sends an authenticated
+**GET /v1/inbox?wing=fallen** using the already-provisioned private receiver token.
+A 200 response must match the actual Wing Courier broker inbox schema and wing.
+The result contains no inbox items, bearer tokens, package identifiers, file
+names or customer bytes. A 404 is HELD and does not expose a bearer token.
+
+Default invocation is an offline private-config dry run. Network verification
+requires an explicit local opt-in:
+
+```bash
+node systemia/wing-courier/receiver-auth-canary.mjs --config /approved/private/fallen.json
+node systemia/wing-courier/receiver-auth-canary.mjs --config /approved/private/fallen.json --authorize-owned-network-check
+```
+
+It does **not** download/decrypt an envelope, run the resident, change the
+broker, enable the Fabric public route, assign Systemia work, or release customer
+media. Even a valid authenticated response is NOT evidence of a completed
+Harbor-to-Fallen transfer or machine identity attestation. Keep #2294 open until
+a separately approved synthetic end-to-end receipt and later authorized
+real customer-file 12/12 verification exist.
+
 ## Limits, honesty, and next operator gates
 This reference implementation is **not yet a hardened internet-facing service**: it needs owner-controlled TLS reverse proxy, per-actor revocation, audited quotas/retention, recovery/reconciliation of interrupted uploads, operational health monitoring and real direct device key registration. If the owned relay host is unavailable, the system must hold queued work and retry safely; no customer-facing claims of delivery or production.
 
