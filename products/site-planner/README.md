@@ -211,3 +211,13 @@ Evercraft LLC live Stripe catalog, independently verified:
 - Founding Five is a provisional price test: keep both links inactive pending tax review, owner-approved scope, private provider-verified settlement handling, customer authentication and Systemia receipts.
 
 `stripe_pilot.json` stores only non-secret identity and last-checked status. It is **not a Stripe webhook, authenticated account lookup, payment receipt, or fulfillment entitlement**. `GET /api/commercial/readiness` presents the recorded prices while keeping `checkout_configured=false`, `payment_verification_connected=false`, `commercial_release_allowed=false`.
+
+## v1.8: buyer-facing illustrative concept sample
+
+`sample.html` is a responsive, original, **entirely fictional** two-page illustrative EV charging site concept and evidence register. It showcases four hypothetical Level 2 stalls, one circulation idea, a possible equipment pad and trench route, and the unresolved requirements for field/engineering confirmation. It uses no real parcel, customer data, map, aerial imagery, geocoding or external services.
+
+The existing local-only server serves this at `GET /sample` and `GET /sample.html`, with the **same optional bearer-token gate** as the operator UI. The workspace links to the sample. The sample is read-only, requires no Site Planner DB record, and its print stylesheet supports **Print / Save PDF** in a browser. For developer-independent review, an equivalent two-page PDF snapshot can be generated from this HTML; the authored HTML remains the canonical source.
+
+`test_sample.py` checks access control, content markers, anti-framing headers, zero Stripe checkout links, and the absence of mutations to sites, orders and Systemia outbox. Full test command: `python3 -m unittest discover -v`.
+
+**Release boundary:** Illustrative sample quality does not establish site-specific feasibility, licensed engineering, automated concept generation or production readiness. Live Stripe links remain inactive, and commercial orders cannot be dispatched.
