@@ -215,32 +215,68 @@ function drawConfluences(){
   ctx.restore();
  });
 }
+// Eight articulated, short limbs replace the old straight filament fan.
+// Pair spacing and joint motion are scenic. No source or mission status is inferred.
+function explorerLegGeometry(size,leg,phase){
+ var pair=Math.floor(leg/2),side=leg%2===0?-1:1;
+ var shoulderX=[.43,.16,-.17,-.44][pair]*size;
+ var kneeX=[1.04,.56,-.48,-.93][pair]*size;
+ var footX=[1.22,.37,-.72,-1.10][pair]*size;
+ var step=Math.sin(phase+pair*1.64+side*1.15);
+ var lift=Math.max(0,Math.cos(phase+pair*1.64+side*1.15));
+ return {
+  side:side,
+  startX:shoulderX,startY:side*size*.13,
+  kneeX:kneeX+step*size*.09,
+  kneeY:side*size*(.54+pair*.065)-lift*side*size*.075,
+  footX:footX+step*size*.16,
+  footY:side*size*(.84+(pair%2)*.12)-lift*side*size*.15
+ };
+}
 function spider(from,to,t){
  var pos=locate(from,to,t),ahead=locate(from,to,Math.min(.999,t+.009));
  var dx=ahead.x-pos.x,dy=ahead.y-pos.y,angle=Math.atan2(dy,dx);
- var size=Math.max(25,Math.min(47,width*.083));
+ // In an iPhone river, the explorer is a recognizable little creature,
+ // not a 200px comet with straight antennae.
+ var size=Math.max(15,Math.min(28,width*.044));
+ var gait=clock*3.1;
  ctx.save();ctx.translate(pos.x,pos.y);ctx.rotate(angle);ctx.globalCompositeOperation="lighter";
- var wake=ctx.createRadialGradient(0,0,0,0,0,size*2.9);wake.addColorStop(0,"rgba(248,255,237,.52)");wake.addColorStop(.24,"rgba(105,255,213,.26)");wake.addColorStop(1,"rgba(69,160,253,0)");
- ctx.fillStyle=wake;ctx.beginPath();ctx.arc(0,0,size*2.9,0,7);ctx.fill();
- for(var ray=0;ray<26;ray++){
-  var spread=(ray-12.5)/13.0,osc=Math.sin(clock*.85+ray*.23)*size*.08;
-  ctx.beginPath();ctx.moveTo(-size*.18,spread*size*.25);
-  ctx.quadraticCurveTo(-size*1.2,spread*size*.76+osc,-size*(2.9+ray%4*.20),spread*size*2.1+osc);
-  ctx.strokeStyle=ray%4===0?"rgba(191,173,255,.25)":"rgba(155,255,231,.11)";
-  ctx.lineWidth=.55;ctx.stroke();
+ var halo=ctx.createRadialGradient(0,0,0,0,0,size*2.4);
+ halo.addColorStop(0,"rgba(194,255,230,.35)");
+ halo.addColorStop(.38,"rgba(80,237,194,.12)");
+ halo.addColorStop(1,"rgba(53,147,221,0)");
+ ctx.fillStyle=halo;ctx.beginPath();ctx.arc(0,0,size*2.4,0,Math.PI*2);ctx.fill();
+ // Soft compact wake strands curl behind, instead of trailing long whiskers.
+ for(var wake=0;wake<3;wake++){
+  var drift=(wake-1)*size*.18;
+  ctx.beginPath();ctx.moveTo(-size*.40,drift);
+  ctx.bezierCurveTo(-size*.8,drift+Math.sin(gait*.48+wake)*size*.18,-size*1.28,drift+Math.sin(gait*.42+wake)*size*.13,-size*1.65,drift*.65);
+  ctx.strokeStyle=wake===1?"rgba(160,255,230,.19)":"rgba(128,197,249,.11)";
+  ctx.lineWidth=.8;ctx.shadowBlur=4;ctx.shadowColor="#8dffdc";ctx.stroke();
  }
- // A trailing filament fan gives the explorer its spider-like silhouette.
- for(var leg=0;leg<12;leg++){
-  var side=leg%2===0?1:-1,depth=Math.floor(leg/2);
-  var sway=Math.sin(clock*1.7+depth*.9)*5;
-  var length=size*(2+depth*.41),spread=side*size*(.65+depth*.22);
-  ctx.beginPath();ctx.moveTo(-4,side*3);
-  ctx.bezierCurveTo(-size*.65,spread*.4,-length*.75,spread*.95+sway,-length,spread*1.3+sway);
-  ctx.strokeStyle="rgba(169,255,231,"+(.45-depth*.06)+")";ctx.shadowBlur=7;ctx.shadowColor="#a9ffdc";ctx.lineWidth=depth===0?1.8:1.1;ctx.stroke();
-  ctx.fillStyle=depth%2===0?"#adffeb":"#b7afff";ctx.beginPath();ctx.arc(-length,spread*1.3+sway,1.2,0,7);ctx.fill();
+ // Four mirrored pairs. Each leg has a distinct shoulder, flexing knee and foot.
+ for(var leg=0;leg<8;leg++){
+  var g=explorerLegGeometry(size,leg,gait);
+  ctx.beginPath();ctx.moveTo(g.startX,g.startY);
+  ctx.quadraticCurveTo((g.startX+g.kneeX)*.59,g.startY+g.side*size*.38,g.kneeX,g.kneeY);
+  ctx.quadraticCurveTo(g.kneeX+(g.footX-g.kneeX)*.22,g.footY-g.side*size*.09,g.footX,g.footY);
+  ctx.lineWidth=leg<4?1.8:1.5;
+  ctx.strokeStyle=leg%3===0?"rgba(173,211,255,.77)":"rgba(171,255,224,.78)";
+  ctx.shadowBlur=5;ctx.shadowColor="#98ffe2";ctx.stroke();
+  ctx.beginPath();ctx.arc(g.kneeX,g.kneeY,.9,0,Math.PI*2);
+  ctx.fillStyle="rgba(207,255,242,.8)";ctx.fill();
+  ctx.beginPath();ctx.arc(g.footX,g.footY,1.2,0,Math.PI*2);
+  ctx.fillStyle=leg%3===0?"#c3beff":"#9affd7";ctx.fill();
  }
- ctx.shadowBlur=14;ctx.shadowColor="#e8ffeb";ctx.fillStyle="#eaffef";ctx.beginPath();ctx.arc(0,0,4.4,0,7);ctx.fill();
- ctx.strokeStyle="#c7ffec";ctx.lineWidth=1;ctx.beginPath();ctx.arc(0,0,10+Math.sin(clock*2.6)*1.5,0,7);ctx.stroke();
+ // A compact segmented, luminous body points in the direction of travel.
+ ctx.shadowBlur=8;ctx.shadowColor="#9fffe6";
+ ctx.fillStyle="rgba(5,43,53,.86)";ctx.strokeStyle="rgba(179,255,229,.92)";
+ ctx.lineWidth=1.55;ctx.beginPath();ctx.ellipse(-size*.10,0,size*.46,size*.32,0,0,Math.PI*2);ctx.fill();ctx.stroke();
+ ctx.fillStyle="rgba(157,254,218,.69)";ctx.beginPath();ctx.ellipse(-size*.09,0,size*.25,size*.17,0,0,Math.PI*2);ctx.fill();
+ ctx.fillStyle="rgba(221,255,240,.98)";ctx.beginPath();ctx.ellipse(size*.39,0,size*.23,size*.24,0,0,Math.PI*2);ctx.fill();
+ ctx.fillStyle="#284c5b";ctx.beginPath();ctx.arc(size*.52,-size*.07,1.2,0,Math.PI*2);ctx.arc(size*.52,size*.07,1.2,0,Math.PI*2);ctx.fill();
+ ctx.strokeStyle="rgba(209,255,240,.49)";ctx.lineWidth=.75;ctx.beginPath();
+ ctx.ellipse(0,0,size*.95,size*.78,0,0,Math.PI*2);ctx.stroke();
  ctx.restore();
 }
 function routeAt(){
