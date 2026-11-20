@@ -12,7 +12,7 @@ const code=watch.match(/<script>([\s\S]*?)<\/script>/)?.[1];
 test('river Watch is an interactive site and not an image stand-in',()=>{
  assert.match(home,/href="\.\/watch\/"/);
  assert.match(home,/Enter the Current/);
- assert.match(watch,/hudson-watch-release" content="river-current-v5-responsive-watershed"/);
+ assert.match(watch,/hudson-watch-release" content="river-current-v6-phase-traveler"/);
  assert.match(watch,/canvas id="current"/);
  assert.match(watch,/id="explore"/);
  assert.match(watch,/id="pause"/);
@@ -25,7 +25,7 @@ test('river Watch is an interactive site and not an image stand-in',()=>{
  assert.match(code,/function drawRivers\(/);
  assert.match(code,/function drawParticles\(/);
  assert.match(code,/function drawConfluences\(/);
- assert.match(code,/function drawAnomaly\(from,to,t\)/);
+ assert.match(code,/function drawTraveler\(from,to,t\)/);
  assert.match(code,/function routeAt\(/);
  assert.match(code,/canvas\.addEventListener\("click"/);
 });
@@ -62,39 +62,44 @@ test('river topology has seven named confluences and multi-channel currents',()=
  assert.match(code,/drawWatershed\(field\);drawRivers\(\);drawParticles\(dt\);drawConfluences\(\)/);
 });
 
-test('the watcher becomes an ambiguous changing presence, not a recognizable bug',()=>{
- assert.match(code,/function anomalyFilament\(time,index\)/);
- assert.match(code,/function anomalyForm\(time\)/);
- assert.match(code,/function drawAnomaly\(from,to,t\)/);
- assert.match(code,/for\(var thread=0;thread<9;thread\+\+\)/);
- assert.match(code,/ctx\.globalCompositeOperation="source-over"/);
- assert.match(code,/dark center is deliberate negative space/i);
- assert.match(code,/faint delayed echo/);
- assert.doesNotMatch(code,/function explorerLegGeometry/);
+test('phase traveler is an unmistakable moving form, not a tiny bug or orbiting dot',()=>{
+ assert.match(code,/function travelerState\(time,progress\)/);
+ assert.match(code,/function ribbonForm\(time,layer,state\)/);
+ assert.match(code,/function drawTraveler\(from,to,t\)/);
+ assert.match(code,/for\(var layer=0;layer<5;layer\+\+\)/);
+ assert.match(code,/var size=width<=620\?clamp\(width\*\.116,39,57\):clamp\(width\*\.068,65,100\)/);
+ assert.match(code,/var shades=\[/);
+ assert.match(code,/ctx\.bezierCurveTo\(span\*\.18/);
+ assert.match(code,/A partially hidden aperture, never a fixed eye/);
+ assert.doesNotMatch(code,/function anomalyFilament/);
+ assert.doesNotMatch(code,/function anomalyForm/);
+ assert.doesNotMatch(code,/function drawAnomaly/);
  assert.doesNotMatch(code,/function spider\(/);
- assert.doesNotMatch(code,/for\(var leg=0;/);
- assert.doesNotMatch(code,/for\(var ray=0;/);
- assert.doesNotMatch(code,/ctx\.shadowBlur=14/);
- assert.match(watch,/river-current-v5-responsive-watershed/);
+ assert.doesNotMatch(code,/function explorerLegGeometry/);
+ assert.match(code,/drawTraveler\(trip\.from,trip\.to,\.04\+trip\.t\*\.92\)/);
 });
-test('probing filaments fold, disappear and return without fixed mirrored anatomy',()=>{
- const a=code.indexOf('function presencePulse(time){');
- const b=code.indexOf('function drawAnomaly(',a);
- assert.ok(a>=0&&b>a);
- const forms=new vm.Script(code.slice(a,b)+';({anomalyFilament,anomalyForm})').runInNewContext({Math});
- const snapshot=(at)=>Array.from({length:9},(_,i)=>forms.anomalyFilament(at,i));
- const beginning=snapshot(0),later=snapshot(12.3);
- assert.ok(beginning.some((p,i)=>Math.abs(p.opacity-later[i].opacity)>.13),'filament brightness changes');
- assert.ok(beginning.some((p,i)=>Math.abs(p.reach-later[i].reach)>.23),'filament lengths change');
- for(const p of [...beginning,...later]){
-  assert.ok(p.reach>=.47&&p.reach<=1.70,'reach capped');
-  assert.ok(p.opacity>=.055&&p.opacity<=.516,'appearance bounded');
-  assert.ok(Number.isFinite(p.angle)&&Number.isFinite(p.curl));
+test('traveler ribbons evolve in length, twist, transparency and confluence behavior',()=>{
+ const begin=code.indexOf('function presencePulse(time){');
+ const end=code.indexOf('function drawPresenceRipple(',begin);
+ assert.ok(begin>=0&&end>begin);
+ const forms=new vm.Script(code.slice(begin,end)+';({presencePulse,travelerState,ribbonForm})')
+  .runInNewContext({Math,clamp:(x,a,b)=>Math.max(a,Math.min(b,x))});
+ const quiet=forms.travelerState(2,.25),arrival=forms.travelerState(2,.97);
+ assert.ok(arrival.opening>quiet.opening+.32,'arrival unfolds rather than circling mindlessly');
+ assert.ok(arrival.scan>.25,'arrival briefly examines a confluence');
+ assert.ok(quiet.scan===0,'no scanning at the start of every current');
+ const early=Array.from({length:5},(_,i)=>forms.ribbonForm(2,i,quiet));
+ const late=Array.from({length:5},(_,i)=>forms.ribbonForm(14,i,arrival));
+ assert.ok(early.some((f,i)=>Math.abs(f.length-late[i].length)>.18),'ribbons actually morph');
+ assert.ok(early.some((f,i)=>Math.abs(f.angle-late[i].angle)>.20),'ribbons rotate unevenly');
+ for(const f of [...early,...late]){
+  assert.ok(f.length>.4&&f.length<2);
+  assert.ok(f.width>.13&&f.width<.55);
+  assert.ok(f.opacity>=.13&&f.opacity<=.67);
+  assert.ok(Number.isFinite(f.bend)&&Number.isFinite(f.angle));
  }
- const first=forms.anomalyForm(0),second=forms.anomalyForm(20);
- assert.notEqual(first.rotation,second.rotation);
- assert.notEqual(first.fold,second.fold);
- assert.ok(first.aperture>=.14&&first.aperture<=.70);
+ const atPhone=390*.116;
+ assert.ok(atPhone>=39&&atPhone<=57,'phone-size traveler must be visible');
 });
 test('slow river camera moves the whole field and tap positions use its inverse',()=>{
  const start=code.indexOf('function riverCamera(){');
@@ -117,7 +122,7 @@ test('slow river camera moves the whole field and tap positions use its inverse'
 });
 
 test('Presence has an irregular multi-stage pulse rather than a blinking light',()=>{
- const begin=code.indexOf('function presencePulse(time){'),end=code.indexOf('function anomalyFilament(',begin);
+ const begin=code.indexOf('function presencePulse(time){'),end=code.indexOf('function travelerState(',begin);
  assert.ok(begin>=0&&end>begin);
  const pulse=new vm.Script(code.slice(begin,end)+';presencePulse').runInNewContext({Math});
  const timeline=Array.from({length:3501},(_,i)=>({t:i*.02,...pulse(i*.02)}));
@@ -133,31 +138,24 @@ test('Presence has an irregular multi-stage pulse rather than a blinking light',
   assert.ok(p.phase>=0&&p.phase<Math.PI*2);
  }
 });
-test('pulse ripples into the water and responds through staggered filaments',()=>{
+test('pulse spreads through prismatic ribbons and the river, without a fake live-heartbeat claim',()=>{
  assert.match(code,/function drawPresenceRipple\(from,to,t\)/);
- assert.match(code,/presencePulse\(time-\(index%5\)\*\.12\)/);
- assert.match(code,/reach:\.47\+unfold\*\(1\.04\+delayed\.energy\*\.18\)/);
- assert.match(code,/ctx\.scale\(1\+form\.pulse\*\.07,1\+form\.pulse\*\.095\)/);
+ assert.match(code,/presencePulse\(time-\(layer%4\)\*\.19\)/);
+ assert.match(code,/width:\.17\+state\.opening\*\.24\+delay\.energy\*\.09/);
  assert.match(code,/var nearness=Math\.pow\(clamp\(\(t-\.76\)\/\.24,0,1\),2\)/);
- assert.match(code,/drawPresenceRipple\(trip\.from,trip\.to,\.04\+trip\.t\*\.92\);drawAnomaly\(trip\.from,trip\.to,\.04\+trip\.t\*\.92\)/);
- assert.match(code,/deterministic visual choreography, never a live source\/mission heartbeat/);
+ assert.match(code,/drawPresenceRipple\(trip\.from,trip\.to,\.04\+trip\.t\*\.92\);drawTraveler\(trip\.from,trip\.to,\.04\+trip\.t\*\.92\)/);
+ assert.match(code,/This is visual choreography, not AI life/);
  const a=code.indexOf('function presencePulse(time){'),b=code.indexOf('function drawPresenceRipple(',a);
- const f=new vm.Script(code.slice(a,b)+';({presencePulse,anomalyFilament,anomalyForm})').runInNewContext({Math});
- for(let i=0;i<9;i++){
-  for(const t of [0,.4,4.2,13.4,28.5]){
-   const filament=f.anomalyFilament(t,i);
-   assert.ok(filament.reach>=.47&&filament.reach<=1.70);
-   assert.ok(filament.opacity>=.055&&filament.opacity<=.50);
-   assert.ok(Number.isFinite(filament.angle));
-  }
- }
+ const forms=new vm.Script(code.slice(a,b)+';({presencePulse,travelerState,ribbonForm})')
+  .runInNewContext({Math,clamp:(x,a,b)=>Math.max(a,Math.min(b,x))});
  for(const t of [0,3,14,34]){
-  const form=f.anomalyForm(t);
-  assert.ok(form.aperture>=.14&&form.aperture<=.70);
-  assert.ok(form.pulse>=0&&form.pulse<=1);
+  const state=forms.travelerState(t,.78);
+  assert.ok(state.opening>=.15&&state.opening<=1);
+  assert.ok(state.pulse>=0&&state.pulse<=1);
+  const ribbon=forms.ribbonForm(t,2,state);
+  assert.ok(Number.isFinite(ribbon.length));
  }
 });
-
 test('Presence pulse actually reshapes local river geometry and leaves far waters alone',()=>{
  const begin=code.indexOf('function presenceCurrentField(trip){');
  const end=code.indexOf('function strokeSamples(points,offset){',begin);
