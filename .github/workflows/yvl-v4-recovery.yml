@@ -1,0 +1,33 @@
+name: YVL v4 Original Artifact Recovery Gate
+on:
+  pull_request:
+    paths:
+      - 'scripts/yvl-v4-artifact-recovery.py'
+      - 'tests/test_yvl_v4_artifact_recovery.py'
+      - 'docs/procurement/yvl-v4-rfp-recovery-20261120.md'
+      - '.github/workflows/yvl-v4-recovery.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/yvl-v4-artifact-recovery.py'
+      - 'tests/test_yvl_v4_artifact_recovery.py'
+      - 'docs/procurement/yvl-v4-rfp-recovery-20261120.md'
+      - '.github/workflows/yvl-v4-recovery.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  recovery-source-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Parse original recovery code
+        run: |
+          python3 -m py_compile scripts/yvl-v4-artifact-recovery.py
+          python3 -m py_compile tests/test_yvl_v4_artifact_recovery.py
+      - name: Verify no invented original source and ZIP security holds
+        run: python3 -m unittest discover -s tests -p 'test_yvl_v4_artifact_recovery.py' -v
