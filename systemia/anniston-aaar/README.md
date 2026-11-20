@@ -100,3 +100,32 @@ The flight range renders original procedural 3D geometry with native WebGL2 wher
 - Next release gates: private AAAR deployment, independent Worlds HTTPS route verification, real-device performance/camera/touch testing, canonical GitHub-backed session evidence and Systemia work-order integration, then optionally authoritative World Engine adapter.
 
 No production URL or hardware execution is implied by GitHub commits or simulated flight metrics.
+
+
+## Aircraft Foundry v0.6 | Design and fly in Worlds
+
+**Owner-built local prototype; PR branch, not yet production deployed.**
+
+AAAR now includes a design-to-flight loop inside its existing `Fly in Worlds` room, and the same self-contained game lives at `public/worlds/flight/index.html` for the eventual owned Worlds route.
+
+- Five editable starting machines: trainer, sailplane, flying wing, light quadrotor and heavy rotorcraft. Designs may be renamed and tuned across geometry, mass, wing span/chord/sweep, tail, center-of-mass position, thrust, rotor count/radius and available power.
+- Top-down parametric visual assembly, screening metrics (stall speed, induced drag, thrust/drag margin, rotor disk loading, hover-power assumption), warnings and local blueprint import/export.
+- Gameplay test flights use low-order fixed-wing point-mass and idealized rotor momentum-theory approximations. Controls and bad designs affect the flight, and custom geometry changes the rendered vehicle where supported. Not CFD, wind tunnel, calibrated rotor data, structures, or flight certification.
+- Flight records include the validated blueprint. AAAR's parent validates every numeric field before accepting it, and the owner API now rejects unexpected fields, malformed values, missing custom designs and certification promotion. The only accepted evidence class remains `UNVALIDATED_GAMEPLAY`.
+- Browser-local save and export. No live GitHub registry synchronization, Systemia mission execution, physical flight actuation, actual airworthiness or user account storage.
+- No Base44, commercial game runtime, third-party JS library, assets or remote hosts.
+
+### Source
+
+`site/worlds-flight/foundry-core.js` is a deterministic model used by both browser and Node regression tests. `site/worlds-flight/foundry-ui.js` and `foundry-ui.css` implement the interactive screen. `flight-core.js` and `flight-runtime.js` now support validated custom machines, with an optional Canvas2D fallback. `site/worlds-flight/index.html` and `public/worlds/flight/index.html` are self-contained launch documents.
+
+### Local verification performed during build
+
+- 24/24 Node tests passed: 14 previous airfoil/flight tests plus 10 Foundry dynamics, units, adverse conditions and safety-contract tests.
+- 11/11 Python owner-API tests passed: six existing plus five strict custom-blueprint tests.
+- Chromium memory-document smoke checks at 1440px and 390px: tune rotor power, preview, save a blueprint, launch a custom airframe and save its gameplay receipt. AAAR parent handoff also checked on both sizes.
+- Test browser disallowed native WebGL2 and blocked local HTTP navigation; the Canvas2D fallback was tested. **Physical Safari/device WebGL2, performance, production TLS and deployment remain unverified.**
+
+### Further engineering
+
+Part-level craft graph, multi-wing/VTOL/airship/rocket model plugins, calibrated coefficients, verified flight envelopes, richer Worlds terrain and authoritative simulation integration remain open. These should be added as separate evidence-gated modules, not represented as already supported. Hosted paths and cross-device sync still require approved deployment receipts.
