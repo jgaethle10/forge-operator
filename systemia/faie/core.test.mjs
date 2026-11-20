@@ -237,3 +237,21 @@ test('FAIE comparative underwriting ranks evidence readiness without declaring s
   assert.equal(result.comparison.evidence_readiness_order[0].label, 'Yakima');
   assert.match(result.comparison.interpretation, /not a site-suitability score/i);
 });
+
+test('explicit local geography is a hard evidence boundary even when words match', () => {
+  let state = emptyFaieState();
+  const local = {...observation(), observation_id:'region:yakima-only', region_keys:['yakima-wa'],
+    summary:'Irrigation water drought and climate resilience for regional food infrastructure'};
+  state = ingestFaieObservation(state, local, { now: NOW }).state;
+  const outside = buildFaieInvestigation(state,{
+    question:'Irrigation water drought and climate resilience for regional food infrastructure',
+    region_keys:['tri-cities-wa'], asset_types:['regional food production infrastructure']
+  },{now:NOW}).investigation;
+  assert.equal(outside.findings.length,0,'matching prose must never become wrong-geography evidence');
+  const inside = buildFaieInvestigation(state,{
+    question:'Irrigation water drought and climate resilience for regional food infrastructure',
+    region_keys:['yakima-wa'], asset_types:['regional food production infrastructure']
+  },{now:NOW}).investigation;
+  assert.equal(inside.findings.length,1);
+  assert.equal(inside.decision_authority,false);
+});

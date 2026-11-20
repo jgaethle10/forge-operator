@@ -1,6 +1,7 @@
 import { pollNwsActiveAlerts } from '../sentinel/sources/nws-alerts.mjs';
 import { pollUsgsWaterLatest } from '../sentinel/sources/usgs-water.mjs';
 import { pollNwpsRiverGauges } from '../sentinel/sources/nwps-rivers.mjs';
+import { pollUsdmCountyDrought } from './usdm-source.mjs';
 import { resolveSentinelRegionConfig } from '../sentinel/region-profile.mjs';
 
 const clean = (value) => String(value ?? '').replace(/\s+/g, ' ').trim();
@@ -38,7 +39,10 @@ export function faieCollectorConfigFromEnv(env = process.env) {
     nws_area: resolved.nws_area,
     usgs_water_sites: resolved.usgs_water_locations,
     usgs_water_parameters: csv(env.FAIE_USGS_WATER_PARAMETERS || '00060,00065', 20),
-    nwps_gauges: resolved.nwps_gauges
+    nwps_gauges: resolved.nwps_gauges,
+    // Explicitly bounded known county profiles. County-wide drought is contextual, not a site verdict.
+    usdm_enabled: bool(env.FAIE_USDM_ENABLED,profileId === 'yakima-basin-wa'),
+    usdm_county_fips: profileId === 'yakima-basin-wa' ? ['53077','53005','53021'] : []
   };
 }
 
@@ -134,7 +138,8 @@ export async function collectFaieOfficialSources({
   pollers = {
     nws: pollNwsActiveAlerts,
     usgsWater: pollUsgsWaterLatest,
-    nwps: pollNwpsRiverGauges
+    nwps: pollNwpsRiverGauges,
+    usdm: pollUsdmCountyDrought
   }
 } = {}) {
   if (!config?.enabled) {
@@ -199,6 +204,18 @@ export async function collectFaieOfficialSources({
     });
   }
 
+  if (config.usdm_enabled && (config.usdm_county_fips || []).length) {
+    jobs.push({
+      id: 'usdm-county-weekly',
+      run: () => pollers.usdm({countyFips:config.usdm_county_fips,fetchImpl,checkedAt})
+    });
+  } else {
+    jobs.push({
+      id: 'usdm-county-weekly',
+      disabled: disabledReceipt('usdm-county-weekly','no_verified_county_profile_or_disabled',checkedAt)
+    });
+  }
+
   const observations = [];
   const receipts = [];
 
@@ -216,9 +233,17 @@ export async function collectFaieOfficialSources({
       });
       for (const row of result?.observations || []) {
         try {
-          observations.push(sentinelObservationToFaie(row, {
-            regionAliases: config.region_aliases || []
-          }));
+          const usdm = row.source_family === 'us-drought-monitor-ndmc';
+          const nws = row.source_family === 'nws-api';
+          // County-specific USDM results must never borrow Yakima aliases from Benton/Franklin.
+          const yakimaUsdm = usdm && row.adapter_receipt?.county_fips === '53077';
+          // NWS area=WA response covers all Washington; only explicit Yakima-named alerts
+          // are allowed to inherit Yakima Basin aliases.
+          const scopedNws = nws && /\byakima\b/i.test(String(row.region_key || ''));
+          const aliases = usdm ? (yakimaUsdm ? config.region_aliases || [] : [])
+            : nws ? (scopedNws ? config.region_aliases || [] : [])
+            : config.region_aliases || [];
+          observations.push(sentinelObservationToFaie(row, {regionAliases:aliases}));
         } catch (error) {
           receipts.push({
             source_id: job.id,

@@ -1,0 +1,50 @@
+name: FAIE independent drought source gate
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/faie/usdm-source.mjs'
+      - 'systemia/faie/usdm-source.test.mjs'
+      - 'scripts/faie-usdm-live-source-canary.mjs'
+      - '.github/workflows/faie-usdm-source-gate.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/faie/usdm-source.mjs'
+      - 'systemia/faie/usdm-source.test.mjs'
+      - 'scripts/faie-usdm-live-source-canary.mjs'
+      - '.github/workflows/faie-usdm-source-gate.yml'
+  workflow_dispatch:
+  schedule:
+    - cron: '25 14 * * *'
+
+permissions:
+  contents: read
+
+jobs:
+  independent-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Prove source parser and county geographic boundaries
+        run: node --test systemia/faie/usdm-source.test.mjs
+      - name: Probe live official USDM county data, fail closed
+        id: probe
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts
+          node scripts/faie-usdm-live-source-canary.mjs | tee artifacts/faie-usdm-live-source.json
+          test "$(jq -r '.state' artifacts/faie-usdm-live-source.json)" = OFFICIAL_SOURCE_VERIFIED
+      - name: Preserve live provenance and failures
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: faie-usdm-official-source
+          path: artifacts/faie-usdm-live-source.json
+          if-no-files-found: warn
+          retention-days: 90
