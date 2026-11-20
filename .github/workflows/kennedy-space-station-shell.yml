@@ -56,3 +56,5 @@ jobs:
               os.environ.pop(name,None)
           assert obj.preflight()==2
           PY
+      - name: Public homepage security and isolation gate
+        run: python3 products/kennedy-space-station/verify_public_home.py
