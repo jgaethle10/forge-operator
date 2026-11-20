@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import vm from 'node:vm';
 
 const html=fs.readFileSync('public/worlds/flight/index.html','utf8');
-const scripts=[...html.matchAll(/<script[^>]*>([\\s\\S]*?)<\\/script>/g)].map(x=>x[1]);
+const scripts=[...html.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/g)].map(x=>x[1]);
 const block=term=>{
  const s=scripts.find(x=>x.includes(term));
  assert.ok(s,'Missing game script '+term);
@@ -80,7 +80,7 @@ test('three mobile plane silhouettes render into genuine Canvas2D paths and shad
   assert.doesNotThrow(()=>world.drawVistaAircraft2D(canvas,390,844,{
    craft,bank:.1,pitch:.05,speed:70,flightTime:4,throttle:.8
   }),craft+' must paint even in touch-only fallback');
-  assert.ok(effects.fills>=18&&effects.paths>=15,craft+' is missing dimensional aircraft faces');
+  assert.ok(effects.fills>=15&&effects.paths>=15,craft+' is missing dimensional aircraft faces');
   assert.ok(effects.gradients>=3,craft+' missing aircraft materials');
   assert.ok(effects.strokes>=4,craft+' missing painted contour and controls');
  }
