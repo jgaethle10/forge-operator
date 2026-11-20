@@ -239,6 +239,10 @@ function relevanceScore(signal, scope) {
         ? 0.35
         : 0;
 
+  // An explicit geography is a hard boundary. Text similarity never overrides it.
+  // Globally tagged evidence may still be compared as global context with lower weight.
+  if (scopeRegions.size && regionMatch === 0) return 0;
+
   const cropMatch = scope.crop && signal.summary.toLowerCase().includes(scope.crop.toLowerCase()) ? 1 : 0;
   return Number(clamp01((0.55 * tokenScore) + (0.3 * regionMatch) + (0.15 * cropMatch)).toFixed(3));
 }
