@@ -63,6 +63,13 @@ footer{margin-top:24px;color:#a6c4cf;font-size:12px;line-height:1.7}
 @media(max-width:920px){.layout,.below{grid-template-columns:1fr}.sidebar{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}.sidebar h2,.sidebar .hint,.preset-heading{grid-column:1/-1}.scene{order:0}.sidebar{order:1}}
 @media(max-width:580px){.sidebar{display:flex}.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.mission-grid{grid-template-columns:1fr}#landscape{height:330px}.scene-head,.scene-footer{padding:11px 13px}.metric{padding:13px}h1{font-size:44px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+.scene-layers{display:flex;align-items:center;justify-content:space-between;gap:10px 15px;flex-wrap:wrap;padding:12px 15px;border-top:1px solid #365f6e;background:linear-gradient(120deg,#0a3140,#123d49)}
+.scene-layers>span{font:900 10px/1.5 system-ui;letter-spacing:.14em;color:#baf1d1}
+.layer-buttons{display:flex;gap:7px;flex-wrap:wrap}
+.layer-buttons button{min-height:44px;padding:9px 12px;border:1px solid #4f7b85;border-radius:10px;background:#163b49;color:#d9edf0;font:800 12px system-ui}
+.layer-buttons button[aria-pressed=true]{background:#caf5dd;border-color:#caf5dd;color:#0d3539}
+.layer-explain{font:12px/1.5 system-ui;color:#cce9e9;padding:9px 15px;border-top:1px solid #305b69;background:#103343}
+@media(max-width:580px){.layer-buttons{width:100%}.layer-buttons button{flex:1 1 105px;padding:9px 6px}}
 .sculpt-bar{display:flex;align-items:center;flex-wrap:wrap;gap:8px;padding:12px 15px;background:#092b39;border-top:1px solid #32596c}
 .sculpt-bar span{font-size:12px;color:#c4dfe6;flex:1 1 180px}
 .sculpt-bar button{padding:9px 12px;border-radius:10px;min-height:44px;background:#163f4b;color:#eaf8f4;border:1px solid #5c8a8e;font:800 12px/1.4 system-ui}
@@ -83,7 +90,15 @@ footer{margin-top:24px;color:#a6c4cf;font-size:12px;line-height:1.7}
 <div class="layout">
 <section class="scene" aria-label="Illustrated watershed simulation">
  <div class="scene-head"><b>💧 THE LIVING WATERSHED</b><span id="dayLabel">DAY 0 · Ready to explore</span></div>
- <canvas id="landscape" role="img" aria-label="Illustrated side view of five mountain-to-valley watershed zones. Use the zone buttons below for an accessible readout of water stored in each zone."></canvas>
+ <canvas id="landscape" role="img" aria-label="Animated illustrated mountain-to-valley watershed, with science-linked weather, snow, river and groundwater layers. Use the named zone buttons and numerical readouts for an accessible description."></canvas>
+ <div class="scene-layers" aria-label="Choose watershed visual layers">
+  <span>EXPLORE THE WATER</span>
+  <div class="layer-buttons" role="group" aria-label="Display water movement">
+   <button type="button" data-layer="all" aria-pressed="true">✦ Entire system</button>
+   <button type="button" data-layer="surface" aria-pressed="false">🌧️ Above ground</button>
+   <button type="button" data-layer="ground" aria-pressed="false">💧 Underground</button>
+  </div>
+ </div>
  <div class="zone-list" id="zoneList" aria-label="Inspect a watershed zone"></div>
  <div class="sculpt-bar" aria-label="Sculpt mountain elevation">
   <button type="button" id="sculptMode" aria-pressed="false">✦ Sculpt terrain: off</button>
@@ -93,6 +108,7 @@ footer{margin-top:24px;color:#a6c4cf;font-size:12px;line-height:1.7}
   <button type="button" id="raiseZone" aria-label="Raise selected zone elevation by 100 meters">+ 100 m</button>
   <button type="button" id="restoreMountains">Restore ridges</button>
  </div>
+ <div class="layer-explain" id="layerExplanation" aria-live="polite">Entire system: rain, snow, river and below-ground stores. Flow markers are classroom illustrations of modeled daily amounts.</div>
  <div class="zone-info" id="zoneInfo" aria-live="polite">Tap a landscape zone or choose a named zone to inspect its water storage.</div>
  <div class="scene-footer">
   <span id="sceneStatus">Run one day to watch the water move.</span>
@@ -209,6 +225,9 @@ function stepWatershed(state,p){
   cell.soil-=percolation;cell.groundwater+=percolation;
   const slowFlow=cell.groundwater*.042;
   cell.groundwater-=slowFlow;
+  // Per-cell display-only fluxes, the values actually accounted for above.
+  // They are inspected and drawn, never added again to the mass budget.
+  cell.visualFlux={snowfall,rainfall,thaw,infiltration,fastFlow,evaporated,percolation,slowFlow};
   outflow+=fastFlow+slowFlow;
  }
  const n=state.cells.length;
@@ -232,11 +251,24 @@ function simulateScenario(p,initial='temperate',days=7,mountains=ELEVATIONS){
  for(let i=0;i<days;i++)stepWatershed(state,p);
  return {outflow:state.totalOutput,evaporation:state.totalEvap,storage:stores(state),state};
 }
-let elevations=[...ELEVATIONS],sculpting=false,terrainDrag=null;
+let elevations=[...ELEVATIONS],sculpting=false,terrainDrag=null,visualLayer='all',visualTime=0,lastPaint=0;
 let state=makeWatershed(),initialCondition='temperate',selectedZone=2,playing=false,frame=0,last=0,accumulator=0;
 let width=800,height=440,dpr=1,currentPreset=null,trialA=null;
 const canvas=$('landscape'),ctx=canvas.getContext('2d');
 const chart=$('hydrograph'),gctx=chart.getContext('2d');
+const LAYER_TEXT={
+ all:'Entire system: watch water arrive as rain or snow, flow through the river, and collect in the soil and groundwater. The movement is a teaching illustration, not particle tracking.',
+ surface:'Above ground: see precipitation, snowpack and the river responding to the model. Water falling from each cloud is based on that zone’s temperature.',
+ ground:'Underground: see stored soil water, slow groundwater release, and downward infiltration/percolation. These are diagram layers, not an underground survey.'
+};
+function changeVisualLayer(layer){
+ if(!Object.hasOwn(LAYER_TEXT,layer))return;
+ visualLayer=layer;
+ for(const button of document.querySelectorAll('[data-layer]'))
+   button.setAttribute('aria-pressed',String(button.dataset.layer===layer));
+ $('layerExplanation').textContent=LAYER_TEXT[layer];
+ drawLandscape();
+}
 function setControl(id,value){$(id).value=value}
 function showInputs(){
  for(const [id,suffix] of [['rain',' mm/day'],['temp','°C'],['forest','%'],['slope',' / 10']])
@@ -392,7 +424,7 @@ function refresh(){
  updateZone();drawLandscape();drawHydrograph();
 }
 function advance(){const next=stepWatershed(state,params());refresh();return next}
-function stop(){playing=false;last=0;accumulator=0;if(frame)cancelAnimationFrame(frame);frame=0;$('play').textContent='▶ Play days'}
+function stop(){playing=false;last=0;accumulator=0;lastPaint=0;if(frame)cancelAnimationFrame(frame);frame=0;$('play').textContent='▶ Play days'}
 function reset(initial=initialCondition){
  stop();initialCondition=initial;state=makeWatershed(initial,elevations);refresh();
 }
@@ -407,8 +439,10 @@ function renderFrame(time){
  if(!playing)return;
  if(document.hidden){last=time;frame=requestAnimationFrame(renderFrame);return;}
  if(!last)last=time;
- accumulator+=Math.min(80,time-last);last=time;
- if(accumulator>=700){accumulator=0;advance()}else drawLandscape();
+ const delta=Math.min(80,time-last);last=time;
+ accumulator+=delta;visualTime=(visualTime+delta/1000)%10000;
+ if(accumulator>=700){accumulator=0;advance()}
+ else if(time-lastPaint>=33){lastPaint=time;drawLandscape()}
  frame=requestAnimationFrame(renderFrame);
 }
 function resize(){
@@ -435,6 +469,8 @@ $('play').addEventListener('click',()=>{
  playing=true;$('play').textContent='Ⅱ Pause days';last=0;accumulator=0;frame=requestAnimationFrame(renderFrame);refresh();
 });
 $('reset').addEventListener('click',()=>reset());
+for(const button of document.querySelectorAll('[data-layer]'))
+ button.addEventListener('click',()=>changeVisualLayer(button.dataset.layer));
 $('lowerZone').addEventListener('click',()=>sculptElevation(selectedZone,elevations[selectedZone]-100));
 $('raiseZone').addEventListener('click',()=>sculptElevation(selectedZone,elevations[selectedZone]+100));
 $('restoreMountains').addEventListener('click',restoreMountains);
