@@ -234,11 +234,16 @@ export async function collectFaieOfficialSources({
       for (const row of result?.observations || []) {
         try {
           const usdm = row.source_family === 'us-drought-monitor-ndmc';
-          // Never assign Yakima Basin aliases to Benton/Franklin county drought reports.
+          const nws = row.source_family === 'nws-api';
+          // County-specific USDM results must never borrow Yakima aliases from Benton/Franklin.
           const yakimaUsdm = usdm && row.adapter_receipt?.county_fips === '53077';
-          observations.push(sentinelObservationToFaie(row, {
-            regionAliases: usdm ? (yakimaUsdm ? config.region_aliases || [] : []) : config.region_aliases || []
-          }));
+          // NWS area=WA response covers all Washington; only explicit Yakima-named alerts
+          // are allowed to inherit Yakima Basin aliases.
+          const scopedNws = nws && /\byakima\b/i.test(String(row.region_key || ''));
+          const aliases = usdm ? (yakimaUsdm ? config.region_aliases || [] : [])
+            : nws ? (scopedNws ? config.region_aliases || [] : [])
+            : config.region_aliases || [];
+          observations.push(sentinelObservationToFaie(row, {regionAliases:aliases}));
         } catch (error) {
           receipts.push({
             source_id: job.id,
