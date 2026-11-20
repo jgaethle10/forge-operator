@@ -46,6 +46,8 @@ async function main(){
  if(!Number.isSafeInteger(cap)||cap<1)throw Error('documented_provider_cap_required');
  const report=reconcileGmailOutreach({
   messages:mail.messages,
+  // Manually verified Gmail DSN evidence must match an exact SENT message + recipient.
+  deliveryEvents:mail.delivery_events??[],
   prospects:prospects.prospects,
   now:new Date().toISOString(),
   hmacKey:key,
