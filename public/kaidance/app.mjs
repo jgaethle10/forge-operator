@@ -93,6 +93,11 @@ function renderFooter(){
  $('sourceFoot').textContent='COLLIDER: '+readableSource(state.pulse?assessPublicPulse(state.pulse):null)+
   ' · GITHUB: '+(state.githubChecked?(state.githubPartial?'PARTIAL':'PUBLIC RECORD'):'UNAVAILABLE');
 }
+function portraitEvent(event){
+ $('portraitEventKind').textContent=event?event.kind+' · PUBLIC RECORD':'PUBLIC SOURCE HELD';
+ $('portraitEventTitle').textContent=event?event.title:'No verified public engineering event available';
+ $('portraitEventTime').textContent=event?'Recorded '+labelTime(event.time)+' · Not live Collider activity':'Recorded GitHub source unavailable · Not a simulated event';
+}
 function showEvent(){
  const events=state.events;
  if(!events.length){
@@ -102,6 +107,7 @@ function showEvent(){
    $('eventAge').textContent='WAITING FOR SOURCE';
    $('eventLink').hidden=true;
    $('eventProgress').style.width='0%';
+   portraitEvent(null);
    return;
  }
  const e=events[state.current%events.length];
@@ -110,6 +116,7 @@ function showEvent(){
  $('eventMeta').textContent=e.detail+' · '+e.source;
  $('eventAge').textContent='RECORDED '+labelTime(e.time);
  $('eventLink').href=e.url;$('eventLink').hidden=false;
+ portraitEvent(e);
  state.eventStart=Date.now();
 }
 function renderEventList(){
