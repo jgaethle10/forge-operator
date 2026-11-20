@@ -267,3 +267,11 @@ The first release therefore has an actual closed loop:
 FAIE is evidence support. Public previews do not persist the visitor's question into the shared archive. FAIE does not autonomously publish, move money, make regulatory determinations, issue emergency orders, prescribe agricultural chemicals, control irrigation equipment, or make other consequential decisions. Those actions require the appropriate human or separately authorized system.
 
 Unknown is a valid result.
+
+### OpenFEMA NFIP historical claims (source adapter staging, NOT live)
+
+The `systemia/faie/nfip-claims-v3.mjs` adapter targets FEMA's **NFIP Redacted Claims - v3** dataset at `https://www.fema.gov/api/open/v3/NfipClaims`. This first bounded, testable stage accepts only an **explicit two-letter state and inclusive loss-year range**. It never accepts visitor point coordinates, property addresses, insurer records or caller-supplied claim identifiers. It selects only loss-year and payment fields, pages bounded official API results, requires full pagination before returning a receipt, suppresses aggregates with fewer than 11 transactions, and returns no raw claim rows.
+
+The adapter is **not yet wired to the public FAIE page or an active endpoint**. It has deterministic mocked official-source tests; successful tests do **not** prove FEMA's live v3 response, deployed Fabric readiness, data freshness, or permission to infer individual property losses. Only a separately verified public source can advance release status. Do not combine state-wide historical claim totals with a point-specific FEMA flood map as a parcel insurance or safety decision.
+
+Staged test: `node --test systemia/faie/nfip-claims-v3.test.mjs`. Next gates: independently verify current FEMA v3 API schema and year-scope semantics, add a rate-limited owned Fabric route, choose the correct county geographic relationship with independently sourced FIPS evidence, then attach a human-readable, area-labeled historical-loss panel to the scan. Continue to hold public claims of live verification until every owned-edge and privacy gate passes.
