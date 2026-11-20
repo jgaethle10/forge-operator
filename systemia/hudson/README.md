@@ -171,3 +171,7 @@ The tiny luminous mark in v10 is replaced with a legible path-scale **spectral s
 
 ### v11 cinematic browser-QA revision
 Sharpened the three sail outlines to avoid a petal silhouette, deepened the hull, added fixed shrouds, raised aftcastle and gold railings. Five slow spectral-weather veils plus 38 bounded background starlets now enrich otherwise empty space. Actual 390 × 844 and 1440 × 900 browser captures were reviewed with no page errors before this patch. The new optics remain scenic and intentionally do not claim live mission activity.
+
+
+### v11 dedicated film scene
+Broadcast-oriented `?film=1` mode now removes the large full-width readout panel while retaining a small always-readable public replay/scenery disclosure and a small Exit Film control. It is a local display preference, not a streaming publisher; the normal information-rich interactive view is unchanged and all source-admission policies remain in force.
