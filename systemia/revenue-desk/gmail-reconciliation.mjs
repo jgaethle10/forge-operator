@@ -4,7 +4,7 @@ import {createHmac,createHash} from 'node:crypto';
 // Systemia lead records. Does not fetch mail, create permits, send, or mutate a CRM.
 const VALID_MAIL_DIRECTIONS=new Set(['inbound','outbound']);
 const VALID_STAGES=new Set(['researched','verified','contact_ready','sent','replied','quoted','accepted','invoiced','paid','fulfilled']);
-const BLOCK_STATES=new Set(['opted_out','bounced','blocked','do_not_contact','customer_hold','declined']);
+const BLOCK_STATES=new Set(['opted_out','bounced','delivery_delayed','blocked','do_not_contact','customer_hold','declined']);
 const clean=v=>String(v??'').trim();
 function parseTime(value,field){
  const t=Date.parse(clean(value));
@@ -30,11 +30,11 @@ function safeCount(x){return Number.isSafeInteger(x)&&x>=0?x:null;}
  * use per-recipient conservative units; never infer deliverability from SENT.
  */
 export function reconcileGmailOutreach({
- messages=[],prospects=[],now=new Date().toISOString(),hmacKey,
+ messages=[],prospects=[],deliveryEvents=[],now=new Date().toISOString(),hmacKey,
  historyComplete=false,providerDailyCap=null,coldTarget=400,replyReserve=100,
  minimumCooldownHours=72
 }={}){
- assertArray(messages,'messages');assertArray(prospects,'prospects');
+ assertArray(messages,'messages');assertArray(prospects,'prospects');assertArray(deliveryEvents,'delivery_events');
  const clock=parseTime(now,'now'),cold=safeCount(coldTarget),reserve=safeCount(replyReserve);
  const cap=safeCount(providerDailyCap);
  if(cold===null||reserve===null||!Number.isSafeInteger(minimumCooldownHours)||minimumCooldownHours<0)
@@ -86,6 +86,28 @@ export function reconcileGmailOutreach({
    if(!prev||prev.time<m.time)addressed.set(key,m);
   }
  }
+ const deliveryByContact=new Map(),seenDsnIds=new Set();
+ let acceptedDeliveryEvents=0,rejectedDeliveryEvents=0;
+ const byOutboundMessage=new Map(mail.filter(m=>m.direction==='outbound').map(m=>[m.id,m]));
+ for(const ev of deliveryEvents) {
+  const dsnId=clean(ev?.dsn_message_id),originalId=clean(ev?.original_sent_message_id);
+  const recipient=canonicalEmail(ev?.recipient_address),kind=clean(ev?.delivery_state);
+  const sent=byOutboundMessage.get(originalId);
+  let eventTime=null;
+  try{eventTime=parseTime(ev?.occurred_at,'delivery_event_occurred_at');}catch{}
+  if(!dsnId||!originalId||!recipient||!['permanent_failure','temporary_delay'].includes(kind)||
+     ev?.source_kind!=='gmail_delivery_status_notification'||ev?.source_verified_by_operator!==true||
+     eventTime===null||eventTime>clock+300000||!sent||eventTime<sent.time-300000||
+     !sent.recipients.includes(recipient)) {
+    rejectedDeliveryEvents++;invalid.push('untrusted_or_unmatched_delivery_status');continue;
+  }
+  if(seenDsnIds.has(dsnId))continue;
+  seenDsnIds.add(dsnId);acceptedDeliveryEvents++;
+  const key=digest(hmacKey,recipient),prev=deliveryByContact.get(key);
+  // A documented permanent failure wins over any temporary delay, even a later one.
+  if(!prev||kind==='permanent_failure'||(prev.kind!=='permanent_failure'&&prev.time<eventTime))
+    deliveryByContact.set(key,{kind,time:eventTime,dsn_ref:'gmail:'+dsnId});
+ }
  const byThread=new Map();
  for(const m of mail){
   if(!m.thread_id)continue;
@@ -113,7 +135,11 @@ export function reconcileGmailOutreach({
   if(usedKeys.has(composite))continue;
   usedKeys.add(composite);
   const latest=addressed.get(emailKey)||groupedOpportunityLastSend.get(prospectKey)||null;
-  const status=BLOCK_STATES.has(p.contact_state)?p.contact_state:clean(p.contact_state)||'unknown';
+  const event=deliveryByContact.get(emailKey);
+  const status=BLOCK_STATES.has(p.contact_state)?p.contact_state:
+    event?.kind==='permanent_failure'?'bounced':
+    event?.kind==='temporary_delay'?'delivery_delayed':
+    clean(p.contact_state)||'unknown';
   const stage=VALID_STAGES.has(p.stage)?p.stage:'researched';
   const inbound=mail.filter(m=>m.direction==='inbound'&&m.sender_key===emailKey&&!m.is_auto_reply&&!m.is_bounce);
   const latestBuyerReply=inbound.sort((a,b)=>b.time-a.time)[0]||null;
@@ -126,6 +152,8 @@ export function reconcileGmailOutreach({
   usedContacts.add(emailKey);
   usedOpportunities.add(prospectKey);
   if(suppressed)reasons.push('suppressed_or_customer_hold');
+  if(event?.kind==='permanent_failure')reasons.push('verified_dsn_hard_bounce_hold');
+  if(event?.kind==='temporary_delay')reasons.push('verified_dsn_delivery_delay_hold');
   if(priorContact)reasons.push('prior_contact_reconcile_before_new_outreach');
   if(cooldown)reasons.push('cooldown_active');
   if(p.unfulfilled_commitment===true)reasons.push('complete_customer_commitment_first');
@@ -146,6 +174,7 @@ export function reconcileGmailOutreach({
     latest_inbound_ref:latestBuyerReply?'gmail:'+latestBuyerReply.id:null,
     last_reply_at:latestBuyerReply?new Date(latestBuyerReply.time).toISOString():null,
     prior_contact:priorContact,contact_state:status,
+    delivery_status_hold_ref:event?.dsn_ref||null,
     actionable_as_new_cold_target:reasons.length===0,
     reasons,send_authorized:false
   });
@@ -153,6 +182,10 @@ export function reconcileGmailOutreach({
  const inboxBuyerReplies=mail.filter(m=>m.direction==='inbound'&&!m.is_auto_reply&&!m.is_bounce).length;
  return {
   schema:'evercraft.systemia.gmail-reconciliation.v1',generated_at:now,
+  delivery_event_coverage:{accepted:acceptedDeliveryEvents,rejected:rejectedDeliveryEvents,
+    hard_bounces:[...deliveryByContact.values()].filter(x=>x.kind==='permanent_failure').length,
+    pending_delays:[...deliveryByContact.values()].filter(x=>x.kind==='temporary_delay').length,
+    operator_asserted_evidence_only:true,provider_delivery_verified:false},
   record_coverage:{complete:historyComplete===true,valid:mail.length,invalid:invalid.length,
     invalid_reasons:[...new Set(invalid)]},
   quota:{provider_daily_cap:actualCap,rolling_24h_units:sentUnits,
