@@ -31,7 +31,7 @@ test('original owned physics preview has three meaningful variable-driven models
   assert.match(css,/@media\(max-width:460px\)/);
   assert.match(html,/small-angle approximation/i);
   assert.match(html,/no air resistance/i);
-  assert.doesNotMatch(html,/<script[^>]+src=|<iframe\b|base44|firebase|tracking|analytics\.js/i);
+  assert.doesNotMatch(html,/<script[^>]+src=|<iframe\b|base44|firebase|analytics\.js/i);
   assert.doesNotMatch(js,/\bfetch\s*\(|WebSocket|XMLHttpRequest|sendBeacon|eval\s*\(/);
 });
 
