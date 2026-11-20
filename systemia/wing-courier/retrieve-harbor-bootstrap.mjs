@@ -106,7 +106,12 @@ export async function retrieveHarborBootstrap({
  let decoded;try{decoded=JSON.parse(bytes.toString('utf8'))}
  catch{fail('encrypted_package_invalid')}
  if(decoded?.schema!=='evercraft.harbor.receiver-enrollment.v1'||
-    decoded.recipientFingerprint!==recipientFingerprint)
+    decoded.recipientFingerprint!==recipientFingerprint||
+    decoded.format!=='x25519-hkdf-sha256-aes256gcm-v1'||
+    Object.keys(decoded).sort().join(',')!==[
+      'schema','format','recipientFingerprint','ephemeralPublicKeySpkiBase64',
+      'saltBase64','nonceBase64','ciphertextBase64','tagBase64'
+    ].sort().join(','))
     fail('encrypted_package_recipient_invalid');
  // Exclusive 0600 private ciphertext file; the owner decrypts separately.
  validatePrivateOutput(outputFile);
