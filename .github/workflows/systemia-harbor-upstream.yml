@@ -5,8 +5,12 @@ on:
       - 'systemia/newsroom/systemia-harbor-upstream.mjs'
       - 'systemia/newsroom/systemia-harbor-upstream.test.mjs'
       - 'systemia/newsroom/founder-creator-upstream.test.mjs'
+      - 'systemia/newsroom/harbor-founder-owner-inbox.mjs'
+      - 'systemia/newsroom/harbor-founder-owner-inbox.test.mjs'
+      - 'systemia/lineage/signatures.mjs'
       - 'systemia/creator/founder-editorial-preflight.*'
       - 'docs/publishing/FOUNDER-PERSONAL-SOURCE-FIRST.md'
+      - 'docs/publishing/HARBOR-FOUNDER-OWNER-INBOX.md'
       - 'docs/research/TOWI-SYSTEMIA-HARBOR-UPSTREAM-20261120.md'
       - '.github/workflows/systemia-harbor-upstream.yml'
   push:
@@ -15,8 +19,12 @@ on:
       - 'systemia/newsroom/systemia-harbor-upstream.mjs'
       - 'systemia/newsroom/systemia-harbor-upstream.test.mjs'
       - 'systemia/newsroom/founder-creator-upstream.test.mjs'
+      - 'systemia/newsroom/harbor-founder-owner-inbox.mjs'
+      - 'systemia/newsroom/harbor-founder-owner-inbox.test.mjs'
+      - 'systemia/lineage/signatures.mjs'
       - 'systemia/creator/founder-editorial-preflight.*'
       - 'docs/publishing/FOUNDER-PERSONAL-SOURCE-FIRST.md'
+      - 'docs/publishing/HARBOR-FOUNDER-OWNER-INBOX.md'
       - 'docs/research/TOWI-SYSTEMIA-HARBOR-UPSTREAM-20261120.md'
       - '.github/workflows/systemia-harbor-upstream.yml'
 permissions:
@@ -35,4 +43,4 @@ jobs:
       - name: Parse source
         run: node --check systemia/newsroom/systemia-harbor-upstream.mjs
       - name: Fail-closed synthetic boundary tests
-        run: node --test systemia/newsroom/systemia-harbor-upstream.test.mjs systemia/newsroom/founder-creator-upstream.test.mjs systemia/creator/founder-editorial-preflight.test.mjs
+        run: node --test systemia/newsroom/systemia-harbor-upstream.test.mjs systemia/newsroom/founder-creator-upstream.test.mjs systemia/newsroom/harbor-founder-owner-inbox.test.mjs systemia/creator/founder-editorial-preflight.test.mjs systemia/lineage/signatures.test.mjs
