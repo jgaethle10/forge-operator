@@ -34,6 +34,7 @@ test('only explicit state and bounded year range may be queried',()=>{
   assert.equal(u.pathname,'/api/open/v3/NfipClaims');
   assert.equal(u.searchParams.get('$filter'),"state eq 'WA' and yearOfLoss ge 2023 and yearOfLoss le 2024");
   assert.equal(u.searchParams.get('$top'),'1000');
+  assert.equal(u.searchParams.get('$orderby'),'id asc');
   assert.equal(u.searchParams.get('$skip'),'1000');
   assert.equal(u.searchParams.get('$select').includes('reportedZipCode'),false);
   for(const invalid of [{state:"WA' or 1 eq 1"},{state:'wa'},{firstYear:1970},{lastYear:2050},{firstYear:2024,lastYear:2023},{pageSize:10001},{skip:-1}]){
