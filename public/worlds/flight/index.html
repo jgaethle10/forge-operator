@@ -3,6 +3,18 @@
 :root{color-scheme:dark;--deep:#061623;--glass:#071c2bcf;--line:#a4dfd03b;--mint:#adf7df;--orange:#ffa86b;--muted:#9ab9c9}*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:#12334a;color:white}button,select{font:inherit}button{cursor:pointer}button:focus-visible,select:focus-visible{outline:2px solid var(--orange);outline-offset:2px}.flight-shell{position:relative;width:100%;height:100%;min-height:470px;overflow:hidden;background:linear-gradient(to bottom,#33739b 0%,#81b4cd 40%,#d6ddc3 67%,#b5bd97 100%)}#flightCanvas{display:block;width:100%;height:100%;touch-action:none}#flightCanvas:focus{outline:none}.sky-sun{position:absolute;right:12%;top:11%;width:165px;height:165px;background:radial-gradient(circle,#fff9c4c9 0%,#fae6b548 25%,transparent 70%);border-radius:50%;pointer-events:none;mix-blend-mode:screen}.sky-haze{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,transparent 36%,#d9e3b017 54%,transparent 75%)}.hud{position:absolute;inset:0;pointer-events:none}.hud button,.hud select,.hud input,.hud a{pointer-events:auto}.flight-top{position:absolute;top:0;left:0;right:0;display:flex;justify-content:space-between;gap:12px;padding:15px 18px 35px;background:linear-gradient(#071727bd,transparent);align-items:flex-start}.flight-brand{display:flex;align-items:center;gap:11px}.flight-logo{font-size:27px;color:var(--orange);line-height:1}.flight-brand strong{font-size:13px;letter-spacing:.18em;display:block}.flight-brand small{display:block;font:700 9px ui-monospace,monospace;letter-spacing:.11em;color:var(--muted);margin-top:3px}.flight-session{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}.chip{border:1px solid #b4dddb45;color:#c4e4e4;padding:7px 9px;font:700 9px ui-monospace,monospace;letter-spacing:.07em;background:#071b29ad;white-space:nowrap}.chip.live{border-color:#9ee6be87;color:#bafad8}.chip.live:before{content:'●';color:#7bf1b7;margin-right:6px}.hud-side{position:absolute;top:76px;left:19px;width:218px;display:grid;gap:9px}.glass{background:var(--glass);backdrop-filter:blur(14px);border:1px solid var(--line);box-shadow:0 13px 30px #07152532}.mission-box{padding:16px}.overline{font:800 9px ui-monospace,monospace;letter-spacing:.15em;color:#83c3c2}.mission-box h1{font-size:19px;line-height:1.07;margin:10px 0 8px;letter-spacing:-.03em}.mission-box p{font-size:11px;color:#b0c4cd;line-height:1.55;margin:0 0 11px}.mission-progress{display:flex;gap:8px;margin:12px 0 8px}.mission-progress i{flex:1;height:4px;background:#416273;display:block}.mission-progress i.done{background:#f9aa72}.mission-target{font:700 10px ui-monospace,monospace;color:#dfeced;line-height:1.5}.model-label{display:block;font:800 8px ui-monospace,monospace;color:#8dbbbd;letter-spacing:.1em;margin-bottom:6px}.plane-select{padding:14px}.plane-select select{background:#112e40;color:white;border:1px solid #618891;font-size:12px;width:100%;padding:9px;border-radius:4px}.plane-select small{display:block;margin-top:8px;line-height:1.45;font-size:10px;color:#a3c2ca}.hud-center{position:absolute;top:49%;left:50%;transform:translate(-50%,-50%);width:172px;height:160px;display:grid;place-items:center}.flight-reticle{width:108px;height:108px;border:1px solid #b9f2c46b;border-radius:50%;position:relative;box-shadow:0 0 25px #7cffdd0f}.flight-reticle:before{content:'';position:absolute;top:50%;left:-26px;right:-26px;border-top:1px solid #c3f7d9aa}.flight-reticle:after{content:'';position:absolute;left:50%;top:-15px;bottom:-15px;border-left:1px dashed #cef0d662}.nose-cue{position:absolute;width:14px;height:14px;border-left:2px solid #ffd4a4;border-top:2px solid #ffd4a4;transform:rotate(45deg);top:45px;left:46px}.flight-telemetry{position:absolute;right:18px;top:76px;width:178px;padding:15px}.telemetry-row{display:flex;align-items:baseline;justify-content:space-between;border-bottom:1px solid #a4d5d82d;padding:9px 0}.telemetry-row:last-child{border:0}.telemetry-row span{color:#a3c0c9;font:700 9px ui-monospace,monospace;letter-spacing:.11em}.telemetry-row strong{font:700 19px ui-monospace,monospace;color:#f1fbfa}.telemetry-row em{font:700 9px ui-monospace,monospace;color:#b2d3d4;font-style:normal}.flight-bottom{position:absolute;bottom:0;left:0;right:0;display:flex;align-items:end;justify-content:space-between;gap:12px;background:linear-gradient(transparent,#051725e0);padding:42px 18px 17px}.flight-controls{max-width:425px;display:flex;gap:6px;flex-wrap:wrap}.control-guide{font-size:10px;line-height:1.65;color:#afccd3}.control-guide b{color:#edf7f7;background:#314c5d;border:1px solid #7695a043;padding:2px 5px;margin:0 2px;font:700 10px ui-monospace,monospace}.action-row{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:7px}.action-row button,.overlay-actions button{background:#0d293c;border:1px solid #6f9a9b80;border-radius:3px;color:#d8f3ee;padding:10px 13px;font-size:11px;font-weight:750}.action-row button:hover,.overlay-actions button:hover{background:#285064}.action-row button.primary{background:#e68b59;border-color:#e68b59;color:#13232d}.floating-alert{position:absolute;top:21%;left:50%;transform:translateX(-50%);font:700 11px ui-monospace,monospace;padding:11px 15px;border:1px solid #ffa96c8e;background:#091f2bdc;color:#ffdfb8;text-align:center;max-width:min(92%,450px);opacity:0;transition:opacity .2s}.floating-alert.active{opacity:1}.start-screen{position:absolute;inset:0;background:linear-gradient(100deg,#061c2be8,#123e508b 60%,#0d2c3b96);display:flex;align-items:center;justify-content:center;z-index:8;padding:20px}.start-card{width:min(620px,100%);border:1px solid #9ad7ca65;background:#051b2bbf;backdrop-filter:blur(15px);padding:32px 36px;box-shadow:0 25px 90px #020d1db0}.start-card h2{font-size:clamp(39px,6vw,70px);line-height:.97;letter-spacing:-.075em;margin:14px 0 13px}.start-card h2 em{font-style:normal;color:#ffa16a}.start-card p{max-width:490px;font-size:13px;color:#c4d8da;line-height:1.8}.start-card .start-foot{display:flex;gap:9px;flex-wrap:wrap;margin-top:19px}.start-card button{background:#ed9b65;border:0;color:#142637;font-weight:900;padding:13px 18px}.start-card small{display:block;margin-top:17px;color:#a2c2c6;font-size:10px;line-height:1.55}.start-card .start-foot button.secondary{background:#1d4353;color:#d3eeee;border:1px solid #648c89}.mobile-panel{display:none}.screen-reader{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}.scanlines{position:absolute;inset:0;background:repeating-linear-gradient(0deg,#07121c05 0,#07121c05 1px,transparent 1px,transparent 4px);pointer-events:none}.license{position:absolute;right:18px;bottom:88px;font:700 8px ui-monospace,monospace;letter-spacing:.08em;color:#dce8e4ac}.hud.off{display:none}.full-note{color:#87b1b8}
 @media(max-width:750px){.flight-shell{min-height:550px}.flight-top{padding:11px 11px 28px}.flight-brand strong{font-size:11px}.flight-brand small{font-size:7px}.chip{font-size:8px;padding:6px}.chip:not(.live){display:none}.hud-side{top:62px;left:9px;width:152px}.mission-box{padding:11px}.mission-box h1{font-size:15px}.mission-box p{font-size:9px}.plane-select{padding:9px}.plane-select select{font-size:11px;padding:6px}.plane-select small{font-size:9px}.flight-telemetry{top:62px;right:9px;width:122px;padding:7px 10px}.telemetry-row{padding:7px 0}.telemetry-row strong{font-size:14px}.telemetry-row span{font-size:7px}.telemetry-row em{font-size:7px}.flight-bottom{padding:15px 10px 8px;display:block}.flight-controls{display:none}.action-row{justify-content:center}.action-row button{padding:8px 10px;font-size:10px}.license{bottom:144px;right:8px;font-size:7px}.hud-center{top:48%}.mobile-panel{position:absolute;bottom:58px;left:8px;right:8px;display:flex;gap:9px;justify-content:space-between;align-items:end;pointer-events:auto}.touch-group{display:grid;grid-template-columns:repeat(3,43px);grid-template-rows:repeat(2,42px);gap:5px}.touch-group button,.touch-throttle button{color:#effff7;background:#092939b9;border:1px solid #b8f4e46b;border-radius:9px;touch-action:none;user-select:none;font-size:18px;font-weight:900}.touch-group [data-touch="pitchUp"]{grid-column:2}.touch-group [data-touch="left"]{grid-column:1;grid-row:2}.touch-group [data-touch="pitchDown"]{grid-column:2;grid-row:2}.touch-group [data-touch="right"]{grid-column:3;grid-row:2}.touch-throttle{display:grid;grid-template-columns:58px;gap:6px}.touch-throttle button{height:44px;font-size:11px}.start-card{padding:25px 20px}.start-card p{font-size:12px}}
 @media(max-width:390px){.mission-box p{display:none}.mission-progress{margin:8px 0}.plane-select{display:none}.flight-brand small{letter-spacing:0}.hud-center{width:124px;height:124px}.flight-reticle{width:79px;height:79px}.nose-cue{left:34px;top:31px}.action-row button{font-size:9px;padding:8px}.mobile-panel{bottom:57px}.flight-telemetry{width:111px}}
+
+/* AAAR Aircraft Foundry: original, owner-hosted, no third-party UI. */
+.foundry-launch{border:1px solid #fdbd8b!important;background:#b35436bb!important;color:#fff!important;font-weight:800!important}
+.foundry-overlay{position:absolute;inset:0;z-index:125;background:#071824;overflow:auto;overscroll-behavior:contain;color:#eff7f4;display:none;font-family:system-ui,-apple-system,Segoe UI,sans-serif}
+.foundry-overlay.open{display:block}
+.foundry-frame{max-width:1580px;margin:0 auto;min-height:100%;padding:22px clamp(14px,2.7vw,42px) 65px}
+.foundry-top{display:flex;align-items:center;justify-content:space-between;gap:18px;border-bottom:1px solid #ffffff26;padding:0 0 18px}.foundry-identity{font-size:11px;color:#c9e0e5;letter-spacing:.14em;font-weight:850}.foundry-identity b{color:#ffad7d}.foundry-top button{background:transparent;color:#d4e5e4;border:1px solid #ffffff50;border-radius:7px;padding:10px 13px;font-weight:700}
+.foundry-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;padding:32px 0 25px}.foundry-heading h2{font-weight:900;letter-spacing:-.07em;line-height:.96;font-size:clamp(37px,5.5vw,77px);margin:11px 0 10px}.foundry-heading h2 span{color:#f5a576}.foundry-heading p{color:#98b8be;line-height:1.55;max-width:610px;font-size:13px;margin:0}.foundry-label{font:850 10px ui-monospace,Consolas,monospace;letter-spacing:.16em;color:#a4edcf}.foundry-flags{font-size:10px;text-align:right;line-height:1.9;color:#a8c9c9}
+.foundry-main{display:grid;grid-template-columns:minmax(340px,.82fr) minmax(0,1.18fr);gap:16px}.foundry-panel{background:#0d2635;border:1px solid #44616f;padding:20px;border-radius:8px;min-width:0}.foundry-formhead{display:grid;grid-template-columns:minmax(120px,1fr) 1fr;gap:12px}.foundry-panel label{display:flex;flex-direction:column;gap:7px;min-width:0;font-size:10px;color:#9cbcbf;font-weight:800;letter-spacing:.075em}.foundry-panel input[type=text],.foundry-panel select{background:#09202d;border:1px solid #47606b;border-radius:5px;color:white;padding:12px;width:100%;min-width:0;letter-spacing:normal;font-size:12px}.foundry-subhead{display:flex;gap:10px;align-items:center;margin:23px 0 12px;font-weight:900;letter-spacing:.13em;font-size:10px;color:#f9bd8d}.foundry-subhead:after{content:'';height:1px;background:#44616f;flex:1}.foundry-field{display:grid;grid-template-columns:1fr auto;gap:7px 12px;margin:11px 0}.foundry-field .field-name{font-size:11px;font-weight:700;color:#dce9e8;letter-spacing:0}.foundry-field output{font:850 11px ui-monospace,Consolas,monospace;color:#ffc99e}.foundry-field input[type=range]{grid-column:1/-1;width:100%;accent-color:#ee9d71;cursor:pointer}.foundry-note{font-size:11px;color:#9db7be;line-height:1.5}.foundry-mini{color:#6e919d;font-size:9px;letter-spacing:.06em}.foundry-plot{min-height:340px;border:1px solid #416272;background:radial-gradient(circle at 50% 40%,#234858,#0c2634 64%);border-radius:8px;position:relative;overflow:hidden}.foundry-plot:before{content:'';position:absolute;inset:0;opacity:.35;background-image:linear-gradient(#a2d4da16 1px,transparent 1px),linear-gradient(90deg,#a2d4da16 1px,transparent 1px);background-size:23px 23px;pointer-events:none}.foundry-plot svg{display:block;position:relative;width:100%;height:340px}.foundry-plot .badge{position:absolute;left:14px;top:12px;font:800 9px ui-monospace,Consolas,monospace;letter-spacing:.12em;color:#c7e6e2;background:#0d2731bf;padding:6px 9px}.foundry-plot .other{position:absolute;bottom:12px;right:12px;color:#8ba9b4;font:750 9px ui-monospace,Consolas,monospace}.foundry-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:13px 0}.foundry-stat{border:1px solid #38535d;border-radius:5px;padding:13px 11px;background:#0a2030;min-height:85px}.foundry-stat small{font:800 9px ui-monospace,Consolas,monospace;letter-spacing:.07em;color:#8fb1b9;display:block}.foundry-stat strong{display:block;font-size:20px;margin:7px 0 0;letter-spacing:-.05em}.foundry-stat span{display:block;color:#9eb8bf;font-size:10px;margin-top:5px}.foundry-warnings{background:#231f1e;border:1px solid #725a48;border-radius:6px;padding:13px 16px;margin-top:15px;color:#e5c6ab;font-size:11px;line-height:1.52}.foundry-warnings b{font-size:10px;color:#f0bb9b;letter-spacing:.1em}.foundry-warnings ul{margin:9px 0 0;padding-left:17px}.foundry-warnings li{margin:4px 0}.foundry-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:17px}.foundry-actions button{border-radius:5px;padding:12px 15px;background:#193747;color:#d1e8e6;border:1px solid #50717b;font-weight:800;font-size:11px}.foundry-actions .primary{background:#ec9a70;color:#161d22;border-color:#ec9a70;font-weight:900}.foundry-footer{color:#8aa7af;margin-top:15px;font-size:10px;line-height:1.6}.foundry-library{margin-top:12px}.foundry-error{min-height:20px;color:#ffc29a;font-size:11px;margin-top:7px}.foundry-gate{background:#173e3d;border-left:3px solid #87e6c0;color:#bdebd8;padding:10px 13px;font-size:10px;margin-top:12px;line-height:1.4}.foundry-gate.hold{background:#462f24;border-color:#f0ad78;color:#ffcbac}
+@media(max-width:850px){.foundry-main{grid-template-columns:1fr}.foundry-heading{align-items:flex-start;flex-direction:column}.foundry-flags{text-align:left}.foundry-frame{padding-bottom:90px}.foundry-plot{min-height:260px}.foundry-plot svg{height:270px}.foundry-top button{flex-shrink:0}}
+@media(max-width:450px){.foundry-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.foundry-panel{padding:14px}.foundry-formhead{grid-template-columns:1fr}.foundry-heading h2{font-size:44px}.foundry-actions button{flex:1}.foundry-frame{padding:12px 12px 75px}}
+
 </style></head><body>
 <div class="flight-shell" id="flightShell">
  <canvas id="flightCanvas" tabindex="0" aria-label="Playable 3D Anniston flight range. Use W/S for pitch, A/D for bank, Shift/Ctrl for throttle, C to switch camera, R reset."></canvas><div class="sky-sun"></div><div class="sky-haze"></div><div class="scanlines"></div>
@@ -14,11 +26,140 @@
    <div class="floating-alert" id="flightAlert" role="status" aria-live="polite"></div>
    <div class="mobile-panel" aria-label="Touch flight controls"><div class="touch-group"><button type="button" data-touch="pitchUp" aria-label="Pitch up">↑</button><button type="button" data-touch="left" aria-label="Bank left">↶</button><button type="button" data-touch="pitchDown" aria-label="Pitch down">↓</button><button type="button" data-touch="right" aria-label="Bank right">↷</button></div><div class="touch-throttle"><button type="button" data-touch="throttleUp">THR +</button><button type="button" data-touch="throttleDown">THR −</button></div></div>
    <div class="license">ENTERTAINMENT MODEL / NOT CFD / NOT FLIGHT TRAINING / NO PHYSICAL CONTROL</div>
-   <div class="flight-bottom"><div class="flight-controls"><div class="control-guide"><b>W / S</b> Pitch <b>A / D</b> Bank <b>Q / E</b> Rudder <b>SHIFT / CTRL</b> Throttle <b>C</b> Camera <b>P</b> Pause <b>R</b> Reset</div></div><div class="action-row"><button id="cameraToggle" type="button">◉ Chase view</button><button id="pauseToggle" type="button">Ⅱ Pause</button><button id="resetFlight" type="button">↺ Restart</button><button id="saveFlight" class="primary" type="button">Save flight ↗</button><button id="fullscreenToggle" type="button">⤢</button></div></div>
+   <div class="flight-bottom"><div class="flight-controls"><div class="control-guide"><b>W / S</b> Pitch <b>A / D</b> Bank <b>Q / E</b> Rudder <b>SHIFT / CTRL</b> Throttle <b>C</b> Camera <b>P</b> Pause <b>R</b> Reset</div></div><div class="action-row"><button id="openFoundry" class="foundry-launch" type="button">✦ Design machine</button><button id="cameraToggle" type="button">◉ Chase view</button><button id="pauseToggle" type="button">Ⅱ Pause</button><button id="resetFlight" type="button">↺ Restart</button><button id="saveFlight" class="primary" type="button">Save flight ↗</button><button id="fullscreenToggle" type="button">⤢</button></div></div>
  </div>
- <div class="start-screen" id="startScreen"><div class="start-card"><span class="overline">EVERCRAFT WORLDS × ANNISTON AAAR / EXPERIENCE 001</span><h2>THE SKY<br/>IS <em>YOURS.</em></h2><p>Take a trainer, glider or fast jet through a fictional mountain valley. Fly with your keyboard or on-screen touch controls. Save a local flight record back to Anniston when you're done.</p><div class="start-foot"><button id="beginFlight" type="button">ENTER FLIGHT RANGE ↗</button><button class="secondary" id="skipToControls" type="button">VIEW CONTROLS</button></div><small>A playable procedural 3D sandbox. The physics and terrain are deliberately simplified, not validated engineering models. Full Evercraft Worlds world-state integration is a separate milestone.</small></div></div>
+ <div class="start-screen" id="startScreen"><div class="start-card"><span class="overline">EVERCRAFT WORLDS × ANNISTON AAAR / EXPERIENCE 001</span><h2>THE SKY<br/>IS <em>YOURS.</em></h2><p>Take a trainer, glider or fast jet through a fictional mountain valley. Fly with your keyboard or on-screen touch controls. Save a local flight record back to Anniston when you're done.</p><div class="start-foot"><button id="designFromStart" class="foundry-launch" type="button">✦ Design your own machine</button> <button id="beginFlight" type="button">ENTER FLIGHT RANGE ↗</button><button class="secondary" id="skipToControls" type="button">VIEW CONTROLS</button></div><small>A playable procedural 3D sandbox. The physics and terrain are deliberately simplified, not validated engineering models. Full Evercraft Worlds world-state integration is a separate milestone.</small></div></div>
  <div class="screen-reader" id="flightA11y" aria-live="polite"></div>
 </div>
+<script>/* Anniston Aircraft Foundry v0.6 — screening model, NOT CFD, flight certification or a digital twin.
+ * Pure deterministic equations, limited fixed-wing point-mass / multirotor thrust model.
+ * Validated designs only; no network, physical outputs or external packages.
+ */
+(function(root,factory){const api=factory();if(typeof module!=='undefined'&&module.exports)module.exports=api;if(root)root.AAARFoundry=api;})(typeof globalThis==='undefined'?null:globalThis,function(){
+'use strict';
+const SCHEMA='evercraft.aaar.airframe-design.v1';
+const G=9.80665,RHO0=1.225,clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+const bounds={massKg:[.4,30000],spanM:[.6,60],chordM:[.15,9],sweepDeg:[0,60],bodyLengthM:[.5,40],bodyWidthM:[.15,8],tailAreaM2:[0,30],cgFraction:[.05,.85],thrustN:[0,160000],cd0:[.012,.25],clMax:[.65,2.5],rotors:[2,12],rotorRadiusM:[.09,3.5],totalPowerW:[100,1500000]};
+const BASE={schema:SCHEMA,name:'Untitled machine',type:'wing',massKg:850,spanM:12,chordM:1.6,sweepDeg:5,bodyLengthM:8.2,bodyWidthM:1.35,tailAreaM2:3.1,cgFraction:.28,thrustN:3200,cd0:.038,clMax:1.35,rotors:4,rotorRadiusM:.42,totalPowerW:3600};
+const presets={
+ kestrel:{...BASE,name:'Kestrel One',type:'wing'},
+ glider:{...BASE,name:'Silent Arc',type:'wing',massKg:550,spanM:21,chordM:1.1,bodyLengthM:7.6,tailAreaM2:2.8,thrustN:0,cd0:.019},
+ flyingwing:{...BASE,name:'Manta Concept',type:'wing',massKg:220,spanM:9,chordM:2.7,bodyLengthM:4,tailAreaM2:0,cgFraction:.43,thrustN:1300,sweepDeg:31,cd0:.032},
+ quad:{...BASE,name:'Quad Sparrow',type:'rotor',massKg:2.4,bodyLengthM:.7,bodyWidthM:.32,spanM:1.1,chordM:.35,tailAreaM2:0,rotors:4,rotorRadiusM:.23,totalPowerW:900},
+ heavy:{...BASE,name:'Sky Hauler',type:'rotor',massKg:95,bodyLengthM:2.8,bodyWidthM:1.5,spanM:3.8,chordM:1.5,tailAreaM2:0,rotors:8,rotorRadiusM:.83,totalPowerW:45000}
+};
+function validate(input){
+ if(!input||Array.isArray(input)||typeof input!=='object'||input.schema!==SCHEMA)throw Error('Invalid AAAR airframe schema');
+ if(!['wing','rotor'].includes(input.type))throw Error('Choose fixed-wing or rotorcraft');
+ if(typeof input.name!=='string'||input.name.trim().length<1||input.name.length>64)throw Error('Aircraft name must be 1–64 characters');
+ const out={schema:SCHEMA,name:input.name.trim(),type:input.type};
+ for(const [key,[lo,hi]] of Object.entries(bounds)){
+  const n=input[key];if(typeof n!=='number'||!Number.isFinite(n)||n<lo||n>hi)throw Error(`Invalid ${key}: ${lo}–${hi}`);
+  if(key==='rotors'&&!Number.isInteger(n))throw Error('Rotor count must be an integer');
+  out[key]=n;
+ }
+ return out;
+}
+const preset=(key='kestrel')=>validate({...presets[key]||presets.kestrel});
+function rho(h){return RHO0*Math.exp(-clamp(h,0,20000)/8500);}
+function wingNumbers(d){
+ const wingArea=d.spanM*d.chordM,ar=d.spanM*d.spanM/wingArea;
+ const e=clamp(.84 - d.sweepDeg*.003, .6,.88),a=(2*Math.PI)/(1+2/(e*ar));
+ // Assumed section zero-lift at -2 deg, not inferred from geometry.
+ const alpha0=-2*Math.PI/180;
+ const vStall=Math.sqrt(2*d.massKg*G/(RHO0*wingArea*d.clMax));
+ const vScreen= Math.max(vStall*1.45,8);
+ const clReq=(d.massKg*G)/(.5*RHO0*vScreen*vScreen*wingArea);
+ const cd=d.cd0+clReq*clReq/(Math.PI*e*ar);
+ const drag=.5*RHO0*vScreen*vScreen*wingArea*cd;
+ const alphaTrim=alpha0+clReq/a;
+ const tailVolume=d.tailAreaM2*Math.max(.5,d.bodyLengthM*.46)/(wingArea*d.chordM);
+ return {wingArea,aspectRatio:ar,spanEfficiency:e,liftSlope:a,alpha0,vStall,screenSpeed:vScreen,screenDragN:drag,screenThrustMarginN:d.thrustN-drag,trimAlphaRad:alphaTrim,tailVolume,cdAtScreen:cd};
+}
+function rotorNumbers(d){
+ const diskArea=d.rotors*Math.PI*d.rotorRadiusM**2;
+ // Momentum theory hover ideal induced power: P = T^(3/2) / sqrt(2 rho A).
+ // Effective factor 0.56 is an arbitrary screening assumption, NOT a blade-design calculation.
+ const efficiency=.56;
+ const thrust=(d.totalPowerW*efficiency*Math.sqrt(2*RHO0*diskArea))**(2/3);
+ const hoverPowerIdeal=(d.massKg*G)**1.5/Math.sqrt(2*RHO0*diskArea);
+ const hoverPowerScreen=hoverPowerIdeal/efficiency;
+ return {diskArea,maxThrustN:thrust,thrustWeightRatio:thrust/(d.massKg*G),hoverPowerIdealW:hoverPowerIdeal,hoverPowerScreenW:hoverPowerScreen,diskLoadingNpm2:(d.massKg*G)/diskArea,efficiencyAssumption:efficiency};
+}
+function analyze(input){const d=validate(input),warnings=[],metrics=d.type==='wing'?wingNumbers(d):rotorNumbers(d);
+ if(d.type==='wing'){
+   if(metrics.screenThrustMarginN<0&&d.thrustN>0)warnings.push('At screening airspeed, modeled thrust does not cover drag. Level powered flight is unlikely in this model.');
+   if(!d.thrustN)warnings.push('No propulsion: expect an energy-losing glide without modeled updrafts.');
+   if(metrics.aspectRatio<2)warnings.push('Very low aspect ratio: simple lifting-line approximation is unreliable.');
+   if(metrics.tailVolume<.2)warnings.push('Low horizontal tail-volume proxy: pitch stability and trim are NOT established.');
+   if(d.cgFraction>.4||d.cgFraction<.12)warnings.push('Center of mass appears outside a conventional starting range; neutral-point location is unknown.');
+   if(d.sweepDeg>35)warnings.push('High sweep: this screening model omits compressibility, vortex lift and swept-wing aeroelasticity.');
+ }else{
+   if(metrics.thrustWeightRatio<1)warnings.push('Modeled maximum rotor thrust is below weight: cannot hover or sustain vertical flight.');
+   else if(metrics.thrustWeightRatio<1.25)warnings.push('Low modeled hover thrust margin; handling and disturbance reserves are not demonstrated.');
+   if(d.rotorRadiusM*2>d.spanM)warnings.push('Rotor disks may overlap the nominal vehicle footprint. Geometry interference is not modeled.');
+   warnings.push('Rotor thrust uses an ideal momentum-theory scaling with an assumed efficiency. Blade aerodynamics and flight-controller stability are not simulated.');
+ }
+ warnings.push('No structural strength, control surface sizing, dynamic stability, battery/fuel, weather, certification or physical safety assessment.');
+ return {schema:'evercraft.aaar.foundry-screen.v1',model_state:'LOW_ORDER_ANALYTICAL_ESTIMATE',evidence_state:'UNVALIDATED_SCREENING',design:d,metrics,warnings};
+}
+function startState(design){const d=validate(design),a=analyze(d),wing=d.type==='wing';const stall=wing?a.metrics.vStall:0,initialV=wing?Math.max(stall*1.5,8):2;
+ const canHover=!wing&&a.metrics.thrustWeightRatio>=1;
+ const throttle=wing?(d.thrustN? .7:0):(canHover?clamp((d.massKg*G/a.metrics.maxThrustN)**1.5*1.05,0,1):1);
+ return {schema:'evercraft.aaar.worlds-flight-state.v1',craft:'custom',design:d,x:0,y:wing?280:90,z:-740,yaw:0,
+   pitch:wing?a.metrics.trimAlphaRad:0,bank:0,path:0,speed:initialV,throttle,
+   vx:0,vz:wing?initialV:2,vy:0,flightTime:0,distance:0,maxAlt:wing?280:90,maxSpeed:initialV,
+   checkpoints:0,events:[],track:[],paused:false,condition:'FLYING',aero:{liftN:0,dragN:0,thrustN:0,stall:false,verticalSpeed:0}};
+}
+function stepPhysics(s,a,dt){const d=s.design;dt=clamp(Number(dt)||0,0,.05);const inPitch=clamp(Number(a?.pitch)||0,-1,1),inBank=clamp(Number(a?.bank)||0,-1,1),rudder=clamp(Number(a?.rudder)||0,-1,1);
+ s.throttle=clamp(s.throttle+clamp(Number(a?.throttle)||0,-1,1)*.4*dt,0,1);
+ s.pitch=clamp(s.pitch+inPitch*(d.type==='wing'?.52:.7)*dt,d.type==='wing'?-.42:-.48,d.type==='wing'?.52:.48);
+ s.bank=clamp(s.bank+inBank*(d.type==='wing'?1.0:1.3)*dt,-1.1,1.1);
+ if(Math.abs(inBank)<.01)s.bank*=Math.exp(-(d.type==='wing'?.15:.75)*dt);
+ let lift=0,drag=0,thrust=0,stall=false,cl=0;
+ if(d.type==='wing'){
+  const w=wingNumbers(d),v=Math.max(.1,s.speed),density=rho(s.y),q=.5*density*v*v;
+  const alpha=s.pitch-s.path,clLinear=w.liftSlope*(alpha-w.alpha0);
+  cl=clamp(clLinear,-.9,d.clMax);
+  // Post-stall reduction is a toy approximation, not dynamic-stall CFD.
+  if(clLinear>d.clMax){stall=true;cl=Math.max(.35*d.clMax,d.clMax*(1-.032*(clLinear-d.clMax)*180/Math.PI));}
+  lift=q*w.wingArea*cl;
+  drag=q*w.wingArea*(d.cd0+cl*cl/(Math.PI*w.spanEfficiency*w.aspectRatio));
+  thrust=d.thrustN*s.throttle;
+  const acceleration=(thrust-drag)/d.massKg -G*Math.sin(s.path);
+  s.speed=clamp(s.speed+acceleration*dt,0,400);
+  const pathRate=(lift*Math.cos(s.bank)-d.massKg*G*Math.cos(s.path))/(d.massKg*Math.max(5,s.speed));
+  s.path=clamp(s.path+clamp(pathRate,-1,1)*dt,-1.2,.8);
+  s.yaw+=(G*Math.tan(s.bank)/Math.max(s.speed,8)*Math.cos(s.path)+rudder*.15)*dt;
+  const horizontal=s.speed*Math.cos(s.path),dx=Math.sin(s.yaw)*horizontal*dt,dz=Math.cos(s.yaw)*horizontal*dt;
+  s.x+=dx;s.z+=dz;s.y+=s.speed*Math.sin(s.path)*dt;s.distance+=Math.hypot(dx,dz);
+  s.vy=s.speed*Math.sin(s.path);
+ }else{
+  const r=rotorNumbers(d),dens=rho(s.y),rhoScale=(dens/RHO0)**(1/3),T=r.maxThrustN*Math.pow(s.throttle,2/3)*rhoScale;
+  const cPitch=Math.cos(s.pitch),cBank=Math.cos(s.bank),vertical=T*cPitch*cBank;
+  // X/Z body axes; simplified thrust-vectoring, not propeller flight dynamics.
+  const forward=T*Math.sin(s.pitch)*cBank,lateral=T*Math.sin(s.bank);
+  const hx=Math.sin(s.yaw),hz=Math.cos(s.yaw),sideX=Math.cos(s.yaw),sideZ=-Math.sin(s.yaw);
+  const cdA=.8*d.bodyLengthM*d.bodyWidthM;
+  const hSpeed=Math.hypot(s.vx,s.vz),dragH=.5*dens*hSpeed*hSpeed*cdA;
+  const accF=forward/d.massKg,accLat=lateral/d.massKg;
+  s.vx+=(accF*hx+accLat*sideX - (hSpeed>0?dragH/d.massKg*s.vx/hSpeed:0))*dt;
+  s.vz+=(accF*hz+accLat*sideZ - (hSpeed>0?dragH/d.massKg*s.vz/hSpeed:0))*dt;
+  const vDrag=.5*dens*s.vy*Math.abs(s.vy)*cdA*.65;
+  s.vy+=clamp((vertical-vDrag)/d.massKg-G,-100,100)*dt;
+  s.vy=clamp(s.vy,-90,90);
+  const dx=s.vx*dt,dz=s.vz*dt;s.x+=dx;s.z+=dz;s.y+=s.vy*dt;s.distance+=Math.hypot(dx,dz);
+  s.yaw+=rudder*.85*dt;
+  s.speed=Math.hypot(s.vx,s.vz);s.path=Math.atan2(s.vy,Math.max(s.speed,.5));
+  thrust=T;drag=dragH;lift=vertical;
+ }
+ s.flightTime+=dt;s.maxAlt=Math.max(s.maxAlt,s.y);s.maxSpeed=Math.max(s.maxSpeed,s.speed);
+ s.aero={liftN:lift,dragN:drag,thrustN:thrust,stall,verticalSpeed:s.vy,cl};
+ return s;
+}
+return Object.freeze({SCHEMA,G,bounds,presets,preset,validate,analyze,startState,stepPhysics,wingNumbers,rotorNumbers,rho});
+});
+</script>
 <script>/* AAAR Worlds Flight Range core v0.5. Entertainment/simulation training only.
  * Designed for reproducible browser preview, not CFD, avionics, or certification.
  * This file contains no networking or hardware interfaces.
@@ -26,13 +167,15 @@
 (function(root,factory){const api=factory();if(typeof module!=='undefined'&&module.exports)module.exports=api;if(root)root.AAARFlight=api;})(typeof globalThis==='undefined'?null:globalThis,function(){
 'use strict';
 const PI=Math.PI, DEG=180/PI, RAD=PI/180;
+const Foundry=typeof globalThis!=='undefined'&&globalThis.AAARFoundry?globalThis.AAARFoundry:(typeof require==='function'?require('./foundry-core.js'):null);
 const aircraft={
   trainer:{id:'trainer',name:'A-01 Kestrel',kind:'Light trainer',cruise:55,stall:25,maxSpeed:83,accel:12.5,drag:.0031,bankRate:1.00,pitchRate:.60,skin:'#f8ad79'},
   glider:{id:'glider',name:'A-02 Albatross',kind:'Sailplane',cruise:34,stall:17,maxSpeed:54,accel:1.4,drag:.0011,bankRate:.69,pitchRate:.43,skin:'#d1e9f1'},
   jet:{id:'jet',name:'A-03 Peregrine',kind:'Fast experimental',cruise:118,stall:49,maxSpeed:185,accel:42,drag:.0027,bankRate:1.16,pitchRate:.78,skin:'#e6dfd3'}
 };
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
-function start(kind='trainer'){
+function start(kind='trainer',design=null){
+ if(kind==='custom'){if(!Foundry)throw Error('Aircraft Foundry model missing');return Foundry.startState(design);}
  const p=aircraft[kind]||aircraft.trainer;
  return {schema:'evercraft.aaar.worlds-flight-state.v1',craft:p.id,x:0,y:280,z:-740,
   yaw:0,pitch:0,bank:0,path:0,speed:p.cruise,throttle:p.id==='glider'?0:.68,
@@ -45,9 +188,16 @@ function groundHeight(x,z){
 }
 const gates=[{x:0,y:285,z:380,title:'RUNWAY DEPARTURE'},{x:220,y:330,z:1450,title:'RIDGE TRANSIT'},{x:-230,y:385,z:2900,title:'HIGH-VALLEY PASS'}];
 function step(s,input,dt){
- if(!s||!aircraft[s.craft])throw new Error('Unsupported aircraft');
+ if(!s||!(aircraft[s.craft]||s.craft==='custom'&&s.design))throw new Error('Unsupported aircraft');
  if(s.paused||s.condition!=='FLYING')return s;
  dt=clamp(Number(dt)||0,0,.05);
+ if(s.craft==='custom'){
+  Foundry.stepPhysics(s,input||{},dt);
+  if(s.y<=groundHeight(s.x,s.z)+4){s.y=groundHeight(s.x,s.z)+4;s.condition='GROUND_CONTACT';s.events.push({kind:'ground_contact',at:+s.flightTime.toFixed(1)});}
+  const next=gates[s.checkpoints];if(next&&Math.hypot(s.x-next.x,s.y-next.y,s.z-next.z)<80){s.checkpoints++;s.events.push({kind:'gate',index:s.checkpoints,title:next.title,at:+s.flightTime.toFixed(1)});}
+  if(Math.floor(s.flightTime*2)>s.track.length&&s.track.length<1200)s.track.push({x:Math.round(s.x),y:Math.round(s.y),z:Math.round(s.z),at:+s.flightTime.toFixed(1)});
+  return s;
+ }
  const p=aircraft[s.craft],a=input||{};
  const pitch=clamp(Number(a.pitch)||0,-1,1),bank=clamp(Number(a.bank)||0,-1,1),rudder=clamp(Number(a.rudder)||0,-1,1);
  s.throttle=clamp(s.throttle+clamp(Number(a.throttle)||0,-1,1)*.34*dt,0,1);
@@ -74,7 +224,7 @@ function step(s,input,dt){
  if(Math.floor(s.flightTime*2)>s.track.length&&s.track.length<1200)s.track.push({x:Math.round(s.x),y:Math.round(s.y),z:Math.round(s.z),at:+s.flightTime.toFixed(1)});
  return s;
 }
-function flightReceipt(s){return {schema:'evercraft.aaar.worlds-flight.v1',model_state:'GAME_SIMULATION_ONLY',evidence_state:'UNVALIDATED_GAMEPLAY',id:'AAAR-WFL-'+Date.now().toString(36).toUpperCase(),created_at:new Date().toISOString(),aircraft:s.craft,aircraft_name:aircraft[s.craft].name,world:'anniston-cedar-basin-synthetic-v1',flight_time_seconds:+s.flightTime.toFixed(1),distance_m:Math.round(s.distance),max_altitude_m:Math.round(s.maxAlt),max_speed_mps:+s.maxSpeed.toFixed(1),checkpoints:s.checkpoints,condition:s.condition,events:s.events.slice(-20),track:s.track.slice(-300),limitations:'Stylized browser flight model and synthetic scenery. No certified flight physics, CFD, aircraft training credit, real terrain, hardware commands, or flight authorization.',canonical_sync:'local_preview_only'};}
+function flightReceipt(s){return {schema:'evercraft.aaar.worlds-flight.v1',model_state:'GAME_SIMULATION_ONLY',evidence_state:'UNVALIDATED_GAMEPLAY',id:'AAAR-WFL-'+Date.now().toString(36).toUpperCase(),created_at:new Date().toISOString(),aircraft:s.craft,aircraft_name:s.craft==='custom'?s.design.name:aircraft[s.craft].name,design:s.craft==='custom'?Foundry.validate(s.design):null,screening_model:s.craft==='custom'?Foundry.analyze(s.design).schema:null,world:'anniston-cedar-basin-synthetic-v1',flight_time_seconds:+s.flightTime.toFixed(1),distance_m:Math.round(s.distance),max_altitude_m:Math.round(s.maxAlt),max_speed_mps:+s.maxSpeed.toFixed(1),checkpoints:s.checkpoints,condition:s.condition,events:s.events.slice(-20),track:s.track.slice(-300),limitations:'Low-order flight dynamics and synthetic scenery. Aircraft Foundry uses approximate lift/drag or rotor momentum screening, NOT CFD, measured stability, rotor blade models, structures, certification, real terrain or flight authorization.',canonical_sync:'local_preview_only'};}
 return Object.freeze({aircraft,gates,start,step,groundHeight,flightReceipt,constants:{RAD,DEG}});
 });
 </script>
@@ -159,9 +309,60 @@ function buildMeshes(){
   meshes[craft.id]=p.upload();
  }
 }
+function buildCustomMesh(design){
+ if(!gl||!program)return;
+ const d=window.AAARFoundry.validate(design),p=builder();
+ const body=[.86,.91,.88],accent=[.96,.60,.38];
+ const scale=Math.min(2.2,Math.max(.32,17/Math.max(d.spanM,d.bodyLengthM)));
+ const length=d.bodyLengthM*scale, width=Math.max(.6,d.bodyWidthM*scale);
+ p.box(0,0,0,width,Math.max(.35,width*.45),length,body);
+ p.box(0,.25,Math.min(length*.18,2),width*.56,.4,length*.38,[.21,.44,.55]);
+ if(d.type==='wing'){
+   const wing=d.spanM*scale/2,chord=d.chordM*scale,sw=Math.tan(d.sweepDeg*Math.PI/180)*wing*.36;
+   for(const sign of [-1,1]){
+     const a=[sign*width*.45,.1,-chord*.5],b=[sign*wing,.1,-chord*.5+sw],c=[sign*wing,.1,chord*.5+sw],e=[sign*width*.45,.1,chord*.5];
+     p.quad(a,b,c,e,body);
+   }
+   const tail=Math.min(wing*.5,Math.sqrt(d.tailAreaM2)*scale*.5);
+   if(tail>.04)p.box(0,.15,-length*.39,Math.max(.1,tail*2),.16,.65,[.68,.82,.83]);
+   if(d.tailAreaM2>.3)p.tri([0,Math.max(.7,length*.16),-length*.48],[0,0,-length*.50],[0,0,-length*.23],accent);
+ }else{
+   const radius=Math.max(.5,d.rotorRadiusM*scale*1.5),ring=Math.max(width*1.1,d.rotorRadiusM*scale*2.3);
+   for(let i=0;i<d.rotors;i++){
+    const theta=2*Math.PI*i/d.rotors+Math.PI/4,x=Math.cos(theta)*ring,z=Math.sin(theta)*ring;
+    p.box(x/2,.05,z/2,Math.abs(x)+.4,.16,.15,[.53,.79,.78]);
+    for(let a=0;a<12;a++){const u=a*Math.PI/6,v=(a+1)*Math.PI/6;
+      p.tri([x,.22,z],[x+radius*Math.cos(u),.22,z+radius*Math.sin(u)],[x+radius*Math.cos(v),.22,z+radius*Math.sin(v)],[.58,.74,.76]);}
+    p.box(x,.25,z,.3,.2,.3,accent);
+   }
+ }
+ if(meshes.custom?.buffer)gl.deleteBuffer(meshes.custom.buffer);
+ meshes.custom=p.upload();
+}
 function planeModel(s){const c=Math.cos,b=Math.sin,cy=c(s.yaw),sy=b(s.yaw),cp=c(-s.pitch),sp=b(-s.pitch),cr=c(-s.bank),sr=b(-s.bank);const RY=[cy,0,-sy,0,0,1,0,0,sy,0,cy,0,0,0,0,1];const RX=[1,0,0,0,0,cp,sp,0,0,-sp,cp,0,0,0,0,1];const RZ=[cr,sr,0,0,-sr,cr,0,0,0,0,1,0,0,0,0,1];const T=identity();T[12]=s.x;T[13]=s.y;T[14]=s.z;return mul(mul(mul(T,RY),RX),RZ);}
 let fallback2D=false;
 /* Native Canvas2D perspective fallback for restricted devices. No third-party rendering engine. */
+function drawCustom2D(ctx,w,h,d,bank){
+ const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+ const cx=w/2,cy=h*.71,sc=Math.max(.55,Math.min(1.65,h/640));ctx.save();ctx.translate(cx,cy);ctx.scale(sc,sc);ctx.rotate(-bank*.83);
+ ctx.shadowColor='#031624b9';ctx.shadowBlur=22;ctx.shadowOffsetY=9;
+ const paint=(points,fill)=>{ctx.beginPath();ctx.moveTo(points[0][0],points[0][1]);for(const p of points.slice(1))ctx.lineTo(p[0],p[1]);ctx.closePath();ctx.fillStyle=fill;ctx.fill();ctx.strokeStyle='#567783';ctx.lineWidth=1.4;ctx.stroke();};
+ if(d.type==='wing'){
+  const hs=clamp(d.spanM*11,46,133),nose=clamp(d.bodyLengthM*6,45,91),tail=nose*.7,chord=clamp(d.chordM*11,14,54);
+  const sweep=Math.tan(d.sweepDeg*Math.PI/180)*hs*.35;
+  for(const sign of [-1,1])paint([[sign*8,-chord*.5],[sign*hs,-chord*.5+sweep],[sign*hs,chord*.5+sweep],[sign*8,chord*.5]],'#d7e4e4');
+  if(d.tailAreaM2>.05){const tw=clamp(Math.sqrt(d.tailAreaM2)*30,8,62);paint([[-tw,tail*.72],[tw,tail*.72],[tw*.84,tail],[ -tw*.84,tail]],'#a0c2c4');}
+  paint([[0,-nose],[-9,-nose*.75],[-11,tail*.72],[-5,tail],[5,tail],[11,tail*.72],[9,-nose*.75]],'#f7f3e9');
+  ctx.fillStyle='#315b71';ctx.beginPath();ctx.ellipse(0,-nose*.45,5,16,0,0,Math.PI*2);ctx.fill();
+ }else{
+  const n=d.rotors,ring=95,rotorR=clamp(d.rotorRadiusM*75,11,31);
+  for(let i=0;i<n;i++){const a=2*Math.PI*i/n+Math.PI/4,x=Math.cos(a)*ring,y=Math.sin(a)*ring;ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(x,y);ctx.strokeStyle='#9abcbf';ctx.lineWidth=7;ctx.stroke();ctx.beginPath();ctx.arc(x,y,rotorR,0,Math.PI*2);ctx.fillStyle='#c4e4df55';ctx.fill();ctx.strokeStyle='#f4d0ad';ctx.lineWidth=2.5;ctx.stroke();ctx.beginPath();ctx.arc(x,y,4,0,Math.PI*2);ctx.fillStyle='#eaa370';ctx.fill();}
+  const bw=clamp(d.bodyWidthM*35,12,40),bl=clamp(d.bodyLengthM*30,22,75);
+  paint([[0,-bl],[-bw,-bl*.6],[-bw,bl*.55],[-bw*.7,bl],[bw*.7,bl],[bw,bl*.55],[bw,-bl*.6]],'#d1e8e6');
+  ctx.fillStyle='#2c6372';ctx.fillRect(-bw*.28,-bl*.48,bw*.56,bl*.46);
+ }
+ ctx.shadowBlur=0;ctx.shadowOffsetY=0;ctx.restore();
+}
 function render2D(){
  const dpi=Math.min(window.devicePixelRatio||1,1.25),w=Math.round(canvas.clientWidth*dpi),h=Math.round(canvas.clientHeight*dpi);
  if(!w||!h)return;if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;}
@@ -190,12 +391,13 @@ function render2D(){
  // World training gates are projected in 3D; draw ring paths with depth-sensitive line weight.
  core.gates.forEach((g,i)=>{const p=project([g.x,g.y,g.z]);if(!p)return;const r=52*focal/p.d;if(r<2||r>h*6)return;ctx.save();ctx.globalAlpha=i<state.checkpoints?.22:.92;ctx.lineWidth=Math.min(6,Math.max(1,3.2*focal/p.d));ctx.strokeStyle=i<state.checkpoints?'#b2dec4':i===state.checkpoints?'#ffbf77':'#a6f3db';ctx.shadowColor=ctx.strokeStyle;ctx.shadowBlur=17;ctx.beginPath();ctx.ellipse(p.u,p.v,r,r,0,0,Math.PI*2);ctx.stroke();ctx.restore();});
  // Aircraft follows the 3D flight state; cockpit view hides the chase airplane.
- if(view!=='cockpit'){
+ if(view!=='cockpit'&&state.craft==='custom'){drawCustom2D(ctx,w,h,state.design,state.bank);}
+ else if(view!=='cockpit'){
   const cx=w/2,cy=h*.69,sc=Math.max(.52,Math.min(1.6,h/650));
   ctx.save();ctx.translate(cx,cy);ctx.scale(sc,sc);ctx.rotate(-state.bank*.80);ctx.shadowColor='#041522b7';ctx.shadowBlur=26;ctx.shadowOffsetY=8;
   ctx.fillStyle='#142d3b';ctx.beginPath();ctx.moveTo(-93,13);ctx.lineTo(-10,-8);ctx.lineTo(-15,52);ctx.lineTo(-36,64);ctx.lineTo(-35,73);ctx.lineTo(0,67);ctx.lineTo(35,73);ctx.lineTo(36,64);ctx.lineTo(15,52);ctx.lineTo(10,-8);ctx.lineTo(93,13);ctx.lineTo(102,2);ctx.lineTo(10,-32);ctx.lineTo(0,-91);ctx.lineTo(-10,-32);ctx.lineTo(-102,2);ctx.closePath();ctx.fill();
   ctx.shadowBlur=0;ctx.shadowOffsetY=0;ctx.fillStyle='#d8ecec';ctx.beginPath();ctx.moveTo(0,-91);ctx.lineTo(9,-31);ctx.lineTo(100,4);ctx.lineTo(91,15);ctx.lineTo(13,-5);ctx.lineTo(15,54);ctx.lineTo(36,68);ctx.lineTo(33,73);ctx.lineTo(0,66);ctx.lineTo(-33,73);ctx.lineTo(-36,68);ctx.lineTo(-15,54);ctx.lineTo(-13,-5);ctx.lineTo(-91,15);ctx.lineTo(-100,4);ctx.lineTo(-9,-31);ctx.closePath();ctx.fill();
-  ctx.fillStyle=core.aircraft[state.craft].skin;ctx.fillRect(-100,4,24,8);ctx.fillRect(76,4,24,8);ctx.fillStyle='#286077';ctx.beginPath();ctx.ellipse(0,-20,6,22,0,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#93cbd9';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(0,-86);ctx.lineTo(0,65);ctx.stroke();ctx.restore();
+  ctx.fillStyle=state.craft==='custom'?'#f2aa7c':core.aircraft[state.craft].skin;ctx.fillRect(-100,4,24,8);ctx.fillRect(76,4,24,8);ctx.fillStyle='#286077';ctx.beginPath();ctx.ellipse(0,-20,6,22,0,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#93cbd9';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(0,-86);ctx.lineTo(0,65);ctx.stroke();ctx.restore();
  }
  // Low-opacity directional wind lines and cinematic shadows, still decorative.
  ctx.save();ctx.strokeStyle='#d8f5e640';ctx.lineWidth=1;for(let i=0;i<7;i++){const ux=(w*.12+i*w*.14+state.flightTime*7)%w,vy=h*.55+(i%3)*20;ctx.beginPath();ctx.moveTo(ux,vy);ctx.lineTo(ux+25,vy);ctx.stroke();}ctx.restore();
@@ -216,18 +418,18 @@ function render(){
  const vp=mul(perspective(view==='cockpit'?78*Math.PI/180:70*Math.PI/180,canvas.width/canvas.height,.5,15000),lookAt(eye,focus,up));
  gl.useProgram(program);gl.uniformMatrix4fv(uVP,false,vp);drawMesh(meshes.world,identity());if(view!=='cockpit')drawMesh(meshes[state.craft],planeModel(state));
 }
-function hud(){const round=n=>Math.round(n).toLocaleString('en-US');$('speedOut').textContent=round(state.speed*1.94384);$('altOut').textContent=round(state.y*3.28084);$('headOut').textContent=String(Math.round((state.yaw*180/Math.PI+3600)%360)).padStart(3,'0');$('pitchOut').textContent=(state.pitch*180/Math.PI).toFixed(0);$('bankOut').textContent=(state.bank*180/Math.PI).toFixed(0);$('throttleOut').textContent=round(state.throttle*100);const sec=Math.floor(state.flightTime);$('flightTime').textContent='T+ '+String(Math.floor(sec/60)).padStart(2,'0')+':'+String(sec%60).padStart(2,'0');$('gateProgress').querySelectorAll('i').forEach((el,i)=>el.classList.toggle('done',i<state.checkpoints));const next=core.gates[state.checkpoints];$('nextGate').textContent=next?`NEXT: ${next.title} · ${state.checkpoints} / 3`:'MISSION COMPLETE · 3 / 3';$('flightStatus').textContent=state.condition==='GROUND_CONTACT'?'GROUND CONTACT':state.paused?'PAUSED':'SIMULATION ACTIVE';$('pauseToggle').textContent=state.paused?'▶ Resume':'Ⅱ Pause';$('cameraToggle').textContent=view==='chase'?'◉ Chase view':'◉ Cockpit view';}
+function hud(){const round=n=>Math.round(n).toLocaleString('en-US');$('speedOut').textContent=round(state.speed*1.94384);$('altOut').textContent=round(state.y*3.28084);$('headOut').textContent=String(Math.round((state.yaw*180/Math.PI+3600)%360)).padStart(3,'0');$('pitchOut').textContent=(state.pitch*180/Math.PI).toFixed(0);$('bankOut').textContent=(state.bank*180/Math.PI).toFixed(0);$('throttleOut').textContent=round(state.throttle*100);const sec=Math.floor(state.flightTime);$('flightTime').textContent='T+ '+String(Math.floor(sec/60)).padStart(2,'0')+':'+String(sec%60).padStart(2,'0');$('gateProgress').querySelectorAll('i').forEach((el,i)=>el.classList.toggle('done',i<state.checkpoints));const next=core.gates[state.checkpoints];$('nextGate').textContent=next?`NEXT: ${next.title} · ${state.checkpoints} / 3`:'MISSION COMPLETE · 3 / 3';$('flightStatus').textContent=state.condition==='GROUND_CONTACT'?'GROUND CONTACT':state.paused?'PAUSED':state.craft==='custom'?'FOUNDRY FLIGHT / SCREENING':'SIMULATION ACTIVE';$('pauseToggle').textContent=state.paused?'▶ Resume':'Ⅱ Pause';$('cameraToggle').textContent=view==='chase'?'◉ Chase view':'◉ Cockpit view';}
 function controls(){const has=(...a)=>a.some(k=>held.has(k));const t=k=>touch.has(k);return {pitch:(has('w','arrowup')||t('pitchUp')?1:0)-(has('s','arrowdown')||t('pitchDown')?1:0),bank:(has('d','arrowright')||t('right')?1:0)-(has('a','arrowleft')||t('left')?1:0),rudder:(has('e')?1:0)-(has('q')?1:0),throttle:(has('shift')||t('throttleUp')?1:0)-(has('control')||t('throttleDown')?1:0)};}
 function notify(message,seconds=3){$('flightAlert').textContent=message;$('flightAlert').classList.add('active');alertUntil=performance.now()+seconds*1000;$('flightA11y').textContent=message;}
 function frame(timestamp){if(!running)return;const dt=Math.min(.05,(timestamp-last)/1000||.016);last=timestamp;
  const was=state.checkpoints,prior=state.condition;core.step(state,controls(),dt);
  if(was!==state.checkpoints)notify(state.checkpoints>=3?'MISSION COMPLETE · SAVE YOUR FLIGHT':`GATE ${state.checkpoints} CLEARED`,4);
  if(prior!==state.condition&&state.condition==='GROUND_CONTACT'){state.paused=true;notify('GROUND CONTACT · RESTART OR SAVE FLIGHT',5);}
- if(state.speed<core.aircraft[state.craft].stall&&!state.paused&&Math.floor(timestamp/800)!==Math.floor((timestamp-16)/800))notify('LOW AIRSPEED · SIMULATED STALL',1.0);
+ if((state.craft==='custom'?state.aero?.stall:state.speed<core.aircraft[state.craft].stall)&&!state.paused&&Math.floor(timestamp/800)!==Math.floor((timestamp-16)/800))notify('LOW AIRSPEED · SIMULATED STALL',1.0);
  if(!fallback2D||timestamp-lastDraw>65){render();lastDraw=timestamp;}if(timestamp-lastHUD>100){hud();lastHUD=timestamp;}if(alertUntil&&timestamp>alertUntil){$('flightAlert').classList.remove('active');alertUntil=0;}
  frames++;requestAnimationFrame(frame);
 }
-function reset(kind=state.craft){state=core.start(kind);view='chase';hud();notify('FLIGHT RESTARTED · SYNTHETIC RANGE',2);}
+function reset(kind=state.craft){const design=state.design;state=core.start(kind,kind==='custom'?design:null);view='chase';hud();notify('FLIGHT RESTARTED · SYNTHETIC RANGE',2);}
 function togglePause(){state.paused=!state.paused;hud();notify(state.paused?'SIMULATION PAUSED':'SIMULATION RESUMED',1.2);}
 function saveFlight(){const receipt=core.flightReceipt(state);try{localStorage.setItem('evercraft-aaar-last-flight',JSON.stringify(receipt));}catch{}
  const sent=window.parent!==window;
@@ -236,9 +438,15 @@ function saveFlight(){const receipt=core.flightReceipt(state);try{localStorage.s
 }
 function begin(){if(running)return;running=true;$('startScreen').style.display='none';canvas.focus({preventScroll:true});last=performance.now();requestAnimationFrame(frame);notify('FLIGHT RANGE ACTIVE · W/S PITCH · A/D BANK',3);}
 function initEvents(){
+ window.addEventListener('AAAR_FOUNDRY_OPEN',()=>{if(running)state.paused=true;hud();});
+ window.addEventListener('AAAR_LAUNCH_CRAFT',event=>{
+   const design=window.AAARFoundry.validate(event.detail);state=core.start('custom',design);
+   const select=$('planeType');let opt=select.querySelector('option[value=custom]');if(!opt){opt=document.createElement('option');opt.value='custom';select.appendChild(opt);}opt.textContent=design.name;select.value='custom';
+   if(gl&&program)buildCustomMesh(design);view='chase';if(!running)begin();else{state.paused=false;}hud();notify('CUSTOM '+(design.type==='wing'?'WING':'ROTORCRAFT')+' LAUNCHED · ANALYTICAL GAME MODEL',4);
+ });
  $('beginFlight').addEventListener('click',begin);
  $('skipToControls').addEventListener('click',()=>{notify('W/S PITCH · A/D BANK · SHIFT/CTRL THROTTLE',5);$('beginFlight').focus();});
- $('planeType').addEventListener('change',e=>{reset(e.target.value);});
+ $('planeType').addEventListener('change',e=>{if(e.target.value==='custom'&&state.design)reset('custom');else if(e.target.value!=='custom')reset(e.target.value);});
  $('cameraToggle').addEventListener('click',()=>{view=view==='chase'?'cockpit':'chase';hud();});
  $('pauseToggle').addEventListener('click',togglePause);$('resetFlight').addEventListener('click',()=>reset());$('saveFlight').addEventListener('click',saveFlight);
  $('fullscreenToggle').addEventListener('click',async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else if(shell.requestFullscreen)await shell.requestFullscreen();}catch{notify('FULLSCREEN NOT AVAILABLE ON THIS DEVICE',2);}});
@@ -246,11 +454,94 @@ function initEvents(){
   const start=e=>{e.preventDefault();b.setPointerCapture?.(e.pointerId);touch.add(key);};
   const end=e=>{e.preventDefault();touch.delete(key);};b.addEventListener('pointerdown',start);b.addEventListener('pointerup',end);b.addEventListener('pointercancel',end);b.addEventListener('lostpointercapture',()=>touch.delete(key));
  }
- document.addEventListener('keydown',e=>{const k=e.key.toLowerCase();if(['w','s','a','d','q','e','shift','control','arrowup','arrowdown','arrowleft','arrowright',' '].includes(k)){if(running&&!e.target.closest('select'))e.preventDefault();held.add(k);}if(e.repeat)return;if(k==='c'){$('cameraToggle').click();}if(k==='r')reset();if(k==='p'||k===' ')togglePause();});
+ document.addEventListener('keydown',e=>{if(document.getElementById('foundryOverlay')?.classList.contains('open'))return;const k=e.key.toLowerCase();if(['w','s','a','d','q','e','shift','control','arrowup','arrowdown','arrowleft','arrowright',' '].includes(k)){if(running&&!e.target.closest('select'))e.preventDefault();held.add(k);}if(e.repeat)return;if(k==='c'){$('cameraToggle').click();}if(k==='r')reset();if(k==='p'||k===' ')togglePause();});
  document.addEventListener('keyup',e=>held.delete(e.key.toLowerCase()));window.addEventListener('blur',()=>{held.clear();touch.clear();if(running&&!state.paused){state.paused=true;hud();}});document.addEventListener('visibilitychange',()=>{if(document.hidden&&running){state.paused=true;}});
- window.addEventListener('message',event=>{if(event.source!==window.parent||event.source===window)return;if(event.data?.type==='AAAR_WORLD_PAUSE'){state.paused=true;hud();}if(event.data?.type==='AAAR_WORLD_RESUME'){state.paused=false;hud();}});
+ window.addEventListener('message',event=>{if(event.source!==window.parent||event.source===window)return;if(event.data?.type==='AAAR_WORLD_PAUSE'){state.paused=true;hud();}if(event.data?.type==='AAAR_WORLD_RESUME'){state.paused=false;hud();}if(event.data?.type==='AAAR_OPEN_FOUNDRY'){window.AAARFoundryUI?.open();}});
 }
 try{if(gl)initGL();else{fallback2D=true;$('flightStatus').textContent='SOFTWARE 3D VIEW';}initEvents();hud();render();}catch(error){$('beginFlight').disabled=true;$('beginFlight').textContent='GRAPHICS UNAVAILABLE';$('startScreen').querySelector('p').textContent=String(error.message||error)+' This does not affect your saved AAAR registry.';}
 })();
 </script>
-</body></html>
+<script>/* Aircraft Foundry screen, local-only design library, scene handoff. */
+(() => {'use strict';
+ const F=window.AAARFoundry;if(!F)return;
+ const $=id=>document.getElementById(id),storageKey='evercraft.aaar.foundry.blueprints.v1';
+ let design=F.preset('kestrel'),saving=false;
+ const fields={
+  massKg:['Mass',.5,30000,1,'kg','every'],bodyLengthM:['Body length',.5,40,.1,'m','every'],bodyWidthM:['Body width',.15,8,.05,'m','every'],
+  spanM:['Wingspan',.6,60,.2,'m','wing'],chordM:['Wing chord',.15,9,.05,'m','wing'],sweepDeg:['Wing sweep',0,60,1,'°','wing'],
+  tailAreaM2:['Horizontal tail area',0,30,.1,'m²','wing'],cgFraction:['CG fraction of chord',.05,.85,.01,'','wing'],
+  thrustN:['Maximum forward thrust',0,160000,100,'N','wing'],cd0:['Zero-lift drag coefficient (assumed)',.012,.25,.001,'','wing'],clMax:['Maximum lift coefficient (assumed)',.65,2.5,.05,'','wing'],
+  rotors:['Rotor count',2,12,1,'','rotor'],rotorRadiusM:['Rotor radius',.09,3.5,.01,'m','rotor'],totalPowerW:['Total motor shaft power',100,1500000,100,'W','rotor']
+ };
+ function boundsNice(n,k){const digits=['cgFraction','cd0'].includes(k)?3:['rotorRadiusM','bodyWidthM','chordM'].includes(k)?2:1;return Number(n.toFixed(digits)).toLocaleString('en-US')}
+ const shell=document.createElement('section');shell.id='foundryOverlay';shell.className='foundry-overlay';shell.setAttribute('role','dialog');shell.setAttribute('aria-modal','true');shell.setAttribute('aria-label','Anniston Aircraft Foundry');shell.innerHTML=`
+ <div class="foundry-frame"><header class="foundry-top"><div class="foundry-identity">EVERCRAFT WORLDS <b>× ANNISTON AAAR</b> / AIRCRAFT FOUNDRY</div><button id="foundryClose" type="button">Close ×</button></header>
+ <div class="foundry-heading"><div><span class="foundry-label">DESIGN / SCREEN / FLY / ITERATE</span><h2>Build the <span>impossible.</span><br>Then test it.</h2><p>Create a winged machine, a glider, a flying wing or a rotorcraft. Adjust the physics. Launch it into Cedar Basin and learn what your concept can actually do in this simplified model.</p></div><div class="foundry-flags">OPERATING MODE / LOCAL<br>REAL EQUATIONS / LOW-ORDER MODEL<br>NOT CFD · NOT AIRWORTHINESS</div></div>
+ <div class="foundry-main"><section class="foundry-panel"><div class="foundry-formhead"><label>FOUNDATION TEMPLATE<select id="fTemplate"><option value="kestrel">Kestrel / general aviation</option><option value="glider">Silent Arc / sailplane</option><option value="flyingwing">Manta / flying wing</option><option value="quad">Sparrow / quadrotor</option><option value="heavy">Sky Hauler / heavy rotorcraft</option><option value="custom">Custom configuration</option></select></label><label>NAME YOUR MACHINE<input id="fName" type="text" maxlength="64" autocomplete="off" placeholder="Your aircraft name" /></label></div><div class="foundry-subhead">01 / STRUCTURE</div><div id="fEvery"></div><div id="fWingSection"><div class="foundry-subhead">02 / WINGS & STABILITY</div><div id="fWing"></div></div><div id="fRotorSection"><div class="foundry-subhead">02 / ROTORS & POWER</div><div id="fRotor"></div></div><p class="foundry-note">Controls change the screening geometry and equations. No structural, aerodynamic, control or propulsion detail is inferred just from how the sketch looks.</p></section>
+ <section class="foundry-panel"><div class="foundry-plot"><div class="badge" id="fBlueprintLabel">TOP-DOWN CONCEPT / NOT TO SCALE</div><svg id="fSketch" viewBox="0 0 760 420" role="img" aria-label="Top-down parametric flying machine preview"></svg><div class="other">BLUEPRINT PROJECTION / SYNTHETIC ASSET</div></div><div class="foundry-stats" id="fStats"></div><div id="fGate" class="foundry-gate"></div><div class="foundry-warnings"><b>ENGINEERING ASSUMPTIONS & LIMITATIONS</b><ul id="fWarnings"></ul></div><div class="foundry-actions"><button class="primary" type="button" id="fLaunch">✈ BUILD & FLY</button><button type="button" id="fSave">Save blueprint</button><button type="button" id="fExport">Export JSON</button><button type="button" id="fImport">Import JSON</button></div><input id="fImportFile" type="file" accept="application/json,.json" hidden><div id="fError" class="foundry-error" role="status"></div><label class="foundry-library">SAVED DESIGNS ON THIS DEVICE<select id="fSaved"><option value="">No saved designs yet</option></select></label><p class="foundry-footer">Simulation-only: modeled lift from dynamic pressure and finite-wing approximation; induced drag from lifting-line theory; rotor hover from ideal momentum scaling with an assumed efficiency. It omits realistic aerodynamic moments, airfoil data, blade dynamics, structures, weather, propeller maps, energy consumption, stability-control engineering, and flight certification. Fictional scenery; no real hardware commands.</p></section></div></div>`;
+ document.getElementById('flightShell').appendChild(shell);
+ for(const [key,[label,min,max,step,unit,group]] of Object.entries(fields)){
+   const row=document.createElement('div');row.className='foundry-field';const l=document.createElement('span');l.className='field-name';l.textContent=label;
+   const o=document.createElement('output');o.id='fo_'+key;const range=document.createElement('input');range.id='fi_'+key;range.type='range';range.min=min;range.max=max;range.step=step;range.setAttribute('aria-label',label);
+   range.addEventListener('input',()=>{design[key]=Number(range.value);$('fTemplate').value='custom';refresh()});row.append(l,o,range);$('f'+group[0].toUpperCase()+group.slice(1)).appendChild(row);
+ }
+ function open(){shell.classList.add('open');$('flightShell').dataset.foundry='open';try{window.dispatchEvent(new Event('AAAR_FOUNDRY_OPEN'))}catch{};refresh();$('foundryClose').focus();}
+ function close(){shell.classList.remove('open');delete $('flightShell').dataset.foundry;}
+ function setDesign(d){design=F.validate(d);const mass=$('fi_massKg'),power=$('fi_totalPowerW'),thrust=$('fi_thrustN');
+   if(design.massKg<=25){mass.min='.4';mass.max='80';mass.step='.1';}else if(design.massKg<=1000){mass.min='1';mass.max='1200';mass.step='1';}else{mass.min='50';mass.max='30000';mass.step='25';}
+   if(design.totalPowerW<=15000){power.min='100';power.max='15000';power.step='50';}else if(design.totalPowerW<=200000){power.min='1000';power.max='250000';power.step='500';}else{power.min='10000';power.max='1500000';power.step='2000';}
+   if(design.thrustN<=15000){thrust.min='0';thrust.max='16000';thrust.step='50';}else{thrust.min='0';thrust.max='160000';thrust.step='500';}
+   for(const key of Object.keys(fields)){$('fi_'+key).value=design[key];} $('fName').value=design.name;const matched=Object.keys(F.presets).find(k=>F.presets[k].name===design.name);$('fTemplate').value=matched||'';refresh();}
+ function sketch(d){const svg=$('fSketch');const centerX=380,cy=206,span=d.type==='wing'?d.spanM:Math.max(d.rotorRadiusM*3.8,d.bodyWidthM*2);
+ const normalizedScale=Math.min(250/Math.max(span/2,.25),145/Math.max(d.bodyLengthM/2,.25));
+ const wingHalf=(d.spanM/2)*normalizedScale,bodyHalf=(d.bodyLengthM/2)*normalizedScale;
+ const bw=Math.max(6,d.bodyWidthM*.5*normalizedScale),alpha=70;
+ const line='#a3ced2',fill='#d6ebe8',accent='#f7a877';
+ let shapes=`<g opacity=".65" stroke="#648e9d" stroke-width="1"><path d="M380 13V405M18 206H742" stroke-dasharray="4 7"/><circle cx="380" cy="206" r="160" fill="none" stroke-dasharray="3 9"/><circle cx="380" cy="206" r="70" fill="none" stroke-dasharray="3 9"/></g>`;
+ if(d.type==='wing'){
+   const yWing=cy+bodyHalf*.13,depth=Math.max(14,d.chordM*normalizedScale),sw=Math.tan(d.sweepDeg*Math.PI/180)*wingHalf*.55;
+   const leftPts=[[centerX-bw,yWing-depth/2],[centerX-wingHalf,yWing-depth/2+sw],[centerX-wingHalf,yWing+depth/2+sw],[centerX-bw,yWing+depth/2]];
+   const rightPts=leftPts.map(p=>[2*centerX-p[0],p[1]]).reverse();
+   const pts=x=>x.map(p=>p.join(',')).join(' ');
+   shapes+=`<polygon points="${pts(leftPts)}" fill="#a3d1cf" stroke="${line}" stroke-width="3"/><polygon points="${pts(rightPts)}" fill="#a3d1cf" stroke="${line}" stroke-width="3"/>`;
+   const tailHalf=Math.min(wingHalf*.56,Math.sqrt(d.tailAreaM2)*normalizedScale*.7),ty=cy+bodyHalf*.83;
+   if(tailHalf>0)shapes+=`<path d="M${centerX-tailHalf} ${ty-12}L${centerX+tailHalf} ${ty-12}L${centerX+tailHalf*.8} ${ty+14}L${centerX-tailHalf*.8} ${ty+14}Z" fill="#87aaa9"/>`;
+ }
+ if(d.type==='rotor'){
+   const R=d.rotorRadiusM*normalizedScale,ring=Math.min(wingHalf*.72,120),count=d.rotors;
+   for(let i=0;i<count;i++){const theta=2*Math.PI*i/count+Math.PI/4,x=centerX+Math.cos(theta)*ring,y=cy+Math.sin(theta)*ring;
+     shapes+=`<line x1="${centerX}" y1="${cy}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}" stroke="#8cc9c7" stroke-width="9"/><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${Math.max(7,Math.min(96,R)).toFixed(1)}" fill="#84c9d21a" stroke="#b8ede0" stroke-width="3"/><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="5" fill="${accent}"/>`;
+   }
+ }
+ const ytop=cy-bodyHalf,ybot=cy+bodyHalf;
+ shapes+=`<path d="M${centerX} ${ytop}L${centerX+bw} ${ytop+bodyHalf*.36}L${centerX+bw} ${ybot-bodyHalf*.22}L${centerX+bw*.75} ${ybot}L${centerX-bw*.75} ${ybot}L${centerX-bw} ${ybot-bodyHalf*.22}L${centerX-bw} ${ytop+bodyHalf*.36}Z" fill="${fill}" stroke="${line}" stroke-width="3"/><path d="M${centerX} ${ytop+8}V${ybot-9}" stroke="#577987" stroke-width="2" stroke-dasharray="7 7"/><circle cx="${centerX}" cy="${cy-6}" r="6" fill="${accent}"/>`;
+ shapes+=`<g fill="#a8c6cb" font-family="monospace" font-size="13"><text x="27" y="390">${d.type==='wing'?'WING PLANFORM':'ROTOR POSITION PROXY'} / NON-STRUCTURAL</text><text x="686" y="34">TOP</text></g>`;
+ svg.innerHTML=shapes;
+ }
+ function refresh(){try{design.name=$('fName').value||design.name;const a=F.analyze(design),d=a.design,m=a.metrics;
+    $('fWingSection').hidden=d.type!=='wing';$('fRotorSection').hidden=d.type!=='rotor';
+    for(const [key,meta] of Object.entries(fields)){$('fo_'+key).textContent=boundsNice(design[key],key)+(meta[4]?' '+meta[4]:'');}
+    sketch(d);
+    const stats=d.type==='wing'?[['WING AREA',m.wingArea,'m²'],['ASPECT RATIO',m.aspectRatio,''],['STALL SCREEN',m.vStall*1.94384,'knots'],['SCREEN DRAG',m.screenDragN,'N'],['THRUST - DRAG',m.screenThrustMarginN,'N'],['TAIL VOLUME',m.tailVolume,'proxy']]:[['THRUST / WEIGHT',m.thrustWeightRatio,'×'],['DISK AREA',m.diskArea,'m²'],['HOVER POWER',m.hoverPowerScreenW/1000,'kW'],['POWER PROVIDED',d.totalPowerW/1000,'kW'],['DISK LOADING',m.diskLoadingNpm2,'N/m²'],['MASS',d.massKg,'kg']];
+    $('fStats').replaceChildren(...stats.map(([label,num,unit])=>{const e=document.createElement('div');e.className='foundry-stat';const small=document.createElement('small');small.textContent=label;const strong=document.createElement('strong');strong.textContent=Number(num).toLocaleString('en-US',{maximumFractionDigits:unit==='proxy'||unit==='×'?2:1});const span=document.createElement('span');span.textContent=unit||'dimensionless';e.append(small,strong,span);return e;}));
+    const pass=d.type==='wing'?m.screenThrustMarginN>=0:m.thrustWeightRatio>=1;
+    $('fGate').className='foundry-gate'+(pass?'':' hold');$('fGate').textContent=d.type==='wing'?(pass?'SCREENING: thrust covers modeled drag at 1.45 × stall speed. This is not a safe-flight result.':'SCREENING HOLD: modeled thrust does not cover level-flight drag. Still flyable as a glider or failure experiment.'):(pass?'SCREENING: modeled available thrust exceeds weight. Control stability remains unknown.':'SCREENING HOLD: thrust below weight. Expect a descent in the simulator.');
+    $('fWarnings').replaceChildren(...a.warnings.map(t=>{const li=document.createElement('li');li.textContent=t;return li;}));$('fBlueprintLabel').textContent=d.name.toUpperCase().slice(0,48)+' / '+(d.type==='wing'?'FIXED WING':'ROTORCRAFT');$('fError').textContent='';
+  }catch(err){$('fError').textContent=err.message;}}
+ function library(){try{const d=JSON.parse(localStorage.getItem(storageKey)||'[]');return Array.isArray(d)?d.filter(x=>x&&x.schema===F.SCHEMA).slice(-20):[];}catch{return [];}}
+ function updateLibrary(){const items=library();const list=$('fSaved');list.replaceChildren();const empty=document.createElement('option');empty.value='';empty.textContent=items.length?'Select a saved blueprint':'No saved designs yet';list.append(empty);items.forEach((d,i)=>{const o=document.createElement('option');o.value=String(i);o.textContent=(d.name||'Design').slice(0,64);list.append(o);});}
+ $('fTemplate').addEventListener('change',e=>{if(F.presets[e.target.value])setDesign(F.preset(e.target.value));});
+ $('fName').addEventListener('input',e=>{design.name=e.target.value||'Untitled machine';refresh();});
+ $('foundryClose').addEventListener('click',close);
+ $('fLaunch').addEventListener('click',()=>{try{const d=F.validate({...design,name:$('fName').value});try{localStorage.setItem('evercraft.aaar.foundry.last.v1',JSON.stringify(d));}catch{}window.dispatchEvent(new CustomEvent('AAAR_LAUNCH_CRAFT',{detail:d}));close();}catch(err){$('fError').textContent=err.message;}});
+ $('fSave').addEventListener('click',()=>{try{const d=F.validate({...design,name:$('fName').value});const items=library().filter(x=>x.name!==d.name);items.push(d);localStorage.setItem(storageKey,JSON.stringify(items.slice(-20)));updateLibrary();$('fError').textContent='Saved locally. No online synchronization.';}catch(err){$('fError').textContent=err.message;}});
+ $('fExport').addEventListener('click',()=>{try{const d=F.validate({...design,name:$('fName').value});const blob=new Blob([JSON.stringify(d,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='anniston-aircraft-blueprint.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);}catch(err){$('fError').textContent=err.message;}});
+ $('fImport').addEventListener('click',()=>$('fImportFile').click());
+ $('fImportFile').addEventListener('change',async e=>{try{const file=e.target.files?.[0];if(!file)return;if(file.size>12000)throw Error('Blueprint JSON exceeds 12 KB.');setDesign(F.validate(JSON.parse(await file.text())));}catch(err){$('fError').textContent='Import refused: '+err.message}finally{e.target.value='';}});
+ $('fSaved').addEventListener('change',e=>{if(e.target.value==='')return;const d=library()[Number(e.target.value)];try{setDesign(F.validate(d));}catch(err){$('fError').textContent=err.message;}});
+ window.AAARFoundryUI={open,close,getDesign:()=>F.validate(design)};
+ setDesign(design);updateLibrary();
+ document.getElementById('openFoundry')?.addEventListener('click',open);
+ document.getElementById('designFromStart')?.addEventListener('click',open);
+})();
+</script></body></html>
