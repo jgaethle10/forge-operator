@@ -59,7 +59,7 @@ function keyHash(file){
   const publicPem=fs.readFileSync(file,'utf8');
   // createPublicKey() also accepts a private PEM and derives its public half.
   // Never allow a wing's private signer to be accidentally stored on the broker.
-  if(!/^-----BEGIN PUBLIC KEY-----\\r?\\n/.test(publicPem))deny('private_key_at_broker_forbidden');
+  if(!/^-----BEGIN PUBLIC KEY-----\r?\n/.test(publicPem))deny('private_key_at_broker_forbidden');
   let key;
   try{key=crypto.createPublicKey(publicPem);}
   catch{deny('key_invalid');}
