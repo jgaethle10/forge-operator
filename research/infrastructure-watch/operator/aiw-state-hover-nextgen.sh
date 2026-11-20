@@ -141,7 +141,7 @@ then
   echo "STOP: new preview did not pass. Existing 8794 and other services untouched."
   # Only stop the exact process we just launched. Never signal a port owner.
   if [ -r "/proc/$NEW_PID/cmdline" ] &&
-     tr '\\0' ' ' < "/proc/$NEW_PID/cmdline" | grep -Fq "$HOVER/aiw_state_first_gateway.py"; then
+     ps -p "$NEW_PID" -o args= | grep -Fq "$HOVER/aiw_state_first_gateway.py"; then
     kill "$NEW_PID" 2>/dev/null || true
   fi
   tail -n 20 "$HOVER/gateway.log" || true
