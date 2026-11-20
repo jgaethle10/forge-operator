@@ -2,6 +2,40 @@
 
 Aiden's Lab is Evercraft's **public science exploration front door**. It is not an alternate Systemia authority, clinical-research validation system, or separate source of truth.
 
+## Immersive science museum entrance (November 20, 2026)
+
+The Aiden's Lab **front door** now contains three large original illustrated
+and motion-aware entry portals for the actually playable Physics Atlas,
+Earth & World Atlas, and Watershed Laboratory. The portals open directly
+into existing first-party owned routes rather than a marketing mockup.
+Their illustrations are intentionally schematic CSS artwork, **not**
+survey, satellite, model output, live data, or photographs.
+
+The existing Learning Universe hero now has seven world buttons, including
+the already cataloged `watershed-lab` destination. Its entirely local
+Canvas rendering includes a more layered holographic particle field and
+orbital ribbons, using deterministic trigonometric placement and a
+bounded ~30fps draw schedule. Pointer-based gentle background parallax
+runs only for non-touch pointing devices, never collects or stores user
+location, never sends network requests, respects reduced-motion settings,
+pauses when off-screen/inactive, and cleans up its event handlers.
+
+On narrow phone screens the three entrances form a horizontally
+swipeable, scroll-snapping gallery with a neighboring card peeking into
+view. Animated decoration is disabled for visitors requesting reduced
+motion. An icon or art tile cannot imply a world is ready: these three
+links exist because their first-party playable URLs already have audited
+owned routes. Other historic learning worlds retain their honest
+ready/not-restored states in the source-bound registry.
+
+Verification: `tests/aiden-lab-living-universe.test.mjs` checks all
+seven navigable hero nodes against the allowlisted registry, exact three
+live portal paths, original owned artwork classes, low-motion and mobile
+controls, bounded orbit geometry and absence of telemetry/network APIs.
+Passing tests is not equivalent to phone-tested visual quality or an
+actual **deployed** updated homepage; use managed Penguin update and
+independent public 11-asset HTTPS exact-source verification.
+
 ## Watershed Laboratory, first original landscape simulation (November 20, 2026)
 
 **Science-linked visual system v3:** The Watershed Laboratory now draws a
