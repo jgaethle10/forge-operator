@@ -83,11 +83,12 @@ function invalidate(){
 }
 async function getPdf(){
  if(busy)return;
- busy=true;const btn=$('print'),ready=$('pdfReady'),download=$('pdfDownload');
+ busy=true;const startVersion=window.__evercraftDrawingVersion||0;const btn=$('print'),ready=$('pdfReady'),download=$('pdfDownload');
  btn.disabled=true;btn.textContent='Preparing your PDF…';invalidate();
  $('messages').textContent='Building two landscape sheets on your device. No imagery is uploaded.';
  try{
   const images=[await rasterSheet('drawing-1'),await rasterSheet('drawing-2')];
+  if((window.__evercraftDrawingVersion||0)!==startVersion)throw Error('The drawing changed while the PDF was being made. Tap View / Save PDF again');
   const result=pdfBytes(images);
   const blob=new Blob([result],{type:'application/pdf'});
   const next=URL.createObjectURL(blob);
