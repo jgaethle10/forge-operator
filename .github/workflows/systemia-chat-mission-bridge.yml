@@ -58,6 +58,7 @@ jobs:
           bash -n systemia/mission-bridge/gems/execute_segment_replay.sh
           bash -n systemia/mission-bridge/gems/execute_candidate_qc.sh
           bash -n systemia/mission-bridge/gems/execute_full_area_replay.sh
+          bash -n systemia/mission-bridge/gems/execute_hard_negative_ablation.sh
           python3 -m unittest discover -s systemia/mission-bridge/gems -p test_verify_official_input_hashes.py -v
       - name: Run bounded synthetic GEMS computation (not official competition data)
         run: node systemia/mission-bridge/gems/run-synthetic-smoke.mjs
