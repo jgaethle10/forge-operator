@@ -11,7 +11,7 @@ The opt-in Fabric route is `/api/internal/wing-enrollment/v1/fallen`, separate f
 - NextGen's pinned recipient X25519 SPKI SHA-256 is `eebd0eb18ff928eaee284fa9b584bd9d981e2091c40fb1708d8129a94799867a`.
 - The already-created encrypted package SHA-256 is `b3c4dbc7e2cf167291257d64bab60b174763b3512f5fed4da4e14580ff4a4491`. The source file stays in Penguin's private `0700/0600` storage.
 - The owner must independently verify the live TLS origin, signer pin, private package file, and authoritative deployment before enabling anything.
-- Challenge GET yields a random 192-bit nonce with a 60s expiration. POST requires a valid Ed25519 signature over the exact nonce, package hash, recipient fingerprint, and protocol schema. A nonce is consumed even if a signature fails. One successfully verified claim per process; further claims return 410. Restart resets the in-process claim flag, so **disable and remove the route promptly after the first signed receipt**, and use service audit evidence. This is a short-lived operator-supervised bootstrap, not a durable enrollment issuance service.
+- Challenge GET yields a random 192-bit nonce with a 60s expiration. POST requires a valid Ed25519 signature over the exact nonce, package hash, recipient fingerprint, and protocol schema. A nonce is consumed even if a signature fails. One successful claim atomically creates an exclusive 0600 marker under a pre-existing 0700 owner-private claim-state directory, and further claims return 410 **including after restart**. A crash during delivery still consumes the claim, requiring explicit operator recovery rather than automatic replay. Disable the temporary route promptly after the signed receipt; the marker must not be deleted during routine deployment or restarts. This is an operator-supervised bootstrap, not a general enrollment issuance service.
 - Only ciphertext is returned. This doesn't transfer customer media, authorize Passport intake, install receiver credentials, enable resident service, or allow previews/payments.
 
 ## Source tests
@@ -28,7 +28,10 @@ EVERCRAFT_FALLEN_BOOTSTRAP_PACKAGE=/home/jessegaethle10/.local/state/evercraft/w
 EVERCRAFT_FALLEN_BOOTSTRAP_SIGNER_PUB=/home/jessegaethle10/.local/state/evercraft/wing-courier/trusted/fallen.sign.pub
 EVERCRAFT_FALLEN_BOOTSTRAP_SHA256=b3c4dbc7e2cf167291257d64bab60b174763b3512f5fed4da4e14580ff4a4491
 EVERCRAFT_FALLEN_BOOTSTRAP_RECIPIENT_FP=eebd0eb18ff928eaee284fa9b584bd9d981e2091c40fb1708d8129a94799867a
+EVERCRAFT_FALLEN_BOOTSTRAP_CLAIM_STATE_DIR=/home/jessegaethle10/.local/state/evercraft/wing-courier/claim-state
 ```
+
+Create and verify the claim-state directory separately as owner-only mode 0700 before enabling Fabric. Preserve it across deployments and restarts. Fail closed if that directory is missing, writable by others, or symlinked.
 
 Never put these env values into a public browser, and never write private signing/decryption keys or bearer credentials to GitHub. In particular, do not enable the route until runtime source provenance and startup behavior under these flags are verified. A stale Fabric binary will not contain this handler.
 
