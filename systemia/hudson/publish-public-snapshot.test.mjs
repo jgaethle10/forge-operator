@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {classifyPaths,makePublicSnapshot,CANONICAL,SCHEMA} from './publish-public-snapshot.mjs';
+import {classifyPaths,makePublicSnapshot,parsePublicGitLog,CANONICAL,SCHEMA} from './publish-public-snapshot.mjs';
 const now='2026-11-20T02:00:00.000Z',sha='a'.repeat(40);
 test('source routing is bounded to public owned paths',()=>{
  assert.equal(classifyPaths(['systemia/hudson/README.md']),'hudson');
@@ -35,4 +35,16 @@ test('no evidence never becomes generated activity',()=>{
  const snapshot=makePublicSnapshot({publishedAt:now,entries:[]});
  assert.equal(snapshot.events.length,0);
  assert.equal(snapshot.sources.length,1);
+});
+
+test('single batch Git log parses paths and preserves commit provenance',()=>{
+ const first='a'.repeat(40),second='b'.repeat(40);
+ const raw=first+'\x1f2026-11-20T01:58:00Z\n\npublic/chum/a.json\n\n'+second+'\x1f2026-11-20T01:57:00Z\n\nsystemia/hudson/readme.md\n';
+ const entries=parsePublicGitLog(raw);
+ assert.equal(entries.length,2);
+ assert.deepEqual(entries[0].paths,['public/chum/a.json']);
+ assert.deepEqual(entries[1].paths,['systemia/hudson/readme.md']);
+ const snapshot=makePublicSnapshot({publishedAt:now,entries});
+ assert.deepEqual(snapshot.events.map(e=>e.system),['discovery','hudson']);
+ assert.equal(JSON.stringify(snapshot).includes('a.json'),false);
 });

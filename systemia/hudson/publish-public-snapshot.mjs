@@ -65,17 +65,29 @@ export function makePublicSnapshot({entries, publishedAt = new Date().toISOStrin
     events:events.slice(0,Math.max(1,Math.min(200,limit)))
   };
 }
-export function gatherGitEntries(root,max=240) {
+export function parsePublicGitLog(raw) {
+  const result=[];
+  let current=null;
+  for (const line of String(raw||'').split('\n')) {
+    const value=line.trim();
+    const match=/^([a-f0-9]{40})\x1f([^\x1f]+)$/i.exec(value);
+    if(match){
+      current={sha:match[1],at:match[2],paths:[]};
+      result.push(current);
+    }else if(value&&current&&!value.includes('\x00')){
+      current.paths.push(value);
+    }
+  }
+  return result;
+}
+export function gatherGitEntries(root,max=80) {
   const origin=runGit(root,['remote','get-url','origin']);
   if (!approvedRemote.test(origin)) throw new Error('wrong_canonical_public_repository');
-  const records=runGit(root,['log','--no-merges','-n',String(Math.max(1,Math.min(400,max))),'--format=%H%x1f%cI']);
-  if (!records) return [];
-  return records.split('\n').map(line=>{
-    const [sha,at]=line.trim().split('\x1f');
-    if (!/^[0-9a-f]{40}$/i.test(sha)) return null;
-    const paths=runGit(root,['show','--pretty=format:','--name-only',sha]).split('\n').filter(Boolean);
-    return {sha,at,paths};
-  }).filter(Boolean);
+  const records=runGit(root,[
+    'log','--no-merges','-n',String(Math.max(1,Math.min(200,max))),
+    '--format=%H%x1f%cI','--name-only'
+  ]);
+  return parsePublicGitLog(records);
 }
 function arg(name,fallback) {
   const i=process.argv.indexOf(name);
