@@ -514,11 +514,11 @@ function drawMistySail(x,span,side,swell,tint){
  ctx.closePath();
  var silk=ctx.createLinearGradient(x-.5,0,x+.12,tip);
  silk.addColorStop(0,"rgba(22,103,139,.08)");
- silk.addColorStop(.32,tint===0?"rgba(114,239,222,.24)":"rgba(175,166,255,.22)");
- silk.addColorStop(.78,"rgba(222,255,247,.39)");
+ silk.addColorStop(.32,tint===0?"rgba(114,239,222,.43)":"rgba(175,166,255,.40)");
+ silk.addColorStop(.78,"rgba(222,255,247,.67)");
  silk.addColorStop(1,"rgba(238,255,251,.015)");
  ctx.fillStyle=silk;ctx.fill();
- ctx.strokeStyle=tint===0?"rgba(146,255,228,.52)":"rgba(193,191,255,.51)";
+ ctx.strokeStyle=tint===0?"rgba(146,255,228,.81)":"rgba(193,191,255,.78)";
  ctx.lineWidth=.035;ctx.shadowBlur=.14;
  ctx.shadowColor=tint===0?"rgba(122,255,227,.55)":"rgba(174,175,255,.49)";
  ctx.stroke();ctx.shadowBlur=0;
@@ -569,7 +569,11 @@ function drawTraveler(from,to,t){
  hull.addColorStop(1,"rgba(33,126,146,.40)");
  ctx.fillStyle=hull;ctx.fill();
  ctx.save();ctx.shadowBlur=.18;ctx.shadowColor="rgba(143,255,238,.90)";
- ctx.strokeStyle="rgba(167,255,232,.81)";ctx.lineWidth=.050;ctx.stroke();ctx.restore();
+ ctx.strokeStyle="rgba(167,255,232,.97)";ctx.lineWidth=.060;ctx.stroke();ctx.restore();
+ // A luminous rail runs the keel, visually joining all cloud sails to one hull.
+ ctx.beginPath();ctx.moveTo(-1.25,-.06);
+ ctx.quadraticCurveTo(.20,-.31,1.36,-.045);
+ ctx.strokeStyle="rgba(232,255,239,.68)";ctx.lineWidth=.023;ctx.stroke();
  // Five silver porthole embers, just enough detail at phone-scale.
  for(var lamp=0;lamp<5;lamp++){
   var lx=-.80+lamp*.38,ly=.035+Math.sin(lamp*1.5)*.07;
@@ -583,8 +587,8 @@ function drawTraveler(from,to,t){
   ctx.beginPath();ctx.moveTo(mast.x,-mast.s*breathe);
   ctx.lineTo(mast.x,mast.s*breathe);
   ctx.strokeStyle="rgba(232,251,242,.55)";ctx.lineWidth=.024;ctx.stroke();
+  // Three rising cloud-sails create a ship silhouette, not a mirrored flower.
   drawMistySail(mast.x,mast.s*breathe,-1,.7,mastIndex%2);
-  drawMistySail(mast.x,mast.s*breathe,1,.8,(mastIndex+1)%2);
  }
  // A faint tapering cloud-figurehead at the bow.
  ctx.beginPath();ctx.moveTo(1.13,0);
@@ -599,7 +603,7 @@ function drawTraveler(from,to,t){
   var px=-1.72+seeded(spark*19+7)*3.35+Math.sin(z)*.20;
   var py=(seeded(spark*11+9)-.5)*2.30+Math.cos(z*.82)*.10;
   var twinkle=Math.pow(.5+.5*Math.sin(clock*(1.1+k*1.7)+spark*2.3),4);
-  var alpha=.15+twinkle*.58,r=.009+twinkle*.022;
+  var alpha=.33+twinkle*.61,r=.020+twinkle*.033;
   ctx.fillStyle=spark%4===0?"rgba(254,248,224,"+alpha.toFixed(3)+")":
     "rgba(171,255,233,"+alpha.toFixed(3)+")";
   ctx.beginPath();ctx.arc(px,py,r,0,7);ctx.fill();
