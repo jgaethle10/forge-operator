@@ -1,0 +1,141 @@
+# ANNISTON
+## Aerospace, Aerodynamics & Robotics (AAAR)
+
+**Evercraft LLC engineering division · AAAR Mission Control 0.2**
+
+Anniston is an evidence-led, mobile-responsive program operations site for aerospace, aerodynamic engineering, aircraft safety, UAV/drone systems, robotics, physical autonomy and space research. It is a component of the broader **Evercraft OS**, with **GitHub as the canonical record** and **Systemia as the intended orchestrator**.
+
+### What is implemented in this release
+
+- Custom Anniston identity, architectural flight schematic, responsive dashboard and navigation.
+- Program registry with proposed / recovery / active / dormant / resurrected lifecycle filters; search by domain, confidence and text.
+- Edit and register programs; build maturity, blockers, source confidence, next step and review cadence are independent fields.
+- Evidence vault with direct GitHub source links, receipt notes and independent-reproduction status kept distinct from artifact existence.
+- Simulation & QA workbench with current observations, next test gate and safety boundaries.
+- Commercial pathway tracking with buyer-validation distinctions; no unverified revenue is implied.
+- Side-by-side priority comparison and documented heuristic for triage, not safety certification.
+- Review queue, local review logging, cadence rescheduling and program attention ranking.
+- Local idempotent "Push next action" creating an exportable Systemia *handoff request*, **not** a live command.
+- Import/export of JSON data; compatibility with legacy `evercraft.anniston-aaar.v1` and `evercraft.flightworks.v1` registry imports.
+- Browser-local persistence, with no third-party frameworks, fonts, image CDNs, analytics, APIs or runtimes.
+
+### Source-backed engineering records in seed registry
+
+1. **Evercraft Network Air Relay**: `systemia/network/AIR-RELAY.md` and its proof contract, with software-only evidence boundaries.
+2. **Evercraft Network Aircraft Relay**: `systemia/network/AIRCRAFT-RELAY.md`, `aircraft-relay-planner.mjs`, and `aircraft-relay-proof.mjs`; planned/verified contact separation and explicit civilian aircraft consent.
+
+Both seed records mean **source files were independently located in the GitHub repository**. The proof scripts have **not been rerun for this AAAR interface build**, so AAAR does not claim accepted execution receipts, deployed UAV flight capability, airworthiness, navigation, radio approvals, physical operation or commercial contracts.
+
+The aircraft-safety, lunar-habitat, robotics, and UAV-simulator entries are explicitly **unverified research/recovery leads**, not fabricated engineering milestones.
+
+### Preview / run locally
+
+Open `index.html` or serve its directory from an Evercraft-owned host. The site has no runtime dependencies. Because preview storage is local to the current browser origin, export changes when moving between environments.
+
+The delivered `anniston-aaar-standalone.html` is a standalone version with CSS and JavaScript embedded for quick review. The structured `index.html` + `assets/` version is intended for owned deployment and future backend integration.
+
+### Owned integration needed before production
+
+1. Commit these files in the canonical repository under `systemia/anniston-aaar/site/` or another approved AAAR path.
+2. Deploy behind an authenticated private route on Evercraft-operated compute / edge. Do not use Base44, Wix or any third-party site/application runtime.
+3. Add Systemia API endpoints for versioned program CRUD, evidence receipts, audit journal, role-based approval and conflict-safe sync. GitHub remains source of truth.
+4. Replace local work-order handoff with an authenticated, idempotent Systemia request carrying job ID, explicit human review gate and execution receipt. No direct actuation or aircraft control from AAAR.
+5. Connect review schedules and overdue checks to Kaidance/Systemia heartbeat; never claim reminders are live before verified scheduler receipts exist.
+6. Add a signed release manifest, CI regression tests and end-to-end integration/authorization tests before private deployment.
+
+### Safety and evidence policy
+
+A GitHub reference is evidence of a file, not of a successful experiment or physical system. A successful simulation is not field approval. Operational flight, robotic actuation, radio use or aviation certification require independent regulatory, engineering, operator and hardware evidence. AAAR exposes no flight-control commands. Buyer and revenue fields record hypotheses until independently validated.
+
+### Smoke tests
+
+`python tests/smoke.py` (requires Python Playwright and a Chromium browser for development tests only). Tests assert desktop registry rendering, lifecycle filtering, local work-order idempotency, comparison views, export, and 390px mobile navigation.
+
+**Tracked engineering issue:** https://github.com/jgaethle10/forge-operator/issues/2285
+
+### Private owner API candidate (v0.3)
+
+The bundled `service/server.py` is a **Python standard-library-only** loopback API. It has authenticated registry snapshots with optimistic revision guards, append-only-in-memory/locally persisted audit entries, atomic disk replacement, and idempotent review-only work requests. The UI now has an explicit bottom-right Connect / Pull / Save registry / Submit review queue control. It does not automatically upload browser data. The operator token stays in JavaScript memory, not localStorage.
+
+Run from repo root on a controlled Evercraft-owned node:
+
+```sh
+export AAAR_TOKEN="$(python3 -c 'import secrets;print(secrets.token_urlsafe(48))')"
+export AAAR_HOST=127.0.0.1
+export AAAR_PORT=8876
+python3 systemia/anniston-aaar/service/server.py
+# Open http://127.0.0.1:8876/ on that node.
+```
+
+Use an owner-approved authenticated reverse proxy before accessing from other devices. Do **not** bind directly to a public interface. The default private data file lives at `~/.local/state/evercraft/aaar/private-registry.json`; do not commit that private file to a public repo. Operator actions are **locally persisted only**. GitHub canonical synchronization, review approval policy, Systemia job acceptance and owned private Sites deployment remain blocked until their own integration is verified.
+
+Smoke tests (Python 3, no packages):
+
+```sh
+cd systemia/anniston-aaar/service
+python3 -m unittest -v test_server
+```
+
+These test authentication, stale revision conflicts, atomic write path, duplicate work order suppression, misleading execution-state prevention, and malformed input. **No flight, drone or robot commands are exposed.**
+
+## AAAR 0.4 analytical airfoil lab (local integration candidate)
+The source-controlled pure analytical module `site/aero-core.js` adds NACA four-digit geometry, thin-airfoil mean-camber zero-lift angle, simplified finite-wing linear lift coefficient, dynamic pressure, and lift/weight screening. Run `node --test systemia/anniston-aaar/tests/aero.test.cjs` (six passed locally).
+
+A corresponding single-file AAAR 0.4 interface and upgraded owner API were built and browser-tested locally (1440px and 390px). They are bundled in the user's downloadable AAAR 0.4 artifact **but are not yet committed in this PR**. The canonical index and API in this branch remain the 0.3 versions. Never present AAAR 0.4 as deployed or running on Systemia until those files are reviewed, committed and deployed.
+
+Model truth boundary: screening only, not CFD, drag/stall/structural assessment, hardware operation, or certification. User interface study records are labeled `UNVALIDATED_SCREENING`; local API code rejects attempts to call them certified. NASA Glenn lift equation: https://www1.grc.nasa.gov/beginners-guide-to-aeronautics/lift-equation/ . GitHub program data sync and live orchestration remain pending.
+
+
+## AAAR 0.5 | Worlds Flight Range
+
+The owner-only Anniston site now includes a **Fly in Worlds** section: a playable, browser-local synthetic aircraft sandbox, with a counterpart at `public/worlds/flight/index.html` and a new flight portal link from `public/worlds/index.html`. Three fictional aircraft (Kestrel trainer, Albatross glider, Peregrine experimental) have keyboard/touch pitch, bank, rudder and throttle, chase/cockpit views, runway, 3 mission gates, game-HUD instruments, terrain contact and local flight records.
+
+The flight range renders original procedural 3D geometry with native WebGL2 where available and a Canvas2D perspective fallback on restricted browsers. It does not call external game/rendering libraries, hosted asset services, remote control systems, aircraft, or robotics hardware. This is an **entertainment-grade gameplay simulation**, explicitly not the authoritative World Engine, flight training credit, aerodynamic validation or certification.
+
+- Owner AAAR site source: `systemia/anniston-aaar/site/index.html`.
+- Flight runtime: `systemia/anniston-aaar/site/worlds-flight/index.html` and separated `flight-core.js`/`flight-runtime.js` for tests.
+- Owned Worlds static route source: `public/worlds/flight/index.html`.
+- Flight data classification: `evercraft.aaar.worlds-flight.v1`, `GAME_SIMULATION_ONLY`, `UNVALIDATED_GAMEPLAY`, `local_preview_only`. The authenticated service rejects promotion to certified or arbitrary tracks.
+- Reproduced local tests: 8 flight physics, 6 airfoil, 6 owner API; browser flight input and saved-record check on desktop and separate 390px mobile fallback rendering. Hardware WebGL2 and physical Safari validation are **not claimed**.
+- Next release gates: private AAAR deployment, independent Worlds HTTPS route verification, real-device performance/camera/touch testing, canonical GitHub-backed session evidence and Systemia work-order integration, then optionally authoritative World Engine adapter.
+
+No production URL or hardware execution is implied by GitHub commits or simulated flight metrics.
+
+
+## Aircraft Foundry v0.6 | Design and fly in Worlds
+
+**Owner-built local prototype; PR branch, not yet production deployed.**
+
+AAAR now includes a design-to-flight loop inside its existing `Fly in Worlds` room, and the same self-contained game lives at `public/worlds/flight/index.html` for the eventual owned Worlds route.
+
+- Five editable starting machines: trainer, sailplane, flying wing, light quadrotor and heavy rotorcraft. Designs may be renamed and tuned across geometry, mass, wing span/chord/sweep, tail, center-of-mass position, thrust, rotor count/radius and available power.
+- Top-down parametric visual assembly, screening metrics (stall speed, induced drag, thrust/drag margin, rotor disk loading, hover-power assumption), warnings and local blueprint import/export.
+- Gameplay test flights use low-order fixed-wing point-mass and idealized rotor momentum-theory approximations. Controls and bad designs affect the flight, and custom geometry changes the rendered vehicle where supported. Not CFD, wind tunnel, calibrated rotor data, structures, or flight certification.
+- Flight records include the validated blueprint. AAAR's parent validates every numeric field before accepting it, and the owner API now rejects unexpected fields, malformed values, missing custom designs and certification promotion. The only accepted evidence class remains `UNVALIDATED_GAMEPLAY`.
+- Browser-local save and export. No live GitHub registry synchronization, Systemia mission execution, physical flight actuation, actual airworthiness or user account storage.
+- No Base44, commercial game runtime, third-party JS library, assets or remote hosts.
+
+### Source
+
+`site/worlds-flight/foundry-core.js` is a deterministic model used by both browser and Node regression tests. `site/worlds-flight/foundry-ui.js` and `foundry-ui.css` implement the interactive screen. `flight-core.js` and `flight-runtime.js` now support validated custom machines, with an optional Canvas2D fallback. `site/worlds-flight/index.html` and `public/worlds/flight/index.html` are self-contained launch documents.
+
+### Local verification performed during build
+
+- 24/24 Node tests passed: 14 previous airfoil/flight tests plus 10 Foundry dynamics, units, adverse conditions and safety-contract tests.
+- 11/11 Python owner-API tests passed: six existing plus five strict custom-blueprint tests.
+- Chromium memory-document smoke checks at 1440px and 390px: tune rotor power, preview, save a blueprint, launch a custom airframe and save its gameplay receipt. AAAR parent handoff also checked on both sizes.
+- Test browser disallowed native WebGL2 and blocked local HTTP navigation; the Canvas2D fallback was tested. **Physical Safari/device WebGL2, performance, production TLS and deployment remain unverified.**
+
+### Further engineering
+
+Part-level craft graph, multi-wing/VTOL/airship/rocket model plugins, calibrated coefficients, verified flight envelopes, richer Worlds terrain and authoritative simulation integration remain open. These should be added as separate evidence-gated modules, not represented as already supported. Hosted paths and cross-device sync still require approved deployment receipts.
+
+
+## AAAR v0.7 mobile flight-launch repair
+
+- The AAAR overview hero and mobile Worlds section now link directly to `./worlds-flight/index.html`. Mobile no longer runs a large, lazy-loaded nested iframe.
+- The self-contained cockpit is versioned in `systemia/anniston-aaar/site/worlds-flight/index.html` and mirrored in `public/worlds/flight/index.html`. It uses Canvas2D by default on touch/narrow browsers, with WebGL2 optional on desktop. Failed GL initialization cannot prevent a safe software fallback.
+- iPhone safe-area CSS keeps steering/throttle buttons above the action toolbar. Pointer-capture exceptions are handled. Foundry saves fall back to tab memory if the HTML viewer refuses localStorage, with JSON export available.
+- On 2026-11-19, local Chromium mobile-emulation smoke tests covered 390×844, 375×667, 844×390, 1440×900, start, touch throttle, saved in-tab custom craft, flight export action and zero JavaScript errors. Available-storage simulation also confirmed custom flight receipts. The Node engine suites passed 24/24 checks.
+- **Not proven:** in-app iOS Quick Look / ChatGPT HTML preview JavaScript execution, native Safari GPU behavior, publicly deployed owned HTTPS route, and persistent Systemia sync. The test harness blocks both file:// and 127.0.0.1 navigation, so browser tests used `page.set_content`; do not claim a device-tested or public-working link from this alone.
+- **Next gate:** deploy exact pinned cockpit through Evercraft-owned Worlds edge to an HTTPS route, check GET plus executable JS on a physical iPhone Safari session, verify touch/foundry/storage behavior and collect a deployment receipt. Do not use Base44, third-party app runtimes or unapproved flight controls.

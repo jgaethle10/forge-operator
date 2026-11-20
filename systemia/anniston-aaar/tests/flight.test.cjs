@@ -1,0 +1,10 @@
+const test=require('node:test'),assert=require('node:assert/strict');
+const Flight=require('../site/worlds-flight/flight-core.js');
+test('three selectable aircraft and bounded synthetic gates',()=>{assert.equal(Object.keys(Flight.aircraft).length,3);assert.equal(Flight.gates.length,3);});
+test('trainer advances in deterministic time',()=>{const s=Flight.start('trainer');for(let i=0;i<200;i++)Flight.step(s,{},.05);assert.ok(s.z>-740&&s.distance>100);assert.equal(s.condition,'FLYING');});
+test('pitch raises flight path',()=>{const s=Flight.start('trainer'),y=s.y;for(let i=0;i<200;i++)Flight.step(s,{pitch:.9},.05);assert.ok(s.y>y+10);});
+test('bank changes heading',()=>{const s=Flight.start('trainer');for(let i=0;i<160;i++)Flight.step(s,{bank:1},.05);assert.ok(Math.abs(s.yaw)>.1);});
+test('three craft have different envelopes',()=>{const a=Flight.start('glider'),b=Flight.start('jet');for(let i=0;i<500;i++){Flight.step(a,{throttle:1},.05);Flight.step(b,{throttle:1},.05);}assert.ok(b.speed>a.speed+40);});
+test('collision ends game flight; receipt cannot claim certification',()=>{const s=Flight.start('trainer');s.y=Flight.groundHeight(s.x,s.z)+2;Flight.step(s,{},.05);assert.equal(s.condition,'GROUND_CONTACT');const r=Flight.flightReceipt(s);assert.equal(r.model_state,'GAME_SIMULATION_ONLY');assert.equal(r.evidence_state,'UNVALIDATED_GAMEPLAY');});
+test('crosses training checkpoint within local synthetic geometry',()=>{const s=Flight.start('trainer'),g=Flight.gates[0];Object.assign(s,{x:g.x,y:g.y,z:g.z});Flight.step(s,{},.01);assert.equal(s.checkpoints,1);});
+test('reject unsupported craft and bound time delta',()=>{assert.throws(()=>Flight.step({craft:'unknown'}, {},.02));const s=Flight.start();Flight.step(s,{throttle:99,pitch:99},5);assert.ok(s.flightTime<=.05&&s.throttle<=1);});
