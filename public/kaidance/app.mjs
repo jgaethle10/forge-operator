@@ -25,7 +25,8 @@ function renderPulse(){
  $('portraitSource').textContent=status;
  if(!p.ok){
    setStatus('HEARTBEAT NOT CONNECTED','waiting');
-   $('colliderState').textContent='UNKNOWN';
+   $('colliderState').textContent='FEED PENDING';
+   document.querySelector('.hero-pulse-label').lastChild.textContent=' COLLIDER TELEMETRY: PENDING';
    $('stageNote').textContent='No approved live Collider export is connected.';
    $('cycleLarge').textContent='—';$('cycleCount').textContent='—';
    $('admittedCount').textContent='—';$('heldCount').textContent='—';
@@ -46,6 +47,7 @@ function renderPulse(){
  $('lastBeat').textContent=p.last_completed_cycle?'Last cycle '+labelTime(p.last_completed_cycle):'No cycle recorded';
  $('colliderState').textContent=p.verified?'HEARTBEAT VERIFIED':p.sourceFresh?'OBSERVED · NOT VERIFIED':'SOURCE STALE';
  $('stageNote').textContent=status;
+ document.querySelector('.hero-pulse-label').lastChild.textContent=p.verified?' COLLIDER TELEMETRY: VERIFIED':' COLLIDER TELEMETRY: '+(p.sourceFresh?'UNVERIFIED':'STALE');
  $('verificationText').textContent=p.verified?'Independent field attestation and fresh receipt reported':
     p.field_attestation_verified?'Field attested, but current heartbeat not verified':'Independent field attestation not verified';
  $('verificationLight').className='verification-light'+(p.verified?' ok':'');
@@ -106,6 +108,11 @@ function showEvent(){
    $('portraitEventTitle').textContent='No verified engineering event';
    $('portraitEventMeta').textContent='Collider data is shown separately; no activity is being invented.';
    $('portraitProofProgress').style.width='0%';
+   $('heroEventKind').textContent='SOURCE NOT AVAILABLE';
+   $('heroEventTitle').textContent='No source-backed public event is available.';
+   $('heroEventMeta').textContent='No activity is invented when public source access fails.';
+   $('heroEventLink').hidden=true;
+   $('heroProgress').style.width='0%';
    $('eventProgress').style.width='0%';
    return;
  }
@@ -118,6 +125,11 @@ function showEvent(){
  $('portraitEventKind').textContent=e.kind+' · PUBLIC GITHUB';
  $('portraitEventTitle').textContent=e.title;
  $('portraitEventMeta').textContent=e.state+' · Recorded '+labelTime(e.time)+' · Not a Collider event';
+ $('heroEventKind').textContent=e.kind+' · '+e.state;
+ $('heroEventTitle').textContent=e.title;
+ $('heroEventMeta').textContent=e.detail+' · '+labelTime(e.time)+' · PUBLIC GITHUB';
+ $('heroEventLink').href=e.url;
+ $('heroEventLink').hidden=false;
  state.eventStart=Date.now();
 }
 function renderEventList(){
@@ -173,12 +185,17 @@ function eventTicker(){
  const progress=Math.min(100,100*(Date.now()-state.eventStart)/EVENT_MS)+'%';
  $('eventProgress').style.width=progress;
  $('portraitProofProgress').style.width=progress;
+ $('heroProgress').style.width=progress;
 }
-$('portraitBtn').addEventListener('click',()=>{
- const active=document.body.classList.toggle('portrait');
+function setBroadcastView(active){
+ document.body.classList.toggle('portrait',active);
  $('portraitBtn').setAttribute('aria-pressed',String(active));
- $('portraitBtn').textContent=active?'EXIT 9:16 VIEW':'9:16 LIVE VIEW';
-});
+ $('portraitBtn').querySelector('span:last-child').textContent=active?'EXIT LIVE VIEW':'9:16 LIVE VIEW';
+ $('portraitBtn').setAttribute('aria-label',active?'Exit broadcast view':'Open 9:16 broadcast view');
+}
+$('portraitBtn').addEventListener('click',()=>setBroadcastView(!document.body.classList.contains('portrait')));
+// Direct, shareable streaming layout. Changes presentation only, never pulse state.
+if(new URLSearchParams(window.location.search).get('view')==='live')setBroadcastView(true);
 $('filmBtn').addEventListener('click',async()=>{
  try{
    if(document.fullscreenElement)await document.exitFullscreen();
@@ -191,6 +208,7 @@ document.addEventListener('fullscreenchange',()=>{
  $('filmBtn').textContent=active?'EXIT FULL SCREEN':'FULL SCREEN ⛶';
 });
 $('reloadBtn').addEventListener('click',()=>{void refreshPulse();void refreshGithub()});
+$('refreshStage').addEventListener('click',()=>{void refreshPulse();void refreshGithub()});
 renderPulse();renderFooter();
 void refreshPulse();void refreshGithub();
 setInterval(renderPulse,1000);

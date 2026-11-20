@@ -63,3 +63,14 @@ node systemia/collider/public-readback.mjs \
 ```
 
 The streaming 9:16 view separately rotates actual timestamped public GitHub development receipts. The UI must always distinguish source-backed engineering events from new KAIDANCE cycle receipts.
+
+
+## KAIDANCE V02: cinematic first-screen and TikTok broadcast
+
+The source-accurate observatory has a redesigned first screen. A motion-rich network canvas is **ambient artwork only** and never maps particles to agents, real work, or mission counts. The actual verified heartbeat flare still requires a freshly incremented, attested cycle from `pulse.json`. The static GitHub Pages fallback deliberately has no pulse export and reads only public GitHub development records.
+
+The hero stage now displays the latest eligible public GitHub event with its exact source URL and timestamp, rather than burying that information below a long telemetry panel. Visitors can open `/kaidance/?view=live` to go directly into a phone-sized broadcast composition or use the always-visible **9:16 LIVE VIEW** button. All labels retain explicit development-record vs live-Collider distinctions. The full-screen button remains optional and is not relied upon for iPhone Safari.
+
+New first-party assets are `experience.css` and `visual.mjs`. They use a capped animation framerate, reduced-motion compliance and no outside animation SDK, WebSocket, telemetry or browser storage. Both are allowed on the existing owned Caddy and Leiland static host routes. `scripts/probe-kaidance-fallback.mjs` includes them in the external HTTPS asset readback.
+
+The V02 browser QA runs iPhone-sized and desktop Chrome tests, checks for horizontal overflow and JS errors, verifies one-tap and URL-parameter broadcast viewing and retains screenshot evidence. A green QA report proves the client-side **viewer** behavior, not private field activation.
