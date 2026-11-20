@@ -25,7 +25,7 @@ test('river Watch is an interactive site and not an image stand-in',()=>{
  assert.match(code,/function drawRivers\(/);
  assert.match(code,/function drawParticles\(/);
  assert.match(code,/function drawConfluences\(/);
- assert.match(code,/function spider\(from,to,t\)/);
+ assert.match(code,/function drawAnomaly\(from,to,t\)/);
  assert.match(code,/function routeAt\(/);
  assert.match(code,/canvas\.addEventListener\("click"/);
 });
@@ -62,44 +62,39 @@ test('river topology has seven named confluences and multi-channel currents',()=
  assert.match(code,/drawWatershed\(\);drawRivers\(\);drawParticles\(dt\);drawConfluences\(\)/);
 });
 
-test('the explorer has eight short jointed legs rather than a straight trailing filament fan',()=>{
- assert.match(code,/function explorerLegGeometry\(size,leg,phase\)/);
- assert.match(code,/for\(var leg=0;leg<8;leg\+\+\)/);
- assert.match(code,/quadraticCurveTo\(.*g\.kneeX,g\.kneeY\)/);
- assert.match(code,/quadraticCurveTo\(.*g\.footX,g\.footY\)/);
- assert.doesNotMatch(code,/for\(var ray=0;ray<26;ray\+\+\)/);
- assert.doesNotMatch(code,/for\(var leg=0;leg<12;leg\+\+\)/);
- const i=code.indexOf('function explorerLegGeometry(');
- const j=code.indexOf('function spider(',i);
- assert.ok(i>=0&&j>i);
- const legFn=new vm.Script(code.slice(i,j)+';explorerLegGeometry').runInNewContext({Math});
- for(let leg=0;leg<8;leg++){
-  const g=legFn(20,leg,.43);
-  assert.equal(g.side,leg%2===0?-1:1);
-  assert.ok(Math.abs(g.footX)<=25,'front/rear foot reach stays compact');
-  assert.ok(Math.abs(g.footY)<=26,'the lateral leg spread is bounded');
-  assert.ok(Math.hypot(g.footX-g.startX,g.footY-g.startY)<=35,'limbs remain shorter than the original rays');
-  assert.notDeepEqual(
-    [legFn(20,leg,.43).footX,legFn(20,leg,.43).footY],
-    [legFn(20,leg,1.43).footX,legFn(20,leg,1.43).footY],
-    'articulated feet should move with gait'
-  );
- }
- assert.match(code,/Math\.max\(15,Math\.min\(28,width\*\.044\)\)/);
+test('the watcher becomes an ambiguous changing presence, not a recognizable bug',()=>{
+ assert.match(code,/function anomalyFilament\(time,index\)/);
+ assert.match(code,/function anomalyForm\(time\)/);
+ assert.match(code,/function drawAnomaly\(from,to,t\)/);
+ assert.match(code,/for\(var thread=0;thread<9;thread\+\+\)/);
+ assert.match(code,/ctx\.globalCompositeOperation="source-over"/);
+ assert.match(code,/dark center is deliberate negative space/i);
+ assert.match(code,/faint delayed echo/);
+ assert.doesNotMatch(code,/function explorerLegGeometry/);
+ assert.doesNotMatch(code,/function spider\(/);
+ assert.doesNotMatch(code,/for\(var leg=0;/);
+ assert.doesNotMatch(code,/for\(var ray=0;/);
+ assert.doesNotMatch(code,/ctx\.shadowBlur=14/);
+ assert.match(watch,/river-current-v3-anomaly/);
 });
-
-test('explorer silhouette remains readable in bright water without additive overexposure',()=>{
- const start=code.indexOf('function spider(from,to,t){');
- const end=code.indexOf('function routeAt(){',start);
- assert.ok(start>=0&&end>start);
- const body=code.slice(start,end);
- assert.match(body,/ctx\.globalCompositeOperation="source-over"/);
- assert.doesNotMatch(body,/ctx\.globalCompositeOperation="lighter"/);
- assert.match(body,/dark under-stroke separates each articulated leg/i);
- assert.match(body,/ctx\.lineWidth=4\.5;ctx\.strokeStyle="rgba\(2,23,33,\.9\)"/);
- assert.match(body,/ctx\.lineWidth=leg<4\?1\.95:1\.7/);
- assert.match(body,/rgba\(194,255,230,\.13\)/);
- assert.doesNotMatch(body,/ctx\.shadowBlur=14/);
+test('probing filaments fold, disappear and return without fixed mirrored anatomy',()=>{
+ const a=code.indexOf('function anomalyFilament(time,index){');
+ const b=code.indexOf('function drawAnomaly(',a);
+ assert.ok(a>=0&&b>a);
+ const forms=new vm.Script(code.slice(a,b)+';({anomalyFilament,anomalyForm})').runInNewContext({Math});
+ const snapshot=(at)=>Array.from({length:9},(_,i)=>forms.anomalyFilament(at,i));
+ const beginning=snapshot(0),later=snapshot(12.3);
+ assert.ok(beginning.some((p,i)=>Math.abs(p.opacity-later[i].opacity)>.13),'filament brightness changes');
+ assert.ok(beginning.some((p,i)=>Math.abs(p.reach-later[i].reach)>.23),'filament lengths change');
+ for(const p of [...beginning,...later]){
+  assert.ok(p.reach>=.47&&p.reach<=1.70,'reach capped');
+  assert.ok(p.opacity>=.055&&p.opacity<=.516,'appearance bounded');
+  assert.ok(Number.isFinite(p.angle)&&Number.isFinite(p.curl));
+ }
+ const first=forms.anomalyForm(0),second=forms.anomalyForm(20);
+ assert.notEqual(first.rotation,second.rotation);
+ assert.notEqual(first.fold,second.fold);
+ assert.ok(first.aperture>=.14&&first.aperture<=.70);
 });
 test('slow river camera moves the whole field and tap positions use its inverse',()=>{
  const start=code.indexOf('function riverCamera(){');
