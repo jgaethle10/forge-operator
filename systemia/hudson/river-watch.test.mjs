@@ -123,6 +123,8 @@ test('mist ship is compact glowing cloud, sails and sparkling stardust',()=>{
  assert.match(code,/for\(var fog=0;fog<10;fog\+\+\)/);
  assert.match(code,/for\(var spark=0;spark<35;spark\+\+\)/);
  assert.match(code,/for\(var mastIndex=0;mastIndex<3;mastIndex\+\+\)/);
+ assert.match(code,/Three rising cloud-sails create a ship silhouette/);
+ assert.doesNotMatch(code,/drawMistySail\(mast.x,mast.s\*breathe,1/);
  assert.match(code,/A faint tapering cloud-figurehead/);
  assert.match(code,/Narrow dark keel and luminous rim/);
  assert.match(code,/shipPathPose\(trip.from,trip.to,end\).size/);
