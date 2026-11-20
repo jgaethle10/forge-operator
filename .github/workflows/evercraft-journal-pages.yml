@@ -63,6 +63,7 @@ jobs:
           npm run test:product-url-fabric
           node --test tests/clip-public-entry.test.mjs
           node --test tests/kennedy-public-studio.test.mjs
+          node --test tests/kennedy-demo-draft.test.mjs
 
       - name: Verify KAIDANCE public fallback readback contract
         run: node --test tests/kaidance-public-fallback-readback.test.mjs
