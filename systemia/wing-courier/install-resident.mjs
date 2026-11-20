@@ -58,6 +58,7 @@ export function evaluateWingResidentConfig({configPath,wingExpected='fallen'}={}
  requiredDir(cfg.destinationDir);
  const senders=cfg.senderVerifyPublicKeys||{};
  const trustedNames=Object.keys(senders);
+ if(trustedNames.length===0)throw Error('wing_resident_trusted_senders_missing');
  const expectedSender=cfg.wing==='harbor'?'fallen':'harbor';
  if(trustedNames.length!==1||trustedNames[0]!==expectedSender)
   throw Error('wing_resident_trusted_senders_scope_mismatch');
