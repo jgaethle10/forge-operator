@@ -53,11 +53,14 @@ test('owned Fabric serves FAIE UI, public preview API, and native FAIE MCP witho
     assert.match(pageResponse.headers.get('content-type')||'',/^text\/html/);
     assert.match(pageResponse.headers.get('content-security-policy')||'',/connect-src 'self'/);
     const page=await pageResponse.text();
-    assert.match(page,/Evidence for the physical world/);
-    assert.match(page,/Underwrite the world beneath the thesis/);
-    assert.match(page,/Compare candidate regions/);
+    assert.match(page,/Make better decisions with real-world evidence/);
+    assert.match(page,/Ask my own question/);
+    assert.match(page,/Compare evidence for two places/);
     assert.match(page,/AgNormal \/ Yakima Valley/);
     assert.match(page,/Run live AgNormal brief/);
+    assert.match(page,/id="heroTryExample"/);
+    assert.match(page,/id="advancedScope"/);
+    assert.match(page,/id="compareExample"/);
     assert.match(page,/fetchWithTimeout/);
     assert.match(page,/FAIE did not answer within 15 seconds/);
     assert.match(page,/id="activityHud"/);
