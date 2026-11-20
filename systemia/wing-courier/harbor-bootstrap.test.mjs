@@ -7,6 +7,7 @@ import path from 'node:path';
 import http from 'node:http';
 import {createHarborBootstrap,HARBOR_BOOTSTRAP_PATH,createFallenBootstrap,BOOTSTRAP_PATH} from './enrollment-bootstrap.mjs';
 import {retrieveHarborBootstrap,HARBOR_ENROLLMENT_URL} from './retrieve-harbor-bootstrap.mjs';
+import {createEncryptedHarborEnrollment} from './harbor-enrollment-package.mjs';
 
 function fixture(t){
  const root=fs.mkdtempSync(path.join(os.tmpdir(),'harbor-owned-bootstrap-'));fs.chmodSync(root,0o700);
@@ -17,14 +18,20 @@ function fixture(t){
  const trusted=path.join(keys,'harbor.sign.pub');
  fs.writeFileSync(signer,privateKey.export({type:'pkcs8',format:'pem'}),{mode:0o600});
  fs.writeFileSync(trusted,publicKey.export({type:'spki',format:'pem'}),{mode:0o600});
- const recipientFingerprint='d'.repeat(64);
+ const receiver=crypto.generateKeyPairSync('x25519');
+ const receiverPub=path.join(keys,'harbor.decrypt.pub');
+ fs.writeFileSync(receiverPub,receiver.publicKey.export({type:'spki',format:'pem'}),{mode:0o600});
+ const recipientFingerprint=crypto.createHash('sha256').update(
+  receiver.publicKey.export({type:'spki',format:'der'})).digest('hex');
+ const tokenFile=path.join(keys,'harbor.receive.token');
+ fs.writeFileSync(tokenFile,'synthetic-owner-only-harbor-receive-'+crypto.randomBytes(32).toString('hex'),{mode:0o600});
  const packageFile=path.join(root,'package.json');
- const bytes=Buffer.from(JSON.stringify({
-  schema:'evercraft.harbor.receiver-enrollment.v1',
-  recipientFingerprint,encryptedCredential:'synthetic-ciphertext-only'
- }));
- fs.writeFileSync(packageFile,bytes,{mode:0o600});
- const expectedSha256=crypto.createHash('sha256').update(bytes).digest('hex');
+ const created=createEncryptedHarborEnrollment({
+  receiveTokenFile:tokenFile,recipientPublicKeyFile:receiverPub,
+  expectedRecipientFingerprint:recipientFingerprint,outputFile:packageFile
+ });
+ const bytes=fs.readFileSync(packageFile);
+ const expectedSha256=created.sha256;
  const opts={enabled:true,packageFile,signerPublicKeyFile:trusted,
   expectedSha256,recipientFingerprint,claimStateDir:root};
  return {root,signer,trusted,bytes,recipientFingerprint,expectedSha256,opts,
