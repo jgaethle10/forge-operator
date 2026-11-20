@@ -9,7 +9,7 @@
   "payment_link_id": "plink_1UdhsM5rgRECaZMDczQW5JTr",
   "price_currency": "usd",
   "unit_amount_cents": 49900,
-  "price_status": "provisional_founding_pilot",
+  "price_status": "standard",
   "product_active_at_verification": false,
   "payment_link_active_at_verification": false,
   "managed_payments_enabled": false,
@@ -19,5 +19,28 @@
   "checkout_configured_for_site_planner": false,
   "payment_verification_connected": false,
   "fulfillment_release_allowed": false,
-  "notes": "Read-only record of verified live Stripe objects. This JSON is NOT a payment receipt, real-time Stripe status, authorization to publish, or evidence that an order has been paid."
+  "notes": "Stripe objects verified on Evercraft LLC live account and left INACTIVE. This read-only snapshot is not a settlement receipt, current Stripe status, checkout approval, guarantee of fulfillment, or customer entitlement.",
+  "standard": {
+    "price_id": "price_1Udhqa5rgRECaZMDsK7sstdv",
+    "payment_link_id": "plink_1UdhsM5rgRECaZMDczQW5JTr",
+    "unit_amount_cents": 49900,
+    "currency": "usd",
+    "last_verified_link_active": false
+  },
+  "founding_five": {
+    "price_id": "price_1UdiIw5rgRECaZMDDUwbMux8",
+    "payment_link_id": "plink_1UdiJV5rgRECaZMD3URffDU5",
+    "unit_amount_cents": 34900,
+    "currency": "usd",
+    "checkout_completed_session_limit": 5,
+    "completed_sessions_at_verification": 0,
+    "last_verified_link_active": false,
+    "offer_status": "prelaunch_hold"
+  },
+  "pricing_experiment": {
+    "name": "Founding Five",
+    "discount_from_standard_cents": 15000,
+    "customer_cap_message": "5 completed checkout sessions maximum, not necessarily five distinct customers",
+    "provisional": true
+  }
 }
