@@ -11,7 +11,7 @@ The customer-facing page is at /public/mesh/ai-boardroom/ and has a free local d
 3. A configured chair model synthesizes the responses, preserves dissent and identifies uncertainty.
 4. Failures remain visible. Fewer than two independent vendor outputs returns "insufficient_models"; no synthetic votes or fictional providers.
 
-Official adapters are available for OpenAI Chat Completions, Anthropic Messages and Google Gemini generateContent. Supported models and request limits must be chosen from the providers' current published APIs. This engine makes no real external calls without administrator-supplied environment secrets.
+Official adapters are available for OpenAI Chat Completions, Anthropic Messages, Google Gemini generateContent and xAI Grok Responses (non-persistent `store:false`, no server-side tools). Supported models and request limits must be chosen from the providers' current published APIs. This engine makes no real external calls without administrator-supplied environment secrets.
 
 ## Start locally
 
@@ -21,6 +21,7 @@ Set at least two different vendor pairs:
 - OPENAI_API_KEY and BOARDROOM_OPENAI_MODEL
 - ANTHROPIC_API_KEY and BOARDROOM_ANTHROPIC_MODEL
 - GOOGLE_API_KEY and BOARDROOM_GOOGLE_MODEL
+- XAI_API_KEY and BOARDROOM_XAI_MODEL
 
 Also set BOARDROOM_API_ENABLED=1, BOARDROOM_ACCESS_TOKEN (a high-entropy private token), optionally BOARDROOM_PORT and BOARDROOM_ALLOWED_ORIGINS. Keep tokens out of source, browser, logging, URLs and public discovery.
 
