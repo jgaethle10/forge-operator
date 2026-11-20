@@ -135,3 +135,14 @@ The underlying source, provenance and privacy boundaries are unchanged: only all
 - A reversible \`/hudson/watch/?film=1\` browser capture layout reduces overlays while retaining public source-state, labeled Git-source replay, and the explicit not-live-mission warning. It is **not** a TikTok streamer or the future multi-product master screen.
 - Decorative optics never imply live private cognition or progress. Source trust rules, network calls, hidden-tab pause, user Pause, reduced-motion and ~30fps budget remain unchanged. The exact external canary and owned Fabric route gate now require \`river-current-v7-cinematic-confluences\` plus the real renderer function signatures.
 - New deterministic tests cover bounded destination-specific junction response and the reversible film route. Run node tests and responsive Chromium/phone visual review, then an independent *owned HTTPS* release canary; merged Git source is not public rollout evidence.
+
+
+## HUDSON Watch v8: Undertow Cathedral (November 20, 2026)
+
+Founder visual acceptance found that v7's traveler and basin halos still read as a lightly upgraded network diagram. v8 replaces **three core renderers**, rather than layering additional decorative glows: the atmospheric sky, the main river bands and the complete confluence silhouette. Every basin is now a dark suspended optical lens with incomplete moving horizons, angular broken caustics, and a high-contrast aperture. HUDSON's central lens is visually larger. The currents become luminous multidepth braided rivers with moving light seams. The backdrop has three slow color wells and a dark outer vignette.
+
+The traveler itself is replaced by **The Fold**, a fractured, asymmetric five-veil structure around a jagged dark rift. Its changing aperture, detached glass-like wings and motion follow the approved illustrative route. This is not an insect, eye, literal intelligence, real active mission, or model inference. It preserves deterministic pulse, interaction, source replay, privacy and motion controls.
+
+Performance safeguards: no textures/CDNs/assets/network/API changes, old 30fps gate and hidden-tab stop remain, all new shapes use bounded counts (three atmospheric wells, seven lenses, at most eleven facets per lens, five traveler veils). This is a **new visual design**, not a new telemetry adapter.
+
+Browser review was performed locally for 390×844 and 1440×900 film captures from source before PR, with mobile showing a visibly larger crystalline Fold, dark lens confluences and much brighter river channels. Local preview is not owned-host deployment proof. Exact source release gate is \`river-current-v8-undertow-cathedral\`; tests and external Fabric canary reject v7. The browser must separately be verified after the owned Penguin updater, then its honest public Git history freshness must independently pass before advertising a live source feed.
