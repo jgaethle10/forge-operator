@@ -17,6 +17,10 @@ The returned owner-private `intake-offer.json` can include a `oneCompanyPlan` wi
 
 The output has no source filenames, source hashes, full source paths, customer text or private keys. It retains only opaque internal package/candidate IDs, counts and contract references inside the owner-private intake receipt. The actual media stays exclusively at the private receiving wing.
 
+## Real integration defect corrected
+
+The first receiver integration CI exposed a source-contract discrepancy: the existing Intake Fabric emits `receipt_hash` as a **`sha256:<64-hex>` string**, while the commercial loop's synthetic fixtures and new coordination plan had treated it as a bare 64-hex digest. We changed both readers and the regression fixtures to require the authoritative prefixed format. This prevents a real authenticated inbound candidate from being incorrectly rejected at the next workflow boundary.
+
 ## What it does NOT do
 
 - Does not launch Saban, grant workers, query an LLM or open source files for ForensiScope.
