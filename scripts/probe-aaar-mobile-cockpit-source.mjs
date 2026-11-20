@@ -84,6 +84,7 @@ try{
   assert.equal(await page.locator('#mobileHudToggle').getAttribute('aria-pressed'),'false');
   await page.locator('#mobileMoreToggle').click();
   assert.equal(await page.locator('#mobileMoreToggle').getAttribute('aria-expanded'),'true');
+  assert.equal(await page.locator('#planeType').isVisible(),true,orientation.name+': More must expose aircraft selection');
   await page.locator('#mobileMoreToggle').click();
   await page.locator('#pauseToggle').click();
   assert.equal(await page.locator('#pauseToggle').getAttribute('data-paused'),'true');
