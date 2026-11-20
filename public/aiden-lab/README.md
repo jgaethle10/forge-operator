@@ -2,6 +2,49 @@
 
 Aiden's Lab is Evercraft's **public science exploration front door**. It is not an alternate Systemia authority, clinical-research validation system, or separate source of truth.
 
+## Sunlight Theater: a playable day/night Earth (November 20, 2026)
+
+The original Earth Atlas now contains a **Sunlight Theater** directly under
+the real-coastline Earth globe. Aiden can select a June solstice, equinox,
+or December solstice and use a simple 0–23 UTC classroom hour dial or
+play/pause a 24-hour rotation. It changes the brightness of each
+orthographically projected, geography-grounded globe pixel according to
+the cosine of the solar zenith angle:
+
+`sin(latitude)*sin(declination) + cos(latitude)*cos(declination)*cos(longitude - subsolarLongitude)`.
+
+The Sun's modeled subsolar longitude is 0° at UTC 12:00, 90°E at UTC 06:00
+and 90°W at UTC 18:00. Declination is fixed at +23.44°, 0°, or
+-23.44° for the three teaching scenarios. Twilight hues and a visible
+subsolar marker make the geometry legible; the source-linked expedition
+cards additionally report the Sun's altitude above/below the horizon
+at the selected real destination. Seasonal polar day/night is an
+actual consequence of the same model, not a hardcoded animated overlay.
+
+**Important honesty boundaries:** This is a simplified classroom
+geometric illumination model. It does not calculate actual dates,
+equation of time, atmospheric refraction, live climate, satellite
+day/night images, cloud-cover observations, or current Sun position.
+Decorative light and polar caps do not represent measured conditions.
+UTC is merely the model's 24-hour dial, not a forecast or a request
+for the learner's time zone or location. Fixed Natural Earth 1:110m
+land mask and existing source-linked coordinates remain authoritative.
+
+The globe remains drag/rotate and eight-point source-linked.
+The lighting is rendered client-side only at interaction or at a
+paced ~850ms classroom time increment, with the existing bounded
+420px CPU texture cap and pointer-frame throttling. Playback pauses
+on hidden tabs and when reduced-motion is requested; the season and
+hour controls remain manually operable. No new network calls,
+account/profile, location permission or telemetry.
+
+Numerical tests cover solar noon, midnight, opposite sides, quarter
+turns, equinox, two solstices, and predicted polar day/night across
+all four sampled times, alongside source-level pointer/keyboard,
+CSP and strict 11-asset Fabric checks. Public release still requires
+the authorized Penguin updater and independent HTTPS exact-source
+parity, and phone usability/frame time remain human acceptance gates.
+
 ## Immersive science museum entrance (November 20, 2026)
 
 The Aiden's Lab **front door** now contains three large original illustrated
