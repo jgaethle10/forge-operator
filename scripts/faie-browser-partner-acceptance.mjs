@@ -58,6 +58,15 @@ try{
     return response.status;
   });
   mark('soil_preview_rejects_missing_location_without_source_call',invalidSoilHttp===400);
+  await page.locator('#siteScanExample').click();
+  await page.locator('#siteScanResult .site-scan-scaffold').waitFor({timeout:47000});
+  const scanText=await page.locator('#siteScanResult').innerText();
+  mark('real_two_source_site_scan_ui',scanText.includes('USDA NRCS')&&scanText.includes('NOAA NWS'));
+  mark('no_site_verdict_from_weather_or_soil',scanText.includes('not a site verdict')||scanText.includes('not a site'));
+  const scanDownload=page.waitForEvent('download',{timeout:10000});
+  await page.locator('#siteScanDownload').click();
+  const scanFile=await scanDownload;
+  mark('site_scan_evidence_download',scanFile.suggestedFilename()==='evercraft-faie-site-scan.json');
 
   await page.locator('#heroTryExample').click();
   await page.locator('#result .plain-results').waitFor({timeout:30000});
