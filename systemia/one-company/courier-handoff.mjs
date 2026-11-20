@@ -6,7 +6,6 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {admitMultiplicationRequest} from '../saban/admission.mjs';
-import {candidateForVerifiedWingReceipt} from '../wing-courier/intake-bridge.mjs';
 
 export const ONE_COMPANY_COURIER_SCHEMA='evercraft.systemia.one-company-courier-plan.v1';
 const MODULE_ROOT=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../..');
@@ -88,8 +87,23 @@ export function projectOneCompanyCourierHandoff({receipt,intake,rootDir=MODULE_R
     !HEX32.test(receipt.id||'')||
     receipt.toWing!=='fallen'||receipt.fromWing!=='harbor')
     fail('expected_receiver_custody_required');
- // Reuse the existing canonical metadata/manifest contract.
- candidateForVerifiedWingReceipt({receipt});
+ // Verify the metadata contract again without trusting caller-provided
+ // custody status as independent evidence. Only the resident's local verified
+ // bytes + Passport path may produce an authentic live plan.
+ if(!Array.isArray(receipt.assets)||receipt.assets.length<1||
+    receipt.assets.length>100||!HEX64.test(receipt.ciphertextSha256||''))
+    fail('asset_manifest_invalid');
+ const names=new Set();
+ for(const asset of receipt.assets){
+  const name=asset?.filename;
+  if(typeof name!=='string'||name.length>200||!name||
+     name!==path.basename(name)||name.startsWith('.')||
+     name.includes('\\\\')||names.has(name.toLowerCase())||
+     !HEX64.test(asset.sha256||'')||
+     !Number.isSafeInteger(asset.bytes)||asset.bytes<1)
+     fail('asset_manifest_invalid');
+  names.add(name.toLowerCase());
+ }
  if(intake?.schema!=='evercraft.wing-courier.intake-handoff.v1'||
     intake.packageId!==receipt.id||
     !['candidate_only','duplicate'].includes(intake.intakeState)||
