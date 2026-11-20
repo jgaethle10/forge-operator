@@ -6,17 +6,17 @@ import {spawnSync} from 'node:child_process';
 
 const script=fs.readFileSync('scripts/publish-aaar-seattle-now.mjs','utf8');
 const html=fs.readFileSync('public/worlds/flight/index.html');
-const expected='5314b21f6572a177aa02da8e18624985019d2d7d5f8f81674db7413b56733825';
+const expected='8649cef17aae99d06c158d6dad87a8e1dcadf16a20e16c374a73a1b6d3d16568';
 
-test('Flight School 1.3 owner release pins approved candidate and exact new flight asset',()=>{
- const pin='267afc904628620fae3f48727501969ce3456e84';
+test('Seattle Vista 1.4 owner release pins approved candidate and exact new flight asset',()=>{
+ const pin='31dfd02bbaaa6064b62268963043ba9feb799d21';
  const pinned=spawnSync('git',['show',pin+':public/worlds/flight/index.html'],{encoding:'buffer',maxBuffer:2*1024*1024,timeout:5000});
  // GitHub Actions checkout is shallow; the parent pin may be absent there.
  // The owner-side helper still requires the pinned commit to exist and be an
  // ancestor of fetched main before it can run, failing closed on Penguin.
  if(pinned.status===0)assert.equal(createHash('sha256').update(pinned.stdout).digest('hex'),expected);
  assert.equal(createHash('sha256').update(html).digest('hex'),expected);
- assert.match(script,/267afc904628620fae3f48727501969ce3456e84/);
+ assert.match(script,/31dfd02bbaaa6064b62268963043ba9feb799d21/);
  assert.ok(script.includes(expected));
  assert.match(html.toString('utf8'),/id="aaar-seattle-geography"/);
  assert.match(html.toString('utf8'),/Space Needle/);
@@ -27,11 +27,14 @@ test('Flight School 1.3 owner release pins approved candidate and exact new flig
  assert.match(html.toString('utf8'),/startRunway/);
  assert.match(html.toString('utf8'),/function forRunwayQuads/);
  assert.match(html.toString('utf8'),/function addRunwaySoftware/);
+ assert.match(html.toString('utf8'),/function drawVistaAircraft2D/);
+ assert.match(html.toString('utf8'),/function forAirportVistaQuads/);
+ assert.match(html.toString('utf8'),/function airportVistaDetails/);
  assert.match(html.toString('utf8'),/KBFI/);
  assert.match(html.toString('utf8'),/KSEA/);
  assert.match(html.toString('utf8'),/SOURCE_LOCATED_VISUAL_GAMEPLAY_AIRFIELDS/);
  assert.match(html.toString('utf8'),/STYLIZED_GAMEPLAY_HIGHLANDS/);
- assert.ok(script.includes("const ALLOWED_OLD='1f8280fe6e05de30dab9b6f7a6954df334990571e78bdd30d91dd64dcf3aa13f'"));
+ assert.ok(script.includes("const ALLOWED_OLD='5314b21f6572a177aa02da8e18624985019d2d7d5f8f81674db7413b56733825'"));
 });
 test('operator release gates same named Penguin vault and actual local route',()=>{
  assert.match(script,/os\.hostname\(\)!=='penguin'/);
