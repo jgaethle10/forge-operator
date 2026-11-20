@@ -58,6 +58,22 @@ try{
   assert.ok(dims.stick.left>=-1&&dims.stick.right<=dims.view+1,orientation.name+': stick outside viewport');
   assert.ok(dims.throttle.left>=-1&&dims.throttle.right<=dims.view+1,orientation.name+': throttle outside viewport');
   assert.ok(dims.stick.right<dims.throttle.left,orientation.name+': thumb controls overlap');
+  await page.waitForFunction(()=>window.AAARSceneMetrics?.().frames>=3,null,{timeout:10000});
+  const scenery=await page.evaluate(()=>window.AAARSceneMetrics());
+  assert.equal(scenery.renderMode,'canvas2d',orientation.name+': missing mobile scenery fallback');
+  assert.ok(scenery.treesTotal>500,orientation.name+': Cedar Basin forest population missing');
+  assert.ok(scenery.terrainPolygons>300,orientation.name+': ground geometry not drawn');
+  assert.ok(Number.isFinite(scenery.renderCostMs)&&scenery.renderCostMs>0&&scenery.renderCostMs<500,orientation.name+': renderer not time-bounded');
+  const colors=await page.locator('#flightCanvas').evaluate(canvas=>{
+    const ctx=canvas.getContext('2d');if(!ctx)return 0;
+    const pts=new Set();
+    for(let y=0;y<12;y++)for(let x=0;x<18;x++){
+      const pixel=ctx.getImageData(Math.min(canvas.width-1,Math.floor((x+.5)*canvas.width/18)),Math.min(canvas.height-1,Math.floor((y+.5)*canvas.height/12)),1,1).data;
+      pts.add([pixel[0]>>3,pixel[1]>>3,pixel[2]>>3].join('-'));
+    }
+    return pts.size;
+  });
+  assert.ok(colors>18,orientation.name+': rendered world appears blank or unpainted, color bins='+colors);
   const selected=await page.locator('#flightStick').evaluate(el=>{const css=getComputedStyle(el);return css.userSelect||css.webkitUserSelect||css.getPropertyValue('-webkit-user-select');});
   assert.equal(selected,'none',orientation.name+': iOS text selection still allowed on joystick');
   const box=await page.locator('#flightStick').boundingBox();
@@ -90,7 +106,7 @@ try{
   assert.equal(await page.locator('#pauseToggle').getAttribute('data-paused'),'true');
   await page.locator('#pauseToggle').click();
   assert.equal(await page.locator('#pauseToggle').getAttribute('data-paused'),'false');
-  receipts.push({orientation:orientation.name,viewport:orientation.width+'x'+orientation.height,stick_drag:true,aircraft_bank_changes:true,auto_center:true,throttle_to_100:true,hud_toggle:true,more_toggle:true,pause_resume:true,no_overflow:true});
+  receipts.push({orientation:orientation.name,viewport:orientation.width+'x'+orientation.height,stick_drag:true,aircraft_bank_changes:true,auto_center:true,throttle_to_100:true,hud_toggle:true,more_toggle:true,pause_resume:true,no_overflow:true,scenery_trees_total:scenery.treesTotal,scenery_visible_pines:scenery.treesVisible,scenery_ground_polygons:scenery.terrainPolygons,scenery_clouds:scenery.cloudsVisible,world_color_bins:colors,render_cost_ms:+scenery.renderCostMs.toFixed(1)});
  }
  assert.equal(errors.length,0,'browser JavaScript errors: '+errors.join(' | '));
  console.log(JSON.stringify({schema:'evercraft.aaar.mobile-cockpit-source-e2e.v1',tested_source:'pull_request_branch_local_http',browser:engine,device:'mobile-emulation-not-physical-Safari',passed:true,receipts,physical_iphone_safari_verified:false,hosted_release_verified:false},null,2));
