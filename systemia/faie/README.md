@@ -158,6 +158,21 @@ Pilot acceptance gate:
 - one-click Yakima Valley food-infrastructure scope is available on the real UI
 - human review remains required before consequential action
 
+### FEMA NFHL effective flood-hazard point lookup (first insurance intelligence layer)
+
+The Evercraft-owned edge provides `POST /api/faie/flood/preview` for an explicitly supplied WGS84 latitude/longitude within the contiguous United States. This is an **opt-in** addition to the site scan and is not an insurance-quote, claims or underwriting endpoint. Coordinates are sent to FEMA's official National Flood Hazard Layer ArcGIS REST service to query:
+
+- **Flood Hazard Zones (layer 28)**: a point-intersection against effective `S_FLD_HAZ_AR` polygon features. Return reported FEMA `FLD_ZONE`, `ZONE_SUBTY`, `SFHA_TF` (true/false only when explicitly provided), source references, and map metadata. Official provenance: https://hazards.fema.gov/arcgis/rest/services/public/NFHL/MapServer/28.
+- **FIRM Panels (layer 3)**: independent intersecting effective FIRM panel reference and `EFF_DATE` when provided, including missing date or unavailable panel as unknown. Official provenance: https://hazards.fema.gov/arcgis/rest/services/public/NFHL/MapServer/3.
+
+The endpoint uses a fixed allowlisted FEMA host, two bounded point queries (geometry only in the upstream query; no raw arbitrary geometry returned), strict response and field parsing, modest rate/concurrency limits, no state writes, and no automated decision or publication authority. FEMA data classification is **REPORTED** official regulatory mapping, not measured flood depth, a property survey, an insurer quote, insurance coverage or eligibility, or a guarantee of flood safety.
+
+**Negative inference is prohibited:** when an official query returns zero hazard polygons, FAIE says so literally. Even a matching FIRM panel does **not** make it safe; no returned panel and zero polygons is coverage **unverified**. Source failures return 502 rather than an invented zone or low-risk score. Effective mapping cannot represent all flash floods, local drainage events, future climate conditions or flood damage, and must be checked against LOMR/LOMA, FEMA Map Service Center, county/local administrators and historic loss data.
+
+Source adapter tests: `systemia/faie/fema-flood-point.test.mjs`; owned-route/limits/privacy tests: `systemia/mcp/fabric-faie-flood-preview.test.mjs`; web acceptance: `scripts/faie-browser-partner-acceptance.mjs`; real upstream gate: `scripts/faie-fema-flood-live-acceptance.mjs`. The public test point is **46.6021, -120.5059**, and the gate must receive actual FEMA zone or panel context before the source can be described as verified live.
+
+Next, add anonymized OpenFEMA NFIP claim history at its available publication granularity and USDA RMA county/crop cause-of-loss payouts. Those sources remain separate **area-level** evidence, never evidence that a named private property filed a claim.
+
 ### NOAA NCEI historic station context (optional, Yakima pilot)
 
 The owned edge exposes `POST /api/faie/climate/history` for **explicitly supplied coordinates** within 40 km of NOAA's Yakima Airport GHCN-Daily station `USW00024243` (NOAA record 46.56398, -120.53488). It is **not a nearest-station search**: points outside the verified station radius receive a 422 hold. The user interface keeps history behind an optional action, separate from the fast soil + NWS forecast scan.
