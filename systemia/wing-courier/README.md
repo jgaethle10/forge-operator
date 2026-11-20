@@ -171,3 +171,19 @@ Client-side `baseUrl` is pinned to this exact **owned HTTPS origin + path** for 
 
 See P0 issues #2294 (deployment), #2280 (first customer), #2284 (rejected-preview incident).
 
+
+
+## Fabric shared-route resource guards (2026-11-19)
+
+The existing **opt-in** \`/api/internal/wing-courier\` bridge within Evercraft Fabric is a fixed-path request relay to its **loopback-only**, wing-authenticated ciphertext broker. It is **not live** merely because code is merged. The single canonical proxy is \`systemia/wing-courier/fabric-proxy.mjs\`, not a second Caddy listener or new public domain.
+
+In addition to the broker's destination/token/signature and durable-queue limits, the Fabric proxy now defaults to:
+
+- **512 MiB maximum incoming request body** (hard ceiling 3 GiB plus an envelope allowance), validated against Content-Length before opening an upstream request and against bytes actually streamed for chunked/unknown-length uploads; large bytes are **not** assembled into a JS buffer.
+- **4 simultaneous active proxied requests** (bounded configurable range 1–64). Excess authorized requests return HTTP 429 and must be retried by the authorized wing without changing package identity or granting send authority.
+- A bounded upstream request timeout; owner-local backend failures return generic non-secret 503/504 statuses.
+- Existing exact Host/method/path restrictions and owner-scoped bearer-token verification. Bad bearer credentials never become media work.
+
+Operator-selected limits in \`createWingCourierFabricProxy\` must not exceed the installed broker's own quotas, the signed wing contract, disk capacity and approved source batch. The code's default does **not** establish actual operator approval, a configured live broker or a secure public deployment.
+
+Run \`node --test systemia/wing-courier/fabric-proxy.test.mjs\` to verify declared + streamed oversized-body rejection, concurrency backpressure/recovery and existing authenticated routing. These are synthetic offline tests only. The real 12-file customer handoff remains HELD until a named owner operator verifies the existing TLS edge, broker, secrets, resident, exact source bytes, rights and independent review. The native Meta preview-send freeze remains unaffected.
