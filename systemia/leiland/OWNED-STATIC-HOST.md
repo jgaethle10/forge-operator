@@ -66,3 +66,8 @@ The public probe's final_public_launch_authorized flag intentionally remains fal
 - For source upgrades, first run tests/QA, roll out a pinned source revision, repeat external probes, and retain a separately authorized rollback route and release receipt.
 
 No public URL has been announced or independently verified by authoring this source.
+
+
+## KAIDANCE V02 asset parity
+
+The read-only host's KAIDANCE static allowlist now includes `/kaidance/experience.css` and `/kaidance/visual.mjs`. These are visual-only presentation assets with no network writer, and are required for the cinematic mobile/9:16 experience. The host still returns 404 for an absent authorized `pulse.json`, with no fabricated cycle. The owned deployment gates above remain unchanged.
