@@ -21,12 +21,19 @@ header{height:74px;display:flex;align-items:center;justify-content:space-between
 .chip{border:1px solid #50707c;background:#142b38;color:#a4c3c9;border-radius:99px;font-size:10px;padding:7px 12px}.chip[aria-pressed=true]{background:#a0f0df;color:#08212b;border-color:#a0f0df;font-weight:800}
 .lower{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin-top:15px}.tile{padding:21px;min-height:146px}.tile h3{font:normal 22px Georgia,serif;margin:13px 0 6px}.tile p{margin:0;color:#91acb5;font-size:11px;line-height:1.55}
 footer{border-top:1px solid #59808b50;display:flex;justify-content:space-between;gap:15px;padding-top:27px;margin-top:28px;color:#88a5af;font-size:11px}footer b{color:#a8e7da}
+.signal-card{position:absolute;z-index:3;right:23px;bottom:61px;width:clamp(225px,34%,315px);padding:16px 17px;background:#091b24e8;border:1px solid #558c8b70;border-radius:13px;box-shadow:0 10px 38px #0007;pointer-events:auto;backdrop-filter:blur(8px)}
+.signal-tag{font-size:9px;letter-spacing:.18em;font-weight:800;color:#98b2bd}.signal-title{font:normal 18px Georgia,serif;margin:9px 0 8px;line-height:1.18}.signal-meta{color:#8faeb6;font-size:10px}.signal-card a{display:inline-block;color:#99f2e2;text-decoration:none;font-size:10px;margin-top:10px}.signal-card a[hidden]{display:none}.signal-card[data-kind="new"]{border-color:#a6f5df;box-shadow:0 0 0 3px #8cefdc15,0 0 48px #46e7bf20}
+.node.signal .ring{stroke:#f1ffef;stroke-width:4;filter:drop-shadow(0 0 15px #9cf3e8)}.node.signal .inner{filter:drop-shadow(0 0 14px #9cf3e8)}
+body.film-mode .shell{max-width:520px;padding:0 12px 16px}body.film-mode .intro{padding:18px 0 13px}body.film-mode h1{font-size:44px}
+body.film-mode .intro p{font-size:11px}body.film-mode .intro-note,body.film-mode .side,body.film-mode .lower,body.film-mode footer{display:none}
+body.film-mode .panels{display:block}body.film-mode .visual{height:min(83vh,810px);min-height:610px}body.film-mode .graph{transform:scale(1.22)}
+body.film-mode .signal-card{left:14px;right:14px;bottom:64px;width:auto}body.film-mode .visual-bottom .hint{display:none}
 @keyframes dash{to{stroke-dashoffset:-300}}@keyframes breathe{0%,100%{opacity:.45;transform:scale(.93)}50%{opacity:.9;transform:scale(1.09)}}.paused .orbit,.paused .flowline,.paused .corehalo{animation:none}.paused .particle{display:none}
-@media(max-width:1100px){.panels{grid-template-columns:1fr}.side{grid-template-columns:1fr 1fr;grid-template-rows:auto}}@media(max-width:660px){.shell{padding:0 13px 32px}header{height:64px}.brand{font-size:10px;letter-spacing:.13em}.symbol{width:30px;height:30px}.actions .btn{display:none}.pill{font-size:9px}.intro{padding:30px 4px 22px}.intro-note{display:none}h1{font-size:45px}.visual{height:430px}.side,.lower{grid-template-columns:1fr}.visual-top{top:17px;left:15px;right:15px}.visual-bottom{bottom:16px;left:14px;right:14px}.visual-bottom .hint{display:none}.visual-bottom .mobile-motion{display:block!important;padding:6px 9px;font-size:10px}.graph{top:4%;height:91%}.tile{min-height:100px}.tile h3{font-size:19px}.feed{min-height:200px}footer{display:block;line-height:1.8}}
+@media(max-width:1100px){.panels{grid-template-columns:1fr}.side{grid-template-columns:1fr 1fr;grid-template-rows:auto}}@media(max-width:660px){.shell{padding:0 13px 32px}header{height:64px}.brand{font-size:10px;letter-spacing:.13em}.symbol{width:30px;height:30px}.actions .btn{display:none}.pill{font-size:9px}.intro{padding:30px 4px 22px}.intro-note{display:none}h1{font-size:45px}.visual{height:430px}.side,.lower{grid-template-columns:1fr}.visual-top{top:17px;left:15px;right:15px}.visual-bottom{bottom:16px;left:14px;right:14px}.visual-bottom .hint{display:none}.signal-card{left:12px;right:12px;bottom:51px;width:auto;padding:11px 13px}.signal-title{font-size:16px}.visual-bottom .mobile-motion{display:block!important;padding:6px 9px;font-size:10px}.graph{top:4%;height:91%}.tile{min-height:100px}.tile h3{font-size:19px}.feed{min-height:200px}footer{display:block;line-height:1.8}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important}}
 </style></head>
 <body><div class="shell">
-<header><div class="brand"><span class="symbol">H</span>EVERCRAFT <span style="color:#5f8893">/</span> HUDSON</div><div class="actions"><div class="pill" id="status">AWAITING PUBLIC FEED</div><button type="button" class="btn" id="pause">Pause motion</button></div></header>
+<header><div class="brand"><span class="symbol">H</span>EVERCRAFT <span style="color:#5f8893">/</span> HUDSON</div><div class="actions"><div class="pill" id="status">AWAITING PUBLIC FEED</div><button type="button" class="btn" id="focus" aria-pressed="false">Film view</button><button type="button" class="btn" id="pause">Pause motion</button></div></header>
 <div class="intro"><div><span class="eyebrow">THE EVERCRAFT KNOWLEDGE OBSERVATORY / 001</span><h1>A living <em>spine.</em></h1><p>Every discovery adds context. Every decision leaves a trace. Watch how the Evercraft ecosystem connects, remembers, and grows through verified evidence.</p></div><div class="intro-note"><b>PUBLIC OBSERVATORY</b><br>Read-only · Source-backed · Private by default</div></div>
 <main><div class="panels">
 <section class="panel visual" aria-label="Interactive HUDSON topology">
@@ -56,6 +63,7 @@ footer{border-top:1px solid #59808b50;display:flex;justify-content:space-between
 <g class="node gold" data-key="discovery" role="button" tabindex="0" aria-label="Explore Discovery" transform="translate(170 333)"><circle class="ring" r="25"/><circle class="inner" r="7"/><text class="label" y="-41" text-anchor="middle">DISCOVERY</text><text class="sublabel" y="-27" text-anchor="middle">RESEARCH</text></g>
 <g class="node" data-key="hudson" role="button" tabindex="0" aria-label="Explore Hudson" transform="translate(500 313)"><circle class="corehalo" r="84"/><circle class="corehalo" r="68" style="animation-delay:-2s"/><circle class="core" r="51"/><circle fill="#9cffe7" r="7"/><text class="coretext" y="-13" text-anchor="middle">H</text><text class="centerlabel" y="75" text-anchor="middle">HUDSON · MEMORY</text></g>
 </svg>
+<div class="signal-card" id="signal-card" data-kind="waiting"><div class="signal-tag" id="signal-tag">PUBLIC SOURCE HISTORY</div><div class="signal-title" id="signal-title">Watching the knowledge spine.</div><div class="signal-meta" id="signal-meta">Awaiting source-linked activity</div><a id="signal-link" href="#" target="_blank" rel="noopener noreferrer" hidden>View source receipt ↗</a></div>
 <div class="visual-bottom"><div class="legend"><span><i></i> Knowledge paths</span><span><i></i> System links</span></div><div class="hint">ANIMATED PATHS ARE NOT VERIFIED EVENTS</div><button type="button" class="btn mobile-motion" id="pause-mobile" style="display:none">Pause motion</button></div>
 </section>
 <div class="side"><section class="panel pad"><div class="paneltitle"><h2>The spine today</h2><span class="eyebrow" id="source-status">UNCONNECTED</span></div><p class="note">Only public, source-linked records count. Missing data is unknown, never zero.</p>
@@ -76,18 +84,37 @@ saban:["SABAN","Coordinates work and execution. Receipts and outcomes enrich HUD
 evidence:["EVIDENCE","Receipts, source references and reproducible facts ground the knowledge graph.","Every public assertion needs a trail."],
 discovery:["DISCOVERY","New research, signals and observations create context and useful connections.","The input of new knowledge."]
 };
-var current="hudson",data=null,onlyDay=false;
+var current="hudson",data=null,onlyDay=false,firstFeed=true,reelIndex=0,newSignalUntil=0;
 var els=document.querySelectorAll("[data-key]");
 function select(key){if(!info[key])return;current=key;els.forEach(function(el){el.classList.toggle("active",el.dataset.key===key)});document.getElementById("detail-name").textContent=info[key][0];document.getElementById("detail-copy").textContent=info[key][1];document.getElementById("detail-foot").textContent=info[key][2];render();}
 els.forEach(function(el){el.addEventListener("click",function(){select(el.dataset.key)});el.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();select(el.dataset.key)}})});
 var paused=matchMedia("(prefers-reduced-motion: reduce)").matches;
 function setMotion(){document.body.classList.toggle("paused",paused);["pause","pause-mobile"].forEach(function(id){var b=document.getElementById(id);b.textContent=paused?"Resume motion":"Pause motion";b.setAttribute("aria-pressed",String(paused))})}
 ["pause","pause-mobile"].forEach(function(id){document.getElementById(id).addEventListener("click",function(){paused=!paused;setMotion()})});setMotion();
+document.getElementById("focus").addEventListener("click",function(){var next=!document.body.classList.contains("film-mode");document.body.classList.toggle("film-mode",next);this.setAttribute("aria-pressed",String(next));this.textContent=next?"Normal view":"Film view"});
 document.getElementById("day-filter").addEventListener("click",function(){onlyDay=!onlyDay;this.setAttribute("aria-pressed",String(onlyDay));render()});
 function age(t){var diff=Date.now()-Date.parse(t);if(!Number.isFinite(diff))return "unknown";if(diff<0)return "future";if(diff<60000)return "now";if(diff<3600000)return Math.floor(diff/60000)+"m ago";if(diff<86400000)return Math.floor(diff/3600000)+"h ago";return Math.floor(diff/86400000)+"d ago";}
 function safeURL(s){try{var u=new URL(String(s),location.origin);return u.protocol==="https:"&&!u.username&&!u.password?u.href:null}catch(e){return null}}
 function isEvent(e){return e&&e.public===true&&e.source_verified===true&&typeof e.id==="string"&&e.id.length<=128&&typeof e.title==="string"&&e.title.length<=160&&typeof e.at==="string"&&Number.isFinite(Date.parse(e.at))&&!!info[e.system]&&!!safeURL(e.source_url)}
 function status(s,label){var p=document.getElementById("status");p.className="pill"+(s==="live"?" live":s==="stale"?" stale":"");p.textContent=label;document.getElementById("source-status").textContent=s==="live"?"CURRENT SOURCE":s==="stale"?"DELAYED SOURCE":"UNCONNECTED"}
+function showSignal(e,isNew){
+ var card=document.getElementById("signal-card"),tag=document.getElementById("signal-tag"),title=document.getElementById("signal-title"),meta=document.getElementById("signal-meta"),link=document.getElementById("signal-link");
+ document.querySelectorAll(".node.signal").forEach(function(n){n.classList.remove("signal")});
+ if(!e){card.dataset.kind="waiting";tag.textContent="SOURCE NOT AVAILABLE";title.textContent="The spine stays visible.";meta.textContent="No public verified event available";link.hidden=true;link.removeAttribute("href");return;}
+ card.dataset.kind=isNew?"new":"replay";
+ tag.textContent=isNew?"NEW VERIFIED PUBLIC SOURCE":"SOURCE HISTORY · REPLAY";
+ title.textContent=e.title;
+ meta.textContent=info[e.system][0]+" · "+age(e.at)+" · public Git change";
+ link.href=safeURL(e.source_url);link.hidden=false;
+ var node=document.querySelector('.node[data-key="'+e.system+'"]');if(node)node.classList.add("signal");
+ if(isNew)newSignalUntil=Date.now()+11000;
+}
+function playHistory(){
+ if(Date.now()<newSignalUntil)return;
+ var arr=data&&data.status==="connected"?data.events.filter(isEvent):[];
+ if(!arr.length){showSignal(null,false);return}
+ reelIndex=reelIndex%arr.length;showSignal(arr[reelIndex++],false);
+}
 function render(){
 var list=document.getElementById("list");list.replaceChildren();
 var events=data&&data.status==="connected"?data.events.filter(isEvent):[];
@@ -95,8 +122,11 @@ if(onlyDay)events=events.filter(function(e){return Date.now()-Date.parse(e.at)<=
 if(!events.length){var div=document.createElement("div");div.className="empty";var g=document.createElement("div");g.className="glyph";g.textContent="◎";var b=document.createElement("b");b.textContent=data&&data.status==="connected"?"No matching events.":"Waiting for the first signal.";var p=document.createElement("p");p.textContent=data&&data.status==="connected"?"Public evidence will appear when the publisher admits a verified update.":"The network keeps moving, but real activity is shown only after public evidence is connected.";div.append(g,b,p);list.append(div);return;}
 events.slice(0,15).forEach(function(e){var row=document.createElement("div");row.className="event";var dot=document.createElement("div");dot.className="dot";var body=document.createElement("div");var a=document.createElement("a");a.href=safeURL(e.source_url);a.target="_blank";a.rel="noopener noreferrer";a.textContent=e.title;var sub=document.createElement("small");sub.textContent=info[e.system][0]+" · "+age(e.at)+" · verified source";body.append(a,sub);row.append(dot,body);list.append(row)});
 }
-function apply(d){if(!d||d.schema!=="evercraft.hudson.public-activity.v1"||!Array.isArray(d.events)||d.events.length>200||!Array.isArray(d.sources)||d.sources.length>40)throw Error("Bad feed schema");data=d;var active=d.status==="connected"&&Number.isFinite(Date.parse(d.published_at)),fresh=active&&Date.now()>=Date.parse(d.published_at)&&Date.now()-Date.parse(d.published_at)<120000;status(fresh?"live":active?"stale":"waiting",fresh?"PUBLIC FEED CURRENT":active?"SOURCE DELAYED":"AWAITING PUBLIC FEED");document.getElementById("published").textContent=active?"Updated "+age(d.published_at):"No published snapshot";var ev=d.events.filter(isEvent);document.getElementById("day").textContent=active?ev.filter(function(e){return Date.now()-Date.parse(e.at)<=86400000}).length:"—";document.getElementById("sources").textContent=active?d.sources.length:"—";document.getElementById("records").textContent=active?ev.length:"—";document.getElementById("checked").textContent="Checked "+new Date().toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"});render()}
-async function refresh(){try{var controller=new AbortController(),timer=setTimeout(function(){controller.abort()},8000);var res;try{res=await fetch("./activity.json?t="+Date.now(),{cache:"no-store",credentials:"omit",signal:controller.signal})}finally{clearTimeout(timer)}if(!res.ok)throw Error("Source unavailable");apply(await res.json())}catch(e){data=null;status("waiting","FEED UNAVAILABLE");["day","sources","records"].forEach(function(k){document.getElementById(k).textContent="—"});document.getElementById("published").textContent="Feed unavailable";render()}}
-select("hudson");refresh();setInterval(refresh,15000);
+function apply(d){if(!d||d.schema!=="evercraft.hudson.public-activity.v1"||!Array.isArray(d.events)||d.events.length>200||!Array.isArray(d.sources)||d.sources.length>40)throw Error("Bad feed schema");var before=data&&data.status==="connected"?new Set(data.events.filter(isEvent).map(function(e){return e.id})):null;data=d;var active=d.status==="connected"&&Number.isFinite(Date.parse(d.published_at)),fresh=active&&Date.now()>=Date.parse(d.published_at)&&Date.now()-Date.parse(d.published_at)<120000;status(fresh?"live":active?"stale":"waiting",fresh?"PUBLIC FEED CURRENT":active?"SOURCE DELAYED":"AWAITING PUBLIC FEED");document.getElementById("published").textContent=active?"Updated "+age(d.published_at):"No published snapshot";var ev=d.events.filter(isEvent);document.getElementById("day").textContent=active?ev.filter(function(e){return Date.now()-Date.parse(e.at)<=86400000}).length:"—";document.getElementById("sources").textContent=active?d.sources.length:"—";document.getElementById("records").textContent=active?ev.length:"—";document.getElementById("checked").textContent="Checked "+new Date().toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"});
+var arrivals=before&&fresh?ev.filter(function(e){return !before.has(e.id)&&Date.now()-Date.parse(e.at)>=0&&Date.now()-Date.parse(e.at)<600000}):[];
+if(arrivals.length)showSignal(arrivals[0],true);else if(firstFeed){firstFeed=false;playHistory()}
+render()}
+async function refresh(){try{var controller=new AbortController(),timer=setTimeout(function(){controller.abort()},8000);var res;try{res=await fetch("./activity.json?t="+Date.now(),{cache:"no-store",credentials:"omit",signal:controller.signal})}finally{clearTimeout(timer)}if(!res.ok)throw Error("Source unavailable");apply(await res.json())}catch(e){data=null;status("waiting","FEED UNAVAILABLE");["day","sources","records"].forEach(function(k){document.getElementById(k).textContent="—"});document.getElementById("published").textContent="Feed unavailable";showSignal(null,false);render()}}
+select("hudson");refresh();setInterval(refresh,15000);setInterval(playHistory,14000);
 })();
 </script></body></html>
