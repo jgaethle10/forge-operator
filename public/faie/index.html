@@ -172,6 +172,10 @@
     a{color:var(--water)}
 
     /* FAIE FIRST-THREE-SECONDS ONBOARDING 2026-11-19 */
+    .pilot-actions{display:none}
+    body[data-pilot="agnormal"] .pilot-actions{display:flex}
+    #pilotNote{display:none}
+    body[data-pilot="agnormal"] #pilotNote{display:block}
     .hero-partner-intro{display:none;margin:12px 0 0;color:#e9d5a1;font-size:.88rem;line-height:1.5}
     body[data-pilot="agnormal"] .hero-partner-intro{display:block}
     .runtime-details{margin-top:22px;border:1px solid rgba(189,220,184,.2);background:rgba(8,27,16,.36);padding:12px 16px;border-radius:15px}
@@ -183,6 +187,8 @@
     .scope-advanced .two{margin-top:8px}
     .scope-hint{font-size:.74rem;color:#afc0b1;line-height:1.45;margin-top:6px}
     .scope-hint strong{color:#e0e8d7}
+    .compare-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    .compare-actions button{margin-top:18px}
     .plain-results{display:flex;flex-direction:column;gap:5px;border:1px solid #46654a;border-radius:15px;background:#102719;padding:15px;margin-top:16px}
     .plain-results strong{font-size:.82rem;color:#d7edce}
     .plain-results span{font-size:.85rem;color:#e5ebe0;line-height:1.5}
@@ -566,7 +572,8 @@
         <input id="compareRegionB" placeholder="candidate-region-key">
       </div>
     </div>
-    <button id="compareRun" type="button">Compare evidence readiness</button>
+    <div class="compare-actions"><button id="compareRun" type="button">Compare evidence readiness</button><button id="compareExample" class="secondary" type="button">Try Yakima vs. Tri-Cities ↗</button></div>
+    <div class="scope-hint">This compares the strength of available information, never the quality or suitability of the place itself.</div>
     <div id="comparisonResult" style="margin-top:18px"><div class="quiet">Add two candidate regions to compare the evidence packets side by side.</div></div>
   </section>
 </main>
@@ -1195,6 +1202,16 @@ function setFaieMetrics({health,error}={}){
   faieMetrics.pulseLabel.textContent=health.ok===true?'API responding':'Runtime needs attention';
 }
 
+document.getElementById('compareExample').addEventListener('click', () => {
+  if(document.getElementById('compareRun').disabled) return;
+  document.getElementById('compareLabelA').value='Yakima Valley';
+  document.getElementById('compareRegionA').value='yakima-wa';
+  document.getElementById('compareLabelB').value='Tri-Cities';
+  document.getElementById('compareRegionB').value='tri-cities-wa';
+  document.getElementById('question').value='Compare the available evidence and missing proof for food-production infrastructure in Yakima Valley and Tri-Cities.';
+  document.getElementById('asset').value='regional food production infrastructure';
+  document.getElementById('compareRun').click();
+});
 document.getElementById('heroTryExample').addEventListener('click', () => {
   if(document.getElementById('run').disabled) return;
   loadFoodInfrastructurePilot({partner:document.body.dataset.pilot==='agnormal'});
