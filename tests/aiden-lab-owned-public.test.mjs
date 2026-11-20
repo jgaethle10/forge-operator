@@ -42,7 +42,7 @@ test('five source-verified assets give a bounded proof, not a medical outcome', 
   const result = await runPublicCanary({fetcher:mock,now:new Date('2026-11-20T00:00:00Z')});
   assert.equal(result.public_https_verified,true);
   assert.equal(result.publication_state,'EXACT_SOURCE_PUBLIC_VERIFIED');
-  assert.equal(result.assets.length,5);
+  assert.equal(result.assets.length,6);
   assert.equal(result.medical_outcome_validated,false);
   assert.equal(result.external_action_taken,false);
   assert.equal(result.patient_data_accessed,false);
