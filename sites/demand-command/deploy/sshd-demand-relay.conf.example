@@ -1,0 +1,33 @@
+# Evercraft Demand Command: STAGED SSHD CONFIG, not installed.
+# Run separately from ssh.service, which has its own opt-out marker.
+# DO NOT substitute or import into /etc/ssh/sshd_config.
+# Requires dedicated demandrelay unprivileged account, root-owned 0600 authorized_keys,
+# locally generated root-owned 0600 ED25519 host key, and dedicated systemd unit.
+# Chromebooks require ChromeOS Linux TCP port-forward permission for 8222.
+# The home router MUST NOT publish WAN 8222.
+Port 8222
+ListenAddress 0.0.0.0
+AddressFamily inet
+HostKey /etc/evercraft/demand-relay/ssh_host_ed25519_key
+PidFile /run/evercraft-demand-sshd.pid
+AuthorizedKeysFile /etc/evercraft/demand-relay/authorized_keys
+AllowUsers demandrelay
+AuthenticationMethods publickey
+PubkeyAuthentication yes
+PasswordAuthentication no
+KbdInteractiveAuthentication no
+PermitRootLogin no
+PermitEmptyPasswords no
+UsePAM no
+AllowTcpForwarding remote
+PermitListen 127.0.0.1:18897
+PermitOpen none
+GatewayPorts no
+X11Forwarding no
+AllowAgentForwarding no
+AllowStreamLocalForwarding no
+PermitTunnel no
+PermitTTY no
+PermitUserRC no
+MaxSessions 0
+LogLevel VERBOSE
