@@ -1,0 +1,33 @@
+name: Systemia Revenue Gmail Reconciliation
+on:
+  pull_request:
+    paths:
+      - 'systemia/revenue-desk/**'
+      - '.github/workflows/systemia-revenue-gmail-reconciliation.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/revenue-desk/**'
+      - '.github/workflows/systemia-revenue-gmail-reconciliation.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  reconcile-offline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Syntax
+        run: |
+          node --check systemia/revenue-desk/gmail-reconciliation.mjs
+          node --check systemia/revenue-desk/gmail-reconciliation.test.mjs
+          node --check systemia/revenue-desk/atomic-send-reservations.mjs
+          node --check systemia/revenue-desk/atomic-send-reservations.test.mjs
+          node --check systemia/revenue-desk/owned-gmail-import.mjs
+          node --check systemia/revenue-desk/owned-gmail-import.test.mjs
+      - name: Receipt and quota safety proof
+        run: node --test systemia/revenue-desk/gmail-reconciliation.test.mjs systemia/revenue-desk/atomic-send-reservations.test.mjs systemia/revenue-desk/owned-gmail-import.test.mjs
