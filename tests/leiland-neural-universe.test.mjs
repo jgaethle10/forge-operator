@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
-import {REGIONS,buildNeuralAtlas,adaptiveNodeBudget,projectAtlasNode} from '../public/leiland/neural-universe.mjs';
+import {REGIONS,buildNeuralAtlas,adaptiveNodeBudget,projectAtlasNode,buildCinematicArteries,sampleCinematicArtery} from '../public/leiland/neural-universe.mjs';
 
 const sourceRoot=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..','public','leiland');
 const read=name=>fs.readFileSync(path.join(sourceRoot,name),'utf8');
@@ -72,4 +72,43 @@ test('reduced motion and broadcast still prioritize the full-screen observatory'
  assert.ok(visual.includes('IntersectionObserver'));
  assert.ok(visual.includes('visibilitychange'));
  assert.ok(visual.includes('adaptiveNodeBudget'));
+});
+
+
+test('cinematic arteries preserve deterministic sculpted architecture with no fabricated activity',()=>{
+ const a=buildCinematicArteries(),b=buildCinematicArteries();
+ assert.deepEqual(a,b,'scenic motion should be independent of private services and wall-clock events');
+ assert.equal(a.length,9);
+ assert.ok(Object.isFrozen(a));
+ for(const artery of a){
+  assert.ok(REGIONS.includes(artery.from)&&REGIONS.includes(artery.to));
+  for(const t of [0,.14,.33,.5,.71,1]){
+   const p=sampleCinematicArtery(artery,t);
+   assert.ok([p.x,p.y,p.z].every(Number.isFinite));
+   assert.ok(Math.abs(p.x)<1.5&&Math.abs(p.y)<1.5&&Math.abs(p.z)<1.5);
+  }
+  const first=sampleCinematicArtery(artery,0),last=sampleCinematicArtery(artery,1);
+  assert.deepEqual([first.x,first.y,first.z],artery.p0);
+  assert.deepEqual([last.x,last.y,last.z],artery.p3);
+  assert.deepEqual(sampleCinematicArtery(artery,-100),first);
+  assert.deepEqual(sampleCinematicArtery(artery,Infinity),first);
+  assert.deepEqual(sampleCinematicArtery(artery,100),last);
+ }
+ assert.notDeepEqual(buildCinematicArteries(987654),a);
+});
+
+test('mobile cinematic effects remain explicitly synthetic, bounded and accessible',()=>{
+ const visual=read('neural-universe.mjs'),css=read('style.css');
+ assert.ok(visual.includes('const steps=small?22:34'),'cap artery tessellation on phones');
+ assert.ok(visual.includes('const count=chosen?2:1'),'cap illuminated travelers per artery');
+ assert.ok(visual.includes('if(!still){'),'no moving packets in reduced-motion');
+ assert.ok(visual.includes('ARTERY_PAIRS'));
+ assert.ok(visual.includes('setPublicEventCount(n)'),'public event marks stay separate');
+ assert.ok(visual.includes('acknowledgeCycle()'),'only verified pulse triggers a specific ripple');
+ assert.ok(!visual.includes('fetch('),'scenic visualizer never reads a remote source itself');
+ assert.ok(!visual.includes('AudioContext')&&!visual.includes('WebGLRenderingContext'));
+ assert.ok(css.includes('LEILAND CINEMATIC / V2'));
+ assert.ok(css.includes('leiland-core-breathe'));
+ assert.ok(css.includes('@media(prefers-reduced-motion:reduce)'));
+ assert.ok(css.includes('.intro p{display:none}'),'put the immersive artwork above the fold on iPhone');
 });
