@@ -25,6 +25,9 @@ jobs:
           bash -n research/infrastructure-watch/release/aiw-beta-receive-penguin.sh
           bash -n research/infrastructure-watch/release/aiw-beta-edge-preflight.sh
           bash -n research/infrastructure-watch/release/aiw-beta-public-edge-audit.sh
+          bash -n research/infrastructure-watch/release/aiw-beta-prepare-public-route.sh
+          grep -Fq 'live_caddy_unchanged=true' research/infrastructure-watch/release/aiw-beta-prepare-public-route.sh
+          grep -Fq 'publication_activated=false' research/infrastructure-watch/release/aiw-beta-prepare-public-route.sh
           grep -Fq 'services_restarted=false' research/infrastructure-watch/release/aiw-beta-public-edge-audit.sh
           grep -Fq 'public_website_activated=false' research/infrastructure-watch/release/aiw-beta-public-edge-audit.sh
           grep -Fq 'EXISTING CADDY: valid with installed public-edge environment' research/infrastructure-watch/release/aiw-beta-stage-owned-edge.sh
@@ -65,6 +68,10 @@ jobs:
           assert "href='./advanced'" not in output
           PY
           node --check /tmp/aiw-public-beta.js
+      - name: Verify no-modification Caddy candidate construction
+        run: |
+          python3 -m py_compile research/infrastructure-watch/release/aiw_caddy_candidate.py
+          python3 -m unittest discover -s research/infrastructure-watch/tests -p 'test_aiw_caddy_candidate.py' -v
       - name: Verify immutable hover -> static public beta contract
         run: python3 -m unittest discover -s research/infrastructure-watch/tests -p 'test_aiw_public_beta_bundle.py' -v
       - name: Verify no third-party executable hosting introduced
