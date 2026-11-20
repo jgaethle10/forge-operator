@@ -14,6 +14,7 @@ EDGE_ATTESTATION_EXPECTED=false
 VISUAL_INGEST_TOKEN_CREATED=false
 SIGNAL_INTAKE_KEY_CREATED=false
 WEBSITE_AUDIT_INTAKE_CHANGED=false
+STUDIO_INTAKE_CHANGED=false
 PUBLIC_EDGE_SERVICE="evercraft-public-edge.service"
 ROUTER_MAP_SERVICE="evercraft-router-map.service"
 ROUTER_MAP_TIMER="evercraft-router-map.timer"
@@ -231,6 +232,30 @@ ensure_website_audit_private_intake() {
     WEBSITE_AUDIT_INTAKE_CHANGED=true
   fi
   echo "Evercraft update: Website Audit private inbox provisioned (payment remains held)"
+}
+
+ensure_studio_private_intake() {
+  # The resident Fabric unit has ProtectHome=read-only. Studio customer
+  # data must persist under the owned /var/lib state, never guessed from HOME.
+  # Existing legacy home state or custom env paths HOLD for private migration.
+  local provisioner="$REPO_ROOT/scripts/provision-studio-owned-intake.mjs"
+  [[ -f "$provisioner" ]] || {
+    echo "HOLD: Studio private intake provisioner missing" >&2
+    return 1
+  }
+  local output=""
+  output="$(node "$provisioner" --uid "$(id -u "$RUN_USER")" \
+    --gid "$(id -g "$RUN_USER")" --home "$RUN_HOME" \
+    --apply --confirm-owned-host)" || return 1
+  [[ "$output" == *'"state":"private_intake_prepared"'* ]] || return 1
+  STUDIO_INTAKE_CHANGED=false
+  if [[ "$output" == *'"environment_updated":true'* ||
+        "$output" == *'"directory_created":true'* ||
+        "$output" == *'"outbox_created":true'* ||
+        "$output" == *'"receipts_created":true'* ]]; then
+    STUDIO_INTAKE_CHANGED=true
+  fi
+  echo "Evercraft update: private Studio inbox provisioned; no customer data touched"
 }
 
 ensure_signal_private_intake() {
@@ -703,9 +728,13 @@ if [[ "$before" == "$target" ]]; then
     echo "ERROR: Website Audit private inbox provisioning failed" >&2
     exit 19
   fi
+  if ! ensure_studio_private_intake; then
+    echo "HOLD: Studio private inbox requires private owner migration or provisioning review" >&2
+    exit 20
+  fi
   ensure_visual_ingest_token
   reconcile_edge_attestation_env
-  if [[ -n "$ENV_BACKUP" || "$VISUAL_INGEST_TOKEN_CREATED" == "true" || "$SIGNAL_INTAKE_KEY_CREATED" == "true" || "$WEBSITE_AUDIT_INTAKE_CHANGED" == "true" ]]; then
+  if [[ -n "$ENV_BACKUP" || "$VISUAL_INGEST_TOKEN_CREATED" == "true" || "$SIGNAL_INTAKE_KEY_CREATED" == "true" || "$WEBSITE_AUDIT_INTAKE_CHANGED" == "true" || "$STUDIO_INTAKE_CHANGED" == "true" ]]; then
     if ! systemctl restart "$SERVICE"; then
       restore_edge_attestation_env
       systemctl restart "$SERVICE" || true
@@ -811,6 +840,10 @@ fi
 if ! ensure_website_audit_private_intake; then
   rollback "website_audit_private_intake_provision_failed"
   exit 19
+fi
+if ! ensure_studio_private_intake; then
+  rollback "studio_private_intake_provision_hold"
+  exit 20
 fi
 ensure_visual_ingest_token
 reconcile_edge_attestation_env
