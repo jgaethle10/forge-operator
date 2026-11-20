@@ -439,9 +439,41 @@ return Object.freeze({SCHEMA,G,bounds,presets,preset,validate,analyze,startState
   {...byName('Space Needle'),y:315,title:'SPACE NEEDLE FLYOVER'},
   {...byName('Columbia Center'),y:390,title:'DOWNTOWN SKYLINE'}
  ];
+
+ // Seattle obstacle broad phase: index expanded building footprints into 160m grid
+ // cells once at startup, instead of walking the whole city on every animation frame.
+ // The narrow phase preserves the exact old geometric and height predicates.
+ const collisionTargets=buildings.concat(landmarks.filter(l=>l.type!=='wheel'));
+ const collisionCellSize=160,collisionCells=new Map(),emptyCollisionCell=Object.freeze([]);
+ for(const b of collisionTargets){
+  const left=Math.floor((b.x-b.w/2-3)/collisionCellSize);
+  const right=Math.floor((b.x+b.w/2+3)/collisionCellSize);
+  const near=Math.floor((b.z-b.d/2-3)/collisionCellSize);
+  const far=Math.floor((b.z+b.d/2+3)/collisionCellSize);
+  for(let cx=left;cx<=right;cx++)for(let cz=near;cz<=far;cz++){
+   const key=cx+':'+cz;
+   let bucket=collisionCells.get(key);
+   if(!bucket){bucket=[];collisionCells.set(key,bucket);}
+   bucket.push(b);
+  }
+ }
+ for(const bucket of collisionCells.values())Object.freeze(bucket);
+ function collisionCandidates(x,z){
+  if(!Number.isFinite(x)||!Number.isFinite(z))return emptyCollisionCell;
+  return collisionCells.get(Math.floor(x/collisionCellSize)+':'+Math.floor(z/collisionCellSize))||emptyCollisionCell;
+ }
+ function collisionAt(x,y,z){
+  if(!Number.isFinite(y))return null;
+  for(const b of collisionCandidates(x,z)){
+   const dx=Math.abs(x-b.x),dz=Math.abs(z-b.z),terrain=ground(b.x,b.z),roof=terrain+b.h;
+   if(dx<b.w/2+3&&dz<b.d/2+3&&y<roof+2&&y>terrain-10)return b;
+  }
+  return null;
+ }
  const source={name:'City of Seattle · Building Outlines 2023',url:'https://services.arcgis.com/ZOyb2t4B0UYuYNYH/ArcGIS/rest/services/Building_Outlines_2023/FeatureServer/0',
   note:'2023 city footprint locations, simplified to bounding rectangles; heights, coastline, elevation and 3D shapes approximate; synthetic game flight only.'};
  window.AAARSeattle=Object.freeze({enabled,flags,origin:ORIGIN,geo,water,ground,landmarks,buildings,gates,source,seed,
+  collisionAt,collisionCandidates,collisionCellSize,collisionTargetsCount:collisionTargets.length,
   spawn:{x:-1720,y:320,z:-380,yaw:1.18},sceneVersion:'seattle-sky-tour-2026-11-preview',totalSourceFootprints:rects.length});
 })();
 </script>
@@ -1049,16 +1081,13 @@ function notify(message,seconds=3){$('flightAlert').textContent=message;$('fligh
 function frame(timestamp){if(!running)return;const dt=Math.min(.05,(timestamp-last)/1000||.016);last=timestamp;
  const was=state.checkpoints,prior=state.condition;core.step(state,controls(),dt);
  if(seattle&&state.condition==='FLYING'){
-  // Simplified axis-aligned collision screening against modeled roofs.
-  // Only game simulation, NOT a real city safety/airspace model.
-  const list=seattle.buildings.concat(seattle.landmarks.filter(l=>l.type!=='wheel'));
-  for(const b of list){
-   const dx=Math.abs(state.x-b.x),dz=Math.abs(state.z-b.z),roof=seattle.ground(b.x,b.z)+b.h;
-   if(dx<b.w/2+3&&dz<b.d/2+3&&state.y<roof+2&&state.y>seattle.ground(b.x,b.z)-10){
-    state.condition='BUILDING_CONTACT';state.paused=true;
-    state.events.push({kind:'synthetic_building_contact',building:b.name||'city_footprint',at:+state.flightTime.toFixed(1)});
-    notify('CITY OBSTACLE CONTACT · RESET FLIGHT',5);break;
-   }
+  // Indexed broad phase, identical narrow-phase game collision rules.
+  // Synthetic geometry only, not real city navigation or flight safety.
+  const hit=seattle.collisionAt(state.x,state.y,state.z);
+  if(hit){
+   state.condition='BUILDING_CONTACT';state.paused=true;
+   state.events.push({kind:'synthetic_building_contact',building:hit.name||'city_footprint',at:+state.flightTime.toFixed(1)});
+   notify('CITY OBSTACLE CONTACT · RESET FLIGHT',5);
   }
  }
  if(was!==state.checkpoints)notify(state.checkpoints>=3?'MISSION COMPLETE · SAVE YOUR FLIGHT':`GATE ${state.checkpoints} CLEARED`,4);
