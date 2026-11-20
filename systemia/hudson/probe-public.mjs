@@ -68,8 +68,9 @@ export async function probeHudsonPublic({origin=HUDSON_ORIGIN,fetchImpl=fetch,no
  let page,feed,health,privateProbe;
  try{
   page=await getText(url,fetchImpl);
-  checks.public_html=page.status===200&&/^text\/html/i.test(page.type)&&page.content.includes('HUDSON | The Living Spine')&&page.content.includes('ANIMATED PATHS ARE NOT VERIFIED EVENTS');
-  if(!checks.public_html)errors.push('public_html_not_verified');
+  checks.public_html=page.status===200&&/^text\/html/i.test(page.type)&&page.content.includes('HUDSON | The Living Spine')&&page.content.includes('ANIMATED PATHS ARE NOT VERIFIED EVENTS')&&page.content.includes('name="hudson-release" content="v2-mobile-cinematic"')&&page.content.includes('id="ambient-field"')&&page.content.includes('id="next-signal"');
+  checks.visual_release_version=checks.public_html?'v2-mobile-cinematic':null;
+  if(!checks.public_html)errors.push('public_v2_html_not_verified');
  }catch(e){checks.public_html=false;checks.public_html_error_class=classifyPublicFetchFailure(e);errors.push('public_html_unreachable')}
  try{
   feed=await getText(url+'activity.json?proof=1',fetchImpl);

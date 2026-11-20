@@ -71,3 +71,7 @@ Quality gate: run `node --test systemia/hudson/mobile-stage.test.mjs systemia/hu
 ## Atmospheric motion, not AI telemetry
 
 HUDSON v2 includes a first-party 2D canvas behind the SVG topology for a low-cost moving aurora, radial light arcs, and drifting decorative particles. The 2D canvas has no remote dependencies, no telemetry writes, no private API, and no access to system activity. Pixel density is capped at 1.5 device pixels, animation is capped around 30 fps, and it suspends when the page becomes hidden or the user pauses/reduces motion. Real public Git-source events are handled **separately** by the verified-event path, provenance links, and labeled replay card. No part of the canvas animation itself is a verified HUDSON ingestion event.
+
+## Exact visual-release admission
+
+Following the mobile v2 merge, the public external canary additionally requires the version marker `hudson-release=v2-mobile-cinematic`, the first-party atmospheric canvas, and the `Next story` control. A healthy **legacy** HUDSON page now fails public v2 verification even if the previous Git-source feed and health endpoints are reachable. This is a deployed-visual-surface proof, not an attestation of the exact running server SHA or private HUDSON memory. The marker is HTML-only and has no operator secrets.

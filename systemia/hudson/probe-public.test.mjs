@@ -32,7 +32,7 @@ function response(status,body,contentType='application/json; charset=utf-8',cach
 }
 function fakeFetch(mode='pass'){
  return async (url)=>{
-  if(url===HUDSON_ORIGIN+'/hudson/')return response(200,'<title>HUDSON | The Living Spine</title> ANIMATED PATHS ARE NOT VERIFIED EVENTS','text/html; charset=utf-8');
+  if(url===HUDSON_ORIGIN+'/hudson/')return response(200,mode==='old-layout'?'<title>HUDSON | The Living Spine</title> ANIMATED PATHS ARE NOT VERIFIED EVENTS':'<title>HUDSON | The Living Spine</title><meta name="hudson-release" content="v2-mobile-cinematic"> ANIMATED PATHS ARE NOT VERIFIED EVENTS <canvas id="ambient-field"></canvas><button id="next-signal">Next</button>','text/html; charset=utf-8');
   if(url.includes('/hudson/activity.json'))return response(200,specimen({published_at:mode==='stale'?new Date(now-200000).toISOString():undefined}));
   if(url===HUDSON_ORIGIN+'/health')return response(200,{hudson_public_path:'/hudson/',hudson_public_source_ready:true,hudson_public_feed_authority:'public_git_source_history_only'});
   if(url===HUDSON_ORIGIN+'/hudson/private.json')return response(mode==='exposed'?200:404,{error:'not_found'});
@@ -42,6 +42,10 @@ function fakeFetch(mode='pass'){
 test('external canary requires HTML, health, fresh JSON, and private denial',async()=>{
  const p=await probeHudsonPublic({fetchImpl:fakeFetch(),now});
  assert.equal(p.verified,true);
+ assert.equal(p.checks.visual_release_version,'v2-mobile-cinematic');
+ const legacy=await probeHudsonPublic({fetchImpl:fakeFetch('old-layout'),now});
+ assert.equal(legacy.verified,false);
+ assert.ok(legacy.holds.includes('public_v2_html_not_verified'));
  assert.equal(p.checks.source_listed_events,1);
  assert.equal(p.public_activity_authority,'canonical_public_git_source_changes_only');
  assert.equal(p.private_hudson_verified,false);
