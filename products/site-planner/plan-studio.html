@@ -150,7 +150,7 @@ for(const id of ['siteName','address','rev','sourceText'])$(id).addEventListener
 $('siteImage').addEventListener('change',e=>readImage(e.target,'siteImage','siteSource'));
 $('contextImage').addEventListener('change',e=>readImage(e.target,'contextImage','contextSource'));
 $('angle').addEventListener('input',e=>{state.angle=Number(e.target.value);$('angleLabel').textContent=state.angle+'°'});
-for(let b of document.querySelectorAll('[data-tool]'))b.addEventListener('click',()=>{state.tool=b.dataset.tool;state.pending=null;document.querySelectorAll('[data-tool]').forEach(x=>x.classList.toggle('selected',x===b))});
+for(let b of document.querySelectorAll('[data-tool]'))b.addEventListener('click',()=>{state.tool=b.dataset.tool;state.pending=null;state.calibrationPending=null;document.querySelectorAll('[data-tool]').forEach(x=>x.classList.toggle('selected',x===b))});
 $('knownFeet').addEventListener('input',()=>{if(state.calibrationPending)state.calibrationPending=null;});
 $('undo').addEventListener('click',()=>{state.marks.pop();state.pending=null;draw()});
 $('reset').addEventListener('click',()=>{state.marks=state.siteImage?[]:baseMarks();state.pending=null;draw()});
