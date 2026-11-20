@@ -48,6 +48,15 @@ vm.createContext(sandbox);vm.runInContext(inline,sandbox,{timeout:4000});
  const before=run('state.siteHash');
  await run('lookupPublicAerial()');
  if(run('state.siteHash')!==before||!get('messages').textContent.includes('Address ambiguous'))throw Error('Failed lookup mutated project');
+
+ // Editing an address invalidates the previously retrieved aerial, not just its label.
+ get('address').value='100 New Property St, Washington, DC 20001';
+ get('address').handlers.input();
+ if(run('state.siteImage')!==''||run('state.contextImage')!=='')throw Error('Stale imagery survived address edit');
+ if(run('state.aerialProvenance')!==null||run('state.siteHash')!==''||run('state.contextHash')!=='')throw Error('Old geolocation provenance survived address edit');
+ if(run('state.marks.length')!==0||run('state.calibration')!==null)throw Error('Old-site geometry survived address edit');
+ if(!get('sourceState').textContent.includes('Address changed'))throw Error('User not notified of reset');
+
  class Reader{readAsDataURL(f){this.result='data:image/png;base64,dGVzdA==';this.onload()}}
  sandbox.FileReader=Reader;
  run("readImage({files:[{name:'new-property.png',type:'image/png',size:4}],value:''},'siteImage','siteSource')");
