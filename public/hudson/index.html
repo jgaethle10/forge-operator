@@ -125,6 +125,16 @@ body.film-mode .visual-bottom .hint{display:none}
 }
 @media(max-width:380px){.visual{height:635px}.brand{font-size:8px}.signal-title{font-size:16px}.visual-bottom .legend span+span{display:none}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+
+/* Foreground depth, visual selection, and subtle non-data atmospheric texture */
+.starfield{pointer-events:none}.dust{fill:#c8fff1;filter:drop-shadow(0 0 2px #9cf6df);pointer-events:none}
+.graph .corehalo{transform-origin:center;transform-box:fill-box}
+.graph .node.active .ring{stroke:#e7fff2;stroke-width:3.5;filter:drop-shadow(0 0 11px #83f6de)}
+.graph .node.signal .ring{stroke:#ddfff4;filter:drop-shadow(0 0 14px #81edda)}
+.graph .node .ring,.graph .node .inner{transition:stroke .25s ease,filter .25s ease}
+.graph .node:focus-visible .ring{stroke-width:4;stroke:#fff}
+@media(max-width:660px){.graph .node .label{font-size:15px;letter-spacing:2px}.graph .node .sublabel{font-size:9px;letter-spacing:1px}.graph .node .coretext{font-size:54px}.graph .centerlabel{font-size:12px}}
+@media(prefers-reduced-motion:reduce){.graph .node .ring,.graph .node .inner{transition:none}}
 </style></head>
 <body><div class="shell">
 <header><div class="brand"><span class="symbol">H</span>EVERCRAFT <span style="color:#5f8893">/</span> HUDSON</div><div class="actions"><div class="pill" id="status">AWAITING PUBLIC FEED</div><button type="button" class="btn" id="focus" aria-pressed="false">Film view</button><button type="button" class="btn" id="pause">Pause motion</button></div></header>
@@ -180,7 +190,55 @@ discovery:["DISCOVERY","New research, signals and observations create context an
 };
 var current="hudson",data=null,onlyDay=false,firstFeed=true,reelIndex=0,newSignalUntil=0;
 var els=document.querySelectorAll("[data-key]");
-function select(key){if(!info[key])return;current=key;els.forEach(function(el){el.classList.toggle("active",el.dataset.key===key)});document.getElementById("detail-name").textContent=info[key][0];document.getElementById("detail-copy").textContent=info[key][1];document.getElementById("detail-foot").textContent=info[key][2];render();}
+var graph=document.querySelector(".graph"),layoutType="";
+var desktopNodes=[[292,155],[734,157],[836,344],[706,502],[285,500],[170,333],[500,313]];
+var mobileNodes=[[120,130],[360,130],[407,280],[344,449],[136,449],[73,280],[240,286]];
+var nodeKeys=["systemia","kaidance","raven","saban","evidence","discovery","hudson"];
+var nodesByKey={};els.forEach(function(el){nodesByKey[el.dataset.key]=el});
+function curve(a,b){var x1=a[0],y1=a[1],x2=b[0],y2=b[1];var qx=(x1+x2)/2,qy=(y1+y2)/2;
+ return "M"+x1+" "+y1+" Q"+qx+" "+qy+" "+x2+" "+y2;
+}
+var starfield=document.createElementNS("http://www.w3.org/2000/svg","g");
+starfield.setAttribute("class","starfield");starfield.setAttribute("aria-hidden","true");
+graph.insertBefore(starfield,graph.querySelector(".orbit"));
+for(var si=0;si<76;si++){
+ var star=document.createElementNS("http://www.w3.org/2000/svg","circle");
+ star.setAttribute("class","dust");star.setAttribute("r",(si%7===0?1.8:.8).toString());
+ star.setAttribute("opacity",(.18+(si%5)*.1).toFixed(2));star.setAttribute("data-index",String(si));
+ starfield.appendChild(star);
+}
+function adaptGraph(){
+ var mobile=matchMedia("(max-width:660px)").matches,kind=mobile?"portrait":"landscape";
+ if(layoutType===kind)return;layoutType=kind;
+ var coords=mobile?mobileNodes:desktopNodes,center=coords[6];
+ graph.setAttribute("viewBox",mobile?"0 0 480 585":"0 0 1000 620");
+ nodeKeys.forEach(function(key,i){nodesByKey[key].setAttribute("transform","translate("+coords[i][0]+" "+coords[i][1]+")")});
+ var orbits=graph.querySelectorAll(".orbit"),rings=mobile?[[205,200],[158,151],[103,105]]:[[343,213],[265,160],[175,121]];
+ orbits.forEach(function(el,i){el.setAttribute("cx",center[0]);el.setAttribute("cy",center[1]);el.setAttribute("rx",rings[i][0]);el.setAttribute("ry",rings[i][1])});
+ var connections=graph.querySelectorAll(".connections path");
+ var anim=graph.querySelectorAll("animateMotion");
+ for(var i=0;i<6;i++){
+  var outward=curve(center,coords[i]),inward=curve(coords[i],center);
+  connections[i*2].setAttribute("d",outward);
+  connections[i*2+1].setAttribute("d",outward);
+  anim[i].setAttribute("path",i%2===1?inward:outward);
+ }
+ var halo=nodesByKey.hudson.querySelectorAll(".corehalo");
+ halo.forEach(function(el,i){el.setAttribute("r",mobile?i?90:115:i?68:84)});
+ nodesByKey.hudson.querySelector(".core").setAttribute("r",mobile?65:51);
+ nodesByKey.hudson.querySelector(".coretext").setAttribute("y",mobile?"-16":"-13");
+ nodesByKey.hudson.querySelector(".centerlabel").setAttribute("y",mobile?"93":"75");
+ nodeKeys.slice(0,6).forEach(function(key){nodesByKey[key].querySelector(".ring").setAttribute("r",mobile?30:25)});
+ var width=mobile?480:1000,height=mobile?585:620;
+ starfield.querySelectorAll(".dust").forEach(function(el,i){
+  // Stable decorative geometry, never a source-record or real activity signal.
+  var nx=((i*139+17)%997)/997,ny=((i*277+51)%991)/991;
+  el.setAttribute("cx",(nx*width).toFixed(1));el.setAttribute("cy",(ny*height).toFixed(1));
+ });
+}
+adaptGraph();window.addEventListener("resize",adaptGraph,{passive:true});
+
+function select(key){if(!info[key])return;current=key;els.forEach(function(el){el.classList.toggle("active",el.dataset.key===key)});document.getElementById("detail-name").textContent=info[key][0];document.getElementById("detail-copy").textContent=info[key][1];document.getElementById("detail-foot").textContent=info[key][2];document.getElementById("graph-caption").textContent=info[key][0]+" · "+info[key][2];render();}
 els.forEach(function(el){el.addEventListener("click",function(){select(el.dataset.key)});el.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();select(el.dataset.key)}})});
 var paused=matchMedia("(prefers-reduced-motion: reduce)").matches;
 function setMotion(){document.body.classList.toggle("paused",paused);["pause","pause-mobile"].forEach(function(id){var b=document.getElementById(id);b.textContent=paused?"Resume motion":"Pause motion";b.setAttribute("aria-pressed",String(paused))})}
@@ -204,8 +262,8 @@ function showSignal(e,isNew){
  var node=document.querySelector('.node[data-key="'+e.system+'"]');if(node)node.classList.add("signal");
  if(isNew)newSignalUntil=Date.now()+11000;
 }
-function playHistory(){
- if(Date.now()<newSignalUntil)return;
+function playHistory(force){
+ if(!force&&Date.now()<newSignalUntil)return;
  var arr=data&&data.status==="connected"?data.events.filter(isEvent):[];
  if(!arr.length){showSignal(null,false);return}
  reelIndex=reelIndex%arr.length;showSignal(arr[reelIndex++],false);
@@ -217,11 +275,12 @@ if(onlyDay)events=events.filter(function(e){return Date.now()-Date.parse(e.at)<=
 if(!events.length){var div=document.createElement("div");div.className="empty";var g=document.createElement("div");g.className="glyph";g.textContent="◎";var b=document.createElement("b");b.textContent=data&&data.status==="connected"?"No matching events.":"Waiting for the first signal.";var p=document.createElement("p");p.textContent=data&&data.status==="connected"?"Public evidence will appear when the publisher admits a verified update.":"The network keeps moving, but real activity is shown only after public evidence is connected.";div.append(g,b,p);list.append(div);return;}
 events.slice(0,15).forEach(function(e){var row=document.createElement("div");row.className="event";var dot=document.createElement("div");dot.className="dot";var body=document.createElement("div");var a=document.createElement("a");a.href=safeURL(e.source_url);a.target="_blank";a.rel="noopener noreferrer";a.textContent=e.title;var sub=document.createElement("small");sub.textContent=info[e.system][0]+" · "+age(e.at)+" · verified source";body.append(a,sub);row.append(dot,body);list.append(row)});
 }
-function apply(d){if(!d||d.schema!=="evercraft.hudson.public-activity.v1"||!Array.isArray(d.events)||d.events.length>200||!Array.isArray(d.sources)||d.sources.length!==1||d.sources[0]?.id!=="evercraft-git"||d.coverage!=="public_git_history_only_not_total_hudson_activity")throw Error("Bad feed schema");if(d.status==="connected"&&d.events.some(function(e){return !isEvent(e)}))throw Error("Untrusted source event");var before=data&&data.status==="connected"?new Set(data.events.filter(isEvent).map(function(e){return e.id})):null;data=d;var active=d.status==="connected"&&Number.isFinite(Date.parse(d.published_at)),fresh=active&&Date.now()-Date.parse(d.published_at)>=-10000&&Date.now()-Date.parse(d.published_at)<120000;status(fresh?"live":active?"stale":"waiting",fresh?"PUBLIC FEED CURRENT":active?"SOURCE DELAYED":"AWAITING PUBLIC FEED");document.getElementById("published").textContent=active?"Updated "+age(d.published_at):"No published snapshot";var ev=d.events.filter(isEvent);document.getElementById("day").textContent=active?ev.filter(function(e){return Date.now()-Date.parse(e.at)<=86400000}).length:"—";document.getElementById("sources").textContent=active?d.sources.length:"—";document.getElementById("records").textContent=active?ev.length:"—";document.getElementById("checked").textContent="Checked "+new Date().toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"});
+function apply(d){if(!d||d.schema!=="evercraft.hudson.public-activity.v1"||!Array.isArray(d.events)||d.events.length>200||!Array.isArray(d.sources)||d.sources.length!==1||d.sources[0]?.id!=="evercraft-git"||d.coverage!=="public_git_history_only_not_total_hudson_activity")throw Error("Bad feed schema");if(d.status==="connected"&&d.events.some(function(e){return !isEvent(e)}))throw Error("Untrusted source event");var before=data&&data.status==="connected"?new Set(data.events.filter(isEvent).map(function(e){return e.id})):null;data=d;var active=d.status==="connected"&&Number.isFinite(Date.parse(d.published_at)),fresh=active&&Date.now()-Date.parse(d.published_at)>=-10000&&Date.now()-Date.parse(d.published_at)<120000;status(fresh?"live":active?"stale":"waiting",fresh?"GIT SOURCE CURRENT":active?"GIT SOURCE DELAYED":"SOURCE NOT CONNECTED");document.getElementById("published").textContent=active?"Updated "+age(d.published_at):"No published snapshot";var ev=d.events.filter(isEvent);document.getElementById("day").textContent=active?ev.filter(function(e){return Date.now()-Date.parse(e.at)<=86400000}).length:"—";document.getElementById("sources").textContent=active?d.sources.length:"—";document.getElementById("records").textContent=active?ev.length:"—";document.getElementById("checked").textContent="Checked "+new Date().toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"});
 var arrivals=before&&fresh?ev.filter(function(e){return !before.has(e.id)&&Date.now()-Date.parse(e.at)>=0&&Date.now()-Date.parse(e.at)<600000}):[];
 if(arrivals.length)showSignal(arrivals[0],true);else if(firstFeed){firstFeed=false;playHistory()}
 render()}
-async function refresh(){try{var controller=new AbortController(),timer=setTimeout(function(){controller.abort()},8000);var res;try{res=await fetch("./activity.json?t="+Date.now(),{cache:"no-store",credentials:"omit",signal:controller.signal})}finally{clearTimeout(timer)}if(!res.ok)throw Error("Source unavailable");apply(await res.json())}catch(e){data=null;status("waiting","FEED UNAVAILABLE");["day","sources","records"].forEach(function(k){document.getElementById(k).textContent="—"});document.getElementById("published").textContent="Feed unavailable";showSignal(null,false);render()}}
-select("hudson");refresh();setInterval(refresh,15000);setInterval(playHistory,14000);
+async function refresh(){try{var controller=new AbortController(),timer=setTimeout(function(){controller.abort()},8000);var res;try{res=await fetch("./activity.json?t="+Date.now(),{cache:"no-store",credentials:"omit",signal:controller.signal})}finally{clearTimeout(timer)}if(!res.ok)throw Error("Source unavailable");apply(await res.json())}catch(e){data=null;status("waiting","SOURCE UNAVAILABLE");["day","sources","records"].forEach(function(k){document.getElementById(k).textContent="—"});document.getElementById("published").textContent="Feed unavailable";showSignal(null,false);render()}}
+document.getElementById("next-signal").addEventListener("click",function(){newSignalUntil=0;playHistory(true)});
+select("hudson");refresh();setInterval(refresh,15000);setInterval(function(){if(!paused)playHistory()},14000);
 })();
 </script></body></html>
