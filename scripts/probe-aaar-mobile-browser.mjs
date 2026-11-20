@@ -1,7 +1,7 @@
 // AAAR public-launch smoke test. Browser emulation never substitutes for real iPhone QA.
 // Run from repo root: node scripts/probe-aaar-mobile-browser.mjs <owned URL>
 import assert from 'node:assert/strict';
-import { chromium } from 'playwright';
+import { chromium, webkit } from 'playwright';
 
 function checkedTarget(raw) {
   let u;
@@ -14,18 +14,20 @@ function checkedTarget(raw) {
 }
 
 const target = checkedTarget(process.argv[2] || '');
+const engineName = process.env.AAAR_BROWSER === 'webkit' ? 'webkit' : 'chromium';
+const browserEngine = engineName === 'webkit' ? webkit : chromium;
 const receipt = {
   schema: 'evercraft.aaar.mobile-browser-release-probe.v1',
   target: target.target, url: target.url,
   checked_at_utc: new Date().toISOString(),
-  browser: 'Playwright Chromium, mobile emulation, NOT actual Safari',
+  browser: 'Playwright '+(engineName === 'webkit' ? 'WebKit' : 'Chromium')+', mobile emulation, NOT actual iPhone Safari',
   real_iphone_safari_verified: false,
   worlds_authoritative_flight_integration_verified: false,
   checks: [], passed: false
 };
 let browser;
 try {
-  browser = await chromium.launch({headless:true});
+  browser = await browserEngine.launch({headless:true});
   const context = await browser.newContext({viewport:{width:390,height:844},deviceScaleFactor:2,isMobile:true,hasTouch:true});
   const page = await context.newPage(), errors=[];
   page.on('pageerror',err=>errors.push(String(err.message).slice(0,350)));
