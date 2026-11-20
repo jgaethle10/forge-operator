@@ -144,10 +144,13 @@ function showEvent(){
    detail:{title:e.title,kind:e.kind,recorded_at:e.time}
  }));
  state.eventStart=Date.now();
+ renderEventList(); // Keep supporting signals distinct from the currently featured record.
 }
 function renderEventList(){
  const node=$('eventList');node.replaceChildren();
- for(const e of state.events.slice(0,4)){
+ const featuredIndex=state.events.length?state.current%state.events.length:-1;
+ const supporting=state.events.filter((_,i)=>i!==featuredIndex).slice(0,4);
+ for(const e of supporting){
    const safeState=e.state==='RUNNING'||e.state==='PASSED'||e.state==='MERGED'
      ||e.state==='FAILED'||e.state==='CANCELLED'||e.state==='RECORDED'
      ||e.state==='QUEUED'?e.state:'DEFAULT';
@@ -165,9 +168,11 @@ function renderEventList(){
    detail.textContent='RECORDED '+labelTime(e.time)+' · PUBLIC GITHUB';
    a.append(meta,title,detail);node.append(a);
  }
- if(!state.events.length){
+ if(!supporting.length){
    const p=document.createElement('p');p.className='empty';
-   p.textContent='GitHub evidence could not be verified. Check the source directly.';
+   p.textContent=state.events.length===1
+     ?'One eligible public receipt is available. The featured record contains its source link.'
+     :'GitHub evidence could not be verified. Check the source directly.';
    node.append(p);
  }
 }
@@ -195,7 +200,7 @@ async function refreshGithub(){
  if(good){
    const normalized=normalizePublicActivity(raw);
    state.events=normalized.items.slice(0,20);
-   state.current=0;showEvent();renderEventList();
+   state.current=0;showEvent();
    $('githubStatus').textContent=good===3?'PUBLIC RECORD · '+state.events.length+' EVENTS':'PARTIAL PUBLIC RECORD';
  }else{
    state.events=[];renderEventList();showEvent();
