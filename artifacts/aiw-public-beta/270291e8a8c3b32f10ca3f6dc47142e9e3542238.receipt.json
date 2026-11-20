@@ -1,0 +1,10 @@
+{
+  "archive_bytes": 388949,
+  "archive_sha256": "47d8da45c45db533cad3556766195e077f62070bd683e5b90f120b01c32e16c7",
+  "kind": "public-federal-static-data-only",
+  "payload_path": "artifacts/aiw-public-beta/270291e8a8c3b32f10ca3f6dc47142e9e3542238.tar.gz",
+  "public_deployed": false,
+  "runtime_host": "Evercraft-owned-edge-only",
+  "schema": "evercraft.aiw.github-courier.v1",
+  "source_commit": "270291e8a8c3b32f10ca3f6dc47142e9e3542238"
+}
