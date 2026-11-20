@@ -10,7 +10,7 @@ redir /kaidance /kaidance/ 308
 
 route /kaidance/* {
   # Explicit file allowlist. Other /kaidance paths return 404.
-  @kaidanceAllowed path /kaidance/ /kaidance/index.html /kaidance/app.mjs /kaidance/style.css /kaidance/pulse-source.mjs /kaidance/pulse.json
+  @kaidanceAllowed path /kaidance/ /kaidance/index.html /kaidance/app.mjs /kaidance/style.css /kaidance/pulse-source.mjs /kaidance/work-source.mjs /kaidance/mark.svg /kaidance/pulse.json
 
   handle @kaidanceAllowed {
     root * /srv/evercraft/public
