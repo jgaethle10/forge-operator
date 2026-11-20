@@ -105,6 +105,14 @@ function corpusHasTerm(corpus, term) {
 }
 
 function classifyDimensions(observation) {
+  // Provider-specific semantics take precedence over words appearing in caveats.
+  // The official USDM datum is a county-scale drought assessment, not a soil
+  // sample or an irrigation-rights measurement. Sentences such as "does not
+  // establish soil condition" must NEVER make soil a covered evidence dimension.
+  if (observation.source_family === 'us-drought-monitor-ndmc' &&
+      observation.kind === 'usdm_county_weekly_drought_assessment') {
+    return ['resilience'];
+  }
   const corpus = textCorpus(observation);
   const dimensions = [];
   for (const [dimension, terms] of Object.entries(DIMENSION_RULES)) {
@@ -367,6 +375,23 @@ export function emptyFaieState() {
     receipts: [],
     last_cycle: null
   };
+}
+
+// Conservatively repair cached USDM signals made before the provider-scoped
+// classifier existed. No new observations or stronger evidence states are made.
+export function reconcileFaieSourceDimensions(inputState) {
+  const state = structuredClone(inputState || emptyFaieState());
+  let corrected = 0;
+  for (const signal of Object.values(state.signals || {})) {
+    if (signal.source_family !== 'us-drought-monitor-ndmc' ||
+        signal.kind !== 'usdm_county_weekly_drought_assessment') continue;
+    const expected = ['resilience'];
+    if (JSON.stringify(signal.dimensions) !== JSON.stringify(expected)) {
+      signal.dimensions = expected;
+      corrected += 1;
+    }
+  }
+  return {state,corrected};
 }
 
 export function ingestFaieObservation(inputState, rawObservation, { now = new Date().toISOString() } = {}) {
