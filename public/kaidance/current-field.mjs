@@ -100,7 +100,7 @@ if(canvas&&stage&&marker){
    const sample=26;
    for(let k=0;k<=sample;k++){
     const t=k/sample;const p=at(c,t);
-    const m=Math.sin(t*TAU*2.2+time*.48+phase)*1.8;
+    const m=Math.sin(t*TAU*2.35+time*.58+phase)*Math.sin(t*Math.PI)*6.8;
     const x=p.x+m,y=p.y-m;
     if(k===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
    }
@@ -137,18 +137,18 @@ if(canvas&&stage&&marker){
     const [a,b]=connections[i],c=path(a,b,i%3-1);
     const bright=active.has(a)&&active.has(b);
     // Underwater light tunnels. Several strands converge into each system.
-    ribbon(c,byKey[a].color,bright?.135:.063,bright?8:3,i);
-    ribbon(c,byKey[b].color,bright?.5:.22,bright?1.8:1,i);
+    ribbon(c,byKey[a].color,bright?.19:.11,bright?12:5,i);
+    ribbon(c,byKey[b].color,bright?.68:.37,bright?2.1:1.25,i);
     for(let lane=0;lane<3;lane++){
      const c2=path(a,b,lane-1);
-     ribbon(c2,byKey[b].color,.07+lane*.025,.65,i+lane);
+     ribbon(c2,byKey[b].color,.11+lane*.037,.85,i+lane);
     }
     // Individual energy packets travel without pretending to be missions.
     for(let j=0;j<(w<680?3:5);j++){
      const t=(time*(.035+.006*(i%3))+j/(w<680?3:5)+i*.131)%1;
      const p=at(c,t);
-     halo(p.x,p.y,10,byKey[b].color,.65);
-     dot(p.x,p.y,1.2,byKey[b].color,.45+.4*Math.sin(t*Math.PI));
+     halo(p.x,p.y,12,byKey[b].color,.88);
+     dot(p.x,p.y,1.6,byKey[b].color,.56+.38*Math.sin(t*Math.PI));
     }
    }
    ctx.restore();
@@ -165,8 +165,8 @@ if(canvas&&stage&&marker){
     ctx.lineWidth=i===0?1.6:.7;ctx.stroke();
    }
    ctx.restore();
-   halo(c.x,c.y,r*.78,'#6ae8ff',.9);
-   halo(c.x,c.y,r*.26,'#d8ffff',1.4);
+   halo(c.x,c.y,r*1.15,'#6ae8ff',1.1);
+   halo(c.x,c.y,r*.39,'#d8ffff',1.4);
    dot(c.x,c.y,4.4,'#ddffff',.95);
    if(beat>0&&!reduced.matches){
     const rr=r*(.55+(1-beat)*1.8);
@@ -178,8 +178,8 @@ if(canvas&&stage&&marker){
   function nodes(){
    for(const sys of systems){
     const p=point(sys.key),active=sys.key===focus;
-    const r=sys.key==='kaidance'?10:active?7:5;
-    halo(p.x,p.y,active?47:24,sys.color,active?1.25:.75);
+    const r=sys.key==='kaidance'?10:active?8:5.6;
+    halo(p.x,p.y,active?58:31,sys.color,active?1.35:.97);
     dot(p.x,p.y,r,sys.color,active?.85:.65);
     dot(p.x,p.y,active?2.9:1.9,'#eeffff',.9);
     if(sys.key==='kaidance')continue;
@@ -203,7 +203,7 @@ if(canvas&&stage&&marker){
    const [a,b]=routes[journeyIndex],fraction=(time%10.5)/10.5;
    const c=path(a,b),p=at(c,clamp(fraction,.01,.99));
    const next=at(c,clamp(fraction+.008,.02,1));
-   const angle=Math.atan2(next.y-p.y,next.x-p.x),size=w<680?11:17;
+   const angle=Math.atan2(next.y-p.y,next.x-p.x),size=w<680?17:22;
    ctx.save();ctx.translate(p.x,p.y);ctx.rotate(angle);
    halo(0,0,size*5,'#b8ffeb',1.3);
    ctx.globalCompositeOperation='lighter';
@@ -215,7 +215,7 @@ if(canvas&&stage&&marker){
     const sway=Math.sin(time*1.2+i*.65)*size*.25;
     ctx.beginPath();ctx.moveTo(-size*.35,0);
     ctx.bezierCurveTo(-size*.75,spread*.18,-tail*.55,spread*.7+sway,-tail,spread+sway);
-    ctx.strokeStyle=i%4===0?'rgba(194,160,255,.29)':'rgba(147,255,233,.39)';
+    ctx.strokeStyle=i%4===0?'rgba(194,160,255,.43)':'rgba(147,255,233,.53)';
     ctx.lineWidth=depth<2?1.2:.68;ctx.stroke();
    }
    const tail=ctx.createRadialGradient(0,0,0,0,0,size*4);
