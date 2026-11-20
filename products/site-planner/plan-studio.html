@@ -24,7 +24,7 @@
 </div>
 <div class="quick-step"><div class="step-title"><span class="step-num">2</span><strong>Tap where chargers go</strong></div>
 <div class="simple-tool"><button class="selected button-primary" data-tool="charger">⚡ Add charger</button><button id="undo" class="button-secondary">Undo</button></div>
-<p class="helper"><span id="activeTool">Adding chargers</span> · Tap the first plan sheet to place them.</p>
+<p class="helper"><span id="activeTool">Adding chargers</span> · Tap to add. Tap an existing charger, then a new spot to move it. Undo fixes mistakes.</p>
 <div class="statline"><span id="chargerCount" class="pill">8 CONCEPT CHARGERS</span><span id="scaleState" class="pill amber">SCALE UNVERIFIED</span></div>
 </div>
 <div class="quick-step"><div class="step-title"><span class="step-num">3</span><strong>Get your plan</strong></div>
@@ -71,7 +71,7 @@
 const $=id=>document.getElementById(id);
 const ns='http://www.w3.org/2000/svg';
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const state={tool:'charger',angle:0,siteImage:'',contextImage:'',siteSource:'',contextSource:'',siteHash:'',contextHash:'',pending:null,marks:[],history:[],calibration:null,calibrationPending:null,siteGeneration:0,contextGeneration:0,lookupGeneration:0,aerialProvenance:null,mapScale:null};
+const state={tool:'charger',angle:0,siteImage:'',contextImage:'',siteSource:'',contextSource:'',siteHash:'',contextHash:'',pending:null,marks:[],history:[],selectedMarkIndex:null,calibration:null,calibrationPending:null,siteGeneration:0,contextGeneration:0,lookupGeneration:0,aerialProvenance:null,mapScale:null};
 function safeFeet(value){const n=Number(value);return Number.isFinite(n)&&n>=1&&n<=10000?n:null}
 function distance(a,b){return Math.hypot(b.x-a.x,b.y-a.y)}
 function calibrateFromPoints(a,b,known,sourceName){
@@ -174,6 +174,23 @@ function draw(){siteSheet();contextSheet();
  $('scaleState').textContent=state.calibration?'OPERATOR REFERENCE · NOT SURVEYED':state.mapScale?'USGS IMAGE SCALE · ESTIMATE':'SCALE UNVERIFIED · NTS';
  $('calibrationState').textContent=state.calibration?'Reference: '+state.calibration.knownFeet+' ft across '+Math.round(state.calibration.svgUnits)+' drawing units. Estimated distances only.':state.calibrationPending?'Tap the second reference endpoint.':state.mapScale?'Approx. USGS imagery scale, not surveyed. Manual reference can override.':'NO REFERENCE CALIBRATION · DRAWING NTS';
 }
+function saveUndoSnapshot(){
+ state.history.push(state.marks.map(m=>({...m})));
+ if(state.history.length>50)state.history.shift();
+}
+function undoEdit(){
+ if(state.pending||state.selectedMarkIndex!==null){
+  state.pending=null;state.selectedMarkIndex=null;
+  $('messages').textContent='Selection cancelled.';draw();return;
+ }
+ if(state.history.length){
+  state.marks=state.history.pop();
+  $('messages').textContent='Last change reversed.';draw();return;
+ }
+ // Legacy demonstration first tap still removes the last mark, for a simple editable starting point.
+ if(!state.siteImage&&state.marks.length){state.marks.pop();draw();return}
+ $('messages').textContent='Nothing to undo.';
+}
 function onCanvasTap(ev){const svg=$('drawing-1');let p=svg.createSVGPoint();p.x=ev.clientX;p.y=ev.clientY;const mat=svg.getScreenCTM();if(!mat)return;p=p.matrixTransform(mat.inverse());const x=Math.round(p.x),y=Math.round(p.y);if(x<40||x>845||y<75||y>665)return;if(state.tool==='calibrate'){
  if(!state.siteImage){$('messages').textContent='A real source image is required before calibration.';return}
  const feet=safeFeet($('knownFeet').value);
@@ -183,7 +200,26 @@ function onCanvasTap(ev){const svg=$('drawing-1');let p=svg.createSVGPoint();p.x
  state.calibrationPending=null;
  if(!c){$('messages').textContent='Reference points must be at least 20 drawing units apart.';draw();return}
  state.calibration=c;$('messages').textContent='Operator reference captured. Estimated dimensions are NOT surveyed measurements.';draw();return;
-}if(state.tool==='erase'){let i=state.marks.findLastIndex(m=>Math.hypot(m.x-x,m.y-y)<45);if(i>=0)state.marks.splice(i,1)}else if(state.tool==='route'){if(state.pending){state.marks.push({type:'route',x:state.pending.x,y:state.pending.y,x2:x,y2:y});state.pending=null}else{state.pending={x,y};$('messages').textContent='Tap the route endpoint.';return}}else state.marks.push({type:state.tool,x,y,angle:state.angle});draw()}
+}if(state.tool==='charger'){
+ if(state.selectedMarkIndex!==null){
+  const mark=state.marks[state.selectedMarkIndex];
+  if(mark&&mark.type==='charger'){
+   if(distance(mark,{x,y})>4){saveUndoSnapshot();mark.x=x;mark.y=y;$('messages').textContent='Charger moved. Undo reverses this change.'}
+  }
+  state.selectedMarkIndex=null;draw();return;
+ }
+ const i=state.marks.findLastIndex(m=>m.type==='charger'&&Math.hypot(m.x-x,m.y-y)<24);
+ if(i>=0){state.selectedMarkIndex=i;$('messages').textContent='Charger selected. Tap its new position, or Undo to cancel.';draw();return}
+ saveUndoSnapshot();state.marks.push({type:'charger',x,y,angle:state.angle});
+ $('messages').textContent='Charger added. Tap it again to move it.';draw();return;
+}if(state.tool==='erase'){
+ let i=state.marks.findLastIndex(m=>Math.hypot(m.x-x,m.y-y)<45);
+ if(i>=0){saveUndoSnapshot();state.marks.splice(i,1)}
+}else if(state.tool==='route'){
+ if(state.pending){saveUndoSnapshot();state.marks.push({type:'route',x:state.pending.x,y:state.pending.y,x2:x,y2:y});state.pending=null}
+ else{state.pending={x,y};$('messages').textContent='Tap the route endpoint.';return}
+}else{saveUndoSnapshot();state.marks.push({type:state.tool,x,y,angle:state.angle})}
+draw()}
 function dl(name,blob){let a=document.createElement('a');const u=URL.createObjectURL(blob);a.href=u;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1500)}
 function exportSvg(){const a=$('drawing-1').cloneNode(true),b=$('drawing-2').cloneNode(true);for(const c of [a,b]){const h=c.querySelector('#hit-target');if(h)h.remove();c.setAttribute('xmlns',ns);c.setAttribute('width','1400');c.setAttribute('height','870')}dl('Evercraft-EV-Site-Concept-S01.svg',new Blob([new XMLSerializer().serializeToString(a)],{type:'image/svg+xml'}));setTimeout(()=>dl('Evercraft-Vicinity-Concept-A01.svg',new Blob([new XMLSerializer().serializeToString(b)],{type:'image/svg+xml'})),350);$('messages').textContent='Exported two editable vector sheets. Download the evidence JSON separately to retain provenance.'}
 function exportEvidence(){const data=JSON.stringify(evidenceRecord(),null,2);dl('Evercraft-Site-Concept-Evidence.json',new Blob([data+'\n'],{type:'application/json'}));$('messages').textContent='Downloaded operator evidence record. It is not a survey or engineering certificate.'}
@@ -217,7 +253,7 @@ async function lookupPublicAerial(){
     state.contextSource='Evercraft-USGS-Vicinity.jpg';
     state.siteHash=result.site.sha256;
     state.contextHash=result.vicinity.sha256;
-    state.calibration=null;state.calibrationPending=null;state.marks=[];state.pending=null;
+    state.calibration=null;state.calibrationPending=null;state.marks=[];state.history=[];state.selectedMarkIndex=null;state.pending=null;
     state.mapScale=projectedScreeningScale(result.site.bbox_3857,result.approximate_address_coordinate?.lat);
     state.aerialProvenance={
       provider:'USGS The National Map',census_geocoder:'Public_AR_Current',
@@ -245,7 +281,7 @@ function invalidateAddressBoundAerial(){
     state.siteImage='';state.contextImage='';
     state.siteSource='';state.contextSource='';
     state.siteHash='';state.contextHash='';
-    state.marks=[];state.calibration=null;state.mapScale=null;
+    state.marks=[];state.history=[];state.selectedMarkIndex=null;state.calibration=null;state.mapScale=null;
     state.calibrationPending=null;state.pending=null;state.aerialProvenance=null;
     $('siteImage').value='';$('contextImage').value='';
     $('sourceState').textContent='Address changed. Find a new aerial or upload an image.';
@@ -254,7 +290,7 @@ function invalidateAddressBoundAerial(){
   }
   draw();
 }
-function readImage(input,key,label){const f=input.files?.[0];if(!f)return;if(!/^image\/(png|jpeg|webp)$/.test(f.type)||f.size>12*1024*1024){alert('Use PNG, JPG or WebP up to 12 MB.');input.value='';return}const generationKey=key==='siteImage'?'siteGeneration':'contextGeneration';const generation=++state[generationKey];const reader=new FileReader();reader.onload=async()=>{if(generation!==state[generationKey])return;if(key==='siteImage'){++state.lookupGeneration;$('lookupAerial').disabled=false;$('lookupAerial').textContent='Find public aerial';state.aerialProvenance=null;state.mapScale=null;state.contextImage='';state.contextSource='';state.contextHash='';++state.contextGeneration;$('contextImage').value='';if($('siteName').value==='DEMONSTRATION RETAIL SITE')$('siteName').value='SITE CONCEPT · OPERATOR REVIEW';state.marks=[];state.pending=null;state.calibration=null;state.calibrationPending=null;$('messages').textContent='New site aerial: all prior conceptual marks cleared. Place new marks based on this source.';$('sourceText').value='Operator-supplied '+f.name+' / rights and location unverified'}state[key]=String(reader.result);state[label]=f.name;state[key==='siteImage'?'siteHash':'contextHash']='';if(typeof crypto!=='undefined'&&crypto.subtle&&typeof f.arrayBuffer==='function'){try{const hash=await crypto.subtle.digest('SHA-256',await f.arrayBuffer());if(generation===state[generationKey])state[key==='siteImage'?'siteHash':'contextHash']=Array.from(new Uint8Array(hash)).map(n=>n.toString(16).padStart(2,'0')).join('')}catch{}}$('sourceState').textContent='Operator image: '+f.name+' · byte fingerprint only · not verified geography';draw()};reader.readAsDataURL(f)}
+function readImage(input,key,label){const f=input.files?.[0];if(!f)return;if(!/^image\/(png|jpeg|webp)$/.test(f.type)||f.size>12*1024*1024){alert('Use PNG, JPG or WebP up to 12 MB.');input.value='';return}const generationKey=key==='siteImage'?'siteGeneration':'contextGeneration';const generation=++state[generationKey];const reader=new FileReader();reader.onload=async()=>{if(generation!==state[generationKey])return;if(key==='siteImage'){++state.lookupGeneration;$('lookupAerial').disabled=false;$('lookupAerial').textContent='Find public aerial';state.aerialProvenance=null;state.mapScale=null;state.contextImage='';state.contextSource='';state.contextHash='';++state.contextGeneration;$('contextImage').value='';if($('siteName').value==='DEMONSTRATION RETAIL SITE')$('siteName').value='SITE CONCEPT · OPERATOR REVIEW';state.marks=[];state.history=[];state.selectedMarkIndex=null;state.pending=null;state.calibration=null;state.calibrationPending=null;$('messages').textContent='New site aerial: all prior conceptual marks cleared. Place new marks based on this source.';$('sourceText').value='Operator-supplied '+f.name+' / rights and location unverified'}state[key]=String(reader.result);state[label]=f.name;state[key==='siteImage'?'siteHash':'contextHash']='';if(typeof crypto!=='undefined'&&crypto.subtle&&typeof f.arrayBuffer==='function'){try{const hash=await crypto.subtle.digest('SHA-256',await f.arrayBuffer());if(generation===state[generationKey])state[key==='siteImage'?'siteHash':'contextHash']=Array.from(new Uint8Array(hash)).map(n=>n.toString(16).padStart(2,'0')).join('')}catch{}}$('sourceState').textContent='Operator image: '+f.name+' · byte fingerprint only · not verified geography';draw()};reader.readAsDataURL(f)}
 for(const id of ['siteName','rev','sourceText'])$(id).addEventListener('input',draw);
 $('address').addEventListener('input',invalidateAddressBoundAerial);
 $('siteImage').addEventListener('change',e=>readImage(e.target,'siteImage','siteSource'));
@@ -262,10 +298,10 @@ $('lookupAerial').addEventListener('click',lookupPublicAerial);
 $('saveSourcePhotos').addEventListener('click',saveSourcePhotos);
 $('contextImage').addEventListener('change',e=>readImage(e.target,'contextImage','contextSource'));
 $('angle').addEventListener('input',e=>{state.angle=Number(e.target.value);$('angleLabel').textContent=state.angle+'°'});
-for(let b of document.querySelectorAll('[data-tool]'))b.addEventListener('click',()=>{state.tool=b.dataset.tool;state.pending=null;state.calibrationPending=null;document.querySelectorAll('[data-tool]').forEach(x=>x.classList.toggle('selected',x===b));draw()});
+for(let b of document.querySelectorAll('[data-tool]'))b.addEventListener('click',()=>{state.tool=b.dataset.tool;state.pending=null;state.selectedMarkIndex=null;state.calibrationPending=null;document.querySelectorAll('[data-tool]').forEach(x=>x.classList.toggle('selected',x===b));draw()});
 $('knownFeet').addEventListener('input',()=>{if(state.calibrationPending)state.calibrationPending=null;});
-$('undo').addEventListener('click',()=>{state.marks.pop();state.pending=null;draw()});
-$('reset').addEventListener('click',()=>{state.marks=state.siteImage?[]:baseMarks();state.pending=null;draw()});
+$('undo').addEventListener('click',undoEdit);
+$('reset').addEventListener('click',()=>{saveUndoSnapshot();state.marks=state.siteImage?[]:baseMarks();state.pending=null;state.selectedMarkIndex=null;draw()});
 $('export').addEventListener('click',exportSvg);$('evidence').addEventListener('click',exportEvidence);
 draw();
 </script>
