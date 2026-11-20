@@ -21,6 +21,7 @@ test('river Watch is an interactive site and not an image stand-in',()=>{
  assert.match(watch,/CURRENT|RIVER|SCENIC CURRENT/);
  assert.ok(code);
  assert.doesNotThrow(()=>new vm.Script(code));
+ assert.match(code,/function drawDepthVeils\(\)/);
  assert.match(code,/function drawWatershed\(/);
  assert.match(code,/function drawRivers\(/);
  assert.match(code,/function drawParticles\(/);
@@ -123,6 +124,9 @@ test('Spectral Navigator adds dimensional cloud sails, reflective carved keel an
  assert.match(code,/for\(var cloud=0;cloud<19;cloud\+\+\)/);
  assert.match(code,/for\(var star=0;star<42;star\+\+\)/);
  assert.match(code,/drawMistySail\(-\.07,1\.64/);
+ assert.match(code,/Rigging lines connect the upper cloud spires/);
+ assert.match(code,/A carved aftcastle and starlit deck/);
+ assert.match(code,/for\(var prong=0;prong<9;prong\+\+\)/);
  assert.match(code,/Three wind-filled aurora sails, mounted on ONE side/);
  assert.match(code,/Crescent keel/);
  assert.match(code,/drawFoldingWake\(trip\);drawShipStardustWake\(trip\)/);
