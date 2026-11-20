@@ -126,3 +126,21 @@ test('watchable tour remains conceptual, touch-selectable and quiet for accessib
  assert.ok(brain.includes("chooseRegion(button.dataset.system||button.dataset.region,true)"));
  assert.ok(!brain.includes('requestAnimationFrame(advanceScenicTour)'));
 });
+
+
+test('portrait lens fills a tall phone with architecture rather than a central thumbnail',()=>{
+ const opts={width:390,height:740,yaw:0,pitch:0,zoom:.91,offsetX:0,offsetY:0};
+ const top=projectAtlasNode({x:0,y:-.56,z:0},opts);
+ const bottom=projectAtlasNode({x:0,y:.55,z:0},opts);
+ assert.ok(bottom.y-top.y>310,'regions should span a generous vertical distance in 9:16');
+ assert.ok(top.y>0&&bottom.y<opts.height);
+ const desktop=projectAtlasNode({x:0,y:.55,z:0},{
+  width:1365,height:900,yaw:0,pitch:0,zoom:1.03,offsetX:0,offsetY:0
+ });
+ assert.ok(Number.isFinite(desktop.y),'landscape projection stays valid');
+ const visual=read('neural-universe.mjs');
+ assert.ok(visual.includes('radiusY=height>width*1.3'));
+ assert.ok(visual.includes('threadCount=small?2:3'),'phone helix count must remain bounded');
+ assert.ok(visual.includes('steps=small?23:34'),'phone curve tessellation must remain bounded');
+ assert.ok(visual.includes('NOT neural firing'),'braid motion must be clearly described as scenic');
+});
