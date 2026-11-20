@@ -11,7 +11,7 @@
 <meta property="og:type" content="website">
 <title>Leiland | The Living Mind · Evercraft</title>
 <link rel="stylesheet" href="./style.css">
-<script src="./brain.js" defer></script>
+<script type="module" src="./brain.js"></script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to the observatory</a>
@@ -40,7 +40,7 @@
         <span class="field-note note-top">COORDINATION / INFERENCE / COMPUTE</span>
         <span class="field-note note-bottom" id="visual-truth">CONCEPTUAL ANIMATION · NOT MODEL ACTIVATIONS</span>
       </div>
-      <div class="visual-footer"><span id="last-observed">No verified live observation</span><span>Refreshes public feed every 30 seconds</span></div>
+      <div class="visual-footer"><span id="last-observed">No verified live observation</span><span id="heartbeat-cycle">KAIDANCE cycle: not connected</span><span>Refreshes public feed every 30 seconds</span></div>
     </div>
     <aside class="side-panel" aria-labelledby="telemetry-title">
       <div class="panel-title"><span class="kicker">01 / PUBLIC READOUT</span><h2 id="telemetry-title">What is happening?</h2></div>
@@ -48,6 +48,7 @@
       <div class="readout"><span>LAST OBSERVATION</span><strong id="observation-age">Unavailable</strong><small>Updates require an actual source timestamp.</small></div>
       <div class="readout"><span>INFERENCE SIGNAL</span><strong id="inference-state">Unverified</strong><small>Live prompts and model output are never exposed.</small></div>
       <div class="readout"><span>MISSION SIGNAL</span><strong id="mission-state">Unverified</strong><small>Claims require sanitized Systemia receipts.</small></div>
+      <div class="readout"><span>KAIDANCE PUBLIC PULSE</span><strong id="collider-state">Not connected</strong><small id="collider-note">Public cycle evidence is observed separately from private model inference.</small><a class="inline-source" href="../kaidance/">See KAIDANCE source ↗</a></div>
       <div class="privacy-note"><span class="lock">◇</span><div><strong>A window, not a doorway.</strong><p>This public experience has no access to private models, control endpoints, prompts, customers, or credentials.</p></div></div>
     </aside>
   </section>
