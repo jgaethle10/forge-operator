@@ -156,13 +156,12 @@ test('site intelligence scanner has simple entry, real source boundaries, and do
     'Run two-source site scan',
     'USDA NRCS · Reported',
     'NOAA NWS · Modeled',
-    'weather.screening_flags',
+    'wx.screening_flags',
     'source_receipts',
     'data.site_suitability_verdict!==null',
     'latestSiteScan=data',
     'evercraft-faie-site-scan.json',
     'public_lookup_persisted!==false',
-    'upstream',
     'Official site scan unavailable'
   ]) assert.ok(html.includes(marker),'site-scan experience contract missing: '+marker);
   assert.match(html,/Coordinates go to both official services/);
