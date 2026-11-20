@@ -240,10 +240,10 @@ function spider(from,to,t){
  // not a 200px comet with straight antennae.
  var size=Math.max(15,Math.min(28,width*.044));
  var gait=clock*3.1;
- ctx.save();ctx.translate(pos.x,pos.y);ctx.rotate(angle);ctx.globalCompositeOperation="lighter";
+ ctx.save();ctx.translate(pos.x,pos.y);ctx.rotate(angle);ctx.globalCompositeOperation="source-over";
  var halo=ctx.createRadialGradient(0,0,0,0,0,size*2.4);
- halo.addColorStop(0,"rgba(194,255,230,.35)");
- halo.addColorStop(.38,"rgba(80,237,194,.12)");
+ halo.addColorStop(0,"rgba(194,255,230,.13)");
+ halo.addColorStop(.38,"rgba(80,237,194,.045)");
  halo.addColorStop(1,"rgba(53,147,221,0)");
  ctx.fillStyle=halo;ctx.beginPath();ctx.arc(0,0,size*2.4,0,Math.PI*2);ctx.fill();
  // Soft compact wake strands curl behind, instead of trailing long whiskers.
@@ -251,7 +251,7 @@ function spider(from,to,t){
   var drift=(wake-1)*size*.18;
   ctx.beginPath();ctx.moveTo(-size*.40,drift);
   ctx.bezierCurveTo(-size*.8,drift+Math.sin(gait*.48+wake)*size*.18,-size*1.28,drift+Math.sin(gait*.42+wake)*size*.13,-size*1.65,drift*.65);
-  ctx.strokeStyle=wake===1?"rgba(160,255,230,.19)":"rgba(128,197,249,.11)";
+  ctx.strokeStyle=wake===1?"rgba(160,255,230,.12)":"rgba(128,197,249,.06)";
   ctx.lineWidth=.8;ctx.shadowBlur=4;ctx.shadowColor="#8dffdc";ctx.stroke();
  }
  // Four mirrored pairs. Each leg has a distinct shoulder, flexing knee and foot.
@@ -260,23 +260,26 @@ function spider(from,to,t){
   ctx.beginPath();ctx.moveTo(g.startX,g.startY);
   ctx.quadraticCurveTo((g.startX+g.kneeX)*.59,g.startY+g.side*size*.38,g.kneeX,g.kneeY);
   ctx.quadraticCurveTo(g.kneeX+(g.footX-g.kneeX)*.22,g.footY-g.side*size*.09,g.footX,g.footY);
-  ctx.lineWidth=leg<4?1.8:1.5;
-  ctx.strokeStyle=leg%3===0?"rgba(173,211,255,.77)":"rgba(171,255,224,.78)";
-  ctx.shadowBlur=5;ctx.shadowColor="#98ffe2";ctx.stroke();
-  ctx.beginPath();ctx.arc(g.kneeX,g.kneeY,.9,0,Math.PI*2);
-  ctx.fillStyle="rgba(207,255,242,.8)";ctx.fill();
-  ctx.beginPath();ctx.arc(g.footX,g.footY,1.2,0,Math.PI*2);
-  ctx.fillStyle=leg%3===0?"#c3beff":"#9affd7";ctx.fill();
+  // A dark under-stroke separates each articulated leg from brilliant currents.
+  ctx.shadowBlur=0;ctx.lineWidth=4.5;ctx.strokeStyle="rgba(2,23,33,.9)";ctx.stroke();
+  ctx.lineWidth=leg<4?1.95:1.7;
+  ctx.strokeStyle=leg%3===0?"rgba(186,205,255,.88)":"rgba(172,255,223,.9)";
+  ctx.stroke();
+  ctx.beginPath();ctx.arc(g.kneeX,g.kneeY,1.1,0,Math.PI*2);
+  ctx.fillStyle="rgba(229,255,246,.92)";ctx.fill();
+  ctx.beginPath();ctx.arc(g.footX,g.footY,1.35,0,Math.PI*2);
+  ctx.fillStyle=leg%3===0?"#c4bfff":"#9affd7";ctx.fill();
  }
  // A compact segmented, luminous body points in the direction of travel.
- ctx.shadowBlur=8;ctx.shadowColor="#9fffe6";
- ctx.fillStyle="rgba(5,43,53,.86)";ctx.strokeStyle="rgba(179,255,229,.92)";
- ctx.lineWidth=1.55;ctx.beginPath();ctx.ellipse(-size*.10,0,size*.46,size*.32,0,0,Math.PI*2);ctx.fill();ctx.stroke();
- ctx.fillStyle="rgba(157,254,218,.69)";ctx.beginPath();ctx.ellipse(-size*.09,0,size*.25,size*.17,0,0,Math.PI*2);ctx.fill();
- ctx.fillStyle="rgba(221,255,240,.98)";ctx.beginPath();ctx.ellipse(size*.39,0,size*.23,size*.24,0,0,Math.PI*2);ctx.fill();
- ctx.fillStyle="#284c5b";ctx.beginPath();ctx.arc(size*.52,-size*.07,1.2,0,Math.PI*2);ctx.arc(size*.52,size*.07,1.2,0,Math.PI*2);ctx.fill();
- ctx.strokeStyle="rgba(209,255,240,.49)";ctx.lineWidth=.75;ctx.beginPath();
- ctx.ellipse(0,0,size*.95,size*.78,0,0,Math.PI*2);ctx.stroke();
+ ctx.shadowBlur=0;ctx.fillStyle="#061a29";ctx.strokeStyle="rgba(183,255,231,.91)";
+ ctx.lineWidth=1.7;ctx.beginPath();ctx.ellipse(-size*.13,0,size*.47,size*.35,0,0,Math.PI*2);ctx.fill();ctx.stroke();
+ // Two restrained shell markings, not a single overexposed white star.
+ ctx.fillStyle="rgba(110,229,193,.6)";ctx.beginPath();ctx.ellipse(-size*.19,0,size*.26,size*.16,0,0,Math.PI*2);ctx.fill();
+ ctx.fillStyle="#e6fdf1";ctx.strokeStyle="#062330";ctx.lineWidth=2;
+ ctx.beginPath();ctx.ellipse(size*.37,0,size*.24,size*.26,0,0,Math.PI*2);ctx.fill();ctx.stroke();
+ ctx.fillStyle="#194253";ctx.beginPath();ctx.arc(size*.53,-size*.09,1.45,0,Math.PI*2);ctx.arc(size*.53,size*.09,1.45,0,Math.PI*2);ctx.fill();
+ ctx.strokeStyle="rgba(166,255,225,.25)";ctx.lineWidth=.8;ctx.beginPath();
+ ctx.ellipse(0,0,size*.86,size*.72,0,0,Math.PI*2);ctx.stroke();
  ctx.restore();
 }
 function routeAt(){
@@ -289,12 +292,27 @@ function routeAt(){
  var k=Math.floor(clock/9)%SEQUENCE.length;
  return {from:SEQUENCE[k],to:SEQUENCE[(k+1)%SEQUENCE.length],t:(clock%9)/9,event:null};
 }
+// The whole watershed slowly drifts beneath the observation camera.
+// This is ambient scenery, not evidence of a new mission or source event.
+function riverCamera(){
+ return {
+  dx:Math.sin(clock*.067)*Math.min(width*.012,14),
+  dy:Math.sin(clock*.051+.8)*Math.min(height*.009,10),
+  zoom:1.02+Math.sin(clock*.038)*.012
+ };
+}
 function paint(dt){
- drawBackdrop();drawWatershed();drawRivers();drawParticles(dt);drawConfluences();
+ drawBackdrop();
+ var camera=riverCamera();
+ ctx.save();
+ ctx.translate(width/2,height/2);ctx.scale(camera.zoom,camera.zoom);
+ ctx.translate(-width/2+camera.dx,-height/2+camera.dy);
+ drawWatershed();drawRivers();drawParticles(dt);drawConfluences();
  var trip=routeAt();spider(trip.from,trip.to,.04+trip.t*.92);
  if(clock<flashUntil){
   var p=coordinates(trip.to);ctx.strokeStyle="rgba(182,255,220,"+((flashUntil-clock)/3*.7)+")";ctx.lineWidth=2;ctx.beginPath();ctx.arc(p.x,p.y,40+(3-(flashUntil-clock))*30,0,7);ctx.stroke();
  }
+ ctx.restore();
 }
 function loop(ts){
  frame=0;if(document.hidden)return;
@@ -313,7 +331,7 @@ document.getElementById("pause").addEventListener("click",function(){setPause(!p
 document.addEventListener("visibilitychange",function(){if(document.hidden&&frame){cancelAnimationFrame(frame);frame=0}else if(!document.hidden)wake()});
 window.addEventListener("resize",function(){sceneSize();wake()},{passive:true});
 canvas.addEventListener("click",function(ev){
- var rect=canvas.getBoundingClientRect(),x=ev.clientX-rect.left,y=ev.clientY-rect.top,best=null,dist=1e9;
+ var rect=canvas.getBoundingClientRect(),camera=riverCamera(),x=(ev.clientX-rect.left-width/2)/camera.zoom+width/2-camera.dx,y=(ev.clientY-rect.top-height/2)/camera.zoom+height/2-camera.dy,best=null,dist=1e9;
  Object.keys(TOPICS).forEach(function(k){var p=coordinates(k),d=Math.hypot(p.x-x,p.y-y);if(d<dist){dist=d;best=k}});
  if(dist<Math.max(45,Math.min(width*.13,70))&&best)chooseTopic(best);
 });
