@@ -34,6 +34,21 @@ class ModelValidationTest(unittest.TestCase):
         with self.assertRaisesRegex(spatial.StudyError, "outside_bounds"):
             spatial.validate(model, "SITE-A")
 
+    def test_zero_after_rounding_bad_kind_and_xml_controls(self):
+        model = self.model()
+        model["parcel"]["width"] = 0.00001
+        with self.assertRaisesRegex(spatial.StudyError, "below_precision"):
+            spatial.validate(model, "SITE-A")
+        model = self.model()
+        model["objects"][0]["kind"] = ["building"]
+        with self.assertRaisesRegex(spatial.StudyError, "kind_invalid"):
+            spatial.validate(model, "SITE-A")
+        model = self.model()
+        model["title"] = "Example\\u0000"
+        model["title"] = model["title"].replace("\\u0000", chr(0))
+        with self.assertRaisesRegex(spatial.StudyError, "invalid_characters"):
+            spatial.validate(model, "SITE-A")
+
     def test_duplicate_and_injection_safe_svg(self):
         model = self.model()
         model["objects"][1]["id"] = "building-1"

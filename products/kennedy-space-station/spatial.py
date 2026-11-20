@@ -35,6 +35,9 @@ def text_field(value, name, limit, required=False):
     if not isinstance(value, str):
         raise StudyError(name + "_invalid")
     value = value.strip()
+    if any((ord(c) < 32 and c not in "\t\n\r") or 0xD800 <= ord(c) <= 0xDFFF
+           for c in value):
+        raise StudyError(name + "_invalid_characters")
     if len(value) > limit or (required and not value):
         raise StudyError(name + "_invalid")
     return value
@@ -45,7 +48,10 @@ def dimension(value, name, maximum=5000, minimum=0):
         raise StudyError(name + "_must_be_numeric")
     if not math.isfinite(value) or not minimum < value <= maximum:
         raise StudyError(name + "_outside_bounds")
-    return round(float(value), 3)
+    rounded = round(float(value), 3)
+    if rounded <= 0:
+        raise StudyError(name + "_below_precision")
+    return rounded
 
 
 def coordinate(value, name):
@@ -92,7 +98,7 @@ def validate(raw, site_id):
             raise StudyError("object_id_invalid_or_duplicate")
         seen.add(ident)
         kind = item.get("kind")
-        if kind not in KINDS:
+        if not isinstance(kind, str) or kind not in KINDS:
             raise StudyError("kind_invalid")
         shape = {
             "id": ident,
