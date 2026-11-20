@@ -40,6 +40,7 @@ import {
   renderFabricMobileApp,
 } from './fabric-mobile-site.mjs';
 import { renderEarthWorksSimulator } from './earthworks-simulator-page.mjs';
+import { serveAidenLab } from './aiden-lab-public-route.mjs';
 import { createFabricFaieSurface } from './fabric-faie-runtime.mjs';
 import {gatherGitEntries,makePublicSnapshot} from '../hudson/publish-public-snapshot.mjs';
 import { resolveRomanContinuity } from '../domain-shield/roman-funnel.mjs';
@@ -860,6 +861,10 @@ export async function startFabricLocalRuntime({
       // owner-local flag; exact scoped routes and broker auth are enforced in
       // Wing Courier. Never turns a package into publish/send authority.
       if(await wingCourierProxy.handle(req,res))return;
+
+      // Evidence-first public science atlas. Exact allowlisted static files only.
+      // A source commit is not a live deployment claim; external parity is separate.
+      if (serveAidenLab(req,res,{repoRoot:ownedPublicRoot})) return;
 
       // Public-safe availability signal. Hides unconfigured intake before a
       // buyer tries to submit PII. Never exposes paths, key, identity or volume.
