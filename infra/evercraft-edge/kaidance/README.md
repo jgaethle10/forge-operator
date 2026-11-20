@@ -62,3 +62,8 @@ CI additionally validates a temporary Caddy site assembled from the route fragme
 ## V02 portable assets
 
 The cinematic release adds `experience.css` and `visual.mjs` to the owned static file allowlist. Both are public-only and self-contained. Review the whole exact-release asset set before staging the existing hostname. The source-backed first-screen GitHub activity and 9:16 direct view do not need an operating Collider feed; never confuse those visible records with live KAIDANCE cycles.
+
+
+## Collider V03 owned-edge asset parity
+
+The new dimensional Collider requires two public static files: `collider-engine.mjs` and `collider-v3.css`. They are bundled and exactly allowlisted in the staged Caddy example and read-only Leiland host. No private source, signed approval, public pulse, new listener, or server-side animation was introduced. The existing safety and two-cycle release gates remain unchanged.
