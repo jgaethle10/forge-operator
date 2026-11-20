@@ -135,6 +135,10 @@ body.film-mode .visual-bottom .hint{display:none}
 .graph .node:focus-visible .ring{stroke-width:4;stroke:#fff}
 @media(max-width:660px){.graph .node .label{font-size:19px;letter-spacing:1.6px}.graph .node .sublabel{font-size:11px;letter-spacing:1px}.graph .node .coretext{font-size:54px}.graph .centerlabel{font-size:12px}}
 @media(prefers-reduced-motion:reduce){.graph .node .ring,.graph .node .inner{transition:none}}
+
+/* An original, lightweight atmospheric field. Decorative, not live telemetry. */
+.ambient-field{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:.88}
+.graph{z-index:1}.visual-top,.signal-card,.visual-bottom{z-index:2}
 </style></head>
 <body><div class="shell">
 <header><div class="brand"><span class="symbol">H</span>EVERCRAFT <span style="color:#5f8893">/</span> HUDSON</div><div class="actions"><div class="pill" id="status">AWAITING PUBLIC FEED</div><button type="button" class="btn" id="focus" aria-pressed="false">Film view</button><button type="button" class="btn" id="pause">Pause motion</button></div></header>
@@ -142,6 +146,7 @@ body.film-mode .visual-bottom .hint{display:none}
 <main><div class="panels">
 <section class="panel visual" aria-label="Interactive HUDSON topology">
 <div class="visual-top"><div><strong>THE CONNECTION FIELD <span class="field-orbit">◌</span></strong><p id="graph-caption">HUDSON · Select a system to explore</p></div><div class="right">PUBLIC GIT SOURCE<br><span id="published">Awaiting source check</span></div></div>
+<canvas class="ambient-field" id="ambient-field" aria-hidden="true"></canvas>
 <svg class="graph" viewBox="0 0 1000 620" role="img" aria-label="HUDSON at the center of a network of six connected Evercraft systems">
 <defs><filter id="glow" x="-300%" y="-300%" width="700%" height="700%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
 <ellipse class="orbit" cx="500" cy="313" rx="343" ry="213"/><ellipse class="orbit" cx="500" cy="313" rx="265" ry="160"/><ellipse class="orbit" cx="500" cy="313" rx="175" ry="121"/>
@@ -188,7 +193,7 @@ saban:["SABAN","Coordinates work and execution. Receipts and outcomes enrich HUD
 evidence:["EVIDENCE","Receipts, source references and reproducible facts ground the knowledge graph.","Every public assertion needs a trail."],
 discovery:["DISCOVERY","New research, signals and observations create context and useful connections.","The input of new knowledge."]
 };
-var current="hudson",data=null,onlyDay=false,firstFeed=true,reelIndex=0,newSignalUntil=0;
+var current="hudson",data=null,onlyDay=false,firstFeed=true,reelIndex=0,newSignalUntil=0,ambientWake=null;
 var els=document.querySelectorAll("[data-key]");
 var graph=document.querySelector(".graph"),layoutType="";
 var desktopNodes=[[292,155],[734,157],[836,344],[706,502],[285,500],[170,333],[500,313]];
@@ -241,7 +246,7 @@ adaptGraph();window.addEventListener("resize",adaptGraph,{passive:true});
 function select(key){if(!info[key])return;current=key;els.forEach(function(el){el.classList.toggle("active",el.dataset.key===key)});document.getElementById("detail-name").textContent=info[key][0];document.getElementById("detail-copy").textContent=info[key][1];document.getElementById("detail-foot").textContent=info[key][2];document.getElementById("graph-caption").textContent=info[key][0]+" · "+info[key][2];render();}
 els.forEach(function(el){el.addEventListener("click",function(){select(el.dataset.key)});el.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();select(el.dataset.key)}})});
 var paused=matchMedia("(prefers-reduced-motion: reduce)").matches;
-function setMotion(){document.body.classList.toggle("paused",paused);["pause","pause-mobile"].forEach(function(id){var b=document.getElementById(id);b.textContent=paused?"Resume motion":"Pause motion";b.setAttribute("aria-pressed",String(paused))})}
+function setMotion(){document.body.classList.toggle("paused",paused);["pause","pause-mobile"].forEach(function(id){var b=document.getElementById(id);b.textContent=paused?"Resume motion":"Pause motion";b.setAttribute("aria-pressed",String(paused))});if(ambientWake)ambientWake()}
 ["pause","pause-mobile"].forEach(function(id){document.getElementById(id).addEventListener("click",function(){paused=!paused;setMotion()})});setMotion();
 document.getElementById("focus").addEventListener("click",function(){var next=!document.body.classList.contains("film-mode");document.body.classList.toggle("film-mode",next);this.setAttribute("aria-pressed",String(next));this.textContent=next?"Normal view":"Film view"});
 document.getElementById("day-filter").addEventListener("click",function(){onlyDay=!onlyDay;this.setAttribute("aria-pressed",String(onlyDay));render()});
@@ -280,6 +285,72 @@ var arrivals=before&&fresh?ev.filter(function(e){return !before.has(e.id)&&Date.
 if(arrivals.length)showSignal(arrivals[0],true);else if(firstFeed){firstFeed=false;playHistory()}
 render()}
 async function refresh(){try{var controller=new AbortController(),timer=setTimeout(function(){controller.abort()},8000);var res;try{res=await fetch("./activity.json?t="+Date.now(),{cache:"no-store",credentials:"omit",signal:controller.signal})}finally{clearTimeout(timer)}if(!res.ok)throw Error("Source unavailable");apply(await res.json())}catch(e){data=null;status("waiting","SOURCE UNAVAILABLE");["day","sources","records"].forEach(function(k){document.getElementById(k).textContent="—"});document.getElementById("published").textContent="Feed unavailable";showSignal(null,false);render()}}
+
+/* Layered memory aurora. All movement here is illustration, never source-derived data. */
+(function initAmbient(){
+ var canvas=document.getElementById("ambient-field");
+ var ctx=canvas&&canvas.getContext("2d",{alpha:true});
+ if(!ctx)return;
+ var width=0,height=0,cx=0,cy=0,radius=1,frame=null,previous=0;
+ function resize(){
+  var r=canvas.getBoundingClientRect(),gr=graph.getBoundingClientRect();
+  var dpr=Math.min(window.devicePixelRatio||1,1.5);
+  width=r.width;height=r.height;if(!width||!height)return;
+  canvas.width=Math.ceil(width*dpr);canvas.height=Math.ceil(height*dpr);
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  cx=width/2;cy=(gr.top-r.top)+gr.height*.49;radius=Math.min(gr.width*.47,gr.height*.52);
+ }
+ function paint(ts){
+  if(!width||!height)return;
+  var t=paused?0:ts*.001;
+  ctx.clearRect(0,0,width,height);
+  var aura=ctx.createRadialGradient(cx,cy,0,cx,cy,radius*.96);
+  aura.addColorStop(0,"rgba(110,246,207,.09)");
+  aura.addColorStop(.45,"rgba(74,178,202,.045)");
+  aura.addColorStop(1,"rgba(41,91,128,0)");
+  ctx.fillStyle=aura;ctx.beginPath();ctx.arc(cx,cy,radius,0,Math.PI*2);ctx.fill();
+  ctx.globalCompositeOperation="lighter";
+  // Slow, intersecting arcs provide depth without implying new source events.
+  for(var layer=0;layer<5;layer++){
+   var phase=t*(layer%2===0?.08:-.065)+layer*.8;
+   ctx.beginPath();
+   for(var step=0;step<=100;step++){
+    var angle=step/100*Math.PI*2+phase;
+    var size=radius*(.55+layer*.102)+Math.sin(angle*3+phase)*radius*.035;
+    var x=cx+Math.cos(angle)*size;
+    var y=cy+Math.sin(angle)*size*.81;
+    if(step===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
+   }
+   ctx.closePath();
+   ctx.strokeStyle=layer%2===0?"rgba(111,231,207,.10)":"rgba(134,169,240,.08)";
+   ctx.lineWidth=.65+(layer%2)*.3;ctx.stroke();
+  }
+  for(var i=0;i<31;i++){
+   var rotation=t*(.11+(i%7)*.014)+i*2.3999;
+   var dist=radius*(.34+((i*53)%67)/100);
+   var x=cx+Math.cos(rotation)*dist,y=cy+Math.sin(rotation)*dist*.83;
+   var alpha=.14+(.5+.5*Math.sin(t*.95+i*1.91))*.33;
+   ctx.fillStyle=i%4===0?"rgba(160,188,255,"+alpha+")":"rgba(157,255,224,"+alpha+")";
+   ctx.beginPath();ctx.arc(x,y,i%8===0?1.8:1.05,0,Math.PI*2);ctx.fill();
+  }
+  ctx.globalCompositeOperation="source-over";
+ }
+ function loop(ts){
+  frame=null;
+  if(document.hidden){return}
+  if(!paused&&ts-previous<33){frame=requestAnimationFrame(loop);return}
+  previous=ts;paint(ts);
+  if(!paused)frame=requestAnimationFrame(loop);
+ }
+ ambientWake=function(){if(frame===null&&!document.hidden)frame=requestAnimationFrame(loop)};
+ window.addEventListener("resize",function(){resize();ambientWake()},{passive:true});
+ document.addEventListener("visibilitychange",function(){
+  if(document.hidden&&frame!==null){cancelAnimationFrame(frame);frame=null}
+  else if(!document.hidden)ambientWake();
+ });
+ resize();ambientWake();
+})();
+
 document.getElementById("next-signal").addEventListener("click",function(){newSignalUntil=0;playHistory(true)});
 select("hudson");refresh();setInterval(refresh,15000);setInterval(function(){if(!paused)playHistory()},14000);
 })();
