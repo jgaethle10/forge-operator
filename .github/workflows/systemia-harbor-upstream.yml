@@ -47,4 +47,4 @@ jobs:
       - name: Parse source
         run: node --check systemia/newsroom/systemia-harbor-upstream.mjs
       - name: Fail-closed synthetic boundary tests
-        run: node --test systemia/newsroom/systemia-harbor-upstream.test.mjs systemia/newsroom/founder-creator-upstream.test.mjs systemia/newsroom/harbor-founder-owner-inbox.test.mjs systemia/creator/founder-editorial-preflight.test.mjs systemia/lineage/signatures.test.mjs
+        run: node --test systemia/newsroom/systemia-harbor-upstream.test.mjs systemia/newsroom/founder-creator-upstream.test.mjs systemia/newsroom/harbor-founder-owner-inbox.test.mjs systemia/newsroom/founder-editorial-intake.test.mjs systemia/creator/founder-editorial-preflight.test.mjs systemia/lineage/signatures.test.mjs
