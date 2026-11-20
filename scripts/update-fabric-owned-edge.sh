@@ -15,6 +15,7 @@ VISUAL_INGEST_TOKEN_CREATED=false
 SIGNAL_INTAKE_KEY_CREATED=false
 WEBSITE_AUDIT_INTAKE_CHANGED=false
 STUDIO_INTAKE_CHANGED=false
+FAIE_HISTORY_ENV_CHANGED=false
 PUBLIC_EDGE_SERVICE="evercraft-public-edge.service"
 ROUTER_MAP_SERVICE="evercraft-router-map.service"
 ROUTER_MAP_TIMER="evercraft-router-map.timer"
@@ -196,6 +197,7 @@ NETWORK_OBSERVER_INSTALLER="$REPO_ROOT/scripts/install-fabric-network-observer.s
 ROUTER_MAP_INSTALLER="$REPO_ROOT/scripts/install-fabric-router-map-resident.sh"
 SABAN_CAPACITY_INSTALLER="$REPO_ROOT/scripts/install-saban-capacity-organism.sh"
 HOME_EDGE_INSTALLER="$REPO_ROOT/scripts/install-evercraft-home-edge.sh"
+FAIE_HISTORY_PROVISIONER="$REPO_ROOT/scripts/provision-faie-owned-history.mjs"
 
 mkdir -p "$STATE_DIR"
 chown root:"$RUN_USER" "$STATE_DIR"
@@ -293,6 +295,30 @@ ensure_visual_ingest_token() {
   rm -f "$tmp"
   VISUAL_INGEST_TOKEN_CREATED=true
   echo "Evercraft update: Visual Desk ingest credential initialized"
+}
+
+ensure_faie_owned_history_state() {
+  # Independent owned-history durability is required before the public
+  # archive can be described as verified. Never map private visitor points.
+  [[ -f "$FAIE_HISTORY_PROVISIONER" && -f "$FABRIC_ENV" ]] || {
+    echo "HOLD: FAIE owned history provisioning requires the existing Fabric env" >&2
+    return 1
+  }
+  FAIE_HISTORY_ENV_CHANGED=false
+  # The provisioner only creates the canonical private directory when no
+  # FAIE state directory has been configured. Snapshot the current env once
+  # so an unsuccessful service update can restore the previous bytes.
+  if ! grep -Eq '^FAIE_EDGE_STATE_DIR=/' "$FABRIC_ENV" && [[ -z "$ENV_BACKUP" ]]; then
+    ENV_BACKUP="$STATE_DIR/fabric.env.before-faie-history"
+    install -o root -g root -m 0600 "$FABRIC_ENV" "$ENV_BACKUP"
+  fi
+  local output=""
+  output="$(node "$FAIE_HISTORY_PROVISIONER" --uid "$(id -u "$RUN_USER")" --gid "$(id -g "$RUN_USER")" --apply --confirm-owned-host)" || return 1
+  [[ "$output" == *'"root_is_owner_managed":true'* ]] || return 1
+  if [[ "$output" == *'"environment_updated":true'* ]]; then
+    FAIE_HISTORY_ENV_CHANGED=true
+  fi
+  echo "Evercraft update: FAIE durable history state verified (env_changed=$FAIE_HISTORY_ENV_CHANGED)"
 }
 
 reconcile_edge_attestation_env() {
@@ -734,7 +760,12 @@ if [[ "$before" == "$target" ]]; then
   fi
   ensure_visual_ingest_token
   reconcile_edge_attestation_env
-  if [[ -n "$ENV_BACKUP" || "$VISUAL_INGEST_TOKEN_CREATED" == "true" || "$SIGNAL_INTAKE_KEY_CREATED" == "true" || "$WEBSITE_AUDIT_INTAKE_CHANGED" == "true" || "$STUDIO_INTAKE_CHANGED" == "true" ]]; then
+  if ! ensure_faie_owned_history_state; then
+    restore_edge_attestation_env
+    echo "HOLD: FAIE persistent archive is not safely configured" >&2
+    exit 21
+  fi
+  if [[ -n "$ENV_BACKUP" || "$FAIE_HISTORY_ENV_CHANGED" == "true" || "$VISUAL_INGEST_TOKEN_CREATED" == "true" || "$SIGNAL_INTAKE_KEY_CREATED" == "true" || "$WEBSITE_AUDIT_INTAKE_CHANGED" == "true" || "$STUDIO_INTAKE_CHANGED" == "true" ]]; then
     if ! systemctl restart "$SERVICE"; then
       restore_edge_attestation_env
       systemctl restart "$SERVICE" || true
@@ -847,6 +878,10 @@ if ! ensure_studio_private_intake; then
 fi
 ensure_visual_ingest_token
 reconcile_edge_attestation_env
+if ! ensure_faie_owned_history_state; then
+  rollback "faie_owned_history_state_hold"
+  exit 21
+fi
 write_runtime_release_ref "$target"
 
 if ! systemctl restart "$SERVICE"; then
