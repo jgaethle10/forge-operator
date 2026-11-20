@@ -1,5 +1,5 @@
 /* Leiland / Evercraft. Visualization is an architectural illustration, never a raw model activation trace. */
-'use strict';
+import {projectLeilandPulse} from './pulse-bridge.mjs';
 const $=id=>document.getElementById(id);
 const systems={
  systemia:{label:'COORDINATION / MISSION CONTROL',name:'Systemia',description:'Systemia coordinates missions, boundaries, and evidence. It distinguishes proposed work from authorized, completed, and verified work.',url:'https://github.com/jgaethle10/forge-operator/tree/main/systemia'},
@@ -9,6 +9,7 @@ const systems={
  passport:{label:'SAFETY / AUTHORIZATION',name:'Passport',description:'Passport defines who may perform which actions. An attractive public observatory must never become a path to internal controls.',url:'https://github.com/jgaethle10/forge-operator/tree/main/systemia/passport'}
 };
 let selected='systemia', sourceEvents=[], developmentEvents=[], sourceFresh=false;
+let lastAttestedCycle=null, pulseFlashUntil=0;
 for(const button of document.querySelectorAll('[data-system]')){
  button.addEventListener('click',()=>{
   selected=button.dataset.system;
@@ -124,7 +125,28 @@ async function loadPublicDevelopment(){
  }catch{developmentEvents=[]}
  renderEvents();
 }
-loadFeed();loadPublicDevelopment();
+async function loadKaidancePulse(){
+ try{
+  const response=await fetch('../kaidance/pulse.json?view='+Date.now(),{cache:'no-store',credentials:'omit'});
+  if(!response.ok)throw Error('public_pulse_unavailable');
+  const raw=await response.text();if(raw.length>16000)throw Error('public_pulse_oversize');
+  const pulse=projectLeilandPulse(JSON.parse(raw),Date.now());
+  const attested=pulse.state==='source_attested';
+  if(attested&&lastAttestedCycle!==null&&pulse.cycle_number>lastAttestedCycle){
+    pulseFlashUntil=performance.now()+1700;
+  }
+  if(attested&&(lastAttestedCycle===null||pulse.cycle_number>=lastAttestedCycle))lastAttestedCycle=pulse.cycle_number;
+  $('collider-state').textContent=attested?'Field-attested public pulse':pulse.state==='stale'?'Heartbeat stale':pulse.state==='unverified'?'Attestation pending':'Not connected';
+  $('collider-note').textContent=attested?'A source-attested Collider cycle was reported, not private AI inference.':pulse.state==='stale'?'The public cycle evidence is too old to count as active.':'A private model is not inferred from public development events.';
+  $('heartbeat-cycle').textContent=pulse.cycle_number===null?'KAIDANCE cycle: unknown':'KAIDANCE cycle: '+pulse.cycle_number+' · '+pulse.state.replaceAll('_',' ');
+ }catch{
+  $('collider-state').textContent='Not connected';
+  $('collider-note').textContent='The approved KAIDANCE public pulse could not be read. No heartbeat is inferred.';
+  $('heartbeat-cycle').textContent='KAIDANCE cycle: unavailable';
+ }
+}
+loadFeed();loadPublicDevelopment();loadKaidancePulse();
+setInterval(loadKaidancePulse,20000);
 setInterval(loadFeed,30000);
 setInterval(loadPublicDevelopment,600000);
 setInterval(()=>{const at=$('observation-age');if(sourceFresh||at.textContent.includes('ago'))loadFeed()},60000);
@@ -194,6 +216,11 @@ function draw(t){
   const gradient=ctx.createRadialGradient(xx,yy,0,xx,yy,32);
   gradient.addColorStop(0,'rgba(103,241,216,.23)');gradient.addColorStop(1,'rgba(103,241,216,0)');
   ctx.fillStyle=gradient;ctx.beginPath();ctx.arc(xx,yy,32,0,Math.PI*2);ctx.fill();
+ }
+ if(t<pulseFlashUntil){
+  const scale=Math.min(1,Math.max(0,(pulseFlashUntil-t)/1700));
+  ctx.strokeStyle='rgba(112,241,208,'+(.7*scale)+')';ctx.lineWidth=2+2*scale;
+  ctx.beginPath();ctx.arc(w/2,h/2,Math.min(w*.43,h*.52)*(.32+.22*(1-scale)),0,Math.PI*2);ctx.stroke();
  }
  if(sourceFresh && sourceEvents.length){
   const index=(Math.floor(t/2800)*37)%nodes.length,p=points[index];
