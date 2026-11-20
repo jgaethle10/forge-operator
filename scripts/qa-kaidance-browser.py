@@ -40,8 +40,11 @@ try:
    assert page.locator("#heroEventTitle").count()==1
    assert page.locator("#visualField").count()==1
    assert page.locator("#colliderField").count()==1
-   assert page.locator("#colliderField").is_visible()
-   reactor=page.locator("#colliderField").evaluate("""el=>{
+   assert page.locator("#currentField").is_visible()
+   assert page.locator("#fieldExplore").is_visible()
+   assert page.locator("#fieldMode").is_visible()
+   assert page.locator("#fieldSource").count()==0  # Real public source remains in the separate receipt panel.
+   reactor=page.locator("#currentField").evaluate("""el=>{
      const c=el.getContext('2d');
      if(!c)return {pixels:0,bright:0};
      const s=c.getImageData(0,0,el.width,el.height).data;
@@ -52,7 +55,7 @@ try:
      }
      return {pixels,bright};
    }""")
-   assert reactor["pixels"]>150 and reactor["bright"]>40,f"Collider canvas blank or invisible: {reactor}"
+   assert reactor["pixels"]>150 and reactor["bright"]>40,f"Confluence canvas blank or invisible: {reactor}"
 
    assert page.locator("#statusBadge").inner_text().strip(),"source status missing"
    geometry=page.evaluate("({screen:innerWidth,scroll:document.documentElement.scrollWidth})")
@@ -61,7 +64,7 @@ try:
    page.screenshot(path=str(OUTPUT/(name+".png")),full_page=True)
    if name=="desktop":
     def sample_reactor():
-     return page.locator("#colliderField").evaluate("""el=>{
+     return page.locator("#currentField").evaluate("""el=>{
        const c=el.getContext('2d'), w=el.width,h=el.height;
        let hash=2166136261;
        for(let k=0;k<24;k++){
@@ -79,17 +82,32 @@ try:
     before=sample_reactor()
     page.wait_for_timeout(850)
     after=sample_reactor()
-    assert before!=after,"Collider renderer should animate, not remain a static picture"
+    assert before!=after,"Confluence field should flow rather than remain a static picture"
+    page.screenshot(path=str(OUTPUT/"desktop-current.png"),full_page=False)
+    page.locator("#fieldMode").click()
+    assert page.locator("body.reactor").count()==1
+    assert page.locator("#colliderField").is_visible()
+    page.wait_for_timeout(1000)
+    reactor_bytes=page.locator("#colliderField").evaluate("el=>el.getContext('2d').getImageData(Math.floor(el.width*.4),Math.floor(el.height*.3),20,20).data.reduce((sum,value)=>sum+value,0)")
+    assert reactor_bytes>1000,f"Reactor alternative did not paint: {reactor_bytes}"
     page.screenshot(path=str(OUTPUT/"desktop-collider.png"),full_page=False)
+    page.locator("#fieldMode").click()
+    assert page.locator("#currentField").is_visible()
    if name=="iphone":
+    page.locator("#fieldExplore").click()
+    assert page.locator("#fieldDrawer").is_visible()
+    assert page.locator("#fieldTopics button").count()==7
+    page.locator("#fieldTopics button").get_by_text("HUDSON").click()
+    assert page.locator("#fieldStoryTitle").inner_text()=="HUDSON"
+    assert not page.locator("#fieldDrawer").is_visible()
+    page.locator("#fieldPause").click()
+    assert page.locator("#fieldPause").inner_text()=="RESUME"
+    page.locator("#fieldPause").click()
+    assert page.locator("#fieldPause").inner_text()=="PAUSE"
     headline=page.locator("#heroEventTitle").bounding_box()
     assert headline and headline["y"]<height-40,f"first-screen activity still buried: {headline}"
     stage=page.locator("#stage").bounding_box()
     assert stage
-    for selector in [".orbit-label-2",".orbit-label-4"]:
-     label=page.locator(selector).bounding_box()
-     assert label and label["x"]>=stage["x"]-1 and label["x"]+label["width"]<=stage["x"]+stage["width"]+1, f"clipped network label: {selector} {label}"
-
     page.locator("#portraitBtn").click()
     assert page.locator("body.portrait").count()==1
     assert page.locator("#portraitEventTitle").is_visible()
@@ -100,13 +118,12 @@ try:
     page.goto(HOST+"?view=live",wait_until="domcontentloaded",timeout=15000)
     assert page.locator("body.portrait").count()==1,"shareable live view not applied"
     page.wait_for_timeout(1200)
-    for selector in [".orbit-label-2",".orbit-label-4"]:
-     label=page.locator(selector).bounding_box()
-     assert label and label["x"]>=-1 and label["x"]+label["width"]<=width+1, f"clipped broadcast label: {selector} {label}"
+    assert page.locator("#currentField").is_visible()
+    assert page.locator("#fieldStoryTitle").is_visible()
     page.screenshot(path=str(OUTPUT/"iphone-direct-live.png"),full_page=False)
    page.close()
   browser.close()
- print("KAIDANCE_BROWSER_QA_PASS: responsive desktop, iPhone, one-tap broadcast, direct live view, no errors or horizontal overflow")
+ print("KAIDANCE_BROWSER_QA_PASS: confluence desktop+iPhone, source theater, explore/pause/reactor modes, broadcast, no errors or horizontal overflow")
 finally:
  SERVER.terminate()
  try:SERVER.wait(timeout=3)
