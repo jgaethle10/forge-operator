@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#040b13">
-<meta name="hudson-watch-release" content="river-current-v6-phase-traveler"><meta name="description" content="Watch HUDSON's flowing knowledge currents and source-linked replay on Evercraft's owned public observatory.">
+<meta name="hudson-watch-release" content="river-current-v7-cinematic-confluences"><meta name="description" content="Watch HUDSON's flowing knowledge currents and source-linked replay on Evercraft's owned public observatory.">
 <title>HUDSON | Enter the Current</title>
 <style>
 :root{color-scheme:dark;--aqua:#9affdc;--chalk:#e2f7f1;--soft:#9ebabb}
@@ -50,6 +50,15 @@ body.drawer-open:after{content:"";position:fixed;z-index:7;inset:0;background:#0
  .readout a{display:inline-block;margin-top:8px;font-size:10px}
  .facts{margin-top:7px;padding-top:5px;font-size:8px}
 }
+/* Capture layout is a browser frame, not a live broadcast service. */
+body.film-mode .top{background:linear-gradient(#040b13cc,transparent);pointer-events:none}
+body.film-mode .top .controls,body.film-mode #help{display:none}
+body.film-mode .state{top:calc(81px + env(safe-area-inset-top));letter-spacing:.14em}
+body.film-mode .readout{background:linear-gradient(105deg,#04131ed8,#081d25bb);border-color:#a1dcc645;max-width:820px;margin:auto}
+@media(max-width:620px){
+ body.film-mode .readout{bottom:calc(44px + env(safe-area-inset-bottom));left:12px;right:12px}
+ body.film-mode #story-sub{padding-right:100px}
+}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
 </style></head>
 <body><canvas id="current" aria-label="Animated river currents connecting HUDSON, SYSTEMIA, KAIDANCE, DISCOVERY, EVIDENCE, RAVEN and SABAN. Decorative water motion is not live mission telemetry." role="img"></canvas>
@@ -58,7 +67,7 @@ body.drawer-open:after{content:"";position:fixed;z-index:7;inset:0;background:#0
 <div id="help">RIVER MOTION IS ILLUSTRATIVE<b>Tap a confluence to explore</b></div>
 <aside class="readout glass" aria-live="polite">
  <div><span class="eyebrow" id="story-kind">SCENIC CURRENT</span><div id="story">The river remembers.</div><div id="story-sub">Tracing the architecture of Evercraft knowledge.</div><a href="#" id="receipt" target="_blank" rel="noopener noreferrer" hidden>Read verified source receipt ↗</a></div>
- <div class="bottom"><button id="next" type="button">Next current ↗</button></div>
+ <div class="bottom"><button id="film" type="button" aria-pressed="false">Film view</button><button id="next" type="button">Next current ↗</button></div>
  <div class="facts">Public Git history when available · Not live mission or AI inference telemetry · No private knowledge exposed</div>
 </aside>
 <section id="topic-drawer" class="glass" role="dialog" aria-modal="true" aria-labelledby="drawer-title" hidden>
@@ -228,9 +237,89 @@ function drawParticles(dt){
  }
  ctx.restore();
 }
+
+// Public illustrative optics only, not live cognition or mission telemetry.
+// Drift layers are drawn behind the existing river and require no new assets.
+function drawDepthVeils(){
+ ctx.save();ctx.globalCompositeOperation="screen";
+ for(var layer=0;layer<4;layer++){
+  var sway=Math.sin(clock*(.07+layer*.012)+layer*1.9),y=height*(.16+layer*.21)+sway*height*.055;
+  ctx.beginPath();ctx.moveTo(-width*.20,y+height*.08);
+  ctx.bezierCurveTo(width*.20,y-height*.16,width*.69,y+height*.15,width*1.2,y-height*.07);
+  ctx.strokeStyle=layer%2===0?"rgba(33,148,164,.055)":"rgba(107,98,176,.045)";
+  ctx.lineWidth=Math.min(height*.17,140);ctx.stroke();
+  ctx.strokeStyle=layer%2===0?"rgba(112,251,223,.075)":"rgba(168,162,255,.065)";
+  ctx.lineWidth=1.2;ctx.stroke();
+ }
+ ctx.restore();
+}
+// Only the destination confluence blooms, fading completely before a new leg.
+function junctionExcitation(trip,key){
+ if(!trip||trip.to!==key)return 0;
+ var x=clamp((trip.t-.61)/.39,0,1);
+ return Math.sin(Math.PI*x)*Math.sqrt(x);
+}
+// Short translucent folding membranes follow the same canonical scenic route.
+// They never become insect legs or static, straight feelers.
+function drawFoldingWake(trip){
+ if(trip.t<.07)return;
+ var end=.04+trip.t*.92,span=Math.min(.24,trip.t*.29);
+ var size=width<=620?clamp(width*.116,39,57):clamp(width*.068,65,100);
+ ctx.save();ctx.globalCompositeOperation="source-over";
+ for(var band=0;band<3;band++){
+  var left=[],right=[];
+  for(var j=0;j<=20;j++){
+   var u=j/20,s=clamp(end-u*span,.01,.999),q=locate(trip.from,trip.to,s);
+   var m=Math.hypot(q.dx,q.dy)||1,nx=-q.dy/m,ny=q.dx/m;
+   var wave=Math.sin(clock*.68+u*8.5+band*2.2)*(1-u)*size*(.06+band*.017);
+   var center=(band-1)*size*.16*(1-u)+wave,half=size*(.10+band*.016)*(1-u)*(.6+.4*Math.sin(u*Math.PI));
+   left.push({x:q.x+nx*(center+half),y:q.y+ny*(center+half)});
+   right.push({x:q.x+nx*(center-half),y:q.y+ny*(center-half)});
+  }
+  ctx.beginPath();
+  left.forEach(function(q,i){if(i===0)ctx.moveTo(q.x,q.y);else ctx.lineTo(q.x,q.y)});
+  for(var k=right.length-1;k>=0;k--)ctx.lineTo(right[k].x,right[k].y);
+  ctx.closePath();
+  var g=ctx.createLinearGradient(left[0].x,left[0].y,left[20].x,left[20].y);
+  g.addColorStop(0,band===1?"rgba(116,253,223,.23)":"rgba(166,162,255,.16)");
+  g.addColorStop(.46,band===1?"rgba(73,185,202,.13)":"rgba(117,128,228,.10)");
+  g.addColorStop(1,"rgba(48,103,156,0)");
+  ctx.fillStyle=g;ctx.fill();
+ }
+ ctx.restore();
+}
+// A temporary route-specific branching surge shares the deformed 91-point river.
+function drawBranchingSurge(trip){
+ var energy=junctionExcitation(trip,trip.to);
+ if(energy<.018)return;
+ var origin=coordinates(trip.to);
+ ctx.save();ctx.globalCompositeOperation="lighter";
+ for(var i=0;i<scene.edges.length;i++){
+  var edge=scene.edges[i];
+  if(edge.from!==trip.to&&edge.to!==trip.to)continue;
+  var points=edge.warpedPoints||edge.points,reverse=edge.to===trip.to;
+  var steps=Math.min(48,Math.floor(12+energy*36));
+  var far=points[reverse?90-steps:steps];
+  var g=ctx.createLinearGradient(origin.x,origin.y,far.x,far.y);
+  g.addColorStop(0,rgba(edge.color,.60*energy));
+  g.addColorStop(.55,rgba(edge.color,.25*energy));
+  g.addColorStop(1,rgba(edge.color,0));
+  ctx.strokeStyle=g;ctx.lineWidth=2.3+energy*3.4;
+  ctx.shadowColor=rgba(edge.color,.53*energy);ctx.shadowBlur=14;
+  ctx.beginPath();
+  for(var j=0;j<=steps;j++){
+   var q=points[reverse?90-j:j];
+   if(j===0)ctx.moveTo(q.x,q.y);else ctx.lineTo(q.x,q.y);
+  }
+  ctx.stroke();ctx.shadowBlur=0;
+ }
+ ctx.restore();
+}
+
 function drawConfluences(){
+ var trip=routeAt();
  Object.keys(TOPICS).forEach(function(key,i){
-  var p=TOPICS[key],o=coordinates(key),r=key==="hudson"?Math.min(width*.13,76):Math.min(width*.09,45);
+  var p=TOPICS[key],o=coordinates(key),r=key==="hudson"?Math.min(width*.13,76):Math.min(width*.09,45),surge=junctionExcitation(trip,key);
   if(width>700)r=Math.min(width*.09,p.r*1.35);
   var halo=ctx.createRadialGradient(o.x,o.y,1,o.x,o.y,r*3.6);
   halo.addColorStop(0,rgba(p.color,key==="hudson"?.28:.18));halo.addColorStop(.5,rgba(p.color,.075));halo.addColorStop(1,rgba(p.color,0));
@@ -238,12 +327,22 @@ function drawConfluences(){
   ctx.save();ctx.translate(o.x,o.y);ctx.globalCompositeOperation="lighter";
   for(var ring=0;ring<7;ring++){
    var scale=.40+ring*.19,twist=clock*(ring%2===0?.12:-.09)+i+ring*.45;
-   ctx.beginPath();ctx.ellipse(0,0,r*scale,r*scale*.49,twist,0,Math.PI*2);
-   ctx.strokeStyle=rgba(p.color,.15+(ring%3)*.05);ctx.lineWidth=ring===0?1.5:.65;ctx.stroke();
+   ctx.beginPath();ctx.ellipse(0,0,r*scale*(1+surge*.25),r*scale*(.49+surge*.14),twist,0,Math.PI*2);
+   ctx.strokeStyle=rgba(p.color,.15+(ring%3)*.05+surge*.24);ctx.lineWidth=(ring===0?1.5:.65)+surge*.8;ctx.stroke();
   }
   for(var dot=0;dot<25;dot++){
    var a=dot*2.39996+clock*(dot%2===0?.05:-.035),d=r*(.45+seeded(dot*17+i)*1.65);
    ctx.fillStyle=rgba(p.color,.08+seeded(dot*14+i)*.35);ctx.beginPath();ctx.arc(Math.cos(a)*d,Math.sin(a)*d*.69,.5+seeded(dot+i)*1.1,0,7);ctx.fill();
+  }
+  if(surge>.02){
+   // River petals flare briefly rather than drawing a repetitive pulse halo.
+   for(var petal=0;petal<5;petal++){
+    var a=petal*2.399963+clock*.14,reach=r*(.72+surge*.95);
+    ctx.beginPath();ctx.moveTo(Math.cos(a)*r*.38,Math.sin(a)*r*.24);
+    ctx.quadraticCurveTo(Math.cos(a+.5)*reach,Math.sin(a+.5)*reach*.75,
+       Math.cos(a+.91)*reach*.79,Math.sin(a+.91)*reach*.54);
+    ctx.strokeStyle=rgba(p.color,surge*.32);ctx.lineWidth=.65+surge*.9;ctx.stroke();
+   }
   }
   ctx.fillStyle=rgba(p.color,.85);ctx.beginPath();ctx.arc(0,0,key==="hudson"?5:3,0,7);ctx.fill();
   ctx.restore();
@@ -445,7 +544,7 @@ function riverCamera(){
  };
 }
 function paint(dt){
- drawBackdrop();
+ drawBackdrop();drawDepthVeils();
  var camera=riverCamera();
  ctx.save();
  ctx.translate(width/2,height/2);ctx.scale(camera.zoom,camera.zoom);
@@ -453,6 +552,7 @@ function paint(dt){
  var trip=routeAt(),field=presenceCurrentField(trip);
  shapeRiverChannels(field);
  drawWatershed(field);drawRivers();drawParticles(dt);drawConfluences();
+ drawBranchingSurge(trip);drawFoldingWake(trip);
  drawPresenceRipple(trip.from,trip.to,.04+trip.t*.92);drawTraveler(trip.from,trip.to,.04+trip.t*.92);
  if(clock<flashUntil){
   var p=coordinates(trip.to);ctx.strokeStyle="rgba(182,255,220,"+((flashUntil-clock)/3*.7)+")";ctx.lineWidth=2;ctx.beginPath();ctx.arc(p.x,p.y,40+(3-(flashUntil-clock))*30,0,7);ctx.stroke();
@@ -473,6 +573,18 @@ function loop(ts){
 function wake(){if(!frame&&!document.hidden){last=0;frame=requestAnimationFrame(loop)}}
 function setPause(next){paused=Boolean(next);document.getElementById("pause").textContent=paused?"Resume":"Pause";document.getElementById("pause").setAttribute("aria-pressed",String(paused));if(frame){cancelAnimationFrame(frame);frame=0}wake()}
 document.getElementById("pause").addEventListener("click",function(){setPause(!paused)});
+var filmButton=document.getElementById("film");
+function setFilmMode(on){
+ document.body.classList.toggle("film-mode",Boolean(on));
+ filmButton.textContent=on?"Exit film":"Film view";
+ filmButton.setAttribute("aria-pressed",String(Boolean(on)));
+ var u=new URL(window.location.href);
+ if(on)u.searchParams.set("film","1");else u.searchParams.delete("film");
+ window.history.replaceState(null,"",u.pathname+u.search+u.hash);
+ wake();
+}
+filmButton.addEventListener("click",function(){setFilmMode(!document.body.classList.contains("film-mode"))});
+if(new URLSearchParams(window.location.search).get("film")==="1")setFilmMode(true);
 document.addEventListener("visibilitychange",function(){if(document.hidden&&frame){cancelAnimationFrame(frame);frame=0}else if(!document.hidden)wake()});
 window.addEventListener("resize",function(){sceneSize();wake()},{passive:true});
 canvas.addEventListener("click",function(ev){
