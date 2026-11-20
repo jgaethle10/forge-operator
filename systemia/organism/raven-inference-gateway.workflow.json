@@ -41,6 +41,18 @@
       "credential_vault": "evercraft-owned",
       "api": "responses",
       "model_required": true
+    },
+    "anthropic": {
+      "credential_provider": "anthropic",
+      "credential_vault": "evercraft-owned",
+      "api": "messages",
+      "model_required": true
+    },
+    "xai": {
+      "credential_provider": "xai",
+      "credential_vault": "evercraft-owned",
+      "api": "responses_store_false",
+      "model_required": true
     }
   },
   "secret_boundary": {
@@ -54,7 +66,9 @@
     "provider_calls": {
       "ollama": "local model inventory",
       "gemini": "models.get",
-      "openai": "retrieve model"
+      "openai": "retrieve model",
+      "anthropic": "models.get",
+      "xai": "models.get"
     },
     "prompt_sent": false,
     "inference_performed": false,
