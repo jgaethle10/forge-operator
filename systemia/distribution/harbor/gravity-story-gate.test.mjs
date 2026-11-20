@@ -79,19 +79,52 @@ test('publishing style rules reject em dash, en dash and And-leading paragraphs'
   s.post.message='A milestone.\n\nAnd it continues.';
   assert.ok(codes(s,context()).includes('paragraph_starts_with_and'));
 });
-test('comment path requires actual live owned Journal, exact post ID and separate approved exact text',()=>{
+test('comment path requires a genuine published post, exact owned Journal URL and separate exact-text authority',()=>{
   const s=story(),c=context(),url='https://worlds.systemiacommandcenters.com/journal/test';
   s.journal={state:'JOURNAL_LIVE',canonical_url:url};s.first_comment={state:'REQUESTED',target_post_id:'provider-post-42'};
   c.journal={urlReadback:url,editorialAccepted:true};c.providerPostId='provider-post-42';
-  let r=assessHarborGravityStory(s,c);assert.equal(r.comment_status,'COMMENT_HELD');
-  assert.ok(r.comment_blockers.includes('separate_comment_authority_missing'));
+  let r=assessHarborGravityStory(s,c);
+  assert.equal(r.comment_status,'COMMENT_HELD');
+  assert.ok(r.comment_blockers.includes('verified_original_post_receipt_missing'));
+  c.publishedKeys=[r.dedup_key];
+  c.publishedPostReceipt={status:'PUBLISHED',independently_read_back:true,
+    provider_post_id:'provider-post-42',page_id:pageId,dedup_key:r.dedup_key,post_sha256:r.post_sha256};
   c.commentAuthority={permitted:true,approvedTextHash:sha(`For the full story, original sources, context, and updates: ${url}`)};
   r=assessHarborGravityStory(s,c);
+  assert.equal(r.status,'HOLD','duplicate Page post is denied');
+  assert.ok(r.blockers.includes('duplicate_story_page_angle_update'));
+  assert.equal(r.facebook_job_candidate,null,'never re-post just to add a comment');
   assert.equal(r.comment_status,'READY_FOR_SEPARATE_COMMENT_OPERATOR_REVIEW');
   assert.equal(r.first_comment_candidate.post_id,'provider-post-42');
   assert.equal(r.commenting_performed,false);
+  const commentDedup=r.comment_dedup_key;
+  c.sentCommentKeys=[commentDedup];
+  assert.ok(assessHarborGravityStory(s,c).comment_blockers.includes('duplicate_journal_comment'));
+  c.sentCommentKeys=[];
+  c.publishedPostReceipt.page_id='another-page';
+  assert.ok(assessHarborGravityStory(s,c).comment_blockers.includes('verified_original_post_receipt_missing'));
+  c.publishedPostReceipt.page_id=pageId;
+  c.publishedPostReceipt.post_sha256='not-original';
+  assert.ok(assessHarborGravityStory(s,c).comment_blockers.includes('verified_original_post_receipt_missing'));
+  c.publishedPostReceipt.post_sha256=r.post_sha256;
   s.journal.canonical_url='https://evercraft.base44.app/journal/test';
   assert.equal(assessHarborGravityStory(s,c).first_comment_candidate,null);
+});
+test('unrelated editorial Page failure remains a comment hold even after published-post evidence',()=>{
+  const s=story(),c=context(),url='https://worlds.systemiacommandcenters.com/journal/test';
+  s.journal={state:'JOURNAL_LIVE',canonical_url:url};
+  s.first_comment={state:'REQUESTED',target_post_id:'provider-post-42'};
+  c.journal={urlReadback:url,editorialAccepted:true};c.providerPostId='provider-post-42';
+  const pre=assessHarborGravityStory(s,c);
+  c.publishedKeys=[pre.dedup_key];
+  c.publishedPostReceipt={status:'PUBLISHED',independently_read_back:true,
+    provider_post_id:'provider-post-42',page_id:pageId,dedup_key:pre.dedup_key,post_sha256:pre.post_sha256};
+  c.commentAuthority={permitted:true,approvedTextHash:sha(`For the full story, original sources, context, and updates: ${url}`)};
+  c.approvedPages[0].status='FROZEN';
+  const result=assessHarborGravityStory(s,c);
+  assert.ok(result.blockers.includes('page_not_active'));
+  assert.equal(result.comment_status,'COMMENT_HELD');
+  assert.equal(result.first_comment_candidate,null);
 });
 test('unverified or developing anonymous claims cannot masquerade as confirmed',()=>{
   const s=story();s.uncertainty_label='HOLD';
