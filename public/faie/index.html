@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>FAIE | Evidence for the physical world</title>
-  <meta name="description" content="FAIE is Evercraft's evidence-first intelligence layer for food infrastructure, land, water, production and resilience decisions.">
+  <title>FAIE | Know what the evidence says</title>
+  <meta name="description" content="Ask a real agriculture, land or infrastructure question. FAIE checks current evidence, shows the source links, and identifies what still needs verification.">
   <style>
     :root{
       color-scheme:dark;
@@ -171,6 +171,29 @@
     footer{border-top:1px solid var(--line);padding:28px 0 52px;color:var(--soft);font-size:.84rem;line-height:1.6}
     a{color:var(--water)}
 
+    /* FAIE FIRST-THREE-SECONDS ONBOARDING 2026-11-19 */
+    .pilot-actions{display:none}
+    body[data-pilot="agnormal"] .pilot-actions{display:flex}
+    #pilotNote{display:none}
+    body[data-pilot="agnormal"] #pilotNote{display:block}
+    .hero-partner-intro{display:none;margin:12px 0 0;color:#e9d5a1;font-size:.88rem;line-height:1.5}
+    body[data-pilot="agnormal"] .hero-partner-intro{display:block}
+    .runtime-details{margin-top:22px;border:1px solid rgba(189,220,184,.2);background:rgba(8,27,16,.36);padding:12px 16px;border-radius:15px}
+    .runtime-details summary,.scope-advanced summary{cursor:pointer;color:#dce9d5;font-size:.83rem;font-weight:720}
+    .runtime-details[open] summary,.scope-advanced[open] summary{color:#d6e9b7;margin-bottom:13px}
+    .runtime-details .intelligence-ribbon{margin-top:13px}
+    .first-screen-pulse{margin:12px 0 0;display:flex}
+    .scope-advanced{border:1px solid #375043;border-radius:14px;padding:13px 15px;background:rgba(6,21,13,.42);margin-top:18px}
+    .scope-advanced .two{margin-top:8px}
+    .scope-hint{font-size:.74rem;color:#afc0b1;line-height:1.45;margin-top:6px}
+    .scope-hint strong{color:#e0e8d7}
+    .compare-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    .compare-actions button{margin-top:18px}
+    .plain-results{display:flex;flex-direction:column;gap:5px;border:1px solid #46654a;border-radius:15px;background:#102719;padding:15px;margin-top:16px}
+    .plain-results strong{font-size:.82rem;color:#d7edce}
+    .plain-results span{font-size:.85rem;color:#e5ebe0;line-height:1.5}
+    .hero-actions button.hero-primary{margin:0;border:none}
+    @media(max-width:620px){.hero-actions button.hero-primary,.hero-actions a{width:100%;justify-content:center}.runtime-details{padding:12px}}
     /* FAIE EXPERIENCE REVAMP 2026-11-19: owned, responsive intelligence studio */
     :root{
       --bg:#070e0c;--panel:#101c18;--panel2:#172820;--line:#304239;
@@ -343,10 +366,10 @@
       <span class="brandcopy"><strong>FAIE</strong><small>Evercraft · Field Intelligence</small></span>
     </a>
     <div class="nav-links">
-      <a href="#investigation">Investigate</a>
-      <a href="#field">Evidence field</a>
+      <a href="#investigation">Ask a question</a>
+      <a href="#field">Live sources</a>
       <a href="#comparison">Compare</a>
-      <a class="nav-cta" href="#investigation">Open decision room ↗</a>
+      <a class="nav-cta" href="#investigation">Try FAIE ↗</a>
     </div>
   </div>
 </nav>
@@ -355,40 +378,44 @@
   <div class="shell">
     <div class="hero-grid">
       <div>
-        <div class="eyebrow">Evercraft / Systemia · physical-world intelligence</div>
+        <div class="eyebrow">Food, farms, water and infrastructure · Evercraft</div>
         <h1>FAIE</h1>
-        <div class="lede"><strong>Underwrite the world beneath the thesis.</strong> Evidence for the physical world, built to test food-infrastructure decisions against what is actually happening in water, soil, climate, energy, labor, logistics, policy and production.</div>
+        <div class="lede"><strong>Make better decisions with real-world evidence.</strong> Ask FAIE a question about water, land, food production or infrastructure. It checks available evidence, shows where it came from, and tells you what still needs to be verified.</div>
+        <p class="hero-partner-intro">Prepared for AgNormal: test a real Yakima Valley food-production question in one click. This uses live evidence, not a canned demo.</p>
 
         <div class="hero-actions">
-          <a class="hero-primary" href="#investigation">Start an investigation ↗</a>
-          <a class="hero-secondary" href="#field">Explore the evidence field</a>
+          <button class="hero-primary" id="heroTryExample" type="button">See a real example ↗</button>
+          <a class="hero-secondary" href="#investigation">Ask my own question</a>
         </div>
         <div class="promise-grid">
-          <div class="promise"><b>Sense reality</b><span>Separate current evidence from assumption, model and noise.</span></div>
-          <div class="promise"><b>Attack assumptions</b><span>Expose what could weaken, contradict or invalidate the thesis.</span></div>
-          <div class="promise"><b>Find the next proof</b><span>Turn missing evidence into an explicit diligence queue.</span></div>
+          <div class="promise"><b>1. Ask</b><span>Pick a real question, or try the Yakima Valley example.</span></div>
+          <div class="promise"><b>2. Check</b><span>See current evidence and direct links to its sources.</span></div>
+          <div class="promise"><b>3. Decide what to verify</b><span>Get the unknowns and next checks before making a decision.</span></div>
         </div>
       </div>
       <aside class="hero-card">
-        <div class="section-kicker">Decision room</div>
-        <div class="hero-card-title">From thesis to evidence.</div>
-        <p>FAIE does not choose the site or pretend to know agriculture better than the operator. It continuously acquires, reconciles and challenges the external facts the thesis depends on.</p>
+        <div class="section-kicker">What can FAIE check?</div>
+        <div class="hero-card-title">Start with what matters on the ground.</div>
+        <p>Water supply. Soil. Weather. Energy. Transportation. Operating risks. FAIE searches its admitted evidence sources, then makes missing proof visible. It does not approve a site or replace local experts.</p>
         <div class="watch-grid">
           <span>Water</span><span>Soil</span><span>Heat</span><span>Energy</span>
           <span>Labor</span><span>Logistics</span><span>Policy</span><span>Continuity</span>
         </div>
-        <div class="proof-line"><span>Owned Fabric</span><span>Official MCP Registry</span><span>Live evidence</span></div>
-        <a class="hero-link" href="#investigation">Open the decision room ↓</a>
+        <div class="proof-line"><span>Source-linked findings</span><span>Unknowns stay visible</span><span>Human review required</span></div>
+        <a class="hero-link" href="#field">See which evidence is currently available ↓</a>
       </aside>
     </div>
-    <div class="statusbar" id="statusbar"><span class="pill">Checking FAIE runtime…</span></div><div class="pulse-badge" aria-live="polite" style="margin-top:12px"><i class="pulse-dot" id="runtimePulse" data-health="pending" aria-hidden="true"></i><span id="runtimePulseLabel">Verifying API</span></div>
-    <div class="intelligence-ribbon" aria-label="Live evidence overview">
+    <details class="runtime-details">
+      <summary>See the current evidence coverage and system status</summary>
+      <div class="statusbar" id="statusbar"><span class="pill">Checking FAIE runtime…</span></div>
+      <div class="intelligence-ribbon" aria-label="Live evidence overview">
       <div class="intelligence-stat"><b id="metricSignals">—</b><span>Admitted signals</span></div>
       <div class="intelligence-stat"><b id="metricFeeds">—</b><span>Healthy official feeds</span></div>
       <div class="intelligence-stat"><b id="metricRegion">—</b><span>Active evidence profile</span></div>
       <div class="intelligence-stat"><b id="metricChecked">—</b><span>Last API check</span></div>
-    </div>
-
+      </div>
+    </details>
+    <div class="pulse-badge first-screen-pulse" aria-live="polite"><i class="pulse-dot" id="runtimePulse" data-health="pending" aria-hidden="true"></i><span id="runtimePulseLabel">Checking live sources</span></div>
   </div>
 </header>
 
@@ -426,8 +453,8 @@
         <strong>AgNormal / Yakima Valley</strong>
         <p>This view preloads a real food-infrastructure thesis into the live FAIE engine. Nothing below is a canned answer, and FAIE does not assume AgNormal's undisclosed physical architecture.</p>
       </div>
-      <h2>Frame the decision</h2>
-      <div class="meta">Start with the decision that matters. Geography, physical system and assumptions make the evidence packet sharper.</div>
+      <h2>What would you like to check?</h2>
+      <div class="meta">Write one real question about a place or production system. Try the example above if you're not sure where to begin.</div>
       <div class="pilot-actions">
         <button class="run-pilot" id="runAgnormalNow" type="button">Run live AgNormal brief</button>
         <button class="preset secondary" id="agnormalPreset" type="button">Load AgNormal pilot scope</button>
@@ -436,8 +463,8 @@
 
 
       <div class="lens-tray" aria-label="Investigation starting points">
-        <div class="section-kicker" style="margin-bottom:8px">Start with a lens</div>
-        <p>Pick a question to load it into the same live FAIE engine. Review and edit before you run.</p>
+        <div class="section-kicker" style="margin-bottom:8px">Or pick a starting question</div>
+        <p>Choose a topic below. You can change the question before checking the evidence.</p>
         <div class="lens-grid">
           <button type="button" data-faie-lens="water">Water reality</button>
           <button type="button" data-faie-lens="soil">Soil &amp; site</button>
@@ -447,21 +474,24 @@
       </div>
 
       <form id="form">
-        <label for="question">Question</label>
+        <label for="question">Your question</label>
         <textarea id="question" maxlength="1200" placeholder="What current evidence could affect irrigation and orchard resilience in the Yakima Valley?"></textarea>
 
         <div class="two">
           <div>
-            <label for="region">Region key</label>
-            <input id="region" placeholder="yakima-wa">
+            <label for="region">Area to investigate (optional region key)</label>
+            <input id="region" placeholder="e.g. yakima-wa">
+            <div class="scope-hint">Try <strong>yakima-wa</strong> for the Yakima Valley. This is an evidence region identifier, not a street-address search.</div>
           </div>
           <div>
-            <label for="asset">Asset or system</label>
-            <input id="asset" placeholder="regional food production system">
+            <label for="asset">What are you evaluating? (optional)</label>
+            <input id="asset" placeholder="e.g. greenhouse, food production, irrigation">
           </div>
         </div>
 
-        <div class="two">
+        <details class="scope-advanced" id="advancedScope">
+          <summary>Optional: refine the question with more detail</summary>
+          <div class="two">
           <div>
             <label for="crop">Crop or production type</label>
             <input id="crop" placeholder="apples, tomatoes, nursery starts">
@@ -484,18 +514,20 @@
         <textarea id="assumptions" maxlength="5000" placeholder="One assumption per line. Example: Regional water availability can support the target production system."></textarea>
         <div class="pilot-note">FAIE links evidence to these assumptions without declaring them true or false. Persisted internal investigations can carry the register forward over time.</div>
 
-        <button id="run" type="submit">Build decision packet</button>
+        </details>
+        <button id="run" type="submit">Check the evidence ↗</button>
+        <div class="scope-hint">You'll see findings, sources and what's still unknown. This is research support, not a site approval.</div>
       </form>
 
       <div class="boundary">FAIE is evidence support, not autonomous farm control or regulatory authority. Modeled, reported, observed and verified evidence stay visibly separate.</div>
     </section>
 
     <section class="panel">
-      <div class="panel-topline"><div class="section-kicker">02 / Underwrite</div><span class="tag">sense · challenge · next proof</span></div>
+      <div class="panel-topline"><div class="section-kicker">02 / Understand the result</div><span class="tag">sense · challenge · next proof</span></div>
       <div id="result">
         <div class="empty-packet">
-          <strong>The packet builds here.</strong>
-          <p>FAIE will show what the evidence supports, what could break the thesis, which assumptions are being watched, and what proof should be acquired next.</p>
+          <strong>Your findings will appear here.</strong>
+          <p>FAIE will show what it found, source links, what it couldn't confirm, and the next checks to make before acting.</p>
         </div>
       </div>
     </section>
@@ -504,8 +536,8 @@
   <div class="grid2">
     <section class="panel" id="field">
       <div class="section-kicker">Live field</div>
-      <h2>Current evidence field</h2>
-      <div class="meta">Newest admitted physical-world evidence held by the owned runtime right now.</div>
+      <h2>What FAIE is seeing</h2>
+      <div class="meta">Recent information from connected evidence sources. It is not automatically verified for your exact site.</div>
       <div id="signals" style="margin-top:16px"></div>
     </section>
 
@@ -524,8 +556,8 @@
 
   <section class="panel" id="comparison" style="margin-top:18px">
     <div class="panel-topline"><div class="section-kicker">03 / Compare</div><span class="tag">same rubric · no hidden weighting</span></div>
-    <h2>Compare candidate regions</h2>
-    <div class="meta">Run the same FAIE rubric across two candidates. The ordering measures evidence readiness only. A better packet does not mean a better site.</div>
+    <h2>Compare evidence for two places</h2>
+    <div class="meta">See which place has more available evidence and which questions remain unanswered. This <strong>does not rank the best place to build</strong>.</div>
     <div class="two">
       <div>
         <label for="compareLabelA">Candidate A</label>
@@ -540,7 +572,8 @@
         <input id="compareRegionB" placeholder="candidate-region-key">
       </div>
     </div>
-    <button id="compareRun" type="button">Compare evidence readiness</button>
+    <div class="compare-actions"><button id="compareRun" type="button">Compare evidence readiness</button><button id="compareExample" class="secondary" type="button">Try Yakima vs. Tri-Cities ↗</button></div>
+    <div class="scope-hint">This compares the strength of available information, never the quality or suitability of the place itself.</div>
     <div id="comparisonResult" style="margin-top:18px"><div class="quiet">Add two candidate regions to compare the evidence packets side by side.</div></div>
   </section>
 </main>
@@ -715,7 +748,8 @@ function renderResult(inv) {
       : [];
   const readiness = coverage.decision_readiness || packet.decide?.readiness || 'evidence_gaps';
 
-  let html = '<div class="result-head"><div><div class="section-kicker">Decision packet</div><h2>What the world says now</h2><div class="meta">' + esc(inv.summary) + '</div></div><div class="confidence"><span>' + Math.round((Number(inv.confidence)||0)*100) + '%</span><small>coverage</small></div></div>';
+  let html = '<div class="result-head"><div><div class="section-kicker">Your evidence report</div><h2>What FAIE found</h2><div class="meta">' + esc(inv.summary) + '</div></div><div class="confidence"><span>' + Math.round((Number(inv.confidence)||0)*100) + '%</span><small>coverage</small></div></div>';
+  html += '<div class="plain-results"><strong>At a glance</strong><span>' + findings.length + ' findings · ' + unknowns.length + ' unknowns · ' + acquisitionQueue.length + ' next checks. This is evidence coverage, not a prediction or site approval.</span></div>';
   html += '<div class="meta" style="margin-top:12px">Evidence coverage score, not event probability. Public investigations are ephemeral previews and are not added to the shared investigation archive.</div>';
   html += '<div class="coverage">';
   html += '<span class="pill">Readiness: <strong class="readiness">' + esc(String(readiness).replaceAll('_',' ')) + '</strong></span>';
@@ -971,7 +1005,7 @@ document.getElementById('agnormalPreset').addEventListener('click', () => {
 document.getElementById('runAgnormalNow').addEventListener('click', () => {
   loadFoodInfrastructurePilot({partner:true});
   document.getElementById('result').scrollIntoView({behavior:'smooth',block:'start'});
-  document.getElementById('form').requestSubmit();
+  if(!document.getElementById('run').disabled) document.getElementById('form').requestSubmit();
 });
 
 const params = new URLSearchParams(window.location.search);
@@ -1072,7 +1106,11 @@ document.getElementById('form').addEventListener('submit', async (event) => {
     : [];
   const horizonDays = Number(document.getElementById('horizon').value) || 90;
 
-  if (!question) return;
+  if (!question) {
+    document.getElementById('question').focus();
+    document.getElementById('result').innerHTML='<div class="quiet error">Start by entering one question, or choose the live example above.</div>';
+    return;
+  }
   button.disabled = true;
   button.textContent = 'Investigating…';
   const resultTarget = document.getElementById('result');
@@ -1119,7 +1157,7 @@ document.getElementById('form').addEventListener('submit', async (event) => {
     evercraftActivity.fail({title:'Investigation stopped',detail:requestErrorMessage(error)});
   } finally {
     button.disabled = false;
-    button.textContent = 'Build decision packet';
+    button.textContent = 'Check the evidence ↗';
   }
 });
 
@@ -1164,6 +1202,25 @@ function setFaieMetrics({health,error}={}){
   faieMetrics.pulseLabel.textContent=health.ok===true?'API responding':'Runtime needs attention';
 }
 
+document.getElementById('compareExample').addEventListener('click', () => {
+  if(document.getElementById('compareRun').disabled) return;
+  document.getElementById('compareLabelA').value='Yakima Valley';
+  document.getElementById('compareRegionA').value='yakima-wa';
+  document.getElementById('compareLabelB').value='Tri-Cities';
+  document.getElementById('compareRegionB').value='tri-cities-wa';
+  document.getElementById('question').value='Compare the available evidence and missing proof for food-production infrastructure in Yakima Valley and Tri-Cities.';
+  document.getElementById('asset').value='regional food production infrastructure';
+  document.getElementById('compareRun').click();
+});
+document.getElementById('heroTryExample').addEventListener('click', () => {
+  if(document.getElementById('run').disabled) return;
+  loadFoodInfrastructurePilot({partner:document.body.dataset.pilot==='agnormal'});
+  document.getElementById('result').scrollIntoView({behavior:'smooth',block:'start'});
+  document.getElementById('form').requestSubmit();
+});
+if(document.body.dataset.pilot==='agnormal'){
+  document.getElementById('heroTryExample').textContent='Run the AgNormal example ↗';
+}
 loadState();
 setInterval(loadState, 60000);
 </script>

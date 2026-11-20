@@ -58,3 +58,42 @@ test('public evidence, AgNormal, and authority boundaries remain intact', () => 
   assert.match(html, /@media\(max-width:620px\)/);
   assert.match(html, /navigator\.clipboard\.writeText/);
 });
+
+test('a newcomer can start a real live example in one click', () => {
+  assert.match(html, /id="heroTryExample"/);
+  assert.match(html, /See a real example/);
+  assert.match(html, /Make better decisions with real-world evidence/);
+  assert.match(html, /Ask my own question/);
+  assert.match(html, /document\.getElementById\('heroTryExample'\)\.addEventListener\('click'/);
+  assert.match(html, /loadFoodInfrastructurePilot\(\{partner:document\.body\.dataset\.pilot==='agnormal'\}\)/);
+  assert.match(html, /document\.getElementById\('form'\)\.requestSubmit\(\)/);
+  assert.match(html, /id="advancedScope"/);
+  assert.match(html, /Optional: refine the question with more detail/);
+  assert.match(html, /id="runtimePulse"/);
+  assert.match(html, /id="metricSignals"/);
+  assert.match(html, /At a glance/);
+  assert.match(html, /site approval/);
+  assert.doesNotMatch(html, /<a class="hero-primary" href="#investigation">Start an investigation/);
+});
+
+test('first screen remains usable without loading system diagnostics', () => {
+  const opening = html.slice(html.indexOf('<header>'), html.indexOf('</header>') + 9);
+  assert.match(opening, /id="heroTryExample"/);
+  assert.match(opening, /<details class="runtime-details">/);
+  assert.match(opening, /<summary>See the current evidence coverage and system status<\/summary>/);
+  assert.match(opening, /id="runtimePulseLabel"/);
+  assert.ok(opening.indexOf('id="heroTryExample"') < opening.indexOf('id="metricSignals"'));
+  const form = html.slice(html.indexOf('<form id="form">'), html.indexOf('</form>'));
+  assert.ok(form.indexOf('id="question"') < form.indexOf('id="advancedScope"'));
+  assert.ok(form.indexOf('id="region"') < form.indexOf('id="advancedScope"'));
+  assert.ok(form.indexOf('id="run"') > form.indexOf('</details>'));
+});
+
+test('optional comparison starter connects to the real comparison flow', () => {
+  assert.match(html, /id="compareExample"/);
+  assert.match(html, /id="compareRun"/);
+  assert.match(html, /Compare evidence for two places/);
+  assert.match(html, /document\.getElementById\('compareExample'\)\.addEventListener\('click'/);
+  assert.match(html, /document\.getElementById\('compareRun'\)\.click\(\)/);
+  assert.match(html, /body\[data-pilot="agnormal"\] \.pilot-actions/);
+});

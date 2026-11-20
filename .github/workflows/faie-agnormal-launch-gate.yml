@@ -25,7 +25,7 @@ permissions:
 jobs:
   verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 15
     env:
       EVERCRAFT_OPERATOR_EDGE_ORIGIN: https://fabric.systemiacommandcenters.com
     steps:
@@ -113,21 +113,59 @@ jobs:
             exit "$status"
           fi
 
+      - name: Verify partner product end to end on owned HTTPS
+        id: partner
+        shell: bash
+        run: |
+          set -euo pipefail
+          for attempt in $(seq 1 15); do
+            set +e
+            node scripts/faie-partner-end-to-end.mjs --require-ui-parity > artifacts/faie-partner-end-to-end.json
+            code=$?
+            set -e
+            if [ "$code" -eq 0 ]; then
+              cat artifacts/faie-partner-end-to-end.json
+              break
+            fi
+            stage="$(jq -r '.stage_failed // ""' artifacts/faie-partner-end-to-end.json)"
+            error="$(jq -r '.error // ""' artifacts/faie-partner-end-to-end.json)"
+            if [ "$stage" = "public_pages" ] && [[ "$error" == source_live_parity_* ]] && [ "$attempt" -lt 15 ]; then
+              echo "FAIE public UI has not converged to checked-out source ($attempt/15); waiting for verified updater."
+              sleep 15
+              continue
+            fi
+            echo "FAIE partner acceptance failed at $stage: $error" >&2
+            cat artifacts/faie-partner-end-to-end.json >&2
+            exit "$code"
+          done
+          test "$(jq -r '.state' artifacts/faie-partner-end-to-end.json)" = 'PARTNER_GATE_PASSED'
+
+      - name: Test partner journey in a real browser
+        id: browser
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --no-save --no-package-lock --no-audit --no-fund playwright-core@1.56.1 >/dev/null
+          node scripts/faie-browser-partner-acceptance.mjs | tee artifacts/faie-browser-partner-acceptance.json
+          test "$(jq -r '.state' artifacts/faie-browser-partner-acceptance.json)" = 'BROWSER_UX_ACCEPTED'
+
       - name: Publish FAIE launch status
         if: always()
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VERIFY_OUTCOME: ${{ steps.verify.outcome }}
+          PARTNER_OUTCOME: ${{ steps.partner.outcome }}
+          BROWSER_OUTCOME: ${{ steps.browser.outcome }}
         shell: bash
         run: |
           set -euo pipefail
-          if [ "$VERIFY_OUTCOME" = "success" ]; then
+          if [ "$VERIFY_OUTCOME" = "success" ] && [ "$PARTNER_OUTCOME" = "success" ] && [ "$BROWSER_OUTCOME" = "success" ]; then
             state="success"
-            description="FAIE AgNormal partner room externally verified"
+            description="FAIE AgNormal UI, real API, and browser journey verified"
           else
             state="failure"
-            stage="$(jq -r '.stage // "unknown"' artifacts/faie-agnormal-launch-gate.json 2>/dev/null || echo unknown)"
-            error="$(jq -r '.error // "verification_failed"' artifacts/faie-agnormal-launch-gate.json 2>/dev/null || echo verification_failed)"
+            stage="verify=$VERIFY_OUTCOME partner=$PARTNER_OUTCOME browser=$BROWSER_OUTCOME"
+            error="$(jq -r '.error // "verification_failed"' artifacts/faie-partner-end-to-end.json 2>/dev/null || echo verification_failed)"
             description="FAIE launch failure: ${stage} (${error})"
             description="${description:0:140}"
           fi
@@ -139,6 +177,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: faie-agnormal-launch-gate
-          path: artifacts/faie-agnormal-launch-gate.json
+          path: |
+            artifacts/faie-agnormal-launch-gate.json
+            artifacts/faie-partner-end-to-end.json
+            artifacts/faie-browser-partner-acceptance.json
           if-no-files-found: error
           retention-days: 90
