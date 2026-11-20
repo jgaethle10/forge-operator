@@ -305,3 +305,15 @@ The **three-step** mobile-first editor remains the default. Inside step 2, a use
 The active-step message now appears immediately below the charger controls so the operator can see what the tap did on a phone. A newly uploaded site image, new address or successful federal aerial lookup clears stale placement history. Restoring a locally saved project starts a fresh undo history so old-property drawings cannot be resurrected.
 
 `test_tap_to_edit.py` uses the actual browser JavaScript in an isolated Node VM to verify add/select/reposition/cancel/undo/erase/reset/history clearing. This is an ease-of-use improvement, **not** geospatial validation. The map source, parcel evidence, commercial holds and PDF accuracy limitations are unchanged.
+
+## v2.6 mobile PDF delivery and revision safety
+
+Step 3 **View / Save PDF** remains the single primary action. A two-sheet 17×11 landscape PDF is generated in the operator's browser using an Evercraft-owned PDF 1.4 writer and rasterized drawing sheets. When rendering succeeds, the editor displays two **explicit user-tapped** actions: **Open PDF** (new browser tab) and **Download PDF**. It no longer auto-clicks a download link from an asynchronous task, which some iOS contexts can block.
+
+The PDF is created from the currently displayed **S-01 / A-01** sheets, including the operator's source imagery where present. It is a **non-stamped concept**, not a permit-ready or surveyed drawing. No site photo is uploaded to a remote PDF service. The local browser retains a temporary PDF object URL until a new plan is generated or the drawing changes.
+
+Every redraw invalidates the prior PDF link so an old artifact cannot be accidentally reopened after adjusting charger placements. A monotonic drawing-version check additionally refuses an export when the drawing changes **during asynchronous sheet rasterization**, to prevent combining mismatched source states. The user can simply tap View / Save PDF again.
+
+`test_pdf_contract.py` checks the generated binary's PDF page tree, two landscape page sizes, exact xref object offsets, and the real click-handler presentation of Open / Download links; it also tests invalidation and mid-render change rejection. The tiny synthetic JPEG envelope in this test checks *PDF structure*, not photo-rendering quality. Visual confirmation with a real iPhone/WebKit browser and real source imagery remains a separate acceptance gate.
+
+No public link, authenticated customer portal, engineering release, live checkout, or Systemia dispatch was enabled by this update.
