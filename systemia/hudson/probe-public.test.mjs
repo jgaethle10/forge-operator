@@ -33,7 +33,7 @@ function response(status,body,contentType='application/json; charset=utf-8',cach
 function fakeFetch(mode='pass'){
  return async (url)=>{
   if(url===HUDSON_ORIGIN+'/hudson/')return response(200,mode==='old-layout'?'<title>HUDSON | The Living Spine</title> ANIMATED PATHS ARE NOT VERIFIED EVENTS':'<title>HUDSON | The Living Spine</title><meta name="hudson-release" content="v2-mobile-cinematic"> ANIMATED PATHS ARE NOT VERIFIED EVENTS <canvas id="ambient-field"></canvas><button id="next-signal">Next</button>','text/html; charset=utf-8');
-  if(url===HUDSON_ORIGIN+'/hudson/watch/')return response(200,mode==='missing-watch'?'Legacy page':mode==='old-bug'?'name="hudson-watch-release" content="river-current-v2-jointed-explorer" function spider(from,to,t)':mode==='prior-presence'?'name="hudson-watch-release" content="river-current-v3-anomaly" function drawAnomaly(from,to,t)':'<title>HUDSON | Enter the Current</title><meta name="hudson-watch-release" content="river-current-v4-living-pulse"><canvas id="current"></canvas> PUBLIC GIT HISTORY · REPLAY SCENIC CURRENT · NOT A LIVE MISSION function presencePulse(time) function drawPresenceRipple(from,to,t) function anomalyFilament(time,index) function anomalyForm(time) function drawAnomaly(from,to,t) credentials:"omit"','text/html; charset=utf-8');
+  if(url===HUDSON_ORIGIN+'/hudson/watch/')return response(200,mode==='missing-watch'?'Legacy page':mode==='old-bug'?'name="hudson-watch-release" content="river-current-v2-jointed-explorer" function spider(from,to,t)':mode==='prior-presence'?'name="hudson-watch-release" content="river-current-v3-anomaly" function drawAnomaly(from,to,t)':mode==='prior-pulse'?'name="hudson-watch-release" content="river-current-v4-living-pulse" function presencePulse(time) function drawPresenceRipple(from,to,t)':'<title>HUDSON | Enter the Current</title><meta name="hudson-watch-release" content="river-current-v5-responsive-watershed"><canvas id="current"></canvas> PUBLIC GIT HISTORY · REPLAY SCENIC CURRENT · NOT A LIVE MISSION function presencePulse(time) function drawPresenceRipple(from,to,t) function presenceCurrentField(trip) function deflectCurrent(x,y,field) function shapeRiverChannels(field) function anomalyFilament(time,index) function anomalyForm(time) function drawAnomaly(from,to,t) credentials:"omit"','text/html; charset=utf-8');
   if(url===HUDSON_ORIGIN+'/hudson/watch/private.json')return response(mode==='exposed-watch'?200:404,{error:'not_found'});
   if(url.includes('/hudson/activity.json'))return response(200,specimen({published_at:mode==='stale'?new Date(now-200000).toISOString():undefined}));
   if(url===HUDSON_ORIGIN+'/health')return response(200,{hudson_public_path:'/hudson/',hudson_public_source_ready:true,hudson_public_feed_authority:'public_git_source_history_only',hudson_watch_path:'/hudson/watch/',hudson_watch_source_ready:true,source_release_ref:sha,source_release_ref_bound:true});
@@ -48,7 +48,10 @@ test('external canary requires HTML, health, fresh JSON, and private denial',asy
  assert.equal(p.checks.fabric_source_release_ref_bound,true);
  assert.equal(p.checks.visual_release_version,'v2-mobile-cinematic');
  assert.equal(p.checks.watch_river,true);
- assert.equal(p.checks.watch_river_version,'river-current-v4-living-pulse');
+ assert.equal(p.checks.watch_river_version,'river-current-v5-responsive-watershed');
+ const oldPulse=await probeHudsonPublic({fetchImpl:fakeFetch('prior-pulse'),now});
+ assert.equal(oldPulse.verified,false);
+ assert.ok(oldPulse.holds.includes('public_hudson_river_watch_not_verified'));
  const priorPresence=await probeHudsonPublic({fetchImpl:fakeFetch('prior-presence'),now});
  assert.equal(priorPresence.verified,false);
  assert.ok(priorPresence.holds.includes('public_hudson_river_watch_not_verified'));
