@@ -121,3 +121,73 @@ test('no remote listener and no overlapping private publication roots',async()=>
   await assert.rejects(()=>startLeilandObservatory({publicRoot:root,publicationRoot:r,releaseSha:'fake-commit'}),/release_commit_sha_invalid/);
  }finally{await fs.rm(r,{recursive:true,force:true})}
 });
+
+test('host refuses malformed and unexpectedly expanded public pulse files before public response',async()=>{
+ await runFixture(async({url,projectionRoot})=>{
+  await fs.mkdir(path.join(projectionRoot,'kaidance'));
+  const target=path.join(projectionRoot,'kaidance','pulse.json');
+  await fs.writeFile(target,'{"schema":"evercraft.kaidance.public-pulse.v1","private_secret":"DO-NOT-SERVE"}');
+  let response=await fetch(url+'/kaidance/pulse.json');
+  assert.equal(response.status,503);
+  assert.equal((await response.text()).includes('DO-NOT-SERVE'),false);
+  const pulse={schema:'evercraft.kaidance.public-pulse.v1',state:'healthy',cycle_number:20,
+   last_completed_cycle:new Date().toISOString(),heartbeat_target_seconds:300,
+   admitted_count:0,held_count:0,coverage_receipt_valid:true,field_attestation_verified:true,
+   observed_at:new Date().toISOString(),published_at:new Date().toISOString(),
+   private_customer_info:'NEVER-PUBLIC'};
+  await fs.writeFile(target,JSON.stringify(pulse));
+  response=await fetch(url+'/kaidance/pulse.json');
+  assert.equal(response.status,503);
+  assert.equal((await response.text()).includes('NEVER-PUBLIC'),false);
+  delete pulse.private_customer_info;
+  await fs.writeFile(target,JSON.stringify(pulse));
+  response=await fetch(url+'/kaidance/pulse.json');
+  assert.equal(response.status,200);
+  assert.equal((await response.json()).cycle_number,20);
+ });
+});
+test('host fails closed on unreviewed feed keys, sensitive event titles, and invalid JSON',async()=>{
+ await runFixture(async({url,projectionRoot})=>{
+  await fs.mkdir(path.join(projectionRoot,'leiland'));
+  const target=path.join(projectionRoot,'leiland','feed.json');
+  const now=new Date().toISOString();
+  const receipt='https://github.com/jgaethle10/forge-operator/pull/2346';
+  const feed={
+   schema:'evercraft.leiland.public-feed.v1',published_at:now,status:'publisher_reported',
+   signals:{inference:{state:'unverified',observed_at:null,receipt_url:null},
+    missions:{state:'unverified',observed_at:null,receipt_url:null}},
+   events:[{at:now,title:'Public milestone reviewed for Leiland',receipt_url:receipt}]
+  };
+  await fs.writeFile(target,'{unparseable-unsafe-raw');
+  let response=await fetch(url+'/leiland/feed.json');
+  assert.equal(response.status,503);
+  await fs.writeFile(target,JSON.stringify({...feed,internal_node_address:'NEVER-PUBLISH'}));
+  response=await fetch(url+'/leiland/feed.json');
+  assert.equal(response.status,503);
+  assert.equal((await response.text()).includes('NEVER-PUBLISH'),false);
+  feed.events[0].title='Customer record token leaked publicly';
+  await fs.writeFile(target,JSON.stringify(feed));
+  response=await fetch(url+'/leiland/feed.json');
+  assert.equal(response.status,503);
+  feed.events[0].title='Public milestone reviewed for Leiland';
+  await fs.writeFile(target,JSON.stringify(feed));
+  response=await fetch(url+'/leiland/feed.json');
+  assert.equal(response.status,200);
+  const approved=await response.json();
+  assert.equal(approved.events[0].title,'Public milestone reviewed for Leiland');
+  assert.equal(approved.status,'publisher_reported');
+ });
+});
+test('valid but stale public coordination state is served as stale evidence, not refreshed',async()=>{
+ await runFixture(async({url,projectionRoot})=>{
+  await fs.mkdir(path.join(projectionRoot,'kaidance'));
+  const past=new Date(Date.now()-900000).toISOString();
+  const pulse={schema:'evercraft.kaidance.public-pulse.v1',state:'healthy',cycle_number:17,
+   last_completed_cycle:past,heartbeat_target_seconds:300,admitted_count:1,held_count:1,
+   coverage_receipt_valid:true,field_attestation_verified:true,observed_at:past,published_at:past};
+  await fs.writeFile(path.join(projectionRoot,'kaidance','pulse.json'),JSON.stringify(pulse));
+  const response=await fetch(url+'/kaidance/pulse.json');
+  assert.equal(response.status,200);
+  assert.equal((await response.json()).published_at,past);
+ });
+});
