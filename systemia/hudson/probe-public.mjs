@@ -11,6 +11,7 @@ export const HUDSON_ORIGIN='https://fabric.systemiacommandcenters.com';
 export const HUDSON_SCHEMA='evercraft.hudson.public-activity.v1';
 const COMMIT=/^https:\/\/github\.com\/jgaethle10\/forge-operator\/commit\/([a-f0-9]{40})$/;
 const SYSTEMS=new Set(['hudson','systemia','kaidance','raven','saban','evidence','discovery']);
+const PUBLIC_TITLES={hudson:'HUDSON source lineage updated',systemia:'Evercraft orchestration source updated',kaidance:'Continuity source updated',raven:'Communications source updated',saban:'Execution coordination source updated',evidence:'Evidence and provenance source updated',discovery:'Public discovery source updated'};
 
 export function validateHudsonSnapshot(data,{now=Date.now()}={}){
  const reasons=[];
@@ -27,7 +28,7 @@ export function validateHudsonSnapshot(data,{now=Date.now()}={}){
   const at=Date.parse(e?.at||'');
   if(!m||e.id!==m[1]||seen.has(e.id)||e.public!==true||e.source_verified!==true||
      e.kind!=='public_git_source_change'||!SYSTEMS.has(e.system)||
-     typeof e.title!=='string'||e.title.length<1||e.title.length>160||
+     e.title!==PUBLIC_TITLES[e.system]||
      !Number.isFinite(at)||at>now+120000){
     reasons.push('invalid_public_event_or_source_receipt');break;
   }
