@@ -31,13 +31,107 @@ body.film-mode .signal-card{left:14px;right:14px;bottom:64px;width:auto}body.fil
 @keyframes dash{to{stroke-dashoffset:-300}}@keyframes breathe{0%,100%{opacity:.45;transform:scale(.93)}50%{opacity:.9;transform:scale(1.09)}}.paused .orbit,.paused .flowline,.paused .corehalo{animation:none}.paused .particle{display:none}
 @media(max-width:1100px){.panels{grid-template-columns:1fr}.side{grid-template-columns:1fr 1fr;grid-template-rows:auto}}@media(max-width:660px){.shell{padding:0 13px 32px}header{height:64px}.brand{font-size:10px;letter-spacing:.13em}.symbol{width:30px;height:30px}.actions #pause{display:none}.actions #focus{display:inline-block;font-size:9px;padding:8px}.pill{font-size:9px}.intro{padding:30px 4px 22px}.intro-note{display:none}h1{font-size:45px}.visual{height:430px}.side,.lower{grid-template-columns:1fr}.visual-top{top:17px;left:15px;right:15px}.visual-bottom{bottom:16px;left:14px;right:14px}.visual-bottom .hint{display:none}.signal-card{left:12px;right:12px;bottom:51px;width:auto;padding:11px 13px}.signal-title{font-size:16px}.visual-bottom .mobile-motion{display:block!important;padding:6px 9px;font-size:10px}.graph{top:4%;height:91%}.tile{min-height:100px}.tile h3{font-size:19px}.feed{min-height:200px}footer{display:block;line-height:1.8}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important}}
+
+/* HUDSON v2: mobile-first observational stage, where the network is the hero. */
+html{scroll-behavior:smooth}
+body{background:#050b10;background-image:radial-gradient(ellipse at 53% 0%,#1534426b,transparent 38%),radial-gradient(ellipse at 10% 65%,#0d25332f,transparent 45%);font-family:"Segoe UI",Arial,sans-serif;color:#f0f8f5}
+.shell{max-width:1500px;padding:0 clamp(16px,3vw,50px) 50px}
+header{height:75px;border-color:#83b5ab21}
+.brand{font-size:11px;color:#e7f6f1;letter-spacing:.18em}.brand .symbol{border-radius:50%;width:39px;height:39px;border-color:#a0f6db7c;background:radial-gradient(circle,#164942,#091b21);box-shadow:0 0 28px #64ddc32a}
+.btn,.chip{transition:border-color .18s ease,background .18s ease,transform .18s ease}.btn:hover,.chip:hover,.story-next:hover{border-color:#b0f7e3;transform:translateY(-1px)}
+.pill{background:#0e2229;border-color:#425c62;color:#adcad0;font-size:10px;letter-spacing:.09em;padding:9px 12px}
+.pill.live{background:#0c2926;border-color:#427b6b}.pill.stale{background:#24201a;border-color:#947c53}
+.intro{padding:55px 0 35px;align-items:end;gap:16px}
+.intro .eyebrow{font-size:10px;color:#9be8d2;letter-spacing:.21em}
+h1{font:normal clamp(66px,6.9vw,117px)/.87 Georgia,"Times New Roman",serif;letter-spacing:-.073em;margin:18px 0 22px}
+h1 em{font-style:italic;color:#a2f5d8;text-shadow:0 0 55px #75dcbc28}
+.intro p{color:#adc5c9;font-size:15px;line-height:1.56;max-width:515px;letter-spacing:.005em}
+.intro-note{border-left:1px solid #6a9e962e;padding-left:28px;text-align:left;font-size:12px}
+.panels{grid-template-columns:minmax(0,1.6fr) minmax(315px,.75fr);gap:18px}
+.panel{border:1px solid #668b8b39;border-radius:25px;background:#0b1923;box-shadow:0 18px 60px #0004}
+.visual{position:relative;height:min(76vh,805px);min-height:660px;display:flex;flex-direction:column;background:radial-gradient(ellipse at 50% 42%,#1b54535c 0%,#122b3452 35%,transparent 63%),radial-gradient(ellipse at 75% 35%,#19395847,transparent 66%),linear-gradient(150deg,#0e2330,#07131c 78%);isolation:isolate}
+.visual:before{background-size:41px 41px;opacity:.7;mask-image:radial-gradient(ellipse at 50% 45%,black,transparent 72%)}
+.visual:after{content:"";position:absolute;inset:12% 8% 21%;z-index:-1;pointer-events:none;background:radial-gradient(ellipse at center,#9ce9d712,transparent 55%);filter:blur(32px)}
+.visual-top,.visual-bottom{position:relative;left:auto;right:auto;top:auto;bottom:auto;z-index:3;flex-shrink:0}
+.visual-top{order:0;margin:26px 27px 0;align-items:start}.visual-top strong{font-size:11px;letter-spacing:.19em;color:#f1fcf7}.visual-top p{margin-top:9px;font-size:11px;color:#92c3c0}
+.visual-top .right{font-size:10px;letter-spacing:.12em;color:#9aafb9;line-height:1.9}
+.field-orbit{color:#a8f2db;font-size:17px;margin-left:5px;display:inline-block;animation:rotate-orbit 18s linear infinite}
+.graph{position:relative;inset:auto;top:auto;flex:1 1 auto;min-height:0;width:100%;height:auto;order:1;overflow:hidden}
+.graph .orbit{stroke:#8adcc5;stroke-opacity:.19;stroke-dasharray:3 11}
+.graph .edge{stroke:#8ed4cd;stroke-opacity:.3;stroke-width:1.4}
+.graph .flowline{stroke:#d0ffec;stroke-opacity:.7;stroke-width:1.8}
+.graph .particle{filter:url(#glow)}
+.graph .node .ring{fill:#15343b;stroke:#8adcc5;stroke-width:2}.graph .node .inner{filter:drop-shadow(0 0 8px #7ff6db)}
+.graph .node .label{font-size:16px;letter-spacing:2.2px;fill:#eefbf7}.graph .node .sublabel{font-size:10px;fill:#95b9c0}
+.graph .node .corehalo{stroke:#a4f6d482;fill:#72edc50d}.graph .node .core{fill:#113c43;stroke:#b8ffe9;stroke-width:2.8;filter:drop-shadow(0 0 16px #49ddbb61)}
+.graph .node .coretext{font-size:43px}.graph .node .centerlabel{font-size:11px;letter-spacing:2.4px}
+.signal-card{position:relative;left:auto;right:auto;bottom:auto;order:2;flex-shrink:0;width:auto;margin:0 24px 10px;padding:13px 16px 14px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:3px 14px;align-items:center;border-radius:17px;background:linear-gradient(116deg,#0a252cee,#0d1a27f2);border-color:#679a8c59;box-shadow:0 11px 32px #0005;backdrop-filter:blur(10px)}
+.signal-card[data-kind="new"]{border-color:#9effdc;box-shadow:0 0 0 1px #8cefdc33,0 0 40px #6becc522}
+.signal-tag{grid-column:1;grid-row:1;font-size:9px;letter-spacing:.2em;color:#90eacb}
+.signal-title{grid-column:1;grid-row:2;font:normal clamp(18px,1.9vw,24px)/1.16 Georgia,serif;margin:3px 0;letter-spacing:-.02em}
+.signal-meta{grid-column:1;grid-row:3;font-size:10px;line-height:1.3;color:#8fb2b9}
+.signal-card a{grid-column:2;grid-row:2;white-space:nowrap;margin:0;font-size:11px;font-weight:700}
+.signal-card a[hidden]{display:none}
+.story-next{grid-column:2;grid-row:3;border:none;background:none;color:#a6ebd7;font-size:10px;letter-spacing:.03em;padding:5px;white-space:nowrap;cursor:pointer}
+.story-next span{margin-left:5px;font-size:15px}
+.visual-bottom{order:3;margin:0 25px 19px;align-items:center;font-size:9px;color:#89b4b5;letter-spacing:.02em}
+.visual-bottom .hint{font-size:9px;color:#8eabba;letter-spacing:.06em}
+.legend i{width:6px;height:6px}.legend span+span{margin-left:15px}
+.side{gap:18px}.pad{padding:25px}.paneltitle h2{font-size:12px}.metrics{margin:28px 0 25px}
+.metric strong{font-size:33px}.metric small{font-size:9px}.detail-title{font-size:27px}.detail-copy{line-height:1.7}
+.feed{padding:25px}.event{padding:15px 0}.event a{font-size:13px;line-height:1.35}
+.lower{gap:18px;margin-top:18px}.tile{padding:25px}
+body.film-mode .shell{max-width:560px;padding:0 12px 16px}
+body.film-mode .intro{padding:17px 5px 12px}
+body.film-mode h1{font-size:clamp(40px,7vh,75px);margin:10px 0 7px}
+body.film-mode .intro p,body.film-mode .intro-note,body.film-mode .side,body.film-mode .lower,body.film-mode footer{display:none}
+body.film-mode .panels{display:block}
+body.film-mode .visual{height:calc(100svh - 205px);min-height:520px;max-height:880px}
+body.film-mode .graph{transform:none}
+body.film-mode .signal-card{left:auto;right:auto;bottom:auto;width:auto;margin:0 14px 8px}
+body.film-mode .visual-bottom .hint{display:none}
+.paused .field-orbit{animation:none}
+@keyframes rotate-orbit{to{transform:rotate(360deg)}}
+@media(max-width:1100px){.panels{grid-template-columns:1fr}.visual{height:720px}.side{grid-template-columns:1fr 1fr;grid-template-rows:auto}}
+@media(max-width:660px){
+ .shell{padding:0 14px 35px}
+ header{height:64px;padding:0 1px}.brand{font-size:9px;letter-spacing:.12em;gap:7px}.brand .symbol{width:34px;height:34px;font-size:21px}
+ .actions{gap:5px}.actions #pause{display:none}.actions #focus{display:inline-block;background:#142c32;border-color:#547970;color:#d4fbe9;font-size:10px;padding:9px 10px}
+ .pill{max-width:148px;min-width:0;white-space:nowrap;overflow:hidden;font-size:8px;letter-spacing:0;padding:8px 9px;gap:5px}.pill:before{flex-shrink:0}
+ .intro{display:block;padding:29px 4px 22px}
+ .intro .eyebrow{font-size:9px;letter-spacing:.15em}
+ h1{font-size:clamp(59px,14.4vw,76px);line-height:.91;margin:17px 0 18px}
+ .intro p{font-size:13px;line-height:1.55;max-width:350px;color:#a8c6c6}
+ .intro-note{display:none}
+ .panels{display:block}
+ .visual{height:668px;min-height:0;border-radius:24px;background:radial-gradient(ellipse at 50% 42%,#21595168,transparent 53%),radial-gradient(ellipse at 75% 35%,#193b4c77,transparent 70%),linear-gradient(150deg,#0c1f2b,#08141d)}
+ .visual-top{margin:19px 17px 0;gap:6px}.visual-top strong{font-size:10px;letter-spacing:.105em}.field-orbit{font-size:16px;margin-left:2px}
+ .visual-top p{font-size:10px;margin:8px 0 0}
+ .visual-top .right{font-size:8px;line-height:1.7;letter-spacing:.08em;flex-shrink:0}
+ .graph{top:auto;height:auto;min-height:0;flex:1 1 auto;transform:none}
+ .signal-card{margin:0 12px 9px;padding:12px 13px 13px;border-radius:14px;gap:3px 7px}
+ .signal-tag{font-size:8px}.signal-title{font-size:18px;line-height:1.14}.signal-meta{font-size:9px}
+ .signal-card a{font-size:10px}.story-next{font-size:10px}
+ .visual-bottom{margin:0 14px 15px;gap:6px}.visual-bottom .legend{display:flex;flex-wrap:wrap;gap:5px}
+ .visual-bottom .legend span{font-size:8px}.visual-bottom .legend span+span{margin-left:6px}
+ .visual-bottom .hint{display:none}
+ .visual-bottom .mobile-motion{display:block!important;background:transparent;border:0;font-size:9px;color:#b2e5da;padding:4px}
+ .side{display:grid;grid-template-columns:1fr;grid-template-rows:auto;gap:13px;margin-top:13px}
+ .pad,.feed{padding:21px}.metrics{margin:20px 0 22px}
+ .lower{grid-template-columns:1fr;gap:12px;margin-top:13px}
+ .tile{min-height:105px}.tile h3{font-size:22px}
+ body.film-mode .intro{padding:13px 4px 10px}body.film-mode h1{font-size:clamp(44px,11vw,58px)}body.film-mode .visual{height:calc(100svh - 166px);min-height:480px}
+ body.film-mode .graph{top:auto;height:auto;transform:none}
+}
+@media(max-width:380px){.visual{height:635px}.brand{font-size:8px}.signal-title{font-size:16px}.visual-bottom .legend span+span{display:none}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
 </style></head>
 <body><div class="shell">
 <header><div class="brand"><span class="symbol">H</span>EVERCRAFT <span style="color:#5f8893">/</span> HUDSON</div><div class="actions"><div class="pill" id="status">AWAITING PUBLIC FEED</div><button type="button" class="btn" id="focus" aria-pressed="false">Film view</button><button type="button" class="btn" id="pause">Pause motion</button></div></header>
-<div class="intro"><div><span class="eyebrow">THE EVERCRAFT KNOWLEDGE OBSERVATORY / 001</span><h1>A living <em>spine.</em></h1><p>Every discovery adds context. Every decision leaves a trace. Watch how the Evercraft ecosystem connects, remembers, and grows through verified evidence.</p></div><div class="intro-note"><b>PUBLIC OBSERVATORY</b><br>Read-only · Source-backed · Private by default</div></div>
+<div class="intro"><div><span class="eyebrow">HUDSON / THE EVERCRAFT KNOWLEDGE SPINE</span><h1>Nothing<br><em>gets lost.</em></h1><p>Evercraft’s shared memory, made visible. Explore how our systems connect and follow real public evidence as it arrives.</p></div><div class="intro-note"><b>THE LIVING ARCHIVE</b><br>Evidence first. Private by design.</div></div>
 <main><div class="panels">
 <section class="panel visual" aria-label="Interactive HUDSON topology">
-<div class="visual-top"><div><strong>THE CONNECTION FIELD</strong><p>Living topology · Motion is illustrative</p></div><div class="right">PUBLIC SOURCE SNAPSHOT<br><span id="published">No published snapshot</span></div></div>
+<div class="visual-top"><div><strong>THE CONNECTION FIELD <span class="field-orbit">◌</span></strong><p id="graph-caption">HUDSON · Select a system to explore</p></div><div class="right">PUBLIC GIT SOURCE<br><span id="published">Awaiting source check</span></div></div>
 <svg class="graph" viewBox="0 0 1000 620" role="img" aria-label="HUDSON at the center of a network of six connected Evercraft systems">
 <defs><filter id="glow" x="-300%" y="-300%" width="700%" height="700%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
 <ellipse class="orbit" cx="500" cy="313" rx="343" ry="213"/><ellipse class="orbit" cx="500" cy="313" rx="265" ry="160"/><ellipse class="orbit" cx="500" cy="313" rx="175" ry="121"/>
@@ -63,8 +157,8 @@ body.film-mode .signal-card{left:14px;right:14px;bottom:64px;width:auto}body.fil
 <g class="node gold" data-key="discovery" role="button" tabindex="0" aria-label="Explore Discovery" transform="translate(170 333)"><circle class="ring" r="25"/><circle class="inner" r="7"/><text class="label" y="-41" text-anchor="middle">DISCOVERY</text><text class="sublabel" y="-27" text-anchor="middle">RESEARCH</text></g>
 <g class="node" data-key="hudson" role="button" tabindex="0" aria-label="Explore Hudson" transform="translate(500 313)"><circle class="corehalo" r="84"/><circle class="corehalo" r="68" style="animation-delay:-2s"/><circle class="core" r="51"/><circle fill="#9cffe7" r="7"/><text class="coretext" y="-13" text-anchor="middle">H</text><text class="centerlabel" y="75" text-anchor="middle">HUDSON · MEMORY</text></g>
 </svg>
-<div class="signal-card" id="signal-card" data-kind="waiting"><div class="signal-tag" id="signal-tag">PUBLIC SOURCE HISTORY</div><div class="signal-title" id="signal-title">Watching the knowledge spine.</div><div class="signal-meta" id="signal-meta">Awaiting source-linked activity</div><a id="signal-link" href="#" target="_blank" rel="noopener noreferrer" hidden>View source receipt ↗</a></div>
-<div class="visual-bottom"><div class="legend"><span><i></i> Knowledge paths</span><span><i></i> System links</span></div><div class="hint">ANIMATED PATHS ARE NOT VERIFIED EVENTS</div><button type="button" class="btn mobile-motion" id="pause-mobile" style="display:none">Pause motion</button></div>
+<div class="signal-card" id="signal-card" data-kind="waiting"><div class="signal-tag" id="signal-tag">PUBLIC SOURCE HISTORY</div><div class="signal-title" id="signal-title">The story is in the connections.</div><div class="signal-meta" id="signal-meta">Awaiting source-linked activity</div><a id="signal-link" href="#" target="_blank" rel="noopener noreferrer" hidden>See receipt ↗</a><button class="story-next" type="button" id="next-signal" aria-label="Show next source-backed story">Next story <span aria-hidden="true">→</span></button></div>
+<div class="visual-bottom"><div class="legend"><span><i></i> Illustrative connections</span><span><i></i> Verified source receipts below</span></div><div class="hint">ANIMATED PATHS ARE NOT VERIFIED EVENTS</div><button type="button" class="btn mobile-motion" id="pause-mobile" style="display:none">Pause motion</button></div>
 </section>
 <div class="side"><section class="panel pad"><div class="paneltitle"><h2>The spine today</h2><span class="eyebrow" id="source-status">UNCONNECTED</span></div><p class="note">Only public, source-linked records count. Missing data is unknown, never zero.</p>
 <div class="metrics"><div class="metric"><strong id="day">—</strong><small>Listed / 24h</small></div><div class="metric"><strong id="sources">—</strong><small>Sources</small></div><div class="metric"><strong id="records">—</strong><small>Feed events</small></div></div>
