@@ -29,6 +29,7 @@ jobs:
             products/kennedy-space-station/raster_registration.py \
             products/kennedy-space-station/aerial_vault.py \
             products/kennedy-space-station/test_aerial_vault.py \
+            products/kennedy-space-station/test_aerial_http.py \
             products/kennedy-space-station/sheet_compiler.py \
             products/kennedy-space-station/test_shell.py \
             products/kennedy-space-station/test_spatial.py \
@@ -90,7 +91,7 @@ jobs:
           from pathlib import Path
           import re
           import subprocess
-          for source in ("index.html","studio.html"):
+          for source in ("index.html","studio.html","aerial.html"):
               data=Path("products/kennedy-space-station",source).read_text()
               scripts=re.findall(r"<script>(.*?)</script>",data,flags=re.S)
               assert scripts,source

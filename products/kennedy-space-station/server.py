@@ -98,7 +98,7 @@ def report_context(site_id, report_id):
 class KennedyHandler(site_planner.Handler):
     def do_GET(self):
         path = urlsplit(self.path).path
-        if path in ("/", "/home", "/home.html", "/studio", "/workspace", "/api/health"):
+        if path in ("/", "/home", "/home.html", "/studio", "/aerial", "/workspace", "/api/health"):
             if not self.authorized():
                 return
             if path == "/api/health":
@@ -128,6 +128,9 @@ class KennedyHandler(site_planner.Handler):
                                  "text/html; charset=utf-8")
             if path == "/studio":
                 return self.send(200, (ROOT / "studio.html").read_bytes(),
+                                 "text/html; charset=utf-8")
+            if path == "/aerial":
+                return self.send(200, (ROOT / "aerial.html").read_bytes(),
                                  "text/html; charset=utf-8")
             return self.send(200, (ROOT / "index.html").read_bytes(),
                              "text/html; charset=utf-8")
