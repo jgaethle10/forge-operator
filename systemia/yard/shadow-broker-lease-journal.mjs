@@ -20,6 +20,11 @@ const VALID_PHASES=new Set([
 const O=fs.constants;
 const NODE=/^[A-Za-z0-9._-]{1,128}$/;
 const SHA=/^[a-f0-9]{64}$/;
+const BROKER_WORKLOAD='systemia.remote-capacity-broker.v1';
+const RECEIPT_FIELDS=[
+  'schema','node_id','seq','type','at','previous_hash',
+  'lease_id','workload_class','receipt_hash',
+];
 
 function requireOk(ok,reason){
   if(!ok)throw Error('shadow_lease_'+reason);
@@ -152,6 +157,57 @@ export function inspectShadowLeaseJournal({dir}={}){
     secrets_printed:false,
   };
 }
+function validateReleaseProof(proof,state){
+  if(!proof||typeof proof!=='object'||Array.isArray(proof)||
+     Object.keys(proof).length!==RECEIPT_FIELDS.length||
+     RECEIPT_FIELDS.some(k=>!Object.hasOwn(proof,k))||
+     proof.schema!=='evercraft.compute.receipt.v1'||
+     proof.type!=='capacity.lease.released'||
+     proof.node_id!==state.expected_node_id||
+     proof.lease_id!==state.lease?.lease_id||
+     proof.workload_class!==BROKER_WORKLOAD||
+     !Number.isSafeInteger(proof.seq)||proof.seq<1||
+     !Number.isFinite(Date.parse(String(proof.at||'')))||
+     !(proof.previous_hash==='GENESIS'||
+       SHA.test(String(proof.previous_hash||'')))||
+     !SHA.test(String(proof.receipt_hash||''))) return false;
+  const {receipt_hash:hash,...body}=proof;
+  const digest=createHash('sha256').update(JSON.stringify(body)).digest('hex');
+  return digest===hash;
+}
+
+/**
+ * Attest only a finalized private journal. This verifies a locally stored,
+ * hash-consistent NodeSeed receipt and the journal's secret erasure. It is
+ * NOT a signed origin attestation and cannot prove the resident is stopped;
+ * independent NodeSeed/DNS process observation is still mandatory.
+ */
+export function inspectShadowLeaseReleaseEvidence({dir,expectedNodeId}={}){
+  const state=readPrivate(dir);
+  const erased=Boolean(state.lease&&
+    !Object.hasOwn(state.lease,'token')&&
+    !Object.hasOwn(state.lease,'allocator_token'));
+  const phaseOk=state.phase==='released'&&
+    state.cleanup==='confirmed_lease_release';
+  const nodeMatches=typeof expectedNodeId==='string'&&
+    expectedNodeId.length>0&&expectedNodeId===state.expected_node_id;
+  const valid=phaseOk&&erased&&nodeMatches&&
+    validateReleaseProof(state.release_receipt,state);
+  return {
+    schema:'evercraft.yard.shadow-broker-release-attestation.v1',
+    ok:valid,
+    journal_phase:state.phase,
+    release_receipt_verified:valid,
+    receipt_integrity_only_not_signed:true,
+    node_id:valid?state.expected_node_id:null,
+    workload_class:valid?BROKER_WORKLOAD:null,
+    secret_token_erased:erased,
+    manual_reconciliation_required:!valid,
+    automatic_job_retry_allowed:false,
+    broker_activation_authorized:false,
+  };
+}
+
 export async function releaseShadowLease({dir,request=fetch}={}){
   let state=readPrivate(dir);
   if(state.phase==='released'){
@@ -174,22 +230,14 @@ export async function releaseShadowLease({dir,request=fetch}={}){
     if(!response.ok)throw Error('lease_release_non_success');
     const receipt=await response.json();
     const proof=receipt.receipt;
-    if(receipt.ok!==true || !proof || proof.type!=='capacity.lease.released' ||
-       proof.schema!=='evercraft.compute.receipt.v1' ||
-       proof.node_id!==state.expected_node_id ||
-       proof.lease_id!==state.lease.lease_id ||
-       proof.workload_class!=='systemia.remote-capacity-broker.v1' ||
-       !SHA.test(String(proof.receipt_hash||''))) {
-      throw Error('lease_release_receipt_invalid');
-    }
-    const {receipt_hash:hash,...body}=proof;
-    const computed=createHash('sha256').update(JSON.stringify(body)).digest('hex');
-    if(computed!==hash)throw Error('lease_release_receipt_hash_mismatch');
+    if(receipt.ok!==true || !validateReleaseProof(proof,state))
+      throw Error('lease_release_receipt_invalid_or_hash_mismatch');
 
     durableWrite(dir,{
       ...state,
       phase:'released',
       lease:{lease_id:state.lease.lease_id,expires_at:state.lease.expires_at},
+      release_receipt:proof,
       cleanup:'confirmed_lease_release',
       updated_at:new Date().toISOString(),
     });
