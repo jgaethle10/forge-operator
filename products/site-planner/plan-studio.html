@@ -34,6 +34,8 @@
 <div class="group"><h3>04 · Plans and output</h3>
 <div class="statline"><span id="chargerCount" class="pill">8 CONCEPT CHARGERS</span><span class="pill amber" id="scaleState">SCALE UNVERIFIED</span></div>
 <div class="row"><button class="button-primary" id="print">Print / Save PDF</button><button class="button-secondary" id="export">Export SVG</button><button class="button-secondary" id="evidence">Download evidence JSON</button></div>
+<div class="row"><button class="button-secondary" id="draftSave">Save editable project</button><label style="flex:1">Restore project JSON<input id="draftLoad" type="file" accept=".json,application/json"></label></div>
+<p class="helper">Projects are saved locally as JSON without source photographs. To restore, re-upload the exact same aerial and vicinity images; SHA-256 fingerprints must match. No customer data is sent to a server.</p>
 <p class="helper">Two sheets: S-01 proposed EV layout and A-01 vicinity context. Print in landscape tabloid (17 × 11 in). SVG is vector; user-provided raster backgrounds retain their original photo limitations.</p>
 <div id="messages" role="status" aria-live="polite"></div>
 </div>
@@ -157,4 +159,5 @@ $('reset').addEventListener('click',()=>{state.marks=state.siteImage?[]:baseMark
 $('print').addEventListener('click',()=>window.print());$('export').addEventListener('click',exportSvg);$('evidence').addEventListener('click',exportEvidence);
 draw();
 </script>
+<script src="plan-drafts.js"></script>
 </body></html>
