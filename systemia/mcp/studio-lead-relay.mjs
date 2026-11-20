@@ -25,6 +25,66 @@ export function enqueueStudioAlert({folder=baseDir(),reference,project,received_
   catch(e){if(e.code!=='EEXIST')throw e;}
   return {queued:true,reference};
 }
+// Recover a notification that failed AFTER the buyer's durable record was saved.
+// A successful 201 must never become a permanently invisible sales opportunity.
+// Read only from the owner-private ledger; never forward customer PII to Relay.
+export function recoverStudioAlerts({folder=baseDir()}={}){
+ const ledger=path.join(folder,'inquiries.ndjson');
+ if(!fs.existsSync(ledger))return {scanned:0,requeued:0,acknowledged:0,pending:0};
+ const st=fs.lstatSync(ledger);
+ if(!st.isFile()||st.isSymbolicLink()||st.nlink!==1||
+    (st.mode&0o077)!==0||
+    (typeof process.getuid==='function'&&st.uid!==process.getuid())||
+    st.size>16*1024*1024)throw Error('studio_recovery_untrusted_private_ledger');
+ privateDir(folder);
+ const outbox=path.join(folder,'alert-outbox'),receipts=path.join(folder,'alert-receipts');
+ privateDir(outbox);
+ if(fs.existsSync(receipts))privateDir(receipts);
+ const records=fs.readFileSync(ledger,'utf8').split('\n').filter(Boolean);
+ if(records.length>10000)throw Error('studio_recovery_ledger_capacity_hold');
+ const refs=new Set();
+ let requeued=0,acknowledged=0,pending=0;
+ for(const raw of records){
+  if(Buffer.byteLength(raw)>8192)throw Error('studio_recovery_invalid_ledger_row');
+  let row;
+  try{row=JSON.parse(raw)}catch{throw Error('studio_recovery_invalid_ledger_row')}
+  if(row?.schema!=='evercraft.studio.inquiry.v1'||!REF.test(row.id||'')||
+     row.state!=='UNREVIEWED_NO_COMMITMENT'||row.consent!==true||
+     row.agent_execution_authorized!==false||row.automated_payment!==false||
+     !normalizeStudioProject(row.project)||!Number.isFinite(Date.parse(row.received_at))||
+     refs.has(row.id))throw Error('studio_recovery_invalid_ledger_row');
+  refs.add(row.id);
+  const file=row.id+'.json',queued=path.join(outbox,file),accepted=path.join(receipts,file);
+  if(fs.existsSync(accepted)){
+   const rs=fs.lstatSync(accepted);
+   if(!rs.isFile()||rs.isSymbolicLink()||rs.nlink!==1||
+      (rs.mode&0o077)!==0||
+      (typeof process.getuid==='function'&&rs.uid!==process.getuid()))
+      throw Error('studio_recovery_untrusted_acceptance_receipt');
+   let receipt;
+   try{receipt=JSON.parse(fs.readFileSync(accepted,'utf8'))}
+   catch{throw Error('studio_recovery_invalid_acceptance_receipt')}
+   if(receipt.schema!=='evercraft.studio.relay-acceptance.v1'||
+      receipt.reference!==row.id||Number(receipt.relay_inboxed)<1)
+     throw Error('studio_recovery_invalid_acceptance_receipt');
+   if(fs.existsSync(queued)){
+    const qs=fs.lstatSync(queued);
+    if(!qs.isFile()||qs.isSymbolicLink()||qs.nlink!==1||
+       (qs.mode&0o077)!==0)throw Error('studio_recovery_untrusted_outbox_file');
+    fs.unlinkSync(queued); // Durable Relay acceptance already exists; avoid replay.
+   }
+   acknowledged++;
+  }else if(fs.existsSync(queued)){
+   pending++;
+  }else{
+   enqueueStudioAlert({folder,reference:row.id,
+     project:row.project,received_at:row.received_at});
+   requeued++;
+  }
+ }
+ return {scanned:records.length,requeued,acknowledged,pending};
+}
+
 export function alertIntent(entry,recipient){
   if(entry?.schema!=='evercraft.studio.operator-alert.v1'||!REF.test(entry.reference)||!normalizeStudioProject(entry.project))throw Error('invalid_studio_notification_record');
   if(!/^[A-Za-z0-9][A-Za-z0-9_.:-]{1,127}$/.test(String(recipient||'')))throw Error('studio_owner_principal_invalid');
@@ -78,7 +138,10 @@ export function createStudioAlertDispatcher({folder=baseDir(),recipient=process.
   const dispatch=async()=>{
     if(ongoing)return {state:'BUSY'};
     ongoing=true;
-    try{return await deliverStudioAlerts({folder,recipient,notify:sender});}
+    try{
+      const recovery=recoverStudioAlerts({folder});
+      return {...await deliverStudioAlerts({folder,recipient,notify:sender}),recovery};
+    }
     finally{ongoing=false;}
   };
   let timer=null;
