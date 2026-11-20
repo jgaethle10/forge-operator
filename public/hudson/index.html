@@ -133,7 +133,7 @@ body.film-mode .visual-bottom .hint{display:none}
 .graph .node.signal .ring{stroke:#ddfff4;filter:drop-shadow(0 0 14px #81edda)}
 .graph .node .ring,.graph .node .inner{transition:stroke .25s ease,filter .25s ease}
 .graph .node:focus-visible .ring{stroke-width:4;stroke:#fff}
-@media(max-width:660px){.graph .node .label{font-size:15px;letter-spacing:2px}.graph .node .sublabel{font-size:9px;letter-spacing:1px}.graph .node .coretext{font-size:54px}.graph .centerlabel{font-size:12px}}
+@media(max-width:660px){.graph .node .label{font-size:19px;letter-spacing:1.6px}.graph .node .sublabel{font-size:11px;letter-spacing:1px}.graph .node .coretext{font-size:54px}.graph .centerlabel{font-size:12px}}
 @media(prefers-reduced-motion:reduce){.graph .node .ring,.graph .node .inner{transition:none}}
 </style></head>
 <body><div class="shell">
@@ -195,7 +195,7 @@ var desktopNodes=[[292,155],[734,157],[836,344],[706,502],[285,500],[170,333],[5
 var mobileNodes=[[120,130],[360,130],[407,280],[344,449],[136,449],[73,280],[240,286]];
 var nodeKeys=["systemia","kaidance","raven","saban","evidence","discovery","hudson"];
 var nodesByKey={};els.forEach(function(el){nodesByKey[el.dataset.key]=el});
-function curve(a,b){var x1=a[0],y1=a[1],x2=b[0],y2=b[1];var qx=(x1+x2)/2,qy=(y1+y2)/2;
+function curve(a,b){var x1=a[0],y1=a[1],x2=b[0],y2=b[1];var qx=(x1+x2)/2-(y2-y1)*.09,qy=(y1+y2)/2+(x2-x1)*.09;
  return "M"+x1+" "+y1+" Q"+qx+" "+qy+" "+x2+" "+y2;
 }
 var starfield=document.createElementNS("http://www.w3.org/2000/svg","g");
