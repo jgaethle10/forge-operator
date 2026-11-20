@@ -78,7 +78,22 @@ trap 'rm -f "$TEMP"' EXIT
 "$SCAN" -T 6 -p 8222 -t ed25519 "$LAN_IP" > "$TEMP" 2>/dev/null || true
 LINES="$(wc -l < "$TEMP")"
 [[ "$LINES" -eq 1 ]] || {
-  echo 'No single SSH ED25519 host key received from ChromeOS LAN:8222. Check LAN address and Linux port forwarding.' >&2
+  echo 'No single SSH ED25519 host key received; NO TUNNEL CREATED.' >&2
+  "$PYTHON" - "$LAN_IP" <<'PY'
+import socket, sys
+host = sys.argv[1]
+try:
+    with socket.create_connection((host, 8222), timeout=5):
+        print('TCP 8222: CONNECTED, but SSH ED25519 identity was not returned.')
+        print('Inspect sshd on Penguin and whether ChromeOS maps to the intended Linux service.')
+except ConnectionRefusedError:
+    print('TCP 8222: CONNECTION REFUSED. Confirm ChromeOS forwards TCP 8222 and Penguin service listens.')
+except TimeoutError:
+    print('TCP 8222: TIMED OUT. Check Chromebook IP, Wi-Fi LAN isolation, ChromeOS forwarding and firewalls.')
+except OSError as exc:
+    print('TCP 8222: NETWORK ERROR (' + exc.__class__.__name__ + '). Check local routing and forwarding.')
+PY
+  echo 'Do not weaken host checking, open the household WAN, or start default SSH to bypass this.' >&2
   exit 2
 }
 RECEIVED="$("$KEYGEN" -lf "$TEMP" -E sha256 | awk '{print $2}')"
