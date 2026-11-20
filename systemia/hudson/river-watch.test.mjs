@@ -12,7 +12,7 @@ const code=watch.match(/<script>([\s\S]*?)<\/script>/)?.[1];
 test('river Watch is an interactive site and not an image stand-in',()=>{
  assert.match(home,/href="\.\/watch\/"/);
  assert.match(home,/Enter the Current/);
- assert.match(watch,/hudson-watch-release" content="river-current-v3-anomaly"/);
+ assert.match(watch,/hudson-watch-release" content="river-current-v4-living-pulse"/);
  assert.match(watch,/canvas id="current"/);
  assert.match(watch,/id="explore"/);
  assert.match(watch,/id="pause"/);
@@ -114,4 +114,46 @@ test('slow river camera moves the whole field and tap positions use its inverse'
  assert.match(code,/x=\(ev\.clientX-rect\.left-width\/2\)\/camera\.zoom\+width\/2-camera\.dx/);
  assert.match(code,/ctx\.restore\(\);[\s\n]*\}/);
  assert.match(code,/This is ambient scenery, not evidence of a new mission/);
+});
+
+test('Presence has an irregular multi-stage pulse rather than a blinking light',()=>{
+ const begin=code.indexOf('function presencePulse(time){'),end=code.indexOf('function anomalyFilament(',begin);
+ assert.ok(begin>=0&&end>begin);
+ const pulse=new vm.Script(code.slice(begin,end)+';presencePulse').runInNewContext({Math});
+ const timeline=Array.from({length:3501},(_,i)=>({t:i*.02,...pulse(i*.02)}));
+ const peaks=timeline.filter((p,i)=>i>0&&i<timeline.length-1&&p.primary>timeline[i-1].primary&&p.primary>=timeline[i+1].primary&&p.primary>.82);
+ assert.ok(peaks.length>=10,'visible repeating pulse peaks for long-running Watch');
+ const intervals=peaks.slice(1).map((p,i)=>p.t-peaks[i].t);
+ assert.ok(Math.max(...intervals)-Math.min(...intervals)>.45,'beats must be irregular, not a metronome');
+ assert.ok(Math.min(...intervals)>3,'long rests give the Presence mystery');
+ assert.ok(timeline.some(p=>p.secondary>.40),'occasional second beat is perceptible');
+ assert.ok(timeline.some(p=>p.energy<.005),'silence between pulses remains possible');
+ for(const p of timeline){
+  assert.ok(Number.isFinite(p.energy)&&p.energy>=0&&p.energy<=1);
+  assert.ok(p.phase>=0&&p.phase<Math.PI*2);
+ }
+});
+test('pulse ripples into the water and responds through staggered filaments',()=>{
+ assert.match(code,/function drawPresenceRipple\(from,to,t\)/);
+ assert.match(code,/presencePulse\(time-\(index%5\)\*\.12\)/);
+ assert.match(code,/reach:\.47\+unfold\*\(1\.04\+delayed\.energy\*\.18\)/);
+ assert.match(code,/ctx\.scale\(1\+form\.pulse\*\.07,1\+form\.pulse\*\.095\)/);
+ assert.match(code,/var nearness=Math\.pow\(clamp\(\(t-\.76\)\/\.24,0,1\),2\)/);
+ assert.match(code,/drawPresenceRipple\(trip\.from,trip\.to,\.04\+trip\.t\*\.92\);drawAnomaly\(trip\.from,trip\.to,\.04\+trip\.t\*\.92\)/);
+ assert.match(code,/deterministic visual choreography, never a live source\/mission heartbeat/);
+ const a=code.indexOf('function presencePulse(time){'),b=code.indexOf('function drawPresenceRipple(',a);
+ const f=new vm.Script(code.slice(a,b)+';({presencePulse,anomalyFilament,anomalyForm})').runInNewContext({Math});
+ for(let i=0;i<9;i++){
+  for(const t of [0,.4,4.2,13.4,28.5]){
+   const filament=f.anomalyFilament(t,i);
+   assert.ok(filament.reach>=.47&&filament.reach<=1.70);
+   assert.ok(filament.opacity>=.055&&filament.opacity<=.50);
+   assert.ok(Number.isFinite(filament.angle));
+  }
+ }
+ for(const t of [0,3,14,34]){
+  const form=f.anomalyForm(t);
+  assert.ok(form.aperture>=.14&&form.aperture<=.70);
+  assert.ok(form.pulse>=0&&form.pulse<=1);
+ }
 });
