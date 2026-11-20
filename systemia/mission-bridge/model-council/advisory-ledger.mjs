@@ -44,6 +44,7 @@ export function reserveAdvisoryAttempt({
  try{
   const all=records(root);
   if(all.some(x=>x.key===job.key))return {reserved:false,reason:'already_attempted'};
+  if(all.some(x=>x.reserved_at_ms>now_ms))throw Error('advisory_ledger_clock_rollback');
   const consumed=all.filter(x=>now_ms-x.reserved_at_ms<MAX_24H_MS && now_ms>=x.reserved_at_ms)
     .reduce((sum,x)=>sum+x.estimated_cost_cents,0);
   if(consumed+job.estimated_cost_cents>rolling_budget_cents)
