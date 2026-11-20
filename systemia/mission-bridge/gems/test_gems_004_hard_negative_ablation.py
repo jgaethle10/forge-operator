@@ -51,10 +51,11 @@ class HardNegativeTests(unittest.TestCase):
         distances[40]=7.
         pilot=np.array([1,7,*range(10,20)],dtype=np.int64)
         mine=hard.mining_indices(labels,train,distances,pilot)
+        selected_hard=np.array([20,21,22,23])
         a,receipt=hard.select_distance_matched_random_indices(
-            labels,train,distances,pilot,mine,fold=1)
+            labels,train,distances,pilot,mine,selected_hard,fold=1)
         b,_=hard.select_distance_matched_random_indices(
-            labels,train,distances,pilot,mine,fold=1)
+            labels,train,distances,pilot,mine,selected_hard,fold=1)
         self.assertTrue(np.array_equal(a,b))
         self.assertEqual(a[:8].tolist(),[1,7,10,11,12,13,14,15])
         self.assertEqual(len(a),12)
@@ -72,7 +73,37 @@ class HardNegativeTests(unittest.TestCase):
         for forbidden in (np.array([20,21,22,30]),np.array([11,21,22,23])):
             with self.assertRaisesRegex(ValueError,"distance_control_training_leakage"):
                 hard.select_distance_matched_random_indices(
-                    labels,train,distances,pilot,forbidden,fold=0)
+                    labels,train,distances,pilot,forbidden,
+                    np.array([20,21,22,23]),fold=0)
+
+    def test_exact_distance_bin_histogram_matches_mined_examples(self):
+        labels=np.zeros(120,bool);labels[[1,7]]=True
+        train=np.ones(120,bool);train[100:]=False
+        distances=np.full(120,17.,dtype=float)
+        pilot=np.array([1,7,*range(10,20)])
+        # Hard-picked negatives span four distinct training-fault distances:
+        # 12px, 24px, 40px and 105px, one per fixed bin.
+        distances[[20,21,22,23]]=[12.,24.,40.,105.]
+        distances[[24,25,26,27]]=[13.,25.,41.,107.]
+        available=hard.mining_indices(labels,train,distances,pilot)
+        chosen_hard=np.array([20,21,22,23])
+        control,receipt=hard.select_distance_matched_random_indices(
+            labels,train,distances,pilot,available,chosen_hard,fold=2)
+        sample=control[-4:]
+        bins=np.array(hard.DISTANCE_BIN_EDGES)
+        hard_hist=np.bincount(np.searchsorted(
+            bins,distances[chosen_hard],side="right"),minlength=len(bins)+1)
+        sample_hist=np.bincount(np.searchsorted(
+            bins,distances[sample],side="right"),minlength=len(bins)+1)
+        self.assertTrue(np.array_equal(sample_hist,hard_hist))
+        self.assertEqual(sum(x["hard_count"] for x in receipt["distance_bin_counts"]),4)
+        self.assertEqual(sum(x["random_count"] for x in receipt["distance_bin_counts"]),4)
+        self.assertTrue(all(x["hard_count"]==x["random_count"]
+                            for x in receipt["distance_bin_counts"]))
+        # Hard-picked pixels must themselves be inside the eligible train pool.
+        with self.assertRaisesRegex(ValueError,"distance_control_training_leakage"):
+            hard.select_distance_matched_random_indices(labels,train,distances,
+                pilot,available,np.array([20,21,22,101]),fold=2)
 
     def test_fails_closed_when_mining_insufficient_or_probabilities_invalid(self):
         labels=np.zeros(40,bool);labels[[1,7]]=True
@@ -150,6 +181,10 @@ class HardNegativeTests(unittest.TestCase):
                 self.assertTrue(all(
                     r["distance_matched_control_training"]["positives"]==
                     r["hard_negative_training"]["positives"]
+                    for r in a["fold_ledger"]))
+                self.assertTrue(all(
+                    all(b["hard_count"]==b["random_count"]
+                        for b in r["distance_matched_control_training"]["distance_bin_counts"])
                     for r in a["fold_ledger"]))
                 self.assertTrue(all(r["full_scoreable_pixels"]>r["corridor_scoreable_pixels"]
                     for r in a["fold_ledger"]))
