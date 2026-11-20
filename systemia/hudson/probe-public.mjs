@@ -75,7 +75,7 @@ export async function probeHudsonPublic({origin=HUDSON_ORIGIN,fetchImpl=fetch,no
  try{
   watch=await getText(url+'watch/',fetchImpl);
   checks.watch_river=watch.status===200&&/^text\/html/i.test(watch.type)&&
-    watch.content.includes('name="hudson-watch-release" content="river-current-v9-archive-ship"')&&
+    watch.content.includes('name="hudson-watch-release" content="river-current-v10-mistbound-ship"')&&
     watch.content.includes('function presencePulse(time)')&&
     watch.content.includes('function drawPresenceRipple(from,to,t)')&&
     watch.content.includes('function presenceCurrentField(trip)')&&
@@ -96,14 +96,15 @@ export async function probeHudsonPublic({origin=HUDSON_ORIGIN,fetchImpl=fetch,no
     watch.content.includes('id="current"')&&
     watch.content.includes('PUBLIC GIT HISTORY · REPLAY')&&
     watch.content.includes('SCENIC CURRENT · NOT A LIVE MISSION')&&
-    watch.content.includes("HUDSON'S ARCHIVE SHIP")&&
-    watch.content.includes('function drawRoyalSail(x,top,bottom,beam,wind,index)')&&
-    watch.content.includes('Massive timber-and-gold keel')&&
-    watch.content.includes('A distinct forward triangular staysail')&&
+    watch.content.includes('MISTBOUND SHIP')&&
+    watch.content.includes('function shipPathPose(from,to,t)')&&
+    watch.content.includes('function drawMistySail(x,span,side,swell,tint)')&&
+    watch.content.includes('for(var spark=0;spark<35;spark++)')&&
+    !watch.content.includes('var drawX=clamp(')&&
     watch.content.includes('Each confluence is a suspended deep-water lens')&&
     watch.content.includes('Braided bands instead of hairline pipes')&&
     watch.content.includes('credentials:"omit"');
-  checks.watch_river_version=checks.watch_river?'river-current-v9-archive-ship':null;
+  checks.watch_river_version=checks.watch_river?'river-current-v10-mistbound-ship':null;
   if(!checks.watch_river)errors.push('public_hudson_river_watch_not_verified');
  }catch(e){checks.watch_river=false;checks.watch_error_class=classifyPublicFetchFailure(e);errors.push('hudson_river_watch_unreachable')}
  try{
