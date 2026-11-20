@@ -9,9 +9,9 @@ BASE="$HOME/evercraft-aiw-stage"
 STATE="$HOME/.local/state/evercraft/aiw"
 ROOT="$STATE/national-map-private"
 STATE_FIRST="$ROOT/state-first"
-HOVER="$ROOT/state-hover-preview"
-PORT=8795
-URL="http://127.0.0.1:$PORT"
+HOVER="$ROOT/state-hover-preview/$COMMIT"
+# Do not assume any fixed port belongs to this product.
+CANDIDATES=(8795 8796 8797 8798 8799 8800 8801 8802 8803 8804 8805)
 
 echo "=== PRESERVE ORIGINAL NATIONAL MAP AND ALL EVERCRAFT SERVICES ==="
 test -d "$BASE"
@@ -24,11 +24,6 @@ test -f "$STATE_FIRST/states-v3.0.1.geojson"
 test -f "$STATE/official-fhwa-2026/WA26-independent.sqlite"
 curl -fsS --max-time 5 http://127.0.0.1:8794/healthz \
   | python3 -c 'import json,sys;d=json.load(sys.stdin);assert d["status"]=="ready" and d["state_polygons"]==56'
-if ss -H -ltn "( sport = :$PORT )" | grep -q .; then
-  echo "STOP: port $PORT occupied. No process stopped or replaced."
-  exit 1
-fi
-
 echo "=== STAGE REVISED HOVER EXPERIENCE ==="
 mkdir -p "$HOVER"
 chmod 700 "$HOVER"
@@ -53,7 +48,53 @@ assert "layer.on('click'" in page
 print("Hover preview code: STAGED")
 PY
 
-echo "=== START ISOLATED PRIVATE HOVER PREVIEW (8795) ==="
+echo "=== REUSE EXACT HOVER BUILD IF ALREADY RUNNING ==="
+# Match the *full bytes* of the served HTML and the expected private health
+# contract. A generic 'ready' health check is not proof of identity.
+for CANDIDATE in "${CANDIDATES[@]}"; do
+  if ss -H -ltn "( sport = :$CANDIDATE )" | grep -q .; then
+    if python3 - "$CANDIDATE" "$HOVER/state-first-hover.html" <<'PY'
+import hashlib,json,sys,urllib.request
+port=int(sys.argv[1])
+expected=hashlib.sha256(open(sys.argv[2],'rb').read()).hexdigest()
+base=f'http://127.0.0.1:{port}'
+try:
+  with urllib.request.urlopen(base+'/',timeout=2) as r:
+    page=hashlib.sha256(r.read()).hexdigest()
+  with urllib.request.urlopen(base+'/healthz',timeout=2) as r:
+    health=json.load(r)
+  assert page==expected
+  assert health.get('experience')=='state_first_interactive'
+  assert health.get('washington_2026_records')==8619
+  assert health.get('public_release_ready') is False
+except Exception:
+  sys.exit(1)
+print('Exact hover preview already running:',base)
+PY
+    then
+      echo "REUSED EXISTING HOVER PREVIEW: http://127.0.0.1:$CANDIDATE"
+      echo "Nothing restarted or overwritten."
+      exit 0
+    fi
+    echo "Port $CANDIDATE belongs to another or different-version service; preserving it."
+  fi
+done
+
+echo "=== SELECT UNALLOCATED PRIVATE PREVIEW PORT ==="
+PORT=""
+for CANDIDATE in "${CANDIDATES[@]}"; do
+  if ! ss -H -ltn "( sport = :$CANDIDATE )" | grep -q .; then
+    PORT="$CANDIDATE"
+    break
+  fi
+done
+if [ -z "$PORT" ]; then
+  echo "STOP: no free staging port in 8795-8805. No processes touched."
+  exit 1
+fi
+URL="http://127.0.0.1:$PORT"
+echo "Chosen free port: $PORT"
+echo "=== START ISOLATED PRIVATE HOVER PREVIEW ==="
 nohup python3 -u "$HOVER/aiw_state_first_gateway.py" \
   --national-dir "$ROOT/public" \
   --overlay "$ROOT/owned-wa26-drilldown.js" \
@@ -98,7 +139,11 @@ print("PUBLIC RELEASE: DISABLED")
 PY
 then
   echo "STOP: new preview did not pass. Existing 8794 and other services untouched."
-  kill "$NEW_PID" 2>/dev/null || true
+  # Only stop the exact process we just launched. Never signal a port owner.
+  if [ -r "/proc/$NEW_PID/cmdline" ] &&
+     tr '\\0' ' ' < "/proc/$NEW_PID/cmdline" | grep -Fq "$HOVER/aiw_state_first_gateway.py"; then
+    kill "$NEW_PID" 2>/dev/null || true
+  fi
   tail -n 20 "$HOVER/gateway.log" || true
   exit 1
 fi
@@ -106,3 +151,4 @@ printf '%s\n' "$NEW_PID" > "$HOVER/gateway.pid"
 echo "HOVER PREVIEW: $URL"
 echo "EXISTING MAP: http://127.0.0.1:8794"
 echo "All other services preserved."
+echo "This private preview does not modify the public site."
