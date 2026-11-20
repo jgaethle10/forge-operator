@@ -132,6 +132,10 @@ This reference implementation is **not yet a hardened internet-facing service**:
 Related existing contracts: `systemia/intake-fabric/README.md`, `systemia/passport/README.md`, `systemia/shipping/README.md`, `systemia/media-studio/client-commercial-preflight.md`, issues #2280 (real customer handoff) and #2284 (customer incident).
 
 
+## Owned broker side activation and local deny canary
+
+The broker now has a distinct **owner-only dry-run-first** installation preflight in `install-broker.mjs`. It verifies real private wing token files and public ACK keys, exact two-wing routing, owned local storage and fixed loopback port, without generating/exporting credentials or turning on Fabric's opt-in external route. Only an explicitly authorized operator on the real owned host may use both `--activate` and `--confirm-owned-host`, which installs an ordinary user systemd service and verifies unauthenticated local send/receive are denied. A successful local service probe **does not** mean external TLS is deployed or customer bytes were delivered. See `docs/commercial/wing-courier-owned-broker-activation-20261119.md`; runtime deployment still tracked by #2294.
+
 ## Owned NextGen resident bootstrap, no founder media copying
 
 `install-resident.mjs` provides a **dry-run-first local host activation gate**. It does not connect to Meta, create keys, publish routes or move customer files. It refuses to install unless a real local operator supplies a 0600 private config with pinned Harbor public signing key, private Fallen recipient decrypt+ACK signing keys, private received-assets directory and a real HTTPS origin. It does not log secret contents.
