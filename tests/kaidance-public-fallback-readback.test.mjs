@@ -13,7 +13,8 @@ function mock({pulseStatus=404,broken=null,wrongMime=null}={}) {
   'confluence.css':'/* KAIDANCE V04 */ #currentField{display:block;}',
   'signal-wall.css':'/* KAIDANCE V06 */ .event { border: 0; }',
   'signal-river.mjs':'// KAIDANCE V06 public signal river, illustration only. No private data source.',
-  'current-field.mjs':"// KAIDANCE CONFLUENCE FIELD V05 import {scenicChapter} from './field-chapters.mjs'; const canvas = document.getElementById('currentField');",
+  'current-field.mjs':"// KAIDANCE CONFLUENCE FIELD V07 import {scenicChapter} from './field-chapters.mjs'; import {SCENIC_ROUTES} from './field-topology.mjs'; const canvas = document.getElementById('currentField');",
+  'field-topology.mjs':'// KAIDANCE V07 export const SCENIC_ROUTES=[]; export const CONFLUENCE_CONNECTIONS=[]; paths are illustrative',
   'field-chapters.mjs':'// KAIDANCE V05 export const SCENIC_LEG_SECONDS=10.5; narrated routes are illustrative',
   'collider-engine.mjs':'// KAIDANCE V03 AMBIENT ART particle beam renderer, no telemetry simulation',
   'visual.mjs':'// Ambient art only: a source-honest decorative canvas. No telemetry changes.',
@@ -31,7 +32,7 @@ function mock({pulseStatus=404,broken=null,wrongMime=null}={}) {
 test('public fallback verifies real HTML/assets but never claims a Collider pulse',async()=>{
  const r=await probeKaidanceFallback({root,fetchImpl:mock(),now:new Date('2026-11-20T04:00:00Z')});
  assert.equal(r.result,'public_viewer_verified');
- assert.equal(r.verified_assets.length,15);
+ assert.equal(r.verified_assets.length,16);
  assert.equal(r.approved_live_pulse,'not_present_on_fallback');
  assert.equal(r.url,root+'kaidance/');
  assert.equal(r.index_sha256.length,64);
