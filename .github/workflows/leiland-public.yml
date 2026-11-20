@@ -7,6 +7,7 @@ on:
       - 'public/kaidance/pulse-source.mjs'
       - 'tests/leiland-public.test.mjs'
       - 'tests/leiland-neural-universe.test.mjs'
+      - 'scripts/qa-leiland-browser.py'
       - 'tests/leiland-owned-pulse-publisher.test.mjs'
       - 'tests/leiland-owned-release-probe.test.mjs'
       - 'tests/leiland-owned-observatory-host.test.mjs'
@@ -30,6 +31,7 @@ on:
       - 'public/kaidance/pulse-source.mjs'
       - 'tests/leiland-public.test.mjs'
       - 'tests/leiland-neural-universe.test.mjs'
+      - 'scripts/qa-leiland-browser.py'
       - 'tests/leiland-owned-pulse-publisher.test.mjs'
       - 'tests/leiland-owned-release-probe.test.mjs'
       - 'tests/leiland-owned-observatory-host.test.mjs'
@@ -75,3 +77,25 @@ jobs:
           node --check systemia/leiland/resident-host-runner.mjs
       - name: Prove public-only activity and privacy contract
         run: node --test tests/leiland-public.test.mjs tests/leiland-owned-pulse-publisher.test.mjs tests/leiland-owned-release-probe.test.mjs tests/leiland-owned-observatory-host.test.mjs tests/leiland-kaidance-field-integration.test.mjs tests/leiland-field-preflight.test.mjs tests/leiland-systemia-resident.test.mjs tests/leiland-owned-field-canary.test.mjs tests/leiland-neural-universe.test.mjs
+
+  leiland-browser:
+    name: Leiland real Chromium iPhone / desktop / portrait proof
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run actual local Chromium pixel, interaction and portrait acceptance
+        run: |
+          python -m pip install --quiet playwright==1.58.0
+          python scripts/qa-leiland-browser.py
+      - name: Preserve human-reviewable Leiland frames
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: leiland-neural-universe-browser-frames
+          path: artifacts/leiland-browser/*.png
+          retention-days: 30
+          if-no-files-found: warn
