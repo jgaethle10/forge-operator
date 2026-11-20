@@ -43,7 +43,13 @@ KAIDANCE is Evercraft's existing Collider operating cadence, **not a new schedul
 
    The target directory must already exist and be served by the approved **owned Evercraft edge** as the same-origin `/kaidance/pulse.json`. The publisher does not install services, modify network routing, upload files to GitHub, or open a listener. A previously published value becomes visibly stale if the next publication fails. After the operator confirms the host setup, schedule the one-shot command every **60 seconds**, using the existing owned resident scheduler. The five-minute cycle remains controlled by KAIDANCE; the 60-second publisher only observes it. Revoke by disabling/expiring the private policy and removing the public output, rather than keeping an old file indefinitely.
 
-5. Check an **external**, unauthenticated public readback, the actual pulse freshness and another completed cycle. Confirm 20-second polling, stale-state handling, mobile controls, and that live flashes happen **only on new verified cycles**. Only then advertise this as a live Systemia pulse.
+5. From an **independent network** (not the same machine that publishes), check the public HTTPS source with:
+
+   ```sh
+   node scripts/kaidance-public-readback.mjs --origin https://YOUR-APPROVED-EVERCRAFT-ORIGIN
+   ```
+
+   The canary targets exactly `https://<approved-origin>/kaidance/pulse.json`, refuses redirects, checks payload size, source age, heartbeat age, coverage receipt, and independently verified field attestation. It never contacts private Yard. Success proves that **one** externally reachable public pulse was fresh and verified at check time, not that future five-minute cycles are guaranteed. Repeat across a second observed real cycle. Confirm 20-second browser polling, mobile controls, and that the visual flashes only on new verified cycles. Only then advertise a LIVE Systemia pulse.
 
 Until a verified public export exists at its deployed origin, the page must show **HEARTBEAT NOT CONNECTED**. It intentionally has no `pulse.json` committed to GitHub. The visual remains a branded motion environment with accurate source labels.
 
