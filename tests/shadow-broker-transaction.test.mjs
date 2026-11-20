@@ -94,3 +94,59 @@ test('transaction refuses mismatched on-disk NodeSeed identity before leases',as
     assert.equal(fs.readdirSync(parent).length,0);
   });
 });
+
+
+test('failed midflight observer still releases the broker lease and restores zero residents',async()=>{
+  await withNodeSeed(async({seed,parent})=>{
+    let observed=false;
+    const result=await runRehearsalShadowBrokerTransaction({
+      nodeSeedReceipt:seed,
+      journalParent:parent,
+      allocatorToken:'synthetic-shadow-transaction-key',
+      onBrokerVerified:async evidence=>{
+        assert.equal(evidence.broker_zero_authority_verified,true);
+        assert.equal(evidence.public_route_created,false);
+        assert.equal(await count(seed.endpoint),1);
+        observed=true;
+        throw Error('injected_midflight_observer_failure');
+      },
+    });
+    assert.equal(observed,true);
+    assert.equal(result.ok,false);
+    assert.equal(result.release_confirmed,true);
+    assert.equal(result.journal_phase,'released');
+    assert.equal(await count(seed.endpoint),0);
+  });
+});
+
+test('rehearsal rejects a copied fixture receipt pointing at Penguin production port',async()=>{
+  const root=fixture();
+  try{
+    const nodeRoot=path.join(root,'compute');
+    const parent=path.join(nodeRoot,'shadow-journals');
+    fs.mkdirSync(parent,{recursive:true,mode:0o700});
+    const receipt={
+      schema:'evercraft.compute.nodeseed-receipt.v1',
+      root:nodeRoot,
+      node_id:'shadow-fake-live-node',
+      endpoint:'http://127.0.0.1:42420',
+      device_fingerprint:'test',
+    };
+    fs.writeFileSync(
+      path.join(nodeRoot,'nodeseed-receipt.json'),
+      JSON.stringify(receipt),
+      {mode:0o600}
+    );
+    let requests=0;
+    await assert.rejects(
+      runRehearsalShadowBrokerTransaction({
+        nodeSeedReceipt:receipt,
+        journalParent:parent,
+        allocatorToken:'synthetic-shadow-transaction-key',
+        request:async()=>{requests+=1;throw Error('must_not_contact_live_node')},
+      }),/live_node_endpoint_not_disposable/
+    );
+    assert.equal(requests,0);
+    assert.equal(fs.readdirSync(parent).length,0);
+  }finally{fs.rmSync(root,{recursive:true,force:true})}
+});
