@@ -44,6 +44,19 @@ The host binds to 127.0.0.1:8795, **never 0.0.0.0**, and exposes a deliberately 
 
 The source code's test server uses an ephemeral local port and synthetic public data in a temporary directory. Passing those tests cannot establish any field deployment or real source attestation.
 
+## Minimal node field canary (no approval, no publishing)
+
+For a trusted Evercraft operator who has an **independently verified, pinned 40-character Git SHA**, a real checkout, and an existing separate local public-projection folder, use the narrowly read-only canary to test the source and its local transport before private source activation:
+
+    node scripts/leiland-owned-field-canary.mjs \
+      --checkout /verified/evercraft/forge-operator \
+      --publication-root /verified/owned/public-projections \
+      --expected-sha <independently-pinned-full-commit-sha>
+
+The command starts a temporary ephemeral listener on 127.0.0.1, compares all allowlisted page assets against the actual pinned Git objects (not merely the current HEAD label), probes every public static route, checks that the pulse is missing or sanitized, checks the public activity feed, rejects unapproved write/private-source routes, closes its listener and emits a machine-readable **local-only** canary receipt. It does not create folders, alter DNS, edit Caddy, modify public files, request private Yard credentials, issue signatures, or start a resident service. If an approval/signature or a real signed private Yard heartbeat is not ready, this public-only local canary can still report the site and its disconnected state accurately.
+
+A passing local canary does **not** mean that an operator has authorized publication, that the KAIDANCE source is trusted, or that the actual owned HTTPS route exists. After it passes, use the separate, stricter **scripts/leiland-field-preflight.mjs** for a real private source, signed approval, and existing authenticated KAIDANCE Yard pulse. The field preflight is the next gate and must not be bypassed by the canary.
+
 ## HTTPS edge integration
 
 The staged example at systemia/leiland/owned-public-route.Caddyfile.example has a deliberately non-deployable example.invalid hostname. Do not import it until:
