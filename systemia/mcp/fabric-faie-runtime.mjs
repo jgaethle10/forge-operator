@@ -4,6 +4,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createFaieRuntime } from '../faie/runtime.mjs';
 import { faieCollectorConfigFromEnv } from '../faie/collectors.mjs';
+import { collectUsdaSoilAtPoint } from '../faie/soil-source.mjs';
 import {
   executeFaieMcpRpc,
   faieMcpTools,
@@ -130,6 +131,11 @@ export function createFabricFaieSurface({
   if(ownsRuntime&&startResident) faieRuntime.start();
 
   const limit=createFixedWindowLimiter({limit:postLimit});
+  // Explicitly low-volume pilot: USDA Soil Data Access is a government service,
+  // not an unlimited anonymous upstream proxy. This preview is ephemeral.
+  const soilClientLimit=createFixedWindowLimiter({limit:4,windowMs:60_000});
+  const soilGlobalLimit=createFixedWindowLimiter({limit:12,windowMs:60_000});
+  let soilPreviewInFlight=0;
 
   function health(){
     const runtimeHealth=faieRuntime.health();
@@ -233,6 +239,85 @@ export function createFabricFaieSurface({
         return true;
       }
       sendJson(res,200,response,{'access-control-allow-origin':'*'});
+      return true;
+    }
+
+    if(req.method==='POST'&&pathname==='/api/faie/soil/preview'){
+      const globalAllowance=soilGlobalLimit({headers:{},socket:{remoteAddress:'all-public-soil-visitors'}});
+      const clientAllowance=soilClientLimit(req);
+      if(!globalAllowance.ok||!clientAllowance.ok){
+        sendJson(res,429,{ok:false,error:'soil_preview_rate_limited'},{
+          'retry-after':String(Math.max(globalAllowance.retry_after,clientAllowance.retry_after))
+        });
+        return true;
+      }
+      if(soilPreviewInFlight>=2){
+        sendJson(res,503,{ok:false,error:'soil_preview_busy_try_later'});
+        return true;
+      }
+      let body;
+      try{
+        body=await readJson(req,{maxBytes:2048});
+      }catch(error){
+        sendJson(res,400,{ok:false,error:'invalid_soil_preview_input'});
+        return true;
+      }
+      const latRaw=String(body?.latitude??'').trim();
+      const lonRaw=String(body?.longitude??'').trim();
+      const latitude=Number(latRaw),longitude=Number(lonRaw);
+      if(!latRaw||!lonRaw||!Number.isFinite(latitude)||!Number.isFinite(longitude)||
+        latitude<24||latitude>50||longitude< -125||longitude> -66){
+        sendJson(res,400,{ok:false,error:'Enter valid latitude and longitude inside the contiguous United States.'});
+        return true;
+      }
+      soilPreviewInFlight+=1;
+      try{
+        const source=await collectUsdaSoilAtPoint({
+          latitude,longitude,regionKeys:[],fetchImpl,retrievedAt:new Date().toISOString()
+        });
+        // The result is returned directly to the visitor only. Never ingest
+        // coordinates, mapunits or visitor queries into shared FAIE memory.
+        const observed=source.observation;
+        const mapunits=(observed?.facts?.mapunits||[]).slice(0,6).map((row)=>({
+          name:row.muname,
+          survey_area_name:row.survey_area_name,
+          farmland_classification:row.farmland_classification,
+          survey_updated_at:row.source_updated_at,
+          source_version:row.source_version,
+          components:(row.components||[]).slice(0,3).map((component)=>({
+            name:component.name,
+            percentage:component.percent,
+            slope_percent:component.slope_percent,
+            major_component:component.major_component
+          }))
+        }));
+        sendJson(res,200,{
+          schema:'evercraft.faie.public-soil-preview.v1',
+          status:mapunits.length?'mapped_soil_available':'no_mapped_soil_found',
+          source:'USDA NRCS Soil Data Access / SSURGO',
+          evidence_state:'REPORTED',
+          retrieved_at:source.retrieved_at,
+          source_updated_at:observed?.facts?.source_updated_at||null,
+          coordinates:{latitude,longitude},
+          mapunit_count:source.mapunit_count,
+          mapunits,
+          provenance_urls:[
+            'https://sdmdataaccess.nrcs.usda.gov/WebServiceHelp.aspx',
+            'https://sdmdataaccess.nrcs.usda.gov/documents/AdvancedQueries.html'
+          ],
+          field_verification_required:true,
+          soil_testing_performed:false,
+          site_suitability_verdict:null,
+          decision_authority:false,
+          publication_authority:false,
+          request_persisted:false,
+          warning:'USDA mapped soil-survey context is not a field soil test, a guarantee of current conditions, an irrigation right, or a site approval.'
+        });
+      }catch(error){
+        sendJson(res,502,{ok:false,error:'Official USDA soil information could not be verified. No map unit is being inferred.'});
+      }finally{
+        soilPreviewInFlight-=1;
+      }
       return true;
     }
 

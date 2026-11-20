@@ -93,6 +93,13 @@ test('owned Fabric serves FAIE UI, public preview API, and native FAIE MCP witho
     const partnerPage=await partnerPageResponse.text();
     assert.match(partnerPage,/Prepared for AgNormal · design-partner room/);
 
+    assert.match(page,/id="soilPreviewPanel"/);
+    assert.match(page,/id="soilPreviewForm"/);
+    const missingSoil=await fetch(runtime.url+'/api/faie/soil/preview',{
+      method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({})
+    });
+    assert.equal(missingSoil.status,400,'public USDA preview must reject absent explicit coordinates');
+
     const faieHealthResponse=await fetch(runtime.url+'/api/faie/health');
     assert.equal(faieHealthResponse.status,200);
     const faieHealth=await faieHealthResponse.json();

@@ -66,3 +66,23 @@ test('USDA soil collector rejects missing or out-of-range site coordinates', asy
     /longitude/
   );
 });
+
+
+test('USDA lookup lacking survey update date never invents a survey timestamp',async()=>{
+  const body={
+    Table:[
+      ['saversion','saverest','areasymbol','areaname','mukey','musym','muname','farmlndcl','cokey','compname','comppct_r'],
+      ['18','', 'WA999','Fixture Survey','123','1','Fixture loam','Prime farmland','456','Fixture component','80']
+    ]
+  };
+  const result=await collectUsdaSoilAtPoint({
+    latitude:46.6021,longitude:-120.5059,
+    retrievedAt:'2026-11-19T21:00:00.000Z',
+    fetchImpl:async()=>({ok:true,status:200,text:async()=>JSON.stringify(body)})
+  });
+  assert.equal(result.mapunit_count,1);
+  assert.equal(result.observation.facts.source_updated_at,null);
+  assert.equal(result.receipt.source_updated_at,null);
+  assert.equal(result.observation.observed_at,'2026-11-19T21:00:00.000Z');
+  assert.equal(result.observation.metadata.source_timestamp_semantics,'retrieval_time_fallback');
+});
