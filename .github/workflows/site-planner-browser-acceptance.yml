@@ -1,9 +1,7 @@
 name: Site Planner real browser acceptance
 
 on:
-  push:
-    branches:
-      - feature/evercraft-site-planner-intake-v1
+  pull_request:
     paths:
       - 'products/site-planner/browser_acceptance.py'
       - 'products/site-planner/plan-studio.html'
