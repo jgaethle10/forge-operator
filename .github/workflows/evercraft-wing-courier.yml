@@ -3,6 +3,7 @@ on:
   push:
     paths:
       - 'systemia/wing-courier/**'
+      - 'systemia/one-company/**'
       - '.github/workflows/evercraft-wing-courier.yml'
   pull_request:
     paths:
@@ -23,4 +24,4 @@ jobs:
         with:
           node-version: '22'
       - name: Wing-to-wing confidential delivery and adversarial tests
-        run: node --test systemia/wing-courier/*.test.mjs
+        run: node --test systemia/wing-courier/*.test.mjs systemia/one-company/*.test.mjs
