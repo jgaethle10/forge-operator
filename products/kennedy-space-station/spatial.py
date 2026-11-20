@@ -197,8 +197,32 @@ class SpatialStore:
                 created_at TEXT NOT NULL)""")
             db.execute("CREATE INDEX IF NOT EXISTS idx_kss_outbox_state ON kss_outbox(state,created_at)")
 
-    def save(self, site_id, model):
+    def save(self, site_id, model, report_receipt=None):
         normalized = validate(model, site_id)
+        report_id = normalized["source_report_id"]
+        if report_id:
+            # The HTTP operator must derive this receipt by reading canonical Site Planner
+            # storage. The untrusted client's claimed receipt is never reused.
+            if (not isinstance(report_receipt, dict) or
+                report_receipt.get("schema") != "evercraft.kss.report-context.v1" or
+                report_receipt.get("site_id") != site_id or
+                report_receipt.get("report_id") != report_id or
+                not isinstance(report_receipt.get("snapshot_sha256"), str) or
+                not re.fullmatch(r"[a-f0-9]{64}", report_receipt["snapshot_sha256"])):
+                raise StudyError("verified_report_receipt_required")
+            normalized["source_report_receipt"] = {
+                "schema": report_receipt["schema"],
+                "site_id": report_receipt["site_id"],
+                "report_id": report_receipt["report_id"],
+                "created_at": report_receipt["created_at"],
+                "snapshot_sha256": report_receipt["snapshot_sha256"],
+                "evidence_counts": report_receipt["evidence_counts"],
+                "scenario_count": report_receipt["scenario_count"],
+                "evidence_status_authority": report_receipt["evidence_status_authority"],
+                "spatial_ground_truth": False,
+            }
+        elif report_receipt is not None:
+            raise StudyError("unexpected_report_receipt")
         model_json = canonical_json(normalized)
         sha = digest(normalized)
         with self.connect() as db:
@@ -228,7 +252,8 @@ class SpatialStore:
                  "pending", created))
         return {"id": study_id, "site_id": site_id, "revision": next_rev,
                 "created_at": created, "title": normalized["title"],
-                "model_sha256": sha, "source_report_id": normalized["source_report_id"]}
+                "model_sha256": sha, "source_report_id": normalized["source_report_id"],
+                "source_report_sha256": (normalized.get("source_report_receipt") or {}).get("snapshot_sha256") }
 
     def list(self, site_id):
         with self.connect() as db:

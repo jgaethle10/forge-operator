@@ -5,6 +5,8 @@ Operator-only integration shell. This is neither a paid membership portal nor
 an operational site-plan solver. The Site Planner product owns the site/report API.
 """
 import importlib.util
+import hashlib
+import json
 import os
 import re
 import sqlite3
@@ -31,6 +33,7 @@ SPATIAL = spatial.SpatialStore(Path(os.environ.get("KENNEDY_DATA", str(site_plan
 
 
 def validate_site_and_report(site_id, source_report_id=""):
+    """Confirm scope against the canonical Site Planner database."""
     if not spatial.ID.fullmatch(site_id):
         raise spatial.StudyError("site_id_invalid")
     with site_planner.connect() as db:
@@ -43,6 +46,47 @@ def validate_site_and_report(site_id, source_report_id=""):
             if row is None:
                 raise spatial.StudyError("source_report_not_owned_by_site")
 
+
+def report_context(site_id, report_id):
+    """Minimum report lineage and user-recorded evidence counts, never spatial truth."""
+    validate_site_and_report(site_id)
+    if not spatial.ID.fullmatch(report_id):
+        raise spatial.StudyError("report_id_invalid")
+    with site_planner.connect() as db:
+        row = db.execute("""SELECT id,site_id,created_at,snapshot_json,evidence_count,
+                                   scenario_count FROM reports WHERE site_id=? AND id=?""",
+                         (site_id, report_id)).fetchone()
+    if row is None:
+        raise LookupError("report_not_found_in_site")
+    source = row["snapshot_json"]
+    try:
+        parsed = json.loads(source)
+        if not isinstance(parsed, dict) or parsed.get("site", {}).get("id") != site_id:
+            raise ValueError("site mismatch")
+        evidence = parsed.get("evidence", [])
+        if not isinstance(evidence, list):
+            raise ValueError("evidence malformed")
+        counts = {"verified": 0, "unverified": 0, "assumption": 0, "other": 0}
+        for item in evidence:
+            if not isinstance(item, dict):
+                raise ValueError("evidence malformed")
+            state = item.get("status")
+            counts[state if isinstance(state, str) and state in counts else "other"] += 1
+        if sum(counts.values()) != row["evidence_count"]:
+            raise ValueError("evidence count mismatch")
+    except (TypeError, ValueError, AttributeError):
+        raise spatial.StudyError("source_snapshot_invalid")
+    return {
+        "schema": "evercraft.kss.report-context.v1",
+        "site_id": site_id,
+        "report_id": row["id"],
+        "created_at": row["created_at"],
+        "snapshot_sha256": hashlib.sha256(source.encode("utf-8")).hexdigest(),
+        "evidence_counts": counts,
+        "scenario_count": row["scenario_count"],
+        "evidence_status_authority": "site_planner_operator_recorded_not_independently_verified",
+        "spatial_ground_truth": False,
+    }
 
 
 class KennedyHandler(site_planner.Handler):
@@ -77,6 +121,18 @@ class KennedyHandler(site_planner.Handler):
                 return self.send(200, SPATIAL.outbox())
             except sqlite3.Error:
                 return self.bad("spatial_store_unavailable", 500)
+        m = re.fullmatch(r"/api/kss/sites/([A-Za-z0-9_-]+)/reports/([A-Za-z0-9_-]+)/context", path)
+        if m:
+            if not self.authorized():
+                return
+            try:
+                return self.send(200, report_context(m.group(1), m.group(2)))
+            except LookupError as exc:
+                return self.bad(str(exc), 404)
+            except spatial.StudyError as exc:
+                return self.bad(str(exc), 422)
+            except sqlite3.Error:
+                return self.bad("source_report_unavailable", 500)
         m = re.fullmatch(r"/api/kss/sites/([A-Za-z0-9_-]+)/studies(?:/([A-Za-z0-9_-]+)(/svg)?)?", path)
         if m:
             if not self.authorized():
@@ -113,7 +169,9 @@ class KennedyHandler(site_planner.Handler):
             raw = self.body()
             normalized = spatial.validate(raw, site_id)
             validate_site_and_report(site_id, normalized["source_report_id"])
-            result = SPATIAL.save(site_id, normalized)
+            receipt = (report_context(site_id, normalized["source_report_id"])
+                       if normalized["source_report_id"] else None)
+            result = SPATIAL.save(site_id, normalized, report_receipt=receipt)
             return self.send(201, result)
         except LookupError as exc:
             return self.bad(str(exc), 404)
