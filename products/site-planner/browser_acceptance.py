@@ -5,6 +5,8 @@ This is a browser compatibility check, not a physical iPhone test, real parcel,
 verified georeferencing, certified engineering, customer access or release gate.
 Requires Playwright (test-only dependency) and installed Chromium/WebKit.
 """
+import base64
+import hashlib
 import json
 import os
 import socket
@@ -111,6 +113,58 @@ def run_profile(playwright, name, engine, mobile, origin, image_bytes):
         assert first != moved, "Charger didn't move"
         page.locator("#undo").click()
         assert first == page.evaluate("({x:state.marks[0].x,y:state.marks[0].y})"), "Undo didn't restore placement"
+
+        # Exercise address-to-site + vicinity workflow with a SYNTHETIC MOCK provider.
+        # Real Census/USGS network acceptance has a separate public-fixture receipt.
+        jpeg_pair = page.evaluate("""async () => {
+          const image = new Image();
+          image.src = state.siteImage;
+          await image.decode();
+          const canvas = document.createElement('canvas');
+          canvas.width = 1024; canvas.height = 752;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(image,0,0,1024,752);
+          const site = canvas.toDataURL('image/jpeg',0.9).split(',')[1];
+          ctx.fillStyle = '#244c67';
+          ctx.fillRect(100,100,175,45);
+          const vicinity = canvas.toDataURL('image/jpeg',0.9).split(',')[1];
+          return {site,vicinity};
+        }""")
+        def image_record(encoded, bbox):
+            return {
+                "image_base64": encoded,
+                "sha256": hashlib.sha256(base64.b64decode(encoded)).hexdigest(),
+                "bbox_3857": bbox,
+            }
+        preview = {
+            "schema": "evercraft.site-planner.usgs-address-aerial.v1",
+            "match_class": "census_address_range_not_parcel",
+            "census_matched_address": "SYNTHETIC TEST FIXTURE / NOT A REAL PARCEL",
+            "approximate_address_coordinate": {"lon": -76.93, "lat": 38.85},
+            "site": image_record(jpeg_pair["site"], [0, 0, 640, 470]),
+            "vicinity": image_record(jpeg_pair["vicinity"], [0, 0, 4800, 3525]),
+        }
+        page.route("**/api/aerial/preview", lambda route: route.fulfill(
+            status=200, content_type="application/json", body=json.dumps(preview)
+        ))
+        page.locator("#address").fill("123 Synthetic QA Lane, Test District, DC 20000")
+        page.locator("#lookupAerial").click()
+        page.wait_for_function(
+            "state.aerialProvenance !== null && state.contextImage.startsWith('data:image/jpeg;base64,')",
+            timeout=15000,
+        )
+        assert page.evaluate("state.marks.length") == 0, "Old placements survived an address-source change"
+        assert page.evaluate("state.siteHash !== state.contextHash"), "Distinct source images expected"
+        assert "SOURCE: USGS / CENSUS PREVIEW" in page.locator("#drawing-1").inner_html(), "Site image provenance missing"
+        assert "USGS VICINITY IMAGE" in page.locator("#drawing-2").inner_html(), "Vicinity provenance missing"
+        assert "No geocoding performed" not in page.locator("#drawing-2").inner_html(), "Sheet ignores address source"
+        page.locator("#drawing-1 #hit-target").click(position={"x": 180, "y": 190})
+        assert page.evaluate("state.marks.filter(m=>m.type==='charger').length") == 1
+        # Mark mock provenance prominently in generated QA-only sheet, never a customer report.
+        page.evaluate("""() => {
+          document.getElementById('sourceText').value='SYNTHETIC MOCK IMAGE / NOT REAL USGS';
+          draw();
+        }""")
         page.locator("#drawing-1").screenshot(path=str(profile_dir / "sheet-S01.png"))
         page.locator("#drawing-2").screenshot(path=str(profile_dir / "sheet-A01.png"))
 
@@ -133,7 +187,8 @@ def run_profile(playwright, name, engine, mobile, origin, image_bytes):
             "profile": name, "engine": engine, "mobile_emulation": mobile,
             "site_image": "original synthetic test fixture; not real aerial imagery",
             "three_steps": True, "upload": "pass", "tap_add": "pass",
-            "tap_select_move_undo": "pass", "pdf_generation": "pass",
+            "tap_select_move_undo": "pass", "mocked_address_preview_with_two_sources": "pass",
+            "source_labels": "pass", "pdf_generation": "pass",
             "pdf_pages": 2, "pdf_bytes": size, "stale_export_invalidation": "pass",
             "physical_ios_tested": False,
         }
