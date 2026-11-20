@@ -6,6 +6,8 @@ on:
       - 'public/kaidance/**'
       - 'infra/evercraft-edge/kaidance/**'
       - 'tests/kaidance-owned-edge.test.mjs'
+      - 'tests/kaidance-cinematic-experience.test.mjs'
+      - 'scripts/qa-kaidance-browser.py'
       - 'tests/kaidance-public-fallback-readback.test.mjs'
       - 'scripts/probe-kaidance-fallback.mjs'
       - '.github/workflows/kaidance-owned-edge.yml'
@@ -14,6 +16,8 @@ on:
       - 'public/kaidance/**'
       - 'infra/evercraft-edge/kaidance/**'
       - 'tests/kaidance-owned-edge.test.mjs'
+      - 'tests/kaidance-cinematic-experience.test.mjs'
+      - 'scripts/qa-kaidance-browser.py'
       - 'tests/kaidance-public-fallback-readback.test.mjs'
       - 'scripts/probe-kaidance-fallback.mjs'
       - '.github/workflows/kaidance-owned-edge.yml'
@@ -31,11 +35,17 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
       - name: Verify owned portable assets and privacy
         run: |
           node --test tests/kaidance-owned-edge.test.mjs
           node --test tests/kaidance-public-observatory.test.mjs
           node --test tests/kaidance-public-fallback-readback.test.mjs
+          node --test tests/kaidance-cinematic-experience.test.mjs
+          node --check public/kaidance/app.mjs
+          node --check public/kaidance/visual.mjs
       - name: Validate example Caddy route without networking or deployment
         run: |
           set -euo pipefail
@@ -48,3 +58,16 @@ jobs:
           docker run --rm --network none -v "$PWD/_kaidance_caddy_qa:/qa:ro" \
             caddy:2.10-alpine caddy adapt --config /qa/Caddyfile --adapter caddyfile > _kaidance_caddy_qa/adapted.json
           node -e "const a=require('./_kaidance_caddy_qa/adapted.json');if(!a.apps?.http?.servers)throw Error('Caddy route missing')"
+
+      - name: Capture and assert actual mobile, film and desktop browser experience
+        run: |
+          python -m pip install --quiet playwright==1.58.0
+          python scripts/qa-kaidance-browser.py
+      - name: Preserve actual KAIDANCE browser frames
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: kaidance-v02-browser-frames
+          path: artifacts/kaidance-browser/*.png
+          retention-days: 30
+          if-no-files-found: warn
