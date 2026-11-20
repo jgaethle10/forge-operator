@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {planHeartbeatAdvisories,executeAdvisory} from './heartbeat-advisory.mjs';
+import {createRavenAdvisoryInvoker} from './raven-invoker.mjs';
 
 const providers=[
  {id:'anthropic',model:'claude-test',ready:true,estimated_cost_cents:5},
@@ -57,4 +58,17 @@ test('provider errors and unknown outcome fail closed, no automatic retry',async
  const job=planHeartbeatAdvisories({missions:[mission()],providers,budget_cents_remaining:40}).queue[0];
  const x=await executeAdvisory(job,{recordAttempt:async()=>({reserved:true}),invoke:async()=>{throw Error('network timeout')}});
  assert.equal(x.state,'held');assert.equal(x.reason,'provider_failed_or_unknown');
+});
+
+test('owned Raven invoker routes a reserved heartbeat job to its explicitly configured provider',async()=>{
+ const job=planHeartbeatAdvisories({missions:[mission()],providers,budget_cents_remaining:40}).queue[0];
+ const seen=[];
+ const invoke=createRavenAdvisoryInvoker({credentialStateDir:'/private/fixture-vault',
+  engineFactory:spec=>{seen.push(spec);return {infer:async arg=>({status:'completed',text:'Bounded observation',provider_receipt:'sha256:proof',model:spec.model})};}});
+ const result=await executeAdvisory(job,{invoke,recordAttempt:async()=>({reserved:true})});
+ assert.equal(result.state,'advisory_received');
+ assert.equal(seen[0].provider,'anthropic');
+ assert.equal(seen[0].credentialStateDir,'/private/fixture-vault');
+ assert.equal(result.external_actions_authorized,false);
+ await assert.rejects(invoke({provider:'untrusted',model:'model',request_id:'one',role:'qa',input:'test'}),/not_allowed/);
 });
