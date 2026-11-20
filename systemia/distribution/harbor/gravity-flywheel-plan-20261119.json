@@ -1,0 +1,177 @@
+{
+  "schema": "evercraft.harbor.gravity-flywheel-plan.v1",
+  "mission": "gravity-flywheel-cadence-20261119",
+  "date_pacific": "2026-11-19",
+  "state": "PROPOSED_NOT_SENT_NOT_SCHEDULED",
+  "owner": "Evercraft LLC",
+  "orchestrator": "Systemia",
+  "publishing_wing": "Harbor",
+  "publication_authority": "Existing founder standing ordinary Page authorization only; high-stakes and founder-profile gates retained",
+  "handoff": "GITHUB_SOURCE_ONLY_NO_VERIFIED_HARBOR_ACK",
+  "authoritative_issue": "https://github.com/jgaethle10/forge-operator/issues/2271",
+  "related_unmerged_dispatch_pr": "https://github.com/jgaethle10/forge-operator/pull/2255",
+  "current_network": {
+    "pages_in_scope_last_verified": 22,
+    "excluded": [
+      "R&B Chicken & Soul",
+      "Space Dudz"
+    ],
+    "frozen": [
+      "Little Red Writing Press"
+    ],
+    "held_identity": [
+      "Evercraft Transparency Atlas"
+    ],
+    "editorial_gated": [
+      "Evercraft Journal",
+      "TOWI",
+      "Week in Motion"
+    ],
+    "brand_registry_rule": "Harbor latest 22 Page register v2 and Graph readback; no superseded November 17 mappings"
+  },
+  "cadence": {
+    "systemia_candidate_review_minutes": 5,
+    "harbor_existing_morning_briefing": true,
+    "network_primary_posts_target_per_7_days": 7,
+    "additional_distinct_posts_max_per_7_days": 5,
+    "friday_week_in_motion": "ONLY_IF_VERIFIED_FOOTAGE_APPROVALS_AND_JOURNAL_ACCESS",
+    "new_scheduler_requested": false
+  },
+  "formats": {
+    "facebook": "Original Page posts through verified existing provider route with ID/readback",
+    "instagram": "Distinct native version only when actual media and scopes verified",
+    "tiktok": "Distinct native original video only with footage and scopes",
+    "linkedin": "Distinct evidence-based professional version only with authenticated destination",
+    "founder_profile": "Founder authentic native post/upload only"
+  },
+  "candidate_queue": [
+    {
+      "id": "GF-20261120-01",
+      "date": "2026-11-20",
+      "franchise": "Week's verified work",
+      "page_id": "1253915241138545",
+      "property": "Evercraft",
+      "status": "DRAFT_VERIFY_3_MILESTONES",
+      "asset": "Verified real milestone citations",
+      "medium": "company page post"
+    },
+    {
+      "id": "GF-20261120-02",
+      "date": "2026-11-20",
+      "franchise": "Week in Motion",
+      "page_id": "108624442073018",
+      "property": "Evercraft Journal",
+      "status": "HOLD_JOURNAL_AND_FOOTAGE",
+      "asset": "Original footage and narration"
+    },
+    {
+      "id": "GF-20261121-01",
+      "date": "2026-11-21",
+      "franchise": "ESAN play analysis",
+      "page_id": "513781131811732",
+      "property": "ESAN (currently Edge of the Play)",
+      "status": "DRAFT_RIGHTS_AND_SPORTS_FACTS",
+      "asset": "Licensed sports video or original analysis graphic"
+    },
+    {
+      "id": "GF-20261122-01",
+      "date": "2026-11-22",
+      "franchise": "Everyday Heroes nominations",
+      "page_id": "839409312582152",
+      "property": "Yakima Life",
+      "status": "DRAFT_EDITORIAL_AND_DUPLICATE_CHECK",
+      "asset": "Original text, approved illustration optional"
+    },
+    {
+      "id": "GF-20261122-02",
+      "date": "2026-11-22",
+      "franchise": "How to verify an AI demo",
+      "page_id": "356956657493951",
+      "property": "Evercraft Learning Network",
+      "status": "DRAFT_EDITORIAL_AND_DUPLICATE_CHECK",
+      "asset": "Original text, tutorial carousel optional"
+    },
+    {
+      "id": "GF-20261123-01",
+      "date": "2026-11-23",
+      "franchise": "Systemia proof of work",
+      "page_id": "955525380981999",
+      "property": "Systemia (currently Systemia Radar)",
+      "status": "DRAFT_GENUINE_RECEIPT_REQUIRED",
+      "asset": "Genuine logged proof or actual screen recording"
+    },
+    {
+      "id": "GF-20261123-02",
+      "date": "2026-11-23",
+      "franchise": "Raven Nexus problem story",
+      "page_id": "426647487192435",
+      "property": "Raven Nexus (currently Replay Fuel)",
+      "status": "DRAFT_RESEARCH_LABEL_REQUIRED",
+      "asset": "Original conceptual diagram"
+    },
+    {
+      "id": "GF-20261124-01",
+      "date": "2026-11-24",
+      "franchise": "AAAR aviation safety evidence",
+      "page_id": null,
+      "property": "Relevant authorized Page per latest register",
+      "status": "DRAFT_PRIMARY_SOURCE_AND_TARGET_REQUIRED",
+      "asset": "Primary FAA source or own measured simulator result"
+    },
+    {
+      "id": "GF-20261124-02",
+      "date": "2026-11-24",
+      "franchise": "Fallen Studios commercial proof",
+      "page_id": "1047855798412865",
+      "property": "Evercraft Fallen Studios",
+      "status": "HOLD_SAMPLE_CAPACITY_AND_INTAKE",
+      "asset": "Approved playable proof reel and working intake"
+    },
+    {
+      "id": "GF-20261125-01",
+      "date": "2026-11-25",
+      "franchise": "ForensiScope frame-by-frame",
+      "page_id": "517990454723203",
+      "property": "ForensiScope (currently Frame by Frame)",
+      "status": "DRAFT_GENUINE_DEMO_RIGHTS",
+      "asset": "Real rights-cleared or clearly synthetic original footage"
+    },
+    {
+      "id": "GF-20261125-02",
+      "date": "2026-11-25",
+      "franchise": "AI workforce Journal feature",
+      "page_id": "108624442073018",
+      "property": "Evercraft Journal (currently Newsroom)",
+      "status": "HOLD_FOUNDER_ARTICLE_APPROVAL",
+      "asset": "Approved sourced article"
+    },
+    {
+      "id": "GF-20261126-01",
+      "date": "2026-11-26",
+      "franchise": "People behind the systems",
+      "page_id": "1253915241138545",
+      "property": "Evercraft",
+      "status": "DRAFT_COMMUNITY_CONSENT_TONE",
+      "asset": "Original people/systems material with permission"
+    }
+  ],
+  "publish_gates": [
+    "latest_page_id_and_brand_readback",
+    "source_evidence",
+    "content_origin_and_rights",
+    "validated_exact_text_and_sensitive_claims",
+    "existing_post_dedupe",
+    "approved_account_scope",
+    "permission_and_applicable_editorial_approval",
+    "provider_post_id_and_public_permalink",
+    "independent_public_readback",
+    "separate_lead_revenue_attribution"
+  ],
+  "outcomes": {
+    "scheduled": 0,
+    "published_by_this_plan": 0,
+    "harbor_ack_received": false,
+    "provider_receipts": [],
+    "customer_payments_attributable_to_plan": 0
+  }
+}
