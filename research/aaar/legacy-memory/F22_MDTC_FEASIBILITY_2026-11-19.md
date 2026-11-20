@@ -19,6 +19,7 @@
 | Fortasa Memory Systems | Self-described US manufacturer; industrial PCMCIA Type II, SLC product family; public page says 128 MB to 32 GB in overview and 128 MB to 16 GB in specification section | https://www.fortasa.com/products/flash-card-series/industrial-pcmcia-card | Exact currently orderable part/revision, flash origins, legal supply authorization, quotes, lead times, long-term policy, host compatibility and F-22 suitability |
 | Delkin Devices | Says it designs/builds industrial CompactFlash in Poway, CA; controlled-BOM and lifecycle-oriented product pages | https://www.delkin.com/products/industrial-cf/ ; https://www.delkin.com/products/industrial-cf/c600/ | Which capacity/part currently available, component origin, passive-adapter package, host compatibility, export/contract suitability and partnership |
 | PCcardsDirect | Lists 256 MB industrial-temperature Type II PC ATA card PCDATA256MBI at **US$105.44 posted retail** at evidence cut | https://www.pccardsdirect.com/products/industrial-pcmcia-ata-cards.php | Actual stock/quote validity, who manufactures silicon/finished card, authorized channel, provenance, acceptance testing, warranty and qualification |
+| California PC FLASH | Lists **FPCI-256MB-2162TM2**, 256 MB PCMCIA ATA industrial card, PIO4 no DMA, **$114.20 for quantity 1–9**; a separate 256 MB UDMA variant is marked EOL. These are not interchangeable without independent verification. | https://www.californiapc.com/Industrial-Flash-Memory/Industrial-Grade-PCMCIA-Tough-Metal-Series-2/ | OEM authorization, actual inventory, written quote and lead time, product identity and complete supply chain, compatibility and qualification |
 
 Published marketing claims and price listings are *leads*, not audited evidence. Supplier claims of “US manufacturer”/“built in USA” do not resolve country of origin for each part. A retailer listing is not a firm commercial quote, and published price is not margin.
 
@@ -72,10 +73,18 @@ Also verify separately: company legal identity, current SAM registration status,
 
 **Acceptance artifact:** evidence-backed partner-led business decision and a reusable legacy-parts supplier qualification ledger; not an F-22-equivalent product prototype.
 
+
+## Executable supplier-documentation preflight (2026-11-19 extension)
+- `supplier-preflight.mjs` is a **pure, public-evidence ledger validator** which reads `supplier-candidates-2026-11-19.json`, counts the 16 documentary areas for each supplier, lists gaps and **always prohibits automatic government response, purchases and any claim of F-22 qualification**.
+- `supplier-preflight.test.mjs` has five Node built-in test cases: unknown ledger schema rejected, unknown public lead held, synthetic 16-field pointers do not imply qualification, unsafe local URI excluded, current candidate ledger held. Only pure evaluator logic was exercised during authoring; a Node test runner and GitHub CI are **not yet confirmed** for the new files.
+- Example command (no network, no special permissions): `node --test research/aaar/legacy-memory/supplier-preflight.test.mjs` and `node research/aaar/legacy-memory/supplier-preflight.mjs research/aaar/legacy-memory/supplier-candidates-2026-11-19.json`.
+- Public listing prices are benchmarks only. Air Force official PDF independently verified: **NO**. Actual supplier partnership: **NONE**. Commercial order: **NONE**. All current candidates must remain `RESEARCH_HOLD`.
+
 ## Evidence register
 - [SAM.gov official notice](https://sam.gov/workspace/contract/opp/8948e8601e964c6aba9c801eee16b1be/view) — official notice metadata; public attachment available; official PDF not independently reproduced here.
 - [GovTribe attachment transcription](https://govtribe.com/file/government-file/fa861127rf22-f-22-mdtc-ssn-rm-dot-pdf) — secondary extracted document text, retrieved 2026-11-19.
 - [Fortasa PCMCIA](https://www.fortasa.com/products/flash-card-series/industrial-pcmcia-card) — manufacturer marketing/technical claims, retrieved 2026-11-19.
 - [Delkin industrial CF](https://www.delkin.com/products/industrial-cf/) — manufacturer claims, retrieved 2026-11-19.
 - [PCcardsDirect PCMCIA](https://www.pccardsdirect.com/products/industrial-pcmcia-ata-cards.php) — retailer inventory/price claims, retrieved 2026-11-19.
+- [California PC FLASH Tough Metal Series 2](https://www.californiapc.com/Industrial-Flash-Memory/Industrial-Grade-PCMCIA-Tough-Metal-Series-2/) — catalog price, card properties and separately marked end-of-life variants, retrieved 2026-11-19.
 - [DFARS 252.246-7008](https://www.acquisition.gov/dfars/252.246-7008-sources-electronic-parts.) — government regulatory reference, retrieved 2026-11-19.
