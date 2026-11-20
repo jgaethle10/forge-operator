@@ -76,7 +76,6 @@ export function reconcileGmailOutreach({
  const usedColdBudget=Math.max(0,Math.min(cold,actualCap===null?cold:actualCap-reserve));
  const coldRemaining=actualCap===null?0:Math.max(0,Math.min(usedColdBudget,actualCap-reserve-sentUnits));
  const providerRemaining=actualCap===null?0:Math.max(0,actualCap-sentUnits);
- const provenComplete=historyComplete===true&&invalid.length===0&&actualCap!==null&&actualCap>=reserve;
 
  const addressed=new Map();
  for(const m of mail){
@@ -108,6 +107,7 @@ export function reconcileGmailOutreach({
   if(!prev||kind==='permanent_failure'||(prev.kind!=='permanent_failure'&&prev.time<eventTime))
     deliveryByContact.set(key,{kind,time:eventTime,dsn_ref:'gmail:'+dsnId});
  }
+ const provenComplete=historyComplete===true&&invalid.length===0&&actualCap!==null&&actualCap>=reserve;
  const byThread=new Map();
  for(const m of mail){
   if(!m.thread_id)continue;
