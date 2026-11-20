@@ -39,8 +39,8 @@ test('no evidence never becomes generated activity',()=>{
 
 test('single batch Git log parses paths and preserves commit provenance',()=>{
  const first='a'.repeat(40),second='b'.repeat(40);
- const raw=first+'\\x1f2026-11-20T01:58:00Z\\n\\npublic/chum/a.json\\n\\n'+second+'\\x1f2026-11-20T01:57:00Z\\n\\nsystemia/hudson/readme.md\\n';
- const entries=parsePublicGitLog(raw.replaceAll('\\\\x1f','\\x1f').replaceAll('\\\\n','\\n'));
+ const raw=first+'\x1f2026-11-20T01:58:00Z\n\npublic/chum/a.json\n\n'+second+'\x1f2026-11-20T01:57:00Z\n\nsystemia/hudson/readme.md\n';
+ const entries=parsePublicGitLog(raw);
  assert.equal(entries.length,2);
  assert.deepEqual(entries[0].paths,['public/chum/a.json']);
  assert.deepEqual(entries[1].paths,['systemia/hudson/readme.md']);
