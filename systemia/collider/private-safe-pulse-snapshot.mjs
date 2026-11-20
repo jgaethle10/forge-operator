@@ -21,8 +21,9 @@ function privateDir(dir){
  return real;
 }
 function readExisting(file){
- if(!fs.existsSync(file))return null;
- const stat=fs.lstatSync(file);
+ let stat;
+ try{stat=fs.lstatSync(file)}catch(error){if(error.code==='ENOENT')return null;throw error}
+
  if(!stat.isFile()||stat.isSymbolicLink()||(stat.mode&0o077)!==0)throw Error('private_snapshot_permissions_invalid');
  if(typeof process.getuid==='function'&&stat.uid!==process.getuid())throw Error('private_snapshot_owner_invalid');
  if(stat.size<=0||stat.size>MAX_BYTES)throw Error('private_snapshot_size_invalid');
