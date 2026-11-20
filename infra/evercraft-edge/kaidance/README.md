@@ -57,3 +57,8 @@ The `public/kaidance/` directory contains all its own CSS, JS, public-only GitHu
 `node --test tests/kaidance-owned-edge.test.mjs tests/kaidance-public-observatory.test.mjs`
 
 CI additionally validates a temporary Caddy site assembled from the route fragment, without loading it on an actual edge. The dedicated field-release gate remains the real operator, runtime and offsite readback checks.
+
+
+## V02 portable assets
+
+The cinematic release adds `experience.css` and `visual.mjs` to the owned static file allowlist. Both are public-only and self-contained. Review the whole exact-release asset set before staging the existing hostname. The source-backed first-screen GitHub activity and 9:16 direct view do not need an operating Collider feed; never confuse those visible records with live KAIDANCE cycles.
