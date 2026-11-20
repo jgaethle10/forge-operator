@@ -27,6 +27,7 @@ export const STATIC_PATHS=Object.freeze({
  '/kaidance/signal-river.mjs':'kaidance/signal-river.mjs',
  '/kaidance/current-field.mjs':'kaidance/current-field.mjs',
  '/kaidance/field-chapters.mjs':'kaidance/field-chapters.mjs',
+ '/kaidance/field-topology.mjs':'kaidance/field-topology.mjs',
  '/kaidance/visual.mjs':'kaidance/visual.mjs',
  '/kaidance/app.mjs':'kaidance/app.mjs',
  '/kaidance/work-source.mjs':'kaidance/work-source.mjs',
