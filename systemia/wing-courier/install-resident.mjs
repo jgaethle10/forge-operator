@@ -35,7 +35,7 @@ export function evaluateWingResidentConfig({configPath,wingExpected='fallen'}={}
   throw Error('wing_resident_scope_mismatch');
  const url=new URL(cfg.baseUrl);
  if(url.protocol!=='https:'||url.username||url.password||
-   url.search||url.hash||url.pathname!=='/'||
+   url.search||url.hash||!['/','/wing-courier'].includes(url.pathname)||
    url.hostname==='localhost'||url.hostname==='127.0.0.1')
    throw Error('wing_resident_requires_owned_https');
  for(const key of ['receiveTokenFile','receiverPrivateKeyFile','receiverSigningKeyFile'])
