@@ -313,8 +313,12 @@ function resetSourceFields(slot){
 }
 function qualification(){
  const reasons=[];
- if(!state.siteImage)return {status:'HOLD',source_class:'synthetic_demonstration',
+ if(!state.siteImage&&!state.contextImage)return {status:'HOLD',source_class:'synthetic_demonstration',
    missing:['real_site_image','site_georegistration','independent_rights_review'],
+   verified_imagery_rights:false,verified_geographic_registration:false,
+   production_plan_release_allowed:false};
+ if(!state.siteImage)return {status:'HOLD',source_class:'operator_supplied_image_incomplete',
+   missing:['site_image_missing','independent_rights_review_required','geographic_registration_unverified'],
    verified_imagery_rights:false,verified_geographic_registration:false,
    production_plan_release_allowed:false};
  for(const slot of SOURCE_SLOTS){
