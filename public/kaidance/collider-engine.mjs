@@ -211,7 +211,7 @@ if (stage && canvas && verifiedMarker) {
     ctx.beginPath();ctx.moveTo(start.x,start.y);
     ctx.bezierCurveTo(cp1.x,cp1.y,cp2.x,cp2.y,finish.x,finish.y);
     ctx.lineWidth=i%6===0?2.1:.65;
-    ctx.strokeStyle=col+(.12+.1*seed(i+40))+')';ctx.stroke();
+    ctx.strokeStyle=col+(.25+.17*seed(i+40))+')';ctx.stroke();
    }
    // Chromatic caustics: concentric shards of refracted light, not event rings.
    for(let i=0;i<30;i++){
@@ -220,7 +220,7 @@ if (stage && canvas && verifiedMarker) {
     ctx.beginPath();
     ctx.moveTo(cx+Math.cos(a)*near,cy+Math.sin(a)*near*.88);
     ctx.lineTo(cx+Math.cos(a+.08)*far,cy+Math.sin(a+.08)*far*.88);
-    ctx.strokeStyle=i%7===0?'rgba(255,210,166,.35)':'rgba(151,224,255,.2)';
+    ctx.strokeStyle=i%7===0?'rgba(255,210,166,.54)':'rgba(151,224,255,.33)';
     ctx.lineWidth=i%7===0?1.4:.7;ctx.stroke();
    }
    ctx.restore();
@@ -241,7 +241,7 @@ if (stage && canvas && verifiedMarker) {
      const midX=cx+(endX-cx)*.44,midY=cy+(endY-cy)*.4+wobble;
      const mid2X=cx+(endX-cx)*.13,mid2Y=cy+(endY-cy)*.11;
      line([{x:endX,y:endY+wobble},{x:midX,y:midY},{x:mid2X,y:mid2Y},{x:cx,y:cy}],{
-      color:col,alpha:.10+(.05*(6-k)/6),weight:.55+(k===0?2:0),glow:k===0?10:0,composite:'lighter'});
+      color:col,alpha:.20+(.15*(6-k)/6),weight:.75+(k===0?2.6:0),glow:k===0?10:0,composite:'lighter'});
     }
    }
    // The "event horizon" is a glass-like iris surrounded by an engraved field.
@@ -254,9 +254,9 @@ if (stage && canvas && verifiedMarker) {
    }
    ctx.setLineDash([]);
    ctx.restore();
-   glow(cx,cy,R*.29,[
+   glow(cx,cy,R*.39,[
      [0,'rgba(250,255,255,.92)'],[.08,'rgba(170,239,255,.69)'],
-     [.27,'rgba(33,158,255,.26)'],[.67,'rgba(41,98,185,.08)'],[1,'rgba(0,0,0,0)']],.87);
+     [.27,'rgba(33,158,255,.38)'],[.67,'rgba(41,98,185,.12)'],[1,'rgba(0,0,0,0)']],.87);
    // The dark iris makes the luminous chamber feel deep rather than washed out.
    ctx.save();ctx.globalAlpha=.93;const g=ctx.createRadialGradient(cx-R*.025,cy-R*.035,0,cx,cy,R*.16);
    g.addColorStop(0,'#fffdf8');g.addColorStop(.13,'#d6f9ff');
