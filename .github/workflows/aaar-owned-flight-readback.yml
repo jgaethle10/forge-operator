@@ -6,6 +6,8 @@ on:
       - "public/worlds/flight/index.html"
       - "scripts/probe-aaar-public-readback.mjs"
       - "tests/aaar-public-readback.test.mjs"
+      - "scripts/probe-aaar-mobile-cockpit-source.mjs"
+      - "tests/aaar-flight-static.test.mjs"
       - ".github/workflows/aaar-owned-flight-readback.yml"
   push:
     branches: [main]
@@ -26,7 +28,7 @@ jobs:
         with:
           node-version: "22"
       - name: Pure Node release probe contract tests
-        run: node --test tests/aaar-public-readback.test.mjs
+        run: node --test tests/aaar-public-readback.test.mjs tests/aaar-flight-static.test.mjs
       - name: Read-only external verification from GitHub network
         id: probe
         shell: bash
@@ -60,6 +62,8 @@ jobs:
         run: npm install --no-save --no-audit --no-fund playwright@1.55.1
       - name: Install supported Chromium browser
         run: npx playwright install chromium
+      - name: Validate v0.8 source cockpit stick and throttle in portrait and landscape
+        run: node scripts/probe-aaar-mobile-cockpit-source.mjs
       - name: Execute actual owned HTTPS AAAR buttons in phone emulation
         id: live
         shell: bash
@@ -82,7 +86,10 @@ jobs:
           if-no-files-found: warn
   hosted-webkit-controls:
     runs-on: ubuntu-24.04
-    timeout-minutes: 12
+    # Pinned test-only browser image. No Evercraft application runs here in production.
+    container:
+      image: mcr.microsoft.com/playwright:v1.55.1-noble
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -90,10 +97,11 @@ jobs:
           node-version: "22"
       - name: Install browser test dependencies
         run: npm install --no-save --no-audit --no-fund playwright@1.55.1
-      # WebKit needs GTK/Graphene/codec libraries absent on the standard Ubuntu 24.04 runner.
-      # Bound the install so an unavailable mirror cannot hold up the AAAR release.
-      - name: Install WebKit and required test-only Linux libraries
-        run: timeout 180s npx playwright install --with-deps webkit
+      # WebKit and libraries are preinstalled in the pinned Playwright testing image.
+      - name: Validate v0.8 source cockpit in mobile WebKit
+        env:
+          AAAR_BROWSER: webkit
+        run: node scripts/probe-aaar-mobile-cockpit-source.mjs
       - name: Execute owned HTTPS AAAR buttons in mobile WebKit
         shell: bash
         run: |
