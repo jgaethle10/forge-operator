@@ -3,6 +3,7 @@
 import fs from 'node:fs';
 const site='https://jgaethle10.github.io/forge-operator/commercial-studio/';
 const endpoint='https://fabric.systemiacommandcenters.com/api/commercial-studio/inquiry';
+const contractEndpoint='https://fabric.systemiacommandcenters.com/api/commercial-studio/offer-contract';
 async function observe(url,method='GET',headers={}){
   const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),12000);
   try{
@@ -13,9 +14,15 @@ async function observe(url,method='GET',headers={}){
 const attribution=JSON.parse(fs.readFileSync(new URL('../public/.well-known/evercraft-chum-attribution.json',import.meta.url),'utf8'));
 const offers=attribution.endpoints?.buyer_frontage?.url_template;
 const findings=[],results=[];
+let publicProjectOptions=null;
 if(offers!=='https://fabric.systemiacommandcenters.com/offers')findings.push('BUYER_FRONTAGE_POINTS_TO_LEGACY_OR_UNKNOWN_ROUTE');
 try{
   const a=await observe(site);
+  // Compare the exact options served to buyers with the owned runtime's
+  // current accepted contract, without sending any synthetic buyer details.
+  const select=a.body.match(/<select\s+id="project"\s+name="project"[^>]*>([\s\S]*?)<\/select>/);
+  publicProjectOptions=select?[...select[1].matchAll(/<option(?:\s+[^>]*)?>([^<]+)<\/option>/g)]
+    .map(m=>m[1].trim()):null;
   const ready=a.status===200&&a.body.includes('Send my commercial brief')&&a.body.includes(endpoint)&&a.body.includes('receipt.received!==true');
   results.push({name:'customer_form',url:site,status:a.status,source_aware:ready});
   if(!ready)findings.push('PUBLIC_CUSTOMER_FORM_NOT_UPDATED');
@@ -46,6 +53,23 @@ try{
     verified_payment_instructions_required:paymentHeld});
   if(!paymentHeld)findings.push('PUBLIC_UNVERIFIED_CHECKOUT_STILL_EXPOSED_OR_HOLD_NOT_DEPLOYED');
 }catch{findings.push('PUBLIC_CUSTOMER_FORM_UNOBSERVED');}
+try{
+  const a=await observe(contractEndpoint);
+  let contract=null;
+  try{contract=JSON.parse(a.body)}catch{}
+  const matching=a.status===200 &&
+    contract?.schema==='evercraft.studio.public-offer-contract.v1' &&
+    contract.default_project===publicProjectOptions?.[0] &&
+    Array.isArray(contract.project_options) && publicProjectOptions!==null &&
+    JSON.stringify(contract.project_options)===JSON.stringify(publicProjectOptions) &&
+    contract.intake_acceptance_proved===false &&
+    contract.payment_authority===false &&
+    contract.production_authority===false;
+  results.push({name:'live_form_to_runtime_offer_contract',url:contractEndpoint,
+    status:a.status,all_public_project_options_accepted_in_source_contract:matching});
+  if(!matching)findings.push('PUBLIC_STUDIO_FORM_RUNTIME_CONTRACT_MISMATCH');
+}catch{findings.push('PUBLIC_STUDIO_FORM_RUNTIME_CONTRACT_UNOBSERVED');}
+
 try{
   const a=await observe(endpoint,'OPTIONS',{'origin':'https://jgaethle10.github.io','access-control-request-method':'POST','access-control-request-headers':'content-type'});
   const originOk=a.headers.get('access-control-allow-origin')==='https://jgaethle10.github.io';
