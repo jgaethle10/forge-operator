@@ -11,7 +11,7 @@ python3 server.py
 # Open http://127.0.0.1:8808
 ```
 
-Local data is in `data/site-planner.sqlite3`; uploaded files in `data/uploads/`. Backup both together. Set `EVERCRAFT_SITE_DATA` to select a durable directory. For LAN/proxy binding set `EVERCRAFT_SITE_HOST=0.0.0.0` **and** `EVERCRAFT_SITE_TOKEN` with a long random secret. For production, add owned reverse-proxy TLS, authenticated user sessions/roles, access-controlled uploads, antivirus scanning, limits, auditing and backups. The browser does not currently support bearer-token login UI: do **not** expose it publicly as-is. Behind an owned private access gateway with a secured upstream bearer header is a possible future integration, but not included.
+Local data is in `data/site-planner.sqlite3`; uploaded files in `data/uploads/`. Backup both together. Set `EVERCRAFT_SITE_DATA` to select a durable directory. Non-loopback network binding is rejected in this version, including with a shared bearer token. Do not expose this private operator workspace via port forwarding or a public reverse proxy. For production, add owned reverse-proxy TLS, authenticated user sessions/roles, access-controlled uploads, antivirus scanning, limits, auditing and backups. The browser does not currently support bearer-token login UI: do **not** expose it publicly as-is. Behind an owned private access gateway with a secured upstream bearer header is a possible future integration, but not included.
 
 ## Workflow
 
@@ -211,3 +211,39 @@ Evercraft LLC live Stripe catalog, independently verified:
 - Founding Five is a provisional price test: keep both links inactive pending tax review, owner-approved scope, private provider-verified settlement handling, customer authentication and Systemia receipts.
 
 `stripe_pilot.json` stores only non-secret identity and last-checked status. It is **not a Stripe webhook, authenticated account lookup, payment receipt, or fulfillment entitlement**. `GET /api/commercial/readiness` presents the recorded prices while keeping `checkout_configured=false`, `payment_verification_connected=false`, `commercial_release_allowed=false`.
+
+## v1.8: buyer-facing illustrative concept sample
+
+`sample.html` is a responsive, original, **entirely fictional** two-page illustrative EV charging site concept and evidence register. It showcases four hypothetical Level 2 stalls, one circulation idea, a possible equipment pad and trench route, and the unresolved requirements for field/engineering confirmation. It uses no real parcel, customer data, map, aerial imagery, geocoding or external services.
+
+The existing local-only server serves this at `GET /sample` and `GET /sample.html`, with the **same optional bearer-token gate** as the operator UI. The workspace links to the sample. The sample is read-only, requires no Site Planner DB record, and its print stylesheet supports **Print / Save PDF** in a browser. For developer-independent review, an equivalent two-page PDF snapshot can be generated from this HTML; the authored HTML remains the canonical source.
+
+`test_sample.py` checks access control, content markers, anti-framing headers, zero Stripe checkout links, and the absence of mutations to sites, orders and Systemia outbox. Full test command: `python3 -m unittest discover -v`.
+
+**Release boundary:** Illustrative sample quality does not establish site-specific feasibility, licensed engineering, automated concept generation or production readiness. Live Stripe links remain inactive, and commercial orders cannot be dispatched.
+
+## v1.9 Kennedy-style owned drawing studio
+
+The earlier illustrated concept sample was **below the standard of the prior Kennedy Space Station drawing sheets**. The new source file `plan-studio.html` is an Evercraft-owned, standalone browser drafting tool available at `/plan-studio.html` on the local operator server. It does NOT contact Base44, a mapping API, or any remote system.
+
+Capabilities currently implemented:
+- Source-selected site aerial and area-context PNG/JPG/WebP files, up to 12 MB each, held in browser memory only (not uploaded to the backend).
+- Interactive tap-to-place charger stalls, EV equipment pads, access arrows, annotations, two-point conduit routes; rotation control, erase, undo, and reset.
+- Professional 17×11 landscape sheet layouts: **S-01 charging concept** and **A-01 vicinity/context**, with engineering-style notes, title blocks, revisions and source labels.
+- Print / Save PDF from the browser and export the two vector SVG sheets.
+- SHA-256 byte fingerprints where browser crypto is available. **A byte hash does not verify aerial rights, coordinates, dimensions, ownership or engineering correctness.**
+- A source-free synthetic drawing is supplied for exploration. **When a real site aerial is loaded, all existing demo marks are cleared** so they cannot be mistaken for genuine site placements. Missing vicinity imagery is marked as missing rather than invented.
+
+This is a **manual pre-engineering illustration tool**, not an automated parcel analysis. There is no survey control, georeferencing, authoritative site location, certified scale, traffic model, clearance check, electrical study, ADA compliance approval, utility plan, stamped drawing, or public deployment. Users must supply authorized images and have an appropriately qualified reviewer inspect all output before any client reliance. Do not use this to claim a verified plan based on its appearance. Existing commercial quote and Stripe payment holds remain unchanged.
+
+`test_plan_studio.py` exercises the protected HTTP route, non-mutating sample access, JavaScript editing and undo, conduit placement, supplied aerial display and automatic clearing of sample marks. Run `python3 -m unittest discover -v` locally.
+
+## v2.0: source-bound reference calibration and evidence export
+
+The owned Kennedy studio now provides **📏 Reference** measurement: enter a genuine known distance (feet) visible in the uploaded **site** image, then tap two endpoints. The operator-entered reference establishes a provisional on-screen image-plane conversion, **not surveyed scale, georeferencing, or geographic coordinates**. Reference clicks are refused without a real uploaded aerial, with missing/invalid distances, or with too-short baselines. Calibrated proposed conduit route lengths are marked as estimates.
+
+The tool exports `Evercraft-Site-Concept-Evidence.json` with source filenames and byte SHA-256 hashes (when browser-supported), image-plane calibration endpoints/known feet, conceptual marks, approximate route lengths and explicit verification limits. It deliberately excludes raw image bytes and cannot prove the images' locations, rights, dimensions or correctness. Users must retain authorized originals for review.
+
+Replacing the site aerial clears all overlays and measurements to prevent cross-property carryover; switching tools cancels an unfinished calibration. The editor remains **private and local**; no customer-facing claims of engineering validity, sales, paid orders or Systemia dispatch. See `CALIBRATION.md` for limitations and tests.
+
+`test_calibration.py` adds a Node VM regression test. The complete local v2.0 suite contains 22 tests.
