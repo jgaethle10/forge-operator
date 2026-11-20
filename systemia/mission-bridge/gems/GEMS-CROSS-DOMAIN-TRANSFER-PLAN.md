@@ -139,3 +139,55 @@ under comparable acquisition vintage, vertical datum, nominal 1m resolution,
 resampling and rights; spatial footprint validation and actual valid raster
 pixel coverage only **after** permitted bytes are available. Keep GEMS-001
 selected and do not submit, promote, deploy or spend paid compute here.
+
+
+## GEMS-006 USGS 3DEP one-meter index query packet (Nov 20)
+
+USGS's **official** 3DEP layer 18 is a polygon feature layer covering 1-meter
+projects with fields `OBJECTID`, `project`, `project_id`, `pub_date`,
+`product_link`, and `metadata_link`. Service:
+https://index.nationalmap.gov/arcgis/rest/services/3DEPElevationIndex/MapServer/18
+(USGS layer schema inspected Nov 20). This is useful as a **public project index**,
+not the organizer's private fault labels and not the raster pixel coverage.
+
+`gems_usgs_3dep_index.py` consumes the already-produced **private**
+`gems_model_disagreement_tiles.geojson` and writes 45 deterministic public
+ArcGIS 1m project-index query URLs (one per balanced high/median/low study tile).
+The output is an offline metadata request packet; it **never** sends requests
+or downloads DEMs. The official source is fixed in code (not user-selectable),
+all WGS84 query bboxes come from the private atlas geometry, and an SHA-256
+identifier binds each request to its tile for later response matching.
+
+```bash
+cd systemia/mission-bridge/gems
+python3 -m unittest -v test_gems_usgs_3dep_index.py
+python3 gems_usgs_3dep_index.py \
+  --atlas /PRIVATE/nevada-disagreement-atlas/gems_model_disagreement_tiles.geojson \
+  --receipt /PRIVATE/NEW/usgs-3dep-1m-index-queries.json
+```
+
+For optional **offline** response screening, manually save public ArcGIS query
+JSON responses to a private local bundle with schema
+`evercraft.gems.usgs-3dep-one-meter-responses.v1` and
+`responses=[{"tile_id":"r...","query_sha256":"<plan query_sha256>",
+"response":{"features":[{"attributes":{"OBJECTID":123,"project":"..."}}],
+"exceededTransferLimit":false}}]` containing **one record for every query**.
+Then run with `--responses /PRIVATE/usgs-results.json`. The tool fails closed
+on missing/duplicated tile IDs, wrong query digests, upstream errors,
+pagination flags, repeated object IDs and record caps. It hashes the captured
+response bytes represented as canonical JSON but **does not authenticate the
+upstream server or imply that any DEM pixels exist**.
+
+### Gate after the metadata packet
+
+1. Make read-only queries to the official USGS index for **all three groups**,
+   retaining timestamps, response provenance and metadata pointers privately.
+2. Check the exact project polygon and product metadata (vintage, datum,
+   processing, available source resolution, and actual valid DEM cells).
+   A positive ArcGIS bounding-box intersection can still contain no usable
+   elevation values. Match control and review group coverage before comparing.
+3. Verify organizer 1m DEM URL matches, provenance and right-to-use/share
+   documentation; only then consider authorized high-resolution terrain
+   transforms in isolated free research compute on held-out geographic folds.
+4. Preserve the official GEMS-001 candidate. Do not submit, deploy, promote,
+   infer new faults, or spend paid compute from index-query results.
