@@ -216,6 +216,18 @@
     .soil-mapunit strong{display:block;font-size:.9rem}
     .soil-mapunit p{color:#b5c4b5;font-size:.75rem;margin:5px 0}
     .soil-preview button{margin:12px 0}
+    .land-memory{margin:22px 0 18px;border:1px solid #42614b;border-radius:17px;padding:17px;background:rgba(7,30,18,.6)}
+    .land-memory summary{cursor:pointer;font-weight:760;color:#dfecd9;font-size:1rem}
+    .land-memory-lede{font-size:.85rem;color:#b7c9b6;line-height:1.6;margin:10px 0 14px}
+    .land-memory-controls{display:flex;flex-wrap:wrap;align-items:end;gap:10px}
+    .land-memory-controls select{max-width:260px}
+    .land-memory-controls button{margin:0}
+    .land-memory-item{margin:12px 0;padding:13px 16px;border-radius:12px;border:1px solid #3b5343;background:#0b2115}
+    .land-memory-item strong{display:block;font-size:.91rem;margin:5px 0}
+    .land-memory-item p{font-size:.8rem;color:#bbcebb;margin:5px 0;line-height:1.5}
+    .land-memory-item small{display:block;color:#a5baab;font-size:.72rem}
+    .land-memory-item a{font-size:.76rem}
+    .land-memory-footer{font-size:.75rem;color:#b5c7b5;line-height:1.55}
     .source-ledger{margin:26px 0 20px}
     .source-ledger-head{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;flex-wrap:wrap}
     .source-ledger-head h2{margin:6px 0}
@@ -614,6 +626,25 @@
       </details>
     </details>
   </section>
+
+  <details class="panel land-memory" id="landHistoryPanel">
+    <summary>Explore land history preserved by Evercraft</summary>
+    <p class="land-memory-lede">FAIE is building its own chronological record of sourced public land history. Browse government observations by region, including original dates, evidence classifications, and links. This is an incomplete archive, not a property's full title history or proof of a past event at any single address.</p>
+    <div class="land-memory-controls">
+      <div>
+        <label for="landHistoryRegion">Public region</label>
+        <select id="landHistoryRegion">
+          <option value="yakima-wa">Yakima area</option>
+          <option value="yakima-basin-wa">Yakima Basin</option>
+          <option value="tri-cities-wa">Tri-Cities area</option>
+        </select>
+      </div>
+      <button id="landHistoryRun" type="button">Open historical timeline ↗</button>
+      <button id="landHistoryDownload" type="button" hidden>Download cited timeline (JSON)</button>
+    </div>
+    <div id="landHistoryResult" role="status" aria-live="polite">No timeline opened yet.</div>
+    <p class="land-memory-footer">Historical map sheets, aerial photographs, land-use changes, disasters and insurance losses require separately verified and legally reusable source records before they appear here. Exact public visitor scan locations are not automatically saved.</p>
+  </details>
 
   <div class="grid2">
     <section class="panel" id="field">
@@ -1215,6 +1246,61 @@ async function runSoilPreview(event) {
   }
 }
 document.getElementById('soilPreviewForm').addEventListener('submit',runSoilPreview);
+
+let latestLandTimeline=null;
+async function loadLandHistory(){
+  const region=document.getElementById('landHistoryRegion').value;
+  const result=document.getElementById('landHistoryResult');
+  const button=document.getElementById('landHistoryRun');
+  const download=document.getElementById('landHistoryDownload');
+  latestLandTimeline=null;download.hidden=true;button.disabled=true;
+  result.textContent='Reading Evercraft\'s verified public land-history ledger…';
+  try{
+    const response=await fetchWithTimeout('/api/faie/history/region?key='+encodeURIComponent(region),
+      {headers:{accept:'application/json'}},15000);
+    if(!response.ok)throw new Error('The historical archive is unavailable. No timeline is being inferred.');
+    const data=await response.json();
+    if(data?.schema!=='evercraft.faie.public-land-timeline.v1'||
+       data.land_id!=='region:'+region||
+       data.exhaustive_history!==false||
+       !Array.isArray(data.records)||data.site_suitability_verdict!==null){
+      throw new Error('Historical timeline failed source and coverage verification.');
+    }
+    latestLandTimeline=data;
+    if(!data.records.length){
+      result.innerHTML='<div class="quiet">No source-backed historical records have been archived for this region yet. Missing history does not mean nothing happened there.</div>';
+    }else{
+      let html='<p class="land-memory-footer">'+esc(data.records.length)+' cited public regional record(s). Date precision and geography vary by source.</p>';
+      for(const item of data.records.slice(0,100)){
+        const when=item.time_precision==='year'?String(item.event_start||'').slice(0,4):
+          (item.event_start===item.event_end?item.event_start:item.event_start+' through '+item.event_end);
+        let url=null;
+        try{
+          const u=new URL(item.source_url);
+          if(u.protocol==='https:'&&!u.username&&!u.password)url=u.href;
+        }catch{}
+        html+='<article class="land-memory-item"><small>'+esc(when||'Date unknown')
+          +' · '+esc(item.time_precision||'unknown')+' precision · '+esc(item.evidence_state||'unclassified')
+          +'</small><strong>'+esc(item.summary||'Unnamed source record')+'</strong>'
+          +'<p>Source family: '+esc(item.source_family||'unknown')
+          +' · Geography: '+esc(item.geography_scope||'not specified')+'</p>';
+        if(url)html+='<a target="_blank" rel="noopener noreferrer" href="'+esc(url)+'">Original source evidence ↗</a>';
+        html+='</article>';
+      }
+      result.innerHTML=html;
+    }
+    download.hidden=false;
+  }catch(error){result.textContent=error?.message||'No archival records could be verified.';}
+  finally{button.disabled=false;}
+}
+document.getElementById('landHistoryRun').addEventListener('click',loadLandHistory);
+document.getElementById('landHistoryDownload').addEventListener('click',()=>{
+  if(!latestLandTimeline)return;
+  const blob=new Blob([JSON.stringify(latestLandTimeline,null,2)+'\n'],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download='evercraft-faie-public-land-history.json';
+  document.body.append(a);a.click();a.remove();URL.revokeObjectURL(url);
+});
 
 async function loadState() {
   const statusbar = document.getElementById('statusbar');
