@@ -14,7 +14,7 @@ if (stage && canvas && verifiedMarker) {
   const seed=n=>{const x=Math.sin(n*128.17+78.233)*43758.5453;return x-Math.floor(x)};
   const reduce=window.matchMedia('(prefers-reduced-motion: reduce)');
   let width=0,height=0,dpr=1,radius=130,centerX=0,centerY=0;
-  let frame=0,previous=0,epoch=0,visible=true,disposed=false,flashAt=-1e8;
+  let frame=0,previous=0,epoch=0,visible=true,disposed=false,flashAt=-1e8,adaptiveGap=55;
   let hoverX=0,hoverY=0,targetX=0,targetY=0;
   const mobile=()=>width<680;
   const powerSave=()=>reduce.matches;
@@ -269,7 +269,7 @@ if (stage && canvas && verifiedMarker) {
     frame=requestAnimationFrame(draw);
     if(!visible||document.hidden)return;
     const maxFps=powerSave()?2:mobile()?18:24;
-    if(now-previous<1000/maxFps)return;
+    if(now-previous<Math.max(1000/maxFps,adaptiveGap))return;
     previous=now;
     if(!epoch)epoch=now;
     const t=powerSave()?2.1:(now-epoch)*.001;
@@ -280,6 +280,10 @@ if (stage && canvas && verifiedMarker) {
     ctx.clearRect(0,0,width,height);
     background(t);magneticRing(t);particleBeams(t);
     interactionChamber(t,flash);structuralAccents(t);
+    // Software-rendered phone browsers must retain idle time for scroll,
+    // screen recording and other apps. Never chase full FPS at 100% CPU.
+    const renderCost=Math.max(1,performance.now()-now);
+    adaptiveGap=clamp(renderCost*3.1,1000/maxFps,240);
   }
   // Provenance gate: the visual cannot schedule, synthesize, or self-trigger
   // verified pulse flashes. The separate source-validating app applies .beat.
