@@ -60,6 +60,8 @@ test('the Collider is a dimensional accelerator rather than a flat brand orbit',
  assert.match(engine,/function magneticRing\(/);
  assert.match(engine,/function particleBeams\(/);
  assert.match(engine,/function interactionChamber\(/);
+ assert.match(engine,/function plasmaStorm\(/);
+ assert.match(engine,/plasmaStorm\(t\);interactionChamber\(t,flash\)/);
  assert.match(engine,/function structuralAccents\(/);
  assert.match(engine,/MutationObserver/);
  assert.match(engine,/verifiedMarker\.classList\.contains\('beat'\)/);
