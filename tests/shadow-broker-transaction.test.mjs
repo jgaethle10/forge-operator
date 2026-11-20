@@ -130,7 +130,8 @@ test('rehearsal rejects a copied fixture receipt pointing at Penguin production 
       root:nodeRoot,
       node_id:'shadow-fake-live-node',
       endpoint:'http://127.0.0.1:42420',
-      device_fingerprint:'test',
+      // Valid synthetic identity reaches the independent live-port guard.
+      device_fingerprint:'sha256:'+'a'.repeat(64),
     };
     fs.writeFileSync(
       path.join(nodeRoot,'nodeseed-receipt.json'),
