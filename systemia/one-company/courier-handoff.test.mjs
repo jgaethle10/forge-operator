@@ -81,6 +81,7 @@ test('forged custody, wrong route, malformed manifest or duplicate filenames fai
   {ciphertextSha256:'bad'},
   {assets:[]},
   {assets:[{filename:'../x.mov',sha256:H,bytes:1}]},
+  {assets:[{filename:'one\\\\bad.mov',sha256:H,bytes:1}]},
   {assets:[{filename:'video.mov',sha256:H,bytes:1},
             {filename:'VIDEO.MOV',sha256:H,bytes:1}]},
  ])assert.throws(()=>plan({receipt:{...receipt(),...changed}}),/one_company_courier_/);
