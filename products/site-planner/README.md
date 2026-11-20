@@ -259,3 +259,13 @@ Drafts are plain, human-inspectable JSON with a fixed schema and limits on marks
 The standalone editor loads `plan-drafts.js` relative to `plan-studio.html`; the private loopback server serves the script from `/plan-drafts.js` behind the same operator authorization check. The `test_plan_drafts.py` regression tests verify the private route, successful round-trip, source mismatch, malformed placement, tampered certification, reference recalibration and no partial writes.
 
 The local v2.1 suite has **24 passing tests**. Site Planner commercial orders remain held, and neither Stripe checkout link is enabled.
+
+## v2.2 simple-first Kennedy workflow
+
+**The default UI is deliberately three actions:** (1) upload an authorized overhead site photo and optionally enter its address, (2) tap the site sheet to place conceptual chargers, and (3) use **View / Save PDF**. This is a manual drawing experience; entering an address alone does **not** fetch imagery or generate a verified plan.
+
+Technical controls are still preserved in a **collapsed More tools & project details** section. These include the separate vicinity image, project metadata, equipment pads, conduit routes, access notes, erase, image reference calibration, advanced exports and source-fingerprint-bound save/restore. A simple customer should not be required to learn any of these before seeing a usable concept.
+
+On phones, the diagram remains large enough for tapping and can be swiped horizontally rather than becoming an unreadable thumbnail. The PDF/print path still contains both engineering-style sheets. Real photo upload clears all fictional demo placements and resets calibration; if the site name is the unchanged demonstration placeholder it becomes an explicit operator-review concept. All outputs remain **not for construction**.
+
+`test_simple_ui.py` locks the three visible steps, verifies expert controls stay collapsed but available, and compiles the inline browser code. Run `python3 -m unittest discover -v`. This is a **UX simplification**, not an automated aerial fetch, engineering review, customer login or production deployment. The commercial order hold remains in place.
