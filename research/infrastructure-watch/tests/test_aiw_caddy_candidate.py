@@ -62,7 +62,7 @@ class CandidateTests(unittest.TestCase):
         self.assertEqual(target[target.index("  handle {\n    reverse_proxy 127.0.0.1:8787"):],
                          BASE[BASE.index("  handle {\n    reverse_proxy 127.0.0.1:8787"):])
         self.assertIn('worlds.systemiacommandcenters.com {',target)
-        self.assertEqual(len(re.findall(r'(?m)^\\s*reverse_proxy 127\\.0\\.0\\.1:8787\\s*
+        self.assertEqual(sum(line.strip() == "reverse_proxy 127.0.0.1:8787" for line in target.splitlines()),1)
         self.assertEqual(target.count("reverse_proxy 127.0.0.1:4310"),1)
         self.assertEqual(target.count("reverse_proxy 127.0.0.1:8797"),1)
         self.assertEqual(target.count("reverse_proxy 127.0.0.1:8788"),1)
