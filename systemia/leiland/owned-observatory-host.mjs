@@ -22,6 +22,8 @@ export const STATIC_PATHS=Object.freeze({
  '/kaidance/experience.css':'kaidance/experience.css',
  '/kaidance/collider-v3.css':'kaidance/collider-v3.css',
  '/kaidance/collider-engine.mjs':'kaidance/collider-engine.mjs',
+ '/kaidance/confluence.css':'kaidance/confluence.css',
+ '/kaidance/current-field.mjs':'kaidance/current-field.mjs',
  '/kaidance/visual.mjs':'kaidance/visual.mjs',
  '/kaidance/app.mjs':'kaidance/app.mjs',
  '/kaidance/work-source.mjs':'kaidance/work-source.mjs',

@@ -85,3 +85,13 @@ A `MutationObserver` only triggers an exceptional, expanding shockwave when the 
 Performance: capped 15 fps on small screens / 20 fps on desktop (with adaptive frame pacing), capped device pixel ratio, reduced particle budget on mobile, pause when out of view or tab hidden, and a static low-activity form under `prefers-reduced-motion`. The old DOM emblem is retained invisibly as a source-gated beat signal and fallback structure. All drawing stays underneath the headline and original controls.
 
 Production parity: `collider-engine.mjs` and `collider-v3.css` are in the Pages fallback probe, Caddy exact asset allowlist, and Leiland owned-observatory-host static allowlist. The browser QA checks nonblank pixel output, real frame-to-frame motion, iPhone/desktop layout, one-tap 9:16, and no JavaScript exceptions. This **does not** authorize publishing a live Collider feed.
+
+## V04 The Confluence Field (from HUDSON comparison)
+
+The new entry view is **a full-viewport interactive living network**, not a large K or standalone reactor. It takes its composition lessons from Evercraft's own HUDSON River Watch: winding channels between named confluences, a distinctive traveling explorer, colored energy streams, and a low-profile source-backed narrative ribbon.
+
+It adds `current-field.mjs` and `confluence.css` as first-party, standalone assets. The accessible Explore drawer navigates conceptual nodes for Systemia, Hudson, Discovery, Kaidance, Raven Nexus, Work Saban and Evidence. Pause halts ambient motion. Reactor View preserves V03 as a second mode. 9:16 Live View is still directly linkable with `?view=live`.
+
+**Source boundaries:** currents and the explorer are explicitly artistic, not live missions. A verified public GitHub record can change the depicted *conceptual* focus and appears with its source receipt in the normal activity overlay. It does not promote anything into Collider execution. Only an independently verified increment in `#collider.beat` may cause a special collision flash. The static Pages preview has no published pulse, and the live signed publisher remains a separate field approval.
+
+QA checks interactive routes, pixel production, animation, both viewing modes, iPhone safe area, reduced-motion behavior, no browser exceptions, and owned static route parity.
