@@ -43,14 +43,16 @@ export async function probeKaidanceFallback({root,fetchImpl=fetch,now=new Date()
  if(!/text\/html/i.test(results['index.html'].contentType))throw Error('fallback_not_html');
  for(const expected of [
     'KAIDANCE | Evercraft in Motion','9:16 LIVE VIEW',
-    'HEARTBEAT NOT CONNECTED','./app.mjs','./style.css','./experience.css','./collider-v3.css','./confluence.css','./visual.mjs','./collider-engine.mjs','./current-field.mjs','./mark.svg'
+    'HEARTBEAT NOT CONNECTED','./app.mjs','./style.css','./experience.css','./collider-v3.css','./confluence.css','./visual.mjs','./collider-engine.mjs','./current-field.mjs','./field-chapters.mjs','./mark.svg'
  ])if(!html.includes(expected))throw Error('fallback_missing_'+expected);
  if(!app.includes("from './pulse-source.mjs'")||
     !app.includes("from './work-source.mjs'")||
     !app.includes("fetch('./pulse.json'"))throw Error('fallback_client_provenance_missing');
  if(!source.includes('assessPublicPulse')||!work.includes('normalizePublicActivity'))throw Error('fallback_source_validation_missing');
- if(!results['current-field.mjs'].text.includes('CONFLUENCE FIELD V04')||
-    !results['confluence.css'].text.includes('KAIDANCE V04'))throw Error('fallback_current_field_assets_missing');
+ if(!results['current-field.mjs'].text.includes('CONFLUENCE FIELD V05')||
+    !results['confluence.css'].text.includes('KAIDANCE V04')||
+    !results['field-chapters.mjs'].text.includes('SCENIC_LEG_SECONDS'))throw Error('fallback_current_field_assets_missing');
+ if(!html.includes('id="fieldRouteProgress"')||!html.includes('id="fieldRecordTopic"'))throw Error('fallback_story_choreography_missing');
  if(!results['collider-engine.mjs'].text.includes('AMBIENT ART')||
     !results['collider-v3.css'].text.includes('KAIDANCE COLLIDER V03'))throw Error('fallback_reactor_assets_missing');
  if(!results['visual.mjs'].text.includes('Ambient art only')||
