@@ -21,6 +21,7 @@ test('river Watch is an interactive site and not an image stand-in',()=>{
  assert.match(watch,/CURRENT|RIVER|SCENIC CURRENT/);
  assert.ok(code);
  assert.doesNotThrow(()=>new vm.Script(code));
+ assert.match(code,/function drawWatershed\(/);
  assert.match(code,/function drawRivers\(/);
  assert.match(code,/function drawParticles\(/);
  assert.match(code,/function drawConfluences\(/);
@@ -58,5 +59,5 @@ test('river topology has seven named confluences and multi-channel currents',()=
  for(const key of keys)assert.match(code,new RegExp(key+':\\{name:'));
  assert.match(code,/var EDGES=/);
  assert.match(code,/createEdge\(e\[0\],e\[1\],e\[2\]\)/);
- assert.match(code,/drawRivers\(\);drawParticles\(dt\);drawConfluences\(\)/);
+ assert.match(code,/drawWatershed\(\);drawRivers\(\);drawParticles\(dt\);drawConfluences\(\)/);
 });
