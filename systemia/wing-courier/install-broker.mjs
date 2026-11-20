@@ -97,7 +97,7 @@ export function evaluateWingBrokerConfig({configPath}={}){
     readyForOwnedLocalActivation:true,host:'127.0.0.1',port:8791,
     scope:'harbor<->fallen only',wingCount:2,separateTokens:4,
     distinctEd25519ReceiverAckKeys:true,privateStorageChecked:true,
-    unitInstalled:false,publicRouteEnabled:false,externalTlsObserved:false,
+    unitInstalled:false,publicRouteActivatedByThisTool:false,externalTlsObserved:false,
     sourceIdentityAttested:false,customerAssetsTransferred:false,
     passportAdmissionGranted:false,customerPreviewAuthorized:false};
 }
@@ -157,7 +157,7 @@ export async function observeLocalWingBroker({port=8791}={}){
   return {schema:BROKER_LOCAL_PROBE_SCHEMA,loopbackObserved:true,
     unauthenticatedSendDenied:true,unauthenticatedReceiveDenied:true,
     liveProcessIdentityNotCryptographicallyAttested:true,
-    externalTlsObserved:false,publicRouteEnabled:false,realCustomerTransfer:false};
+    externalTlsObserved:false,publicRouteActivatedByThisTool:false,realCustomerTransfer:false};
 }
 export async function installWingBroker({
   configPath,activate=false,confirmOwnedHost=false,home=os.homedir(),
@@ -180,7 +180,7 @@ export async function installWingBroker({
   ctl('is-active','--quiet',SERVICE);
   const local=await observeLocalWingBroker();
   return {...pre,...local,mode:'ACTIVATED_LOCAL_USER_SERVICE',
-    unitInstalled:true,externalTlsObserved:false,publicRouteEnabled:false};
+    unitInstalled:true,externalTlsObserved:false,publicRouteActivatedByThisTool:false};
 }
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)){
   const index=process.argv.indexOf('--config');
