@@ -23,6 +23,8 @@ export const STATIC_PATHS=Object.freeze({
  '/kaidance/collider-v3.css':'kaidance/collider-v3.css',
  '/kaidance/collider-engine.mjs':'kaidance/collider-engine.mjs',
  '/kaidance/confluence.css':'kaidance/confluence.css',
+ '/kaidance/signal-wall.css':'kaidance/signal-wall.css',
+ '/kaidance/signal-river.mjs':'kaidance/signal-river.mjs',
  '/kaidance/current-field.mjs':'kaidance/current-field.mjs',
  '/kaidance/field-chapters.mjs':'kaidance/field-chapters.mjs',
  '/kaidance/visual.mjs':'kaidance/visual.mjs',
