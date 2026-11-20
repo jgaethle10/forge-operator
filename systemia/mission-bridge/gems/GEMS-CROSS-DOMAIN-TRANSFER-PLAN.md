@@ -195,10 +195,10 @@ upstream server or imply that any DEM pixels exist**.
 
 ## GEMS-006 next boundary: gated public 3DEP metadata capture (Nov 20)
 
-A separate, explicit-run \`gems_usgs_3dep_capture.py\` can now **fetch
+A separate, explicit-run `gems_usgs_3dep_capture.py` can now **fetch
 public project-index JSON from the pinned USGS 3DEP layer 18 endpoint** once
 the owner-private diagnostic atlas is available locally. Network access is
-**off unless** \`--allow-public-usgs-query\` is provided. No arbitrary base
+**off unless** `--allow-public-usgs-query` is provided. No arbitrary base
 URLs or redirects are allowed, and the client bypasses inherited proxies,
 checks TLS, caps each response at 1 MiB, uses a 12-second timeout, and pauses
 between queries. No raster source download, model training, or submission.
@@ -210,7 +210,7 @@ files. Write the response bundle into private owner-controlled storage;
 **never commit response bundles or private atlas locations to the public repo**.
 The write-once file is created with 0600 permissions.
 
-\`\`\`bash
+```bash
 cd systemia/mission-bridge/gems
 python3 -m unittest -v test_gems_usgs_3dep_capture.py
 # First bounded live trial: one tile from each diagnostic group, 3 public requests.
@@ -220,7 +220,7 @@ python3 gems_usgs_3dep_capture.py \
   --receipt /PRIVATE/NEW/usgs-3dep-public-index-pilot.json \
   --allow-public-usgs-query
 # Only after a verified pilot: --max-per-group 15 in a fresh receipt path
-\`\`\`
+```
 
 A returned project metadata record is only a **public index intersection**,
 not evidence of valid 1m elevation pixels, source rights, equal-area coverage,
