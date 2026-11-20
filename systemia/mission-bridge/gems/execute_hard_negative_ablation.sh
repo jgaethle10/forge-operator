@@ -55,15 +55,23 @@ if rep:
 assert a["scored_submission_made"] is False
 assert a["model_promotion_allowed"] is False
 assert a["candidate_tif_created"] is False
-base=a["full_area_baseline"];candidate=a["full_area_hard_negative"]
+base=a["full_area_baseline"];control=a["full_area_distance_matched_random_control"];candidate=a["full_area_hard_negative"]
 summary={
     "schema":"evercraft.gems.hard-negative-decision-gate.v1",
     "selection_target":"known-fault full-area geographic proxy, not official hidden new-fault score",
-    "baseline_dti":base["dti"],"hard_mined_dti":candidate["dti"],
+    "baseline_dti":base["dti"],"distance_matched_random_dti":control["dti"],
+    "hard_mined_dti":candidate["dti"],
     "hard_minus_baseline":candidate["dti"]-base["dti"],
-    "baseline_weighted_terms":base,"hard_mined_weighted_terms":candidate,
+    "hard_minus_distance_matched_random":candidate["dti"]-control["dti"],
+    "distance_matched_random_minus_baseline":control["dti"]-base["dti"],
+    "baseline_weighted_terms":base,"distance_matched_random_weighted_terms":control,
+    "hard_mined_weighted_terms":candidate,
     "corridor_proxy_baseline":a["corridor_baseline"]["dti"],
     "corridor_proxy_hard_mined":a["corridor_hard_negative"]["dti"],
+    "corridor_proxy_distance_matched_random":a["corridor_distance_matched_random"]["dti"],
+    "all_three_folds_improve_hard_over_distance_control":all(
+        row["hard_mined"]["full_dti"]>row["distance_matched_random"]["full_dti"]
+        for row in a["fold_ledger"]),
     "all_three_folds_improve_full_area":all(
         row["hard_mined"]["full_dti"]>row["baseline"]["full_dti"]
         for row in a["fold_ledger"]),
