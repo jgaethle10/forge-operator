@@ -62,6 +62,7 @@ jobs:
           npm run test:chum-public-origin
           npm run test:product-url-fabric
           node --test tests/clip-public-entry.test.mjs
+          node --test tests/kennedy-public-studio.test.mjs
 
       - name: Verify KAIDANCE public fallback readback contract
         run: node --test tests/kaidance-public-fallback-readback.test.mjs
@@ -277,6 +278,15 @@ jobs:
           test -s _public_pages/closeout/product.json
           test -s _public_pages/closeout/llms.txt
 
+      - name: Assert Kennedy drawing studio travels with the public artifact
+        if: steps.page_state.outputs.enabled == 'true'
+        run: |
+          test -s _public_pages/kennedy-space-station/index.html
+          test -s _public_pages/kennedy-space-station/studio/index.html
+          grep -Fq 'href="studio/"' _public_pages/kennedy-space-station/index.html
+          grep -Fq 'data-mobile-tool="charger"' _public_pages/kennedy-space-station/studio/index.html
+          grep -Fq 'NOT FOR CONSTRUCTION' _public_pages/kennedy-space-station/studio/index.html
+
       - name: Upload Pages artifact
         if: steps.page_state.outputs.enabled == 'true'
         uses: actions/upload-pages-artifact@v3
@@ -324,6 +334,28 @@ jobs:
             echo
             echo "Public company homepage: ${base%/}/"
             echo 'HEADQUARTERS_PUBLIC_ROOT_HTTPS_VERIFIED'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Verify Kennedy Space Station and mobile Drawing Studio over HTTPS
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="${{ steps.deployment.outputs.page_url }}"
+          target="${base%/}/kennedy-space-station/"
+          dir="$(mktemp -d)"
+          curl --fail --silent --show-error --location --retry 6 --retry-all-errors --retry-delay 2 --max-time 20 "${target}" -o "${dir}/home.html"
+          curl --fail --silent --show-error --location --retry 6 --retry-all-errors --retry-delay 2 --max-time 20 "${target}studio/" -o "${dir}/studio.html"
+          grep -Fq 'kennedy-space-station-workshop-v2-20261120' "${dir}/home.html"
+          grep -Fq 'href="studio/"' "${dir}/home.html"
+          grep -Fq 'kennedy-site-planner-public-v2-20261120' "${dir}/studio.html"
+          grep -Fq 'id="drawing-1"' "${dir}/studio.html"
+          grep -Fq 'id="mobileZoom"' "${dir}/studio.html"
+          grep -Fq 'NOT FOR CONSTRUCTION' "${dir}/studio.html"
+          {
+            echo '## Kennedy Space Station public Drawing Studio verified'
+            echo
+            echo "Mobile site and studio available: ${target}"
+            echo 'KENNEDY_PUBLIC_STUDIO_HTTPS_VERIFIED'
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Verify Signal one-time buyer scope assets over public HTTPS
