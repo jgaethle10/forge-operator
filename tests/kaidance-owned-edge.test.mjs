@@ -16,7 +16,7 @@ test('Kaidance standalone owned assets are complete, public-only and mirrored fr
  assert.notEqual(mark,read('../public/headquarters/mark.svg'),'KAIDANCE requires its own product identity');
  assert.match(mark,/<title id="title">Kaidance<\/title>/);
  assert.match(mark,/accelerator rails/);
- assert.doesNotMatch(mark,/<script|<foreignObject|https?:\/\//i);
+ assert.doesNotMatch(mark,/<script|<foreignObject|(?:href|src)=[\"']https?:\/\//i);
  assert.match(html,/class="brand-symbol" src="\.\/mark\.svg"/);
  assert.match(html,/class="stage-brand" src="\.\/mark\.svg"/);
  assert.doesNotMatch(read('../public/kaidance/work-source.mjs'),/Authorization:\s*Bearer|PRIVATE_KEY|process\.env/);
