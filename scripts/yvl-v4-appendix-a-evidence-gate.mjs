@@ -9,7 +9,7 @@ const HARD_HOLDS=['unrecovered_original_v4_archives','unverified_two_completed_l
  'no_current_vpat_acr_or_manual_accessibility_qa','unverified_us_hosting',
  'unverified_five_year_itemized_pricing','no_signed_addenda_acknowledgment'];
 const mandatoryNotAvailable=new Set(['YVL-18','YVL-19']);
-const sourceURL=new URL('../../docs/procurement/yvl-v4-vendor-response-matrix-20261120.json',import.meta.url);
+const sourceURL=new URL('../docs/procurement/yvl-v4-vendor-response-matrix-20261120.json',import.meta.url);
 export function validateYvlMatrix(matrix){
  const errors=[];
  if(matrix?.schema!=='evercraft.yvl.vendor-response-evidence.v1')errors.push('wrong_schema');
