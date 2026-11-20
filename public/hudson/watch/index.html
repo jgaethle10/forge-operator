@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#040b13">
-<meta name="hudson-watch-release" content="river-current-v8-undertow-cathedral"><meta name="description" content="Watch HUDSON's flowing knowledge currents and source-linked replay on Evercraft's owned public observatory.">
+<meta name="hudson-watch-release" content="river-current-v9-archive-ship"><meta name="description" content="Watch HUDSON's flowing knowledge currents and source-linked replay on Evercraft's owned public observatory.">
 <title>HUDSON | Enter the Current</title>
 <style>
 :root{color-scheme:dark;--aqua:#9affdc;--chalk:#e2f7f1;--soft:#9ebabb}
@@ -484,69 +484,171 @@ function drawPresenceRipple(from,to,t){
  }
  ctx.restore();
 }
-// The traveler is deliberately not an insect, orb or fixed spinning logo.
-// Each ribbon has volume and changes silhouette as it moves through the river.
-function drawTraveler(from,to,t){
- // The Fold: angular living architecture suspended inside a refractive rift.
- // It cannot be mistaken for a bug, jellyfish, eye or a live AI thought.
- var pos=locate(from,to,t),ahead=locate(from,to,Math.min(.999,t+.013));
- var angle=Math.atan2(ahead.y-pos.y,ahead.x-pos.x),state=travelerState(clock,t);
- var size=width<=620?clamp(width*.205,73,99):clamp(width*.112,112,188);
- ctx.save();ctx.translate(pos.x,pos.y);ctx.rotate(angle+state.yaw*.5);
- ctx.globalCompositeOperation="source-over";ctx.globalAlpha=state.integrity;
- // Dense shadow separates the body from the luminous river.
- var shadow=ctx.createRadialGradient(0,0,size*.06,0,0,size*1.33);
- shadow.addColorStop(0,"rgba(0,3,13,.99)");
- shadow.addColorStop(.35,"rgba(1,9,26,.93)");
- shadow.addColorStop(.67,"rgba(3,28,47,.44)");
- shadow.addColorStop(1,"rgba(0,5,20,0)");
- ctx.fillStyle=shadow;ctx.beginPath();ctx.arc(0,0,size*1.33,0,7);ctx.fill();
- // Irregular torn veils encircle the hole from different 3D-facing directions.
- var shades=[[74,251,223],[164,149,255],[46,182,235],[177,250,225],[128,114,246]];
- for(var layer=0;layer<5;layer++){
-  var f=ribbonForm(clock,layer,state),phi=layer*2.399963+clock*(layer%2?.062:-.048)+f.angle*.13;
-  var span=size*(.58+.16*layer+state.opening*.38),thick=size*(.20+f.width*.40);
-  var bend=Math.sin(clock*.36+layer*2.1)*size*.28;
-  ctx.save();ctx.rotate(phi);ctx.globalAlpha=clamp(.48+f.opacity*.37,.3,.78)*state.integrity;
-  ctx.beginPath();ctx.moveTo(-size*.07,-thick*.22);
-  ctx.bezierCurveTo(span*.19,-thick*1.48+bend,span*.61,-thick*.98+bend,span,-thick*.38);
-  ctx.quadraticCurveTo(span*.69,thick*1.29+bend,span*.10,thick*.40);
-  ctx.closePath();
-  var col=shades[layer],grad=ctx.createLinearGradient(0,-thick,span,thick);
-  grad.addColorStop(0,"rgba("+col.join(",")+",.02)");
-  grad.addColorStop(.52,"rgba("+col.join(",")+",.57)");
-  grad.addColorStop(1,"rgba("+col.join(",")+",.90)");
-  ctx.fillStyle=grad;ctx.fill();
-  ctx.strokeStyle="rgba("+col.join(",")+",.81)";ctx.lineWidth=1.8;ctx.stroke();
-  ctx.strokeStyle="rgba(236,255,249,.24)";ctx.lineWidth=.7;
-  ctx.beginPath();ctx.moveTo(size*.12,-thick*.08);
-  ctx.quadraticCurveTo(span*.53,-thick*.34+bend*.42,span*.94,-thick*.29);ctx.stroke();
-  ctx.restore();
+
+// HUDSON'S ARCHIVE SHIP: a three-masted celestial flagship, not a floating
+// particle or a depiction of real AI thought. All ornament is first-party 2D
+// geometry and all movement belongs to the same illustrative river route.
+// Full, wind-filled sails have changing curvature and visible stitched panels.
+function drawRoyalSail(x,top,bottom,beam,wind,index){
+ var belly=wind*.11,mid=(top+bottom)*.5;
+ ctx.beginPath();
+ ctx.moveTo(x-beam*.47,top);
+ ctx.quadraticCurveTo(x+beam*.02,top-.045,x+beam*.49,top);
+ ctx.bezierCurveTo(x+beam*(.64+belly),mid-.12,
+  x+beam*(.65+belly),mid+.11,x+beam*.43,bottom);
+ ctx.quadraticCurveTo(x+beam*.02,bottom+.11+belly,x-beam*.42,bottom);
+ ctx.bezierCurveTo(x-beam*.25,mid+.20+belly,x-beam*.37,mid-.15,x-beam*.47,top);
+ ctx.closePath();
+ var cloth=ctx.createLinearGradient(x-beam*.45,top,x+beam*.60,bottom);
+ cloth.addColorStop(0,index%2?"rgba(232,218,255,.94)":"rgba(246,235,201,.95)");
+ cloth.addColorStop(.38,"rgba(222,254,239,.92)");
+ cloth.addColorStop(.72,index%2?"rgba(89,181,202,.86)":"rgba(121,209,201,.86)");
+ cloth.addColorStop(1,"rgba(16,53,87,.85)");
+ ctx.fillStyle=cloth;ctx.shadowColor="rgba(110,243,219,.20)";ctx.shadowBlur=9;ctx.fill();ctx.shadowBlur=0;
+ ctx.strokeStyle="rgba(241,206,139,.91)";ctx.lineWidth=.024;ctx.stroke();
+ // Stitched golden ribs and curved fabric creases keep the sails sculptural.
+ for(var seam=1;seam<=4;seam++){
+  var u=seam/5,yy=top+(bottom-top)*u;
+  ctx.beginPath();ctx.moveTo(x-beam*(.41-.02*u),yy);
+  ctx.quadraticCurveTo(x+beam*(.14+belly),yy+.10,
+   x+beam*(.48+.05*Math.sin(u*Math.PI)+belly),yy);
+  ctx.strokeStyle="rgba(255,245,218,.38)";ctx.lineWidth=.012;ctx.stroke();
  }
- // Broken polar ridges imply internal volume without forming eyes or a face.
- ctx.save();ctx.rotate(clock*.13);
- for(var i=0;i<4;i++){
-  var phi=i*Math.PI*.5+Math.sin(clock*.22+i)*.14;
-  ctx.beginPath();ctx.ellipse(0,0,size*(.58+i*.16),size*(.28+i*.054),phi,phi+.18,phi+.85);
-  ctx.strokeStyle=i%2?"rgba(185,154,255,.20)":"rgba(133,255,223,.30)";
-  ctx.lineWidth=i===0?2:.8;ctx.stroke();
+}
+function drawTraveler(from,to,t){
+ // The Archive Ship: ivory aurora sails, midnight-blue hull, gilded galleries.
+ // A majestic vessel navigates source-history *scenery*, never live missions.
+ var pos=locate(from,to,t),ahead=locate(from,to,Math.min(.999,t+.017));
+ var facing=ahead.x>=pos.x?1:-1;
+ var size=width<=620?clamp(width*.19,70,93):clamp(width*.105,105,163);
+ var state=travelerState(clock,t),breath=presencePulse(clock);
+ var bob=Math.sin(clock*1.06)*.017;
+ ctx.save();
+ ctx.translate(pos.x,pos.y+size*bob);
+ ctx.rotate(clamp(ahead.dy/Math.max(1,Math.hypot(ahead.dx,ahead.dy)),-1,1)*.044
+  +Math.sin(clock*.67)*.014);
+ ctx.scale(size*facing,size);
+ ctx.globalCompositeOperation="source-over";
+ ctx.globalAlpha=.74+.26*state.integrity;
+ // A deep-water silhouette makes the ship readable even across bright channels.
+ var aura=ctx.createRadialGradient(0,-.42,.14,0,-.42,2.06);
+ aura.addColorStop(0,"rgba(2,11,30,.91)");
+ aura.addColorStop(.45,"rgba(8,39,65,.52)");
+ aura.addColorStop(1,"rgba(1,9,23,0)");
+ ctx.fillStyle=aura;ctx.beginPath();ctx.ellipse(0,-.42,1.85,1.80,0,0,Math.PI*2);ctx.fill();
+ // Twin aft foam tongues spread into the existing luminous wake.
+ ctx.save();ctx.globalCompositeOperation="lighter";
+ for(var flank of [-1,1]){
+  var swell=Math.sin(clock*1.1+flank)*.085;
+  ctx.beginPath();ctx.moveTo(-1.18,.22);
+  ctx.bezierCurveTo(-1.44,.28+flank*.10,-1.82,.36+flank*.24,
+   -2.17,.48+flank*(.35+swell));
+  ctx.strokeStyle=flank===1?"rgba(116,252,226,.48)":"rgba(168,162,255,.43)";
+  ctx.lineWidth=.036;ctx.stroke();
+  ctx.beginPath();ctx.moveTo(-1.30,.30+flank*.04);
+  ctx.quadraticCurveTo(-1.67,.48+flank*.21,-1.94,.57+flank*.29);
+  ctx.strokeStyle="rgba(217,255,242,.19)";ctx.lineWidth=.012;ctx.stroke();
  }
  ctx.restore();
- // A rotating jagged rift interrupts the colored veils. No fixed glowing dot.
- ctx.save();ctx.rotate(-state.roll*.55);var r=size*(.34+state.opening*.10);
- ctx.beginPath();
- for(var k=0;k<9;k++){
-  var a=k*Math.PI*2/9+Math.sin(clock*.33+k)*.12;
-  var d=r*(k%3===0?1.17:k%2===0?.73:.98);
-  if(!k)ctx.moveTo(Math.cos(a)*d,Math.sin(a)*d);
-  else ctx.lineTo(Math.cos(a)*d,Math.sin(a)*d);
+ // Massive timber-and-gold keel: an unmistakable sailing-ship profile.
+ ctx.beginPath();ctx.moveTo(-1.31,-.12);
+ ctx.bezierCurveTo(-1.17,-.27,-.98,-.26,-.80,-.25);
+ ctx.lineTo(.98,-.25);
+ ctx.quadraticCurveTo(1.24,-.22,1.48,-.40);
+ ctx.quadraticCurveTo(1.51,-.01,1.14,.25);
+ ctx.bezierCurveTo(.82,.45,-.56,.47,-1.05,.26);
+ ctx.quadraticCurveTo(-1.28,.15,-1.31,-.12);ctx.closePath();
+ var hull=ctx.createLinearGradient(-.7,-.27,.7,.46);
+ hull.addColorStop(0,"#233e56");hull.addColorStop(.3,"#071b35");
+ hull.addColorStop(.66,"#0a3352");hull.addColorStop(1,"#020d25");
+ ctx.fillStyle=hull;ctx.shadowColor="rgba(3,5,16,.9)";ctx.shadowBlur=13;ctx.fill();ctx.shadowBlur=0;
+ ctx.strokeStyle="rgba(248,197,104,.95)";ctx.lineWidth=.041;ctx.stroke();
+ // The golden sheerline, black lower armor and carved forward prow.
+ ctx.beginPath();ctx.moveTo(-1.23,-.19);
+ ctx.bezierCurveTo(-.55,-.11,.70,-.09,1.44,-.35);
+ ctx.strokeStyle="#f9d99d";ctx.lineWidth=.052;ctx.stroke();
+ ctx.beginPath();ctx.moveTo(-1.17,.16);ctx.quadraticCurveTo(.04,.47,1.31,.08);
+ ctx.strokeStyle="rgba(99,238,217,.69)";ctx.lineWidth=.029;ctx.stroke();
+ ctx.beginPath();ctx.moveTo(1.21,-.29);
+ ctx.quadraticCurveTo(1.56,-.56,1.65,-.91);
+ ctx.strokeStyle="rgba(246,197,107,.97)";ctx.lineWidth=.061;ctx.stroke();
+ // Three soaring masts, crossed yards, rigging and illuminated capstones.
+ var masts=[{x:-.78,h:1.42,beam:.78},{x:-.09,h:2.03,beam:1.12},{x:.66,h:1.59,beam:.77}];
+ ctx.strokeStyle="rgba(213,169,108,.75)";ctx.lineWidth=.017;
+ for(var mast of masts){
+  ctx.beginPath();ctx.moveTo(mast.x,-.19);ctx.lineTo(mast.x,-mast.h);
+  ctx.strokeStyle="#e8c68e";ctx.lineWidth=.047;ctx.stroke();
+  ctx.beginPath();ctx.moveTo(mast.x,-mast.h);
+  ctx.lineTo(mast.x-.14,-mast.h+.14);
+  ctx.lineTo(mast.x+.15,-mast.h+.17);
+  ctx.strokeStyle="rgba(255,242,204,.85)";ctx.lineWidth=.012;ctx.stroke();
+  for(var side of [-1,1]){
+   ctx.beginPath();ctx.moveTo(mast.x,-mast.h+.02);
+   ctx.quadraticCurveTo(mast.x+side*.13,-mast.h*.60,
+     mast.x+side*(mast.x>0?1.15:1.1),-.23);
+   ctx.strokeStyle="rgba(194,221,211,.42)";ctx.lineWidth=.011;ctx.stroke();
+  }
  }
- ctx.closePath();ctx.fillStyle="rgba(0,2,12,.99)";ctx.fill();
- ctx.strokeStyle="rgba(143,255,230,.92)";ctx.lineWidth=2.1;ctx.shadowBlur=12;
- ctx.shadowColor="rgba(91,251,223,.9)";ctx.stroke();ctx.shadowBlur=0;
- ctx.beginPath();ctx.arc(0,0,r*.52,-.7,2.3);
- ctx.strokeStyle="rgba(1,14,35,.93)";ctx.lineWidth=5;ctx.stroke();
- ctx.restore();ctx.restore();
+ // Sails are drawn in depth order; the central crown towers above the others.
+ var wind=Math.sin(clock*.83),mainWind=Math.sin(clock*.69+.8);
+ drawRoyalSail(-.78,-1.36,-.48,.72,wind,1);
+ drawRoyalSail(.66,-1.52,-.50,.79,-wind,2);
+ drawRoyalSail(-.09,-1.58,-.64,1.06,mainWind,0);
+ drawRoyalSail(-.09,-1.95,-1.57,.72,wind,3);
+ // A distinct forward triangular staysail, billowing towards the gilded prow.
+ ctx.beginPath();ctx.moveTo(.65,-1.53);
+ ctx.quadraticCurveTo(1.18,-1.20,1.57,-.49);
+ ctx.quadraticCurveTo(1.09,-.69,.80,-.74);
+ ctx.closePath();
+ var jib=ctx.createLinearGradient(.7,-1.5,1.5,-.4);
+ jib.addColorStop(0,"rgba(248,232,199,.89)");
+ jib.addColorStop(.6,"rgba(141,227,217,.82)");
+ jib.addColorStop(1,"rgba(58,95,155,.65)");
+ ctx.fillStyle=jib;ctx.fill();ctx.strokeStyle="rgba(255,220,155,.9)";ctx.lineWidth=.023;ctx.stroke();
+ // Long pearl bowsprit and a gilded star carved into the figurehead.
+ ctx.beginPath();ctx.moveTo(1.13,-.29);ctx.lineTo(1.85,-.69);
+ ctx.strokeStyle="#eac68a";ctx.lineWidth=.037;ctx.stroke();
+ ctx.save();ctx.translate(1.63,-.66);ctx.rotate(clock*.06);
+ for(var p=0;p<8;p++){
+  var aa=p*Math.PI/4;
+  ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(Math.cos(aa)*(p%2?.077:.13),Math.sin(aa)*(p%2?.077:.13));
+  ctx.strokeStyle="rgba(248,217,144,.94)";ctx.lineWidth=.016;ctx.stroke();
+ }
+ ctx.restore();
+ // Raised quarterdeck, handrails, golden galleries and ten warm windows.
+ ctx.beginPath();ctx.moveTo(-1.21,-.24);ctx.lineTo(-1.14,-.52);
+ ctx.lineTo(-.55,-.52);ctx.lineTo(-.50,-.23);ctx.closePath();
+ var cabin=ctx.createLinearGradient(-1.1,-.52,-.55,-.2);
+ cabin.addColorStop(0,"#31516b");cabin.addColorStop(1,"#071529");
+ ctx.fillStyle=cabin;ctx.fill();ctx.strokeStyle="#e3b976";ctx.lineWidth=.029;ctx.stroke();
+ for(var windowIndex=0;windowIndex<10;windowIndex++){
+  var wx=-1.14+windowIndex*.235,wy=windowIndex<4?-.37:.01;
+  if(windowIndex>=4)wx=-.93+(windowIndex-4)*.315;
+  ctx.beginPath();ctx.roundRect(wx,wy,.071,.085,.023);
+  ctx.fillStyle=windowIndex%3===0?"rgba(249,216,148,.97)":"rgba(137,241,222,.82)";
+  ctx.shadowColor="rgba(248,212,145,.6)";ctx.shadowBlur=.052;ctx.fill();ctx.shadowBlur=0;
+ }
+ // Discrete rail posts and latticework echo an ornate ocean liner's grandeur.
+ for(var post=0;post<=17;post++){
+  var xx=-1.16+post*.142;
+  ctx.beginPath();ctx.moveTo(xx,-.24);ctx.lineTo(xx,-.32);
+  ctx.strokeStyle="rgba(243,206,138,.75)";ctx.lineWidth=.013;ctx.stroke();
+ }
+ ctx.beginPath();ctx.moveTo(-1.17,-.32);ctx.lineTo(1.19,-.32);
+ ctx.strokeStyle="rgba(251,220,155,.88)";ctx.lineWidth=.025;ctx.stroke();
+ // Firefly lanterns glow on the towering yards, not random fake activity.
+ ctx.save();ctx.globalCompositeOperation="lighter";
+ for(var lantern=0;lantern<3;lantern++){
+  var tip=masts[lantern],x=tip.x,y=-tip.h;
+  var g=ctx.createRadialGradient(x,y,0,x,y,.16);
+  g.addColorStop(0,"rgba(255,241,173,.78)");
+  g.addColorStop(.34,"rgba(248,205,129,.23)");
+  g.addColorStop(1,"rgba(248,205,129,0)");
+  ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,.16,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle="#fff9d5";ctx.beginPath();ctx.arc(x,y,.022,0,Math.PI*2);ctx.fill();
+ }
+ ctx.restore();
+ ctx.restore();
 }
 function routeAt(){
  // A public Git commit may drive historical replay; visual paths never claim a live mission.
@@ -643,7 +745,7 @@ function presentStory(){
  selectedTopic=null;
  if(!feed.length){
   storyKind.textContent="SCENIC CURRENT · NOT A LIVE MISSION";story.textContent="The river remembers.";
-  storySub.textContent="An unfamiliar presence follows the illustrative currents; no live mission is being shown.";
+  storySub.textContent="The Archive Ship crosses the illustrative knowledge river; this is not live mission telemetry.";
   receipt.hidden=true;receipt.removeAttribute("href");return;
  }
  var e=feed[currentIndex%feed.length],url=safeReceipt(e);
