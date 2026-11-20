@@ -117,6 +117,61 @@ def duplicate_contact(db, record, exclude_id=None):
     return None
 
 
+def project_source_review(source):
+    """Authenticated, ephemeral read-only view of real Revenue Desk records.
+
+    Does not import, send, persist customer details, or assert provider delivery.
+    """
+    from revenue_desk_bridge import entries, one
+    from revenue_desk_action_queue import classify, local_today
+    rows = entries(source)
+    if len(rows) > 500:
+        raise ValueError('Source review limited to 500 records')
+    today = local_today()
+    out = []
+    for i, r in enumerate(rows, 1):
+        if not isinstance(r, dict):
+            out.append({'ordinal': i, 'tier': 'schema_review', 'flags': ['malformed_record']})
+            continue
+        check = classify(r, today)
+        sent = []
+        for event in (r.get('sent') if isinstance(r.get('sent'), list) else [])[:20]:
+            if not isinstance(event, dict):
+                continue
+            sent.append({
+                'to': one(event, ('to','recipient','recipient_email','email','contact'))[:600],
+                'subject': one(event, ('subject',))[:1200],
+                'body': one(event, ('body','message','text','content'))[:8000],
+                'channel': one(event, ('channel','medium','provider','transport'))[:200],
+                'provider_ref_claim': one(event, ('provider_message_id','message_id','smtp_message_id','gmail_message_id','thread_id','id'))[:300],
+                'reported_at': one(event, ('sent_at','created_at','at','timestamp','date'))[:100],
+            })
+        out.append({
+            'ordinal': i, 'tier': check['tier'], 'flags': check['flags'],
+            'business': one(r, ('business','business_name','company','company_name'))[:1000],
+            'buyer': one(r, ('buyer','buyer_name','contact_name'))[:1000],
+            'contact': one(r, ('contact','contact_email','email'))[:1000],
+            'pain': one(r, ('pain','pain_point','problem'))[:8000],
+            'source': one(r, ('source','source_url','source_ref'))[:3000],
+            'signal': one(r, ('signal','sourceText','source_text','original_message'))[:8000],
+            'product': one(r, ('product','service','matched_product'))[:1000],
+            'offer': one(r, ('offer','tailored_offer','offer_text'))[:8000],
+            'draft': one(r, ('draft','outreach_draft','message_draft'))[:8000],
+            'stage': one(r, ('status','stage'))[:200],
+            'followup': one(r, ('followup','next_follow_up','next_followup'))[:100],
+            'reply': one(r, ('reply','buyer_reply'))[:8000],
+            'sent_history': sent,
+            'delivery_verified': False, 'outreach_approved': False,
+        })
+    order = {'reply_reconciliation_first':0,'due_named_buyer_review':1,
+             'due_buyer_identification_review':2,'named_buyer_evidence_review':3,
+             'source_evidence_review':4,'closed_record_review':5,'schema_review':6}
+    out.sort(key=lambda r:(order.get(r['tier'],8),r['ordinal']))
+    return {'mode':'local_read_only','count':len(out),'records':out,
+            'delivery_verified':0,'outreach_approved':0,
+            'note':'Reported source outreach is not provider-verified. Reconcile Gmail and verify original demand before contacting.'}
+
+
 class API(BaseHTTPRequestHandler):
     server_version = 'Evercraft-Demand/0.2'
 
@@ -158,6 +213,14 @@ class API(BaseHTTPRequestHandler):
         try:
             path = self.path.split('?', 1)[0]
             if method == 'GET':
+                if path == '/api/revenue-desk-review':
+                    # The private API is a read-only local adapter for Revenue Desk.
+                    # No source data is written to the private SQLite database.
+                    from revenue_desk_bridge import REVENUE_URL, get_json
+                    try:
+                        return self.reply(200, project_source_review(get_json(REVENUE_URL)))
+                    except Exception:
+                        return self.reply(503, {'error':'Revenue Desk loopback unavailable or incompatible'})
                 if path == '/api/opportunities':
                     rows = db.execute('SELECT * FROM opportunities ORDER BY updated DESC').fetchall()
                     return self.reply(200, {'records': [serialize(r, db) for r in rows]})
