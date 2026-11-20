@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 170" role="img" aria-labelledby="evercraft-title evercraft-description">
+<title id="evercraft-title">Evercraft</title>
+<desc id="evercraft-description">Three ascending titanium bands with a fine champagne gold orbital arc.</desc>
+<defs>
+ <linearGradient id="metal" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f7f8f8"/><stop offset=".24" stop-color="#aeb5be"/><stop offset=".43" stop-color="#e7e9eb"/><stop offset=".68" stop-color="#8a939e"/><stop offset="1" stop-color="#626974"/></linearGradient>
+ <linearGradient id="arc" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f5ddad"/><stop offset=".5" stop-color="#b79a56"/><stop offset="1" stop-color="#dfc184"/></linearGradient>
+</defs>
+<path d="M56 150C13 137 16 96 34 59S96 11 151 13" fill="none" stroke="url(#arc)" stroke-width="1.6" stroke-linecap="round"/>
+<g fill="url(#metal)" stroke="#f4f4f3" stroke-opacity=".36" stroke-width=".6">
+ <path d="M70 28H164L143 51H49Z"/>
+ <path d="M47 71H141L120 94H26Z"/>
+ <path d="M24 114H118L97 137H3Z"/>
+</g>
+<path d="M116 144C133 134 143 124 150 113" fill="none" stroke="url(#arc)" stroke-width="1.1" opacity=".75"/>
+</svg>
