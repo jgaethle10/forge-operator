@@ -67,3 +67,7 @@ The cinematic release adds `experience.css` and `visual.mjs` to the owned static
 ## Collider V03 owned-edge asset parity
 
 The new dimensional Collider requires two public static files: `collider-engine.mjs` and `collider-v3.css`. They are bundled and exactly allowlisted in the staged Caddy example and read-only Leiland host. No private source, signed approval, public pulse, new listener, or server-side animation was introduced. The existing safety and two-cycle release gates remain unchanged.
+
+## KAIDANCE V04 asset parity
+
+The immersive multi-confluence field adds `current-field.mjs` and `confluence.css` to the existing exact static allowlists. The read-only owned host and the public fallback probe include both. No new private service, server-to-client telemetry bridge, live pulse or unsafe route is added. Continuous energy motion remains illustrative and is not proof of mission execution.
