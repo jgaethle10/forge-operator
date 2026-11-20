@@ -1,0 +1,116 @@
+{
+  "schema": "evercraft.aaar.legacy-memory-supplier-candidates.v1",
+  "last_research_date": "2026-11-19",
+  "market_notice": {
+    "identifier": "FA8611-27-R-F-22",
+    "official_url": "https://sam.gov/workspace/contract/opp/8948e8601e964c6aba9c801eee16b1be/view",
+    "notice_type": "sources_sought_market_research",
+    "response_due_local": "2026-12-01T10:00:00-08:00",
+    "no_award_or_purchase_order": true,
+    "official_pdf_independently_reviewed": false
+  },
+  "allowed_states": [
+    "public_lead_only",
+    "partner_permission_verified",
+    "documented_candidate",
+    "qualified_by_independent_authority"
+  ],
+  "eligibility": {
+    "evercraft_sam_registration": "unknown",
+    "evercraft_uei": "unknown",
+    "evercraft_cage": "unknown",
+    "verified_supply_ability": false,
+    "f22_host_compatibility": false,
+    "qualification_or_approval": false
+  },
+  "candidates": [
+    {
+      "id": "FORTASA-PCMCIA",
+      "company": "Fortasa Memory Systems",
+      "role": "self-described US storage manufacturer",
+      "public_product_family": "Industrial PC ATA Memory Card",
+      "part_number": null,
+      "public_price_usd": null,
+      "source_url": "https://www.fortasa.com/products/flash-card-series/industrial-pcmcia-card",
+      "observed": "Advertises industrial Type II PCMCIA cards using SLC NAND and customization",
+      "verification_status": "public_lead_only",
+      "authorized_relationship": false,
+      "verified_traceability": false,
+      "confirmed_quote": false,
+      "host_test_passed": false,
+      "qualification_confirmed": false,
+      "commercial_contacted": false
+    },
+    {
+      "id": "DELKIN-CF",
+      "company": "Delkin Devices",
+      "role": "industrial CompactFlash manufacturer",
+      "public_product_family": "Industrial CompactFlash",
+      "part_number": null,
+      "public_price_usd": null,
+      "source_url": "https://www.delkin.com/products/industrial-cf/",
+      "observed": "Says its industrial CompactFlash cards are designed and built in Poway, California; advertises controlled components",
+      "verification_status": "public_lead_only",
+      "authorized_relationship": false,
+      "verified_traceability": false,
+      "confirmed_quote": false,
+      "host_test_passed": false,
+      "qualification_confirmed": false,
+      "commercial_contacted": false
+    },
+    {
+      "id": "PCCARDSDIRECT-256",
+      "company": "PCcardsDirect",
+      "role": "industrial memory supplier/retailer",
+      "public_product_family": "256 MB Type II industrial PCMCIA ATA",
+      "part_number": "PCDATA256MBI",
+      "public_price_usd": 105.44,
+      "source_url": "https://www.pccardsdirect.com/products/industrial-pcmcia-ata-cards.php",
+      "observed": "Public catalog shows 256 MB card and posted retail price; live stock and manufacturer/chain-of-custody unconfirmed",
+      "verification_status": "public_lead_only",
+      "authorized_relationship": false,
+      "verified_traceability": false,
+      "confirmed_quote": false,
+      "host_test_passed": false,
+      "qualification_confirmed": false,
+      "commercial_contacted": false
+    },
+    {
+      "id": "CALIFORNIAPC-256-2162TM2",
+      "company": "California PC FLASH",
+      "role": "industrial flash-card product line and catalog vendor",
+      "public_product_family": "Tough Metal Series 2 industrial PCMCIA Type II ATA flash",
+      "part_number": "FPCI-256MB-2162TM2",
+      "public_price_usd": 114.2,
+      "public_price_quantity": "1–9 units",
+      "public_price_observed_date": "2026-11-19",
+      "source_url": "https://www.californiapc.com/Industrial-Flash-Memory/Industrial-Grade-PCMCIA-Tough-Metal-Series-2/",
+      "observed": "Catalog describes 256 MB Type II removable-PCMCIA / fixed-IDE, PIO4 (no DMA), industrial -40°C to +85°C, SLC, three-year warranty and published 1–9 quantity unit price. Related 256MB UDMA part FPCI-256MB-4162TM2 is marked EOL; not equivalent without verification.",
+      "verification_status": "public_lead_only",
+      "authorized_relationship": false,
+      "verified_traceability": false,
+      "confirmed_quote": false,
+      "host_test_passed": false,
+      "qualification_confirmed": false,
+      "commercial_contacted": false,
+      "warranty_document_discrepancy": {
+        "state": "UNRESOLVED_PUBLIC_DOCUMENT_CONFLICT",
+        "vendor_catalog_claim_years": 3,
+        "vendor_catalog_url": "https://www.californiapc.com/Industrial-Flash-Memory/Industrial-Grade-PCMCIA-Tough-Metal-Series-2/",
+        "manufacturer_pdf_claim_years": 5,
+        "manufacturer_pdf_url": "https://californiapc.com/core/media/media.nl?c=3379633&h=2514f768f155d536786e&id=1047935",
+        "current_sku_warranty": "UNKNOWN_PENDING_VENDOR_WRITTEN_CONFIRMATION",
+        "independently_read_original_vendor_pdf": true,
+        "last_seen_date": "2026-11-19"
+      }
+    }
+  ],
+  "claim_constraints": [
+    "Public catalog is not a confirmed quote or authorized supplier relationship",
+    "Supplier product specifications do not prove compatibility with a government-furnished host",
+    "No product/firm has been qualified by the Air Force",
+    "No supplier contacted, order placed, bid submitted, or government payment observed",
+    "A catalog 'compatibility guaranteed' statement is not F-22 compatibility evidence; the EOL product is not necessarily interchangeable with the advertised available product.",
+    "California PC FLASH series warranty: current vendor catalog states three years and vendor PDF states five years; do not infer which applies to an exact current purchase."
+  ]
+}

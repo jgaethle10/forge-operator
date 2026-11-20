@@ -1,0 +1,33 @@
+{
+  "schema": "evercraft.aaar.document-claim-ledger.v1",
+  "research_date": "2026-11-19",
+  "publisher": "California Peripherals & Components, Inc.",
+  "claims": [
+    {
+      "id": "CALPC-CATALOG-WARRANTY-20261119",
+      "product_scope": "California PC FLASH Tough Metal Series 2 product family",
+      "attribute": "published_warranty_years",
+      "value": 3,
+      "source_kind": "vendor_catalog",
+      "source_url": "https://www.californiapc.com/Industrial-Flash-Memory/Industrial-Grade-PCMCIA-Tough-Metal-Series-2/",
+      "observed_date": "2026-11-19",
+      "description": "Product category page says these cards come with a three-year warranty (line 448). Applies to series marketing text, not a verified individualized quote."
+    },
+    {
+      "id": "CALPC-PDF-WARRANTY-20261119",
+      "product_scope": "California PC FLASH Tough Metal Series 2 product family",
+      "attribute": "published_warranty_years",
+      "value": 5,
+      "source_kind": "manufacturer_datasheet_pdf",
+      "source_url": "https://californiapc.com/core/media/media.nl?c=3379633&h=2514f768f155d536786e&id=1047935",
+      "observed_date": "2026-11-19",
+      "description": "Tough Metal Series 2 Specs 1.0 PDF lists Warranty: 5 Years, first page feature bullets and second page reliability table; version date/current applicability not established."
+    }
+  ],
+  "annotations": [
+    "The public catalog lists FPCI-256MB-2162TM2 as a PIO 4 no-DMA option; FPCI-256MB-4162TM2 is marked end of life and is a UDMA option. Same storage capacity does not prove equivalence.",
+    "Do not claim an F-22 qualified product, agreed supplier terms, or a customer quote."
+  ],
+  "current_supplier_confirmation": "not_requested_reply_pending_no_outbound_sent",
+  "sources_verified_in_public_web": "2026-11-19"
+}
