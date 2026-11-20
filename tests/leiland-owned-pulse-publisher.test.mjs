@@ -136,3 +136,22 @@ test('approval requires exact Ed25519 signature and bounded schema',()=>{
   assert.equal(approval.scope,'kaidance.public-pulse.publish');
  });
 });
+
+test('does not let a previous public cycle move backward after an authorized publication',()=>{
+ withFixture(f=>{
+  publishOwnedKaidancePulse(f.opts);
+  f.safePulse.cycle_number=13;
+  f.safePulse.last_completed_cycle=iso(-20000);
+  f.safePulse.observed_at=iso(-10000);
+  f.writeSafe();
+  assert.throws(()=>publishOwnedKaidancePulse({...f.opts,now:new Date(NOW.getTime()+20000)}),/public_cycle_regression_forbidden/);
+  const previous=JSON.parse(fs.readFileSync(f.targetPath,'utf8'));
+  assert.equal(previous.cycle_number,14);
+ });
+});
+test('does not repaint a recycled source observation as a fresh new pulse',()=>{
+ withFixture(f=>{
+  publishOwnedKaidancePulse(f.opts);
+  assert.throws(()=>publishOwnedKaidancePulse({...f.opts,now:new Date(NOW.getTime()+20000)}),/public_observation_replay_forbidden/);
+ });
+});
