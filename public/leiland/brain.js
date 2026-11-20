@@ -11,7 +11,16 @@ const systems={
 };
 let selected='systemia', sourceEvents=[], developmentEvents=[], sourceFresh=false;
 let lastAttestedCycle=null, universe=null;
-function chooseRegion(region){
+// The gentle architecture tour is a visual presentation, never a machine pulse.
+// Manual exploration keeps the selected region in view for 90 seconds.
+const scenicSequence=Object.freeze(['systemia','raven','compute','passport','saban']);
+let scenicIndex=0,manualHoldUntil=0;
+function chooseRegion(region,manual=false){
+ if(manual){
+  manualHoldUntil=Date.now()+90000;
+  scenicIndex=Math.max(0,scenicSequence.indexOf(region));
+ }
+ $('system-detail').setAttribute('aria-live',manual?'polite':'off');
  if(!REGIONS.includes(region))return;
  selected=region;
  for(const button of document.querySelectorAll('[data-system],[data-region]')){
@@ -28,7 +37,7 @@ function chooseRegion(region){
  universe?.setFocus(region);
 }
 for(const button of document.querySelectorAll('[data-system],[data-region]')){
- button.addEventListener('click',()=>chooseRegion(button.dataset.system||button.dataset.region));
+ button.addEventListener('click',()=>chooseRegion(button.dataset.system||button.dataset.region,true));
 }
 const broadcast=$('broadcast');
 function setBroadcast(enabled){
@@ -176,6 +185,13 @@ universe=createNeuralUniverse({
  initialFocus:selected
 });
 chooseRegion(selected);
+// Ambient tours progress independently from, and never assert, operational
+// source events. Do not override manual choices, reduced motion, or hidden tabs.
+setInterval(()=>{
+ if(document.hidden||reduce.matches||Date.now()<manualHoldUntil)return;
+ scenicIndex=(scenicIndex+1)%scenicSequence.length;
+ chooseRegion(scenicSequence[scenicIndex]);
+},18000);
 // A direct, shareable portrait-only link for a broadcast capture device.
 // The opt-in query flag changes presentation, not publisher trust or data.
 if(new URLSearchParams(window.location.search).get('view')==='live')setBroadcast(true);
