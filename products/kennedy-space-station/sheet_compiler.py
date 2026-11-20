@@ -188,17 +188,55 @@ def _pdf_file(objs):
     return bytes(out)
 
 
-def _prepare(study, role, image, manifest):
+def _prepare(study, role, image, manifest, *, staged=None):
     model = study["model"]
-    if not isinstance(manifest, dict):
-        raise SheetError(role + "_manifest_missing")
-    receipt = reg.register_image(manifest, image)
+    if staged is None:
+        if not isinstance(manifest, dict):
+            raise SheetError(role + "_manifest_missing")
+        receipt = reg.register_image(manifest, image)
+        # The original deterministic proof must stay strictly synthetic-only.
+        if receipt["rights_state"] != "owned" or receipt["evidence_state"] != "synthetic":
+            raise SheetError(role + "_synthetic_only_gate")
+        source_id = ""
+    else:
+        # The only caller for this mode must load immutable bytes and the
+        # SHA-protected receipt from the private AerialVault, never browser JSON.
+        if manifest is not None or not isinstance(staged, dict):
+            raise SheetError(role + "_private_staging_invalid")
+        receipt = staged.get("registration")
+        if (staged.get("role") != role or
+            staged.get("schema") != "evercraft.kss.aerial-source.v1" or
+            staged.get("review_state") != "pending_independent_rights_and_geographic_qa" or
+            staged.get("real_site_sheet_export_authorized") is not False or
+            staged.get("public_access_authorized") is not False or
+            staged.get("customer_access_authorized") is not False or
+            not isinstance(receipt, dict)):
+            raise SheetError(role + "_source_not_private_reviewable")
+        if (staged.get("image_sha256") != hashlib.sha256(image).hexdigest() or
+            receipt.get("image_sha256") != staged["image_sha256"] or
+            staged.get("site_id") != model["site_id"] or
+            receipt.get("site_id") != staged["site_id"]):
+            raise SheetError(role + "_staged_source_integrity_or_site_mismatch")
+        if (receipt.get("mime_type") != "image/png" or
+            receipt.get("rights_state") not in reg.STATES or
+            receipt.get("evidence_state") not in reg.EVIDENCE or
+            receipt.get("registration_authority") != "operator_control_points_only" or
+            receipt.get("source_rights_authority") != "operator_attested_not_independently_verified" or
+            receipt.get("north_verified") is not False or
+            receipt.get("crs_verified") is not False or
+            receipt.get("survey_grade") is not False or
+            receipt.get("publication_authorized") is not False or
+            receipt.get("aerial_sheet_export_ready") is not False):
+            raise SheetError(role + "_source_review_receipt_invalid")
+        if not isinstance(receipt.get("registration_rmse_m"), (float,int)) or not isinstance(receipt.get("max_rmse_m"), (float,int)) or receipt["registration_rmse_m"] > receipt["max_rmse_m"]:
+            raise SheetError(role + "_registration_error_exceeded")
+        if not isinstance(receipt.get("pixel_to_local_m"), list) or len(receipt["pixel_to_local_m"]) != 6:
+            raise SheetError(role + "_affine_invalid")
+        source_id = staged.get("source_id", "")
+        if not isinstance(source_id,str) or not reg.re.fullmatch(r"AIR-[A-F0-9]{20}", source_id):
+            raise SheetError(role + "_source_id_invalid")
     if receipt["site_id"] != model["site_id"]:
         raise SheetError(role + "_site_mismatch")
-    # The first proof is deliberately synthetic-only. Owned user images and
-    # licensed real imagery remain on hold pending the secure upload workflow.
-    if receipt["rights_state"] != "owned" or receipt["evidence_state"] != "synthetic":
-        raise SheetError(role + "_synthetic_only_gate")
     affine = receipt["pixel_to_local_m"]
     a,b,_,d,e,_ = affine
     l1,l2 = math.hypot(a,d), math.hypot(b,e)
@@ -215,11 +253,11 @@ def _prepare(study, role, image, manifest):
                 _project(x,z,affine,frame,(w,h))
     return {
         "role":role,"receipt":receipt,"pixels":pixels,"w":w,"h":h,
-        "frame":frame,"parcel":vertices,"affine":affine,
+        "frame":frame,"parcel":vertices,"affine":affine,"source_id":source_id,
     }
 
 
-def _page_content(study, source, address):
+def _page_content(study, source, address, *, private_review=False):
     """Actual image bytes + project geometry on S-0; project locator on A-0."""
     model = study["model"]
     role=source["role"]
@@ -230,7 +268,7 @@ def _page_content(study, source, address):
     _rectangle(C,0,1542,PAGE_W,186,"#12213b")
     _line(C,82,1655,"KENNEDY SPACE STATION",47,"#ffffff",True)
     _line(C,84,1595,heading,28,"#bdcff4",True)
-    _line(C,1735,1659,"EVERCRAFT  /  SYNTHETIC VALIDATION",22,"#e2edff",True)
+    _line(C,1735,1659,"EVERCRAFT / " + ("PRIVATE SOURCE REVIEW" if private_review else "SYNTHETIC VALIDATION"),21,"#e2edff",True)
     _line(C,1760,1593,"NOT FOR EXTERNAL DELIVERY",20,"#ffcfb5",True)
     # The entire left plan frame is image-backed with independently decoded
     # PNG pixels. There are no fabricated aerial tiles here.
@@ -273,12 +311,13 @@ def _page_content(study, source, address):
               f"{xx+length:.3f} {yy-7:.3f} m {xx+length:.3f} {yy+7:.3f} l S"])
     _line(C,xx,yy+20,"10 m - operator-local scale",13,"#292344",True)
     _rectangle(C,66,75,1882,82,"#f1eaff","#d4c8ec")
-    _line(C,88,124,"ILLUSTRATIVE SYNTHETIC RASTER - DO NOT RELY ON LOCATION, NORTH OR PARCEL LINES",22,"#4a287c",True)
+    _line(C,88,124,("PRIVATE OPERATOR REVIEW ONLY - SOURCE RIGHTS AND GEOGRAPHY NOT INDEPENDENTLY VERIFIED"
+                   if private_review else "ILLUSTRATIVE SYNTHETIC RASTER - DO NOT RELY ON LOCATION, NORTH OR PARCEL LINES"),21,"#4a287c",True)
     _line(C,88,91,"Control-point registration is operator-calibrated; no known coordinate reference system or survey.",18,"#575777")
     # Right title block
     _rectangle(C,1971,190,559,1300,"#ffffff","#c9cbd9")
     _rectangle(C,1971,1385,559,105,"#251c57")
-    _line(C,1995,1441,sheet + "  |  SYNTHETIC TEST ONLY",25,"#ffffff",True)
+    _line(C,1995,1441,sheet + ("  |  PRIVATE REVIEW ONLY" if private_review else "  |  SYNTHETIC TEST ONLY"),24,"#ffffff",True)
     _line(C,1995,1405,"NOT A PERMIT / CONSTRUCTION DOCUMENT",16,"#ebc7ff",True)
     sections=[
         ("PROJECT",model["title"][:54]),
@@ -287,7 +326,7 @@ def _page_content(study, source, address):
         ("MODEL / REVISION",f"Rev {study['revision']}  |  SHA256"),
         ("MODEL DIGEST A",study["model_sha256"][:32]),
         ("MODEL DIGEST B",study["model_sha256"][32:]),
-        ("RASTER SOURCE",source["receipt"]["source_ref"][:55]),
+        ("RASTER SOURCE",(source["source_id"] + " " if private_review else "") + source["receipt"]["source_ref"][:32]),
         ("RASTER RIGHTS",source["receipt"]["rights_state"]+" / "+source["receipt"]["evidence_state"]),
         ("RASTER SHA256 A",source["receipt"]["image_sha256"][:32]),
         ("RASTER SHA256 B",source["receipt"]["image_sha256"][32:]),
@@ -308,6 +347,8 @@ def _page_content(study, source, address):
     _line(C,1995,263,"PRELIMINARY CONCEPT ONLY",20,"#86531e",True)
     _line(C,1995,236,"NO SURVEY, ADA, ZONING OR CODE QA",14,"#86531e",True)
     _line(C,1995,211,"NO ENGINEERING OR APPROVAL",14,"#86531e",True)
+    if private_review:
+        _line(C,100,1515,"UNVERIFIED PRIVATE OPERATOR SOURCE REVIEW",26,"#893e29",True)
     return ("\n".join(C)+"\n").encode("ascii")
 
 
@@ -318,6 +359,59 @@ def _image_object(source):
         + b" /Height "+str(source["h"]).encode()
         + b" /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /FlateDecode")
     return _pdf_stream(compressed,prefix)
+
+
+
+def compile_two_sheet_private_review(study, site_image, site_record,
+                                     context_image, context_record, address):
+    """Produce a PRIVATE, prominently unverified PDF using stored source bytes.
+
+    This is an internal review artifact ONLY. AerialVault records are operator-
+    attested, not independently approved rights or validated earth coordinates.
+    Input record and original bytes must come from the same site's protected
+    AerialVault, not direct user JSON. No source is promoted/released by this.
+    """
+    if not isinstance(study,dict) or not isinstance(study.get("model"),dict):
+        raise SheetError("saved_study_required")
+    model=study["model"]
+    sid=model.get("site_id")
+    try:
+        canonical=spatial.validate(model,sid)
+        if any(model.get(key)!=value for key,value in canonical.items()):
+            raise SheetError("model_unvalidated_or_modified")
+        if spatial.digest(model)!=study.get("model_sha256"):
+            raise SheetError("saved_model_digest_mismatch")
+    except (spatial.StudyError,TypeError) as exc:
+        raise SheetError("model_invalid") from exc
+    if not isinstance(study.get("revision"),int) or study["revision"]<1:
+        raise SheetError("revision_invalid")
+    address=reg.require_text(address,"display_address",120)
+    if (not isinstance(site_image,bytes) or not isinstance(context_image,bytes)
+        or site_image==context_image):
+        raise SheetError("distinct_image_bytes_required")
+    site=_prepare(study,"site",site_image,None,staged=site_record)
+    context=_prepare(study,"context",context_image,None,staged=context_record)
+    if site["receipt"]["image_sha256"]==context["receipt"]["image_sha256"]:
+        raise SheetError("identical_rasters_not_allowed")
+    resources=(b"/Resources << /Font << /F1 5 0 R /F2 6 0 R >> "
+               b"/XObject << /ImSite 7 0 R /ImContext 8 0 R >> "
+               b"/ExtGState << /GSO 9 0 R /GSN 10 0 R >> >>")
+    page_base=b"/Type /Page /Parent 2 0 R /MediaBox [0 0 2592 1728] "
+    objects=[
+        b"<< /Type /Catalog /Pages 2 0 R >>",
+        b"<< /Type /Pages /Kids [3 0 R 4 0 R] /Count 2 >>",
+        b"<< "+page_base+resources+b" /Contents 11 0 R >>",
+        b"<< "+page_base+resources+b" /Contents 12 0 R >>",
+        b"<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>",
+        b"<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>",
+        _image_object(site),
+        _image_object(context),
+        b"<< /Type /ExtGState /ca 0.27 /CA 0.90 >>",
+        b"<< /Type /ExtGState /ca 1 /CA 1 >>",
+        _pdf_stream(_page_content(study,site,address,private_review=True)),
+        _pdf_stream(_page_content(study,context,address,private_review=True)),
+    ]
+    return _pdf_file(objects)
 
 
 def compile_two_sheet_synthetic(study, site_png, site_manifest, context_png, context_manifest, address):
