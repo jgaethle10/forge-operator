@@ -150,6 +150,7 @@ footer{margin-top:24px;color:#a6c4cf;font-size:12px;line-height:1.7}
   <p><strong>Soil:</strong> Liquid water infiltrates until the simplified infiltration rate or soil capacity is reached. Vegetation raises both in this model.</p>
   <p><strong>River:</strong> Excess surface water reaches the river quickly. Groundwater releases more slowly. Plants and warm air remove some soil water as evaporation and transpiration.</p>
   <p><strong>Altitude experiment:</strong> Drag a ridge while sculpt mode is on, or use the elevation buttons. This model lowers zone air temperature by a fixed 6.5°C per kilometer above the valley; that changes simulated rain, snowfall and thaw. The lapse rate is an illustrative assumption, not a real local measurement.</p>
+  <p><strong>Reading the graphics:</strong> A model-derived visualization: animated raindrops, snowflakes, water pulses and aquifer glows represent simplified daily quantities. The number of illustrated particles is not a measured number of actual drops.</p>
   <p><strong>Reality check:</strong> Five equal-area zones, constant daily weather, fixed soil properties and no routing delays. This is a transparent learning model, not a calibrated watershed, flood prediction or official hydrology dataset.</p>
  </section>
 </div>
@@ -280,7 +281,9 @@ function updateZone(){
  $('lowerZone').disabled=elevations[selectedZone]<=elevationBounds(selectedZone)[0];
  $('raiseZone').disabled=elevations[selectedZone]>=elevationBounds(selectedZone)[1];
  const temp=params().temp-.0065*(c.elevation-250);
- $('zoneInfo').textContent=ZONES[selectedZone]+' · '+c.elevation+' m elevation · '+fmt(temp)+'°C modeled air · Snow '+fmt(c.snow)+' mm · Soil '+fmt(c.soil)+' mm · Groundwater '+fmt(c.groundwater)+' mm';
+ const flux=c.visualFlux;
+ $('zoneInfo').textContent=ZONES[selectedZone]+' · '+c.elevation+' m elevation · '+fmt(temp)+'°C modeled air · Snow '+fmt(c.snow)+' mm · Soil '+fmt(c.soil)+' mm · Groundwater '+fmt(c.groundwater)+' mm'
+  +(flux?' · Last simulated day: infiltration '+fmt(flux.infiltration)+' mm, surface runoff '+fmt(flux.fastFlow)+' mm, groundwater release '+fmt(flux.slowFlow)+' mm.':' · Advance one day to see the water movement.');
  for(const btn of $('zoneList').querySelectorAll('button'))
   btn.setAttribute('aria-pressed',String(Number(btn.dataset.zone)===selectedZone));
 }
