@@ -132,14 +132,14 @@ test('source ledger shows the last cycle, not a fictional global connection list
 
 test('specific-site USDA soil proof is opt-in, source-backed and separate from regional preview', () => {
   const panel=html.slice(html.indexOf('id="soilPreviewPanel"'),html.indexOf('id="soilPreviewResult"')+200);
-  assert.match(panel,/Have a specific location\? Look up its USDA mapped soils/);
+  assert.match(panel,/Scan a real location: soil \+ weather \+ operational questions/);
   assert.match(panel,/id="soilLatitude"/);
   assert.match(panel,/id="soilLongitude"/);
-  assert.match(panel,/USDA Soil Data Access on demand/);
+  assert.match(panel,/FAIE asks USDA for mapped soil units/);
   assert.match(html,/id="soilPreviewForm"/);
   assert.match(html,/\/api\/faie\/soil\/preview/);
   assert.match(html,/document\.getElementById\('soilPreviewForm'\)\.addEventListener\('submit',runSoilPreview\)/);
-  assert.match(html,/Soil maps are not field tests/);
+  assert.match(html,/Survey mapping is not an on-site soil test/);
   assert.match(html,/data\.request_persisted!==false/);
   assert.match(html,/data\.site_suitability_verdict!==null/);
 });
