@@ -1,0 +1,38 @@
+name: Leiland Sovereign AI Public Observatory Proof
+
+on:
+  pull_request:
+    paths:
+      - 'public/leiland/**'
+      - 'public/kaidance/pulse-source.mjs'
+      - 'tests/leiland-public.test.mjs'
+      - '.github/workflows/leiland-public.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'public/leiland/**'
+      - 'public/kaidance/pulse-source.mjs'
+      - 'tests/leiland-public.test.mjs'
+      - '.github/workflows/leiland-public.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  leiland-public:
+    name: Leiland privacy and public-pulse proof
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check browser and public pulse syntax
+        run: |
+          node --check public/leiland/brain.js
+          node --check public/leiland/pulse-bridge.mjs
+          node --check public/kaidance/pulse-source.mjs
+      - name: Prove public-only activity and privacy contract
+        run: node --test tests/leiland-public.test.mjs
