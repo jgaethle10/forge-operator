@@ -57,6 +57,8 @@ try:
     assert page.locator("body.portrait").count()==1
     assert page.locator("#portraitEventTitle").is_visible()
     assert page.locator("#portraitBtn").inner_text().strip().endswith("EXIT LIVE VIEW")
+    exit_color=page.locator("#portraitBtn").evaluate("(el)=>getComputedStyle(el).backgroundColor")
+    assert exit_color=="rgb(9, 35, 53)",f"broadcast exit button lost contrast: {exit_color}"
     page.screenshot(path=str(OUTPUT/"iphone-live.png"),full_page=False)
     page.goto(HOST+"?view=live",wait_until="domcontentloaded",timeout=15000)
     assert page.locator("body.portrait").count()==1,"shareable live view not applied"
