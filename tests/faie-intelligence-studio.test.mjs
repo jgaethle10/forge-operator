@@ -128,3 +128,18 @@ test('source ledger shows the last cycle, not a fictional global connection list
   assert.match(html,/Source receipts unavailable\. Do not interpret previous counts as live/);
   assert.doesNotMatch(html, /All connected sources are live/);
 });
+
+
+test('specific-site USDA soil proof is opt-in, source-backed and separate from regional preview', () => {
+  const panel=html.slice(html.indexOf('id="soilPreviewPanel"'),html.indexOf('id="soilPreviewResult"')+200);
+  assert.match(panel,/Have a specific location\? Look up its USDA mapped soils/);
+  assert.match(panel,/id="soilLatitude"/);
+  assert.match(panel,/id="soilLongitude"/);
+  assert.match(panel,/USDA Soil Data Access on demand/);
+  assert.match(html,/id="soilPreviewForm"/);
+  assert.match(html,/\/api\/faie\/soil\/preview/);
+  assert.match(html,/document\.getElementById\('soilPreviewForm'\)\.addEventListener\('submit',runSoilPreview\)/);
+  assert.match(html,/Soil maps are not field tests/);
+  assert.match(html,/data\.request_persisted!==false/);
+  assert.match(html,/data\.site_suitability_verdict!==null/);
+});
