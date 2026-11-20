@@ -9,6 +9,7 @@ import {
   reconcileFaieSourceDimensions
 } from './core.mjs';
 import { collectFaieOfficialSources, faieCollectorConfigFromEnv } from './collectors.mjs';
+import { openFaieLandHistory } from './land-history-ledger.mjs';
 
 function ensureDir(dir) {
   fs.mkdirSync(dir, { recursive: true });
@@ -151,6 +152,30 @@ export function createFaieRuntime({
       publication_authority:false
     });
   }
+  // Public official collector data are preserved as regional history only.
+  // Never store coordinates submitted to public site/soil/forecast preview APIs.
+  // The SQLite database lives in the same owner-managed state root as FAIE.
+  let historyStore=null;
+  let historyArchiveError=null;
+  let historyBackfilled=0;
+  try{
+    historyStore=openFaieLandHistory({
+      databasePath:path.join(stateDir,'history','faie-land-history.sqlite')
+    });
+    // Backfill previously admitted OFFICIAL observations on a restart.
+    // The ledger's source/version keys make repeated restarts idempotent.
+    for(const record of Object.values(state.observations||{})){
+      try{
+        const result=historyStore.archiveOfficialObservation(record);
+        if(result.action==='archived')historyBackfilled++;
+      }catch{
+        // A damaged historical row is NOT promoted to source-backed history.
+        historyArchiveError='some_prior_source_records_not_eligible_for_archival';
+      }
+    }
+  }catch{
+    historyArchiveError='land_history_database_unavailable';
+  }
   let timer = null;
   let running = false;
 
@@ -223,6 +248,33 @@ export function createFaieRuntime({
   function snapshot(limit = 50) {
     return publicFaieSnapshot(state, { limit });
   }
+  function historyForRegion(region,{limit=200}={}){
+    if(!historyStore)throw new Error('land_history_database_unavailable');
+    return {
+      schema:'evercraft.faie.public-land-timeline.v1',
+      geography_scope:'public named region, never an individual parcel or visitor site',
+      land_id:'region:'+String(region),
+      records:historyStore.listLand('region:'+String(region),{limit}),
+      exhaustive_history:false,
+      archival_content_rights:'public source metadata only; no scanned images reproduced',
+      site_suitability_verdict:null,
+      publication_authority:false,
+      decision_authority:false
+    };
+  }
+  function historyArchiveIntegrity(){
+    return historyStore?historyStore.verifyChain():{ok:false,reason:'database_unavailable'};
+  }
+  function historyPublicRegions({limit=50}={}){
+    if(!historyStore)throw new Error('land_history_database_unavailable');
+    return {
+      schema:'evercraft.faie.public-history-region-index.v1',
+      regions:historyStore.listPublicRegions(limit),
+      public_only:true,
+      exhaustive_history:false,
+      visitor_site_locations_persisted:false
+    };
+  }
 
   function health() {
     const collectorReceipts = Array.isArray(state.last_cycle?.official_collector_receipts)
@@ -255,7 +307,16 @@ export function createFaieRuntime({
       },
       last_cycle: state.last_cycle || null,
       decision_authority: false,
-      publication_authority: false
+      publication_authority: false,
+      land_history_archive:{
+        status:historyStore?(historyArchiveError?'degraded':'active'):'unavailable',
+        ...(historyStore?historyStore.stats():{}),
+        backfilled_existing_public_records:historyBackfilled,
+        warning:historyArchiveError,
+        public_region_history_only:true,
+        visitor_point_queries_persisted:false,
+        owner_managed_storage_required_for_durable_retention:true
+      }
     };
   }
 
@@ -275,6 +336,8 @@ export function createFaieRuntime({
     let deduped = 0;
     let ignored = 0;
     let radarSignalsSeen = 0;
+    let historicalRecordsArchived = 0;
+    let historicalRecordsDeduped = 0;
     const errors = [];
 
     try {
@@ -305,12 +368,29 @@ export function createFaieRuntime({
         }
       }
 
+      const officialObservations=new Set(officialCollectorRun.observations||[]);
       for (const observation of observations) {
         try {
           const decision = ingest(observation);
           if (decision.action === 'admitted') admitted += 1;
           else if (decision.action === 'deduped') deduped += 1;
           else ignored += 1;
+          // The source comes from our official poller, NOT public visitor
+          // payloads, Radar, unreviewed external intake, or a private scan.
+          if(officialObservations.has(observation) &&
+             ['admitted','deduped'].includes(decision.action)){
+            if(!historyStore){
+              errors.push('history_archive: unavailable');
+            }else{
+              try{
+                const archived=historyStore.archiveOfficialObservation(observation,{collectedAt:startedAt});
+                if(archived.action==='archived')historicalRecordsArchived++;
+                if(archived.action==='deduped')historicalRecordsDeduped++;
+              }catch{
+                errors.push('history_archive: official_record_not_archived');
+              }
+            }
+          }
         } catch (error) {
           errors.push(error instanceof Error ? error.message : String(error));
         }
@@ -329,6 +409,8 @@ export function createFaieRuntime({
         admitted,
         deduped,
         ignored,
+        historical_records_archived:historicalRecordsArchived,
+        historical_records_deduped:historicalRecordsDeduped,
         errors,
         publication_authority: false,
         decision_authority: false
@@ -374,6 +456,10 @@ export function createFaieRuntime({
     runOnce,
     start,
     stop,
+    historyForRegion,
+    historyPublicRegions,
+    historyArchiveIntegrity,
+    close(){stop();historyStore?.close()},
     markdown: investigationToMarkdown
   };
 }
