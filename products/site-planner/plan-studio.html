@@ -26,6 +26,7 @@
 <div class="simple-tool"><button class="selected button-primary" data-tool="charger">⚡ Add charger</button><button id="undo" class="button-secondary">Undo</button></div>
 <p class="helper"><span id="activeTool">Adding chargers</span> · Tap to add. Tap an existing charger, then a new spot to move it. Undo fixes mistakes.</p>
 <div class="statline"><span id="chargerCount" class="pill">8 CONCEPT CHARGERS</span><span id="scaleState" class="pill amber">SCALE UNVERIFIED</span></div>
+<div id="messages" role="status" aria-live="polite"></div>
 </div>
 <div class="quick-step"><div class="step-title"><span class="step-num">3</span><strong>Get your plan</strong></div>
 <button class="button-primary main-download" id="print">View / Save PDF</button>
@@ -58,7 +59,6 @@
 <p class="helper">Drafts do not include the images. Reload the exact original imagery before restoring.</p>
 </div>
 </div></details>
-<div id="messages" role="status" aria-live="polite"></div>
 </aside>
 <main class="workspace">
 <div class="workspace-header"><div><h1>Your site plan</h1><p>Tap S-01 to add chargers. On a phone, swipe sideways to explore the sheet. Photo-based positions are conceptual.</p></div><div class="workspace-actions"><span class="pill">NO PERMIT OR ENGINEERING APPROVAL</span></div></div>
@@ -188,7 +188,6 @@ function undoEdit(){
   $('messages').textContent='Last change reversed.';draw();return;
  }
  // Legacy demonstration first tap still removes the last mark, for a simple editable starting point.
- if(!state.siteImage&&state.marks.length){state.marks.pop();draw();return}
  $('messages').textContent='Nothing to undo.';
 }
 function onCanvasTap(ev){const svg=$('drawing-1');let p=svg.createSVGPoint();p.x=ev.clientX;p.y=ev.clientY;const mat=svg.getScreenCTM();if(!mat)return;p=p.matrixTransform(mat.inverse());const x=Math.round(p.x),y=Math.round(p.y);if(x<40||x>845||y<75||y>665)return;if(state.tool==='calibrate'){
