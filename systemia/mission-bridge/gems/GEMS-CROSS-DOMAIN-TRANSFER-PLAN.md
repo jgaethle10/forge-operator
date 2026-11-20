@@ -191,3 +191,41 @@ upstream server or imply that any DEM pixels exist**.
    transforms in isolated free research compute on held-out geographic folds.
 4. Preserve the official GEMS-001 candidate. Do not submit, deploy, promote,
    infer new faults, or spend paid compute from index-query results.
+
+
+## GEMS-006 next boundary: gated public 3DEP metadata capture (Nov 20)
+
+A separate, explicit-run \`gems_usgs_3dep_capture.py\` can now **fetch
+public project-index JSON from the pinned USGS 3DEP layer 18 endpoint** once
+the owner-private diagnostic atlas is available locally. Network access is
+**off unless** \`--allow-public-usgs-query\` is provided. No arbitrary base
+URLs or redirects are allowed, and the client bypasses inherited proxies,
+checks TLS, caps each response at 1 MiB, uses a 12-second timeout, and pauses
+between queries. No raster source download, model training, or submission.
+
+Privacy boundary: sending 3DEP metadata queries necessarily reveals the
+bounded diagnostic **coordinates** to the external USGS server. The script
+does not upload the input atlas, prediction probabilities, labels, or raster
+files. Write the response bundle into private owner-controlled storage;
+**never commit response bundles or private atlas locations to the public repo**.
+The write-once file is created with 0600 permissions.
+
+\`\`\`bash
+cd systemia/mission-bridge/gems
+python3 -m unittest -v test_gems_usgs_3dep_capture.py
+# First bounded live trial: one tile from each diagnostic group, 3 public requests.
+python3 gems_usgs_3dep_capture.py \
+  --atlas /PRIVATE/nevada-disagreement-atlas/gems_model_disagreement_tiles.geojson \
+  --max-per-group 1 \
+  --receipt /PRIVATE/NEW/usgs-3dep-public-index-pilot.json \
+  --allow-public-usgs-query
+# Only after a verified pilot: --max-per-group 15 in a fresh receipt path
+\`\`\`
+
+A returned project metadata record is only a **public index intersection**,
+not evidence of valid 1m elevation pixels, source rights, equal-area coverage,
+or geology. If any request fails, the script fails without a completed receipt
+instead of silently interpreting missing data as no coverage. This work does
+**not** establish that a live request was sent or that any USGS project matched
+our target tiles. Those are next-run evidentiary questions for the owned
+research runtime or another authorized environment with the preserved atlas.
