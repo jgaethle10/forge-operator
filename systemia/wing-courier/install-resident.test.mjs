@@ -71,3 +71,37 @@ test('dangerous characters never enter systemd ExecStart arguments',()=>{
  assert.throws(()=>renderWingResidentUnit({nodeBin:'/usr/bin/node',
   sourceRoot:'/tmp/test;echo PWNED',configPath:'/tmp/config.json'}),/unsafe_service_argument/);
 });
+
+test('activation requires a separately confirmed owned NextGen machine and writes no service',()=>withFixture(async fx=>{
+ const home=path.join(fx.root,'home');fs.mkdirSync(home,{mode:0o700});
+ await assert.rejects(()=>installWingResident({configPath:fx.file,home,activate:true}),
+  /confirm_owned_host_required/);
+ assert.equal(fs.existsSync(path.join(home,'.config')),false);
+}));
+test('existing service is held without replacement or systemctl activation',()=>withFixture(async fx=>{
+ const home=path.join(fx.root,'home'),units=path.join(home,'.config/systemd/user');
+ fs.mkdirSync(units,{recursive:true,mode:0o700});
+ const unit=path.join(units,'evercraft-wing-courier-fallen.service');
+ const original='pre-existing operator service - must preserve';
+ fs.writeFileSync(unit,original,{mode:0o600});
+ await assert.rejects(()=>installWingResident({
+  configPath:fx.file,home,activate:true,confirmOwnedHost:true,
+ }),/existing_unit_requires_review/);
+ assert.equal(fs.readFileSync(unit,'utf8'),original);
+}));
+test('symlinked systemd directory and dangling unit symlink fail closed',()=>withFixture(async fx=>{
+ const home=path.join(fx.root,'home'),systemd=path.join(home,'.config/systemd');
+ const other=path.join(fx.root,'other');fs.mkdirSync(other,{mode:0o700});
+ fs.mkdirSync(path.join(home,'.config'),{recursive:true,mode:0o700});
+ fs.symlinkSync(other,systemd);
+ await assert.rejects(()=>installWingResident({
+  configPath:fx.file,home,activate:true,confirmOwnedHost:true,
+ }),/untrusted_service_directory/);
+ fs.unlinkSync(systemd);fs.mkdirSync(path.join(systemd,'user'),{recursive:true,mode:0o700});
+ const unit=path.join(systemd,'user','evercraft-wing-courier-fallen.service');
+ fs.symlinkSync(path.join(fx.root,'missing.service'),unit);
+ await assert.rejects(()=>installWingResident({
+  configPath:fx.file,home,activate:true,confirmOwnedHost:true,
+ }),/existing_unit_requires_review/);
+ assert.equal(fs.lstatSync(unit).isSymbolicLink(),true);
+}));

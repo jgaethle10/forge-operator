@@ -81,20 +81,44 @@ function ctl(...args){
  const p=spawnSync('systemctl',['--user',...args],{encoding:'utf8',timeout:10000});
  if(p.status!==0||p.error)throw Error('wing_resident_systemd_'+args[0]+'_failed');
 }
-export async function installWingResident({configPath,activate=false,home=os.homedir()}={}){
+export async function installWingResident({
+ configPath,activate=false,confirmOwnedHost=false,home=os.homedir()
+}={}){
  if(Number(process.versions.node.split('.')[0])<22)throw Error('wing_resident_node_22_required');
  if(typeof process.getuid==='function'&&process.getuid()===0)throw Error('wing_resident_root_forbidden');
  const pre=evaluateWingResidentConfig({configPath});
  if(!fs.existsSync(path.join(base,'systemia/wing-courier/resident.mjs')))
   throw Error('wing_resident_source_not_installed');
  if(!activate)return {...pre,mode:'DRY_RUN',unitInstalled:false};
- const units=path.join(home,'.config/systemd/user');
- fs.mkdirSync(units,{recursive:true,mode:0o700});
- const unit=path.join(units,'evercraft-wing-courier-fallen.service');
+ // Activation is an owner-local decision, never inferred from a CI or chat request.
+ if(!confirmOwnedHost)throw Error('wing_resident_confirm_owned_host_required');
+ const uid=typeof process.getuid==='function'?process.getuid():null;
+ const homeStat=fs.lstatSync(home);
+ if(!homeStat.isDirectory()||homeStat.isSymbolicLink()||
+    (uid!==null&&homeStat.uid!==uid))
+  throw Error('wing_resident_untrusted_home');
+ // Do not create a service through a symlinked / redirected systemd directory.
+ const serviceDirs=[path.join(home,'.config'),path.join(home,'.config/systemd'),
+  path.join(home,'.config/systemd/user')];
+ for(const dir of serviceDirs){
+  let st;
+  try{st=fs.lstatSync(dir)}
+  catch(e){
+   if(e?.code!=='ENOENT')throw e;
+   fs.mkdirSync(dir,{mode:0o700});
+   st=fs.lstatSync(dir);
+  }
+  if(!st.isDirectory()||st.isSymbolicLink()||(uid!==null&&st.uid!==uid))
+   throw Error('wing_resident_untrusted_service_directory');
+ }
+ const unit=path.join(serviceDirs[2],'evercraft-wing-courier-fallen.service');
+ // Never overwrite an existing user service or a dangling symlink.
+ try{
+  fs.lstatSync(unit);
+  throw Error('wing_resident_existing_unit_requires_review');
+ }catch(e){if(e?.code!=='ENOENT')throw e}
  const body=renderWingResidentUnit({nodeBin:process.execPath,sourceRoot:base,configPath});
- const temp=unit+'.'+process.pid+'.tmp';
- try{fs.writeFileSync(temp,body,{flag:'wx',mode:0o600});fs.renameSync(temp,unit)}
- finally{try{fs.rmSync(temp,{force:true})}catch{}}
+ fs.writeFileSync(unit,body,{flag:'wx',mode:0o600});
  ctl('daemon-reload');ctl('enable','--now','evercraft-wing-courier-fallen.service');
  ctl('is-active','--quiet','evercraft-wing-courier-fallen.service');
  return {...pre,mode:'ACTIVATED_LOCAL_USER_SERVICE',unitInstalled:true,
@@ -103,7 +127,8 @@ export async function installWingResident({configPath,activate=false,home=os.hom
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)){
  const i=process.argv.indexOf('--config');
  const configPath=i>=0?process.argv[i+1]:null;
- installWingResident({configPath,activate:process.argv.includes('--activate')})
+ installWingResident({configPath,activate:process.argv.includes('--activate'),
+  confirmOwnedHost:process.argv.includes('--confirm-owned-host')})
   .then(r=>console.log(JSON.stringify(r)))
   .catch(e=>{console.error('HOLD:',e?.message||'resident_install_failed');process.exitCode=2});
 }
