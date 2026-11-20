@@ -184,6 +184,12 @@ class SpatialStore:
                 model_sha256 TEXT NOT NULL,
                 UNIQUE(site_id,revision))""")
             db.execute("CREATE INDEX IF NOT EXISTS idx_kss_studies_site ON studies(site_id, revision)")
+            db.execute("""CREATE TABLE IF NOT EXISTS kss_outbox(
+                id TEXT PRIMARY KEY, site_id TEXT NOT NULL, study_id TEXT NOT NULL,
+                event_type TEXT NOT NULL, payload_json TEXT NOT NULL,
+                payload_sha256 TEXT NOT NULL, state TEXT NOT NULL DEFAULT 'pending',
+                created_at TEXT NOT NULL)""")
+            db.execute("CREATE INDEX IF NOT EXISTS idx_kss_outbox_state ON kss_outbox(state,created_at)")
 
     def save(self, site_id, model):
         normalized = validate(model, site_id)
@@ -201,6 +207,19 @@ class SpatialStore:
                 VALUES (?,?,?,?,?,?,?)""",
                 (study_id, site_id, next_rev, created, normalized["title"], model_json, sha)
             )
+            event = {"site_id": site_id, "study_id": study_id,
+                     "revision": next_rev, "model_sha256": sha,
+                     "source_report_id": normalized["source_report_id"],
+                     "evidence_basis": normalized["measurement_basis"],
+                     "engineering_authority": False}
+            event_json = canonical_json(event)
+            db.execute(
+                """INSERT INTO kss_outbox
+                (id,site_id,study_id,event_type,payload_json,payload_sha256,state,created_at)
+                VALUES (?,?,?,?,?,?,?,?)""",
+                ("EVENT-KSS-" + secrets.token_hex(10).upper(), site_id, study_id,
+                 "kss.spatial.study.saved.v1", event_json, digest(event),
+                 "pending", created))
         return {"id": study_id, "site_id": site_id, "revision": next_rev,
                 "created_at": created, "title": normalized["title"],
                 "model_sha256": sha, "source_report_id": normalized["source_report_id"]}
@@ -210,6 +229,12 @@ class SpatialStore:
             return [dict(row) for row in db.execute(
                 """SELECT id,site_id,revision,created_at,title,model_sha256
                 FROM studies WHERE site_id=? ORDER BY revision DESC""", (site_id,))]
+
+    def outbox(self):
+        with self.connect() as db:
+            return [dict(row) for row in db.execute(
+                """SELECT id,site_id,study_id,event_type,payload_sha256,state,created_at
+                FROM kss_outbox ORDER BY created_at,id""")]
 
     def get(self, site_id, study_id):
         with self.connect() as db:

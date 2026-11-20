@@ -22,6 +22,7 @@ The landing page has real create-site, list-sites, and open-site actions through
 - `/api/sites`: canonical Site Planner API, not a KSS duplicate
 - `/api/kss/sites/{id}/studies`: Kennedy study revision read/write API
 - `/api/kss/sites/{id}/studies/{study_id}/svg`: source-bound, non-engineering SVG export
+- `/api/kss/outbox`: private read-only pending KSS study event receipts
 - `/api/health`: truthful integration and deployment readiness flags
 
 Underlying site records, evidence, reports, and queue are kept in the existing Site Planner SQLite database and uploaded-file storage. To share the same local project records with an existing Site Planner deployment, point both processes at an approved, durable `EVERCRAFT_SITE_DATA` directory. Apply backups, access controls, and one-writer/migration discipline before any production use.
@@ -66,3 +67,7 @@ Studies are stored separately in `EVERCRAFT_SITE_DATA/kennedy/studies.sqlite3` b
 Edit the site by dragging rectangles or entering meters, save, load prior revisions, and download the exact saved revision as a labeled SVG. Bounds checks and conservative building-footprint collision checks are deliberately not presented as ADA, hydrology, setback, utility, survey, or code-compliance certification. Run `python3 -m unittest discover -s products/kennedy-space-station -p 'test_*.py' -v` from repo root.
 
 The Spatial Studio is a separately owned product layer, not a Site Planner rename. Future customer memberships require per-tenant identity, hardened file handling, owned public TLS, and externally verified payments. Current $0/$39/$149 offers on the landing page remain hypothetical, not purchasable.
+
+## Systemia-ready, not yet Systemia-delivered
+
+Saving a study commits `kss.spatial.study.saved.v1` into Kennedy's append-only SQLite outbox in the **same database transaction** as the immutable revision. The event includes site/study ID, revision, model SHA-256, optional existing report ID, assumption basis, and explicit `engineering_authority=false`. `GET /api/kss/outbox` reports event IDs, digests, and `pending` state to the local operator. No worker, dispatch, retry, signed delivery, Systemia acknowledgment, billing, permit review, or downstream plan production is claimed. Wiring a signed owned Systemia worker is a separate release gate.

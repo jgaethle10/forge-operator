@@ -70,6 +70,13 @@ class KennedyHandler(site_planner.Handler):
                                  "text/html; charset=utf-8")
             return self.send(200, (ROOT / "index.html").read_bytes(),
                              "text/html; charset=utf-8")
+        if path == "/api/kss/outbox":
+            if not self.authorized():
+                return
+            try:
+                return self.send(200, SPATIAL.outbox())
+            except sqlite3.Error:
+                return self.bad("spatial_store_unavailable", 500)
         m = re.fullmatch(r"/api/kss/sites/([A-Za-z0-9_-]+)/studies(?:/([A-Za-z0-9_-]+)(/svg)?)?", path)
         if m:
             if not self.authorized():
