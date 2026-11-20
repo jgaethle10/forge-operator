@@ -117,6 +117,12 @@ try {
   const waterWithLinks = water.filter((row) => Array.isArray(row.provenance_refs) &&
     row.provenance_refs.some((ref) => /^https?:\/\//.test(String(ref || ''))));
   check(waterWithLinks.length > 0, 'water_source_lineage');
+  // A USDM county drought caution mentions soil/water-right limitations.
+  // That negative statement cannot be counted as actual soil evidence.
+  check(!inv.findings.some((row) =>
+    row.source_family === 'us-drought-monitor-ndmc' &&
+    (row.dimensions || []).some((dimension) => ['soil','crop_health'].includes(dimension))
+  ), 'usdm_drought_not_misclassified_as_soil_or_crop_evidence');
   receipt.investigation = {
     status: inv.status,
     findings: inv.findings.length,
