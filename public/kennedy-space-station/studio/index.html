@@ -47,7 +47,7 @@ body{padding-bottom:68px}.shell{display:flex;flex-direction:column}.workspace{or
 <div class="statline"><span id="chargerCount" class="pill">8 CONCEPT CHARGERS</span><span class="pill amber" id="scaleState">SCALE UNVERIFIED</span></div>
 <div class="row"><button class="button-primary" id="print">Print / Save PDF</button><button class="button-secondary" id="export">Export SVG</button><button class="button-secondary" id="evidence">Download evidence JSON</button></div>
 <div class="row"><button class="button-secondary" id="draftSave">Save editable project</button><label style="flex:1">Restore project JSON<input id="draftLoad" type="file" accept=".json,application/json"></label></div>
-<p class="helper">Editable drafts can be saved as JSON after a source image is uploaded. They contain no source photographs. To restore, re-upload the exact same aerial and vicinity images; SHA-256 fingerprints must match. No customer data is sent to a server.</p>
+<p class="helper">Save your fictional demo as an editable JSON file anytime, even without photos. To reopen it, stay in demo mode and choose Restore project JSON. For real-image drafts, re-upload the exact aerial and vicinity images first so SHA-256 fingerprints match. Draft files never contain source photos; no data is sent to Evercraft.</p>
 <p class="helper">Two sheets: S-01 proposed EV layout and A-01 vicinity context. Print in landscape tabloid (17 × 11 in). SVG is vector; user-provided raster backgrounds retain their original photo limitations.</p>
 <div id="messages" role="status" aria-live="polite"></div>
 </div>
@@ -74,7 +74,7 @@ function calibrateFromPoints(a,b,known,sourceName){
 function routeEstimate(m){return state.calibration&&m.type==='route'?Math.round(distance(m,{x:m.x2,y:m.y2})*state.calibration.feetPerUnit*10)/10:null}
 function evidenceRecord(){return {
  schema:'evercraft.site-planner.operator-drawing-evidence.v1',
- generated_at:new Date().toISOString(),evidence_type:'operator_entered_unverified_concept',
+ generated_at:new Date().toISOString(),evidence_type:'operator_entered_unverified_concept',source_classification:state.siteImage?'operator_supplied_image_unverified':'synthetic_demonstration',
  project:($('siteName').value||'').trim(),address:($('address').value||'').trim(),revision:($('rev').value||'').trim(),
  imagery:{site:{name:state.siteSource||null,sha256:state.siteHash||null},context:{name:state.contextSource||null,sha256:state.contextHash||null},source_note:($('sourceText').value||'').trim(),verified_geolocation:false,rights_verified:false},
  reference_calibration:state.calibration?{...state.calibration,classification:'operator_reference_estimate_not_survey'}:null,
@@ -178,6 +178,7 @@ draw();
 (function(){
 'use strict';
 const SCHEMA='evercraft.site-planner.draft.v1';
+const DEMO_FIXTURE='evercraft.kennedy.synthetic-demo-v1';
 const HASH=/^[a-f0-9]{64}$/;
 const TYPES=new Set(['charger','pad','route','access','note']);
 const sample = (v,min,max)=>typeof v==='number'&&Number.isFinite(v)&&v>=min&&v<=max;
@@ -196,16 +197,21 @@ function validateMarks(rows){
  });
 }
 function hashes(){
+ // The built-in illustration has no image pixels, map coordinates or rights claims.
+ // It is deliberately a different source class from a fingerprinted real image.
+ if(!state.siteImage&&!state.contextImage){
+  return {source_kind:'synthetic_demonstration',demo_fixture:DEMO_FIXTURE,site_sha256:null,context_sha256:null};
+ }
  const site=(state.siteHash||'').toLowerCase(),context=(state.contextHash||'').toLowerCase();
- if(!state.siteImage||!HASH.test(site))throw Error('Upload a real site image and allow SHA-256 fingerprinting before saving or loading a draft');
+ if(!state.siteImage||!HASH.test(site))throw Error('Wait for site image SHA-256 fingerprinting before saving or loading this draft');
  if(state.contextImage&&!HASH.test(context))throw Error('Wait for vicinity image fingerprinting before saving or loading');
- return {site_sha256:site,context_sha256:state.contextImage?context:null};
+ return {source_kind:'operator_supplied_image_unverified',site_sha256:site,context_sha256:state.contextImage?context:null};
 }
 function makeDraft(){
  const binding=hashes();
  return {
   schema:SCHEMA,created_at:new Date().toISOString(),
-  source_binding:binding,
+  source_binding:binding,source_mode:binding.source_kind,
   image_names:{site:state.siteSource||'',context:state.contextSource||''},
   project:{name:($('siteName').value||'').slice(0,90),address:($('address').value||'').slice(0,160),revision:($('rev').value||'').slice(0,90),imagery_rights_note:($('sourceText').value||'').slice(0,160)},
   marks:validateMarks(state.marks),
@@ -219,6 +225,13 @@ function restoreDraft(d){
  if(!d||typeof d!=='object'||d.schema!==SCHEMA||d.evidence_state!=='operator_entered_not_surveyed'||d.engineering_approved!==false||d.payment_verified!==false)throw Error('Unsupported or unsafe draft');
  const binding=hashes(),original=d.source_binding;
  if(!original||original.site_sha256!==binding.site_sha256||original.context_sha256!==binding.context_sha256)throw Error('Source fingerprint mismatch: re-upload the exact images used for this draft');
+ if(binding.source_kind==='synthetic_demonstration'){
+  if(original.source_kind!=='synthetic_demonstration'||original.demo_fixture!==DEMO_FIXTURE||d.source_mode!=='synthetic_demonstration'||d.calibration!==null)throw Error('Synthetic demo source binding invalid. Start from the built-in fictional demo to restore.');
+ }else if((original.source_kind&&original.source_kind!=='operator_supplied_image_unverified')||
+           (d.source_mode&&d.source_mode!=='operator_supplied_image_unverified')||
+           original.demo_fixture!==undefined){
+  throw Error('Real source classification mismatch; no synthetic draft can be promoted to a real image');
+ }
  if(d.image_names?.site!==state.siteSource||String(d.image_names?.context||'')!==String(state.contextSource||''))throw Error('Image filenames do not match the saved draft');
  const marks=validateMarks(d.marks);
  const p=d.project||{};
@@ -239,7 +252,7 @@ function save(){
  try{
   const doc=JSON.stringify(makeDraft(),null,2)+'\n';
   dl('Evercraft-Kennedy-Site-Draft.json',new Blob([doc],{type:'application/json'}));
-  $('messages').textContent='Project draft saved without image pixels. Keep the source images so it can be reopened.';
+  $('messages').textContent=state.siteImage?'Real-image project saved without image pixels. Keep the same photos to reopen.':'Fictional demo saved! Reopen this JSON on the demo page before uploading any real images.';
  }catch(e){$('messages').textContent=e.message}
 }
 function load(ev){
@@ -247,7 +260,7 @@ function load(ev){
  if(f.size>1024*1024||!(/\.json$/i).test(f.name)){$('messages').textContent='Choose a project JSON file under 1 MB';ev.target.value='';return}
  const reader=new FileReader();
  reader.onload=()=>{
-  try{const count=restoreDraft(JSON.parse(String(reader.result)));$('messages').textContent='Restored '+count+' placements. All measurements remain operator estimates, not surveyed.'}
+  try{const count=restoreDraft(JSON.parse(String(reader.result)));$('messages').textContent='Restored '+count+' placements. '+(state.siteImage?'Real source images remain unverified.':'Fictional demo only, with no real property imagery.')+' No survey or engineering approval.'}
   catch(e){$('messages').textContent='Draft not restored: '+e.message}
   ev.target.value='';
  };
