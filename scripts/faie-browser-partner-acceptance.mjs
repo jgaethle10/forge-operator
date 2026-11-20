@@ -49,7 +49,7 @@ try{
   const sourceLedgerText=await page.locator('#sources').innerText();
   mark('last_cycle_receipts_rendered',sourceLedgerText.includes('Last cycle:')&&sourceLedgerText.includes('National Weather Service'));
   mark('source_counts_cannot_claim_all_live',sourceLedgerText.includes('Returned')||sourceLedgerText.includes('Checked; no observations returned')||sourceLedgerText.includes('Not configured'));
-  await page.locator('#soilPreviewPanel summary').click();
+  await page.locator('#soilPreviewPanel > summary').click();
   mark('soil_lookup_is_explicitly_opt_in',await page.locator('#soilPreviewForm').isVisible());
   const invalidSoilHttp=await page.evaluate(async()=>{
     const response=await fetch('/api/faie/soil/preview',{
