@@ -81,19 +81,44 @@ PY
   echo "STOP: existing courier branch contains different bytes. No force push."
   exit 1
 fi
+echo "=== PREPARE OR SAFELY RESUME COURIER WORKTREE ==="
 if [ -e "$WORKTREE" ]; then
-  echo "STOP: prior courier worktree exists without verified remote push. Inspect manually."
-  exit 1
-fi
-
-echo "=== CREATE IMMUTABLE GITHUB COURIER BRANCH ==="
-git -C "$BASE" worktree add --detach "$WORKTREE" "$SOURCE_COMMIT"
-git -C "$WORKTREE" switch -c "$BRANCH"
-mkdir -p "$WORKTREE/$(dirname "$PAYLOAD")"
-cp -- "$ARCHIVE" "$WORKTREE/$PAYLOAD"
-ARCHIVE_SHA="$(sha256sum "$ARCHIVE" | awk '{print $1}')"
-ARCHIVE_BYTES="$(stat -c '%s' "$ARCHIVE")"
-python3 - "$WORKTREE/$RECEIPT" "$SOURCE_COMMIT" "$ARCHIVE_SHA" "$ARCHIVE_BYTES" "$PAYLOAD" <<'PY'
+  test -d "$WORKTREE" && test ! -L "$WORKTREE" ||
+    { echo "STOP: courier worktree is not a real directory"; exit 1; }
+  ACTUAL_TREE="$(git -C "$WORKTREE" rev-parse --show-toplevel)"
+  test "$ACTUAL_TREE" = "$WORKTREE" ||
+    { echo "STOP: unexpected worktree origin; no cleanup attempted"; exit 1; }
+  test "$(git -C "$WORKTREE" branch --show-current)" = "$BRANCH" ||
+    { echo "STOP: existing worktree is not on the pinned courier branch"; exit 1; }
+  test "$(git -C "$WORKTREE" rev-parse HEAD)" = "$SOURCE_COMMIT" ||
+    { echo "STOP: existing worktree has advanced; refusing to overwrite it"; exit 1; }
+  git -C "$WORKTREE" diff --quiet ||
+    { echo "STOP: tracked files in worktree were modified"; exit 1; }
+  test -z "$(git -C "$WORKTREE" diff --cached --name-only)" ||
+    { echo "STOP: pre-existing staged changes must be inspected"; exit 1; }
+  for item in "$PAYLOAD" "$RECEIPT"; do
+    test -f "$WORKTREE/$item" && test ! -L "$WORKTREE/$item" ||
+      { echo "STOP: expected courier file missing or replaced by link: $item"; exit 1; }
+  done
+  cmp -- "$ARCHIVE" "$WORKTREE/$PAYLOAD" ||
+    { echo "STOP: worktree archive differs from independently verified source"; exit 1; }
+  python3 - "$WORKTREE/$RECEIPT" "$SOURCE_COMMIT" "$ARCHIVE_SHA" "$ARCHIVE_BYTES" "$PAYLOAD" <<'PY'
+import json,sys
+from pathlib import Path
+record=json.loads(Path(sys.argv[1]).read_text())
+expected={"schema":"evercraft.aiw.github-courier.v1","source_commit":sys.argv[2],
+          "archive_sha256":sys.argv[3],"archive_bytes":int(sys.argv[4]),
+          "payload_path":sys.argv[5],"kind":"public-federal-static-data-only",
+          "public_deployed":False,"runtime_host":"Evercraft-owned-edge-only"}
+if record!=expected:raise SystemExit("STOP: prior courier receipt differs from source")
+print("EXACT FAILED COURIER WORKTREE: RESUMED SAFELY")
+PY
+else
+  git -C "$BASE" worktree add --detach "$WORKTREE" "$SOURCE_COMMIT"
+  git -C "$WORKTREE" switch -c "$BRANCH"
+  mkdir -p "$WORKTREE/$(dirname "$PAYLOAD")"
+  cp -- "$ARCHIVE" "$WORKTREE/$PAYLOAD"
+  python3 - "$WORKTREE/$RECEIPT" "$SOURCE_COMMIT" "$ARCHIVE_SHA" "$ARCHIVE_BYTES" "$PAYLOAD" <<'PY'
 import json,sys
 from pathlib import Path
 path=Path(sys.argv[1])
@@ -103,9 +128,22 @@ payload={"schema":"evercraft.aiw.github-courier.v1","source_commit":sys.argv[2],
          "public_deployed":False,"runtime_host":"Evercraft-owned-edge-only"}
 path.write_text(json.dumps(payload,indent=2,sort_keys=True)+"\n")
 PY
-git -C "$WORKTREE" add -- "$PAYLOAD" "$RECEIPT"
+fi
+
+echo "=== STAGE ONLY TWO VERIFIED PUBLIC COURIER FILES ==="
+# Evercraft intentionally ignores artifacts/ globally. Force-include ONLY
+# these two already-verified paths, never the whole ignored folder.
+git -C "$WORKTREE" add -f -- "$PAYLOAD" "$RECEIPT"
+STAGED_FILES="$(git -C "$WORKTREE" diff --cached --name-only)"
+EXPECTED_STAGED="$(printf '%s\n' "$PAYLOAD" "$RECEIPT" | sort)"
+test "$(printf '%s\n' "$STAGED_FILES" | sort)" = "$EXPECTED_STAGED" ||
+  { echo "STOP: unexpected paths staged; nothing pushed"; exit 1; }
+STAGED_DIGEST="$(git -C "$WORKTREE" show ":$PAYLOAD" | sha256sum | awk '{print $1}')"
+test "$STAGED_DIGEST" = "$ARCHIVE_SHA" ||
+  { echo "STOP: staged Git blob differs from verified archive"; exit 1; }
 git -C "$WORKTREE" diff --cached --stat
-git -C "$WORKTREE" diff --cached --quiet && { echo "STOP: no content to commit"; exit 1; }
+git -C "$WORKTREE" diff --cached --quiet &&
+  { echo "STOP: expected courier files were not staged"; exit 1; }
 git -C "$WORKTREE" -c commit.gpgsign=false commit -m "artifact(aiw): courier immutable verified historical beta snapshot to owned edge"
 PAYLOAD_COMMIT="$(git -C "$WORKTREE" rev-parse HEAD)"
 echo "=== PUSH ONE NON-PRODUCTION GITHUB COURIER REF ==="
