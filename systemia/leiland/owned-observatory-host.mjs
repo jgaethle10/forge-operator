@@ -6,6 +6,9 @@ import fs from 'node:fs/promises';
 import {constants} from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
+import {assessPublicPulse} from '../../public/kaidance/pulse-source.mjs';
+import {assessLeilandFeed} from '../../scripts/probe-leiland-owned-release.mjs';
+import {titleSafe} from '../../public/live/work-source.mjs';
 
 export const LEILAND_HOST_SCHEMA='evercraft.leiland.owned-observatory-host.v1';
 export const STATIC_PATHS=Object.freeze({
@@ -23,6 +26,33 @@ export const STATIC_PATHS=Object.freeze({
  '/systemia/social-card.svg':'systemia/social-card.svg',
  '/headquarters/mark.svg':'headquarters/mark.svg'
 });
+// Defensive final server boundary. A publisher's write permission is not
+// blanket permission to make arbitrary JSON public.
+const PULSE_FIELDS=Object.freeze([
+ 'schema','state','cycle_number','last_completed_cycle','heartbeat_target_seconds',
+ 'admitted_count','held_count','coverage_receipt_valid','field_attestation_verified',
+ 'observed_at','published_at'
+]);
+export function approvedPublicProjection(relative,bytes,now=Date.now()){
+ if(!Buffer.isBuffer(bytes)||bytes.length===0||bytes.length>20000)return false;
+ let record;
+ try{record=JSON.parse(bytes.toString('utf8'))}catch{return false}
+ if(!record||typeof record!=='object'||Array.isArray(record))return false;
+ if(relative==='kaidance/pulse.json'){
+  if(Object.keys(record).length!==PULSE_FIELDS.length||Object.keys(record).some(key=>!PULSE_FIELDS.includes(key)))return false;
+  return assessPublicPulse(record,now).ok===true;
+ }
+ if(relative==='leiland/feed.json'){
+  try{
+   assessLeilandFeed(record,now);
+   // Browser defense-in-depth is not a substitute for public-source review.
+   // Reject sensitive or mutated event titles before they leave the owned host.
+   return record.events.every(event=>titleSafe(event.title)===event.title);
+  }catch{return false}
+ }
+ return false;
+}
+
 const MIME={'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8',
  '.js':'text/javascript; charset=utf-8','.mjs':'text/javascript; charset=utf-8',
  '.svg':'image/svg+xml','.json':'application/json; charset=utf-8'};
@@ -84,7 +114,8 @@ export async function startLeilandObservatory({host='127.0.0.1',port=0,
  for(const [route,relative] of Object.entries(STATIC_PATHS)){
   if(!await readAllowed(staticRoot,relative,1048576))fail('missing_required_static_asset_'+route.slice(1).replaceAll('/','_'));
  }
- const server=http.createServer(async(req,res)=>{
+ const server=http.createServer((req,res)=>{
+  void (async()=>{
   const method=req.method||'GET';
   if(method!=='GET'&&method!=='HEAD'){
    safeSend(res,method,405,'Method not allowed','text/plain; charset=utf-8',{'allow':'GET, HEAD'});return;
@@ -115,10 +146,18 @@ export async function startLeilandObservatory({host='127.0.0.1',port=0,
   let bytes=null,extension=pathname,policy={};
   if(pathname==='/kaidance/pulse.json'){
    bytes=await readAllowed(dynamicRoot,'kaidance/pulse.json',16000);
+   // An expired but well-formed pulse is allowed: the viewer must show it as
+   // stale instead of inventing success. Invalid data cannot leave the server.
+   if(bytes&&!approvedPublicProjection('kaidance/pulse.json',bytes)){
+    safeSend(res,method,503,'Public pulse not approved','text/plain; charset=utf-8');return;
+   }
    policy={'cache-control':'no-store, max-age=0'};
   }else if(pathname==='/leiland/feed.json'){
    bytes=await readAllowed(dynamicRoot,'leiland/feed.json',20000);
    if(!bytes)bytes=await readAllowed(staticRoot,'leiland/feed.json',20000);
+   if(bytes&&!approvedPublicProjection('leiland/feed.json',bytes)){
+    safeSend(res,method,503,'Public activity feed not approved','text/plain; charset=utf-8');return;
+   }
    policy={'cache-control':'no-store, max-age=0'};
   }else if(Object.hasOwn(STATIC_PATHS,pathname)){
    bytes=await readAllowed(staticRoot,STATIC_PATHS[pathname],1048576);
@@ -129,6 +168,10 @@ export async function startLeilandObservatory({host='127.0.0.1',port=0,
    safeSend(res,method,404,'Not found','text/plain; charset=utf-8');return;
   }
   safeSend(res,method,200,bytes,mime(extension),policy);
+  })().catch(()=>{
+   if(!res.headersSent)safeSend(res,req.method||'GET',503,'Public observatory unavailable','text/plain; charset=utf-8');
+   else res.destroy();
+  });
  });
  try{
   await new Promise((resolve,reject)=>{
