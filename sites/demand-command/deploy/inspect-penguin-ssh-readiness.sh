@@ -15,9 +15,9 @@ for name in ssh.service ssh.socket sshd.service sshd.socket; do
   printf '%s: active=%s enabled=%s\n' "$name" "${state:-unknown}" "${enabled:-unknown}"
 done
 echo
-echo "TCP listeners (SSH 22 and private Demand reverse-forward 18897):"
+echo "TCP listeners (Crostini SSH candidate 8222, default SSH 22 and private Demand reverse-forward 18897):"
 if command -v ss >/dev/null 2>&1; then
-  ss -H -ltn '( sport = :22 or sport = :18897 )' || true
+  ss -H -ltn '( sport = :8222 or sport = :22 or sport = :18897 )' || true
 else
   echo "ss not installed"
 fi
