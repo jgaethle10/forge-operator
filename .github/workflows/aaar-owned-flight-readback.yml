@@ -86,7 +86,10 @@ jobs:
           if-no-files-found: warn
   hosted-webkit-controls:
     runs-on: ubuntu-24.04
-    timeout-minutes: 12
+    # Pinned test-only browser image. No Evercraft application runs here in production.
+    container:
+      image: mcr.microsoft.com/playwright:v1.55.1-noble
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -94,10 +97,7 @@ jobs:
           node-version: "22"
       - name: Install browser test dependencies
         run: npm install --no-save --no-audit --no-fund playwright@1.55.1
-      # WebKit needs GTK/Graphene/codec libraries absent on the standard Ubuntu 24.04 runner.
-      # Bound the install so an unavailable mirror cannot hold up the AAAR release.
-      - name: Install WebKit and required test-only Linux libraries
-        run: timeout 180s npx playwright install --with-deps webkit
+      # WebKit and libraries are preinstalled in the pinned Playwright testing image.
       - name: Validate v0.8 source cockpit in mobile WebKit
         env:
           AAAR_BROWSER: webkit
