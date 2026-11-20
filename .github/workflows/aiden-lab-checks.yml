@@ -1,0 +1,26 @@
+name: Aiden's Lab public surface checks
+
+on:
+  pull_request:
+    paths:
+      - 'public/aiden-lab/**'
+      - 'tests/aiden-lab-public.test.mjs'
+      - '.github/workflows/aiden-lab-checks.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  public-atlas:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify static atlas source and medical guardrails
+        run: node --test tests/aiden-lab-public.test.mjs

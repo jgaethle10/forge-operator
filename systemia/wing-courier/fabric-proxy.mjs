@@ -4,12 +4,15 @@
 // Do not expose via an untrusted HTTP-facing proxy or use this for customer
 // Messenger attachments, payments, or release authority.
 import http from 'node:http';
+import {Transform} from 'node:stream';
 
 export const WING_COURIER_FABRIC_PREFIX='/api/internal/wing-courier';
 const BROKER_HOST='127.0.0.1',BROKER_PORT=8791;
 const EXPECTED_HOST='fabric.systemiacommandcenters.com';
 const ID=/^[a-f0-9]{32}$/;
 const WING=/^[a-z][a-z0-9-]{1,47}$/;
+const MAX_ALLOWED_BYTES=3*1024**3+131072;
+const DEFAULT_MAX_REQUEST_BYTES=512*1024*1024;
 function respond(res,status,body){
  const raw=Buffer.from(JSON.stringify(body));
  res.writeHead(status,{'content-type':'application/json',
@@ -36,7 +39,8 @@ export function routeWingCourierPath(value){
 }
 export function createWingCourierFabricProxy({enabled=false,
  approvedHost=EXPECTED_HOST,brokerHost=BROKER_HOST,brokerPort=BROKER_PORT,
- timeoutMs=120000}={}){
+ timeoutMs=120000,maxRequestBytes=DEFAULT_MAX_REQUEST_BYTES,
+ maxActiveStreams=4}={}){
  if(![true,false].includes(enabled))throw Error('wing_fabric_enabled_boolean_required');
  if(![EXPECTED_HOST,'127.0.0.1'].includes(approvedHost))throw Error('wing_fabric_approved_host_invalid');
  if(brokerHost!==BROKER_HOST||
@@ -45,6 +49,11 @@ export function createWingCourierFabricProxy({enabled=false,
   throw Error('wing_fabric_broker_loopback_route_fixed');
  if(!Number.isInteger(timeoutMs)||timeoutMs<1000||timeoutMs>600000)
   throw Error('wing_fabric_timeout_invalid');
+ if(!Number.isSafeInteger(maxRequestBytes)||maxRequestBytes<1024||maxRequestBytes>MAX_ALLOWED_BYTES)
+  throw Error('wing_fabric_request_cap_invalid');
+ if(!Number.isSafeInteger(maxActiveStreams)||maxActiveStreams<1||maxActiveStreams>64)
+  throw Error('wing_fabric_stream_cap_invalid');
+ let activeStreams=0;
  async function handle(req,res){
   const route=routeWingCourierPath(req.url);
   if(!route)return false;
@@ -70,10 +79,37 @@ export function createWingCourierFabricProxy({enabled=false,
   if(!headers.authorization){
    respond(res,401,{error:'wing_authentication_required'});return true;
   }
+  if(!/^Bearer [\x21-\x7e]{32,512}$/.test(headers.authorization)){
+   respond(res,401,{error:'wing_authentication_required'});return true;
+  }
+  const declared=headers['content-length'];
+  if(declared!==undefined&&(!/^\d+$/.test(declared)||
+     !Number.isSafeInteger(Number(declared)))){
+   respond(res,400,{error:'invalid_request_length'});return true;
+  }
+  if(declared!==undefined&&Number(declared)>maxRequestBytes){
+   respond(res,413,{error:'wing_request_too_large'});return true;
+  }
+  if(activeStreams>=maxActiveStreams){
+   respond(res,429,{error:'wing_route_busy'});return true;
+  }
+  activeStreams++;
+  let released=false,stopped=false;
+  const release=()=>{if(!released){released=true;activeStreams--;}};
+  res.once('close',release);
+  const limiter=new Transform({
+   transform(chunk,encoding,callback){
+    this.bytes=(this.bytes||0)+chunk.length;
+    if(this.bytes>maxRequestBytes)
+     callback(Error('wing_fabric_request_too_large'));
+    else callback(null,chunk);
+   }
+  });
   const upstream=http.request({
    host:brokerHost,port:brokerPort,method:req.method,
    path:route.suffix+route.search,headers,timeout:timeoutMs,
   },(response)=>{
+   if(stopped){response.destroy();return}
    const allowed={};
    for(const key of ['content-type','content-length','x-content-type-options','referrer-policy']){
     const v=response.headers[key];if(typeof v==='string')allowed[key]=v;
@@ -83,13 +119,21 @@ export function createWingCourierFabricProxy({enabled=false,
    response.pipe(res);
    response.on('error',()=>res.destroy());
   });
-  upstream.on('timeout',()=>upstream.destroy(new Error('timeout')));
-  upstream.on('error',()=>{
-   if(!res.headersSent)respond(res,503,{error:'wing_private_broker_unavailable'});
+  function stop(status,error){
+   if(stopped)return;
+   stopped=true;
+   if(!res.headersSent)respond(res,status,{error});
    else res.destroy();
-  });
-  req.on('aborted',()=>upstream.destroy());
-  req.pipe(upstream);
+   req.unpipe(limiter);limiter.unpipe(upstream);
+   limiter.destroy();upstream.destroy();
+   release();
+  }
+  upstream.on('timeout',()=>stop(504,'wing_private_broker_timeout'));
+  upstream.on('error',()=>stop(503,'wing_private_broker_unavailable'));
+  limiter.on('error',()=>stop(413,'wing_request_too_large'));
+  req.on('aborted',()=>{stopped=true;limiter.destroy();upstream.destroy();release();});
+  req.on('error',()=>stop(400,'wing_request_stream_failed'));
+  req.pipe(limiter).pipe(upstream);
   return true;
  }
  return {handle,enabled,externalPublicDeploymentVerified:false,

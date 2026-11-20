@@ -1,3 +1,4 @@
+import {Readable} from 'node:stream';
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import http from 'node:http';
@@ -96,4 +97,76 @@ test('enabled Fabric path forwards exactly scoped broker API and preserves broke
   });
   assert.equal(wrongHostCode,404);
  }finally{await fab.close();await broker.close();fs.rmSync(root,{recursive:true,force:true})}
+});
+
+
+test('Fabric rejects oversized declared ciphertext before opening a broker stream',async()=>{
+ const proxy=createWingCourierFabricProxy({enabled:true,approvedHost:'127.0.0.1',
+  brokerPort:48221,maxRequestBytes:1024});
+ const fab=await withServer(proxy.handle);
+ try{
+  const url=fab.url+WING_COURIER_FABRIC_PREFIX+'/v1/envelopes';
+  const denial=await fetch(url,{method:'POST',headers:{
+   authorization:'Bearer '+('a'.repeat(64)),'content-type':'application/json'},
+   body:'x'.repeat(3000)});
+  assert.equal(denial.status,413);
+  assert.equal((await denial.json()).error,'wing_request_too_large');
+  assert.throws(()=>createWingCourierFabricProxy({maxRequestBytes:100}),/request_cap_invalid/);
+  assert.throws(()=>createWingCourierFabricProxy({maxActiveStreams:0}),/stream_cap_invalid/);
+ }finally{await fab.close()}
+});
+test('Fabric aborts unknown-length streamed uploads above cap without a large buffer',async()=>{
+ const backend=await withServer((req,res)=>{
+  req.resume();
+  req.once('end',()=>{if(!res.headersSent)res.writeHead(200);res.end('{}')});
+  return true;
+ });
+ const proxy=createWingCourierFabricProxy({enabled:true,approvedHost:'127.0.0.1',
+  brokerPort:Number(new URL(backend.url).port),maxRequestBytes:1024});
+ const fab=await withServer(proxy.handle);
+ try{
+  const url=fab.url+WING_COURIER_FABRIC_PREFIX+'/v1/envelopes';
+  const chunks=async function*(){
+   yield Buffer.alloc(700,1);yield Buffer.alloc(700,2);
+  };
+  const answer=await fetch(url,{method:'POST',headers:{
+   authorization:'Bearer '+('a'.repeat(64)),
+   'content-type':'application/octet-stream'},
+   body:Readable.from(chunks()),duplex:'half'});
+  assert.equal(answer.status,413);
+  assert.equal((await answer.json()).error,'wing_request_too_large');
+ }finally{await fab.close();await backend.close()}
+});
+test('Courier bridge bounds concurrent streams and frees a slot after response finishes',async()=>{
+ let releaseFirst;
+ const hold=new Promise(resolve=>{releaseFirst=resolve});
+ let signalFirst;
+ const firstArrived=new Promise(resolve=>{signalFirst=resolve});
+ let requests=0;
+ const backend=await withServer((req,res)=>{
+  requests++;
+  if(requests===1){
+   signalFirst();
+   hold.then(()=>{res.writeHead(200,{'content-type':'application/json'});res.end('{}')});
+  }else{res.writeHead(200,{'content-type':'application/json'});res.end('{}')}
+  return true;
+ });
+ const proxy=createWingCourierFabricProxy({enabled:true,approvedHost:'127.0.0.1',
+  brokerPort:Number(new URL(backend.url).port),maxActiveStreams:1});
+ const fab=await withServer(proxy.handle);
+ const url=fab.url+WING_COURIER_FABRIC_PREFIX+'/v1/inbox?wing=fallen';
+ const headers={authorization:'Bearer '+('a'.repeat(64))};
+ try{
+  const first=fetch(url,{headers});
+  await firstArrived;
+  const busy=await fetch(url,{headers});
+  assert.equal(busy.status,429);
+  assert.equal((await busy.json()).error,'wing_route_busy');
+  assert.equal(requests,1,'extra requests must not reach upstream');
+  releaseFirst();
+  assert.equal((await first).status,200);
+  const recovery=await fetch(url,{headers});
+  assert.equal(recovery.status,200);
+  assert.equal(requests,2);
+ }finally{releaseFirst();await fab.close();await backend.close()}
 });
