@@ -86,7 +86,6 @@ test('atomic ledger reserves once and enforces rolling budget with no double-spe
   assert.equal(reserveAdvisoryAttempt({ledgerDir:root,job:jobs[0],rolling_budget_cents:10,now_ms:100000100}).reason,'already_attempted');
   assert.equal(reserveAdvisoryAttempt({ledgerDir:root,job:jobs[1],rolling_budget_cents:10,now_ms:100000100}).reason,'rolling_budget_limit');
   assert.equal(loadAdvisoryHistory({ledgerDir:root}).length,1);
-  assert.equal(reserveAdvisoryAttempt({ledgerDir:root,job:jobs[1],rolling_budget_cents:10,now_ms:100000000-100}).reserved,undefined);
- }catch(e){if(!/clock_rollback/.test(e.message))throw e;}
- finally{fs.rmSync(root,{recursive:true,force:true});}
+  assert.throws(()=>reserveAdvisoryAttempt({ledgerDir:root,job:jobs[1],rolling_budget_cents:10,now_ms:100000000-100}),/clock_rollback/);
+ }finally{fs.rmSync(root,{recursive:true,force:true});}
 });
