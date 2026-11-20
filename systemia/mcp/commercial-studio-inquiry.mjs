@@ -3,16 +3,10 @@ import os from 'node:os';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import {enqueueStudioAlert} from './studio-lead-relay.mjs';
+import {normalizeStudioProject} from './studio-offer-contract.mjs';
 
 // Untrusted web inquiries remain DATA, never executable missions or payment authority.
 const TRUSTED_ORIGINS=new Set(['https://jgaethle10.github.io','https://fabric.systemiacommandcenters.com']);
-const PROJECTS=new Set([
-  '$50 launch-week 30-second social commercial pilot',
-  'Product launch commercial',
-  'Brand story / ad campaign',
-  'Social video creative',
-  'Something else',
-]);
 const EMAIL=/^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/;
 function send(res,status,body,origin=''){
   const text=JSON.stringify(body);
@@ -35,8 +29,9 @@ export function validateStudioInquiry(input){
   if(!input||Array.isArray(input)||typeof input!=='object')return {error:'invalid_input'};
   if(input.website){return {honeypot:true};}
   const name=clean(input.name,120),email=clean(input.email,200),
-    company=clean(input.company,180),project=clean(input.project,130),goal=clean(input.goal,1800);
-  if(!name||name.length<2||!email||!EMAIL.test(email)||!company||!project||!PROJECTS.has(project)||!goal||goal.length<12)
+    company=clean(input.company,180),project=normalizeStudioProject(clean(input.project,130)),
+    goal=clean(input.goal,1800);
+  if(!name||name.length<2||!email||!EMAIL.test(email)||!company||!project||!goal||goal.length<12)
     return {error:'invalid_inquiry_fields'};
   if(input.consent!==true)return {error:'consent_required'};
   return {value:{name,email,company,project,goal,consent:true}};
