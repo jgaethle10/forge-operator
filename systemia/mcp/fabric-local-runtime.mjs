@@ -453,7 +453,8 @@ export async function startFabricLocalRuntime({
     packageFile:process.env.EVERCRAFT_FALLEN_BOOTSTRAP_PACKAGE||'',
     signerPublicKeyFile:process.env.EVERCRAFT_FALLEN_BOOTSTRAP_SIGNER_PUB||'',
     expectedSha256:process.env.EVERCRAFT_FALLEN_BOOTSTRAP_SHA256||'',
-    recipientFingerprint:process.env.EVERCRAFT_FALLEN_BOOTSTRAP_RECIPIENT_FP||''
+    recipientFingerprint:process.env.EVERCRAFT_FALLEN_BOOTSTRAP_RECIPIENT_FP||'',
+    claimStateDir:process.env.EVERCRAFT_FALLEN_BOOTSTRAP_CLAIM_STATE_DIR||''
   });
   const instanceId='fabric_local_'+crypto.randomBytes(10).toString('hex');
   const resolvedReleaseRefFile=String(
