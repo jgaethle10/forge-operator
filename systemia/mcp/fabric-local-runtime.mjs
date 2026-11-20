@@ -46,6 +46,7 @@ import {gatherGitEntriesAsync,makePublicSnapshot} from '../hudson/publish-public
 import {createHudsonFeedCache} from '../hudson/public-feed-cache.mjs';
 import { resolveRomanContinuity } from '../domain-shield/roman-funnel.mjs';
 import { createStudioInquiryHandler } from './commercial-studio-inquiry.mjs';
+import {STUDIO_INTRO_PROJECT,STUDIO_PROJECT_OPTIONS} from './studio-offer-contract.mjs';
 import {createWebsiteAuditInquiryHandler,websiteAuditInquiryReadiness,createWebsiteAuditAlertDispatcher} from './website-audit-inquiry.mjs';
 import { createSignalBuyerInquiryHandler,signalBuyerIntakeReadiness,createSignalInquiryAlertDispatcher } from './signal-public-inquiry.mjs';
 import { createFindMyPartInquiryHandler, createFindMyPartInquiryAlertDispatcher, findMyPartInquiryReadiness } from './findmypart-public-inquiry.mjs';
@@ -926,9 +927,28 @@ export async function startFabricLocalRuntime({
       }
       if(auditRoute==='/api/website-audit/inquiry')return await websiteAuditInquiry(req,res);
 
+      // Public-only, read-only version of the exact Studio project choices. This
+      // allows independent page-to-runtime acceptance checks without submitting
+      // a fake buyer or exposing private lead records. This is NOT intake health.
+      const studioRoute=new URL(String(req.url||'/'),'http://fabric.local').pathname;
+      if(studioRoute==='/api/commercial-studio/offer-contract'){
+        if(req.method!=='GET')return sendJson(res,405,{ok:false,error:'method_not_allowed'});
+        const caller=String(req.headers.origin||'');
+        const cors=(caller==='https://jgaethle10.github.io'||
+                    caller==='https://fabric.systemiacommandcenters.com')
+          ?{'access-control-allow-origin':caller,'vary':'origin'}:{'vary':'origin'};
+        return sendJson(res,200,{
+          schema:'evercraft.studio.public-offer-contract.v1',
+          default_project:STUDIO_INTRO_PROJECT,
+          project_options:STUDIO_PROJECT_OPTIONS,
+          inquiry_route:'/api/commercial-studio/inquiry',
+          scope:'human_review_only',intake_acceptance_proved:false,
+          payment_authority:false,production_authority:false
+        },cors);
+      }
       // Only this bounded route accepts untrusted commercial inquiry data.
       // It never invokes agents or checkout, sends email, or exposes stored leads.
-      if(new URL(String(req.url||'/'),'http://fabric.local').pathname==='/api/commercial-studio/inquiry'){
+      if(studioRoute==='/api/commercial-studio/inquiry'){
         return await studioInquiry(req,res);
       }
 
