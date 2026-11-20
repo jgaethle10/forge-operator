@@ -1,0 +1,94 @@
+{
+  "schema": "evercraft.hudson.public-activity.v1",
+  "status": "connected",
+  "published_at": "2026-11-20T02:06:53.290Z",
+  "coverage": "public_git_history_only_not_total_hudson_activity",
+  "sources": [
+    {
+      "id": "evercraft-git",
+      "label": "Evercraft public canonical Git history"
+    }
+  ],
+  "events": [
+    {
+      "id": "956aea3ae023f1acf7bb3b7c49ec80f7b4b547e6",
+      "at": "2026-11-20T01:58:13.000Z",
+      "system": "discovery",
+      "kind": "public_git_source_change",
+      "title": "Public discovery source updated",
+      "source_url": "https://github.com/jgaethle10/forge-operator/commit/956aea3ae023f1acf7bb3b7c49ec80f7b4b547e6",
+      "public": true,
+      "source_verified": true
+    },
+    {
+      "id": "b09c374be0557a024148f62924d796c51c71ed0f",
+      "at": "2026-11-20T01:57:38.000Z",
+      "system": "discovery",
+      "kind": "public_git_source_change",
+      "title": "Public discovery source updated",
+      "source_url": "https://github.com/jgaethle10/forge-operator/commit/b09c374be0557a024148f62924d796c51c71ed0f",
+      "public": true,
+      "source_verified": true
+    },
+    {
+      "id": "03bf3a5d28a95c4c55f68974e8ff2f05e043c3a0",
+      "at": "2026-11-20T01:57:22.000Z",
+      "system": "systemia",
+      "kind": "public_git_source_change",
+      "title": "Evercraft orchestration source updated",
+      "source_url": "https://github.com/jgaethle10/forge-operator/commit/03bf3a5d28a95c4c55f68974e8ff2f05e043c3a0",
+      "public": true,
+      "source_verified": true
+    },
+    {
+      "id": "88cf583ea32a593a4414595a63d4ae99c2618ae7",
+      "at": "2026-11-20T01:57:08.000Z",
+      "system": "discovery",
+      "kind": "public_git_source_change",
+      "title": "Public discovery source updated",
+      "source_url": "https://github.com/jgaethle10/forge-operator/commit/88cf583ea32a593a4414595a63d4ae99c2618ae7",
+      "public": true,
+      "source_verified": true
+    },
+    {
+      "id": "1a1cdad9b4ed48d942bff5d961016d7db367c15b",
+      "at": "2026-11-20T01:56:20.000Z",
+      "system": "systemia",
+      "kind": "public_git_source_change",
+      "title": "Evercraft orchestration source updated",
+      "source_url": "https://github.com/jgaethle10/forge-operator/commit/1a1cdad9b4ed48d942bff5d961016d7db367c15b",
+      "public": true,
+      "source_verified": true
+    },
+    {
+      "id": "8739ae342560f94e923fef5550aeb3e4523ced9f",
+      "at": "2026-11-20T01:54:37.000Z",
+      "system": "discovery",
+      "kind": "public_git_source_change",
+      "title": "Public discovery source updated",
+      "source_url": "https://github.com/jgaethle10/forge-operator/commit/8739ae342560f94e923fef5550aeb3e4523ced9f",
+      "public": true,
+      "source_verified": true
+    },
+    {
+      "id": "fcbd0121b536e566bda248056952c86310f9e05c",
+      "at": "2026-11-20T01:53:36.000Z",
+      "system": "discovery",
+      "kind": "public_git_source_change",
+      "title": "Public discovery source updated",
+      "source_url": "https://github.com/jgaethle10/forge-operator/commit/fcbd0121b536e566bda248056952c86310f9e05c",
+      "public": true,
+      "source_verified": true
+    },
+    {
+      "id": "4c5f0bdf6cd7f8956a89f8f9deb763cff964e695",
+      "at": "2026-11-20T01:52:54.000Z",
+      "system": "systemia",
+      "kind": "public_git_source_change",
+      "title": "Evercraft orchestration source updated",
+      "source_url": "https://github.com/jgaethle10/forge-operator/commit/4c5f0bdf6cd7f8956a89f8f9deb763cff964e695",
+      "public": true,
+      "source_verified": true
+    }
+  ]
+}
