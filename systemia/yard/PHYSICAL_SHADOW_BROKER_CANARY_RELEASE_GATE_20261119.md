@@ -87,3 +87,29 @@ enrolled or that the Saban distributed fleet is commercially ready.
 
 A separate, later authorization is required for cross-machine enrollment,
 device policy, Saban dispatch routing or persistent broker service.
+
+## 2026-11-19 next engineering checkpoint: executable three-phase rehearsal
+
+The isolated broker transaction now exposes a disposable-only
+`onBrokerVerified` observation callback while the temporary broker is
+running. Its `finally` path releases the already-journaled broker lease
+even if that observation fails. The installed historical NodeSeed test now
+requires all of the following **during** the temporary broker, in addition
+to the previously verified before/after observations:
+
+- Resident service count increases from 1 (synthetic Edge DNS) to 2
+  (synthetic Edge DNS + temporary broker), then returns to 1.
+- Edge DNS health returns the same instance ID throughout.
+- A real loopback UDP TXT query remains authoritative and nonrecursive
+  with one synthetic answer before, during and after broker operation.
+- No grants, devices, public routes or production NodeSeed roots are used.
+
+A second fault-injection test throws from inside the observation callback
+and asserts that the synthetic broker is still released and zero temporary
+services remain. The rehearsal transaction now also rejects the known live
+Penguin NodeSeed port `42420`, non-temporary state roots, and nonfixture
+NodeSeed identities before requesting capacity or a lease.
+
+**These latest tests are staged but not yet user-run.** They strengthen
+the synthetic rollback proof; they do **not** change the physical
+`--run` hard-disable or create production authorization.
