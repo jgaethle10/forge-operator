@@ -6,7 +6,7 @@ import crypto from 'node:crypto';
 import {fileURLToPath} from 'node:url';
 import {assessPublicPulse} from '../public/kaidance/pulse-source.mjs';
 
-const ASSETS=['leiland/index.html','leiland/style.css','leiland/brain.js','leiland/pulse-bridge.mjs','kaidance/pulse-source.mjs'];
+const ASSETS=['leiland/index.html','leiland/style.css','leiland/brain.js','leiland/pulse-bridge.mjs','leiland/feed.json','kaidance/pulse-source.mjs'];
 const PULSE_KEYS=['schema','state','cycle_number','last_completed_cycle','heartbeat_target_seconds','admitted_count','held_count','coverage_receipt_valid','field_attestation_verified','observed_at','published_at'];
 const error=why=>{throw Error(why)};
 const digest=buffer=>crypto.createHash('sha256').update(buffer).digest('hex');
@@ -53,7 +53,7 @@ export async function probeLeilandPublicOrigin({origin,publicRoot,fetchImpl=glob
   pulseState=assessment.verified?'source_attested':!assessment.sourceFresh||!assessment.cycleFresh?'stale':'unverified';
  }catch(e){
   // Missing feed or network error is not healthy. Invalid public data is a hard failure, not silent approval.
-  if(e.message?.startsWith('public_pulse_'))throw e;
+  if(e.message!=='owned_public_https_read_failed_404')throw e;
  }
  let feedState='unavailable';
  try{
@@ -62,7 +62,7 @@ export async function probeLeilandPublicOrigin({origin,publicRoot,fetchImpl=glob
   if(feed?.schema!=='evercraft.leiland.public-feed.v1'||
      !['not_connected','publisher_reported'].includes(feed.status))error('leiland_public_feed_schema_invalid');
   feedState=feed.status;
- }catch(e){if(e.message==='leiland_public_feed_schema_invalid')throw e}
+ }catch(e){throw Error('leiland_public_feed_readback_invalid: '+e.message)}
  return Object.freeze({
   schema:'evercraft.leiland.external-readback.v1',
   public_https_asset_parity:'matched',
