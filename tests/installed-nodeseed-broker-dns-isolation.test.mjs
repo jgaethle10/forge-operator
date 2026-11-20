@@ -214,3 +214,53 @@ test('installed historical NodeSeed preserves synthetic Edge DNS while shadow br
     fs.rmSync(root,{recursive:true,force:true});
   }
 });
+
+
+test('installed historical NodeSeed releases a broker after losing its startup response',
+  {timeout:20_000},async()=>{
+  verifyInstalled();
+  const root=tempRoot();
+  let seed=null;
+  try{
+    const seedRoot=path.join(root,'disposable-node');
+    const journalParent=path.join(seedRoot,'shadow-journals');
+    fs.mkdirSync(journalParent,{mode:0o700,recursive:true});
+    const {startNodeSeed}=await import(
+      pathToFileURL(installedFile('systemia/compute/node-seed.mjs')).href
+    );
+    seed=await startNodeSeed({
+      root:seedRoot,
+      nodeId:'installed-old-compute-lost-response',
+      host:'127.0.0.1',port:0,advertiseHost:'127.0.0.1',
+      allocatorToken:TEST_TOKEN,
+      announce:false,
+    });
+    assert.equal(await countServices(seed.endpoint),0);
+    let jobAccepted=false;
+    const request=async(url,options)=>{
+      const res=await fetch(url,options);
+      if(String(url).endsWith('/v1/jobs')){
+        assert.equal(res.status,200);
+        jobAccepted=true;
+        throw Error('synthetic_job_result_lost');
+      }
+      return res;
+    };
+    const result=await runRehearsalShadowBrokerTransaction({
+      nodeSeedReceipt:seed,
+      journalParent,
+      allocatorToken:TEST_TOKEN,
+      request,
+    });
+    assert.equal(jobAccepted,true);
+    assert.equal(result.ok,false);
+    assert.equal(result.broker_start_outcome_uncertain,true);
+    assert.equal(result.release_confirmed,true);
+    assert.equal(result.journal_phase,'released');
+    assert.equal(result.manual_review_required,false);
+    assert.equal(await countServices(seed.endpoint),0);
+  }finally{
+    if(seed)await seed.close();
+    fs.rmSync(root,{recursive:true,force:true});
+  }
+});
