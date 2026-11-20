@@ -196,11 +196,12 @@ function paintStars(){
   ctx.beginPath();ctx.arc(x,y,star.r,0,Math.PI*2);ctx.fill();
  }
 }
-// CPU-bounded shaded orthographic renderer. Inverse projection gives each
+// CPU-bounded shaded orthographic renderer: 420 px cap and one queued frame per pointer movement.
+// Inverse projection gives each
 // globe pixel an actual latitude/longitude so geography does not distort.
 function paintEarth(cx,cy,r){
  if(!landMask||!globeContext)return false;
- const size=Math.min(500,Math.max(220,Math.round(r*1.9)));
+ const size=Math.min(420,Math.max(220,Math.round(r*1.75)));
  globeBuffer.width=size;globeBuffer.height=size;
  const pixels=globeContext.createImageData(size,size);
  const out=pixels.data;
@@ -319,6 +320,11 @@ function pointerPos(e){
 }
 function resize(){const box=canvas.getBoundingClientRect();w=Math.max(270,box.width);h=Math.max(280,box.height);ratio=Math.min(2,window.devicePixelRatio||1);canvas.width=Math.floor(w*ratio);canvas.height=Math.floor(h*ratio);ctx.setTransform(ratio,0,0,ratio,0,0);render()}
 function start(e){if(e.button!==0)return;const p=pointerPos(e);drag={pointer:e.pointerId,x:p.x,y:p.y,lon:centerLon,lat:centerLat,moved:false};canvas.setPointerCapture(e.pointerId)}
+let queuedFrame=0;
+function queueRender(){
+ if(queuedFrame)return;
+ queuedFrame=requestAnimationFrame(()=>{queuedFrame=0;render()});
+}
 function move(e){
  if(!drag||drag.pointer!==e.pointerId)return;
  const p=pointerPos(e),dx=p.x-drag.x,dy=p.y-drag.y;
@@ -326,7 +332,7 @@ function move(e){
  if(!drag.moved)return;
  centerLon=wrap(drag.lon-dx/Math.min(w,h)*240);
  centerLat=clamp(drag.lat+dy/Math.min(w,h)*130,-80,80);
- render();
+ queueRender();
 }
 function end(e){
  if(!drag||drag.pointer!==e.pointerId)return;
