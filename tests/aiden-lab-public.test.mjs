@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { TOPICS, CATEGORIES, STATE_LABELS } from '../public/aiden-lab/catalog.mjs';
+import { LEARNING_WORLDS, WORLD_STATES, LEARNING_SEQUENCE } from '../public/aiden-lab/learning-worlds.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../public/aiden-lab');
 const read = (name) => fs.readFileSync(path.join(root, name), 'utf8');
@@ -38,6 +39,52 @@ test('Aiden science catalog has real, source-bound research rooms', () => {
       }
     }
   }
+});
+
+test('Aiden is the first-party home for restored Deep Learning build lineage', () => {
+  assert.ok(LEARNING_WORLDS.length>=9);
+  assert.equal(new Set(LEARNING_WORLDS.map(x=>x.id)).size,LEARNING_WORLDS.length);
+  const required=['infinite-classroom','physics-atlas','earth-atlas',
+    'cosmos-atlas','energy-atlas','wildlife-atlas','sentinel-intelligence',
+    'hidden-world-atlas','deep-learning'];
+  for(const id of required)assert.ok(LEARNING_WORLDS.some(x=>x.id===id),id);
+  const classroom=LEARNING_WORLDS.find(x=>x.id==='infinite-classroom');
+  assert.equal(classroom.state,'practice_preview');
+  assert.equal(classroom.url,'./classroom/');
+  assert.match(classroom.evidence,/original conversational Luma tutor.*not restored/i);
+  for(const world of LEARNING_WORLDS){
+    assert.ok(Object.hasOwn(WORLD_STATES,world.state),world.id);
+    assert.ok(world.evidence.length>40,world.id);
+    assert.ok(world.description.length>40,world.id);
+    const u=new URL(world.url,'https://fabric.systemiacommandcenters.com/aiden-lab/');
+    assert.equal(u.protocol,'https:');
+    if(world.state!=='practice_preview'){
+      assert.equal(u.hostname,'github.com',world.id);
+      assert.notEqual(world.url,'./classroom/',world.id);
+    }
+    assert.equal(new URL(world.source).hostname,'github.com');
+  }
+  assert.equal(LEARNING_SEQUENCE.map(x=>x.title).join(' > '),'Predict > Try it > Observe > Explain > Connect');
+  const sentinel=LEARNING_WORLDS.find(x=>x.id==='sentinel-intelligence');
+  assert.equal(sentinel.state,'historical_rebuild');
+  assert.match(sentinel.description,/No live military tracking or tactical controls/);
+});
+
+test('Deep Learning campus is a visible, mobile-first first choice, not a claim of a fully restored tutor',()=>{
+  const html=read('index.html');
+  assert.ok(html.indexOf('id="worlds"')>0);
+  assert.ok(html.indexOf('id="worlds"')<html.indexOf('id="explore"'));
+  assert.match(html,/id="learningWorldGrid"/);
+  assert.match(html,/href="\.\/classroom\/"/);
+  assert.match(html,/No live AI tutor yet/);
+  assert.match(html,/Science atlas/);
+  const js=read('app.mjs');
+  assert.match(js,/buildLearningWorlds/);
+  assert.match(js,/learning-worlds\.mjs/);
+  assert.doesNotMatch(js,/\bfetch\s*\(|XMLHttpRequest|innerHTML\s*=/);
+  const css=read('styles.css');
+  assert.match(css,/learning-world-grid/);
+  assert.match(css,/@media\(max-width:590px\)/);
 });
 
 test('Medical research does not claim clinical validation', () => {

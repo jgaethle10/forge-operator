@@ -1,4 +1,5 @@
 import { TOPICS, CATEGORIES, STATE_LABELS } from './catalog.mjs';
+import { LEARNING_WORLDS, WORLD_STATES } from './learning-worlds.mjs';
 
 const $ = (id) => document.getElementById(id);
 const grid = $('topicGrid');
@@ -21,6 +22,31 @@ function node(tag, className, content) {
   if (className) element.className = className;
   if (content !== undefined) element.textContent = content;
   return element;
+}
+
+function buildLearningWorlds() {
+  const host = $('learningWorldGrid');
+  if (!host) return;
+  host.replaceChildren();
+  for (const world of LEARNING_WORLDS) {
+    const card = node('article', 'learning-world-card');
+    card.dataset.state = world.state;
+    const icon = node('div', 'learning-world-icon', world.icon);
+    icon.setAttribute('aria-hidden', 'true');
+    const eyebrow = node('p', 'world-kind', world.kind);
+    const title = node('h4', '', world.title);
+    const excerpt = node('p', 'learning-world-description', world.description);
+    const state = node('p', 'world-state', WORLD_STATES[world.state]);
+    const note = node('p', 'world-evidence', world.evidence);
+    const action = node('a', 'world-link', world.action + ' ↗');
+    action.href = world.url;
+    if (world.url.startsWith('https://')) {
+      action.target = '_blank';
+      action.rel = 'noopener noreferrer';
+    }
+    card.append(icon, eyebrow, title, excerpt, state, note, action);
+    host.append(card);
+  }
 }
 
 function persistShelf() {
@@ -137,5 +163,6 @@ dialog.addEventListener('click', (event) => {
   if (event.target === dialog) dialog.close();
 });
 
+buildLearningWorlds();
 buildFilters();
 render();

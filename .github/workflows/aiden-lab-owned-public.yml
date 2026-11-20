@@ -3,12 +3,16 @@ name: Aiden's Lab owned public route proof
 on:
   pull_request:
     paths:
+      - 'public/aiden-lab/**'
+      - 'public/apps/infinite-classroom/play/index.html'
+      - 'systemia/mcp/aiden-lab-public-route.mjs'
       - 'scripts/probe-aiden-lab-public.mjs'
       - 'tests/aiden-lab-owned-public.test.mjs'
       - '.github/workflows/aiden-lab-owned-public.yml'
   push:
     branches: [main]
     paths:
+      - 'public/apps/infinite-classroom/play/index.html'
       - 'public/aiden-lab/**'
       - 'systemia/mcp/aiden-lab-public-route.mjs'
       - 'systemia/mcp/fabric-local-runtime.mjs'

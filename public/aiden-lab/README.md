@@ -1,6 +1,48 @@
-# Aiden's Lab | Public science atlas
+# Aiden's Lab | Science and Deep Learning campus
 
 Aiden's Lab is Evercraft's **public science exploration front door**. It is not an alternate Systemia authority, clinical-research validation system, or separate source of truth.
+
+## The learning campus decision (November 19, 2026)
+
+Aiden's Lab is Evercraft's **shared public home for science, Deep Learning
+atlases, learning worlds, and Infinite Classroom**, not an isolated static
+science directory. The home must make sense in three seconds: choose a learning
+world, or investigate a science topic.
+
+- `public/aiden-lab/learning-worlds.mjs` is the public-safe, hand-reviewed
+  lineage registry for Infinite Classroom, Physics Atlas, Earth & World Atlas,
+  Cosmos Atlas, Global Energy Atlas, Wildlife Atlas, Sentinel Intelligence,
+  Hidden World Atlas, and the Deep Learning corridor architecture.
+- `/aiden-lab/classroom/` is a **first-party, read-only delivery route** for
+  the *existing* six-room/18-mission Infinite Classroom **practice preview**
+  (`public/apps/infinite-classroom/play/index.html`). Local stars, authored
+  clues and static homework prompts are not a conversational tutor.
+- The original Infinite Classroom with curiosity-led conversation, Luma
+  dialogue, per-room context and XP has **not** been restored to parity.
+  Historical data, profiles, and nonconsented child records must never be
+  copied or surfaced publicly.
+- Other named atlases are represented with honest source/product/historical
+  state. Their links go to verified canonical GitHub source records, **not**
+  to unverified public play URLs. An atlas product record is not a working
+  world.
+- Sentinel Intelligence is represented as a **public-history and science
+  learning lineage**, separate from current security/monitoring Sentinels.
+  No private military datasets, live operational targets, restricted telemetry,
+  public command/control or fabricated maps.
+- One learning method carries between worlds: **predict → try → observe →
+  explain → connect**. Each deeper lesson must preserve source date, confidence,
+  uncertainty, learner age suitability, review and rights.
+- This campus is a discovery and learning presentation layer. GitHub remains
+  canonical, Systemia owns governance, Yard/Compute owns runtime, and no
+  third-party hosted builder or legacy SDK is used.
+- Neither a source merge nor a passing simulation establishes a deployed
+  public site. The exact public parity probe now covers **seven** source assets,
+  including the Classroom preview and its dedicated route marker.
+
+The first-party Classroom practice preview is deliberately playable without
+a sign-in, network model, or learner analytics. It is not allowed to acquire
+new inference authority, save children’s identifiable answers, or claim
+personalized AI tutoring merely by appearing in Aiden's Lab.
 
 ## What works in this proposed release
 
@@ -33,6 +75,7 @@ Before adding a clinical conclusion, independently inspect full source methods a
 From repository root, with Node 18 or newer:
 
   node --test tests/aiden-lab-public.test.mjs
+  node --test tests/aiden-lab-fabric-route.test.mjs tests/aiden-lab-owned-public.test.mjs tests/aiden-lab-resident-release.test.mjs
 
 For manual preview, serve the repository's public directory with an existing local static file server and open /aiden-lab/. ES modules do not necessarily load from a file:// URL. Check mobile, search, reading shelf, keyboard navigation, dialog Escape, reduced-motion preference and every evidence link.
 

@@ -11,9 +11,11 @@ export const RESIDENT_ORIGIN='http://127.0.0.1:8787';
 export const ASSETS=Object.freeze([
   {name:'index.html',type:/^text\/html\b/i},
   {name:'app.mjs',type:/^(text|application)\/javascript\b/i},
+  {name:'learning-worlds.mjs',type:/^(text|application)\/javascript\b/i},
   {name:'catalog.mjs',type:/^(text|application)\/javascript\b/i},
   {name:'styles.css',type:/^text\/css\b/i},
   {name:'mark.svg',type:/^image\/svg\+xml\b/i},
+  {name:'classroom/index.html',source:'public/apps/infinite-classroom/play/index.html',type:/^text\/html\b/i,learningMarker:'classroom-practice-v1'},
 ]);
 const sha256=(data)=>createHash('sha256').update(data).digest('hex');
 
@@ -24,6 +26,7 @@ export function classifyResidentAsset({asset,response,source,origin=RESIDENT_ORI
   if(response.final_url!==expectedUrl)findings.push('REDIRECTED_OR_UNEXPECTED_LOCAL_ROUTE');
   if(!asset.type.test(String(response.content_type||'')))findings.push('MIME_MISMATCH');
   if(response.marker!=='aidens-lab-v1')findings.push('OWNED_ROUTE_MARKER_MISSING');
+  if(asset.learningMarker && response.learning_marker!==asset.learningMarker)findings.push('LEARNING_WORLD_MARKER_MISSING');
   if(typeof response.body!=='string'||response.body.length>300000)findings.push('INVALID_OR_OVERSIZED_BODY');
   if(sha256(String(response.body))!==sha256(String(source)))findings.push('SOURCE_RESIDENT_SHA256_MISMATCH');
   return {
@@ -50,7 +53,7 @@ export async function probeAidenLabResident({
     assets:[]
   };
   for(const asset of ASSETS){
-    const canonical=path.resolve(sourceRoot,'public/aiden-lab',asset.name);
+    const canonical=path.resolve(sourceRoot,asset.source||'public/aiden-lab/'+asset.name);
     let source;
     try{
       const stat=fs.lstatSync(canonical);
@@ -69,7 +72,8 @@ export async function probeAidenLabResident({
         response:{
           status:r.status,final_url:r.url,
           content_type:r.headers.get('content-type'),
-          marker:r.headers.get('x-evercraft-static-program'),body
+          marker:r.headers.get('x-evercraft-static-program'),
+          learning_marker:r.headers.get('x-evercraft-learning-world'),body
         },
         source
       }));
