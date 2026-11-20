@@ -245,3 +245,19 @@ bash systemia/mission-bridge/gems/execute_hard_negative_ablation.sh \
 ```
 
 The runner extracts only the hash-pinned original model from the preserved ZIP if absent, runs the four scientific tests, checks all organizer raster SHA-256 hashes, trains/scorers both fixed schemes on identical folds, and writes `run-a/hard-negative-full-area.json` and `hard-negative-decision-gate.json`. It performs **one run** unless `GEMS_REPEAT=1` is explicitly set. It never submits or promotes a model. Stop if the original authorized TIFFs are unavailable. Do not spend Work on rebuilding infra or re-downloading files for this test. Review the full-area DTI and per-fold FP/TP/FN before deciding whether stronger evidence exists; do not use the corridor score to justify a candidate.
+
+### GEMS-004 confound-control amendment: distance-matched random negatives
+
+**Do not interpret a hard-mined gain against the five-random-negatives baseline alone as proof that mining helps.** The hard variant takes two fresh negatives per positive from the >1km pool, so that treatment changes both distance distribution and ranking difficulty.
+
+In the amended `gems_004_hard_negative_ablation.py`, each fold now trains **three** otherwise identical HGB models using exactly the same positive training pixels and 5 negative samples per positive:
+
+| Name | Negative examples per positive | What it isolates |
+| --- | --- | --- |
+| baseline | Five seed-fixed random negatives, eligible at >0 pixels from training faults | Historical full-area reference |
+| distance-matched random control | First three of those pilot negatives + two **randomly selected fresh** negatives from >10px training-only mining pool | Effect of distant-fresh sampling without hard ranking |
+| hard-mined | Identical first three pilot negatives + two **top pilot-predicted fresh** negatives from that SAME >10px training-only pool | Additional effect of hard ranking, above matching the distance pool |
+
+The pilot scores **only unlabeled pixels in the current training mask**. Neither evaluation labels, southern test pixels, nor previously pilot-trained samples are eligible. The random control uses a distinct deterministic seed `SEED+1009+fold`; both controls record SHA-256 digests of selected fresh flattened pixel indices. New leakage, determinism, equal-training-size and double synthetic full-fit tests in `test_gems_004_hard_negative_ablation.py` verify the contract. The offline runner's `hard-negative-decision-gate.json` now reports all three full-area pooled DTI proxy scores and weighted components, hard-minus-baseline, hard-minus-distance-control, and distance-control-minus-baseline, plus per-fold comparisons.
+
+**Interpretation gate:** Any future claim that hard-example mining adds value needs a positive hard-minus-distance-control full-area difference, preferably across all three folds, with defensible TP/FP/FN tradeoffs. A positive hard-minus-baseline alone is not sufficient. This still does **not** establish hidden newly mapped fault performance, and it must not automatically generate a GeoTIFF or submit to DrivenData. Run once in authorized isolated Work CPU only when original hash-pinned GeoDAWN rasters are accessible. The amended suite has synthetic-model CI tests, not a real-data result.
