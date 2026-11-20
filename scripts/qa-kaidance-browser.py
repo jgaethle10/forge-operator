@@ -43,6 +43,12 @@ try:
    assert page.locator("#currentField").is_visible()
    assert page.locator("#fieldExplore").is_visible()
    assert page.locator("#fieldMode").is_visible()
+   assert page.locator("img.brand-symbol").is_visible()
+   assert page.locator("img.stage-brand").is_visible()
+   assert page.locator("img.brand-symbol").evaluate("el=>el.complete && el.naturalWidth>0"),"Kaidance product brand did not load"
+   assert page.locator("#signalSpotlight").count()==1
+   assert page.locator("#signalRiver").count()==1
+   assert page.locator("#signalIndex").count()==1
    assert page.locator("#fieldSource").count()==0  # Real public source remains in the separate receipt panel.
    assert page.locator("#fieldStoryTitle").is_visible()
    assert page.locator("#fieldRouteFrom").inner_text().strip()
@@ -71,6 +77,18 @@ try:
    assert geometry["scroll"]<=geometry["screen"]+3,f"horizontal page overflow: {geometry}"
    assert not errors,f"browser JS errors: {errors}"
    page.screenshot(path=str(OUTPUT/(name+".png")),full_page=True)
+   page.locator("#publicEvidence").scroll_into_view_if_needed()
+   page.wait_for_timeout(330)
+   assert page.locator("#signalSpotlight").is_visible(),"V06 featured signal missing"
+   assert page.locator("#signalRiver").is_visible(),"V06 continuous signal canvas missing"
+   assert page.locator("#eventList").is_visible(),"Additional real source signals missing"
+   source_links=page.locator("#eventList .event")
+   if source_links.count()>0:
+    for link in source_links.all():
+     assert (link.get_attribute("href") or "").startswith("https://github.com/jgaethle10/forge-operator/"),"Untrusted signal URL"
+   page.screenshot(path=str(OUTPUT/(name+"-signal-wall.png")),full_page=False)
+   page.evaluate("window.scrollTo(0,0)")
+
    if name=="desktop":
     def sample_reactor():
      return page.locator("#currentField").evaluate("""el=>{
@@ -134,7 +152,7 @@ try:
     page.screenshot(path=str(OUTPUT/"iphone-direct-live.png"),full_page=False)
    page.close()
   browser.close()
- print("KAIDANCE_BROWSER_QA_PASS: confluence desktop+iPhone, source theater, explore/pause/reactor modes, broadcast, no errors or horizontal overflow")
+ print("KAIDANCE_BROWSER_QA_PASS: branded V06, cinematic signal river, source safety, desktop+iPhone, explore/reactor/broadcast, no JS errors or horizontal overflow")
 finally:
  SERVER.terminate()
  try:SERVER.wait(timeout=3)
