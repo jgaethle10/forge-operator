@@ -227,10 +227,28 @@ class Handler(BaseHTTPRequestHandler):
                 if p=='/api/engineering/queue':
                     return self.send(200,engineering_queue(db))
                 if p=='/api/commercial/readiness':
-                    return self.send(200,{'product_key':'evercraft-site-planner','checkout_configured':False,
+                    pilot_file=ROOT/'stripe_pilot.json'
+                    pilot={}
+                    if pilot_file.is_file():
+                        try:
+                            record=json.loads(pilot_file.read_text(encoding='utf-8'))
+                            if (record.get('schema')=='evercraft.site-planner.stripe-catalog-snapshot.v1'
+                                and record.get('product_key')=='evercraft-site-planner-concept-pilot-v1'
+                                and record.get('payment_link_active_at_verification') is False
+                                and record.get('product_active_at_verification') is False):
+                                pilot={'catalog_recorded':True,'merchant_name':record.get('merchant_name'),
+                                       'currency':record.get('price_currency'),
+                                       'unit_amount_cents':record.get('unit_amount_cents'),
+                                       'price_status':record.get('price_status'),
+                                       'link_status_at_last_verification':'inactive',
+                                       'live_stripe_status_checked_by_server':False}
+                        except (ValueError,OSError):
+                            pilot={}
+                    return self.send(200,{'product_key':'evercraft-site-planner',
+                      'stripe_pilot':pilot,'checkout_configured':False,
                       'payment_verification_connected':False,'systemia_fulfillment_connected':False,
                       'customer_authentication_connected':False,'commercial_release_allowed':False,
-                      'next_action':'Configure product-specific approved checkout and receipt-verified approvals on owned infrastructure'})
+                      'next_action':'Approve pilot price and scope, tax classification, then integrate exact Stripe settlement and verified Systemia delivery before enabling checkout'})
                 if p=='/api/outbox':
                     return self.send(200,[dict(r) for r in db.execute('SELECT id,site_id,event_type,aggregate_id,payload_sha256,state,created_at,delivered_at FROM outbox ORDER BY created_at,id')])
                 if p=='/api/sites':
