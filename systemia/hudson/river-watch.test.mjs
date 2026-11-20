@@ -12,7 +12,7 @@ const code=watch.match(/<script>([\s\S]*?)<\/script>/)?.[1];
 test('river Watch is an interactive site and not an image stand-in',()=>{
  assert.match(home,/href="\.\/watch\/"/);
  assert.match(home,/Enter the Current/);
- assert.match(watch,/hudson-watch-release" content="river-current-v6-phase-traveler"/);
+ assert.match(watch,/hudson-watch-release" content="river-current-v7-cinematic-confluences"/);
  assert.match(watch,/canvas id="current"/);
  assert.match(watch,/id="explore"/);
  assert.match(watch,/id="pause"/);
@@ -53,6 +53,34 @@ test('continuous watch mode has an explicit long-run CPU/visibility budget',()=>
  assert.match(code,/setPause\(!paused\)/);
  assert.match(code,/if\(!paused\)frame=requestAnimationFrame\(loop\)/);
  assert.doesNotMatch(code,/Math\.random\(\)/);
+});
+test('v7 scenic junctions branch only toward their current destination',()=>{
+ assert.match(code,/function drawDepthVeils\(\)/);
+ assert.match(code,/function drawFoldingWake\(trip\)/);
+ assert.match(code,/function drawBranchingSurge\(trip\)/);
+ assert.match(code,/drawBranchingSurge\(trip\);drawFoldingWake\(trip\)/);
+ assert.match(code,/edge\.warpedPoints\|\|edge\.points/);
+ const start=code.indexOf('function junctionExcitation(trip,key){');
+ const end=code.indexOf('function drawFoldingWake(trip){',start);
+ const bloom=new vm.Script(code.slice(start,end)+';junctionExcitation')
+  .runInNewContext({Math,clamp:(x,a,b)=>Math.max(a,Math.min(b,x))});
+ assert.equal(bloom({to:'hudson',t:.81},'saban'),0);
+ assert.equal(bloom({to:'hudson',t:.20},'hudson'),0);
+ assert.ok(bloom({to:'hudson',t:.80},'hudson')>.5);
+ assert.equal(bloom({to:'hudson',t:1},'hudson'),0);
+ for(let t=-1;t<=2;t+=.01){
+  const x=bloom({to:'hudson',t},'hudson');
+  assert.ok(Number.isFinite(x)&&x>=0&&x<=1);
+ }
+});
+test('film-mode is reversible and remains evidence honest',()=>{
+ assert.match(watch,/id="film" type="button" aria-pressed="false"/);
+ assert.match(watch,/body\.film-mode/);
+ assert.match(code,/function setFilmMode\(on\)/);
+ assert.match(code,/searchParams\.set\("film","1"\)/);
+ assert.match(code,/searchParams\.delete\("film"\)/);
+ assert.match(code,/get\("film"\)==="1"/);
+ assert.match(watch,/Not live mission or AI inference telemetry/);
 });
 test('river topology has seven named confluences and multi-channel currents',()=>{
  const keys=['hudson','systemia','kaidance','discovery','evidence','raven','saban'];
