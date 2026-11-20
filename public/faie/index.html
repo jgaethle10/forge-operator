@@ -650,6 +650,14 @@
         <div id="femaFloodResult" role="status" aria-live="polite">No FEMA flood map checked yet.</div>
         <button id="femaFloodDownload" type="button" hidden>Download FEMA map evidence (JSON)</button>
       </section>
+      <details class="fema-flood-panel" id="nfipHistoryPanel">
+        <summary>05 / Historical flood insurance claims · Washington statewide</summary>
+        <h3>What has NFIP paid across Washington?</h3>
+        <p>Independent historical context for Washington State, loss years 2023–2024. This is <strong>not about the selected coordinates, parcel, ZIP code, or the property's claims.</strong> Only statewide redacted records are aggregated. NFIP does not include private insurance or uninsured damage, and these totals do not predict future flood risk, coverage, eligibility, or premiums.</p>
+        <button id="nfipHistoryRun" type="button">Explore Washington NFIP history ↗</button>
+        <div id="nfipHistoryResult" role="status" aria-live="polite">Historical claims not checked. No site conclusion has been made.</div>
+        <button id="nfipHistoryDownload" type="button" hidden>Download statewide claims evidence (JSON)</button>
+      </details>
       <details class="soil-preview" style="margin-top:16px">
         <summary>Show soil-only lookup result</summary>
         <div class="soil-preview-result" id="soilPreviewResult" role="status" aria-live="polite">No soil-only lookup yet.</div>
@@ -1168,6 +1176,50 @@ document.getElementById('femaFloodDownload').addEventListener('click',()=>{
   const blob=new Blob([JSON.stringify(latestFemaFlood,null,2)+'\\n'],{type:'application/json'});
   const url=URL.createObjectURL(blob),a=document.createElement('a');
   a.href=url;a.download='evercraft-faie-fema-flood-map.json';document.body.append(a);a.click();a.remove();URL.revokeObjectURL(url);
+});
+let latestNfipHistory=null;
+async function runNfipHistory(){
+  const button=document.getElementById('nfipHistoryRun');
+  const result=document.getElementById('nfipHistoryResult');
+  const download=document.getElementById('nfipHistoryDownload');
+  latestNfipHistory=null;download.hidden=true;
+  button.disabled=true;button.textContent='Checking official NFIP history…';
+  result.textContent='Requesting FEMA redacted claims for Washington State, loss years 2023–2024. No parcel coordinates are sent.';
+  try{
+    const response=await fetchWithTimeout('/api/faie/nfip/wa-history',{method:'GET',headers:{accept:'application/json'}},40000);
+    if(!response.ok)throw Error(response.status===429
+      ? 'The statewide claims source has reached its request budget. Please try later.'
+      : 'Official NFIP historical claims are unavailable or incomplete. No historical-loss conclusion is available.');
+    const data=await response.json();
+    if(data?.schema!=='evercraft.faie.nfip-state-loss-history.v1'||
+       data.geography?.level!=='state'||data.geography?.state!=='WA'||
+       data.loss_year_range?.first!==2023||data.loss_year_range?.last!==2024||
+       data.request_persisted!==false||data.decision_authority!==false||
+       data.insurance_eligibility_decision!==null||data.parcel_claim_history!==null){
+      throw Error('Statewide claims provenance or privacy contract was not verified.');
+    }
+    latestNfipHistory=data;
+    const count=data.claim_transactions;
+    const paid=data.total_paid_usd;
+    if(data.status==='insufficient_area_records_suppressed'){
+      result.textContent='Too few published claim transactions to disclose a historical total. No property loss is inferred.';
+    }else if(data.status==='area_aggregate_available'&&Number.isFinite(count)&&Number.isFinite(paid)){
+      const dollars=new Intl.NumberFormat(undefined,{style:'currency',currency:'USD',maximumFractionDigits:0});
+      result.innerHTML='<div class="fema-flood-list">'
+        +'<div class="fema-flood-record"><strong>'+esc(count.toLocaleString())+'</strong><span>NFIP claim transactions, Washington statewide, losses in 2023–2024</span></div>'
+        +'<div class="fema-flood-record"><strong>'+esc(dollars.format(paid))+'</strong><span>Nominal NFIP payments across those published transactions, not total flood damage</span></div></div>'
+        +'<p>Source: <a target="_blank" rel="noopener noreferrer" href="https://www.fema.gov/openfema-data-page/nfip-redacted-claims-v3">FEMA OpenFEMA NFIP Claims v3 ↗</a>. Retrieved '+esc(fmt(data.retrieved_at))+'. Statewide evidence only. Does not establish anything about your property.</p>';
+    }else throw Error('FEMA did not return a complete, usable statewide aggregate.');
+    download.hidden=false;
+  }catch(error){result.textContent=error?.message||'NFIP historical source unavailable.';}
+  finally{button.disabled=false;button.textContent='Explore Washington NFIP history ↗';}
+}
+document.getElementById('nfipHistoryRun').addEventListener('click',runNfipHistory);
+document.getElementById('nfipHistoryDownload').addEventListener('click',()=>{
+  if(!latestNfipHistory)return;
+  const blob=new Blob([JSON.stringify(latestNfipHistory,null,2)+'\n'],{type:'application/json'});
+  const url=URL.createObjectURL(blob),a=document.createElement('a');
+  a.href=url;a.download='evercraft-faie-nfip-wa-2023-2024.json';document.body.append(a);a.click();a.remove();URL.revokeObjectURL(url);
 });
 function renderHistoricalClimate(data){
   const metrics=data.metrics||{};
