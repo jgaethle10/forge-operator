@@ -44,7 +44,7 @@ const context={window,document,devicePixelRatio:2,matchMedia:window.matchMedia,
 };
 vm.runInNewContext(scripts[0],context,{timeout:7000});
 function click(id){const cb=ev.get(id+':click');assert(cb,'missing action '+id);cb()}
-function get(id){return element(id).textContent}
+function get(id){return String(element(id).textContent)}
 assert.equal(get('chargers'),'4');assert.equal(get('trees'),'17');assert.equal(get('solar'),'12');
 assert.match(get('scene-mode'),/DAYLIGHT/);
 click('add-charger');assert.equal(get('chargers'),'5');
