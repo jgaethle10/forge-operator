@@ -59,6 +59,9 @@ jobs:
       - name: FAIE Saban swarm proof
         run: npm run proof:saban-faie
 
+      - name: FAIE real public API evidence and comparison acceptance (pre-deploy)
+        run: node scripts/faie-partner-end-to-end.mjs
+
       - name: Typecheck
         run: npm run lint
 
