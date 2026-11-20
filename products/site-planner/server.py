@@ -57,6 +57,7 @@ def init():
         CREATE TABLE IF NOT EXISTS reports(id TEXT PRIMARY KEY,site_id TEXT NOT NULL REFERENCES sites(id),created_at TEXT,snapshot_json TEXT NOT NULL,evidence_count INTEGER,scenario_count INTEGER);
         CREATE TABLE IF NOT EXISTS source_reports(id TEXT PRIMARY KEY,site_id TEXT NOT NULL REFERENCES sites(id),external_report_id TEXT NOT NULL,report_sha256 TEXT NOT NULL,source_sha256 TEXT NOT NULL,report_type TEXT NOT NULL,requested_address TEXT NOT NULL,gateway_schema TEXT NOT NULL,source_coverage_schema TEXT NOT NULL,report_created_at TEXT,verification_basis TEXT NOT NULL,created_at TEXT NOT NULL, UNIQUE(site_id,external_report_id));
         CREATE TABLE IF NOT EXISTS order_source_links(order_id TEXT PRIMARY KEY REFERENCES orders(id),site_id TEXT NOT NULL REFERENCES sites(id),source_report_id TEXT NOT NULL REFERENCES source_reports(id));
+        CREATE TABLE IF NOT EXISTS order_controls(order_id TEXT PRIMARY KEY REFERENCES orders(id),site_id TEXT NOT NULL REFERENCES sites(id),product_key TEXT NOT NULL,lane TEXT NOT NULL CHECK(lane IN ('commercial_quote','internal_planning')),payment_state TEXT NOT NULL CHECK(payment_state IN ('checkout_unconfigured','not_applicable')),scope_review_state TEXT NOT NULL DEFAULT 'pending',capacity_review_state TEXT NOT NULL DEFAULT 'pending',fulfillment_release_state TEXT NOT NULL DEFAULT 'held',created_at TEXT NOT NULL);
         CREATE TABLE IF NOT EXISTS orders(id TEXT PRIMARY KEY,site_id TEXT NOT NULL REFERENCES sites(id),report_id TEXT NOT NULL REFERENCES reports(id),scenario_id TEXT NOT NULL REFERENCES scenarios(id),scope TEXT,requested_by TEXT,status TEXT NOT NULL DEFAULT 'queued',created_at TEXT);
         CREATE TABLE IF NOT EXISTS plans(id TEXT PRIMARY KEY,site_id TEXT NOT NULL REFERENCES sites(id),order_id TEXT NOT NULL REFERENCES orders(id),report_id TEXT NOT NULL REFERENCES reports(id),title TEXT,reviewer TEXT,status TEXT NOT NULL,notes TEXT,file_name TEXT,file_path TEXT,file_type TEXT,created_at TEXT);
         CREATE TABLE IF NOT EXISTS gaps(id TEXT PRIMARY KEY,site_id TEXT NOT NULL REFERENCES sites(id),type TEXT,severity TEXT,title TEXT,detail TEXT,status TEXT NOT NULL DEFAULT 'open',created_at TEXT);
@@ -66,6 +67,7 @@ def init():
         CREATE INDEX IF NOT EXISTS idx_outbox_state ON outbox(state,created_at);
         CREATE INDEX IF NOT EXISTS idx_evidence_site ON evidence(site_id);
         CREATE INDEX IF NOT EXISTS idx_order_report ON orders(report_id);
+        CREATE INDEX IF NOT EXISTS idx_order_controls_site ON order_controls(site_id,order_id);
         CREATE INDEX IF NOT EXISTS idx_source_report_site ON source_reports(site_id,external_report_id);
         CREATE INDEX IF NOT EXISTS idx_plan_order ON plans(order_id);
         ''')
@@ -77,7 +79,7 @@ def getsite(db,sid):
     if not row: raise ValueError('Site not found')
     return dict(row)
 def site_detail(db,sid):
-    return {'site':getsite(db,sid),**{t:rows(db,t,sid) for t in ['evidence','scenarios','reports','orders','plans','gaps','source_reports']}}
+    return {'site':getsite(db,sid),**{t:rows(db,t,sid) for t in ['evidence','scenarios','reports','orders','plans','gaps','source_reports','order_controls']}}
 def snapshot(db,sid):
     d=site_detail(db,sid)
     for e in d['evidence']:
@@ -111,9 +113,12 @@ def engineering_queue(db, status=None):
         raise ValueError('Invalid engineering status')
     q = """SELECT o.id AS order_id,o.site_id,o.report_id,o.scenario_id,
         o.scope,o.requested_by,o.status,o.created_at,s.address,s.name AS site_name,
-        sc.name AS scenario_name
+        sc.name AS scenario_name,oc.lane AS order_lane,
+        COALESCE(oc.payment_state,'unclassified_hold') AS payment_state,
+        COALESCE(oc.fulfillment_release_state,'held') AS fulfillment_release_state
         FROM orders o JOIN sites s ON s.id=o.site_id
-        JOIN scenarios sc ON sc.id=o.scenario_id"""
+        JOIN scenarios sc ON sc.id=o.scenario_id
+        LEFT JOIN order_controls oc ON oc.order_id=o.id AND oc.site_id=o.site_id"""
     return [dict(r) for r in db.execute(q + (' WHERE o.status=?' if status else '') + ' ORDER BY o.created_at,o.id', (status,) if status else ())]
 
 def transition_order(db, site_id, order_id, new_status, actor, reason):
@@ -124,6 +129,9 @@ def transition_order(db, site_id, order_id, new_status, actor, reason):
     if order is None:
         raise ValueError('Order does not belong to site')
     old_status = order['status']
+    controls=db.execute('SELECT lane,fulfillment_release_state FROM order_controls WHERE order_id=? AND site_id=?',(order_id,site_id)).fetchone()
+    if new_status!='cancelled' and (controls is None or controls['lane']!='internal_planning'):
+        raise ValueError('Commercial quote or unclassified order is held: verified checkout, scope and capacity approval not connected')
     if new_status not in ORDER_TRANSITIONS.get(old_status,set()):
         raise ValueError('Invalid engineering state transition')
     db.execute('UPDATE orders SET status=? WHERE id=? AND site_id=?',(new_status,order_id,site_id))
@@ -213,6 +221,11 @@ class Handler(BaseHTTPRequestHandler):
             with connect() as db:
                 if p=='/api/engineering/queue':
                     return self.send(200,engineering_queue(db))
+                if p=='/api/commercial/readiness':
+                    return self.send(200,{'product_key':'evercraft-site-planner','checkout_configured':False,
+                      'payment_verification_connected':False,'systemia_fulfillment_connected':False,
+                      'customer_authentication_connected':False,'commercial_release_allowed':False,
+                      'next_action':'Configure product-specific approved checkout and receipt-verified approvals on owned infrastructure'})
                 if p=='/api/outbox':
                     return self.send(200,[dict(r) for r in db.execute('SELECT id,site_id,event_type,aggregate_id,payload_sha256,state,created_at,delivered_at FROM outbox ORDER BY created_at,id')])
                 if p=='/api/sites':
@@ -304,6 +317,9 @@ class Handler(BaseHTTPRequestHandler):
                     if v['cost'] is not None and (v['cost'] < 0 or not __import__('math').isfinite(v['cost'])):raise ValueError('Cost must be finite and nonnegative')
                     v['chargers']=int(v['chargers']) if v['chargers'] is not None else None
                 elif kind=='orders':
+                    lane=v.get('order_kind','commercial_quote')
+                    if lane not in ('commercial_quote','internal_planning'):
+                        raise ValueError('Order kind must be commercial_quote or internal_planning')
                     scn=db.execute('SELECT id FROM scenarios WHERE id=? AND site_id=?',(v.get('scenario_id'),sid)).fetchone()
                     if not scn:raise ValueError('Scenario must belong to this site')
                     linked_source_id=str(v.get('source_report_id','')).strip() or None
@@ -312,6 +328,9 @@ class Handler(BaseHTTPRequestHandler):
                 elif kind=='plans':
                     order=db.execute('SELECT report_id FROM orders WHERE id=? AND site_id=?',(v.get('order_id'),sid)).fetchone()
                     if not order:raise ValueError('Order must belong to this site')
+                    controls=db.execute('SELECT lane FROM order_controls WHERE order_id=? AND site_id=?',(v.get('order_id'),sid)).fetchone()
+                    if not controls or controls['lane']!='internal_planning':
+                        raise ValueError('Commercial plan return held until provider verified payment and approval workflow exists')
                     if v.get('plan_status') not in ('preliminary','reviewed','revision_requested'):raise ValueError('Invalid plan status')
                     id=uid('PLAN');keys=['order_id','report_id','title','reviewer','status','notes'];v['title']=v.get('plan_title','');v['report_id']=order['report_id'];v['status']=v['plan_status']
                 elif kind=='gaps':
@@ -320,12 +339,20 @@ class Handler(BaseHTTPRequestHandler):
                 db.execute(f'INSERT INTO {kind} ('+','.join(['id','site_id']+keys+['created_at'])+') VALUES ('+','.join(['?']*(len(keys)+3))+')',(id,sid)+tuple(v.get(k,'') for k in keys)+(now(),))
                 record=dict(db.execute(f'SELECT * FROM {kind} WHERE id=?',(id,)).fetchone())
                 if kind=='orders':
+                    db.execute('INSERT INTO order_controls(order_id,site_id,product_key,lane,payment_state,scope_review_state,capacity_review_state,fulfillment_release_state,created_at) VALUES (?,?,?,?,?,?,?,?,?)',
+                        (id,sid,'evercraft-site-planner',lane,'checkout_unconfigured' if lane=='commercial_quote' else 'not_applicable','pending','pending','held',now()))
                     payload={'site_id':sid,'order_id':id,'report_id':record['report_id'],'scenario_id':record['scenario_id'],'scope':record['scope'],'requested_by':record['requested_by']}
                     if linked_source_id:
                         db.execute('INSERT INTO order_source_links VALUES (?,?,?)',(id,sid,linked_source_id))
                         src=db.execute('SELECT external_report_id FROM source_reports WHERE id=?',(linked_source_id,)).fetchone()
                         payload.update({'source_report_id':linked_source_id,'external_report_id':src['external_report_id']})
                     append_event(db,sid,'site.plan.requested.v1',id,payload)
+                    if lane=='commercial_quote':
+                        append_event(db,sid,'site.plan.commercial_hold.v1',id,{
+                            'site_id':sid,'order_id':id,'report_id':record['report_id'],
+                            'product_key':'evercraft-site-planner','payment_state':'checkout_unconfigured',
+                            'fulfillment_release_state':'held','fulfillment_authorized':False,
+                            'hold_reason':'no_verified_site_planner_checkout_or_scope_capacity_approval'})
                 if kind=='plans':
                     append_event(db,sid,'site.plan.registered.v1',id,{'site_id':sid,'plan_id':id,'order_id':record['order_id'],'report_id':record['report_id'],'status':record['status']})
                 db.commit()
