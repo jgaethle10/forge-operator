@@ -4,7 +4,7 @@ import { publicPaymentOffer } from './public-payment-offers.mjs';
 import {renderForensiScopeBuyerPage} from './forensiscope-sales-page.mjs';
 import { ownedPaymentTransportConfig } from './owned-payment-transport.mjs';
 import {createWingCourierFabricProxy} from '../wing-courier/fabric-proxy.mjs';
-import {createFallenBootstrap} from '../wing-courier/enrollment-bootstrap.mjs';
+import {createFallenBootstrap,createHarborBootstrap} from '../wing-courier/enrollment-bootstrap.mjs';
 import http from 'node:http';
 import crypto from 'node:crypto';
 import fs from 'node:fs';
@@ -456,6 +456,16 @@ export async function startFabricLocalRuntime({
     recipientFingerprint:process.env.EVERCRAFT_FALLEN_BOOTSTRAP_RECIPIENT_FP||'',
     claimStateDir:process.env.EVERCRAFT_FALLEN_BOOTSTRAP_CLAIM_STATE_DIR||''
   });
+  // Harbor is separately disabled by default. The package is encrypted for
+  // Harbor's pinned recipient identity and requires Harbor's enrolled signer.
+  const harborBootstrap=createHarborBootstrap({
+    enabled:process.env.EVERCRAFT_HARBOR_BOOTSTRAP_ENABLED==='1',
+    packageFile:process.env.EVERCRAFT_HARBOR_BOOTSTRAP_PACKAGE||'',
+    signerPublicKeyFile:process.env.EVERCRAFT_HARBOR_BOOTSTRAP_SIGNER_PUB||'',
+    expectedSha256:process.env.EVERCRAFT_HARBOR_BOOTSTRAP_SHA256||'',
+    recipientFingerprint:process.env.EVERCRAFT_HARBOR_BOOTSTRAP_RECIPIENT_FP||'',
+    claimStateDir:process.env.EVERCRAFT_HARBOR_BOOTSTRAP_CLAIM_STATE_DIR||''
+  });
   const instanceId='fabric_local_'+crypto.randomBytes(10).toString('hex');
   const resolvedReleaseRefFile=String(
     releaseRefFile||
@@ -868,6 +878,7 @@ export async function startFabricLocalRuntime({
       // owner-local flag; exact scoped routes and broker auth are enforced in
       // Wing Courier. Never turns a package into publish/send authority.
       if(await fallenBootstrap.handle(req,res))return;
+      if(await harborBootstrap.handle(req,res))return;
       if(await wingCourierProxy.handle(req,res))return;
 
       // Evidence-first public science atlas. Exact allowlisted static files only.
