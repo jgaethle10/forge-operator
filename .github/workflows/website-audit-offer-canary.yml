@@ -89,5 +89,5 @@ jobs:
             echo "## Website Audit live layout verified"
             echo
             echo "URL: $url"
-            echo "Verified: correct $49 buyer-action ordering, exact known hosted Stripe URL if present, private inquiry readiness and scope disclosures. No purchase, paid order, or fulfilled audit was exercised."
+            echo 'Verified: correct $49 buyer-action ordering, exact known hosted Stripe URL if present, private inquiry readiness and scope disclosures. No purchase, paid order, or fulfilled audit was exercised.'
           } >> "$GITHUB_STEP_SUMMARY"
