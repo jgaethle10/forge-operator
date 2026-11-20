@@ -17,6 +17,10 @@ on:
       - 'scripts/leiland-owned-field-canary.mjs'
       - 'scripts/leiland-resident-readiness.mjs'
       - 'tests/leiland-resident-readiness.test.mjs'
+      - 'tests/leiland-core-admission.test.mjs'
+      - 'systemia/leiland/core-admission.mjs'
+      - 'systemia/compute/runtime-node.mjs'
+      - 'systemia/compute/local-organism.mjs'
       - 'tests/leiland-systemia-resident.test.mjs'
       - 'systemia/organism/leiland-owned-observatory.workflow.json'
       - 'systemia/core/resident-services.json'
@@ -43,6 +47,10 @@ on:
       - 'scripts/leiland-owned-field-canary.mjs'
       - 'scripts/leiland-resident-readiness.mjs'
       - 'tests/leiland-resident-readiness.test.mjs'
+      - 'tests/leiland-core-admission.test.mjs'
+      - 'systemia/leiland/core-admission.mjs'
+      - 'systemia/compute/runtime-node.mjs'
+      - 'systemia/compute/local-organism.mjs'
       - 'tests/leiland-systemia-resident.test.mjs'
       - 'systemia/organism/leiland-owned-observatory.workflow.json'
       - 'systemia/core/resident-services.json'
@@ -79,9 +87,12 @@ jobs:
           node --check scripts/leiland-field-preflight.mjs
           node --check scripts/leiland-owned-field-canary.mjs
           node --check scripts/leiland-resident-readiness.mjs
+          node --check systemia/leiland/core-admission.mjs
+          node --check systemia/compute/runtime-node.mjs
+          node --check systemia/compute/local-organism.mjs
           node --check systemia/leiland/resident-host-runner.mjs
       - name: Prove public-only activity and privacy contract
-        run: node --test tests/leiland-public.test.mjs tests/leiland-owned-pulse-publisher.test.mjs tests/leiland-owned-release-probe.test.mjs tests/leiland-owned-observatory-host.test.mjs tests/leiland-kaidance-field-integration.test.mjs tests/leiland-field-preflight.test.mjs tests/leiland-systemia-resident.test.mjs tests/leiland-owned-field-canary.test.mjs tests/leiland-neural-universe.test.mjs tests/leiland-resident-readiness.test.mjs
+        run: node --test tests/leiland-public.test.mjs tests/leiland-owned-pulse-publisher.test.mjs tests/leiland-owned-release-probe.test.mjs tests/leiland-owned-observatory-host.test.mjs tests/leiland-kaidance-field-integration.test.mjs tests/leiland-field-preflight.test.mjs tests/leiland-systemia-resident.test.mjs tests/leiland-owned-field-canary.test.mjs tests/leiland-neural-universe.test.mjs tests/leiland-resident-readiness.test.mjs tests/leiland-core-admission.test.mjs
 
   leiland-browser:
     name: Leiland real Chromium iPhone / desktop / portrait proof
