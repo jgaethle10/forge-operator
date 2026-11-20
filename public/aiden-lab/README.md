@@ -4,6 +4,32 @@ Aiden's Lab is Evercraft's **public science exploration front door**. It is not 
 
 ## Watershed Laboratory, first original landscape simulation (November 20, 2026)
 
+**Science-linked visual system v3:** The Watershed Laboratory now draws a
+layered first-party Canvas landscape with atmospheric clouds, distant ridge
+silhouettes, interpolated sculpted terrain, forest clusters responding to
+the vegetation slider, snowcaps driven by per-zone stored snow-water
+equivalent, a river whose width and motion respond to computed river output,
+and soil and groundwater lenses reflecting model stores. Its water movement
+inspection toggles offer Entire System, Above Ground and Underground
+readouts. Each model zone exposes a display-only `visualFlux` record with
+its last daily snowfall, rain, thaw, infiltration, fast runoff,
+evaporation, percolation and slow groundwater release; these are the
+values already used by the mass-conserving equation. No new water is added
+by artwork. Surface/underground modes never alter hydrology. Rain/snow
+particles, aquifer glow, water streaks, and atmospheric shading are
+*authored illustrative visualizations*, not measured individual drops,
+flood paths, remote-sensing imagery, or live telemetry. Rendering while
+playing is capped near 30fps, particles/clouds have finite upper bounds,
+and idle/reduced-motion viewers see a static informative state. Existing
+accessible numeric zone readouts and model limitations remain first class.
+
+The new `tests/aiden-lab-watershed.test.mjs` coverage reconciles all
+per-cell visual fluxes with the existing exact mass budget, validates all
+three visual layer controls and privacy/performance bounds. Passing
+GitHub tests only verifies source contracts, not actual phone frame rate,
+visual quality or public release. Penguin managed updater and the
+independent 11-asset exact-source check remain required.
+
 **Interactive terrain sculpting v2:** Visitors can select one of five zones
 and change its ridge altitude in 100 m keyboard-friendly steps, or turn on
 sculpt mode to drag the ridge with touch/mouse. Elevations remain ordered

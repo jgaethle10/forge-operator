@@ -141,3 +141,66 @@ test('terrain interaction supports touch, accessible buttons, bounded relief and
  assert.match(html,/Restore ridges/);
  assert.doesNotMatch(js,/\bfetch\s*\(|XMLHttpRequest|WebSocket|sendBeacon|navigator\.geolocation|localStorage/);
 });
+
+
+test('visual river, snow, soil and aquifer values are derived from the exact accounted per-zone hydrology fluxes',()=>{
+ const {makeWatershed,stepWatershed,stores}=getHydrology();
+ for(const p of [
+  {rain:80,temp:30,forest:30,slope:8},
+  {rain:48,temp:-8,forest:75,slope:5},
+  {rain:14,temp:21,forest:65,slope:6},
+  {rain:0,temp:29,forest:25,slope:5}
+ ]){
+  const state=makeWatershed('winter');
+  const initial=stores(state),reading=stepWatershed(state,p);
+  let fast=0,slow=0,evap=0,snow=0,melt=0,waterInput=0;
+  for(const cell of state.cells){
+   const f=cell.visualFlux;
+   assert.ok(f,'each modeled zone exposes per-step read-only visual fluxes');
+   for(const key of ['snowfall','rainfall','thaw','infiltration','fastFlow',
+    'evaporated','percolation','slowFlow']){
+     assert.ok(Number.isFinite(f[key])&&f[key]>=0,'flux '+key+' should be non-negative finite');
+   }
+   assert.ok(Math.abs(f.infiltration+f.fastFlow-f.rainfall-f.thaw)<1e-9,'liquid partition must agree');
+   assert.ok(Math.abs(f.snowfall+f.rainfall-p.rain)<1e-9,'precipitation partition must agree');
+   fast+=f.fastFlow;slow+=f.slowFlow;evap+=f.evaporated;
+   snow+=f.snowfall;melt+=f.thaw;waterInput+=f.rainfall+f.snowfall;
+  }
+  assert.ok(Math.abs((fast+slow)/5-reading.outflow)<1e-9,'drawn river is actual modeled river amount');
+  assert.ok(Math.abs(evap/5-reading.evaporation)<1e-9,'evap arrows match averaged amount');
+  assert.ok(Math.abs(snow/5-reading.precipSnow)<1e-9);
+  assert.ok(Math.abs(melt/5-reading.melt)<1e-9);
+  assert.ok(Math.abs(waterInput/5-p.rain)<1e-9);
+  assert.ok(Math.abs(initial+p.rain-reading.outflow-reading.evaporation-stores(state))<1e-9);
+ }
+});
+test('science exhibit has independently selectable aboveground/underground visual layers and bounded animation',()=>{
+ for(const layer of ['all','surface','ground']){
+  assert.match(html,new RegExp('data-layer="'+layer+'"'));
+ }
+ for(const symbol of [
+  'function changeVisualLayer(layer)',
+  'function sceneNodes(w,h)',
+  'function surfaceY(x,nodes)',
+  'function drawLandOutline(nodes,w,h)',
+  'function drawCloud(cx,cy,size,thickness)',
+  'function drawConifer(x,y,size,index)',
+  'function drawRiver(nodes,w,h,riverValue,active)',
+  'zone.visualFlux',
+  'last?.evaporation',
+  'riverValue*.23',
+  'visualTime=(visualTime+delta/1000)%10000',
+  'else if(time-lastPaint>=33)',
+  'Math.min(4,Math.ceil(p.rain/21)+1)'
+ ])assert.ok(js.includes(symbol),'missing source-grounded layer '+symbol);
+ assert.match(html,/id="layerExplanation"/);
+ assert.match(html,/id="layerExplanation"[^>]*aria-live="polite"/);
+ assert.match(html,/role="group" aria-label="Display water movement"/);
+ assert.match(js,/if\(!Object\.hasOwn\(LAYER_TEXT,layer\)\)return/);
+ assert.match(js,/visualLayer!=='ground'/);
+ assert.match(js,/visualLayer!=='surface'/);
+ assert.match(html,/The number of illustrated particles is not a measured number/);
+ assert.match(html,/@media\(max-width:580px\)/);
+ assert.doesNotMatch(js,/\bfetch\s*\(|XMLHttpRequest|WebSocket|sendBeacon|navigator\.geolocation|localStorage/);
+ assert.ok(Buffer.byteLength(html)<300000);
+});
