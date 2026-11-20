@@ -114,10 +114,18 @@ function showEvent(){
    $('heroEventLink').hidden=true;
    $('heroProgress').style.width='0%';
    $('eventProgress').style.width='0%';
+   $('signalSpotlight').dataset.state='PENDING';
+   $('signalIndex').textContent='SOURCE PENDING';
    return;
  }
  const e=events[state.current%events.length];
  $('eventKind').textContent=e.kind+' / '+e.category;
+ const publicStatus=e.state==='RUNNING'||e.state==='PASSED'||e.state==='MERGED'
+   ||e.state==='FAILED'||e.state==='CANCELLED'||e.state==='RECORDED'
+   ||e.state==='QUEUED'?e.state:'DEFAULT';
+ $('signalSpotlight').dataset.state=publicStatus;
+ $('signalIndex').textContent='TRACE '+String((state.current%events.length)+1).padStart(2,'0')+
+   ' / '+String(events.length).padStart(2,'0');
  $('eventTitle').textContent=e.title;
  $('eventMeta').textContent=e.detail+' · '+e.source;
  $('eventAge').textContent='RECORDED '+labelTime(e.time);
@@ -136,18 +144,35 @@ function showEvent(){
    detail:{title:e.title,kind:e.kind,recorded_at:e.time}
  }));
  state.eventStart=Date.now();
+ renderEventList(); // Keep supporting signals distinct from the currently featured record.
 }
 function renderEventList(){
  const node=$('eventList');node.replaceChildren();
- for(const e of state.events.slice(0,4)){
-   const a=document.createElement('a');a.className='event';a.href=e.url;a.target='_blank';a.rel='noopener noreferrer';
+ const featuredIndex=state.events.length?state.current%state.events.length:-1;
+ const supporting=state.events.filter((_,i)=>i!==featuredIndex).slice(0,4);
+ for(const e of supporting){
+   const safeState=e.state==='RUNNING'||e.state==='PASSED'||e.state==='MERGED'
+     ||e.state==='FAILED'||e.state==='CANCELLED'||e.state==='RECORDED'
+     ||e.state==='QUEUED'?e.state:'DEFAULT';
+   const style=safeState==='RUNNING'?'running':safeState==='PASSED'?'passed':
+     safeState==='MERGED'?'merged':safeState==='FAILED'?'failed':
+     safeState==='CANCELLED'?'cancelled':safeState==='RECORDED'?'recorded':
+     safeState==='QUEUED'?'review':'default';
+   const a=document.createElement('a');a.className='event event--'+style;
+   a.dataset.state=safeState;
+   a.href=e.url;a.target='_blank';a.rel='noopener noreferrer';
+   a.setAttribute('aria-label',e.kind+' '+e.state+': '+e.title+'; open public GitHub receipt');
    const meta=document.createElement('small');meta.textContent=e.kind+' · '+e.state;
    const title=document.createElement('b');title.textContent=e.title;
-   a.append(meta,title);node.append(a);
+   const detail=document.createElement('span');detail.className='signal-detail';
+   detail.textContent='RECORDED '+labelTime(e.time)+' · PUBLIC GITHUB';
+   a.append(meta,title,detail);node.append(a);
  }
- if(!state.events.length){
+ if(!supporting.length){
    const p=document.createElement('p');p.className='empty';
-   p.textContent='GitHub evidence could not be verified. Check the source directly.';
+   p.textContent=state.events.length===1
+     ?'One eligible public receipt is available. The featured record contains its source link.'
+     :'GitHub evidence could not be verified. Check the source directly.';
    node.append(p);
  }
 }
@@ -175,7 +200,7 @@ async function refreshGithub(){
  if(good){
    const normalized=normalizePublicActivity(raw);
    state.events=normalized.items.slice(0,20);
-   state.current=0;showEvent();renderEventList();
+   state.current=0;showEvent();
    $('githubStatus').textContent=good===3?'PUBLIC RECORD · '+state.events.length+' EVENTS':'PARTIAL PUBLIC RECORD';
  }else{
    state.events=[];renderEventList();showEvent();

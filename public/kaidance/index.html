@@ -12,12 +12,13 @@
 <link rel="stylesheet" href="./experience.css">
 <link rel="stylesheet" href="./collider-v3.css">
 <link rel="stylesheet" href="./confluence.css">
+<link rel="stylesheet" href="./signal-wall.css">
 </head>
 <body>
 <a class="skip" href="#main">Skip to observatory</a>
 <div id="shell">
   <header class="top">
-    <a class="identity" href="../systemia/" aria-label="Evercraft Systemia home"><span class="brand-symbol">✳</span><span class="brand-type"><b>EVERCRAFT</b><small>SYSTEMIA / PUBLIC WINDOW</small></span></a>
+    <a class="identity" href="./" aria-label="Kaidance observatory home"><img class="brand-symbol" src="./mark.svg" width="42" height="42" alt=""><span class="brand-type"><b>KAIDANCE</b><small>BY EVERCRAFT · SYSTEMIA</small></span></a>
     <div class="topright">
       <div id="statusBadge" class="status-badge waiting"><i></i><span>HEARTBEAT NOT CONNECTED</span></div>
       <button id="portraitBtn" class="live-button" type="button" aria-pressed="false"><span class="live-button-icon">◉</span> <span>9:16 LIVE VIEW</span></button>
@@ -67,7 +68,7 @@
           </section>
         </div>
         <div class="stage-top">
-          <div class="stage-label"><span class="cross">✳</span><span>KAIDANCE <small>THE COLLIDER · EVERCRAFT</small></span></div>
+          <div class="stage-label"><img class="stage-brand" src="./mark.svg" width="40" height="40" alt=""><span>KAIDANCE <small>THE COLLIDER · EVERCRAFT</small></span></div>
           <span class="readout" id="streamType">NO APPROVED COLLIDER FEED</span>
         </div>
         <div class="scene-index" aria-hidden="true"><span>EVERCRAFT NETWORK</span><span>V · 04 / THE FIELD</span></div>
@@ -117,20 +118,23 @@
         <button id="refreshStage" class="refresh-stage" type="button"><span>↻</span> REFRESH PUBLIC SOURCES</button>
       </aside>
     </section>
-    <section class="record">
-      <div class="record-title"><div><span class="tiny">02 / THE RECORDED WORK</span><h2>Real receipts.<br><em>Real progress.</em></h2><p>Source-linked public GitHub checks, reviews and commits. These are recorded engineering events, not evidence of a new private Systemia mission.</p></div><span class="record-status" id="githubStatus">CHECKING SOURCE</span></div>
+    <div class="signal-bridge" aria-hidden="true"><span class="signal-bridge-core"></span><span class="signal-bridge-caption">PUBLIC EVIDENCE NETWORK</span></div>
+    <section class="record" id="publicEvidence" aria-label="Live-looking visual art surrounding source-backed public engineering records">
+      <canvas id="signalRiver" aria-hidden="true"></canvas>
+      <div class="record-title"><div><span class="tiny">02 / THE PUBLIC SIGNAL RIVER</span><h2>Watch the work<br><em>leave a trace.</em></h2><p>Each illuminated signal below is linked to a real public GitHub record. The flowing light is illustrative, never evidence of a mission or payment.</p></div><span class="record-status" id="githubStatus">CHECKING SOURCE</span></div>
       <div class="event-grid">
-        <article class="event-spotlight"><span class="tiny" id="eventKind">WAITING FOR VERIFIED SOURCE</span><h3 id="eventTitle">Checking actual engineering records…</h3><p id="eventMeta">No event loaded yet.</p><div class="event-bottom"><span id="eventAge">SOURCE TIMESTAMP UNKNOWN</span><a id="eventLink" hidden target="_blank" rel="noopener noreferrer">VIEW SOURCE RECEIPT ↗</a></div><div class="event-progress"><div id="eventProgress"></div></div></article>
-        <div class="event-list" id="eventList"><p class="empty">Public events appear here only after a successful source read.</p></div>
+        <article class="event-spotlight" id="signalSpotlight" data-state="PENDING"><div class="signal-orbit" aria-hidden="true"><i></i><i></i><i></i></div><div class="spotlight-header"><span class="tiny" id="eventKind">WAITING FOR VERIFIED SOURCE</span><span class="signal-index" id="signalIndex" aria-label="Public record position">PUBLIC TRACE</span></div><h3 id="eventTitle">Checking actual engineering records…</h3><p id="eventMeta">No event loaded yet.</p><div class="event-bottom"><span id="eventAge">SOURCE TIMESTAMP UNKNOWN</span><a id="eventLink" hidden target="_blank" rel="noopener noreferrer">VIEW SOURCE RECEIPT ↗</a></div><div class="event-progress"><div id="eventProgress"></div></div></article>
+        <div class="event-list" id="eventList" aria-label="Additional source-linked public engineering signals"><p class="empty">Public events appear here only after a successful source read.</p></div>
       </div>
     </section>
-    <section class="about"><div><span class="tiny">THE OPERATING SYSTEM OF EVERCRAFT</span><h2>KAIDANCE is the rhythm.<br>HUDSON is the spine.</h2></div><p>Systemia orchestrates work across Evercraft. This is a public window, not an execution console. A verified heartbeat means a cycle was observed, not that every service is healthy or a payment was received.</p><a href="../systemia/">EXPLORE SYSTEMIA ↗</a></section>
+    <section class="about"><div class="about-brand"><img src="./mark.svg" width="76" height="76" alt=""><div><span class="tiny">THE OPERATING SYSTEM OF EVERCRAFT</span><h2>KAIDANCE is the rhythm.<br>HUDSON is the spine.</h2></div></div><p>Systemia orchestrates work across Evercraft. This public window shows only approved evidence. A verified heartbeat indicates a cycle was observed, not that every service is healthy or a payment was received.</p><a href="../systemia/">EXPLORE SYSTEMIA ↗</a></section>
   </main>
-  <footer><span>© EVERCRAFT · KAIDANCE V02</span><span id="sourceFoot">COLLIDER: NOT CONNECTED · PUBLIC GITHUB: CHECKING</span><div><button id="filmBtn" type="button" aria-pressed="false">FULL SCREEN ⛶</button><button id="reloadBtn" type="button">REFRESH</button></div></footer>
+  <footer><span>© EVERCRAFT · KAIDANCE V06</span><span id="sourceFoot">COLLIDER: NOT CONNECTED · PUBLIC GITHUB: CHECKING</span><div><button id="filmBtn" type="button" aria-pressed="false">FULL SCREEN ⛶</button><button id="reloadBtn" type="button">REFRESH</button></div></footer>
 </div>
 <script type="module" src="./app.mjs"></script>
 <script type="module" src="./visual.mjs"></script>
 <script type="module" src="./collider-engine.mjs"></script>
 <script type="module" src="./current-field.mjs"></script>
+<script type="module" src="./signal-river.mjs"></script>
 </body>
 </html>

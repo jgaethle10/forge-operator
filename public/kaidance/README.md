@@ -106,3 +106,14 @@ The public GitHub receipt carousel continues to show recorded, source-linked wor
 V05 assets are on the Pages readback list, exact Caddy allowlist, and read-only Leiland host. The owned private signed publisher contract remains untouched. Static Pages **must** continue to return 404 for `/kaidance/pulse.json`.
 
 The browser acceptance test verifies a genuinely advancing chapter progress rail, interactive Explore selections, iPhone broadcast view, and both field and reactor renderers. The separate unit tests cover deterministic chapter transitions and prevent any arrival scene from being represented as a verified cycle.
+
+
+## V06 | Independent product brand and a continuous public signal river
+
+This release replaces the generic shared app badge with a distinctive **Kaidance K / accelerator collision** vector mark in `public/kaidance/mark.svg`. It is an original, compact mark used by the favicon, public header, stage identity, and footer. The Evercraft parent attribution remains explicit in the wordmark. The standalone Kaidance mark is deliberately **not** a byte-for-byte mirror of the Evercraft Headquarters mark.
+
+The lower page is no longer a stack of identical rectangles. `signal-wall.css` creates a visual bridge from the network into the source-backed evidence river. The primary record is a featured, illuminated signal with a receipt link, timestamp and verified GitHub status. Additional real records are compact, curved signal terminals joined by an animated spine. Their colors are chosen only from the existing normalized public GitHub states. `signal-river.mjs` draws decorative tributaries *beneath* the recorded content; it cannot fetch, synthesize, promote, or publish a record or Collider event. It pauses when offscreen, hidden, or in broadcast mode, and honors reduced motion.
+
+The actual heartbeat telemetry remains a separate section and **unconnected** until an approved, attested, signed source is active. Static Pages must still return HTTP 404 for `pulse.json`.
+
+Security and release requirements: standalone file allowlists on Caddy and Leiland include the new CSS/JS; the Pages HTTPS check requires the distinct mark and public assets; unit tests assert the signal surface uses only trusted source labels and no fabricated data APIs; mobile/desktop browser tests capture the entire page and the signal wall separately while checking both 9:16 modes. A source merge alone does not constitute a verified public deployment.
