@@ -3,6 +3,7 @@ import test from 'node:test';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import crypto from 'node:crypto';
 import {observeReceiverAuthBoundary,RECEIVER_AUTH_URL} from './receiver-auth-canary.mjs';
 
 function fixture(t){
@@ -16,14 +17,19 @@ function fixture(t){
   return file;
  };
  const token='t'.repeat(48);
+ const receiver=crypto.generateKeyPairSync('x25519');
+ const ack=crypto.generateKeyPairSync('ed25519');
+ const sender=crypto.generateKeyPairSync('ed25519');
+ const privatePem=k=>k.export({type:'pkcs8',format:'pem'});
+ const publicPem=k=>k.export({type:'spki',format:'pem'});
  const cfg={
   wing:'fallen',
   baseUrl:'https://fabric.systemiacommandcenters.com/api/internal/wing-courier',
   receiveTokenFile:secret('fallen.receive',token),
-  receiverPrivateKeyFile:secret('fallen.decrypt.key','synthetic-only-key'),
-  receiverSigningKeyFile:secret('fallen.sign.key','synthetic-only-key'),
+  receiverPrivateKeyFile:secret('fallen.decrypt.key',privatePem(receiver.privateKey)),
+  receiverSigningKeyFile:secret('fallen.sign.key',privatePem(ack.privateKey)),
   destinationDir:dest,
-  senderVerifyPublicKeys:{harbor:secret('harbor.sign.pub','synthetic-only-key')}
+  senderVerifyPublicKeys:{harbor:secret('harbor.sign.pub',publicPem(sender.publicKey))}
  };
  const configPath=secret('config.json',JSON.stringify(cfg));
  return {configPath,token};
