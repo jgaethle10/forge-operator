@@ -36,7 +36,8 @@ export function buildNfipClaimsV3PageUrl({state,firstYear,lastYear,skip=0,pageSi
   return API+'?'+params.toString();
 }
 function validAmount(value){
-  if(value===null||value===undefined||value==='')return 0;
+  // Null means the source did not provide a payment, not an actual zero-dollar payment.
+  if(value===null||value===undefined||value==='')return null;
   const number=typeof value==='number'?value:Number(value);
   if(!Number.isFinite(number)||Math.abs(number)>1e11)throw new Error('nfip_unreliable_payment_value');
   return number; // Keep official signed adjustments rather than inventing a positive sum.
@@ -80,6 +81,7 @@ export async function collectNfipStateLossHistory({
   if(!Number.isInteger(maxPages)||maxPages<1||maxPages>50)throw new TypeError('nfip_page_limit_invalid');
   const ids=new Set();
   let count=0,building=0,contents=0,compliance=0,completed=false;
+  let presentBuilding=0,presentContents=0,presentCompliance=0,missingPaymentRecords=0;
   for(let page=0;page<maxPages;page++){
     const url=buildNfipClaimsV3PageUrl({state,firstYear,lastYear,skip:page*pageSize,pageSize});
     const rows=await loadPage(url,fetchImpl);
@@ -94,9 +96,13 @@ export async function collectNfipStateLossHistory({
       if(ids.has(String(id)))throw new Error('nfip_repeated_claim_between_pages');
       ids.add(String(id));
       count++;
-      building+=validAmount(record.amountPaidOnBuildingClaim);
-      contents+=validAmount(record.amountPaidOnContentsClaim);
-      compliance+=validAmount(record.amountPaidOnIncreasedCostOfComplianceClaim);
+      const b=validAmount(record.amountPaidOnBuildingClaim);
+      const c=validAmount(record.amountPaidOnContentsClaim);
+      const i=validAmount(record.amountPaidOnIncreasedCostOfComplianceClaim);
+      if(b!==null){building+=b;presentBuilding++;}
+      if(c!==null){contents+=c;presentContents++;}
+      if(i!==null){compliance+=i;presentCompliance++;}
+      if(b===null||c===null||i===null)missingPaymentRecords++;
     }
     if(rows.length<pageSize){completed=true;break;}
   }
@@ -113,10 +119,20 @@ export async function collectNfipStateLossHistory({
     retrieved_at:new Date(retrievedAt).toISOString(),
     // Never return small cohorts or raw record IDs; no address or parcel resolution.
     claim_transactions:sufficient?count:null,
-    total_paid_usd:sufficient?Math.round((building+contents+compliance)*100)/100:null,
-    building_paid_usd:sufficient?Math.round(building*100)/100:null,
-    contents_paid_usd:sufficient?Math.round(contents*100)/100:null,
-    compliance_paid_usd:sufficient?Math.round(compliance*100)/100:null,
+    payment_completeness:sufficient?(missingPaymentRecords===0?'complete':'partial'):'suppressed',
+    payment_coverage:sufficient?{
+      complete_records:count-missingPaymentRecords,
+      records_with_missing_components:missingPaymentRecords,
+      building_present_records:presentBuilding,
+      contents_present_records:presentContents,
+      compliance_present_records:presentCompliance
+    }:null,
+    // Never call a known-value subtotal a full payment total if any source fields are missing.
+    known_payment_components_usd:sufficient?Math.round((building+contents+compliance)*100)/100:null,
+    total_paid_usd:sufficient&&missingPaymentRecords===0?Math.round((building+contents+compliance)*100)/100:null,
+    building_paid_usd:sufficient&&presentBuilding===count?Math.round(building*100)/100:null,
+    contents_paid_usd:sufficient&&presentContents===count?Math.round(contents*100)/100:null,
+    compliance_paid_usd:sufficient&&presentCompliance===count?Math.round(compliance*100)/100:null,
     suppression_threshold:MIN_ROWS_FOR_PUBLIC_RESULT,
     source_urls:[NFIP_CLAIMS_V3_SOURCE.documentation,API],
     limitations:[
@@ -124,7 +140,8 @@ export async function collectNfipStateLossHistory({
       'NFIP losses exclude uninsured properties, private insurance and other unreported loss.',
       'Claim counts are not unique structures, claim probability, or a property flood-loss history.',
       'OpenFEMA data can lag underlying federal records and can be corrected; retrieval date is not a publication date.',
-      'Area-level paid amounts do not predict premiums, coverage, eligibility or future damage.'
+      'Area-level paid amounts do not predict premiums, coverage, eligibility or future damage.',
+      'Missing published payment components remain unknown, never zero; recorded-value subtotals may omit unknown amounts.'
     ],
     field_verification_required:true,
     parcel_claim_history:null,

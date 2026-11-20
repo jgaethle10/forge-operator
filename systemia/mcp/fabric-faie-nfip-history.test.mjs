@@ -64,6 +64,21 @@ test('owned public endpoint returns only Washington 2023-24 aggregated NFIP evid
     assert.equal(JSON.stringify(result).includes('"id"'),false);
   });
 });
+test('owned edge never converts missing NFIP payment components into a complete dollar total',async()=>{
+  const incomplete=claims.map(row=>({...row}));
+  incomplete[0].amountPaidOnContentsClaim=null;
+  await withServer(async()=>({ok:true,text:async()=>JSON.stringify({NfipClaims:incomplete})}),async({origin})=>{
+    const response=await fetch(origin+'/api/faie/nfip/wa-history');
+    assert.equal(response.status,200);
+    const result=await response.json();
+    assert.equal(result.payment_completeness,'partial');
+    assert.equal(result.payment_coverage.records_with_missing_components,1);
+    assert.equal(result.total_paid_usd,null);
+    assert.equal(result.contents_paid_usd,null);
+    assert.equal(result.known_payment_components_usd,13100);
+    assert.equal(result.request_persisted,false);
+  });
+});
 test('query string, coordinates and property lookup cannot be supplied to the statewide history endpoint',async()=>{
   let requests=0;
   await withServer(async()=>{requests++;throw Error('upstream_not_authorized')},async({origin})=>{
