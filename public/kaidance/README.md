@@ -74,3 +74,14 @@ The hero stage now displays the latest eligible public GitHub event with its exa
 New first-party assets are `experience.css` and `visual.mjs`. They use a capped animation framerate, reduced-motion compliance and no outside animation SDK, WebSocket, telemetry or browser storage. Both are allowed on the existing owned Caddy and Leiland static host routes. `scripts/probe-kaidance-fallback.mjs` includes them in the external HTTPS asset readback.
 
 The V02 browser QA runs iPhone-sized and desktop Chrome tests, checks for horizontal overflow and JS errors, verifies one-tap and URL-parameter broadcast viewing and retains screenshot evidence. A green QA report proves the client-side **viewer** behavior, not private field activation.
+
+
+## KAIDANCE Collider V03: the accelerator theater
+
+A dedicated `collider-engine.mjs` and `collider-v3.css` now replace the little rotating K emblem **visually** with a perspective-projected toroidal accelerator. The magnet's ribbed coil architecture, depth-sorted rails, counter-rotating cyan/amber particle bunches, interaction chamber, volumetric field lighting and ambient spray are **decorative artwork**, not sensor data, science claims, execution logs, agents, earned revenue, or cycle events. All ambient motion is deterministic browser animation and requires **no backend, storage, external GPU service, audio, vendor scripts, or extra user consent**.
+
+A `MutationObserver` only triggers an exceptional, expanding shockwave when the existing source-verifying `app.mjs` marks `#collider.beat` after a new **verified** cycle. The visual engine does not create, increment or schedule cycles. On the public Pages fallback, no pulse JSON is published and no verified event can be generated. Source labels continue to distinguish the public GitHub record from real KAIDANCE telemetry.
+
+Performance: capped 24 fps on small screens / 30 fps on desktop, capped device pixel ratio, reduced particle budget on mobile, pause when out of view or tab hidden, and a static low-activity form under `prefers-reduced-motion`. The old DOM emblem is retained invisibly as a source-gated beat signal and fallback structure. All drawing stays underneath the headline and original controls.
+
+Production parity: `collider-engine.mjs` and `collider-v3.css` are in the Pages fallback probe, Caddy exact asset allowlist, and Leiland owned-observatory-host static allowlist. The browser QA checks nonblank pixel output, real frame-to-frame motion, iPhone/desktop layout, one-tap 9:16, and no JavaScript exceptions. This **does not** authorize publishing a live Collider feed.
