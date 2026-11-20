@@ -26,6 +26,10 @@ function walkNoSymlinks(input){
 function ownedPrivateParent(root){
   if(typeof root!=='string'||!path.isAbsolute(root)||root==='/')fail('private_root_invalid');
   const target=path.resolve(root),parent=path.dirname(target);
+  // Existing broker installer forbids shell/systemd-unsafe arguments. A
+  // prepared config must never contain paths it cannot later accept.
+  if(/[\s%\u0000-\u001f\\;\"'`  const target=path.resolve(root),parent=path.dirname(target);
+  walkNoSymlinks(parent);|<>#]/.test(target))fail('unsafe_broker_config_path');
   walkNoSymlinks(parent);
   const st=fs.lstatSync(parent);
   if(!st.isDirectory()||(st.mode&0o077)!==0||
