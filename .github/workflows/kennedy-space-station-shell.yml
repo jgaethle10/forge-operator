@@ -33,6 +33,10 @@ jobs:
             products/kennedy-space-station/test_sheet_compiler.py
       - name: Real loopback HTTP, provenance and synthetic raster regression tests
         run: python3 -m unittest discover -s products/kennedy-space-station -p "test_*.py" -v
+      - name: Install PDF raster QA tools on isolated GitHub runner
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y poppler-utils
       - name: Produce and rasterize deterministic two-sheet synthetic PDF
         run: |
           set -euo pipefail
