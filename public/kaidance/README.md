@@ -117,3 +117,14 @@ The lower page is no longer a stack of identical rectangles. `signal-wall.css` c
 The actual heartbeat telemetry remains a separate section and **unconnected** until an approved, attested, signed source is active. Static Pages must still return HTTP 404 for `pulse.json`.
 
 Security and release requirements: standalone file allowlists on Caddy and Leiland include the new CSS/JS; the Pages HTTPS check requires the distinct mark and public assets; unit tests assert the signal surface uses only trusted source labels and no fabricated data APIs; mobile/desktop browser tests capture the entire page and the signal wall separately while checking both 9:16 modes. A source merge alone does not constitute a verified public deployment.
+
+
+## V07 · Choreographed visible journeys
+
+A real founder iPhone recording on November 20 showed beautiful energy flow, but it exposed a continuity issue: the illustrated explorer's chapter route sometimes crossed corridors that the rendered network had **not** connected. In particular, the Discovery–Hudson and Work Saban–Systemia legs were absent from the visible edge list. V07 moves the scenery graph into the pure `field-topology.mjs` module, explicitly adds both edges, and tests that **all eight named scenic chapter legs are visibly connected**.
+
+The browser-only `current-field.mjs` now gives the active narrated route a luminous corridor, soft chapter-colored atmospheric focus, two intertwining strands and traveling glints. As the explorer approaches the destination, brief branches ripple outward to neighboring conceptual systems. These are artistic reactions to **illustrative route progress**, not transfers of real data, live agent movement, mission completions, throughput, or a signed five-minute heartbeat. The special verified heartbeat response remains exclusively gated by the independently validated `#collider.beat` class.
+
+Rendering stays first-party and capped by the existing mobile/desktop frame pacing, hidden-tab and offscreen pausing, and reduced-motion controls. No new services, secrets, external hosts, event feeds, microphone permissions or browser storage were added. Static Pages must still provide HTTP 404 for `/kaidance/pulse.json`.
+
+Release requires topology tests, owned public Caddy/Leiland exact-asset allowlists, source and privacy tests, iPhone/desktop Chromium screenshots, and **external HTTPS readback after Pages deployment**. A passing build is not evidence that real private Systemia heartbeat publication is connected.

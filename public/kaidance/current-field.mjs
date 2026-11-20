@@ -1,5 +1,6 @@
 import {scenicChapter,SCENIC_LEG_SECONDS} from './field-chapters.mjs';
-// KAIDANCE CONFLUENCE FIELD V05 · Living journeys
+import {SCENIC_ROUTES,CONFLUENCE_CONNECTIONS,connectedDestinations} from './field-topology.mjs';
+// KAIDANCE CONFLUENCE FIELD V07 · Choreographed currents
 // Living network sculpture, inspired by Evercraft's own HUDSON river theater.
 // ALL continuous streams/routes/explorer motion are ILLUSTRATIVE, not live jobs,
 // agents, private Systemia execution or a measurement of Collider operations.
@@ -24,20 +25,8 @@ if(canvas&&stage&&marker){
    {key:'evidence',name:'EVIDENCE',x:.79,y:.74,color:'#a6ffe8',detail:'Public provenance and verification'}
   ]);
   const byKey=Object.fromEntries(systems.map(s=>[s.key,s]));
-  const connections=[
-   ['systemia','kaidance'],['kaidance','hudson'],
-   ['discovery','kaidance'],['kaidance','raven'],
-   ['kaidance','saban'],['saban','evidence'],
-   ['hudson','evidence'],['raven','evidence'],
-   ['systemia','discovery'],['discovery','saban'],
-   ['hudson','raven']
-  ];
-  const routes=[
-   ['systemia','kaidance'],['kaidance','discovery'],
-   ['discovery','hudson'],['hudson','kaidance'],
-   ['kaidance','raven'],['raven','evidence'],
-   ['evidence','saban'],['saban','systemia']
-  ];
+  const connections=CONFLUENCE_CONNECTIONS;
+  const routes=SCENIC_ROUTES;
   const dust=Array.from({length:100},(_,i)=>({
    x:random(i+10),y:random(i+220),r:.25+random(i+71)*.85,
    phase:random(i+531)*TAU,shade:random(i+820)
@@ -176,6 +165,65 @@ if(canvas&&stage&&marker){
    }
    ctx.restore();
   }
+  // An illuminated corridor always follows the actual scenic voyager.
+  // This is *art*, never proof that a private agent traversed this route.
+  function activeCorridor(chapter){
+   if(reduced.matches)return;
+   const route=path(chapter.fromKey,chapter.toKey);
+   const from=byKey[chapter.fromKey],to=byKey[chapter.toKey];
+   const source=point(chapter.fromKey),destination=point(chapter.toKey);
+   const progress=chapter.progress;
+   const envelope=.82+.18*Math.sin(progress*Math.PI);
+   ctx.save();ctx.globalCompositeOperation='lighter';
+   // A destination-focused atmospheric lens makes each chapter's color distinct.
+   halo(destination.x,destination.y,Math.min(w*.38,210),to.color,.31);
+   halo(source.x,source.y,Math.min(w*.17,98),from.color,.15);
+   // Two counter-phase strands wrap one illuminated guide beam.
+   ribbon(route,from.color,.12*envelope,16,1.9);
+   ribbon(route,to.color,.38*envelope,6.5,3.4);
+   ribbon(route,'#e0feff',.68*envelope,1.6,5.1);
+   for(let lane=0;lane<2;lane++){
+    const curve=path(chapter.fromKey,chapter.toKey,lane?1:-1);
+    ribbon(curve,lane?to.color:from.color,.38*envelope,.95,lane*1.4);
+   }
+   // Closely grouped moving glints reveal direction without pretending to
+   // count work, transfers, missions or any operational throughput.
+   for(let j=0;j<5;j++){
+    const fraction=(progress*.79+j*.19)%1;
+    const p=at(route,fraction);
+    const strength=.25+.55*Math.sin(Math.PI*fraction);
+    halo(p.x,p.y,10+strength*11,to.color,strength*.8);
+    dot(p.x,p.y,1.2+strength,to.color,.42+strength*.42);
+   }
+   ctx.restore();
+  }
+  function branchingEcho(chapter){
+   // An approaching scenic traveler sends artistic ripples to nearby stations.
+   // It does not show real Systemia orchestration or an authenticated pulse.
+   if(reduced.matches||chapter.progress<.72)return;
+   const reveal=clamp((chapter.progress-.72)/.28,0,1);
+   const alpha=Math.sin(reveal*Math.PI)*.75;
+   if(alpha<=.01)return;
+   const destination=chapter.toKey;
+   const adjacent=connectedDestinations(destination)
+    .filter(n=>n!==chapter.fromKey).slice(0,w<680?3:5);
+   ctx.save();ctx.globalCompositeOperation='lighter';
+   for(const [i,key] of adjacent.entries()){
+    const curve=path(destination,key,i%2?1:-1);
+    const tip=clamp(reveal*.63+Math.sin(i*2+time)*.012,0,.68);
+    ctx.beginPath();
+    for(let k=0;k<=16;k++){
+     const t=tip*k/16,p=at(curve,t);
+     if(!k)ctx.moveTo(p.x,p.y);else ctx.lineTo(p.x,p.y);
+    }
+    ctx.strokeStyle=colors(byKey[key].color,.33*alpha);
+    ctx.lineWidth=w<680?1.15:1.6;ctx.stroke();
+    const p=at(curve,tip);
+    halo(p.x,p.y,11,byKey[key].color,.58*alpha);
+    dot(p.x,p.y,1.6,byKey[key].color,alpha);
+   }
+   ctx.restore();
+  }
   function arrivalBloom(chapter){
    // A local, colored destination bloom occurs on *illustrative approach*.
    // It is intentionally distinct from the central white verified-cycle flash.
@@ -291,7 +339,7 @@ if(canvas&&stage&&marker){
    const chapter=scenicChapter(time,routes,byKey);
    syncStory(chapter);
    ctx.clearRect(0,0,w,h);
-   backdrop();currents(chapter);arrivalBloom(chapter);collisions();nodes(chapter);voyager(chapter);
+   backdrop();currents(chapter);activeCorridor(chapter);branchingEcho(chapter);arrivalBloom(chapter);collisions();nodes(chapter);voyager(chapter);
   }
   function step(timestamp){
    frame=requestAnimationFrame(step);

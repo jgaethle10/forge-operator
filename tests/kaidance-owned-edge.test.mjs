@@ -25,7 +25,7 @@ test('owned Caddy route is staged, narrowly allowlisted, and never exposes priva
  const route=read('../infra/evercraft-edge/kaidance/Caddyfile.route.example');
  assert.match(route,/STAGED ONLY/);
  assert.match(route,/route \/kaidance\/\*/);
- for(const suffix of ['index.html','app.mjs','style.css','experience.css','collider-v3.css','confluence.css','signal-wall.css','visual.mjs','signal-river.mjs','collider-engine.mjs','current-field.mjs','field-chapters.mjs','pulse-source.mjs','work-source.mjs','mark.svg','pulse.json'])
+ for(const suffix of ['index.html','app.mjs','style.css','experience.css','collider-v3.css','confluence.css','signal-wall.css','visual.mjs','signal-river.mjs','collider-engine.mjs','current-field.mjs','field-chapters.mjs','field-topology.mjs','pulse-source.mjs','work-source.mjs','mark.svg','pulse.json'])
    assert.ok(route.includes('/kaidance/'+suffix),suffix);
  assert.match(route,/Cache-Control "no-store/);
  assert.match(route,/respond 404/);
