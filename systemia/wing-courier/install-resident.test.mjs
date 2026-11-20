@@ -13,7 +13,7 @@ function setup(){
  const token=secret('receive.token'),decrypt=secret('decrypt.key'),sign=secret('sign.key');
  const sender=path.join(keys,'harbor.sign.pub');fs.writeFileSync(sender,'NOT_A_REAL_PUBLIC_KEY',{mode:0o644});
  const file=path.join(conf,'fallen.json');
- const cfg={wing:'fallen',baseUrl:'https://courier.systemiacommandcenters.com/',
+ const cfg={wing:'fallen',baseUrl:'https://fabric.systemiacommandcenters.com/api/internal/wing-courier',
   receiveTokenFile:token,receiverPrivateKeyFile:decrypt,receiverSigningKeyFile:sign,
   destinationDir:media,senderVerifyPublicKeys:{harbor:sender},
   intakeStateDir:intake,passportStateDir:passport};
