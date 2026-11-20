@@ -32,6 +32,27 @@ edge_get() {
 edge_headers() {
   curl --noproxy '*' -fsSk --max-time 8 --resolve "$HOST:8443:127.0.0.1" -D - -o /dev/null "https://$HOST:8443$1"
 }
+# systemctl can report active before Caddy has bound 8443. Poll the actual
+# HTTPS route (not just systemd state); all retries are bounded.
+edge_health_status() {
+  curl --noproxy '*' --silent --insecure --max-time 2 \
+    --resolve "$HOST:8443:127.0.0.1" \
+    --output /dev/null --write-out '%{http_code}' \
+    "https://$HOST:8443/health"
+}
+await_edge_healthy() {
+  local attempt status
+  for attempt in $(seq 1 24); do
+    status="$(edge_health_status || true)"
+    if [[ "$status" == "200" ]]; then
+      echo "public_edge_https_health=PASS (attempt $attempt)"
+      return 0
+    fi
+    sleep 1
+  done
+  echo "public_edge_https_health=FAIL after bounded startup probes" >&2
+  return 1
+}
 
 echo "=== AIW BETA PRODUCTION EDGE | $MODE ==="
 for path in "$CONFIG" "$BACKUP" "$CANDIDATE" "$ENVFILE"; do
@@ -110,6 +131,12 @@ rollback() {
     if ! systemctl restart "$EDGE"; then
       echo "CRITICAL: failed to restart public edge after restoring original config" >&2
       echo "Inspect: sudo systemctl status evercraft-public-edge.service" >&2
+    elif ! await_edge_healthy; then
+      echo "CRITICAL: original public edge failed post-rollback HTTPS recovery" >&2
+      echo "Inspect: sudo systemctl status evercraft-public-edge.service" >&2
+      echo "Inspect: sudo journalctl -u evercraft-public-edge.service -n 80 --no-pager" >&2
+    else
+      echo "original_public_edge_HTTPS_restored=true" >&2
     fi
   fi
   if [[ "$LINK_CREATED" == 1 && -L "$CURRENT" ]] && [[ "$(readlink "$CURRENT")" == "$RELEASE" ]]; then
@@ -139,6 +166,9 @@ CONFIG_CHANGED=1
 echo "=== RESTART ONLY EVERCRAFT PUBLIC EDGE ==="
 systemctl restart "$EDGE"
 systemctl is-active --quiet "$EDGE" || fail "Public edge failed restart"
+# Caddy 2.6.2 can need a short startup period before its HTTPS listener is
+# reachable. Do not mistake one immediate connection-refused for a hard failure.
+await_edge_healthy || fail "New Caddy route did not become HTTPS-ready"
 systemctl is-active --quiet "$FABRIC" || fail "Fabric is unexpectedly inactive"
 curl -fsS --max-time 5 http://127.0.0.1:8787/health >/dev/null || fail "Fabric local health failed"
 
