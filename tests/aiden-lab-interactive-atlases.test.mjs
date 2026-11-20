@@ -200,3 +200,65 @@ test('physics scientific method bench records comparable A/B model outputs and c
  assert.match(css,/\.compare-bar/);
  assert.doesNotMatch(js,/\bfetch\s*\(|WebSocket|XMLHttpRequest|sendBeacon/);
 });
+
+
+test('Earth Sunlight Theater uses actual solar-incidence geometry, not a cosmetic night overlay',()=>{
+ const html=source('world'),js=script(html),css=style(html);
+ assert.doesNotThrow(()=>new vm.Script(js,{filename:'earth-sunlight-theater.js'}));
+ const start=js.indexOf('function sunLongitude(hour)'),end=js.indexOf('const clamp=',start);
+ assert.ok(start>0&&end>start,'reviewable pure seasonal solar model');
+ const solar=vm.runInNewContext(js.slice(start,end)+
+  '\n({sunLongitude,solarCosine,solarAltitude});',{Math,RAD:Math.PI/180});
+ const eqSolar=solar.sunLongitude(12);
+ assert.equal(eqSolar,0,'model noon UTC is over Greenwich');
+ assert.equal(solar.sunLongitude(6),90,'UTC 06:00 has solar noon near 90E');
+ assert.equal(solar.sunLongitude(18),-90,'UTC 18:00 has solar noon near 90W');
+ assert.equal(solar.sunLongitude(0),-180,'UTC midnight puts subsolar longitude on antimeridian');
+ const close=(a,b)=>assert.ok(Math.abs(a-b)<1e-9,a+' versus '+b);
+ close(solar.solarCosine(0,0,0,eqSolar),1);
+ close(solar.solarCosine(0,180,0,eqSolar),-1);
+ close(solar.solarCosine(0,90,0,eqSolar),0);
+ close(solar.solarAltitude(0,0,0,eqSolar),90);
+ close(solar.solarAltitude(0,180,0,eqSolar),-90);
+ close(solar.solarAltitude(90,0,0,eqSolar),0);
+ close(solar.solarAltitude(-90,0,0,eqSolar),0);
+ close(solar.solarAltitude(90,40,23.44,eqSolar),23.44);
+ close(solar.solarAltitude(90,40,-23.44,eqSolar),-23.44);
+ // The polar Sun can stay above/below the horizon for the full modeled rotation.
+ for(const h of [0,6,12,18,23]){
+  const sl=solar.sunLongitude(h);
+  assert.ok(solar.solarCosine(80,35,23.44,sl)>0,'north summer near-polar day');
+  assert.ok(solar.solarCosine(80,35,-23.44,sl)<0,'north winter near-polar night');
+ }
+ assert.match(js,/const SUN_SEASONS=\{june:23\.44,equinox:0,december:-23\.44\}/);
+ assert.match(js,/solarCosine\(latitude\/RAD,longitude\/RAD,declination,subsolarLongitude\)/);
+ assert.match(js,/const dayFraction=Math\.max\(0,Math\.min\(1,\(sun\+\.08\)\/\.16\)\)/);
+ assert.match(js,/const noon=project\(SUN_SEASONS\[solarSeason\],sunLongitude\(solarHour\)\)/);
+ assert.match(js,/const here=DATA\.find\(x=>x\.id===selected\)/);
+ assert.match(js,/solarAltitude\(here\.lat,here\.lon,sunLat,sunLon\)/);
+ assert.ok(html.length<300000);
+ assert.doesNotMatch(js,/\bfetch\s*\(|WebSocket|XMLHttpRequest|sendBeacon|navigator\.geolocation/);
+});
+
+test('Earth Sunlight Theater offers accessible season and hour controls, no tracking, and gated time lapse',()=>{
+ const html=source('world'),js=script(html),css=style(html);
+ for(const id of ['sunlightHeading','solarHour','solarHourValue','solarPlay','sunlightReading'])
+  assert.match(html,new RegExp('id="'+id+'"'));
+ for(const season of ['june','equinox','december'])
+  assert.match(html,new RegExp('data-sun-season="'+season+'"'));
+ assert.match(html,/min="0" max="23" step="1"/);
+ assert.match(html,/aria-live="polite"/);
+ assert.match(html,/not a live satellite image or an exact dated solar ephemeris/i);
+ assert.match(html,/classroom time dial/i);
+ assert.match(css,/@media\(max-width:520px\)/);
+ assert.match(css,/\.sunlight-theater/);
+ assert.match(js,/if\(!Object\.hasOwn\(SUN_SEASONS,season\)\)return/);
+ assert.match(js,/function tickSun\(time\)/);
+ assert.match(js,/solarRunning \|\| document\.hidden \|\| solarReduced\.matches/);
+ assert.match(js,/cancelAnimationFrame\(solarFrame\)/);
+ assert.match(js,/if\(time-solarLast>=850\)/);
+ assert.match(js,/solarFrame=requestAnimationFrame\(tickSun\)/);
+ assert.match(js,/if\(document\.hidden\)pauseSun\(\)/);
+ assert.match(js,/if\(solarReduced\.matches\)pauseSun\(\)/);
+ assert.doesNotMatch(html,/<script[^>]+src=|<iframe\b|base44|firebase/);
+});
