@@ -499,22 +499,29 @@ const KEY='evercraft-aaar-seattle-sky-passport-v1',DAY_MS=86400000;
 window.AAARCreateSkyPassport=(world,now=()=>Date.now())=>{
  if(!world?.enabled||!Array.isArray(world.landmarks)||!world.landmarks.length)return null;
  const landmarks=world.landmarks;
- const todayIndex=((Math.floor(now()/DAY_MS)%landmarks.length)+landmarks.length)%landmarks.length;
+ const date=new Date(now()),day=Math.floor(Date.UTC(date.getFullYear(),date.getMonth(),date.getDate())/DAY_MS);
+ const todayIndex=((day%landmarks.length)+landmarks.length)%landmarks.length;
  const daily=landmarks[todayIndex],known=new Set(landmarks.map(l=>l.name)),seen=new Set();
+ let todayDone=false;
  try{
   const record=JSON.parse(window.localStorage.getItem(KEY)||'{}');
-  if(record?.version===1&&Array.isArray(record.names))
+  if(record?.version===1&&Array.isArray(record.names)){
    for(const name of record.names)if(typeof name==='string'&&known.has(name))seen.add(name);
+   todayDone=record.day===day&&record.dailyComplete===true;
+  }
  }catch{/* Storage may be unavailable; discoveries still work this session. */}
- function save(){try{window.localStorage.setItem(KEY,JSON.stringify({version:1,names:[...seen]}));}catch{}}
- function target(){return !seen.has(daily.name)?daily:landmarks.find(l=>!seen.has(l.name))||daily;}
+ function save(){try{window.localStorage.setItem(KEY,JSON.stringify({version:1,names:[...seen],day,dailyComplete:todayDone}));}catch{}}
+ function target(){return !todayDone?daily:landmarks.find(l=>!seen.has(l.name))||daily;}
  function observe(s){
   if(!s||s.paused||s.condition!=='FLYING')return null;
   for(const l of landmarks){
-   if(seen.has(l.name))continue;
+   const fresh=!seen.has(l.name),dailyVisit=l.name===daily.name&&!todayDone;
+   if(!fresh&&!dailyVisit)continue;
    const horizontal=Math.hypot(s.x-l.x,s.z-l.z),minimum=world.ground(l.x,l.z)+l.h+25;
    if(horizontal<200&&s.y>=minimum&&s.y<980){
-    seen.add(l.name);save();return l.name;
+    if(fresh)seen.add(l.name);
+    if(dailyVisit)todayDone=true;
+    save();return {name:l.name,kind:dailyVisit?(fresh?'both':'daily'):'landmark'};
    }
   }
   return null;
@@ -522,7 +529,7 @@ window.AAARCreateSkyPassport=(world,now=()=>Date.now())=>{
  function snapshot(s){
   const l=target(),dx=l.x-(s?.x||0),dz=l.z-(s?.z||0);
   return {count:seen.size,total:landmarks.length,target:l.name,daily:daily.name,
-   dailyComplete:seen.has(daily.name),complete:seen.size===landmarks.length,
+   dailyComplete:todayDone,complete:seen.size===landmarks.length,
    distanceM:Math.round(Math.hypot(dx,dz)),
    bearingDeg:Math.round((Math.atan2(dx,dz)*180/Math.PI+360)%360)};
  }
@@ -623,7 +630,7 @@ const seattle=window.AAARSeattle?.enabled?window.AAARSeattle:null;
 if(seattle){
  document.querySelector('.flight-brand small').textContent='SEATTLE SKY TOUR · SIMULATED CITY';
  document.querySelector('.mission-box h1').textContent='Seattle flyover.';
- document.querySelector('.mission-box p').textContent='Explore Seattle and collect eight Sky Passport landmarks. Today’s spotlight rotates daily on this device. Footprint locations are source-linked; heights are synthetic.';
+ document.querySelector('.mission-box p').textContent='Explore Seattle and collect eight Sky Passport landmarks. Today's fresh challenge rotates each local day. Footprint locations are source-linked; heights are synthetic.';
  document.querySelector('#startScreen .start-card h2').innerHTML='SEATTLE<br/>IS <em>YOURS.</em>';
  document.querySelector('#startScreen .start-card > p').textContent='Find eight Seattle landmarks to complete your Sky Passport, with a featured discovery each day. Progress stays on this device. 2023 building footprints are sourced; heights, water, terrain and flight physics are approximate gameplay.';
  document.getElementById('beginFlight').textContent='FLY OVER SEATTLE ↗';
@@ -1218,7 +1225,7 @@ function frame(timestamp){if(!running)return;const dt=Math.min(.05,(timestamp-la
    notify('CITY OBSTACLE CONTACT · RESET FLIGHT',5);
   }
  }
- if(skyPassport&&timestamp-lastQuest>350){lastQuest=timestamp;const newName=skyPassport.observe(state);if(newName){const progress=skyPassport.snapshot(state);notify(progress.complete?'SEATTLE PASSPORT COMPLETE · ALL LANDMARKS DISCOVERED':'SKY PASSPORT · '+newName.toUpperCase()+' DISCOVERED · '+progress.count+'/'+progress.total,4);}}
+ if(skyPassport&&timestamp-lastQuest>350){lastQuest=timestamp;const discovery=skyPassport.observe(state);if(discovery){const progress=skyPassport.snapshot(state);notify(discovery.kind==='daily'?'DAILY SKY QUEST COMPLETE · '+discovery.name.toUpperCase():progress.complete?'SEATTLE PASSPORT COMPLETE · ALL LANDMARKS DISCOVERED':discovery.kind==='both'?'DAILY QUEST + LANDMARK UNLOCKED · '+discovery.name.toUpperCase():'SKY PASSPORT · '+discovery.name.toUpperCase()+' DISCOVERED · '+progress.count+'/'+progress.total,4);}}
  if(was!==state.checkpoints)notify(state.checkpoints>=3?'MISSION COMPLETE · SAVE YOUR FLIGHT':`GATE ${state.checkpoints} CLEARED`,4);
  if(prior!==state.condition&&state.condition==='GROUND_CONTACT'){state.paused=true;notify('GROUND CONTACT · RESTART OR SAVE FLIGHT',5);}
  if((state.craft==='custom'?state.aero?.stall:state.aeroFlight?.stallMargin<0)&&!state.paused&&Math.floor(timestamp/800)!==Math.floor((timestamp-16)/800))notify('LOW AIRSPEED · SIMULATED STALL',1.0);
