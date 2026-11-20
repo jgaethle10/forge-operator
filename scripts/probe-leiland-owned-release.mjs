@@ -43,7 +43,7 @@ export async function probeLeilandPublicOrigin({origin,publicRoot,fetchImpl=glob
  let pulseState='not_connected',cycleNumber=null;
  try{
   const bytes=await getBytes(fetchImpl,url+'/kaidance/pulse.json',16000);
-  const parsed=JSON.parse(bytes.toString('utf8'));
+  let parsed;try{parsed=JSON.parse(bytes.toString('utf8'))}catch{error('public_pulse_json_invalid')}
   if(!parsed||typeof parsed!=='object'||Array.isArray(parsed)||
     Object.keys(parsed).length!==PULSE_KEYS.length||
     Object.keys(parsed).some(key=>!PULSE_KEYS.includes(key)))error('public_pulse_extra_fields_forbidden');
