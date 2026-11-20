@@ -1,16 +1,19 @@
-// Systemia -> Harbor founder creator editorial REVIEW pickup over the existing
-// Passport-protected Intake Fabric. No second queue, transport, publisher or
-// private founder-copy duplication. Intended for the authorized owner machine.
+// Existing owner-private signed Harbor inbox -> existing Passport-gated
+// Intake Fabric -> separate authorized Harbor local read.
+// No second review queue, publisher, customer data, personal prose or network.
 import fs from 'node:fs';
 import path from 'node:path';
 import {createHash} from 'node:crypto';
 import {EvercraftIntakeFabric} from '../intake-fabric/intake.mjs';
 import {EvercraftPassport} from '../passport/passport.mjs';
-import {prepareSystemiaFounderCreatorReview} from './systemia-harbor-upstream.mjs';
+import {
+ inspectOwnedHarborFounderPacket,OWNER_HARBOR_RECEIPT_SCHEMA
+} from './harbor-founder-owner-inbox.mjs';
 
 export const FOUNDER_INTAKE_SCHEMA='evercraft.systemia.harbor.founder-editorial-intake.v1';
 export const FOUNDER_PICKUP_SCHEMA='evercraft.systemia.harbor.founder-editorial-pickup.v1';
 const HEX=/^sha256:[a-f0-9]{64}$/i;
+const RAWHEX=/^[a-f0-9]{64}$/i;
 const ACTOR=/^adapter:[a-z0-9][a-z0-9-]{2,71}$/;
 const hash=value=>'sha256:'+createHash('sha256').update(value).digest('hex');
 const deny=reason=>Object.freeze({
@@ -39,46 +42,44 @@ function assertPassportWrite(c){
   subject_ref:c.adapterActorRef,product:'evercraft-intake',
   scope:'intake.write.agent',at:c.at
  });
- // Authorize even a duplicate replay. Existing Intake Fabric returns
- // duplicate before its own adapter scope check.
+ // Even exact duplicate replay requires CURRENT authorization: Intake itself
+ // resolves duplicate IDs before its adapter Passport check.
  return auth.decision==='allow';
 }
-function bindingFor(review){
- const source=review?.candidate?.upstream_source;
- const sha=review?.candidate?.exact_copy_sha256;
- const policies=review?.candidate?.policy_source_hashes;
- const example=review?.candidate?.founder_example_receipt;
- if(review.status!=='READY_FOR_INDEPENDENT_EDITORIAL_REVIEW'||!source||
-    !HEX.test(sha||'')||!Array.isArray(policies)||policies.length!==5||
-    policies.some(x=>!HEX.test(x?.sha256||'')||typeof x.path!=='string')||
-    !HEX.test(example?.sha256||'')||
-    typeof review.candidate.story_ref!=='string'||!review.candidate.story_ref)
-  throw Error('founder_review_binding_invalid');
- const identity={
-  source_department:source.source_department,
-  mission_id:source.mission_id,artifact_id:source.artifact_id,
-  revision:source.revision,source_receipt_ref:source.source_receipt_ref
- };
- const policyFingerprint=hash(JSON.stringify({
-  policies:policies.map(x=>[x.path,x.sha256]),
-  example:[example.path,example.section,example.sha256]
- }));
+function bindingFor(assessment,packetDigest){
+ if(assessment?.schema!==OWNER_HARBOR_RECEIPT_SCHEMA||
+    assessment.status!=='READY_FOR_INDEPENDENT_EDITORIAL_REVIEW'||
+    assessment.source_attestations_valid!==true||
+    !RAWHEX.test(packetDigest||'')||
+    !HEX.test(assessment.verified_source_revision_digest||'')||
+    !HEX.test(assessment.founder_copy_digest||'')||
+    !Array.isArray(assessment.policy_source_hashes)||
+    assessment.policy_source_hashes.length!==5||
+    assessment.policy_source_hashes.some(p=>!HEX.test(p?.sha256||'')||
+      typeof p.path!=='string')||
+    !HEX.test(assessment.documented_founder_example?.sha256||'')||
+    assessment.provider_posted!==false||
+    assessment.founder_profile_publishing_authorized!==false)
+  throw Error('owner_signed_founder_review_binding_missing');
+ // Hash only redacted and authenticated receipts, not private founder copy.
  const payload={
-  identity,story_ref:review.candidate.story_ref,
-  copy_sha256:sha,policy_sha256:policyFingerprint,
-  claim_count:review.candidate.claim_binding_count
+  signed_packet_sha256:packetDigest,
+  signed_source_sha256:assessment.verified_source_revision_digest,
+  founder_copy_sha256:assessment.founder_copy_digest,
+  canonical_policies:assessment.policy_source_hashes.map(p=>[p.path,p.sha256]),
+  founder_example_sha256:assessment.documented_founder_example.sha256
  };
- const digest=hash(JSON.stringify(payload));
- return {payload,digest};
+ return hash(JSON.stringify(payload));
 }
 /**
- * Actual owner-machine Intake submission of an INERT review candidate.
- * Trusted callbacks MUST come from the authorized Systemia runtime, binding
- * original producer identity and exact source revision/public projection.
- * Model-supplied callbacks or synthetic tests are not live verification.
+ * The ONLY staging entry consumes owner-private 0600 packet and independently
+ * provisioned trust-anchor files. The existing owner inbox verifies distinct
+ * actor signatures, exact source revision, the factual claim bindings and the
+ * 5 real editorial policies. It is not safe to take bundle/trust objects from
+ * an LLM or network request and call that "authenticated".
  */
-export function stageFounderEditorialIntake({
- upstreamRecord,creatorDraft,trustedChecks,repoRoot,
+export function stageOwnedFounderEditorialIntake({
+ packetFile,trustFile,repoRoot,
  intakeStateDir,passportStateDir,adapterActorRef,
  at=new Date().toISOString()
 }={}){
@@ -86,24 +87,24 @@ export function stageFounderEditorialIntake({
  try{c=localContext({intakeStateDir,passportStateDir,adapterActorRef,at});}
  catch{return deny('owner_private_runtime_not_ready');}
  if(!assertPassportWrite(c))return deny('passport_agent_intake_write_denied');
- const reviewed=prepareSystemiaFounderCreatorReview({
-  upstreamRecord,creatorDraft,trustedChecks,repoRoot
- });
- if(reviewed.status!=='READY_FOR_INDEPENDENT_EDITORIAL_REVIEW')
-  return deny('source_or_canonical_editorial_preflight_held');
- let binding;
- try{binding=bindingFor(reviewed);}
- catch{return deny('editorial_binding_missing');}
- const key='founder-editorial:'+binding.digest;
+ let inspected;
+ try{
+  inspected=inspectOwnedHarborFounderPacket({packetFile,trustFile,repoRoot});
+ }catch{return deny('signed_owner_inbox_not_verified');}
+ let digest;
+ try{digest=bindingFor(inspected.assessment,inspected.packetDigest);}
+ catch{return deny('signed_source_or_canonical_editorial_hold');}
+ const key='founder-editorial:'+digest;
  const candidate={
   idempotency_key:key,external_event_id:key,
-  adapter_actor_ref:c.adapterActorRef,
-  source_type:'agent',source_ref:'systemia:harbor:founder-editorial',
+  adapter_actor_ref:c.adapterActorRef,source_type:'agent',
+  source_ref:'systemia:harbor:founder-editorial',
+  // The content is still untrusted, even when the adapter is authorized and
+  // producer attestations are valid. Never treat a draft as an instruction.
   source_trust_state:'untrusted_external',
-  // The Intake ledger holds only opaque references, not creator prose or URLs.
-  content_ref:'private:founder-editorial-review:'+binding.digest.slice(7),
-  content_fingerprint:binding.digest,
-  intent_excerpt:'Source-bound founder personal post. Human editorial review only; no publication or personal-profile authorization.',
+  content_ref:'private:founder-editorial:'+digest.slice(7),
+  content_fingerprint:digest,
+  intent_excerpt:'Signed-source founder creator candidate. Private independent editorial review only; no personal publishing authorization.',
   requested_capability_hints:['harbor-founder-editorial','independent-fact-and-style-review'],
   claimed_priority:'normal',attachments:[],received_at:c.at
  };
@@ -114,7 +115,7 @@ export function stageFounderEditorialIntake({
  try{result=intake.ingest(candidate);}
  catch{return deny('existing_intake_fabric_rejected');}
  if(result.candidate?.idempotency_key!==key||
-    result.candidate?.content_fingerprint!==binding.digest||
+    result.candidate?.content_fingerprint!==digest||
     result.candidate?.source_ref!==candidate.source_ref||
     result.candidate?.adapter_actor_ref!==c.adapterActorRef||
     !HEX.test(result.receipt?.receipt_hash||''))
@@ -124,10 +125,10 @@ export function stageFounderEditorialIntake({
   status:result.state==='duplicate'?'DUPLICATE_REVIEW_CANDIDATE':
     'STAGED_IN_EXISTING_INTAKE',
   candidateId:result.candidate.candidate_id,
-  contentFingerprint:binding.digest,
+  contentFingerprint:digest,
   intakeReceiptHash:result.receipt.receipt_hash,
   ownerPrivateIntakeOnly:true,
-  actualLiveSourceCallbackProvenanceNotAuditedHere:true,
+  trustedKeyProvisioningSeparatelyRequired:true,
   founderCopyStoredInIntake:false,independentEditorialReviewed:false,
   publicationAuthority:false,personalProfileAccess:false,
   providerPostCreated:false,harborPickupConfirmed:false,
@@ -136,7 +137,7 @@ export function stageFounderEditorialIntake({
 }
 /**
  * Separate local reader for a specific candidate with Passport intake.read.
- * This does NOT mark Harbor remote pickup or create a new queue/ACK.
+ * This does NOT mark a genuine Harbor remote pickup or provider publication.
  */
 export function inspectFounderEditorialPickup({
  candidateId,expectedContentFingerprint,intakeStateDir,passportStateDir,
@@ -162,6 +163,7 @@ export function inspectFounderEditorialPickup({
  if(candidate.schema!=='evercraft.intake.mission-candidate.v1'||
     candidate.source_ref!=='systemia:harbor:founder-editorial'||
     candidate.source_type!=='agent'||
+    candidate.source_trust_state!=='untrusted_external'||
     candidate.content_fingerprint!==expectedContentFingerprint||
     candidate.execution_authority_granted!==false||
     candidate.external_side_effects_authorized!==false||
