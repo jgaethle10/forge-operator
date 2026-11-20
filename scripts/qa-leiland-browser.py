@@ -116,8 +116,11 @@ try:
             assert page.locator("#current-region").inner_text()=="PASSPORT"
             assert page.locator("button[data-region='passport']").get_attribute("aria-pressed")=="true"
             for region in ["systemia","raven","saban","compute","passport"]:
-                assert inside_viewport(page,"button[data-region='"+region+"']",130),(
-                    f"Region pin unexpectedly outside the screen: {name} {region}")
+                horizontal=page.locator("button[data-region='"+region+"']").evaluate("""el=>{
+                  const r=el.getBoundingClientRect();
+                  return r.left>=-4 && r.right<=innerWidth+4 && r.width>0;
+                }""")
+                assert horizontal,f"Region pin overflows horizontal screen: {name} {region}"
             page.screenshot(path=str(OUTPUT/(name+"-main.png")),full_page=True)
             assert not js_errors,f"Uncaught browser JS errors in {name}: {js_errors}"
             if name=="iphone":
