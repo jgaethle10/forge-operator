@@ -5,3 +5,4 @@
 import '../research/aaar/legacy-memory/supplier-preflight.test.mjs';
 import '../research/aaar/legacy-memory/source-conflict-review.test.mjs';
 import '../research/aaar/legacy-memory/civilian-cnc-memory-check.test.mjs';
+import './aaar-legacy-memory-surface.test.mjs';
