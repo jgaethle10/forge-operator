@@ -75,28 +75,32 @@ async function rasterSheet(id){
  }finally{URL.revokeObjectURL(url)}
 }
 let currentLink=null,busy=false;
+function invalidate(){
+ const ready=$('pdfReady'),download=$('pdfDownload');
+ if(ready){ready.hidden=true;ready.removeAttribute('href')}
+ if(download){download.hidden=true;download.removeAttribute('href')}
+ if(currentLink){URL.revokeObjectURL(currentLink);currentLink=null}
+}
 async function getPdf(){
  if(busy)return;
- busy=true;const btn=$('print'),ready=$('pdfReady');
- btn.disabled=true;btn.textContent='Preparing your PDF…';ready.hidden=true;
+ busy=true;const btn=$('print'),ready=$('pdfReady'),download=$('pdfDownload');
+ btn.disabled=true;btn.textContent='Preparing your PDF…';invalidate();
  $('messages').textContent='Building two landscape sheets on your device. No imagery is uploaded.';
  try{
   const images=[await rasterSheet('drawing-1'),await rasterSheet('drawing-2')];
   const result=pdfBytes(images);
   const blob=new Blob([result],{type:'application/pdf'});
   const next=URL.createObjectURL(blob);
-  if(currentLink)URL.revokeObjectURL(currentLink);
   currentLink=next;
-  ready.href=next;ready.download='Evercraft-EV-Site-Concept-S01-A01.pdf';ready.hidden=false;
-  $('messages').textContent='Your two-sheet PDF is ready. Tap the download link below if your phone does not save files automatically. This is a concept, not engineering approval.';
-  // Trigger the download as a convenience; iOS may require the visible user-tapped link.
-  try{ready.click()}catch{}
+  ready.href=next;ready.hidden=false;
+  download.href=next;download.download='Evercraft-EV-Site-Concept-S01-A01.pdf';download.hidden=false;
+  $('messages').textContent='Your two-sheet PDF is ready. Tap Open PDF to preview it, or Download PDF to save it. Not for construction.';
  }catch(e){
   $('messages').textContent='PDF could not be created: '+e.message+'. Use More tools → browser Print / Save PDF instead.';
-  ready.hidden=true;
- }finally{busy=false;btn.disabled=false;btn.textContent='Get your PDF'}
+  invalidate();
+ }finally{busy=false;btn.disabled=false;btn.textContent='View / Save PDF'}
 }
 $('print').addEventListener('click',getPdf);
 $('printFallback').addEventListener('click',()=>window.print());
-window.__evercraftPdf={pdfBytes,validateJpeg};
+window.__evercraftPdf={pdfBytes,validateJpeg,invalidate};
 })();
