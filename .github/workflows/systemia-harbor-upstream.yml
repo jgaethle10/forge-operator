@@ -1,0 +1,32 @@
+name: Systemia Harbor upstream evidence handoff
+on:
+  pull_request:
+    paths:
+      - 'systemia/newsroom/systemia-harbor-upstream.mjs'
+      - 'systemia/newsroom/systemia-harbor-upstream.test.mjs'
+      - 'docs/research/TOWI-SYSTEMIA-HARBOR-UPSTREAM-20261120.md'
+      - '.github/workflows/systemia-harbor-upstream.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/newsroom/systemia-harbor-upstream.mjs'
+      - 'systemia/newsroom/systemia-harbor-upstream.test.mjs'
+      - 'docs/research/TOWI-SYSTEMIA-HARBOR-UPSTREAM-20261120.md'
+      - '.github/workflows/systemia-harbor-upstream.yml'
+permissions:
+  contents: read
+jobs:
+  source-contract:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Parse source
+        run: node --check systemia/newsroom/systemia-harbor-upstream.mjs
+      - name: Fail-closed synthetic boundary tests
+        run: node --test systemia/newsroom/systemia-harbor-upstream.test.mjs
