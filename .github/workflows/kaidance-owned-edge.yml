@@ -1,0 +1,45 @@
+name: KAIDANCE Owned Edge Static Route Proof
+
+on:
+  pull_request:
+    paths:
+      - 'public/kaidance/**'
+      - 'infra/evercraft-edge/kaidance/**'
+      - 'tests/kaidance-owned-edge.test.mjs'
+      - '.github/workflows/kaidance-owned-edge.yml'
+  push:
+    paths:
+      - 'public/kaidance/**'
+      - 'infra/evercraft-edge/kaidance/**'
+      - 'tests/kaidance-owned-edge.test.mjs'
+      - '.github/workflows/kaidance-owned-edge.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  stage-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify owned portable assets and privacy
+        run: |
+          node --test tests/kaidance-owned-edge.test.mjs
+          node --test tests/kaidance-public-observatory.test.mjs
+      - name: Validate example Caddy route without networking or deployment
+        run: |
+          set -euo pipefail
+          mkdir -p _kaidance_caddy_qa
+          {
+            echo 'http://localhost:8080 {'
+            cat infra/evercraft-edge/kaidance/Caddyfile.route.example
+            echo '}'
+          } > _kaidance_caddy_qa/Caddyfile
+          docker run --rm --network none -v "$PWD/_kaidance_caddy_qa:/qa:ro" \
+            caddy:2.10-alpine caddy adapt --config /qa/Caddyfile --adapter caddyfile > _kaidance_caddy_qa/adapted.json
+          node -e "const a=require('./_kaidance_caddy_qa/adapted.json');if(!a.apps?.http?.servers)throw Error('Caddy route missing')"

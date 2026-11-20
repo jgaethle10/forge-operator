@@ -1,4 +1,4 @@
-import {API,normalizePublicActivity} from '../live/work-source.mjs';
+import {API,normalizePublicActivity} from './work-source.mjs';
 import {assessPublicPulse,durationText} from './pulse-source.mjs';
 const $=id=>document.getElementById(id);
 const state={pulse:null,cycleSeen:null,events:[],current:0,eventStart:Date.now(),githubChecked:false,githubPartial:false,pulseBusy:false,githubBusy:false};

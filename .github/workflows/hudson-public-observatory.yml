@@ -68,3 +68,22 @@ jobs:
           path: ${{ runner.temp }}/hudson-public-canary.json
           if-no-files-found: warn
           retention-days: 30
+      - name: Require independently verified public release after receipt upload
+        if: always() && github.event_name != 'pull_request'
+        shell: bash
+        run: |
+          set -euo pipefail
+          node - "$RUNNER_TEMP/hudson-public-canary.json" <<'NODE'
+          const fs=require('node:fs');
+          const file=process.argv[2];
+          if(!fs.existsSync(file)){
+            console.error('HUDSON HOLD: external release receipt missing');
+            process.exit(1);
+          }
+          const proof=JSON.parse(fs.readFileSync(file,'utf8'));
+          if(proof.schema!=='evercraft.hudson.external-release-canary.v1'||proof.verified!==true){
+            console.error('HUDSON HOLD: external verification failed: '+(proof.holds||[]).join(', '));
+            process.exit(1);
+          }
+          console.log('HUDSON release gate PASS: externally verified public evidence and privacy boundary');
+          NODE

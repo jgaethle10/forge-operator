@@ -105,3 +105,26 @@ test('comparison explicitly distinguishes absent evidence from an unsuitable sit
   assert.match(html, /<strong>not<\/strong>/);
   assert.match(html, /not.*evidence that this location is unsuitable/);
 });
+
+test('source ledger shows the last cycle, not a fictional global connection list', () => {
+  for (const marker of [
+    'id="sources"',
+    'id="sourceLedger"',
+    'id="sourceLedgerCycle"',
+    'id="sourceLedgerSummary"',
+    'renderFaieSourceLedger(health)',
+    'official_collector_receipts',
+    'National Weather Service alerts',
+    'USGS stream and water measurements',
+    'NOAA river gauges and forecasts',
+    'U.S. Drought Monitor county assessments',
+    'Checked; no observations returned',
+    'Not configured',
+    'Check failed',
+    'Partial / degraded',
+    'newly admitted across all inputs'
+  ]) assert.ok(html.includes(marker),'source transparency marker missing: '+marker);
+  assert.match(html,/health\.ok !== true/);
+  assert.match(html,/Source receipts unavailable\. Do not interpret previous counts as live/);
+  assert.doesNotMatch(html, /All connected sources are live/);
+});
