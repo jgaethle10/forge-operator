@@ -44,6 +44,17 @@ test('receiver custody survives absent Passport and is offered to Systemia when 
    subject_ref:'adapter:wing-courier',issuer_ref:'evercraft:identity-authority',product:'evercraft-intake',
    scopes:['intake.write.agent'],starts_at:'2026-01-01T00:00:00Z',ends_at:'2027-12-31T00:00:00Z',
    authority_state:'verified_identity_authority',authority_receipt_ref:'identity:adapter:wing-courier'});
+  // A delayed Passport grant must not admit custody if an asset changed
+  // after the original verified import. Restore it, then allow the retry.
+  const assetOnDisk=path.join(inbox,meta.id,'photo.jpg');
+  fs.writeFileSync(assetOnDisk,Buffer.from('tampered synthetic data'));
+  const blocked=await cycle({config:cfg});
+  assert.equal(blocked.received,0);
+  assert.equal(blocked.intake.attempted,1);
+  assert.equal(blocked.intake.pending,1,'changed local bytes must block Intake');
+  assert.equal(blocked.intake.offered,0);
+  assert.equal(fs.existsSync(path.join(inbox,meta.id,'intake-offer.json')),false);
+  fs.writeFileSync(assetOnDisk,Buffer.from('synthetic test only'));
   const second=await cycle({config:cfg});
   assert.equal(second.received,0,'broker must not redeliver acked package');
   assert.equal(second.intake.offered,1,'existing verified private local custody is re-offered after grant');
