@@ -11,7 +11,7 @@ const source = (name) => fs.readFileSync(path.join(repoRoot, 'public/aiden-lab',
 
 test('strictly allowlists five exact science assets', () => {
   assert.deepEqual(Object.keys(AIDEN_LAB_FILES).sort(), [
-    'app.mjs','catalog.mjs','index.html','mark.svg','styles.css'
+    'app.mjs','catalog.mjs','index.html','learning-worlds.mjs','mark.svg','styles.css'
   ]);
   for (const file of Object.keys(AIDEN_LAB_FILES))
     assert.equal(resolveAidenLabRequest('/aiden-lab/' + file).name, file);
@@ -20,7 +20,8 @@ test('strictly allowlists five exact science assets', () => {
   for (const p of [
     '/aiden-lab/README.md', '/aiden-lab/server.ts', '/aiden-lab/secrets',
     '/aiden-lab/nested/index.html', '/aiden-lab/%2Fserver.ts',
-    '/aiden-lab/index.html.js', '/aiden-lab/.env'
+    '/aiden-lab/index.html.js', '/aiden-lab/.env',
+    '/aiden-lab/classroom/README.md', '/aiden-lab/classroom/.env'
   ]) {
     const r = resolveAidenLabRequest(p);
     assert.equal(r.handled, true, p);
@@ -66,6 +67,35 @@ test('real Fabric runtime serves the exact reviewed files with secure content ty
   } finally {
     await rt.close();
   }
+});
+
+test('the reviewed Infinite Classroom practice preview opens through owned Fabric with script hashes', async () => {
+  const rt = await startFabricLocalRuntime({
+    host:'127.0.0.1', port:0, catalog:[], faieSurfaceEnabled:false
+  });
+  try {
+    const canonical=fs.readFileSync(path.join(repoRoot,'public/apps/infinite-classroom/play/index.html'),'utf8');
+    const r=await fetch(rt.url+'/aiden-lab/classroom/');
+    assert.equal(r.status,200);
+    assert.equal(r.headers.get('x-evercraft-static-program'),'aidens-lab-v1');
+    assert.equal(r.headers.get('x-evercraft-learning-world'),'classroom-practice-v1');
+    assert.equal(r.headers.get('content-type'),'text/html; charset=utf-8');
+    const csp=r.headers.get('content-security-policy');
+    assert.match(csp,/script-src 'sha256-/);
+    assert.match(csp,/style-src 'sha256-/);
+    assert.doesNotMatch(csp,/unsafe-inline|unsafe-eval/);
+    assert.match(csp,/connect-src 'none'/);
+    const body=await r.text();
+    assert.equal(body,canonical);
+    assert.match(body,/Math Cave|Science Sky Lab/);
+    const other=await fetch(rt.url+'/aiden-lab/classroom',{redirect:'manual'});
+    assert.equal(other.status,308);
+    assert.equal(other.headers.get('location'),'/aiden-lab/classroom/');
+    const post=await fetch(rt.url+'/aiden-lab/classroom/',{method:'POST'});
+    assert.equal(post.status,405);
+    const noFiles=await fetch(rt.url+'/aiden-lab/classroom/README.md');
+    assert.equal(noFiles.status,404);
+  }finally{await rt.close()}
 });
 
 test('URL traversal cannot read repository private or unrelated files', async () => {
