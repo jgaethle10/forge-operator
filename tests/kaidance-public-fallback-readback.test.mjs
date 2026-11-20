@@ -5,19 +5,21 @@ import {probeKaidanceFallback} from '../scripts/probe-kaidance-fallback.mjs';
 const root='https://jgaethle10.github.io/forge-operator/';
 function mock({pulseStatus=404,broken=null,wrongMime=null}={}) {
  const paths={
-  'index.html':'<html><head><title>KAIDANCE | Evercraft in Motion</title><link rel="stylesheet" href="./style.css"><link rel="stylesheet" href="./experience.css"><link rel="stylesheet" href="./collider-v3.css"><link rel="stylesheet" href="./confluence.css"><link rel="icon" href="./mark.svg"></head><body>9:16 LIVE VIEW HEARTBEAT NOT CONNECTED <script src="./app.mjs"></script><script src="./visual.mjs"></script><script src="./collider-engine.mjs"></script><script src="./current-field.mjs"></script><div id="fieldRouteProgress"></div><div id="fieldRecordTopic"></div></body></html>',
+  'index.html':'<html><head><title>KAIDANCE | Evercraft in Motion</title><link rel="stylesheet" href="./style.css"><link rel="stylesheet" href="./experience.css"><link rel="stylesheet" href="./collider-v3.css"><link rel="stylesheet" href="./confluence.css"><link rel="stylesheet" href="./signal-wall.css"><link rel="icon" href="./mark.svg"></head><body>9:16 LIVE VIEW HEARTBEAT NOT CONNECTED <script src="./app.mjs"></script><script src="./visual.mjs"></script><script src="./collider-engine.mjs"></script><script src="./current-field.mjs"></script><script src="./signal-river.mjs"></script><div id="fieldRouteProgress"></div><div id="fieldRecordTopic"></div><div id="signalRiver"></div><article id="signalSpotlight"></article><img class="brand-symbol" src="./mark.svg"></body></html>',
   'app.mjs':"import {assessPublicPulse} from './pulse-source.mjs';import {normalizePublicActivity} from './work-source.mjs';fetch('./pulse.json');$('heroEventTitle');$('heroProgress')",
   'style.css':'body{background:#000; color:#fff; } /* viewport safe renderer */',
   'experience.css':'/* KAIDANCE V02 */ body{color:#fff;}',
   'collider-v3.css':'/* KAIDANCE COLLIDER V03 */ #colliderField{opacity:1;}',
   'confluence.css':'/* KAIDANCE V04 */ #currentField{display:block;}',
+  'signal-wall.css':'/* KAIDANCE V06 */ .event { border: 0; }',
+  'signal-river.mjs':'// KAIDANCE V06 public signal river, illustration only. No private data source.',
   'current-field.mjs':"// KAIDANCE CONFLUENCE FIELD V05 import {scenicChapter} from './field-chapters.mjs'; const canvas = document.getElementById('currentField');",
   'field-chapters.mjs':'// KAIDANCE V05 export const SCENIC_LEG_SECONDS=10.5; narrated routes are illustrative',
   'collider-engine.mjs':'// KAIDANCE V03 AMBIENT ART particle beam renderer, no telemetry simulation',
   'visual.mjs':'// Ambient art only: a source-honest decorative canvas. No telemetry changes.',
   'pulse-source.mjs':'export function assessPublicPulse() { return null; }',
   'work-source.mjs':'export function normalizePublicActivity() { return null; }',
-  'mark.svg':'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><circle cx="10" cy="10" r="9"/></svg>'
+  'mark.svg':'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><title id="title">Kaidance</title><circle cx="64" cy="64" r="12"/></svg>'
  };
  return async input=>{
   const name=new URL(input).pathname.split('/').pop()||'index.html';
@@ -29,7 +31,7 @@ function mock({pulseStatus=404,broken=null,wrongMime=null}={}) {
 test('public fallback verifies real HTML/assets but never claims a Collider pulse',async()=>{
  const r=await probeKaidanceFallback({root,fetchImpl:mock(),now:new Date('2026-11-20T04:00:00Z')});
  assert.equal(r.result,'public_viewer_verified');
- assert.equal(r.verified_assets.length,13);
+ assert.equal(r.verified_assets.length,15);
  assert.equal(r.approved_live_pulse,'not_present_on_fallback');
  assert.equal(r.url,root+'kaidance/');
  assert.equal(r.index_sha256.length,64);
