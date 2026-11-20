@@ -1,0 +1,20 @@
+# EXAMPLE ONLY. Operator must replace paths/identity and separately approve publication.
+# Never install/enable until the real private Yard route and owned public edge are verified.
+[Unit]
+Description=Evercraft KAIDANCE approved public pulse projector
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=evercraft
+Group=evercraft
+WorkingDirectory=/opt/evercraft/forge-operator
+ExecStart=/usr/bin/node /opt/evercraft/forge-operator/systemia/collider/public-publisher.mjs --yard-state-dir /srv/evercraft/private/yard --deployment-id kaidance-local-resident --approval-file /srv/evercraft/private/kaidance-public-approval.json --public-root /srv/evercraft/public
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=strict
+ReadWritePaths=/srv/evercraft/public/kaidance
+TimeoutStartSec=25s
+# No EnvironmentFile, API token, private key, or credential is passed to a public page.
