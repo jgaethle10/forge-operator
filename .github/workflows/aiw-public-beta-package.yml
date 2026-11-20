@@ -27,6 +27,28 @@ jobs:
           grep -Fq 'LIVE CADDY ROUTE: UNCHANGED' research/infrastructure-watch/release/aiw-beta-stage-owned-edge.sh
           grep -Fq 'handle_path /infrastructure-watch/*' research/infrastructure-watch/release/AIW-public-beta.Caddyfile.fragment
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify exported JavaScript parse and static route rewrites
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import importlib.util,re
+          p=Path('research/infrastructure-watch/release/aiw_public_beta_bundle.py')
+          spec=importlib.util.spec_from_file_location('beta',p)
+          beta=importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(beta)
+          source=Path('research/infrastructure-watch/operator/aiw-state-first-private.html')
+          output=beta.static_page(source.read_bytes()).decode()
+          scripts=re.findall(r'<script>(.*?)</script>',output,re.S)
+          assert len(scripts)==1
+          Path('/tmp/aiw-public-beta.js').write_text(scripts[0])
+          assert "fetch('./data/states.json'" in output
+          assert "fetch('./data/wa-bridges.json'" in output
+          assert "href='./advanced'" not in output
+          PY
+          node --check /tmp/aiw-public-beta.js
       - name: Verify immutable hover -> static public beta contract
         run: python3 -m unittest discover -s research/infrastructure-watch/tests -p 'test_aiw_public_beta_bundle.py' -v
       - name: Verify no third-party executable hosting introduced
