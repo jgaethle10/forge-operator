@@ -109,6 +109,45 @@ try{
   receipts.push({orientation:orientation.name,viewport:orientation.width+'x'+orientation.height,stick_drag:true,aircraft_bank_changes:true,auto_center:true,throttle_to_100:true,hud_toggle:true,more_toggle:true,pause_resume:true,no_overflow:true,scenery_trees_total:scenery.treesTotal,scenery_visible_pines:scenery.treesVisible,scenery_ground_polygons:scenery.terrainPolygons,scenery_clouds:scenery.cloudsVisible,world_color_bins:colors,render_cost_ms:+scenery.renderCostMs.toFixed(1)});
  }
 
+ // Flight School 1.3 actual phone controls must not break the original cockpit.
+ const runwayPage=await context.newPage();
+ runwayPage.on('pageerror',e=>errors.push('runway:'+String(e.message||e)));
+ const runwayResponse=await runwayPage.goto(base+'#seattle',{waitUntil:'domcontentloaded',timeout:25000});
+ assert.equal(runwayResponse?.status(),200,'Seattle training field unavailable in source');
+ assert.equal(await runwayPage.locator('#beginRunway').isVisible(),true,'Runway start choice hidden');
+ assert.equal(await runwayPage.locator('#beginApproach').isVisible(),true,'Landing practice choice hidden');
+ await runwayPage.locator('#beginRunway').click();
+ await runwayPage.waitForFunction(()=>document.querySelector('#startScreen')?.style.display==='none',null,{timeout:10000});
+ await runwayPage.waitForFunction(()=>document.getElementById('flightStatus')?.textContent==='ON RUNWAY / TAXI',null,{timeout:10000});
+ assert.equal(await runwayPage.locator('#mobileBrake').isVisible(),true,'Mobile hold-to-brake button missing');
+ const runwayControlBounds=await runwayPage.evaluate(()=>{
+  const rect=id=>{const r=document.getElementById(id).getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom}};
+  return {brake:rect('mobileBrake'),stick:rect('flightStick'),throttle:rect('flightThrottleRange'),w:innerWidth,h:innerHeight};
+ });
+ assert.ok(runwayControlBounds.brake.left>=0&&runwayControlBounds.brake.right<=runwayControlBounds.w,
+   'Brake control outside phone viewport');
+ assert.ok(runwayControlBounds.brake.left>=runwayControlBounds.stick.right-2,
+   'Brake button overlaps the steering thumb stick');
+ assert.ok(runwayControlBounds.brake.right<=runwayControlBounds.throttle.left+2,
+   'Brake button overlaps throttle slider');
+ await runwayPage.locator('#mobileMoreToggle').click();
+ assert.equal(await runwayPage.locator('#runwayReset').isVisible(),true,'Runway reset hidden behind More');
+ assert.equal(await runwayPage.locator('#approachReset').isVisible(),true,'Landing practice hidden behind More');
+ await runwayPage.locator('#approachReset').click();
+ await runwayPage.waitForFunction(()=>document.getElementById('flightStatus')?.textContent==='SIMULATION ACTIVE',null,{timeout:10000});
+ const school=await runwayPage.evaluate(()=>({
+  model:window.AAARGroundOps?.schema,
+  level:window.AAARGroundOps?.field.level,
+  synthetic:window.AAARGroundOps?.world,
+  runwayVisible:window.AAARSceneMetrics?.().terrainPolygons>300
+ }));
+ assert.equal(school.model,'evercraft.aaar.flight-ground-ops.v1');
+ assert.equal(school.synthetic,'FICTIONAL_GAMEPLAY_AIRFIELD');
+ assert.ok(school.runwayVisible,'Phone runway scene missing terrain');
+ receipts.push({school:'Seattle runway and landing controls',runway_start:true,brake_visible:true,
+  menu_runway:true,menu_approach:true,practice_mode:true,synthetic:true});
+ await runwayPage.close();
+
  // Seattle loads in a fresh page: changing only the URL fragment cannot reinitialize
  // the current game world, because the flight engine is intentionally page-local.
  const cityPage=await context.newPage();
