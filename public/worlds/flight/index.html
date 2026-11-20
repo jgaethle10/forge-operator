@@ -1105,11 +1105,14 @@ function forRunwayQuads(emit){
  if(!seattle||!window.AAARGroundOps?.enabled)return;
  const f=window.AAARGroundOps.field,{x,z,width,length,level:y}=f;
  const rect=(x1,z1,x2,z2,height,c,color)=>emit([x1,height,z1],[x2,height,z1],[x2,height,z2],[x1,height,z2],c,color);
+ const band=(x1,z1,x2,z2,height,c,color)=>{
+  for(let a=z1;a<z2;a+=85)rect(x1,a,x2,Math.min(a+85,z2),height,c,color);
+ };
  const start=z-length/2,end=z+length/2,left=x-width/2,right=x+width/2;
- rect(left-9,start-13,right+9,end+13,y+.12,[.46,.47,.44],'#666f6b');
- rect(left,start,right,end,y+.32,[.105,.16,.19],'#243640');
- rect(left+3,start+3,left+4,end-3,y+.40,[.90,.90,.73],'#f1e6ac');
- rect(right-4,start+3,right-3,end-3,y+.40,[.90,.90,.73],'#f1e6ac');
+ band(left-9,start-13,right+9,end+13,y+.12,[.46,.47,.44],'#666f6b');
+ band(left,start,right,end,y+.32,[.105,.16,.19],'#243640');
+ band(left+3,start+3,left+4,end-3,y+.40,[.90,.90,.73],'#f1e6ac');
+ band(right-4,start+3,right-3,end-3,y+.40,[.90,.90,.73],'#f1e6ac');
  // Centerline, runway thresholds, aiming marks and a high-contrast hold-short bar.
  for(let a=start+130;a<end-100;a+=135)rect(x-2.25,a,x+2.25,a+68,y+.44,[.96,.94,.83],'#fff5d9');
  for(const tip of [start+38,end-38]){
@@ -1121,12 +1124,37 @@ function forRunwayQuads(emit){
  for(const az of [start+450,end-450])for(const side of [-1,1])rect(x+side*18-3,az-36,x+side*18+3,az+36,y+.49,[.95,.94,.85],'#fcf5df');
  // Apron, connecting taxiway and terminal walk edges; artistic scenery only.
  rect(right-1,start+125,right+166,start+180,y+.27,[.29,.32,.34],'#475259');
- rect(right+93,start+65,right+286,start+510,y+.29,[.29,.31,.33],'#47515a');
+ band(right+93,start+65,right+286,start+510,y+.29,[.29,.31,.33],'#47515a');
  rect(right+95,start+75,right+100,start+490,y+.35,[.89,.66,.30],'#efb763');
  for(let j=0;j<12;j++){
   const z0=start+40+j*155;
   rect(left-8,z0,left-4,z0+16,y+.53,[.37,.81,.91],'#7bddec');
   rect(right+4,z0,right+8,z0+16,y+.53,[.37,.81,.91],'#7bddec');
+ }
+}
+function addRunwaySoftware(quad,project,ctx,w,h){
+ if(!seattle||!window.AAARGroundOps?.enabled)return;
+ const f=window.AAARGroundOps.field,x=f.x,y=f.level,z=f.z-f.length/2;
+ function box(cx,cy,cz,wid,hei,dep,color,roof){
+  const ax=cx-wid/2,bx=cx+wid/2,az=cz-dep/2,bz=cz+dep/2,top=cy+hei/2,bottom=cy-hei/2;
+  quad([ax,bottom,az],[bx,bottom,az],[bx,top,az],[ax,top,az],color);
+  quad([bx,bottom,az],[bx,bottom,bz],[bx,top,bz],[bx,top,az],color);
+  quad([ax,top,az],[bx,top,az],[bx,top,bz],[ax,top,bz],roof||color);
+ }
+ for(let i=0;i<3;i++){
+  const bx=x+220+i*95,bz=z+160+i*116;
+  box(bx,y+21,bz,78,40,82,'#9caeb6','#4b6068');
+  box(bx,y+18,bz-42,56,30,1.6,'#274857','#324d5e');
+ }
+ box(x+370,y+41,z+450,20,81,20,'#bec4bc','#d4d9d3');
+ box(x+370,y+87,z+450,37,14,34,'#42788b','#819ca4');
+ box(x+155,y+14,z+365,83,27,62,'#aebcb8','#42616b');
+ for(let i=0;i<4;i++)box(x+120+i*45,y+3,z+93+i*95,20,5,11,i%2?'#dac484':'#438da3','#e9f0e5');
+ const loc=project([x+50,y+17,z+140]);
+ if(loc&&loc.d<2500&&loc.u>50&&loc.u<w-50&&loc.v>25&&loc.v<h-35){
+  ctx.save();ctx.fillStyle='#071d2ee5';ctx.fillRect(loc.u-85,loc.v-21,170,24);
+  ctx.fillStyle='#ffe1b2';ctx.font='bold 11px system-ui';ctx.textAlign='center';
+  ctx.fillText('SEATTLE TRAINING FIELD',loc.u,loc.v-5);ctx.restore();
  }
 }
 function addRunwayWebGL(w){
@@ -1312,7 +1340,7 @@ function render2D(){
  for(let Z=-875;Z<900;Z+=115)quad([-3,9,Z],[3,9,Z],[3,9,Z+52],[-3,9,Z+52],'#ede0af');
  for(let j=0;j<6;j++){const X=140+j*55,Z=-620+j*84;quad([X-17,49,Z-27],[X+17,49,Z-27],[X+17,49,Z+27],[X-17,49,Z+27],'#d5e2d7');}
  }
- if(seattle){scenePerf.city=addSeattleShapes(quad,project,eye);forRunwayQuads((a,b,c,d,_rgb,color)=>quad(a,b,c,d,color));}
+ if(seattle){scenePerf.city=addSeattleShapes(quad,project,eye);forRunwayQuads((a,b,c,d,_rgb,color)=>quad(a,b,c,d,color));addRunwaySoftware(quad,project,ctx,w,h);}
  shapes.sort((a,b)=>b.avg-a.avg);
  for(const shape of shapes){const q=shape.pts;ctx.beginPath();ctx.moveTo(q[0].u,q[0].v);q.slice(1).forEach(p=>ctx.lineTo(p.u,p.v));ctx.closePath();ctx.fillStyle=shape.color;ctx.fill();}
  scenePerf.terrainPolygons=shapes.length;
