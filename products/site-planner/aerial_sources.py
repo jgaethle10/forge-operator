@@ -20,6 +20,18 @@ MAX_CENSUS = 256 * 1024
 MAX_IMAGE = 4 * 1024 * 1024
 
 
+class _NoRedirect(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, *args, **kwargs):
+        return None
+
+
+_DIRECT_OPENER = urllib.request.build_opener(_NoRedirect)
+
+
+def _direct_open(req, timeout=10):
+    return _DIRECT_OPENER.open(req, timeout=timeout)
+
+
 def _fetch(url, max_bytes, opener):
     """Bounded read, no redirect to a different URL/host."""
     req = urllib.request.Request(url, headers={
@@ -104,7 +116,8 @@ def _image(lon, lat, halfwidth, opener):
     }
 
 
-def preview_from_address(address, opener=urllib.request.urlopen):
+def preview_from_address(address, opener=None):
+    opener = opener or _direct_open
     lon, lat, matched = _point(address, opener)
     site = _image(lon, lat, 320, opener)
     vicinity = _image(lon, lat, 2400, opener)
