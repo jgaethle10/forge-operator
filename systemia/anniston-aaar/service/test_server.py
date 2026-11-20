@@ -52,6 +52,26 @@ class AaarApiTests(unittest.TestCase):
         self.assertEqual(self.call('POST','/api/orders',{**order,'action':'Different command'})[0],409)
         self.assertEqual(self.call('POST','/api/orders',{**order,'program_id':'NONEXISTENT','idempotency_key':'new'})[0],404)
         self.assertEqual(self.call('GET','/api/state')[1]['revision'],2)
+    def test_05_worlds_flight_gameplay_only_and_no_certification(self):
+        _,initial=self.call('GET','/api/state')
+        flight={'schema':'evercraft.aaar.worlds-flight.v1','id':'AAAR-WFL-TEST-01',
+          'created_at':'2026-11-19T00:00:00Z','model_state':'GAME_SIMULATION_ONLY',
+          'evidence_state':'UNVALIDATED_GAMEPLAY','canonical_sync':'local_preview_only',
+          'world':'anniston-cedar-basin-synthetic-v1','aircraft':'trainer',
+          'flight_time_seconds':24.5,'distance_m':1120,'max_altitude_m':440,
+          'max_speed_mps':63,'checkpoints':1,'events':[], 'track':[{'x':1,'y':280,'z':-300}]}
+        state={'schema':SCHEMA,'programs':initial['programs'],'history':[],
+          'experiments':initial.get('experiments',[])+[flight]}
+        status,result=self.call('POST','/api/state',{'expected_revision':initial['revision'],'state':state})
+        self.assertEqual(status,200)
+        saved=self.call('GET','/api/state')[1]['experiments'][-1]
+        self.assertEqual(saved['model_state'],'GAME_SIMULATION_ONLY')
+        state['experiments'][-1]['model_state']='CERTIFIED'
+        self.assertEqual(self.call('POST','/api/state',{'expected_revision':result['revision'],'state':state})[0],422)
+        state['experiments'][-1]['model_state']='GAME_SIMULATION_ONLY'
+        state['experiments'][-1]['track']=[{'x':float('nan'),'y':2,'z':3}]
+        self.assertEqual(self.call('POST','/api/state',{'expected_revision':result['revision'],'state':state})[0],422)
+
     def test_04_safety_truth_and_validation(self):
         s,data=self.call('GET','/api/audit')
         self.assertEqual(s,200)
