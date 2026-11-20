@@ -23,6 +23,23 @@ The static root must exactly match the local canonical repo public folder, with 
 
 The Systemia resident supervisor owns process lifecycle and restart receipts. Do not install a second systemd service for the same port.
 
+## Node 001 read-only resident readiness, after the temporary canary
+
+The temporary `scripts/leiland-owned-field-canary.mjs` already tests canonical page bytes with an ephemeral loopback server. **Do not repeat that test to infer a resident started.** The next independent stage is `scripts/leiland-resident-readiness.mjs`, which inspects the existing optional Systemia resident and its **actual local** `127.0.0.1:8795` server without starting anything:
+
+```bash
+REPO="$HOME/.local/share/evercraft/forge-operator"
+PIN="$(git -C "$REPO" ls-remote origin refs/heads/main | awk '{print $1}')"
+node "$REPO/scripts/leiland-resident-readiness.mjs" \
+  --checkout "$REPO" --expected-sha "$PIN"
+```
+
+The command requires an exact pinned revision and the canonical `jgaethle10/forge-operator` remote. It checks the Systemia resident manifest/registry, whether any Leiland bindings are visible **in the current shell only**, the loopback health protocol and served HTML byte parity, and the status of the **public-only** KAIDANCE pulse and inference feed. It prints no private paths or authorization values and performs **no writes**. `not_listening_or_unreadable` is a genuine hold, **not** an instruction to bypass Systemia and start an extra service. Missing environment variables in the terminal do *not* establish that a separate supervisor process lacks them.
+
+If the resident is not listening, verify the actual approved Systemia supervisor environment, deployment receipt, and optional resident admission. If it is listening but reports a wrong revision, reconcile the pinned checkout before changing routes. If it matches and the pulse is absent, progress to separately signed KAIDANCE authorization and existing strict `scripts/leiland-field-preflight.mjs`. If a public pulse is source-reported as attested, that does **not** independently verify private Yard source, signed approval, increasing external cycles, or production TLS; the receipt's high-trust flags intentionally remain false.
+
+The inspector never publishes source snapshots, starts a resident, modifies Caddy/DNS, or makes independent hardware-identity or public HTTPS claims. It should be run on the actual owner-controlled node, not GitHub Actions, when assessing the field state.
+
 ## Local tests, not a production launch
 
 Run focused source QA on the field revision:
