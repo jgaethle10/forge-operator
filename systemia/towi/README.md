@@ -1,5 +1,7 @@
 # TOWI Intelligence OS
 
+> **Recovery scope, November 20 2026:** This directory restores the original TOWI research kernel from still-unmerged PR #735 onto current `main` for independent testing and later integration. The resident runs only when explicitly started by an authorized owner process. No source change here installs a resident, routes public URLs, reads live evidence, sends institutional messages, connects Harbor, or publishes. The `/towi/` and `/api/towi/*` endpoints below are intended surfaces from PR #735 and are **not** implemented or verified by this recovery PR. The living-dossier code and production drafts are not substitutes for institutionally reviewed findings. Existing private Harbor research workspace remains separate until a signed Systemia pickup proof exists.
+
 TOWI is Evercraft's investigative layer for the physical world.
 
 Systemia Radar answers: **what materially changed?**
@@ -24,7 +26,7 @@ TOWI is not a headline scraper and it is not an automatic truth machine. It cons
 
 ## Runtime
 
-The TOWI resident runs on the same five-minute default cycle as Radar and reads Radar's internal latest edition.
+When explicitly started by an authorized service, the recovered resident can use the same five-minute default interval as Radar and read an injected Radar resident's internal latest edition. This repository change does not start it.
 
 State lives under:
 
