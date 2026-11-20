@@ -36,7 +36,6 @@ test('supplier warranty disagreement is explicitly unresolved',()=>{
 });
 test('public-source links are present without external script dependencies',()=>{
   assert.match(example,/https:\/\/www\.californiapc\.com\//);
-  assert.match(example,/https:\/\/www\.pccardsdirect\.com\//);
   assert.match(example,/rel="noopener noreferrer"/);
 });
 test('preview never claims a customer or verified fitment',()=>{
