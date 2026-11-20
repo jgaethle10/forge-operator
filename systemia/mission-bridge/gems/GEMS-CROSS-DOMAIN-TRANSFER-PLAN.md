@@ -71,3 +71,34 @@ python systemia/mission-bridge/gems/gems_nevada_disagreement_atlas.py \
   --gems-002-tif /private/gems_002_candidate_UNSUBMITTED.tif \
   --output-dir /private/NEW/nevada-disagreement-atlas
 ```
+
+## GEMS-005: physics-derived directional features from already-authorized official bands (Nov 20 UTC)
+
+**Purpose:** use Evercraft geospatial/QA techniques to ask whether persistent directional changes in existing GeoDAWN magnetic RTP and isostatic gravity fields carry additional fault-relevant information. DO NOT interpret directional high response as a confirmed fault. Other plausible sources include lithology contacts, acquisition artifacts, erosional lineaments, and cultural noise.
+
+**Already implemented in draft research PR #2259, no new external data required:** `gems_005_directional_features.py` adds exactly four label-free features: structure-tensor directional coherence × gradient-energy magnitude on existing official `rtp` and `iso_grav_anom` raster bands, with preregistered gaussian scales 2 and 8 *100m* pixels, nodata mask normalization and explicit feature-coverage audit. The original 34-feature HGB feature engine remains untouched; the challenger only adds 4 columns to become **38 features**. All organizer input rasters and archived run.py must pass their pinned SHA-256 gates first.
+
+`gems_005_directional_ablation.py` scores baseline 34 vs challenger 38 on **identical training positive and negative pixel indices**, fixed HGB parameters, original .20 ridge rendering, and 3 northern mapped-fault-component holdout groups with full-area score and TP/FP/FN. The comparator is **0m five-random negatives per positive** on both models. Neither spatial holdout data nor hidden new fault labels enter the feature computation. Computing unsupervised image convolutions across fold boundaries is permitted only as an explicitly documented transductive source-image transform, never an inferred label. Both models are fitted afresh within each fold.
+
+The output records full northern known-fault proxy and secondary 1.5km corridor metrics, full fold ledger, exact official source hashes, feature/missingness audit, model settings, and strict `new_candidate_created=false`, `automatic_promotion_allowed=false`, `submission_made=false`. **This is not a GEMS official score or an independent untouched confirmation.** No selected variant becomes a scored competition entry automatically.
+
+Run at most one actual-authorized GeoDAWN execution on isolated free CPU, with original authorized 419 MB organizer feature raster and preserved GEMS-001 source archive already mounted:
+
+```bash
+bash systemia/mission-bridge/gems/execute_directional_ablation.sh \
+  /private/AUTHORIZED_GEODAWN_DATA \
+  /private/gems_001_verified_submission.zip \
+  /private/NEW/gems005-directional-evidence
+```
+
+Expected outputs: `run-a/directional-full-area-ablation.json`, `directional-decision-gate.json`. Do not upload arbitrary public sources; no network or new dependencies beyond existing pinned test requirements. Four feature-unit tests and one full **real-HGB synthetic** two-run contract test are included. CI gates both files plus shell syntax. Review per-fold FP inflation, full-area pooled difference and missingness before any resource-intensive follow-up. A null or negative result ends this four-feature hypothesis. A positive result motivates separate replication on a genuinely untouched region and assessment of whether coherent gradients come from nonfaults, **not automatic promotion or submission**.
+
+### Owned-system responsibilities, without claims of dispatched execution
+
+- **Systemia and Saban:** can route a bounded private CPU science mission using existing approved paths when Work/owned runtime has the source rasters, but no autonomous task was dispatched here.
+- **EverMaps and Kennedy Space Station:** contribute existing reference-plane and geometry QA patterns. They do not provide labels or substitute for UTM raster hash/affine checks.
+- **Evercraft Research, ForensiScope, Black Box:** evidence provenance, source lineage and guard principles transferable; no direct runtime wiring to GEMS-005 has been verified.
+- **Sovereign Raven/Claude/Grok models:** potential hypothesis and code critics only. No connection, credential, or model inference is asserted in this experiment.
+- **Watershed, Subsea Watch, Worlds:** terrain/lineament inspiration, uncertainty classification and optional visualization. No Yakima, Alaska, or fictional site geometry is incorporated into the model.
+
+A new external DEM trial remains **separate** from this source-only GEMS-005 ablation, requiring tile overlap, use/share rights, nodata/datum/CRS verification and explicit model evidence. Preserve original GEMS-001, previously scored GEMS-002, and the public leaderboard distinctions.
