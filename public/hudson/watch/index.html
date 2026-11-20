@@ -225,8 +225,11 @@ function paint(dt){
 }
 function loop(ts){
  frame=0;if(document.hidden)return;
- if(!last)last=ts;
- var dt=Math.min(.08,(ts-last)/1000);last=ts;
+ if(!last)last=ts-34;
+ var elapsed=ts-last;
+ // Cap rendering at about 30fps, even on 120Hz phones, for long watching sessions.
+ if(!paused&&elapsed<33){frame=requestAnimationFrame(loop);return}
+ var dt=Math.min(.08,elapsed/1000);last=ts;
  if(!paused)clock+=dt;
  paint(paused?0:dt);
  if(!paused)frame=requestAnimationFrame(loop);
