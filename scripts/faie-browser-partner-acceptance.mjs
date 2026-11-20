@@ -22,6 +22,11 @@ try{
   mark('advanced_fields_collapsed',!(await page.locator('#advancedScope').evaluate((el)=>el.open)));
   await page.locator('#runtimePulse[data-health="ok"]').waitFor({timeout:17000});
   mark('real_health_indicator',true);
+  await page.locator('#sourceLedger .source-ledger-card').first().waitFor({timeout:17000});
+  const sourceLedgerText=await page.locator('#sources').innerText();
+  mark('last_cycle_receipts_rendered',sourceLedgerText.includes('Last cycle:')&&sourceLedgerText.includes('National Weather Service'));
+  mark('source_counts_cannot_claim_all_live',sourceLedgerText.includes('Returned')||sourceLedgerText.includes('Checked; no observations returned')||sourceLedgerText.includes('Not configured'));
+
   await page.locator('#heroTryExample').click();
   await page.locator('#result .plain-results').waitFor({timeout:30000});
   mark('one_click_real_investigation',true);
