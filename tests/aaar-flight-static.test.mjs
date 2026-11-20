@@ -104,3 +104,13 @@ test('Seattle v1.0 laptop renderer uses lit glass, water and grounded city geome
   assert.match(page,/html\.seattle-mode \.flight-shell/);
   assert.doesNotMatch(page,/https?:\/\/(?:unpkg|cdn\.jsdelivr)/);
 });
+
+test('Seattle flight collision checks use indexed cells and preserve rooftop contact',()=>{
+ assert.match(page,/const collisionCellSize=160,collisionCells=new Map/);
+ assert.match(page,/function collisionCandidates\(x,z\)/);
+ assert.match(page,/function collisionAt\(x,y,z\)/);
+ assert.match(page,/collisionTargetsCount:collisionTargets.length/);
+ assert.match(page,/const hit=seattle\.collisionAt\(state\.x,state\.y,state\.z\)/);
+ assert.match(page,/BUILDING_CONTACT/);
+ assert.doesNotMatch(page,/const list=seattle\.buildings\.concat\(seattle\.landmarks/);
+});
