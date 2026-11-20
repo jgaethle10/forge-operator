@@ -340,6 +340,7 @@ function paintEarth(cx,cy,r){
  const pixels=globeContext.createImageData(size,size);
  const out=pixels.data;
  const cl=centerLat*RAD,lc=Math.cos(cl),ls=Math.sin(cl);
+ const declination=SUN_SEASONS[solarSeason],subsolarLongitude=sunLongitude(solarHour);
  for(let row=0;row<size;row++){
   const y=1-((row+.5)/size)*2;
   for(let col=0;col<size;col++){
@@ -351,8 +352,12 @@ function paintEarth(cx,cy,r){
    const mi=((Math.floor((longitude/Math.PI/2+.5)*MAP_W)%MAP_W+MAP_W)%MAP_W
       +Math.max(0,Math.min(MAP_H-1,Math.floor((.5-latitude/Math.PI)*MAP_H)))*MAP_W)*4;
    const land=landMask[mi]>127;
-   const light=Math.max(0,x*.42+y*.43+z*.79);
-   const luminance=.27+.73*light;
+   // Insolation follows the Sun's location relative to each geodetic
+   // land/ocean pixel. The terminator and twilight track the same math.
+   const sun=solarCosine(latitude/RAD,longitude/RAD,declination,subsolarLongitude);
+   const dayFraction=Math.max(0,Math.min(1,(sun+.08)/.16));
+   const light=Math.max(0,sun);
+   const luminance=.17+dayFraction*(.23+.60*Math.sqrt(light));
    const i=(row*size+col)*4;
    const noise=Math.sin(latitude*21+longitude*13)*Math.cos(longitude*24-latitude*8);
    if(land){
@@ -361,11 +366,16 @@ function paintEarth(cx,cy,r){
     out[i+1]=Math.round((154+green*1.6)*luminance);
     out[i+2]=Math.round((119+green)*luminance);
    }else{
-    const highlight=Math.pow(light,16)*21;
+    const highlight=Math.pow(light,9)*30;
     out[i]=Math.round(10*luminance+highlight*.35);
     out[i+1]=Math.round(96*luminance+highlight);
     out[i+2]=Math.round(147*luminance+highlight);
    }
+   // Warm twilight near the geometric terminator is an illustrative
+   // atmospheric treatment, not measured aerosol/meteorological data.
+   const twilight=Math.max(0,1-Math.abs(sun)/.13);
+   out[i]=Math.min(255,out[i]+25*twilight);
+   out[i+1]=Math.min(255,out[i+1]+11*twilight);
    // Polar caps here are decorative and are not a climate or sea-ice dataset.
    if(Math.abs(latitude)>1.38){
     const blend=Math.min(.88,(Math.abs(latitude)-1.38)*4.5);
