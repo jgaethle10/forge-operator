@@ -10,6 +10,7 @@ import {admitMultiplicationRequest} from '../saban/admission.mjs';
 export const ONE_COMPANY_COURIER_SCHEMA='evercraft.systemia.one-company-courier-plan.v1';
 const MODULE_ROOT=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../..');
 const HEX64=/^[a-f0-9]{64}$/i;
+const INTAKE_RECEIPT_HASH=/^sha256:[a-f0-9]{64}$/i;
 const HEX32=/^[a-f0-9]{32}$/i;
 const MEDIA_AV=/\.(?:mp4|mov|mkv|webm|m4v|avi|mp3|wav|m4a|aac|flac|ogg)$/i;
 const fail=s=>{throw Error('one_company_courier_'+s)};
@@ -107,7 +108,7 @@ export function projectOneCompanyCourierHandoff({receipt,intake,rootDir=MODULE_R
  if(intake?.schema!=='evercraft.wing-courier.intake-handoff.v1'||
     intake.packageId!==receipt.id||
     !['candidate_only','duplicate'].includes(intake.intakeState)||
-    !intake.candidateId||!HEX64.test(intake.intakeReceiptHash||'')||
+    !intake.candidateId||!INTAKE_RECEIPT_HASH.test(intake.intakeReceiptHash||'')||
     intake.admissionGranted!==false||intake.executionGranted!==false||
     intake.customerDeliveryGranted!==false)
     fail('passport_intake_candidate_required');
