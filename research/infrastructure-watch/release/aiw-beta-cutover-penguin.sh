@@ -27,10 +27,10 @@ FABRIC="evercraft-fabric.service"
 sha() { sha256sum "$1" | awk '{print $1}'; }
 fail() { echo "STOP: $*" >&2; exit 1; }
 edge_get() {
-  curl -fsSk --max-time 8 --resolve "$HOST:8443:127.0.0.1" "https://$HOST:8443$1"
+  curl --noproxy '*' -fsSk --max-time 8 --resolve "$HOST:8443:127.0.0.1" "https://$HOST:8443$1"
 }
 edge_headers() {
-  curl -fsSk --max-time 8 --resolve "$HOST:8443:127.0.0.1" -D - -o /dev/null "https://$HOST:8443$1"
+  curl --noproxy '*' -fsSk --max-time 8 --resolve "$HOST:8443:127.0.0.1" -D - -o /dev/null "https://$HOST:8443$1"
 }
 
 echo "=== AIW BETA PRODUCTION EDGE | $MODE ==="
@@ -43,7 +43,8 @@ test ! -e "$CURRENT" && test ! -L "$CURRENT" || fail "AIW current already exists
 test "$(sha "$CONFIG")" = "$ORIGINAL_SHA" || fail "Caddy config drifted after candidate review"
 test "$(sha "$BACKUP")" = "$ORIGINAL_SHA" || fail "Rollback backup is not the exact original config"
 test "$(sha "$CANDIDATE")" = "$CANDIDATE_SHA" || fail "Prepared candidate changed"
-test "$(/usr/bin/caddy version | awk '{print $1}')" = "v2.6.2" || fail "Caddy version drifted"
+CADDY_VERSION="$(/usr/bin/caddy version | awk '{print $1}')"
+[[ "$CADDY_VERSION" == "v2.6.2" || "$CADDY_VERSION" == "2.6.2" ]] || fail "Caddy version drifted: $CADDY_VERSION"
 grep -Eq '^[[:space:]]+admin[[:space:]]+off[[:space:]]*$' "$CONFIG" || fail "Caddy admin setting drifted"
 test "$(awk -F= '$1=="EVERCRAFT_PUBLIC_HOST"{print substr($0,index($0,"=")+1)}' "$ENVFILE" | tail -1)" = "$HOST" || fail "Wrong public host"
 EDGE_EMAIL="$(awk -F= '$1=="EVERCRAFT_ACME_EMAIL"{print substr($0,index($0,"=")+1)}' "$ENVFILE" | tail -1)"
@@ -159,7 +160,7 @@ done
 edge_get /health >/dev/null || fail "Existing Fabric /health changed"
 edge_headers /infrastructure-watch/ | grep -qi '^content-security-policy:' ||
   fail "Static site security header absent"
-REDIRECT_STATUS="$(curl -sk --max-time 5 --output /dev/null --write-out '%{http_code}' \
+REDIRECT_STATUS="$(curl --noproxy '*' -sk --max-time 5 --output /dev/null --write-out '%{http_code}' \
   --resolve "$HOST:8443:127.0.0.1" "https://$HOST:8443/infrastructure-watch")"
 test "$REDIRECT_STATUS" = 308 || fail "Trailing-slash redirect not active"
 test "$(sha "$CONFIG")" = "$CANDIDATE_SHA" || fail "Running config file changed unexpectedly"
