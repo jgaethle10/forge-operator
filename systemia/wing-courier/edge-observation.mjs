@@ -7,7 +7,7 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 
 export const OWNED_FABRIC_HEALTH='https://fabric.systemiacommandcenters.com/health';
-const MAX_BODY=4096;
+const MAX_BODY=128*1024; // Fabric /health includes full directory/readiness detail.
 export async function observeCourierEdgePrerequisite({
  fetchImpl=globalThis.fetch,now=()=>new Date().toISOString(),timeoutMs=7500,
 }={}){
