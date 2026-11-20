@@ -89,6 +89,10 @@ test('resident updater and fresh installer require FAIE private archive without 
   assert.match(updater,/FAIE_HISTORY_ENV_CHANGED/);
   assert.match(updater,/fabric\.env\.before-faie-history/);
   assert.match(updater,/rollback "faie_owned_history_state_hold"/);
+  assert.match(updater,/FAIE_HISTORY_HEALTH_JSON/);
+  assert.match(updater,/h\.edge_state_persistence/);
+  assert.match(updater,/h\.land_history_archive\?\.status/);
+  assert.match(updater,/FAIE owner-managed history archive is not resident and privacy-verified/);
   assert.match(updater,/restore_edge_attestation_env/);
   assert.match(installer,/provision-faie-owned-history\.mjs/);
   assert.match(installer,/--confirm-owned-host/);
