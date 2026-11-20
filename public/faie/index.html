@@ -189,6 +189,13 @@
     .scope-hint strong{color:#e0e8d7}
     .compare-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
     .compare-actions button{margin-top:18px}
+    .fema-flood-panel{margin-top:14px;padding:14px 16px;border:1px solid #4a624f;border-radius:14px;background:rgba(6,27,20,.53)}
+    .fema-flood-panel h3{margin:0 0 8px;font-size:1rem}
+    .fema-flood-panel p{font-size:.79rem;color:#b5c9bd;line-height:1.5}
+    .fema-flood-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:9px;margin:12px 0}
+    .fema-flood-record{border:1px solid #526653;border-radius:10px;padding:12px}
+    .fema-flood-record strong{display:block;font-size:.94rem;margin-bottom:7px}
+    .fema-flood-record span{font-size:.75rem;color:#afc4b5;line-height:1.5}
     .climate-history-panel{margin-top:14px;padding:14px 16px;border:1px solid #4a624f;border-radius:14px;background:rgba(5,29,17,.54)}
     .climate-history-panel h3{margin:0 0 8px;font-size:1rem}
     .climate-history-panel p{font-size:.78rem;color:#b8cbb9;line-height:1.5}
@@ -634,6 +641,14 @@
         <button id="historicalClimateRun" type="button">Check actual NOAA historical records ↗</button>
         <div id="historicalClimateResult" role="status" aria-live="polite">No historical archive checked yet.</div>
         <button id="historicalClimateDownload" type="button" hidden>Download historical evidence (JSON)</button>
+      </section>
+      <section class="fema-flood-panel" id="femaFloodPanel">
+        <div class="section-kicker">04 / Flood hazard maps</div>
+        <h3>What does FEMA map at this location?</h3>
+        <p>Optional: check the effective FEMA flood-hazard polygon and published FIRM panel at the coordinates above. This does not check claims or quote insurance. No returned polygon does not mean the place is safe from flooding.</p>
+        <button id="femaFloodRun" type="button">Check official FEMA flood maps ↗</button>
+        <div id="femaFloodResult" role="status" aria-live="polite">No FEMA flood map checked yet.</div>
+        <button id="femaFloodDownload" type="button" hidden>Download FEMA map evidence (JSON)</button>
       </section>
       <details class="soil-preview" style="margin-top:16px">
         <summary>Show soil-only lookup result</summary>
@@ -1093,6 +1108,67 @@ function renderFaieSourceLedger(health) {
 
 let latestSiteScan=null;
 let latestHistoricalClimate=null;
+let latestFemaFlood=null;
+function renderFemaFlood(result){
+  const zones=Array.isArray(result.hazard_polygons)?result.hazard_polygons:[];
+  const panels=Array.isArray(result.firm_panels)?result.firm_panels:[];
+  let html='<div class="site-scan-scaffold"><strong>FEMA effective flood-map evidence</strong>';
+  html+='<p>Checked '+esc(fmt(result.retrieved_at))+' · Point intersection only, not a full parcel or building analysis.</p>';
+  html+='<p>'+esc(zones.length?'Mapped flood-zone polygon intersects this point.':
+    'No effective flood-hazard polygon was returned at this point. This is NOT a finding of no flood risk.')+'</p></div>';
+  if(zones.length){
+    html+='<div class="fema-flood-list">';
+    for(const record of zones.slice(0,6)){
+      const sfha=record.special_flood_hazard_area===true?'Yes':record.special_flood_hazard_area===false?'No':'Not established';
+      html+='<article class="fema-flood-record"><strong>Zone '+esc(record.flood_zone||'unspecified')+'</strong>';
+      html+='<span>Subtype: '+esc(record.zone_subtype||'not stated')+'</span>';
+      html+='<p>Special Flood Hazard Area designation: '+esc(sfha)+'</p>';
+      html+='</article>';
+    }
+    html+='</div>';
+  }
+  if(panels.length){
+    html+='<p><strong>FIRM panel:</strong> '+esc(panels[0].firm_panel||'Not stated')+' · effective date '+esc(panels[0].effective_date||'unknown')+'</p>';
+  }else html+='<p>FIRM panel context was not confirmed. Check FEMA Map Service Center before acting.</p>';
+  html+='<p>**Not an insurance quote:** FEMA's map cannot establish private insurer premiums, coverage, insurability, or parcel safety. Local surface-water flooding may occur outside mapped zones.</p>';
+  html+='<p><a href="https://msc.fema.gov/portal/home" target="_blank" rel="noopener noreferrer">Open official FEMA Map Service Center ↗</a></p>';
+  return html.replace('**Not an insurance quote:**','<strong>Not an insurance quote:</strong>');
+}
+async function runFemaFlood(){
+  const button=document.getElementById('femaFloodRun');
+  const result=document.getElementById('femaFloodResult');
+  const download=document.getElementById('femaFloodDownload');
+  const latitudeRaw=document.getElementById('soilLatitude').value.trim();
+  const longitudeRaw=document.getElementById('soilLongitude').value.trim();
+  const latitude=Number(latitudeRaw),longitude=Number(longitudeRaw);
+  latestFemaFlood=null;download.hidden=true;
+  if(!latitudeRaw||!longitudeRaw||!Number.isFinite(latitude)||!Number.isFinite(longitude)||latitude<24||latitude>50||longitude< -125||longitude> -66){
+    result.textContent='Enter valid coordinates in the location form above before checking FEMA maps.';
+    return;
+  }
+  button.disabled=true;button.textContent='Checking FEMA maps…';
+  result.textContent='Querying FEMA effective flood hazard and FIRM panel records. Unknown map coverage is never treated as low risk.';
+  try{
+    const response=await fetchWithTimeout('/api/faie/flood/preview',{
+      method:'POST',headers:{'content-type':'application/json','accept':'application/json'},
+      body:JSON.stringify({latitude,longitude})
+    },44000);
+    if(!response.ok)throw new Error(response.status===429?'FEMA map request limit reached. Try again later.':'FEMA flood map could not be verified. No safety conclusion is available.');
+    const data=await response.json();
+    if(data?.schema!=='evercraft.faie.fema-flood-point.v1'||data.request_persisted!==false||data.insurance_eligibility_decision!==null||data.site_suitability_verdict!==null||!Array.isArray(data.hazard_polygons)||!Array.isArray(data.firm_panels))throw new Error('Flood-map source or privacy contract failed.');
+    latestFemaFlood=data;
+    result.innerHTML=renderFemaFlood(data);
+    download.hidden=false;
+  }catch(error){result.textContent=error?.message||'Official flood mapping unavailable.';}
+  finally{button.disabled=false;button.textContent='Check official FEMA flood maps ↗';}
+}
+document.getElementById('femaFloodRun').addEventListener('click',runFemaFlood);
+document.getElementById('femaFloodDownload').addEventListener('click',()=>{
+  if(!latestFemaFlood)return;
+  const blob=new Blob([JSON.stringify(latestFemaFlood,null,2)+'\\n'],{type:'application/json'});
+  const url=URL.createObjectURL(blob),a=document.createElement('a');
+  a.href=url;a.download='evercraft-faie-fema-flood-map.json';document.body.append(a);a.click();a.remove();URL.revokeObjectURL(url);
+});
 function renderHistoricalClimate(data){
   const metrics=data.metrics||{};
   const tiles=[
