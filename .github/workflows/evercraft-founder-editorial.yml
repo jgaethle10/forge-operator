@@ -1,0 +1,35 @@
+name: Evercraft founder personal editorial authority
+on:
+  pull_request:
+    paths:
+      - 'systemia/creator/founder-editorial-preflight.*'
+      - 'docs/publishing/**'
+      - 'docs/creator/FOUNDING_DISTRIBUTION_RECOVERY_20261115.md'
+      - 'distribution/boardroom-public-launch-kit.md'
+      - 'distribution/marketing/boardroom-executive-chamber-20261029.md'
+      - 'distribution/marketing/evercraft-research-launch-20261029.md'
+      - '.github/workflows/evercraft-founder-editorial.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/creator/founder-editorial-preflight.*'
+      - 'docs/publishing/**'
+      - 'docs/creator/FOUNDING_DISTRIBUTION_RECOVERY_20261115.md'
+      - 'distribution/boardroom-public-launch-kit.md'
+      - 'distribution/marketing/boardroom-executive-chamber-20261029.md'
+      - 'distribution/marketing/evercraft-research-launch-20261029.md'
+      - '.github/workflows/evercraft-founder-editorial.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  actual-founder-standard:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check canonical publishing standards and founder-specific examples
+        run: node --test systemia/creator/founder-editorial-preflight.test.mjs tests/boardroom-social-campaign.test.mjs
