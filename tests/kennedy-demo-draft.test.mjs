@@ -13,9 +13,15 @@ function fixture(){
  const fields=new Map(Object.entries({
   siteName:'DEMONSTRATION RETAIL SITE',address:'Fictional property · location not assigned',
   rev:'CONCEPT 01 · EVERCRAFT',sourceText:'No real-world imagery supplied'
- }).map(([key,value])=>[key,{value}]));
- for(const key of ['draftSave','draftLoad','messages']){
-  fields.set(key,{value:'',textContent:'',addEventListener(){}});
+ }).map(([key,value])=>[key,{value,addEventListener(){}}]));
+ for(const key of ['draftSave','draftLoad','messages','sourceReadiness']){
+  fields.set(key,{value:'',textContent:'',classList:{add(){},toggle(){}},addEventListener(){}});
+ }
+ for(const slot of ['site','context']){
+  for(const field of ['Provider','Reference','Captured','Rights']){
+   const key=slot+field;
+   fields.set(key,{value:field==='Rights'?'unknown':'',addEventListener(){}});
+  }
  }
  const state={siteImage:'',contextImage:'',siteSource:'',contextSource:'',
               siteHash:'',contextHash:'',marks:[{type:'charger',x:333,y:355,angle:0}],
@@ -24,7 +30,7 @@ function fixture(){
  let drawings=0;
  const $=id=>{if(!fields.has(id))throw Error('UNEXPECTED_DOM_ID '+id);return fields.get(id)};
  const sandbox={state,window,$,draw:()=>{drawings++},dl:()=>{},
-                calibrateFromPoints:()=>null,Blob,FileReader:class {}};
+                calibrateFromPoints:()=>null,Blob,FileReader:class {},Date};
  vm.runInNewContext(draftSource,sandbox,{timeout:300});
  return {api:window.__evercraftDraft,state,fields,$,getDrawings:()=>drawings};
 }
