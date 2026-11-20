@@ -27,6 +27,27 @@ def now():
     return datetime.now(timezone.utc).isoformat()
 
 
+# AAAR Foundry blueprints are data-only, not airworthiness or hardware permissions.
+AIRFRAME_RANGES={'massKg':(.4,30000),'spanM':(.6,60),'chordM':(.15,9),'sweepDeg':(0,60),
+ 'bodyLengthM':(.5,40),'bodyWidthM':(.15,8),'tailAreaM2':(0,30),'cgFraction':(.05,.85),
+ 'thrustN':(0,160000),'cd0':(.012,.25),'clMax':(.65,2.5),'rotors':(2,12),
+ 'rotorRadiusM':(.09,3.5),'totalPowerW':(100,1500000)}
+
+def validate_airframe(airframe):
+    if not isinstance(airframe,dict) or airframe.get('schema')!='evercraft.aaar.airframe-design.v1':
+        raise ValueError('Custom flight requires an AAAR airframe blueprint')
+    if airframe.get('type') not in ('wing','rotor') or not isinstance(airframe.get('name'),str) or not 1<=len(airframe['name'].strip())<=64:
+        raise ValueError('Invalid airframe identity')
+    if set(airframe)!=set(AIRFRAME_RANGES)|{'schema','type','name'}:
+        raise ValueError('Unexpected airframe fields')
+    for k,(lo,hi) in AIRFRAME_RANGES.items():
+        v=airframe.get(k)
+        if isinstance(v,bool) or not isinstance(v,(int,float)) or not math.isfinite(v) or not lo<=v<=hi:
+            raise ValueError('Invalid airframe design field: '+k)
+        if k=='rotors' and int(v)!=v:
+            raise ValueError('Rotor count must be integral')
+    return airframe
+
 def validate_state(value):
     if not isinstance(value, dict):
         raise ValueError('Registry must be an object')
@@ -70,9 +91,13 @@ def validate_state(value):
         elif e.get('schema')=='evercraft.aaar.worlds-flight.v1':
             if e.get('model_state')!='GAME_SIMULATION_ONLY' or e.get('evidence_state')!='UNVALIDATED_GAMEPLAY' or e.get('canonical_sync')!='local_preview_only':
                 raise ValueError('Worlds flights cannot be promoted to validated engineering evidence')
-            if e.get('world')!='anniston-cedar-basin-synthetic-v1' or e.get('aircraft') not in ('trainer','jet','glider'):
+            if e.get('world')!='anniston-cedar-basin-synthetic-v1' or e.get('aircraft') not in ('trainer','jet','glider','custom'):
                 raise ValueError('Unsupported flight-world reference')
-            for field,maximum in [('flight_time_seconds',14400),('distance_m',3000000),('max_altitude_m',100000),('max_speed_mps',250),('checkpoints',3)]:
+            if e.get('aircraft')=='custom':
+                validate_airframe(e.get('design'))
+            elif e.get('design') is not None:
+                raise ValueError('Built-in aircraft cannot attach custom blueprint')
+            for field,maximum in [('flight_time_seconds',14400),('distance_m',3000000),('max_altitude_m',100000),('max_speed_mps',400),('checkpoints',3)]:
                 metric=e.get(field)
                 if isinstance(metric,bool) or not isinstance(metric,(int,float)) or not math.isfinite(metric) or not 0<=metric<=maximum:
                     raise ValueError('Invalid gameplay metric: '+field)
