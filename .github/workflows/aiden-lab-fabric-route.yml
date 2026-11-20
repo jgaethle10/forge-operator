@@ -1,0 +1,35 @@
+name: Aiden's Lab owned Fabric route tests
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/mcp/aiden-lab-public-route.mjs'
+      - 'systemia/mcp/fabric-local-runtime.mjs'
+      - 'tests/aiden-lab-fabric-route.test.mjs'
+      - '.github/workflows/aiden-lab-fabric-route.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/mcp/aiden-lab-public-route.mjs'
+      - 'systemia/mcp/fabric-local-runtime.mjs'
+      - 'tests/aiden-lab-fabric-route.test.mjs'
+      - '.github/workflows/aiden-lab-fabric-route.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  serve-safe-science:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify syntax and live local Fabric routing
+        run: |
+          node --check systemia/mcp/aiden-lab-public-route.mjs
+          node --check systemia/mcp/fabric-local-runtime.mjs
+          node --test tests/aiden-lab-fabric-route.test.mjs

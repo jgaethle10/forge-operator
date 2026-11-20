@@ -25,18 +25,19 @@ test('rejects arbitrary, private or third-party website origins', () => {
 test('accepts exact sourced assets but rejects rewritten homepages and stale files', () => {
   const asset = ASSETS[0];
   const body = source(asset.path);
-  const observed = {status:200,finalUrl:DEFAULT_ORIGIN+'/aiden-lab/index.html',contentType:'text/html; charset=utf-8',body};
+  const observed = {status:200,finalUrl:DEFAULT_ORIGIN+'/aiden-lab/index.html',contentType:'text/html; charset=utf-8',programMarker:'aidens-lab-v1',body};
   assert.equal(assessAsset(observed,asset,body,DEFAULT_ORIGIN).state,'EXACT_SOURCE_VERIFIED');
   assert.ok(assessAsset({...observed,body:'<h1>Evercraft homepage</h1>'},asset,body,DEFAULT_ORIGIN).findings.includes('SOURCE_LIVE_SHA256_MISMATCH'));
   assert.ok(assessAsset({...observed,finalUrl:'https://wrong.example/aiden-lab/index.html'},asset,body,DEFAULT_ORIGIN).findings.includes('WRONG_OR_REDIRECTED_ORIGIN'));
   assert.ok(assessAsset({...observed,contentType:'application/json'},asset,body,DEFAULT_ORIGIN).findings.includes('UNEXPECTED_CONTENT_TYPE'));
   assert.ok(assessAsset({...observed,status:404},asset,body,DEFAULT_ORIGIN).findings.includes('HTTP_NOT_200'));
+  assert.ok(assessAsset({...observed,programMarker:null},asset,body,DEFAULT_ORIGIN).findings.includes('OWNED_FABRIC_ROUTE_IDENTITY_MISSING'));
 });
 
 test('five source-verified assets give a bounded proof, not a medical outcome', async () => {
   const mock = async (url) => {
     const path = url.split('/').at(-1);
-    return {status:200,url,headers:{get:()=>path.endsWith('.html')?'text/html':path.endsWith('.css')?'text/css':path.endsWith('.svg')?'image/svg+xml':'text/javascript'},text:async()=>source(path)};
+    return {status:200,url,headers:{get:(name)=>name==='x-evercraft-static-program'?'aidens-lab-v1':path.endsWith('.html')?'text/html':path.endsWith('.css')?'text/css':path.endsWith('.svg')?'image/svg+xml':'text/javascript'},text:async()=>source(path)};
   };
   const result = await runPublicCanary({fetcher:mock,now:new Date('2026-11-20T00:00:00Z')});
   assert.equal(result.public_https_verified,true);
@@ -49,7 +50,7 @@ test('five source-verified assets give a bounded proof, not a medical outcome', 
 
 test('partial or stale publication fails closed', async () => {
   const mock = async (url) => ({
-    status:200,url,headers:{get:()=>url.endsWith('.html')?'text/html':'text/javascript'},
+    status:200,url,headers:{get:(name)=>name==='x-evercraft-static-program'?'aidens-lab-v1':url.endsWith('.html')?'text/html':'text/javascript'},
     text:async()=>url.endsWith('catalog.mjs')?'stale code':source(url.split('/').at(-1))
   });
   const result = await runPublicCanary({fetcher:mock});
