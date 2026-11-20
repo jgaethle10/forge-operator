@@ -129,3 +129,13 @@ AAAR now includes a design-to-flight loop inside its existing `Fly in Worlds` ro
 ### Further engineering
 
 Part-level craft graph, multi-wing/VTOL/airship/rocket model plugins, calibrated coefficients, verified flight envelopes, richer Worlds terrain and authoritative simulation integration remain open. These should be added as separate evidence-gated modules, not represented as already supported. Hosted paths and cross-device sync still require approved deployment receipts.
+
+
+## AAAR v0.7 mobile flight-launch repair
+
+- The AAAR overview hero and mobile Worlds section now link directly to `./worlds-flight/index.html`. Mobile no longer runs a large, lazy-loaded nested iframe.
+- The self-contained cockpit is versioned in `systemia/anniston-aaar/site/worlds-flight/index.html` and mirrored in `public/worlds/flight/index.html`. It uses Canvas2D by default on touch/narrow browsers, with WebGL2 optional on desktop. Failed GL initialization cannot prevent a safe software fallback.
+- iPhone safe-area CSS keeps steering/throttle buttons above the action toolbar. Pointer-capture exceptions are handled. Foundry saves fall back to tab memory if the HTML viewer refuses localStorage, with JSON export available.
+- On 2026-11-19, local Chromium mobile-emulation smoke tests covered 390×844, 375×667, 844×390, 1440×900, start, touch throttle, saved in-tab custom craft, flight export action and zero JavaScript errors. Available-storage simulation also confirmed custom flight receipts. The Node engine suites passed 24/24 checks.
+- **Not proven:** in-app iOS Quick Look / ChatGPT HTML preview JavaScript execution, native Safari GPU behavior, publicly deployed owned HTTPS route, and persistent Systemia sync. The test harness blocks both file:// and 127.0.0.1 navigation, so browser tests used `page.set_content`; do not claim a device-tested or public-working link from this alone.
+- **Next gate:** deploy exact pinned cockpit through Evercraft-owned Worlds edge to an HTTPS route, check GET plus executable JS on a physical iPhone Safari session, verify touch/foundry/storage behavior and collect a deployment receipt. Do not use Base44, third-party app runtimes or unapproved flight controls.
