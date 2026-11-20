@@ -157,3 +157,61 @@ test('pulse ripples into the water and responds through staggered filaments',()=
   assert.ok(form.pulse>=0&&form.pulse<=1);
  }
 });
+
+test('Presence pulse actually reshapes local river geometry and leaves far waters alone',()=>{
+ const begin=code.indexOf('function presenceCurrentField(trip){');
+ const end=code.indexOf('function strokeSamples(points,offset){',begin);
+ assert.ok(begin>=0&&end>begin,'pure water geometry functions present');
+ const renderers=new vm.Script(code.slice(begin,end)+';({presenceCurrentField,deflectCurrent,shapeRiverChannels})')
+   .runInNewContext({
+    Math,clock:11,width:390,
+    locate:()=>({x:200,y:350}),clamp:(v,a,b)=>Math.max(a,Math.min(b,v)),
+    presencePulse:()=>({energy:.86}),
+    scene:{edges:[]}
+   });
+ const field=renderers.presenceCurrentField({from:'discovery',to:'hudson',t:.82});
+ assert.ok(field.radius>=67&&field.radius<=90);
+ assert.ok(field.strength>8&&field.strength<25);
+ const near=renderers.deflectCurrent(235,350,field);
+ assert.ok(Math.hypot(near.x-235,near.y-350)>4,'local water bends visibly on an iPhone');
+ assert.ok(Math.hypot(near.x-235,near.y-350)<24,'no violent jump');
+ const far=renderers.deflectCurrent(750,600,field);
+ assert.equal(far.x,750);assert.equal(far.y,600);
+ for(let dx=-200;dx<=200;dx+=17){
+  for(let dy=-200;dy<=200;dy+=19){
+   const p=renderers.deflectCurrent(200+dx,350+dy,field);
+   assert.ok(Number.isFinite(p.x)&&Number.isFinite(p.y),'field is finite');
+   assert.ok(Math.hypot(p.x-(200+dx),p.y-(350+dy))<=27,'deformation bounded');
+  }
+ }
+ const quiet=renderers.deflectCurrent(235,350,{...field,strength:2.4});
+ assert.ok(Math.hypot(near.x-235,near.y-350)>2*Math.hypot(quiet.x-235,quiet.y-350),
+  'visual response becomes substantially stronger on the pulse');
+});
+test('atmospheric streamlines, channel lanes and light particles share one deformed river',()=>{
+ assert.match(code,/function drawWatershed\(field\)/);
+ assert.match(code,/var curved=deflectCurrent\(x,y,field\)/);
+ assert.match(code,/var e=scene\.edges\[i\],rgb=e\.color,major=i<6,water=e\.warpedPoints\|\|e\.points/);
+ assert.match(code,/strokeSamples\(water,shift\)/);
+ assert.match(code,/var water=e\.warpedPoints\|\|e\.points/);
+ assert.match(code,/var trip=routeAt\(\),field=presenceCurrentField\(trip\)/);
+ assert.match(code,/shapeRiverChannels\(field\)/);
+ assert.match(code,/drawWatershed\(field\);drawRivers\(\);drawParticles\(dt\);drawConfluences\(\)/);
+ const idx=code.indexOf('function deflectCurrent(x,y,field){');
+ const stop=code.indexOf('function strokeSamples(',idx);
+ const context={
+  Math,scene:{edges:[{points:[{x:200,y:350},{x:225,y:360},{x:250,y:370}]}]}
+ };
+ const f=new vm.Script(code.slice(idx,stop)+';({shapeRiverChannels})').runInNewContext(context);
+ const original=context.scene.edges[0].points.map(x=>({x:x.x,y:x.y}));
+ const field={x:220,y:360,radius:80,strength:12,swirl:.21};
+ f.shapeRiverChannels(field);
+ const edge=context.scene.edges[0];
+ assert.equal(edge.warpedPoints.length,3);
+ assert.ok(edge.warpedPoints.some((p,i)=>Math.hypot(p.x-edge.points[i].x,p.y-edge.points[i].y)>1));
+ const ref=edge.warpedPoints;
+ f.shapeRiverChannels({...field,strength:3});
+ assert.equal(edge.warpedPoints,ref,'reuse displacement array rather than allocate per frame');
+ assert.deepEqual(edge.points.map(x=>({x:x.x,y:x.y})),original,'canonical topology remains unchanged for touch and explorer travel');
+ assert.doesNotMatch(code,/fetch\(["']https?:\/\//);
+});
