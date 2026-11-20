@@ -27,10 +27,10 @@ export function createHudsonFeedCache({
   async function read(){
     const work=maybeRefresh();
     if(!snapshot&&work&&waitMs>0){
-      await Promise.race([work,new Promise(resolve=>{
-        const timer=setTimeout(resolve,waitMs);
-        timer.unref?.();
-      })]);
+      let timer;
+      try{
+        await Promise.race([work,new Promise(resolve=>{timer=setTimeout(resolve,waitMs)})]);
+      }finally{clearTimeout(timer)}
     }
     return snapshot;
   }
