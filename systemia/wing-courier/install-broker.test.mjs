@@ -122,7 +122,7 @@ test('owned broker over real loopback denies uncredentialed send and receive',as
   assert.equal(result.unauthenticatedSendDenied,true);
   assert.equal(result.unauthenticatedReceiveDenied,true);
   assert.equal(result.externalTlsObserved,false);
-  assert.equal(result.publicRouteEnabled,false);
+  assert.equal(result.publicRouteActivatedByThisTool,false);
   assert.deepEqual(fs.readdirSync(path.join(f.stateDir,'packages')),[]);
 });
 test('an impostor local HTTP service cannot pass the auth-denial canary',async t=>{
