@@ -1,15 +1,30 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 170" role="img" aria-labelledby="evercraft-title evercraft-description">
-<title id="evercraft-title">Evercraft</title>
-<desc id="evercraft-description">Three ascending titanium bands with a fine champagne gold orbital arc.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title desc">
+<title id="title">Kaidance</title>
+<desc id="desc">Distinctive angular K made from three accelerator rails converging at a luminous collision point, enclosed in a broken orbital aperture.</desc>
 <defs>
- <linearGradient id="metal" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f7f8f8"/><stop offset=".24" stop-color="#aeb5be"/><stop offset=".43" stop-color="#e7e9eb"/><stop offset=".68" stop-color="#8a939e"/><stop offset="1" stop-color="#626974"/></linearGradient>
- <linearGradient id="arc" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f5ddad"/><stop offset=".5" stop-color="#b79a56"/><stop offset="1" stop-color="#dfc184"/></linearGradient>
+  <linearGradient id="deep" x1="0" x2="1" y1="0" y2="1">
+    <stop stop-color="#103247"/><stop offset=".55" stop-color="#06121f"/><stop offset="1" stop-color="#030a13"/>
+  </linearGradient>
+  <linearGradient id="rail" x1=".12" x2=".95" y1=".08" y2=".95">
+    <stop stop-color="#f2ffff"/><stop offset=".47" stop-color="#a8e9f5"/><stop offset="1" stop-color="#53c9e5"/>
+  </linearGradient>
+  <linearGradient id="beam" x1="0" y1="0" x2="1" y2="1">
+    <stop stop-color="#a1fff0"/><stop offset=".53" stop-color="#e9fdff"/><stop offset="1" stop-color="#79d5fb"/>
+  </linearGradient>
+  <radialGradient id="impact"><stop stop-color="#fffdf3"/><stop offset=".28" stop-color="#b8fff1"/><stop offset=".75" stop-color="#4cd6ee" stop-opacity=".6"/><stop offset="1" stop-color="#46c6dd" stop-opacity="0"/></radialGradient>
 </defs>
-<path d="M56 150C13 137 16 96 34 59S96 11 151 13" fill="none" stroke="url(#arc)" stroke-width="1.6" stroke-linecap="round"/>
-<g fill="url(#metal)" stroke="#f4f4f3" stroke-opacity=".36" stroke-width=".6">
- <path d="M70 28H164L143 51H49Z"/>
- <path d="M47 71H141L120 94H26Z"/>
- <path d="M24 114H118L97 137H3Z"/>
+<rect width="128" height="128" rx="30" fill="url(#deep)"/>
+<rect x="1" y="1" width="126" height="126" rx="29" fill="none" stroke="#86deed" stroke-opacity=".24" stroke-width="2"/>
+<g transform="rotate(-18 64 64)" fill="none" stroke-linecap="round">
+  <path d="M39 19A50 50 0 0 1 107 72" stroke="#abf9ef" stroke-opacity=".62" stroke-width="2.8"/>
+  <path d="M92 101A50 50 0 0 1 20 53" stroke="#b5d5f4" stroke-opacity=".4" stroke-width="2.6"/>
+  <path d="M103 84A50 50 0 0 1 96 96" stroke="#f9c794" stroke-opacity=".9" stroke-width="3.2"/>
 </g>
-<path d="M116 144C133 134 143 124 150 113" fill="none" stroke="url(#arc)" stroke-width="1.1" opacity=".75"/>
+<path d="M43 32V96" fill="none" stroke="#020b15" stroke-width="18" stroke-linecap="round"/>
+<path d="M45 32V96" fill="none" stroke="url(#rail)" stroke-width="11" stroke-linecap="round"/>
+<path d="M85 30L56 62L91 97" fill="none" stroke="#061925" stroke-width="18" stroke-linecap="square" stroke-linejoin="bevel"/>
+<path d="M84 30L55 63L90 97" fill="none" stroke="url(#beam)" stroke-width="10" stroke-linecap="square" stroke-linejoin="bevel"/>
+<path d="M87 30L60 60" stroke="#fff" stroke-opacity=".65" stroke-width="2" stroke-linecap="round"/>
+<circle cx="57" cy="63" r="16" fill="url(#impact)"/>
+<circle cx="57" cy="63" r="3.4" fill="#f3ffff"/>
 </svg>
