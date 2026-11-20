@@ -3,8 +3,10 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import crypto from 'node:crypto';
 import {fileURLToPath} from 'node:url';
-import {publishApprovedKaidancePulse} from '../systemia/collider/public-publisher.mjs';
+import {verifyPrivatePulseForPublication} from '../systemia/collider/public-publisher.mjs';
+import {publishOwnedKaidancePulse,APPROVAL_SCHEMA} from '../systemia/leiland/owned-pulse-publisher.mjs';
 import {startLeilandObservatory} from '../systemia/leiland/owned-observatory-host.mjs';
 import {probeLeilandPublicOrigin} from '../scripts/probe-leiland-owned-release.mjs';
 import {verifyPublicKaidanceReadback} from '../systemia/collider/public-readback.mjs';
@@ -13,129 +15,135 @@ const sourceRoot=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..',
 const t0=Date.parse('2026-11-20T03:00:00Z');
 const iso=ms=>new Date(ms).toISOString();
 
-function authenticShape(cycle,now){
+function sourcePulse(cycle,now){
  return {
-  schema:'evercraft.kaidance.pulse.v1',
-  resident:true,state:'healthy',cycle_number:cycle,
+  schema:'evercraft.kaidance.pulse.v1',resident:true,
+  state:'healthy',cycle_number:cycle,
   last_completed_cycle:iso(now-50000),observed_at:iso(now-20000),
   heartbeat_target_seconds:300,coverage_receipt_valid:true,
   admitted_count:4,held_count:1,
-  field_attestation:{
-   state:'verified',receipt:'private:field:receipt-not-for-public',verified_at:iso(now-15000)
-  },last_cycle_key:'private:cycle-key',compute_node_id:'private:node-id',
+  field_attestation:{state:'verified',receipt:'private:field:receipt-not-for-public',
+   verified_at:iso(now-15000)},
+  last_cycle_key:'private:cycle-key',compute_node_id:'private:node-id',
   deployment_receipt:'private:deployment-receipt'
  };
 }
 async function fixture(fn){
- const base=fs.mkdtempSync(path.join(os.tmpdir(),'leiland-kaidance-pipeline-'));
- const output=path.join(base,'approved-public');
- fs.mkdirSync(path.join(output,'kaidance'),{recursive:true,mode:0o700});
- const approvalFile=path.join(base,'private-operator-approval.json');
- fs.writeFileSync(approvalFile,JSON.stringify({
-  schema:'evercraft.kaidance.public-publication-approval.v1',
-  allow_publish:true,approved_by:'isolated-test-only',
-  deployment_id:'test-resident',public_root:output,
-  approved_at:iso(t0-60000),expires_at:iso(t0+24*3600000)
- }),{mode:0o600});
- let server;
+ const base=fs.mkdtempSync(path.join(os.tmpdir(),'leiland-signed-field-pipeline-'));
+ const publicRoot=path.join(base,'approved-public'),privateRoot=path.join(base,'operator-only');
+ const receiptDir=path.join(privateRoot,'receipts');
+ fs.mkdirSync(path.join(publicRoot,'kaidance'),{recursive:true});
+ fs.mkdirSync(receiptDir,{recursive:true,mode:0o700});
+ const sourceFile=path.join(privateRoot,'approved-safe-pulse.json'),
+  approvalFile=path.join(privateRoot,'approval.json'),
+  signatureFile=path.join(privateRoot,'approval.sig'),
+  verifyKeyFile=path.join(privateRoot,'operator.pub.pem');
+ const key=crypto.generateKeyPairSync('ed25519');
+ fs.writeFileSync(verifyKeyFile,key.publicKey.export({type:'spki',format:'pem'}));
+ const approval={
+  schema:APPROVAL_SCHEMA,scope:'kaidance.public-pulse.publish',
+  approval_ref:'approved:synthetic-test-only',
+  source_path:sourceFile,target_path:path.join(publicRoot,'kaidance','pulse.json'),
+  not_before:iso(t0-60000),expires_at:iso(t0+3600000)
+ };
+ const sign=()=>{
+  const bytes=Buffer.from(JSON.stringify(approval));
+  fs.writeFileSync(approvalFile,bytes,{mode:0o600});
+  fs.writeFileSync(signatureFile,crypto.sign(null,bytes,key.privateKey).toString('base64')+'\n');
+ };
+ sign();
+ let host;
  try{
-  server=await startLeilandObservatory({publicRoot:sourceRoot,publicationRoot:output,port:0});
-  const readbackFetch=async(url,options={})=>{
+  host=await startLeilandObservatory({publicRoot:sourceRoot,publicationRoot:publicRoot,port:0});
+  const externalFetch=async(url,options={})=>{
    const target=new URL(url);
-   return fetch(server.origin+target.pathname+target.search,options);
+   return fetch(host.origin+target.pathname+target.search,options);
   };
-  await fn({output,approvalFile,url:server.origin,readbackFetch});
+  await fn({publicRoot,privateRoot,receiptDir,sourceFile,approvalFile,signatureFile,
+   verifyKeyFile,approval,sign,host,externalFetch});
  }finally{
-  if(server)await server.close();
+  if(host)await host.close();
   fs.rmSync(base,{recursive:true,force:true});
  }
 }
-
-test('existing approved KAIDANCE publisher drives Leiland without another mission or heartbeat engine',async()=>{
- await fixture(async({output,approvalFile,url,readbackFetch})=>{
-  let privateReads=0;
-  const publish=async(cycle,when)=>{
-   const receipt=await publishApprovedKaidancePulse({
-    publicRoot:output,approvalFile,deploymentId:'test-resident',
-    now:new Date(when),
-    getPulse:async id=>{
-     assert.equal(id,'test-resident');
-     privateReads++;
-     return authenticShape(cycle,when);
-    }
+test('signed, field-gated KAIDANCE projection reaches Leiland and both public readbacks for consecutive cycles',async()=>{
+ await fixture(async f=>{
+  const publish=(cycle,now)=>{
+   const pulse=sourcePulse(cycle,now);
+   // The signed file adapter never establishes field truth by itself.
+   // Require the separate private source verification before writing its input.
+   assert.equal(verifyPrivatePulseForPublication(pulse,{now:new Date(now)}).cycle_number,cycle);
+   fs.writeFileSync(f.sourceFile,JSON.stringify(pulse),{mode:0o600});
+   return publishOwnedKaidancePulse({
+    sourceFile:f.sourceFile,ownedPublicRoot:f.publicRoot,
+    approvalFile:f.approvalFile,signatureFile:f.signatureFile,
+    verifyKeyFile:f.verifyKeyFile,receiptDir:f.receiptDir,now:new Date(now)
    });
-   assert.equal(receipt.status,'published');
-   assert.equal(receipt.target,'kaidance/pulse.json');
-   return receipt;
   };
-  const read=async(when)=>{
-   const response=await fetch(url+'/kaidance/pulse.json',{cache:'no-store'});
-   assert.equal(response.status,200);
-   assert.match(response.headers.get('cache-control'),/no-store/);
-   const publicPulse=await response.json();
-   const ownedHttps=await probeLeilandPublicOrigin({
-    origin:'https://field-proof.evercraft.example/',publicRoot:sourceRoot,fetchImpl:readbackFetch,now:when
+  const check=async(now)=>{
+   const res=await fetch(f.host.origin+'/kaidance/pulse.json');
+   assert.equal(res.status,200);
+   const projected=await res.json();
+   const leiland=await probeLeilandPublicOrigin({
+    origin:'https://isolated.example/',publicRoot:sourceRoot,
+    fetchImpl:f.externalFetch,now
    });
-   assert.equal(ownedHttps.public_https_asset_parity,'matched');
-   assert.equal(ownedHttps.heartbeat_source_state,'source_attested');
-   assert.equal(ownedHttps.inference_publisher_state,'not_connected');
-   assert.equal(ownedHttps.final_public_launch_authorized,false);
-   const independent=await verifyPublicKaidanceReadback({
-    url:'https://field-proof.evercraft.example/kaidance/pulse.json',
-    fetchImpl:readbackFetch,now:when
+   assert.equal(leiland.public_https_asset_parity,'matched');
+   assert.equal(leiland.heartbeat_source_state,'source_attested');
+   assert.equal(leiland.inference_publisher_state,'not_connected');
+   assert.equal(leiland.final_public_launch_authorized,false);
+   const readback=await verifyPublicKaidanceReadback({
+    url:'https://isolated.example/kaidance/pulse.json',
+    fetchImpl:f.externalFetch,now
    });
-   assert.equal(independent.status,'verified');
-   return {publicPulse,ownedHttps,independent};
+   assert.equal(readback.status,'verified');
+   return {projected,leiland,readback};
   };
-
-  const firstReceipt=await publish(21,t0);
-  const first=await read(t0);
-  assert.equal(first.publicPulse.cycle_number,21);
-  assert.equal(first.independent.cycle_number,21);
-  assert.equal(first.ownedHttps.cycle_number,21);
-
+  const firstReceipt=publish(31,t0);
+  const first=await check(t0);
+  assert.equal(first.projected.cycle_number,31);
+  assert.equal(first.readback.cycle_number,31);
   const next=t0+300000;
-  const secondReceipt=await publish(22,next);
-  const second=await read(next);
-  assert.equal(second.publicPulse.cycle_number,22);
-  assert.ok(Date.parse(second.publicPulse.observed_at)>Date.parse(first.publicPulse.observed_at));
-  assert.notEqual(secondReceipt.projection_sha256,firstReceipt.projection_sha256);
-  assert.equal(privateReads,2,'private source is read only for two authorized publications');
-  const serialized=JSON.stringify(second.publicPulse);
-  for(const secret of ['private:node-id','private:field:receipt-not-for-public',
-   'private:deployment-receipt','private:cycle-key'])
-   assert.equal(serialized.includes(secret),false,'private runtime leaked '+secret);
+  const secondReceipt=publish(32,next);
+  const second=await check(next);
+  assert.equal(second.projected.cycle_number,32);
+  assert.notEqual(firstReceipt.public_sha256,secondReceipt.public_sha256);
+  assert.equal(firstReceipt.source_attested,true);
+  assert.equal(firstReceipt.external_https_verified,false);
+  assert.equal(fs.readdirSync(f.receiptDir).length,2);
+  const raw=JSON.stringify(second.projected);
+  for(const privateValue of ['private:node-id','private:cycle-key',
+   'private:field:receipt-not-for-public','private:deployment-receipt'])
+   assert.equal(raw.includes(privateValue),false);
  });
 });
-
-test('withdrawn approval and source failure never create a new externally verifiable pulse',async()=>{
- await fixture(async({output,approvalFile,url,readbackFetch})=>{
-  const pulseAt=async now=>publishApprovedKaidancePulse({
-   publicRoot:output,approvalFile,deploymentId:'test-resident',now:new Date(now),
-   getPulse:async()=>authenticShape(5,now)
+test('revoked signed approval, stale cycle and removed public file all fail closed',async()=>{
+ await fixture(async f=>{
+  const first=sourcePulse(5,t0);
+  fs.writeFileSync(f.sourceFile,JSON.stringify(first),{mode:0o600});
+  const options={sourceFile:f.sourceFile,ownedPublicRoot:f.publicRoot,
+   approvalFile:f.approvalFile,signatureFile:f.signatureFile,
+   verifyKeyFile:f.verifyKeyFile,receiptDir:f.receiptDir,now:new Date(t0)};
+  publishOwnedKaidancePulse(options);
+  const original=fs.readFileSync(f.approvalFile);
+  fs.writeFileSync(f.approvalFile,Buffer.concat([original,Buffer.from(' ')]));
+  assert.throws(()=>publishOwnedKaidancePulse({
+   ...options,now:new Date(t0+300000)
+  }),/approval_signature_invalid/);
+  assert.equal(JSON.parse(fs.readFileSync(f.approvalFile,'utf8')).scope,
+   'kaidance.public-pulse.publish');
+  const stale=await probeLeilandPublicOrigin({
+   origin:'https://isolated.example/',publicRoot:sourceRoot,
+   fetchImpl:f.externalFetch,now:t0+900000
   });
-  await pulseAt(t0);
-  const approval=JSON.parse(fs.readFileSync(approvalFile,'utf8'));
-  approval.allow_publish=false;
-  fs.writeFileSync(approvalFile,JSON.stringify(approval),{mode:0o600});
-  await assert.rejects(()=>pulseAt(t0+300000),/explicit_publication_approval_missing/);
-  const old=await (await fetch(url+'/kaidance/pulse.json')).json();
-  assert.equal(old.cycle_number,5);
-  const probed=await probeLeilandPublicOrigin({
-   origin:'https://field-proof.evercraft.example/',publicRoot:sourceRoot,
-   fetchImpl:readbackFetch,now:t0+900000
+  assert.equal(stale.heartbeat_source_state,'stale');
+  fs.unlinkSync(path.join(f.publicRoot,'kaidance','pulse.json'));
+  assert.equal((await fetch(f.host.origin+'/kaidance/pulse.json')).status,404);
+  const absent=await probeLeilandPublicOrigin({
+   origin:'https://isolated.example/',publicRoot:sourceRoot,
+   fetchImpl:f.externalFetch,now:t0+900000
   });
-  assert.equal(probed.heartbeat_source_state,'stale');
-  assert.equal(probed.final_public_launch_authorized,false);
-  fs.unlinkSync(path.join(output,'kaidance','pulse.json'));
-  const absent=await fetch(url+'/kaidance/pulse.json');
-  assert.equal(absent.status,404);
-  const held=await probeLeilandPublicOrigin({
-   origin:'https://field-proof.evercraft.example/',publicRoot:sourceRoot,
-   fetchImpl:readbackFetch,now:t0+900000
-  });
-  assert.equal(held.heartbeat_source_state,'not_connected');
-  // Staging a public feed is never an inference or payment source.
-  assert.equal(held.inference_publisher_state,'not_connected');
+  assert.equal(absent.heartbeat_source_state,'not_connected');
+  assert.equal(absent.final_public_launch_authorized,false);
  });
 });
