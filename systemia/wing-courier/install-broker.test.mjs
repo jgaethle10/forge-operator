@@ -47,7 +47,7 @@ test('owner-local broker dry-run verifies two scoped wing keys, no secrets or se
   assert.equal(plan.scope,'harbor<->fallen only');
   assert.equal(plan.separateTokens,4);
   assert.equal(plan.privateStorageChecked,true);
-  assert.equal(plan.publicRouteEnabled,false);
+  assert.equal(plan.publicRouteActivatedByThisTool,false);
   assert.equal(plan.customerAssetsTransferred,false);
   assert.doesNotMatch(JSON.stringify(plan),new RegExp(
     fs.readFileSync(f.wings[0].sendTokenFile,'utf8')));
