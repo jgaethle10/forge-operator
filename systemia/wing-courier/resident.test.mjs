@@ -13,7 +13,7 @@ import {EvercraftPassport} from '../passport/passport.mjs';
 test('receiver custody survives absent Passport and is offered to Systemia when authorized',async()=>{
  const root=fs.mkdtempSync(path.join(os.tmpdir(),'wing-resident-'));fs.chmodSync(root,0o700);
  const dir=n=>{let p=path.join(root,n);fs.mkdirSync(p,{mode:0o700});return p};
- const harbor=dir('harbor'),fallen=dir('fallen'),sources=dir('sources'),out=dir('out'),inbox=dir('inbox'),serverState=dir('server');
+ const harbor=dir('harbor'),fallen=dir('fallen'),sources=dir('sources'),out=dir('out'),inbox=dir('inbox'),serverState=dir('server'),goals=dir('goals');
  generateWingKeys({dir:harbor,wing:'harbor'});generateWingKeys({dir:fallen,wing:'fallen'});
  fs.writeFileSync(path.join(sources,'photo.jpg'),Buffer.from('synthetic test only'),{mode:0o600});
  const bundle=path.join(out,'inbound.wing');
@@ -34,10 +34,11 @@ test('receiver custody survives absent Passport and is offered to Systemia when 
   const passportStateDir=path.join(root,'passport'),intakeStateDir=path.join(root,'intake');
   const cfg={baseUrl:broker.url,receiveTokenFile:receiverToken,wing:'fallen',destinationDir:inbox,
    receiverPrivateKeyFile:path.join(fallen,'decrypt.key'),receiverSigningKeyFile:path.join(fallen,'sign.key'),senderVerifyPublicKeys:{harbor:path.join(harbor,'sign.pub')},
-   passportStateDir,intakeStateDir,adapterActorRef:'adapter:wing-courier'};
+   passportStateDir,intakeStateDir,adapterActorRef:'adapter:wing-courier',goalStateDir:goals};
   const first=await cycle({config:cfg});
   assert.equal(first.received,1,JSON.stringify(first));
   assert.equal(first.intake.pending,1,'without a Passport grant, custody exists but Systemia admission fails closed');
+  assert.deepEqual(fs.readdirSync(goals),[],'without Passport no durable goal may exist');
   assert.equal(fs.existsSync(path.join(inbox,meta.id,'intake-offer.json')),false);
   const passport=new EvercraftPassport({stateDir:passportStateDir});
   passport.issueGrant({grant_id:'grant_wing_agent_recovery',idempotency_key:'wing:grant:agent',
@@ -69,7 +70,17 @@ test('receiver custody survives absent Passport and is offered to Systemia when 
     row=>row.department==='forensiscope'&&row.state==='NOT_APPLICABLE_NO_AUDIO_VIDEO'),true);
   assert.equal(admission.oneCompanyPlan?.productionAuthority,false);
   assert.equal(admission.oneCompanyPlan?.realNodeRuntimeObserved,false);
+  assert.equal(admission.goalCheckpoint?.state,'OWNER_PRIVATE_GOAL_STAGED_AND_HELD');
+  assert.equal(admission.goalCheckpoint?.workStartedByThisCall,false);
+  const goalFile=path.join(goals,meta.id+'.goal.json');
+  assert.equal(fs.statSync(goalFile).mode&0o077,0);
+  const goal=JSON.parse(fs.readFileSync(goalFile,'utf8'));
+  assert.equal(goal.status,'waiting');
+  assert.equal(goal.tasks.every(t=>t.human_gate_unresolved),true);
+  assert.equal(goal.tasks.some(t=>t.work_key==='forensiscope-local-authorized-review'),false);
+  assert.equal(goal.next_work_keys.length,0);
   const third=await cycle({config:cfg});
   assert.equal(third.intake.attempted,0,'admission must be durable and idempotent');
+  assert.equal(fs.readdirSync(goals).length,1,'repeated polling cannot create another goal');
  }finally{await broker.close();fs.rmSync(root,{recursive:true,force:true})}
 });
