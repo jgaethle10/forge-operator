@@ -13,6 +13,7 @@ test('HUDSON redesigned mobile stage keeps source and motion boundaries legible'
  assert.match(html,/THE EVERCRAFT KNOWLEDGE SPINE/);
  assert.match(html,/id="graph-caption"/);
  assert.match(html,/id="next-signal"/);
+ assert.match(html,/id="ambient-field" aria-hidden="true"/);
  assert.match(html,/id="focus"/);
  assert.match(html,/data-kind="waiting"/);
  assert.match(html,/ANIMATED PATHS ARE NOT VERIFIED EVENTS/);
@@ -50,4 +51,13 @@ test('public source UI has no invented publication facts or third-party runtime'
  assert.match(js,/status\("waiting","SOURCE UNAVAILABLE"\)/);
  assert.doesNotMatch(html,/https?:\/\/(?:cdn|base44|tinyfish|digitalocean)\./i);
  assert.doesNotMatch(js,/Math\.random\(\).*event/);
+});
+
+test('decorative aurora can be paused and never reads private sources',()=>{
+ assert.match(js,/requestAnimationFrame\(loop\)/);
+ assert.match(js,/if\(!paused\)frame=requestAnimationFrame\(loop\)/);
+ assert.match(js,/if\(document.hidden\)/);
+ assert.match(js,/canvas\.getContext\("2d"/);
+ assert.match(js,/All movement here is illustration, never source-derived data/);
+ assert.doesNotMatch(js,/canvas\.toDataURL|webgl|AudioContext/);
 });
