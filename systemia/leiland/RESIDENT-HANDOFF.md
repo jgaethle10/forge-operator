@@ -42,9 +42,9 @@ The read-only scripts/leiland-field-preflight.mjs can inspect the resident via l
 
 ## One source, one public pulse publisher
 
-KAIDANCE already has an opt-in operator-authorized publisher in systemia/collider/public-publisher.mjs that obtains the existing private Yard pulse and publishes a small reviewed JSON projection. Leiland must subscribe to that same output, never create a second artificial heartbeat.
+The older unsigned KAIDANCE publisher in systemia/collider/public-publisher.mjs has been **retired and intentionally disabled**. Its private field-readiness function remains useful, but its public writer cannot run. Never re-enable or bypass this hold to make the visualization move.
 
-The separate signed publisher in systemia/leiland/owned-pulse-publisher.mjs has a different approval contract; it must not be run simultaneously against the same output. Systemia/Passport must select and authorize one publication path. No sample signed manifest constitutes a production approval.
+Use only the path-bound Ed25519-signed publisher in systemia/leiland/owned-pulse-publisher.mjs, after separate Systemia/Passport authority and genuine private Yard pulse verification. The signed writer reads a private safe pulse snapshot and produces the same minimal kaidance/pulse.json for both viewers. A private field-collection step must ensure the snapshot matches current real Yard state; the read-only scripts/leiland-field-preflight.mjs checks the signed grant, snapshot and live source agreement before publication. Signing a synthetic snapshot or placing an approval key on the public host is not allowed. No sample manifest is production authorization.
 
 ## HTTPS release requirements
 
