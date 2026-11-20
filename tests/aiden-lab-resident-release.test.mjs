@@ -20,7 +20,7 @@ const server=(overrides={})=>async(url)=>{
 };
 
 test('owned resident release proof matches exactly the five science assets',async()=>{
-  assert.equal(ASSETS.length,5);
+  assert.equal(ASSETS.length,6);
   const receipt=await probeAidenLabResident({sourceRoot:ROOT,fetcher:server(),now:new Date('2026-11-20T00:00:00Z')});
   assert.equal(receipt.verified,true);
   assert.equal(receipt.release_state,'RESIDENT_PARITY_VERIFIED');
