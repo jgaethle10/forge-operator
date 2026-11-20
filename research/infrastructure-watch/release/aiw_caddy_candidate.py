@@ -49,8 +49,12 @@ def build_candidate(original: str, fragment: str) -> str:
         raise ValueError("Unexpected Fabric proxy count")
     if any(fragment.count(marker) != 1 for marker in EXPECTED_MARKERS):
         raise ValueError("Approved AIW fragment does not match narrow static route")
-    if any(term in fragment for term in ("reverse_proxy", "basicauth", "basic_auth", "tls internal",
-                                        "import ", "php_fastcgi", "forward_auth")):
+    active_fragment = "\n".join(
+        line for line in fragment.splitlines()
+        if line.strip() and not line.lstrip().startswith("#")
+    )
+    if any(term in active_fragment for term in ("reverse_proxy", "basicauth", "basic_auth", "tls internal",
+                                               "import ", "php_fastcgi", "forward_auth")):
         raise ValueError("AIW route must serve static files only")
     if re.search(r'(?m)^\s*(?:https?://|\{\$EVERCRAFT_PUBLIC_HOST\})', fragment):
         raise ValueError("AIW fragment must be site-local, not declare a host")
