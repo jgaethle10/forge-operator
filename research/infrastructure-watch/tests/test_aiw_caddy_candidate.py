@@ -1,6 +1,7 @@
 """Exact non-mutating AIW public-edge route insertion regression."""
 from pathlib import Path
 import importlib.util
+import re
 import unittest
 
 ROOT=Path(__file__).resolve().parents[1]
@@ -61,7 +62,38 @@ class CandidateTests(unittest.TestCase):
         self.assertEqual(target[target.index("  handle {\n    reverse_proxy 127.0.0.1:8787"):],
                          BASE[BASE.index("  handle {\n    reverse_proxy 127.0.0.1:8787"):])
         self.assertIn('worlds.systemiacommandcenters.com {',target)
-        self.assertEqual(target.count("reverse_proxy 127.0.0.1:8787"),1)
+        self.assertEqual(len(re.findall(r'(?m)^\\s*reverse_proxy 127\\.0\\.0\\.1:8787\\s*
+        self.assertEqual(target.count("reverse_proxy 127.0.0.1:4310"),1)
+        self.assertEqual(target.count("reverse_proxy 127.0.0.1:8797"),1)
+        self.assertEqual(target.count("reverse_proxy 127.0.0.1:8788"),1)
+
+    def test_refuse_duplicate_route_and_config_drift(self):
+        for original in (BASE.replace("handle_path /home/*","handle_path /house/*"),
+                         BASE.replace("127.0.0.1:8787","127.0.0.1:8786"),
+                         BASE.replace("{$EVERCRAFT_PUBLIC_HOST}","other.example.com"),
+                         BASE + BASE,
+                         BASE.replace("reverse_proxy 127.0.0.1:8787",
+                                      "reverse_proxy 127.0.0.1:8787\n    reverse_proxy 127.0.0.1:9999"),
+                         BASE.replace("  handle {\n    reverse_proxy 127.0.0.1:8787",
+                                      "  handle /x/* {\n    reverse_proxy 127.0.0.1:8787"),
+                         BASE.replace("  handle {\n    reverse_proxy 127.0.0.1:8787",
+                                      "  handle_path /infrastructure-watch/* {\n    reverse_proxy 127.0.0.1:8787")):
+            with self.subTest(original=original[:60]):
+                with self.assertRaises(ValueError):
+                    caddy.build_candidate(original,FRAGMENT)
+
+    def test_reject_backend_hijack_in_release_fragment(self):
+        with self.assertRaises(ValueError):
+            caddy.build_candidate(BASE,FRAGMENT+"reverse_proxy 127.0.0.1:8787\n")
+        with self.assertRaises(ValueError):
+            caddy.build_candidate(BASE,FRAGMENT.replace("handle_path /infrastructure-watch/*",
+                                                       "handle_path /home/*"))
+        with self.assertRaises(ValueError):
+            caddy.build_candidate(BASE,FRAGMENT.replace("file_server","respond 200"))
+
+if __name__ == "__main__":
+    unittest.main()
+,target)),1)
         self.assertEqual(target.count("reverse_proxy 127.0.0.1:4310"),1)
         self.assertEqual(target.count("reverse_proxy 127.0.0.1:8797"),1)
         self.assertEqual(target.count("reverse_proxy 127.0.0.1:8788"),1)
