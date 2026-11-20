@@ -45,6 +45,30 @@ canvas:active{cursor:grabbing}
 @media(max-width:900px){.deck{grid-template-columns:1fr}.fact{min-height:0}.destinations{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:520px){main{padding-top:28px}.destinations{grid-template-columns:repeat(2,minmax(0,1fr))}.place{padding:12px}.method{grid-template-columns:1fr}.globe-top,.globe-foot{padding:12px}.fact{padding:22px}canvas{height:350px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+.expedition-hall{margin-top:26px;padding:clamp(18px,3vw,29px);border:1px solid #517a87;border-radius:23px;background:radial-gradient(ellipse at 90% -20%,#2457637a,transparent 60%),#0a2333}
+.expedition-hall h2{font:500 clamp(27px,4vw,40px)/1.06 Georgia,serif;letter-spacing:-.035em;margin:6px 0}
+.expedition-hall .museum-intro{color:#c2d8e3;max-width:700px;font-size:14px;margin:0 0 17px}
+.trail-tabs{display:flex;gap:9px;flex-wrap:wrap;margin:14px 0}
+.trail-tabs button{min-height:44px;padding:10px 15px;border:1px solid #4b7c87;border-radius:999px;background:#123a48;color:#e4f2f7;font-weight:800;font-size:13px}
+.trail-tabs button[aria-pressed=true]{border-color:#bbefd4;background:#b9f0d6;color:#0c2c35}
+.trail-panel{background:#081c2b;border:1px solid #426a79;border-radius:18px;padding:clamp(18px,3vw,26px);display:grid;gap:10px}
+.trail-step{font-size:11px;font-weight:900;color:#abf0d2;letter-spacing:.13em}
+.trail-panel h3{font:500 27px/1.14 Georgia,serif;margin:0}
+.trail-panel p{color:#c8dfe5;font-size:14px;margin:0;line-height:1.6}
+.trail-answers{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-top:7px}
+.trail-answers button{min-height:64px;background:#123648;color:#f3faff;border:1px solid #537785;border-radius:12px;text-align:left;padding:11px 13px;font:700 13px/1.5 system-ui}
+.trail-answers button:hover:not(:disabled),.trail-answers button:focus-visible{background:#1b5260;border-color:#a9e9d5}
+.trail-answers button:disabled{opacity:.7}
+.trail-actions{display:flex;align-items:center;flex-wrap:wrap;gap:11px}
+.trail-actions button{border:0;background:#bcf7dc;color:#0b3032;border-radius:10px;padding:11px 17px;min-height:44px;font-weight:900}
+.trail-actions a{color:#c7f3de;font-weight:800;font-size:13px}
+.trail-feedback{font-size:14px;color:#e3e7ba;min-height:20px}
+.museum-passport{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:17px;color:#c5dfe6;font-size:12px}
+.museum-passport label{display:flex;align-items:center;gap:8px;cursor:pointer}
+.museum-passport input{width:18px;height:18px;accent-color:#bcf7dc}
+.museum-passport button{font:700 12px system-ui;padding:9px 11px;background:#143848;color:#dbebf0;border:1px solid #547989;border-radius:10px}
+@media(max-width:520px){.trail-answers{grid-template-columns:1fr}.trail-answers button{min-height:45px}.trail-panel h3{font-size:24px}}
 </style>
 </head>
 <body>
@@ -70,6 +94,31 @@ canvas:active{cursor:grabbing}
 <a class="source" id="source" href="https://earthobservatory.nasa.gov/" target="_blank" rel="noopener noreferrer">Explore NASA Earth Observatory ↗</a>
 </aside>
 </div>
+
+<section class="expedition-hall" aria-labelledby="expeditionHeading">
+<p class="kicker">SCIENCE MUSEUM · INTERACTIVE EXPEDITION HALL</p>
+<h2 id="expeditionHeading">Follow a scientific mystery.</h2>
+<p class="museum-intro">Three guided explorations across the real globe. Visit each place, examine its source evidence, then solve a question to continue. You can still freely spin the Earth.</p>
+<nav class="trail-tabs" aria-label="Choose an expedition">
+ <button type="button" data-trail="water" aria-pressed="true">💧 The Water Planet</button>
+ <button type="button" data-trail="tectonics" aria-pressed="false">🌋 Restless Earth</button>
+ <button type="button" data-trail="extremes" aria-pressed="false">☀️ Life at Extremes</button>
+</nav>
+<div class="trail-panel">
+ <span class="trail-step" id="trailStep">STOP 01 / 03</span>
+ <h3 id="trailName">Your expedition begins.</h3>
+ <p id="trailStory">Pick a trail to follow connections between distant parts of Earth.</p>
+ <p id="trailQuestion">What is your prediction?</p>
+ <div id="trailAnswers" class="trail-answers" role="group" aria-label="Choose your science answer"></div>
+ <p id="trailFeedback" class="trail-feedback" role="status" aria-live="polite"></p>
+ <div class="trail-actions"><button type="button" id="trailNext" hidden>Next stop</button><a href="../physics/">Enter Physics Atlas ↗</a></div>
+</div>
+<div class="museum-passport">
+ <span id="passportStatus">Discoveries stay in this tab unless you choose otherwise.</span>
+ <label><input id="rememberPass" type="checkbox">Remember discoveries on this device</label>
+ <button id="clearPass" type="button">Clear museum passport</button>
+</div>
+</section>
 <div class="choices-head"><h2>Choose your expedition</h2><span>Each destination is a study starting point, not a live sensor.</span></div>
 <div class="destinations" id="places" aria-label="Choose a place to explore"></div>
 <section class="method" aria-label="How to explore the Earth">
@@ -82,6 +131,42 @@ canvas:active{cursor:grabbing}
 <script>
 (()=>{
 'use strict';
+// First-party, opt-in, device-local museum passport; no pupil profiles or network.
+const PASS_KEY='evercraft.aidens-lab.museum-pass.v1';
+const PASS_SCHEMA='evercraft.aidens-lab.museum-pass.v1';
+const validPhysics=new Set(['launch-1','launch-2','launch-3','pendulum-1','pendulum-2','pendulum-3','wave-1','wave-2','wave-3']);
+const validWorld=new Set(['water','tectonics','extremes']);
+let passport={physics:[],world:[]},remember=false;
+try{
+ const saved=JSON.parse(localStorage.getItem(PASS_KEY)||'null');
+ if(saved?.schema===PASS_SCHEMA&&Array.isArray(saved.physics)&&Array.isArray(saved.world)){
+  passport={physics:[...new Set(saved.physics.filter(x=>validPhysics.has(x)))],
+   world:[...new Set(saved.world.filter(x=>validWorld.has(x)))]};remember=true;
+ }
+}catch{/* Browser storage may be blocked; exploration still works. */}
+function writePassport(){
+ if(!remember)return;
+ try{localStorage.setItem(PASS_KEY,JSON.stringify({schema:PASS_SCHEMA,...passport}))}
+ catch{remember=false;$('rememberPass').checked=false;$('passportStatus').textContent='Storage unavailable. Progress works in this tab.'}
+}
+function passportView(){
+ $('passportStatus').textContent=(remember?'Saved on this device only':'This tab only')
+  +' · '+passport.world.length+'/3 Earth expeditions, '+passport.physics.length+'/9 physics discoveries';
+}
+function passportInit(){
+ $('rememberPass').checked=remember;
+ $('rememberPass').addEventListener('change',e=>{
+  remember=e.target.checked;
+  if(remember)writePassport();else try{localStorage.removeItem(PASS_KEY)}catch{}
+  passportView();
+ });
+ $('clearPass').addEventListener('click',()=>{
+  passport={physics:[],world:[]};if(remember)writePassport();
+  trailStepIndex=0;showTrail();passportView();
+ });
+ passportView();
+}
+
 const $=id=>document.getElementById(id),canvas=$('globe'),ctx=canvas.getContext('2d',{alpha:false}),RAD=Math.PI/180;
 const DATA=[
  {id:'yakima',emoji:'💧',name:'Yakima Basin',kind:'WATERSHED SYSTEMS',region:'Washington, USA',lat:46.6,lon:-120.5,
@@ -296,6 +381,80 @@ function render(){
  ctx.strokeStyle='#4ca3d53b';ctx.lineWidth=1.4;ctx.stroke();
  $('position').textContent='Viewing: '+coordinates(centerLat,centerLon);
 }
+// Curated learning pathways: evidence-based explanations, not live scientific measurements.
+const TRAILS={
+ water:{title:'The Water Planet',steps:[
+  {place:'yakima',story:'Start where mountain snowpack, farms and a river basin meet.',question:'What can change the timing of water reaching a valley?',choices:['The color of mountain rocks','When accumulated snow melts','The length of the day on Jupiter'],answer:1,explain:'Snowmelt timing influences downstream streamflow. Exact local conditions still require current measurements.'},
+  {place:'amazon',story:'Now cross to a rainforest where vegetation, air and rivers interact.',question:'What connects a forest to the water cycle?',choices:['Plants move water to the air through evapotranspiration','Trees stop all rainfall','River water never enters the atmosphere'],answer:0,explain:'Water moves through plants, soil, atmosphere, rivers and rain. This illustration is not a live rainfall dataset.'},
+  {place:'reef',story:'Finally reach a shallow ocean ecosystem sensitive to its surroundings.',question:'Which conditions matter to coral ecosystems?',choices:['Only moonlight','Ocean heat and water chemistry','The height of nearby mountains alone'],answer:1,explain:'Water temperature and chemistry help determine coral conditions. Current reef health needs dated local observations.'}
+ ]},
+ tectonics:{title:'Restless Earth',steps:[
+  {place:'everest',story:'Stand at a mountain belt formed by colliding tectonic plates.',question:'What helps build the Himalaya?',choices:['Continental plate convergence','Ocean tides alone','A daily weather forecast'],answer:0,explain:'Convergence shortens and thickens crust. Elevation and uplift rates depend on how and when they are measured.'},
+  {place:'mariana',story:'Cross to a deep-ocean boundary with another kind of convergence.',question:'What forms many deep-ocean trenches?',choices:['Wind carving rock','Subduction of one plate beneath another','Nighttime freezing of sea water'],answer:1,explain:'Subduction creates many trenches. This globe point is illustrative, not a precise depth survey.'},
+  {place:'iceland',story:'Travel to a volcanic island cut by a spreading ridge.',question:'What describes the tectonic setting at Iceland?',choices:['Plates permanently locked together','The core reaching the surface','Extension along a plate boundary with volcanism'],answer:2,explain:'Iceland straddles the Mid-Atlantic Ridge, where spreading and magma shape the island.'}
+ ]},
+ extremes:{title:'Life at Extremes',steps:[
+  {place:'sahara',story:'Begin in a region of strongly limited rainfall.',question:'Which is one reason subtropical deserts can be dry?',choices:['Large-scale atmospheric circulation','No sunlight ever reaches them','They are all under the ocean'],answer:0,explain:'Atmospheric circulation and geography help produce regional aridity, though climates vary over time.'},
+  {place:'yellowstone',story:'Explore the heat beneath a landscape of geysers and hot springs.',question:'What drives Yellowstone’s geyser systems?',choices:['Frozen ocean currents','Underground heat and water under pressure','Earth spinning in the opposite direction'],answer:1,explain:'Geothermal heat, groundwater and underground plumbing shape geysers. This page is not an eruption forecast.'},
+  {place:'reef',story:'End at a vulnerable living ecosystem in warm seas.',question:'What is a major environmental stressor for corals?',choices:['Longer river names','Perfectly clear stars','Extended unusually high ocean temperatures'],answer:2,explain:'Marine heat stress can cause coral bleaching. Actual reef conditions require current verified observations.'}
+ ]}
+};
+let activeTrail='water',trailStepIndex=0,trailAnswered=false;
+function showTrail(){
+ const trail=TRAILS[activeTrail],step=trail.steps[trailStepIndex];
+ if(!step)return;
+ trailAnswered=false;
+ select(step.place);
+ $('trailStep').textContent='STOP '+String(trailStepIndex+1).padStart(2,'0')+' / '+String(trail.steps.length).padStart(2,'0')+
+  (passport.world.includes(activeTrail)?' · REPLAY':'');
+ $('trailName').textContent=trail.title+' · '+DATA.find(x=>x.id===step.place).name;
+ $('trailStory').textContent=step.story+' Inspect the destination information above as you think.';
+ $('trailQuestion').textContent=step.question;
+ $('trailFeedback').textContent='Choose an answer to test your understanding. There is no timer.';
+ $('trailNext').hidden=true;
+ const answers=$('trailAnswers');answers.replaceChildren();
+ step.choices.forEach((option,i)=>{
+  const btn=document.createElement('button');btn.type='button';btn.textContent=option;
+  btn.addEventListener('click',()=>{
+   if(trailAnswered)return;
+   if(i!==step.answer){
+    $('trailFeedback').textContent='Try again. Read the “What the evidence shows” panel for a clue.';
+    return;
+   }
+   trailAnswered=true;
+   $('trailFeedback').textContent='✓ '+step.explain;
+   for(const b of answers.querySelectorAll('button'))b.disabled=true;
+   $('trailNext').hidden=false;
+   $('trailNext').textContent=trailStepIndex===trail.steps.length-1?'Finish expedition':'Continue to the next stop';
+  });
+  answers.append(btn);
+ });
+ for(const tab of document.querySelectorAll('[data-trail]'))
+  tab.setAttribute('aria-pressed',String(tab.dataset.trail===activeTrail));
+ passportView();
+}
+function beginTrail(id){
+ if(!Object.hasOwn(TRAILS,id))return;
+ activeTrail=id;trailStepIndex=0;showTrail();
+}
+function nextTrailStop(){
+ if(!trailAnswered)return;
+ const trail=TRAILS[activeTrail];
+ if(trailStepIndex<trail.steps.length-1){
+  trailStepIndex++;showTrail();return;
+ }
+ if(!passport.world.includes(activeTrail)){
+  passport.world.push(activeTrail);writePassport();
+ }
+ $('trailStep').textContent='EXPEDITION COMPLETE';
+ $('trailName').textContent='Discovery unlocked: '+trail.title;
+ $('trailStory').textContent='You linked three places with a scientific idea. Replay this trail, pick another expedition, or explore freely.';
+ $('trailQuestion').textContent='What would you investigate next?';
+ $('trailFeedback').textContent='✓ All stops completed. The geography remains available for exploration.';
+ $('trailAnswers').replaceChildren();$('trailNext').hidden=true;
+ passportView();
+}
+
 function select(id){
  const entry=DATA.find(x=>x.id===id);if(!entry)return;
  selected=id;centerLon=entry.lon;centerLat=clamp(entry.lat,-65,65);
@@ -351,7 +510,10 @@ for(const entry of DATA){
 }
 $('reset').addEventListener('click',()=>{centerLon=-30;centerLat=15;selected=null;for(const btn of document.querySelectorAll('.place'))btn.setAttribute('aria-pressed','false');render()});
 window.addEventListener('resize',resize,{passive:true});
-resize();select('yakima');
+for(const tab of document.querySelectorAll('[data-trail]'))tab.addEventListener('click',()=>beginTrail(tab.dataset.trail));
+$('trailNext').addEventListener('click',nextTrailStop);
+passportInit();
+resize();beginTrail('water');
 })();
 </script>
 </body>

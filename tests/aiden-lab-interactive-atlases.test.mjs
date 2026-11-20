@@ -102,3 +102,75 @@ test('both previews keep human-readable model boundaries and explicit source lin
     assert.ok(!html.includes('api/private'));
   }
 });
+
+
+test('museum physics challenges are real, achievable variable/model checks rather than click-through badges',()=>{
+ const js=script(source('physics'));
+ const begin=js.indexOf('const CHALLENGES='),end=js.indexOf('let questAdvancePending=',begin);
+ assert.ok(begin>0&&end>begin);
+ const challenges=vm.runInNewContext(js.slice(begin,end)+'\nCHALLENGES;',{Math});
+ assert.deepEqual(Object.keys(challenges).sort(),['launch','pendulum','wave']);
+ const examples={
+  launch:[[45,20,9.8],[45,20,4],[45,32,9.8]],
+  pendulum:[[1.5,10,9.8],[2.5,10,9.8],[2.5,8,3]],
+  wave:[[.5,6,1],[2,4,1],[1,4,2]]
+ };
+ const evaluate=(mode,v)=>{
+  const [a,b,c]=v;
+  if(mode==='launch')return {range:b*b*Math.sin(2*a*Math.PI/180)/c};
+  if(mode==='pendulum')return {period:2*Math.PI*Math.sqrt(a/c)};
+  return {wavelength:b/a};
+ };
+ for(const [mode,lessons] of Object.entries(challenges)){
+  assert.equal(lessons.length,3);
+  assert.equal(new Set(lessons.map(x=>x.id)).size,3);
+  for(let i=0;i<lessons.length;i++){
+   const quest=lessons[i],v=examples[mode][i];
+   assert.ok(quest.title.length>8&&quest.prompt.length>25&&quest.hint.length>15);
+   assert.equal(quest.pass(v,evaluate(mode,v)),true,mode+' '+quest.id+' should be reachable');
+  }
+ }
+ assert.equal(challenges.launch[0].pass([20,20,9.8],evaluate('launch',[20,20,9.8])),false);
+ assert.equal(challenges.pendulum[0].pass([1.5,29,9.8],evaluate('pendulum',[1.5,29,9.8])),false);
+ assert.equal(challenges.wave[1].pass([1,4,1],evaluate('wave',[1,4,1])),false);
+ assert.match(js,/function checkQuest\(\)/);
+ assert.match(js,/q\.pass\(values\(\),currentResult\(\)\)/);
+});
+test('museum Earth expeditions use three real locations and answer-checked evidence per route',()=>{
+ const js=script(source('world'));
+ const start=js.indexOf('const TRAILS='),end=js.indexOf('let activeTrail=',start);
+ assert.ok(start>0&&end>start);
+ const trails=vm.runInNewContext(js.slice(start,end)+'\nTRAILS;');
+ assert.deepEqual(Object.keys(trails).sort(),['extremes','tectonics','water']);
+ const ids=new Set([...js.matchAll(/\{id:'([a-z]+)',emoji:/g)].map(x=>x[1]));
+ assert.equal(ids.size,8);
+ for(const trail of Object.values(trails)){
+  assert.equal(trail.steps.length,3);
+  assert.equal(new Set(trail.steps.map(x=>x.place)).size,3);
+  for(const stop of trail.steps){
+   assert.ok(ids.has(stop.place),'trail point not on the evidence map: '+stop.place);
+   assert.equal(stop.choices.length,3);
+   assert.ok(Number.isInteger(stop.answer)&&stop.answer>=0&&stop.answer<3);
+   assert.ok(stop.story.length>35&&stop.explain.length>40);
+  }
+ }
+ assert.match(js,/if\(i!==step\.answer\)/);
+ assert.match(js,/select\(step\.place\)/);
+ assert.match(js,/if\(!trailAnswered\)return/);
+});
+test('science museum passport is optional and device-local in both worlds',()=>{
+ for(const name of ['physics','world']){
+  const html=source(name),js=script(html);
+  assert.match(html,/id="rememberPass" type="checkbox"|type="checkbox" id="rememberPass"/);
+  assert.match(html,/id="clearPass"/);
+  assert.match(html,/role="status"/);
+  assert.match(html,/href="\.\.\/(physics|world)\/"/);
+  assert.match(js,/const PASS_KEY='evercraft\.aidens-lab\.museum-pass\.v1'/);
+  assert.match(js,/if\(!remember\)return/);
+  assert.match(js,/localStorage\.removeItem\(PASS_KEY\)/);
+  assert.match(js,/localStorage\.setItem\(PASS_KEY/);
+  assert.match(js,/function passportInit\(\)/);
+  assert.match(js,/new Set\(saved\.(physics|world)\.filter/);
+  assert.doesNotMatch(js,/fetch\s*\(|WebSocket|XMLHttpRequest|sendBeacon|navigator\.geolocation/);
+ }
+});

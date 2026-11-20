@@ -2,6 +2,35 @@
 
 Aiden's Lab is Evercraft's **public science exploration front door**. It is not an alternate Systemia authority, clinical-research validation system, or separate source of truth.
 
+## The science museum floor (November 20, 2026)
+
+Aiden's Lab should feel like visiting a science center on a phone or laptop,
+where visitors can play, make predictions, test physical models, examine
+evidence, and move between connected exhibits. This is the first practical
+exhibit-program layer, not a claim that the full immersive facility exists.
+
+- **Physics Atlas:** nine authored museum challenges across three actual
+  controllable science models. Challenges verify current model variables and
+  derived measurements; wrong attempts get a clue rather than a fake reward.
+- **Earth & World Atlas:** three three-stop expeditions: Water Planet,
+  Restless Earth, Life at Extremes. Each places the learner on the published
+  geographic location, provides context and the external source link, then
+  asks an authored explanation question before progressing.
+- **Cross-gallery doors** now link Physics to Earth and Earth to Physics.
+- **Optional museum passport:** session-only unless visitor explicitly chooses
+  device-local persistence. Stores allowlisted completed exhibit identifiers
+  only, without names or remote submissions; both exhibits have Clear
+  controls and storage-unavailable fallback.
+- No child accounts, profiles, AI tutor, live science feeds, or claims of
+  original Deep Learning source parity were added.
+- The comprehensive architecture, visual standards, youth privacy boundaries
+  and next interactive milestones are documented at
+  [science museum exhibit standard](../../docs/education/AIDENS_LAB_SCIENCE_MUSEUM_STANDARD_2026-11-20.md).
+
+This scope still needs real device interaction and learning-depth review, along
+with the existing resident and public SHA source verification, before it is
+promoted as a working public museum experience.
+
 ## The learning campus decision (November 19, 2026)
 
 Aiden's Lab is Evercraft's **shared public home for science, Deep Learning
