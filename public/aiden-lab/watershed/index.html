@@ -434,6 +434,16 @@ $('play').addEventListener('click',()=>{
  playing=true;$('play').textContent='Ⅱ Pause days';last=0;accumulator=0;frame=requestAnimationFrame(renderFrame);refresh();
 });
 $('reset').addEventListener('click',()=>reset());
+$('lowerZone').addEventListener('click',()=>sculptElevation(selectedZone,elevations[selectedZone]-100));
+$('raiseZone').addEventListener('click',()=>sculptElevation(selectedZone,elevations[selectedZone]+100));
+$('restoreMountains').addEventListener('click',restoreMountains);
+$('sculptMode').addEventListener('click',()=>{
+ sculpting=!sculpting;
+ canvas.dataset.sculpt=String(sculpting);
+ $('sculptMode').setAttribute('aria-pressed',String(sculpting));
+ $('sculptMode').textContent='✦ Sculpt terrain: '+(sculpting?'on':'off');
+ updateZone();
+});
 $('captureA').addEventListener('click',()=>{
  stop();trialA={settings:params(),initial:initialCondition,elevations:[...elevations],result:simulateScenario(params(),initialCondition,7,elevations)};
  $('compareB').disabled=false;
@@ -451,11 +461,35 @@ for(let i=0;i<ZONES.length;i++){
  const b=document.createElement('button');b.type='button';b.dataset.zone=String(i);b.textContent=ZONES[i];
  b.setAttribute('aria-pressed','false');b.addEventListener('click',()=>{selectedZone=i;refresh()});$('zoneList').append(b);
 }
-canvas.addEventListener('pointerup',e=>{
- const rect=canvas.getBoundingClientRect();const x=(e.clientX-rect.left)/rect.width;
- if(x<0||x>1)return;
- selectedZone=clamp(Math.round((x-.065)/.22),0,4);refresh();
+function zoneFromPointer(e){
+ const rect=canvas.getBoundingClientRect();
+ const fraction=(e.clientX-rect.left)/rect.width;
+ if(fraction<0||fraction>1)return null;
+ return clamp(Math.round((fraction-.065)/.22),0,4);
+}
+canvas.addEventListener('pointerdown',e=>{
+ const index=zoneFromPointer(e);
+ if(index===null)return;
+ selectedZone=index;
+ if(!sculpting){refresh();return;}
+ e.preventDefault();
+ terrainDrag={id:e.pointerId,startY:e.clientY,startElevation:elevations[index],index};
+ canvas.setPointerCapture(e.pointerId);
+ refresh();
 });
+canvas.addEventListener('pointermove',e=>{
+ if(!terrainDrag||terrainDrag.id!==e.pointerId)return;
+ const distance=e.clientY-terrainDrag.startY;
+ sculptElevation(terrainDrag.index,terrainDrag.startElevation-
+   distance/Math.max(180,canvas.getBoundingClientRect().height)*1050);
+});
+function endTerrainDrag(e){
+ if(!terrainDrag||terrainDrag.id!==e.pointerId)return;
+ terrainDrag=null;
+ if(canvas.hasPointerCapture(e.pointerId))canvas.releasePointerCapture(e.pointerId);
+}
+canvas.addEventListener('pointerup',endTerrainDrag);
+canvas.addEventListener('pointercancel',endTerrainDrag);
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&playing){stop();refresh()}});
 window.addEventListener('resize',resize,{passive:true});
 if(window.matchMedia('(prefers-reduced-motion:reduce)').matches)stop();
