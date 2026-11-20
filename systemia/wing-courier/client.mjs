@@ -19,7 +19,7 @@ export function resolveWingCourierBase(value){
  let u;try{u=new URL(value)}catch{fail('endpoint_url_invalid')}
  if(u.username||u.password)fail('endpoint_credentials_forbidden');
  if(u.search||u.hash)fail('endpoint_query_forbidden');
- const pathname=u.pathname.replace(/\\/+$/,'');
+ const pathname=u.pathname.replace(/\/+$/,'');
  if(u.protocol==='https:'){
   if(u.origin!=='https://fabric.systemiacommandcenters.com'||
     pathname!=='/api/internal/wing-courier')
