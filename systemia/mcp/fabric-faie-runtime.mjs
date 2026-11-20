@@ -7,6 +7,7 @@ import { faieCollectorConfigFromEnv } from '../faie/collectors.mjs';
 import { collectUsdaSoilAtPoint } from '../faie/soil-source.mjs';
 import { buildFaieSiteScan } from '../faie/site-scan.mjs';
 import { collectFemaFloodAtPoint } from '../faie/fema-flood-point.mjs';
+import { collectNfipStateLossHistory } from '../faie/nfip-claims-v3.mjs';
 import { collectYakimaHistoricalClimate, eligibleYakimaClimatePoint } from '../faie/ncei-climate-history.mjs';
 import {
   executeFaieMcpRpc,
@@ -145,6 +146,11 @@ export function createFabricFaieSurface({
   const floodClientLimit=createFixedWindowLimiter({limit:4,windowMs:60_000});
   const floodGlobalLimit=createFixedWindowLimiter({limit:12,windowMs:60_000});
   let floodInFlight=0;
+  const nfipHistoryClientLimit=createFixedWindowLimiter({limit:2,windowMs:300_000});
+  const nfipHistoryGlobalLimit=createFixedWindowLimiter({limit:6,windowMs:300_000});
+  let nfipHistoryInFlight=false;
+  let nfipHistoryCache=null;
+
 
   function health(){
     const runtimeHealth=faieRuntime.health();
@@ -286,6 +292,47 @@ export function createFabricFaieSurface({
         return true;
       }
       sendJson(res,200,response,{'access-control-allow-origin':'*'});
+      return true;
+    }
+
+    if(req.method==='GET'&&pathname==='/api/faie/nfip/wa-history'){
+      // Standalone Washington statewide historical context: never coupled
+      // to any user-provided coordinates, parcel, ZIP code, or insurer.
+      if(parsed.search||req.headers['content-length']){
+        sendJson(res,400,{ok:false,error:'nfip_fixed_public_region_accepts_no_query_or_body'});
+        return true;
+      }
+      const cached=nfipHistoryCache;
+      if(cached&&Date.now()<cached.expires_at){
+        sendJson(res,200,cached.result);
+        return true;
+      }
+      const globalAllowance=nfipHistoryGlobalLimit({headers:{},socket:{remoteAddress:'all-nfip-history-visitors'}});
+      const clientAllowance=nfipHistoryClientLimit(req);
+      if(!globalAllowance.ok||!clientAllowance.ok){
+        sendJson(res,429,{ok:false,error:'nfip_history_rate_limited'},
+          {'retry-after':String(Math.max(globalAllowance.retry_after,clientAllowance.retry_after))});
+        return true;
+      }
+      if(nfipHistoryInFlight){
+        sendJson(res,503,{ok:false,error:'nfip_history_source_busy'});
+        return true;
+      }
+      nfipHistoryInFlight=true;
+      try{
+        const result=await collectNfipStateLossHistory({
+          state:'WA',firstYear:2023,lastYear:2024,
+          pageSize:1000,maxPages:10,fetchImpl
+        });
+        // The receipt includes no row-level data, claim ids, or query point.
+        nfipHistoryCache={expires_at:Date.now()+60*60*1000,result};
+        sendJson(res,200,result);
+      }catch{
+        sendJson(res,502,{
+          ok:false,error:'Official statewide NFIP historical claims could not be completely verified.',
+          request_persisted:false,insurance_eligibility_decision:null
+        });
+      }finally{nfipHistoryInFlight=false;}
       return true;
     }
 
