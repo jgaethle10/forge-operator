@@ -39,3 +39,9 @@ The returned candidate always has false publication, outreach, research dispatch
 ## Current proof statement
 
 **Source code and tests can prove the proposed handoff contract and its fail-closed behavior.** They cannot by themselves demonstrate that the Harbor agent, the TOWI daily loop, institutional outreach, Systemia live execution, Journal or Clip publication has been connected. Each requires its own private/runtime/source-and-destination proof.
+
+## Personal founder creator branch | November 20 source integration
+
+For a **founder-native** Look Closer / Field Notes piece derived from a real verified Systemia department source, use `prepareSystemiaFounderCreatorReview()` from `systemia/newsroom/systemia-harbor-upstream.mjs`. This new source-level branch first performs the exact original producer, receipt and public-safe projection checks, then binds every proposed factual founder-copy claim and source URL to that verified revision and runs the **actual canonical founder editorial preflight** from `systemia/creator/founder-editorial-preflight.mjs`. It refuses an inflated `reported` → `confirmed` claim, an invented source, a stale revision, missing policy/example documentation, or fake personal-profile authorization.
+
+This branch does **not** turn Harbor into the founder or an independently accepted journalist, cannot make an external source URL actually verified merely by receiving an https string, and cannot send to any personal social profile. Its passing output says only `READY_FOR_INDEPENDENT_EDITORIAL_REVIEW`; review, actual source freshness, rights and founder account permission remain separate. No live machine transport/Harbor uptake is inferred from the source merge. GitHub CI exercises the existing upstream tests plus creator editorial tests under `.github/workflows/systemia-harbor-upstream.yml`.

@@ -1,3 +1,4 @@
+import {preflightFounderPersonalPost} from '../creator/founder-editorial-preflight.mjs';
 // Source-only, non-executable projection from Systemia-owned evidence to Harbor.
 // Never grants research, external-contact, publishing or customer-delivery authority.
 // Trusted callbacks must be supplied by the eventual resident Systemia runtime.
@@ -114,4 +115,102 @@ export function prepareSystemiaHarborCandidate(record, checks = {}) {
     outreach_authority: false,
     reverse_research_authority: false
   };
+}
+
+
+/**
+ * Creator-channel branch of the EXISTING Systemia -> Harbor evidence handoff.
+ * This takes only independently verified upstream projections and delegates
+ * founder-style checks to the canonical policy/example loader. It is not a
+ * personal Meta publisher, a human editor, or a source URL fetcher.
+ *
+ * Additional "upstream_claim_id" bindings are required on each proposed
+ * factual creator claim, preventing unreviewed model-generated extra claims
+ * from riding alongside an otherwise source-bound upstream artifact.
+ */
+export function prepareSystemiaFounderCreatorReview({
+  upstreamRecord,creatorDraft,trustedChecks={},repoRoot
+}={}){
+  const hold=(reason,detail=[])=>Object.freeze({
+    schema:'evercraft.systemia.harbor.founder-creator-review.v1',
+    status:'HOLD',reason,blockers:detail,
+    candidate:null,publication_authority:false,personal_account_authority:false,
+    media_rights_granted:false,provider_posted:false,editorial_review_completed:false
+  });
+  const upstream=prepareSystemiaHarborCandidate(upstreamRecord,trustedChecks);
+  if(upstream.action!=='staged_for_harbor_review')return hold('unverified_upstream_evidence',[upstream.reason]);
+  const c=upstream.candidate;
+  const source=creatorDraft?.upstream_source;
+  if(!source||Object.keys(c.source).some(k=>source[k]!==c.source[k])||
+     Object.keys(source).some(k=>!(k in c.source)))
+    return hold('creator_upstream_revision_not_bound');
+  if(!Array.isArray(creatorDraft?.claims)||!creatorDraft.claims.length)
+    return hold('creator_claims_missing');
+  const factualClaims=new Map(c.claims.map(x=>[x.claim_id,x]));
+  const creatorSources=new Map((Array.isArray(creatorDraft.sources)?
+    creatorDraft.sources:[]).map(s=>[s.id,s.url]));
+  const usedClaims=new Set();
+  const truthStates={
+    verified:new Set(['confirmed','attributed','uncertain']),
+    reported:new Set(['attributed','uncertain']),
+    observed:new Set(['attributed','uncertain']),
+    modeled:new Set(['forecast','uncertain']),
+    inferred:new Set(['uncertain']),
+    disputed:new Set(['uncertain'])
+  };
+  for(const item of creatorDraft.claims){
+    const matched=factualClaims.get(item.upstream_claim_id);
+    if(!matched||usedClaims.has(item.upstream_claim_id))
+      return hold('creator_claim_not_in_verified_upstream');
+    usedClaims.add(item.upstream_claim_id);
+    if(!truthStates[matched.evidence_state]?.has(item.truth_state))
+      return hold('creator_claim_truth_state_inflated');
+    const resolved=(Array.isArray(item.source_ids)?item.source_ids:[])
+      .map(x=>creatorSources.get(x));
+    if(!resolved.length||resolved.some(x=>typeof x!=='string')||
+       resolved.some(url=>!matched.source_urls.includes(url))||
+       new Set(resolved).size!==resolved.length)
+      return hold('creator_claim_sources_not_bound_to_upstream');
+    if(typeof item.copy_span!=='string'||item.copy_span.length<15||
+       !creatorDraft.copy?.includes(item.copy_span))
+      return hold('creator_claim_span_not_in_exact_copy');
+  }
+  // Every submitted source has to be used for one of the verified upstream
+  // factual claims. New source claims go through Systemia evidence first.
+  const allowed=new Set(c.claims.flatMap(claim=>claim.source_urls));
+  if(!Array.isArray(creatorDraft.sources)||
+     creatorDraft.sources.some(s=>!allowed.has(s?.url)))
+    return hold('creator_extra_unreviewed_source');
+  let editorial;
+  try{
+    editorial=preflightFounderPersonalPost(creatorDraft,
+      repoRoot?{repoRoot}:{});
+  }catch{
+    return hold('canonical_policy_or_candidate_preflight_unavailable');
+  }
+  if(editorial.status!=='READY_FOR_INDEPENDENT_EDITORIAL_REVIEW')
+    return hold('founder_canonical_editorial_preflight_held',editorial.blockers);
+  return Object.freeze({
+    schema:'evercraft.systemia.harbor.founder-creator-review.v1',
+    status:'READY_FOR_INDEPENDENT_EDITORIAL_REVIEW',
+    reason:'verified_systemia_projection_and_canonical_founder_preflight',
+    blockers:[],
+    candidate:{
+      schema:'evercraft.creator.editorial-review-handoff.v1',
+      upstream_source:{...c.source},
+      story_ref:editorial.story_ref,
+      exact_copy_sha256:editorial.exact_copy_sha256,
+      policy_source_hashes:editorial.canonical_policy_sources,
+      founder_example_receipt:editorial.documented_founder_example,
+      claim_binding_count:usedClaims.size,
+      next_action:'INDEPENDENT_FOUNDER_VOICE_FACT_RIGHTS_AND_PLATFORM_REVIEW',
+      // Exact text is already in the owner-private creator draft; this
+      // cross-department receipt does not duplicate personal prose.
+      contains_personal_copy:false,verified_by_live_systemia:false,
+      self_attested_claims_accepted:false
+    },
+    publication_authority:false,
+    personal_account_authority:false,media_rights_granted:false,
+    provider_posted:false,editorial_review_completed:false
+  });
 }
