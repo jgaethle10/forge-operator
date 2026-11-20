@@ -10,6 +10,24 @@ Leiland is a first-party read-only loopback host for the Living Mind and KAIDANC
 
 The service stays disabled if a required binding is missing. It cannot silently create directories, publish a pulse, allocate hardware, issue TLS certificates, add DNS or open an internet listener.
 
+## Core admission integration (opt-in, no live restart)
+
+The actual `systemia.core-supervisor.v1` workload constructs a restricted child environment in `systemia/compute/runtime-node.mjs`; exporting the LEILAND variables in an unrelated Penguin terminal **cannot** activate the existing resident. The read-only field finding `optional_environment_not_configured` is the intentionally disabled state recorded by that already-running supervisor.
+
+`systemia/leiland/core-admission.mjs` now provides an **explicit** Systemia/Compute bridge that passes ONLY the three Leiland resident path/release bindings into the Core supervisor when a properly admitted caller submits `input.leiland_observatory`: `enabled: true`, `release_sha`, and `publication_root`. The named input is unavailable when not opted in. The source path is derived from the actual checkout; no external or caller-chosen static source is accepted. The release must equal both the admitted immutable release SHA and the local Git HEAD. The publication root must be an existing, owned, non-symlink, not group/world-writable directory **inside the admitted Core workspace** (the `workspace` child of `input.state_root`). No directory is silently created or exposed. Invalid opt-in returns a specific 422 hold instead of enabling the resident or guessing a source.
+
+The existing `systemia/compute/local-organism.mjs` forwards this admission only when the controlling *service manager*, not a random interactive shell, was deliberately configured with the following environment at an authorized deployment start:
+
+```text
+LEILAND_SUPERVISED_ADMISSION=true
+LEILAND_RELEASE_SHA=<independently-pinned-40-character-deployed-Git-HEAD>
+LEILAND_PUBLICATION_ROOT=<existing-owned-0700-public-projection-root-inside-core-workspace>
+```
+
+The source public root is derived internally, and the listener remains loopback-only on the documented default port 8795. Do NOT set `LEILAND_SUPERVISED_ADMISSION` on an already-running node expecting a dynamic update: the Core supervisor receives its immutable environment at admission. The launcher's other workloads, including KAIDANCE, Core and Fabric, are run together; restarting the local organism can disrupt these workloads. There is **no approval here** to restart it, recreate its Yard deployment, replace a systemd unit, issue a new lease, change TLS or publish a pulse. First locate and review the current local organism service manager, signed deployment identity, source checkout, workspace permissions and rollback with the actual operator.
+
+Once a separately authorized maintenance operation has safely re-admitted Core with these exact bindings, check `scripts/leiland-resident-readiness.mjs` again. A successfully bound *disconnected* resident shows `local_loopback_source_matched` while `public_pulse_state` remains `public_projection_absent`. Live KAIDANCE status requires the existing independently signed source/publisher and separate external release gates. If the configured resident holds or fails, do not start another standalone Leiland process.
+
 ## Field configuration on an already-verified owned node
 
 Only after independent node identity, deployment receipt and filesystem permissions have been verified, configure the existing Systemia resident supervisor with:
