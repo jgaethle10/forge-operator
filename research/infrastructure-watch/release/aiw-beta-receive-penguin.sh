@@ -2,6 +2,9 @@
 # Penguin / Node001: receive an official-public-data-only AIW release from
 # GitHub source control, then privately stage. Does not publish or reload Caddy.
 set -euo pipefail
+RELEASE_REF="${1:?Usage: bash aiw-beta-receive-penguin.sh <40-character-verified-release-kit-commit>}"
+[[ "$RELEASE_REF" =~ ^[a-f0-9]{40}$ ]] ||
+  { echo "STOP: release-kit source commit must be immutable SHA"; exit 2; }
 SOURCE_COMMIT="270291e8a8c3b32f10ca3f6dc47142e9e3542238"
 BRANCH="release/aiw-beta-payload-${SOURCE_COMMIT:0:12}"
 PAYLOAD="artifacts/aiw-public-beta/$SOURCE_COMMIT.tar.gz"
@@ -50,9 +53,6 @@ print("COURIER SHA256:",receipt["archive_sha256"])
 PY
 
 echo "=== FETCH HASH-PINNED STAGING AND READ-ONLY EDGE PREFLIGHT SCRIPTS ==="
-RELEASE_REF="\${1:?Usage: bash aiw-beta-receive-penguin.sh <40-character-verified-release-kit-commit>}"
-[[ "$RELEASE_REF" =~ ^[a-f0-9]{40}$ ]] ||
-  { echo "STOP: release-kit source commit must be immutable SHA"; exit 2; }
 git -C "$REPO" fetch --no-tags origin "$RELEASE_REF"
 test "$(git -C "$REPO" rev-parse FETCH_HEAD)" = "$RELEASE_REF"
 git -C "$REPO" show "$RELEASE_REF:research/infrastructure-watch/release/aiw-beta-edge-preflight.sh" > "$STATE/aiw-beta-edge-preflight.sh"
