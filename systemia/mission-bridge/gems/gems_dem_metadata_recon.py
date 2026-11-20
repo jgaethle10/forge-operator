@@ -86,17 +86,42 @@ def source_index(index):
     result = []
     seen = set()
     for source in index['sources']:
+        if not isinstance(source, dict):
+            raise ValueError('dem_index_entry_invalid')
         sid = source.get('id')
         reference = source.get('metadata_reference')
         if (not isinstance(sid, str) or not sid.strip() or sid in seen or
             not isinstance(reference, str) or not reference.strip()):
             raise ValueError('dem_index_provenance_invalid')
         seen.add(sid)
+        # Values in a user-supplied footprint index remain UNVERIFIED claims.
+        # A filename, inferred 1m resolution, or rights link is not proof.
+        optional_text = ('acquisition_date', 'horizontal_crs', 'vertical_datum',
+                         'rights_reference')
+        missing = []
+        values = {}
+        for key in optional_text:
+            value = source.get(key)
+            if value is None or value == '':
+                missing.append(key)
+                values[key] = None
+            elif not isinstance(value, str) or not value.strip():
+                raise ValueError('dem_metadata_field_invalid_' + key)
+            else:
+                values[key] = value.strip()
+        resolution = source.get('nominal_resolution_m')
+        if resolution is None:
+            missing.append('nominal_resolution_m')
+        elif (isinstance(resolution, bool) or not isinstance(resolution, (int, float))
+              or not math.isfinite(resolution) or resolution <= 0):
+            raise ValueError('dem_metadata_resolution_invalid')
         result.append({'id': sid, 'metadata_reference': reference,
                        'bbox_wgs84': bounds(source.get('bbox_wgs84')),
-                       'acquisition_date': source.get('acquisition_date'),
-                       'vertical_datum': source.get('vertical_datum'),
-                       'rights_reference': source.get('rights_reference')})
+                       **values, 'nominal_resolution_m': resolution,
+                       'declared_metadata_missing_fields': missing,
+                       'nominal_one_meter_resolution_declared': resolution == 1,
+                       'source_metadata_independently_verified': False,
+                       'source_use_and_sponsor_sharing_rights_verified': False})
     return result
 
 
@@ -114,6 +139,24 @@ def build(atlas, index=None):
                        'tiles_with_bbox_candidates': sum(t['diagnostic_group'] == group and
                                                     bool(t['metadata_bbox_candidate_source_ids'])
                                                     for t in matched)} for group in GROUPS}
+    candidate_counts = [summary[g]['tiles_with_bbox_candidates'] for g in GROUPS]
+    # Even equal nonzero bbox hit counts are not proven matched raster coverage.
+    bbox_hits_balanced_across_groups = bool(min(candidate_counts) > 0 and
+                                             len(set(candidate_counts)) == 1)
+    group_source_ids = [set(sid for tile in matched if tile['diagnostic_group'] == g
+                            for sid in tile['metadata_bbox_candidate_source_ids'])
+                        for g in GROUPS]
+    source_ids_with_bbox_hit_in_each_group = sorted(set.intersection(*group_source_ids))
+    metadata_gaps = {s['id']: s['declared_metadata_missing_fields'] for s in sources
+                     if s['declared_metadata_missing_fields']}
+    if not sources:
+        next_gate = 'awaiting_metadata_index'
+    elif not bbox_hits_balanced_across_groups:
+        next_gate = 'review_unbalanced_bbox_candidates'
+    elif metadata_gaps:
+        next_gate = 'complete_unverified_metadata_then_manual_review'
+    else:
+        next_gate = 'manual_coverage_rights_and_science_review_required'
     return {'schema': 'evercraft.gems.dem-metadata-recon.v1',
             'research_only': True, 'network_requests': 0, 'raster_bytes_downloaded': 0,
             'official_score_or_ground_truth_available': False,
@@ -121,6 +164,12 @@ def build(atlas, index=None):
             'data_rights_verified': False, 'model_trained': False,
             'candidate_promoted': False, 'submission_made': False,
             'atlas_groups': summary, 'indexed_source_count': len(sources),
+            'bbox_candidates_balanced_across_review_and_controls': bbox_hits_balanced_across_groups,
+            'source_ids_with_bbox_hit_in_each_group': source_ids_with_bbox_hit_in_each_group,
+            'source_metadata_gaps_by_id': metadata_gaps,
+            'next_research_gate': next_gate,
+            'verified_dem_raster_coverage': False,
+            'all_three_groups_matched_on_source_datum_and_vintage': False,
             'sources': sources, 'tiles': matched,
             'interpretation': ('Potential bbox intersection is only a screening hint. '
                  'No DEM coverage, valid pixels, vertical datum, acquisition vintage, '
