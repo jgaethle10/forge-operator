@@ -100,38 +100,76 @@ def mining_indices(labels,train,distances,pilot_indices,min_dist=HARD_MIN_DISTAN
     allowed[np.asarray(pilot_indices,np.int64)]=False
     return np.flatnonzero(allowed)
 
-def select_distance_matched_random_indices(labels,train,distances,pilot_indices,
-                                           eligible_indices,fold):
-    """Unmined negative control: same 3 pilot + 2 fresh distant negatives per positive.
+# Fixed a priori distance boundaries in 100m-grid pixels. These bands
+# control for distance-to-training-fault geography without using test labels.
+DISTANCE_BIN_EDGES=(15,20,30,50,80,130,200,320,500,800)
 
-    Fresh pool is EXACTLY the same training-only, >10px pool that pilot scores
-    would rank for the hard variant. No prediction-derived ranking here.
+def select_distance_matched_random_indices(labels,train,distances,pilot_indices,
+                                           eligible_indices,hard_indices,fold):
+    """Distance-STRATIFIED negative control, not merely the same eligible pool.
+
+    For each fixed distance-to-train-fault bin, select the same number of
+    random fresh training negatives as the hard-mining procedure selected
+    in that bin. Selection never uses pilot probabilities or test labels.
     """
     labels=np.asarray(labels,bool);train=np.asarray(train,bool)
     distances=np.asarray(distances,float)
     pilot_indices=np.asarray(pilot_indices,np.int64)
     eligible_indices=np.asarray(eligible_indices,np.int64)
+    hard_indices=np.asarray(hard_indices,np.int64)
+    if labels.ndim!=1 or train.shape!=labels.shape or distances.shape!=labels.shape:
+        raise ValueError("distance_control_shapes_invalid")
     pos=np.flatnonzero(train&labels)
     p=int(len(pos));needed=HARD_PER_POSITIVE*p
-    if (not p or pilot_indices.shape!=(6*p,) or
-        not np.array_equal(pilot_indices[:p],pos) or
-        eligible_indices.size<needed):
+    if (not p or pilot_indices.shape!=(6*p,)
+        or not np.array_equal(pilot_indices[:p],pos)
+        or eligible_indices.size<needed or hard_indices.shape!=(needed,)):
         raise ValueError("distance_control_training_counts_invalid")
-    if (np.any(~train[eligible_indices]) or np.any(labels[eligible_indices])
+    if (len(np.unique(pilot_indices))!=len(pilot_indices)
+        or len(np.unique(eligible_indices))!=len(eligible_indices)
+        or len(np.unique(hard_indices))!=len(hard_indices)):
+        raise ValueError("distance_control_duplicate_indices")
+    if (np.any(eligible_indices<0) or np.any(eligible_indices>=len(labels))
+        or np.any(hard_indices<0) or np.any(hard_indices>=len(labels))
+        or np.any(~train[eligible_indices]) or np.any(labels[eligible_indices])
+        or np.any(~np.isfinite(distances[eligible_indices]))
         or np.any(distances[eligible_indices]<=HARD_MIN_DISTANCE_PIXELS)
         or np.intersect1d(pilot_indices,eligible_indices).size
-        or len(np.unique(eligible_indices))!=len(eligible_indices)):
+        or not np.all(np.isin(hard_indices,eligible_indices))):
         raise ValueError("distance_control_training_leakage")
+    bin_edges=np.asarray(DISTANCE_BIN_EDGES,dtype=float)
+    pool_bins=np.searchsorted(bin_edges,distances[eligible_indices],side="right")
+    hard_bins=np.searchsorted(bin_edges,distances[hard_indices],side="right")
     rng=np.random.default_rng(SEED+1009+fold)
-    extra=rng.choice(eligible_indices,size=needed,replace=False)
+    selected=[]
+    bin_receipts=[]
+    for bucket in range(len(DISTANCE_BIN_EDGES)+1):
+        quantity=int((hard_bins==bucket).sum())
+        if quantity==0:continue
+        pool=eligible_indices[pool_bins==bucket]
+        if pool.size<quantity:
+            raise ValueError("distance_bin_unavailable")
+        sampled=rng.choice(pool,size=quantity,replace=False)
+        selected.append(sampled)
+        bin_receipts.append({"bin":bucket,"hard_count":quantity,
+                             "random_count":int(sampled.size),
+                             "eligible_count":int(pool.size)})
+    if not selected:raise ValueError("distance_control_empty")
+    extra=np.concatenate(selected)
     final=np.concatenate((pos,pilot_indices[p:p+RANDOM_PER_POSITIVE*p],extra))
     if (np.any(~train[final]) or len(np.unique(final))!=len(final)
         or np.any(labels[final[p:]]) or len(final)!=6*p):
         raise AssertionError("distance_control_contract_violation")
+    actual_bins=np.searchsorted(bin_edges,distances[extra],side="right")
+    if not np.array_equal(np.bincount(actual_bins,minlength=len(bin_edges)+1),
+                          np.bincount(hard_bins,minlength=len(bin_edges)+1)):
+        raise AssertionError("distance_bin_distribution_mismatch")
     return final,{
         "positives":p,"final_pilot_random_negatives":RANDOM_PER_POSITIVE*p,
         "final_fresh_distance_matched_random_negatives":int(len(extra)),
         "minimum_distance_pixels":HARD_MIN_DISTANCE_PIXELS,
+        "distance_bin_edges_pixels":list(DISTANCE_BIN_EDGES),
+        "distance_bin_counts":bin_receipts,
         "fresh_flat_indices_sha256":hashlib.sha256(
             np.asarray(extra,dtype="<i8").tobytes()).hexdigest(),
         "seed":int(SEED+1009+fold)}
@@ -195,8 +233,10 @@ def execute(data,evidence):
         mine_scores=original.predict(pilot,matrix,mine_mask,matrix.shape[1])
         candidate_indices,hard_receipt=select_hard_training_indices(
             labels,train,distances,pilot_indices,mine_scores,mine)
+        hard_count=hard_receipt["final_mined_negatives"]
+        selected_hard_indices=candidate_indices[-hard_count:]
         control_indices,control_receipt=select_distance_matched_random_indices(
-            labels,train,distances,pilot_indices,mine,fold)
+            labels,train,distances,pilot_indices,mine,selected_hard_indices,fold)
         del mine_scores, mine_mask, mine, pilot
         if np.any(~train[candidate_indices]) or np.any(~train[control_indices]):
             raise AssertionError("candidate_training_leakage")
@@ -242,7 +282,7 @@ def execute(data,evidence):
       "southern_region_excluded_from_train_and_scoring":True,
       "baseline_negative_scheme":"5 random eligible negatives per known mapped fault; 0m",
       "experimental_negative_scheme":"3 pilot random + 2 fresh mined training-only hard negatives per known fault, >1000m from train-known faults",
-      "distance_matched_control_scheme":"3 identical pilot random + 2 fresh uniformly random, training-only negatives from EXACT mined eligibility pool (>1000m from train-known faults)",
+      "distance_matched_control_scheme":"3 identical pilot random + 2 fresh training-only negatives sampled randomly from the same fixed distance bins as selected hard negatives, in the same >1000m eligible pool",
       "model_predicted_hard_negative_labels_are_unverified":True,
       "heldout_labels_never_mined":True,
       "threshold":THRESHOLD,"ridge":True,
