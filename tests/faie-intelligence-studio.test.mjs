@@ -167,3 +167,24 @@ test('site intelligence scanner has simple entry, real source boundaries, and do
   assert.match(html,/Coordinates go to both official services/);
   assert.match(html,/No automatic build, farm or investment recommendation/);
 });
+
+test('observed historical station evidence is separately available with distance, coverage and uncertainty', () => {
+  for(const marker of [
+    'id="historicalClimatePanel"',
+    'id="historicalClimateRun"',
+    'id="historicalClimateResult"',
+    'id="historicalClimateDownload"',
+    '/api/faie/climate/history',
+    '2023–2024',
+    'No approved historical station within 40 km',
+    'Station observations, 2023',
+    'expected_days',
+    'threshold_days',
+    'observed_days',
+    'missing_days',
+    'historical_station_context_available',
+    'evercraft-faie-historical-climate.json'
+  ]) assert.ok(html.includes(marker),'historical context UI contract missing: '+marker);
+  assert.match(html,/This is not a 30-year climate normal/);
+  assert.match(html,/data\.request_persisted!==false/);
+});
