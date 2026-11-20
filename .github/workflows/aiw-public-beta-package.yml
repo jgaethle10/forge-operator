@@ -82,6 +82,12 @@ jobs:
           python3 -m unittest discover -s research/infrastructure-watch/tests -p 'test_aiw_caddy_candidate.py' -v
       - name: Verify immutable hover -> static public beta contract
         run: python3 -m unittest discover -s research/infrastructure-watch/tests -p 'test_aiw_public_beta_bundle.py' -v
+      - name: Verify immutable mobile UX release and rollback
+        run: |
+          python3 -m py_compile research/infrastructure-watch/release/aiw_mobile_refresh_penguin.py
+          python3 -m unittest discover -s research/infrastructure-watch/tests -p 'test_aiw_mobile_refresh.py' -v
+          grep -Fq 'CADDY_SERVICE_RESTARTED=false' research/infrastructure-watch/release/aiw_mobile_refresh_penguin.py
+          grep -Fq 'original_release_symlink_restored=true' research/infrastructure-watch/release/aiw_mobile_refresh_penguin.py
       - name: Verify no third-party executable hosting introduced
         run: |
           python3 - <<'PY'
