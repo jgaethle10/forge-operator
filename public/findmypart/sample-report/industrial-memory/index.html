@@ -55,6 +55,13 @@ footer{font-size:13px;color:var(--muted);margin:24px 4px}
 <p><a href="https://www.californiapc.com/Industrial-Flash-Memory/Industrial-Grade-PCMCIA-Tough-Metal-Series-2/" target="_blank" rel="noopener noreferrer">See vendor's EOL statement</a></p>
 </article>
 </section>
+<section class="wide" aria-labelledby="equipment-limit-heading">
+<div class="eyebrow">Cross-equipment compatibility warning</div>
+<h2 id="equipment-limit-heading">256 MB isn't automatically an upgrade.</h2>
+<p>An independent example from Siemens shows why capacity alone is a poor replacement criterion: the <a href="https://cache.industry.siemens.com/dl/files/676/28515676/att_72939/v1/PHC_0306_en.pdf?download=true" target="_blank" rel="noopener noreferrer">official SINUMERIK 810D CCU equipment manual, section 4.7, printed page 4-76</a>, describes Type II flash cards up to <strong>8 MB</strong> and recommends Siemens PC cards.</p>
+<p>The two <strong>256 MB</strong> industrial cards listed above exceed that manual's published maximum for the referenced 810D CCU. They have <strong>not</strong> been confirmed as suitable replacements for that equipment. Other controller revisions may have different requirements and need separate verification.</p>
+<div class="key">Research rule: identify the exact equipment, controller and firmware first. Match the manufacturer's documented restrictions before even suggesting a candidate, and never treat card capacity as proof of fitment.</div>
+</section>
 <section class="wide">
 <div class="eyebrow">Documentary conflict / supplier clarification needed</div><h2>Even the published warranty disagrees.</h2>
 <div class="conflict">
