@@ -53,6 +53,157 @@ html,body{height:100%;height:100dvh;overscroll-behavior:none;-webkit-text-size-a
   .license{display:none}
 }
 </style>
+
+<style id="aaar-touch-cockpit-v08">
+/* AAAR Flight Range 0.8: phone-first input and unobstructed landscape view. */
+.flight-stick,.flight-throttle-label,.flight-throttle-rail,.flight-throttle-value,#mobileHudToggle,#mobileMoreToggle{display:none}
+.flight-shell.touch-cockpit,.flight-shell.touch-cockpit .hud,.flight-shell.touch-cockpit .mobile-panel,
+.flight-shell.touch-cockpit .flight-top,.flight-shell.touch-cockpit .flight-bottom,
+.flight-shell.touch-cockpit .flight-telemetry,.flight-shell.touch-cockpit .start-screen{
+  -webkit-touch-callout:none;-webkit-user-select:none;user-select:none;overscroll-behavior:none
+}
+.flight-shell.touch-cockpit .foundry-overlay input,
+.flight-shell.touch-cockpit .foundry-overlay select,
+.flight-shell.touch-cockpit .foundry-overlay textarea{
+  -webkit-user-select:text;user-select:text;-webkit-touch-callout:default
+}
+.flight-shell.touch-cockpit .hud-side{display:none}
+.flight-shell.touch-cockpit .flight-telemetry{
+  position:absolute;z-index:4;top:calc(59px + env(safe-area-inset-top,0px));left:50%;right:auto;
+  transform:translateX(-50%);width:min(286px,calc(100vw - 24px));
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));padding:5px 7px;
+  border-radius:12px;background:#071d2bcc;box-shadow:0 8px 22px #07172544
+}
+.flight-shell.touch-cockpit .flight-telemetry .telemetry-row{
+  min-width:0;display:flex;flex-direction:column;justify-content:center;align-items:center;
+  gap:3px;padding:4px 8px;border-bottom:0;border-right:1px solid #96d1c530
+}
+.flight-shell.touch-cockpit .flight-telemetry .telemetry-row:last-child{border-right:0}
+.flight-shell.touch-cockpit .flight-telemetry .telemetry-row:nth-child(n+3):not(:last-child){display:none}
+.flight-shell.touch-cockpit .flight-telemetry .telemetry-row strong{font-size:18px}
+.flight-shell.touch-cockpit .flight-telemetry .telemetry-row span{font-size:8px;letter-spacing:.07em}
+.flight-shell.touch-cockpit .flight-telemetry .telemetry-row em{font-size:8px}
+.flight-shell.touch-cockpit[data-hud="full"] .flight-telemetry{
+  top:calc(58px + env(safe-area-inset-top,0px));left:auto;right:8px;transform:none;
+  width:156px;display:block;padding:8px 10px
+}
+.flight-shell.touch-cockpit[data-hud="full"] .flight-telemetry .telemetry-row{
+  display:flex;flex-direction:row;justify-content:space-between;
+  padding:7px 0;border-right:0;border-bottom:1px solid #96d1c530
+}
+.flight-shell.touch-cockpit[data-hud="full"] .flight-telemetry .telemetry-row:last-child{border:0}
+.flight-shell.touch-cockpit[data-hud="full"] .flight-telemetry .telemetry-row strong{font-size:15px}
+.flight-shell.touch-cockpit .mobile-panel{
+  display:flex!important;position:absolute;z-index:6;left:max(12px,env(safe-area-inset-left,0px));
+  right:max(12px,env(safe-area-inset-right,0px));bottom:calc(66px + env(safe-area-inset-bottom,0px))!important;
+  justify-content:space-between;align-items:end;pointer-events:none
+}
+.flight-shell.touch-cockpit .mobile-panel .touch-group{display:none}
+.flight-shell.touch-cockpit .flight-stick{
+  display:block;position:relative;width:138px;height:138px;flex:0 0 138px;
+  border-radius:50%;border:2px solid #bffbe89c;
+  background:radial-gradient(circle at center,#204d5a9e 0 33%,#061d2cca 65%,#133b47cc 100%);
+  box-shadow:0 0 0 8px #07253233,inset 0 0 23px #b2f5d315;
+  pointer-events:auto;touch-action:none;-webkit-tap-highlight-color:transparent;overflow:hidden
+}
+.flight-shell.touch-cockpit .flight-stick::before,
+.flight-shell.touch-cockpit .flight-stick::after{
+  content:"";position:absolute;pointer-events:none;background:#b5f3d53b
+}
+.flight-shell.touch-cockpit .flight-stick::before{height:1px;left:10px;right:10px;top:50%}
+.flight-shell.touch-cockpit .flight-stick::after{width:1px;top:10px;bottom:10px;left:50%}
+.flight-shell.touch-cockpit .flight-stick-knob{
+  position:absolute;left:50%;top:50%;width:48px;height:48px;border:2px solid #e2fff8;border-radius:50%;
+  transform:translate(-50%,-50%) translate(var(--stick-x,0px),var(--stick-y,0px));
+  background:radial-gradient(circle at 38% 30%,#fbd1a7,#c97857 62%,#803f2d);
+  box-shadow:0 7px 20px #030e17a8,0 0 22px #eebc9a55;pointer-events:none
+}
+.flight-shell.touch-cockpit .flight-stick-label{
+  position:absolute;bottom:8px;left:0;right:0;text-align:center;font:800 8px ui-monospace,monospace;
+  letter-spacing:.1em;color:#c3eee6;pointer-events:none
+}
+.flight-shell.touch-cockpit .touch-throttle{
+  display:flex;width:67px;height:143px;gap:3px;align-items:center;justify-content:space-between;
+  flex-direction:column;padding:8px 6px;border:1px solid #baf1dd72;border-radius:15px;
+  background:#082333da;pointer-events:auto
+}
+.flight-shell.touch-cockpit .touch-throttle button{display:none}
+.flight-shell.touch-cockpit .flight-throttle-label,
+.flight-shell.touch-cockpit .flight-throttle-rail,
+.flight-shell.touch-cockpit .flight-throttle-value{display:block}
+.flight-shell.touch-cockpit .flight-throttle-label{font:800 9px ui-monospace,monospace;color:#c4f2e8}
+.flight-shell.touch-cockpit .flight-throttle-value{font:800 11px ui-monospace,monospace;color:#ffbe91}
+.flight-shell.touch-cockpit .flight-throttle-rail{position:relative;width:44px;height:95px;touch-action:none}
+.flight-shell.touch-cockpit #flightThrottleRange{
+  position:absolute;left:50%;top:50%;width:100px;height:42px;margin:0;
+  transform:translate(-50%,-50%) rotate(-90deg);touch-action:none;accent-color:#ffa86b;
+  -webkit-tap-highlight-color:transparent;cursor:ns-resize
+}
+.flight-shell.touch-cockpit .flight-bottom{
+  position:absolute;z-index:7;left:6px;right:6px;width:auto;
+  bottom:calc(5px + env(safe-area-inset-bottom,0px));top:auto;
+  padding:0!important;background:transparent
+}
+.flight-shell.touch-cockpit .action-row{position:relative;width:100%;display:flex;gap:4px;justify-content:space-around;flex-wrap:nowrap}
+.flight-shell.touch-cockpit .action-row button{
+  flex:1;min-width:0;height:46px;padding:6px 2px!important;font-size:0!important;
+  line-height:0;white-space:nowrap;border-radius:10px;touch-action:manipulation;-webkit-tap-highlight-color:transparent
+}
+.flight-shell.touch-cockpit .action-row button::after{
+  font:800 10px/1.15 system-ui,sans-serif;white-space:nowrap
+}
+.flight-shell.touch-cockpit #mobileHudToggle,.flight-shell.touch-cockpit #mobileMoreToggle{display:block}
+.flight-shell.touch-cockpit #mobileHudToggle::after{content:"◴ HUD"}
+.flight-shell.touch-cockpit #mobileMoreToggle::after{content:"☷ More"}
+.flight-shell.touch-cockpit #resetFlight,.flight-shell.touch-cockpit #fullscreenToggle{display:none}
+.flight-shell.touch-cockpit[data-more="open"] #resetFlight,
+.flight-shell.touch-cockpit[data-more="open"] #fullscreenToggle{
+  display:block;position:absolute;z-index:8;bottom:calc(100% + 7px);flex:none;width:90px;
+  background:#062536f5;border-color:#9de4d2
+}
+.flight-shell.touch-cockpit[data-more="open"] #resetFlight{right:97px}
+.flight-shell.touch-cockpit[data-more="open"] #fullscreenToggle{right:2px}
+.flight-shell.touch-cockpit .license{display:none}
+.flight-shell.touch-cockpit .flight-reticle{opacity:.72}
+.flight-shell.touch-cockpit .start-card{max-height:calc(100dvh - 28px);overflow-y:auto;overscroll-behavior:contain}
+.flight-shell.touch-cockpit .flight-orientation-hint{margin:8px 0;font-size:11px;color:#ffd0af}
+@media (orientation:landscape) and (pointer:coarse){
+  .flight-shell.touch-cockpit .flight-top{right:auto;max-width:50%;padding:calc(8px + env(safe-area-inset-top,0px)) 12px}
+  .flight-shell.touch-cockpit .flight-brand small,.flight-shell.touch-cockpit .flight-session{display:none}
+  .flight-shell.touch-cockpit .flight-telemetry{
+    top:calc(6px + env(safe-area-inset-top,0px));width:265px
+  }
+  .flight-shell.touch-cockpit[data-hud="full"] .flight-telemetry{top:calc(55px + env(safe-area-inset-top,0px));right:9px}
+  .flight-shell.touch-cockpit .flight-bottom{
+    top:calc(52px + env(safe-area-inset-top,0px));right:max(8px,env(safe-area-inset-right,0px));
+    bottom:auto;left:auto;width:min(390px,52vw)
+  }
+  .flight-shell.touch-cockpit[data-more="open"] #resetFlight,
+  .flight-shell.touch-cockpit[data-more="open"] #fullscreenToggle{top:calc(100% + 7px);bottom:auto}
+  .flight-shell.touch-cockpit .mobile-panel{
+    bottom:calc(12px + env(safe-area-inset-bottom,0px))!important;
+    left:max(22px,env(safe-area-inset-left,0px));right:max(22px,env(safe-area-inset-right,0px))
+  }
+  .flight-shell.touch-cockpit .start-card{width:min(610px,90%);padding:15px 22px}
+  .flight-shell.touch-cockpit .start-card h2{font-size:clamp(28px,6vw,44px);margin:6px 0}
+  .flight-shell.touch-cockpit .start-card p{font-size:11px;line-height:1.4;margin:5px 0}
+  .flight-shell.touch-cockpit .start-card small{margin-top:7px}
+  .flight-shell.touch-cockpit .start-card .start-foot{margin-top:10px}
+}
+@media (orientation:landscape) and (pointer:coarse) and (max-height:430px){
+  .flight-shell.touch-cockpit .flight-stick{width:108px;height:108px;flex-basis:108px}
+  .flight-shell.touch-cockpit .touch-throttle{height:111px;width:58px;padding:4px}
+  .flight-shell.touch-cockpit .flight-throttle-rail{height:68px}
+  .flight-shell.touch-cockpit #flightThrottleRange{width:72px}
+  .flight-shell.touch-cockpit .flight-stick-knob{width:39px;height:39px}
+  .flight-shell.touch-cockpit .flight-stick-label{font-size:7px;bottom:5px}
+}
+@media (orientation:portrait) and (pointer:coarse) and (max-width:420px){
+  .flight-shell.touch-cockpit .flight-telemetry{top:calc(55px + env(safe-area-inset-top,0px))}
+  .flight-shell.touch-cockpit .flight-bottom{bottom:calc(5px + env(safe-area-inset-bottom,0px))}
+  .flight-shell.touch-cockpit .mobile-panel{bottom:calc(67px + env(safe-area-inset-bottom,0px))!important}
+}
+</style>
 </head><body>
 <div class="flight-shell" id="flightShell">
  <canvas id="flightCanvas" tabindex="0" aria-label="Playable 3D Anniston flight range. Use W/S for pitch, A/D for bank, Shift/Ctrl for throttle, C to switch camera, R reset."></canvas><div class="sky-sun"></div><div class="sky-haze"></div><div class="scanlines"></div>
@@ -62,11 +213,11 @@ html,body{height:100%;height:100dvh;overscroll-behavior:none;-webkit-text-size-a
    <div class="hud-center"><div class="flight-reticle"><span class="nose-cue"></span></div></div>
    <aside class="flight-telemetry glass" aria-label="Flight instruments"><div class="telemetry-row"><span>AIRSPEED</span><div><strong id="speedOut">—</strong> <em>KTS</em></div></div><div class="telemetry-row"><span>ALTITUDE</span><div><strong id="altOut">—</strong> <em>FT</em></div></div><div class="telemetry-row"><span>HEADING</span><div><strong id="headOut">—</strong> <em>°</em></div></div><div class="telemetry-row"><span>PITCH</span><div><strong id="pitchOut">—</strong> <em>°</em></div></div><div class="telemetry-row"><span>BANK</span><div><strong id="bankOut">—</strong> <em>°</em></div></div><div class="telemetry-row"><span>THROTTLE</span><div><strong id="throttleOut">—</strong> <em>%</em></div></div></aside>
    <div class="floating-alert" id="flightAlert" role="status" aria-live="polite"></div>
-   <div class="mobile-panel" aria-label="Touch flight controls"><div class="touch-group"><button type="button" data-touch="pitchUp" aria-label="Pitch up">↑</button><button type="button" data-touch="left" aria-label="Bank left">↶</button><button type="button" data-touch="pitchDown" aria-label="Pitch down">↓</button><button type="button" data-touch="right" aria-label="Bank right">↷</button></div><div class="touch-throttle"><button type="button" data-touch="throttleUp">THR +</button><button type="button" data-touch="throttleDown">THR −</button></div></div>
+   <div class="mobile-panel" aria-label="Touch flight controls"><div class="flight-stick" id="flightStick" role="group" tabindex="0" aria-label="Flight stick: drag up for pitch up, sideways to bank, release to center"><span class="flight-stick-knob" id="flightStickKnob" aria-hidden="true"></span><span class="flight-stick-label">PITCH / BANK</span></div><div class="touch-group"><button type="button" data-touch="pitchUp" aria-label="Pitch up">↑</button><button type="button" data-touch="left" aria-label="Bank left">↶</button><button type="button" data-touch="pitchDown" aria-label="Pitch down">↓</button><button type="button" data-touch="right" aria-label="Bank right">↷</button></div><div class="touch-throttle"><label for="flightThrottleRange" class="flight-throttle-label">THR</label><div class="flight-throttle-rail"><input type="range" id="flightThrottleRange" min="0" max="100" step="1" value="68" aria-label="Engine throttle percent"></div><output class="flight-throttle-value" id="flightThrottleValue" for="flightThrottleRange">68%</output><button type="button" data-touch="throttleUp">THR +</button><button type="button" data-touch="throttleDown">THR −</button></div></div>
    <div class="license">ENTERTAINMENT MODEL / NOT CFD / NOT FLIGHT TRAINING / NO PHYSICAL CONTROL</div>
-   <div class="flight-bottom"><div class="flight-controls"><div class="control-guide"><b>W / S</b> Pitch <b>A / D</b> Bank <b>Q / E</b> Rudder <b>SHIFT / CTRL</b> Throttle <b>C</b> Camera <b>P</b> Pause <b>R</b> Reset</div></div><div class="action-row"><button id="openFoundry" class="foundry-launch" type="button">✦ Design machine</button><button id="cameraToggle" type="button">◉ Chase view</button><button id="pauseToggle" type="button">Ⅱ Pause</button><button id="resetFlight" type="button">↺ Restart</button><button id="saveFlight" class="primary" type="button">Save flight ↗</button><button id="fullscreenToggle" type="button">⤢</button></div></div>
+   <div class="flight-bottom"><div class="flight-controls"><div class="control-guide"><b>W / S</b> Pitch <b>A / D</b> Bank <b>Q / E</b> Rudder <b>SHIFT / CTRL</b> Throttle <b>C</b> Camera <b>P</b> Pause <b>R</b> Reset</div></div><div class="action-row"><button id="openFoundry" class="foundry-launch" type="button">✦ Design machine</button><button id="cameraToggle" type="button">◉ Chase view</button><button id="pauseToggle" type="button">Ⅱ Pause</button><button id="resetFlight" type="button">↺ Restart</button><button id="saveFlight" class="primary" type="button">Save flight ↗</button><button id="fullscreenToggle" type="button">⤢</button><button id="mobileHudToggle" type="button" aria-label="Show all flight instruments" aria-pressed="false">HUD</button><button id="mobileMoreToggle" type="button" aria-label="More flight actions" aria-expanded="false">More</button></div></div>
  </div>
- <div class="start-screen" id="startScreen"><div class="start-card"><span class="overline">EVERCRAFT WORLDS × ANNISTON AAAR / EXPERIENCE 001</span><h2>THE SKY<br/>IS <em>YOURS.</em></h2><p>Take a trainer, glider or fast jet through a fictional mountain valley. Fly with your keyboard or on-screen touch controls. Save a local flight record back to Anniston when you're done.</p><div class="start-foot"><button id="designFromStart" class="foundry-launch" type="button">✦ Design your own machine</button> <button id="beginFlight" type="button">ENTER FLIGHT RANGE ↗</button><button class="secondary" id="skipToControls" type="button">VIEW CONTROLS</button></div><small>A playable procedural 3D sandbox. The physics and terrain are deliberately simplified, not validated engineering models. Full Evercraft Worlds world-state integration is a separate milestone.</small></div></div>
+ <div class="start-screen" id="startScreen"><div class="start-card"><span class="overline">EVERCRAFT WORLDS × ANNISTON AAAR / EXPERIENCE 001</span><h2>THE SKY<br/>IS <em>YOURS.</em></h2><p>Take a trainer, glider or fast jet through a fictional mountain valley. Fly with your keyboard or on-screen touch controls. Save a local flight record back to Anniston when you're done.</p><p class="flight-orientation-hint">On your phone: rotate sideways for the full cockpit. Left thumb steers; right thumb controls throttle. Portrait works too.</p><div class="start-foot"><button id="designFromStart" class="foundry-launch" type="button">✦ Design your own machine</button> <button id="beginFlight" type="button">ENTER FLIGHT RANGE ↗</button><button class="secondary" id="skipToControls" type="button">VIEW CONTROLS</button></div><small>A playable procedural 3D sandbox. The physics and terrain are deliberately simplified, not validated engineering models. Full Evercraft Worlds world-state integration is a separate milestone.</small></div></div>
  <div class="screen-reader" id="flightA11y" aria-live="polite"></div>
 </div>
 <script>/* Anniston Aircraft Foundry v0.6 — screening model, NOT CFD, flight certification or a digital twin.
@@ -275,7 +426,12 @@ const core=window.AAARFlight;
 const THREE_NEEDED='WebGL2 is unavailable in this browser. Open in a WebGL2-capable browser or device.';
 let state=core.start('trainer'),running=false,view='chase',mode='mission',last=0,frames=0,lastHUD=0,lastDraw=0,alertUntil=0;
 const held=new Set(),touch=new Set();
+const stickInput={pitch:0,bank:0}; let stickPointer=null;
+function resetThumbStick(){stickPointer=null;stickInput.pitch=0;stickInput.bank=0;const knob=document.getElementById("flightStickKnob");if(knob){knob.style.setProperty("--stick-x","0px");knob.style.setProperty("--stick-y","0px");}const pad=document.getElementById("flightStick");if(pad)delete pad.dataset.active;}
 const shell=$('flightShell'); let canvas=$('flightCanvas');
+const mobileInput=()=>window.matchMedia?.('(pointer:coarse)').matches || window.innerWidth<=750;
+const syncMobileMode=()=>{shell.classList.toggle('touch-cockpit',!!mobileInput());if(shell.classList.contains('touch-cockpit')&&!shell.dataset.hud)shell.dataset.hud='compact';};syncMobileMode();
+window.addEventListener('resize',syncMobileMode);
 const opts={alpha:true,antialias:false,depth:true,powerPreference:'low-power',preserveDrawingBuffer:false};
 // The phone path deliberately uses Canvas2D, avoiding WebGL driver and iOS preview failures.
 // Desktop WebGL2 remains optional. Flight equations are the same in both renderers.
@@ -461,8 +617,8 @@ function render(){
  const vp=mul(perspective(view==='cockpit'?78*Math.PI/180:70*Math.PI/180,canvas.width/canvas.height,.5,15000),lookAt(eye,focus,up));
  gl.useProgram(program);gl.uniformMatrix4fv(uVP,false,vp);drawMesh(meshes.world,identity());if(view!=='cockpit')drawMesh(meshes[state.craft],planeModel(state));
 }
-function hud(){const round=n=>Math.round(n).toLocaleString('en-US');$('speedOut').textContent=round(state.speed*1.94384);$('altOut').textContent=round(state.y*3.28084);$('headOut').textContent=String(Math.round((state.yaw*180/Math.PI+3600)%360)).padStart(3,'0');$('pitchOut').textContent=(state.pitch*180/Math.PI).toFixed(0);$('bankOut').textContent=(state.bank*180/Math.PI).toFixed(0);$('throttleOut').textContent=round(state.throttle*100);const sec=Math.floor(state.flightTime);$('flightTime').textContent='T+ '+String(Math.floor(sec/60)).padStart(2,'0')+':'+String(sec%60).padStart(2,'0');$('gateProgress').querySelectorAll('i').forEach((el,i)=>el.classList.toggle('done',i<state.checkpoints));const next=core.gates[state.checkpoints];$('nextGate').textContent=next?`NEXT: ${next.title} · ${state.checkpoints} / 3`:'MISSION COMPLETE · 3 / 3';$('flightStatus').textContent=state.condition==='GROUND_CONTACT'?'GROUND CONTACT':state.paused?'PAUSED':state.craft==='custom'?'FOUNDRY FLIGHT / SCREENING':'SIMULATION ACTIVE';$('pauseToggle').textContent=state.paused?'▶ Resume':'Ⅱ Pause';$('cameraToggle').textContent=view==='chase'?'◉ Chase view':'◉ Cockpit view';}
-function controls(){const has=(...a)=>a.some(k=>held.has(k));const t=k=>touch.has(k);return {pitch:(has('w','arrowup')||t('pitchUp')?1:0)-(has('s','arrowdown')||t('pitchDown')?1:0),bank:(has('d','arrowright')||t('right')?1:0)-(has('a','arrowleft')||t('left')?1:0),rudder:(has('e')?1:0)-(has('q')?1:0),throttle:(has('shift')||t('throttleUp')?1:0)-(has('control')||t('throttleDown')?1:0)};}
+function hud(){const round=n=>Math.round(n).toLocaleString('en-US');$('speedOut').textContent=round(state.speed*1.94384);$('altOut').textContent=round(state.y*3.28084);$('headOut').textContent=String(Math.round((state.yaw*180/Math.PI+3600)%360)).padStart(3,'0');$('pitchOut').textContent=(state.pitch*180/Math.PI).toFixed(0);$('bankOut').textContent=(state.bank*180/Math.PI).toFixed(0);$('throttleOut').textContent=round(state.throttle*100);const slider=$('flightThrottleRange');if(slider&&document.activeElement!==slider)slider.value=String(Math.round(state.throttle*100));const lever=$('flightThrottleValue');if(lever)lever.textContent=round(state.throttle*100)+'%';$('pauseToggle').dataset.paused=String(state.paused);const sec=Math.floor(state.flightTime);$('flightTime').textContent='T+ '+String(Math.floor(sec/60)).padStart(2,'0')+':'+String(sec%60).padStart(2,'0');$('gateProgress').querySelectorAll('i').forEach((el,i)=>el.classList.toggle('done',i<state.checkpoints));const next=core.gates[state.checkpoints];$('nextGate').textContent=next?`NEXT: ${next.title} · ${state.checkpoints} / 3`:'MISSION COMPLETE · 3 / 3';$('flightStatus').textContent=state.condition==='GROUND_CONTACT'?'GROUND CONTACT':state.paused?'PAUSED':state.craft==='custom'?'FOUNDRY FLIGHT / SCREENING':'SIMULATION ACTIVE';$('pauseToggle').textContent=state.paused?'▶ Resume':'Ⅱ Pause';$('cameraToggle').textContent=view==='chase'?'◉ Chase view':'◉ Cockpit view';}
+function controls(){const has=(...a)=>a.some(k=>held.has(k));const t=k=>touch.has(k);const limit=v=>Math.max(-1,Math.min(1,v));return {pitch:limit(stickInput.pitch+(has('w','arrowup')||t('pitchUp')?1:0)-(has('s','arrowdown')||t('pitchDown')?1:0)),bank:limit(stickInput.bank+(has('d','arrowright')||t('right')?1:0)-(has('a','arrowleft')||t('left')?1:0)),rudder:(has('e')?1:0)-(has('q')?1:0),throttle:(has('shift')||t('throttleUp')?1:0)-(has('control')||t('throttleDown')?1:0)};}
 function notify(message,seconds=3){$('flightAlert').textContent=message;$('flightAlert').classList.add('active');alertUntil=performance.now()+seconds*1000;$('flightA11y').textContent=message;}
 function frame(timestamp){if(!running)return;const dt=Math.min(.05,(timestamp-last)/1000||.016);last=timestamp;
  const was=state.checkpoints,prior=state.condition;core.step(state,controls(),dt);
@@ -473,22 +629,57 @@ function frame(timestamp){if(!running)return;const dt=Math.min(.05,(timestamp-la
  frames++;requestAnimationFrame(frame);
 }
 function reset(kind=state.craft){const design=state.design;state=core.start(kind,kind==='custom'?design:null);view='chase';hud();notify('FLIGHT RESTARTED · SYNTHETIC RANGE',2);}
-function togglePause(){state.paused=!state.paused;$('pauseToggle').dataset.paused=String(state.paused);hud();notify(state.paused?'SIMULATION PAUSED':'SIMULATION RESUMED',1.2);}
+function togglePause(){resetThumbStick();state.paused=!state.paused;$('pauseToggle').dataset.paused=String(state.paused);hud();notify(state.paused?'SIMULATION PAUSED':'SIMULATION RESUMED',1.2);}
 function saveFlight(){const receipt=core.flightReceipt(state);try{localStorage.setItem('evercraft-aaar-last-flight',JSON.stringify(receipt));}catch{}
  const sent=window.parent!==window;
  if(sent){window.parent.postMessage({type:'AAAR_FLIGHT_RECEIPT',schema:'evercraft.aaar.worlds-flight.message.v1',receipt},'*');notify('FLIGHT RECORD SENT TO ANNISTON · LOCAL ONLY',4);}
  else {const blob=new Blob([JSON.stringify(receipt,null,2)],{type:'application/json'}),a=document.createElement('a');a.download=`anniston-flight-${receipt.id}.json`;a.href=URL.createObjectURL(blob);document.body.append(a);a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500);a.remove();notify('EXPORTED LOCAL SIMULATION RECORD',3);}
 }
 function begin(){if(running)return;running=true;$('startScreen').style.display='none';try{canvas.focus({preventScroll:true});}catch{canvas.focus();}last=performance.now();requestAnimationFrame(frame);notify('FLIGHT RANGE ACTIVE · W/S PITCH · A/D BANK',3);}
+function setupThumbCockpit(){
+ const pad=$('flightStick'),knob=$('flightStickKnob'),slider=$('flightThrottleRange');
+ const update=e=>{
+  const rect=pad.getBoundingClientRect();
+  const radius=Math.max(1,Math.min(rect.width,rect.height)/2-27);
+  let x=(e.clientX-rect.left-rect.width/2)/radius,y=(e.clientY-rect.top-rect.height/2)/radius;
+  const magnitude=Math.hypot(x,y);if(magnitude>1){x/=magnitude;y/=magnitude;}
+  stickInput.bank=Math.abs(x)<.07?0:x;stickInput.pitch=Math.abs(y)<.07?0:-y;
+  knob.style.setProperty('--stick-x',(stickInput.bank*radius).toFixed(1)+'px');
+  knob.style.setProperty('--stick-y',(-stickInput.pitch*radius).toFixed(1)+'px');
+  pad.dataset.active='true';
+ };
+ pad.addEventListener('pointerdown',e=>{if(stickPointer!==null||e.button>0)return;e.preventDefault();stickPointer=e.pointerId;try{pad.setPointerCapture(e.pointerId);}catch{}update(e);});
+ pad.addEventListener('pointermove',e=>{if(stickPointer!==e.pointerId)return;e.preventDefault();update(e);});
+ const release=e=>{if(stickPointer!==e.pointerId)return;resetThumbStick();};
+ pad.addEventListener('pointerup',release);pad.addEventListener('pointercancel',release);
+ pad.addEventListener('lostpointercapture',release);
+ window.addEventListener('pointerup',release);window.addEventListener('pointercancel',release);
+ slider.addEventListener('input',()=>{state.throttle=Math.max(0,Math.min(1,Number(slider.value)/100));$('flightThrottleValue').textContent=Math.round(state.throttle*100)+'%';hud();});
+ $('mobileHudToggle').addEventListener('click',()=>{
+   const full=shell.dataset.hud!=='full';shell.dataset.hud=full?'full':'compact';
+   $('mobileHudToggle').setAttribute('aria-pressed',String(full));
+   $('mobileHudToggle').setAttribute('aria-label',full?'Use compact flight instruments':'Show all flight instruments');
+ });
+ $('mobileMoreToggle').addEventListener('click',()=>{
+   const open=shell.dataset.more!=='open';shell.dataset.more=open?'open':'closed';
+   $('mobileMoreToggle').setAttribute('aria-expanded',String(open));
+ });
+ for(const id of ['resetFlight','fullscreenToggle']){
+  $(id).addEventListener('click',()=>{shell.dataset.more='closed';$('mobileMoreToggle').setAttribute('aria-expanded','false');});
+ }
+ shell.addEventListener('contextmenu',e=>{if(shell.classList.contains('touch-cockpit')&&e.target.closest('.mobile-panel,.hud,.flight-top,.flight-bottom,.start-screen'))e.preventDefault();});
+ shell.addEventListener('selectstart',e=>{if(shell.classList.contains('touch-cockpit')&&e.target.closest('.mobile-panel,.hud,.flight-top,.flight-bottom,.start-screen'))e.preventDefault();});
+}
 function initEvents(){
- window.addEventListener('AAAR_FOUNDRY_OPEN',()=>{if(running)state.paused=true;hud();});
+ setupThumbCockpit();
+ window.addEventListener('AAAR_FOUNDRY_OPEN',()=>{resetThumbStick();if(running)state.paused=true;hud();});
  window.addEventListener('AAAR_LAUNCH_CRAFT',event=>{
    const design=window.AAARFoundry.validate(event.detail);state=core.start('custom',design);
    const select=$('planeType');let opt=select.querySelector('option[value=custom]');if(!opt){opt=document.createElement('option');opt.value='custom';select.appendChild(opt);}opt.textContent=design.name;select.value='custom';
    if(gl&&program)buildCustomMesh(design);view='chase';if(!running)begin();else{state.paused=false;}hud();notify('CUSTOM '+(design.type==='wing'?'WING':'ROTORCRAFT')+' LAUNCHED · ANALYTICAL GAME MODEL',4);
  });
  $('beginFlight').addEventListener('click',begin);
- $('skipToControls').addEventListener('click',()=>{notify('W/S PITCH · A/D BANK · SHIFT/CTRL THROTTLE',5);$('beginFlight').focus();});
+ $('skipToControls').addEventListener('click',()=>{notify(shell.classList.contains('touch-cockpit')?'LEFT STICK PITCH/BANK · RIGHT LEVER THROTTLE · HUD FOR DETAILS':'W/S PITCH · A/D BANK · SHIFT/CTRL THROTTLE',5);$('beginFlight').focus();});
  $('planeType').addEventListener('change',e=>{if(e.target.value==='custom'&&state.design)reset('custom');else if(e.target.value!=='custom')reset(e.target.value);});
  $('cameraToggle').addEventListener('click',()=>{view=view==='chase'?'cockpit':'chase';hud();});
  $('pauseToggle').addEventListener('click',togglePause);$('resetFlight').addEventListener('click',()=>reset());$('saveFlight').addEventListener('click',saveFlight);
@@ -501,7 +692,7 @@ function initEvents(){
 
  }
  document.addEventListener('keydown',e=>{if(document.getElementById('foundryOverlay')?.classList.contains('open'))return;const k=e.key.toLowerCase();if(['w','s','a','d','q','e','shift','control','arrowup','arrowdown','arrowleft','arrowright',' '].includes(k)){if(running&&!e.target.closest('select'))e.preventDefault();held.add(k);}if(e.repeat)return;if(k==='c'){$('cameraToggle').click();}if(k==='r')reset();if(k==='p'||k===' ')togglePause();});
- document.addEventListener('keyup',e=>held.delete(e.key.toLowerCase()));window.addEventListener('blur',()=>{held.clear();touch.clear();if(running&&!state.paused){state.paused=true;hud();}});document.addEventListener('visibilitychange',()=>{if(document.hidden&&running){state.paused=true;}});
+ document.addEventListener('keyup',e=>held.delete(e.key.toLowerCase()));window.addEventListener('blur',()=>{held.clear();touch.clear();resetThumbStick();if(running&&!state.paused){state.paused=true;hud();}});document.addEventListener('visibilitychange',()=>{if(document.hidden){resetThumbStick();}if(document.hidden&&running){state.paused=true;}});
  window.addEventListener('message',event=>{if(event.source!==window.parent||event.source===window)return;if(event.data?.type==='AAAR_WORLD_PAUSE'){state.paused=true;hud();}if(event.data?.type==='AAAR_WORLD_RESUME'){state.paused=false;hud();}if(event.data?.type==='AAAR_OPEN_FOUNDRY'){window.AAARFoundryUI?.open();}});
 }
 try{
