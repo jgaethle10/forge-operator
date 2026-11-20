@@ -11,8 +11,8 @@ function clean(value) {
 
 function providerKey(value) {
   const provider = clean(value).toLowerCase();
-  if (!["gemini", "openai"].includes(provider)) {
-    throw new Error("hosted_raven_provider_must_be_gemini_or_openai");
+  if (!["gemini", "openai", "anthropic", "xai"].includes(provider)) {
+    throw new Error("hosted_raven_provider_must_be_gemini_openai_anthropic_or_xai");
   }
   return provider;
 }
@@ -109,7 +109,7 @@ async function main() {
     process.stdout.write(JSON.stringify(result) + "\n");
     return;
   }
-  throw new Error("usage: seal-inference-key.mjs status|seal --provider gemini|openai --state-dir PATH");
+  throw new Error("usage: seal-inference-key.mjs status|seal --provider gemini|openai|anthropic|xai --state-dir PATH");
 }
 
 const invoked = process.argv[1] ? pathToFileURL(path.resolve(process.argv[1])).href : "";
