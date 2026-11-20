@@ -65,7 +65,8 @@ export function recoverStudioAlerts({folder=baseDir()}={}){
    try{receipt=JSON.parse(fs.readFileSync(accepted,'utf8'))}
    catch{throw Error('studio_recovery_invalid_acceptance_receipt')}
    if(receipt.schema!=='evercraft.studio.relay-acceptance.v1'||
-      receipt.reference!==row.id||Number(receipt.relay_inboxed)<1)
+      receipt.reference!==row.id||!Number.isSafeInteger(receipt.relay_inboxed)||
+      receipt.relay_inboxed<1)
      throw Error('studio_recovery_invalid_acceptance_receipt');
    if(fs.existsSync(queued)){
     const qs=fs.lstatSync(queued);
