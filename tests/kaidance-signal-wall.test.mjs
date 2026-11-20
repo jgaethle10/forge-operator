@@ -13,7 +13,7 @@ test('product identity is independent, usable as a favicon and repeated consiste
  assert.match(mark,/<title id="title">Kaidance<\/title>/);
  assert.match(mark,/viewBox="0 0 128 128"/);
  assert.match(mark,/accelerator rails/);
- assert.doesNotMatch(mark,/<script|foreignObject|<image|https?:\/\//i);
+ assert.doesNotMatch(mark,/<script|foreignObject|<image|(?:href|src)=[\"']https?:\/\//i);
  assert.notEqual(mark,read('../public/headquarters/mark.svg'));
  assert.match(html,/class="brand-symbol" src="\.\/mark\.svg"/);
  assert.match(html,/class="stage-brand" src="\.\/mark\.svg"/);
