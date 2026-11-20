@@ -36,10 +36,38 @@ This is a private **shadow** result by default. The optional `--history-complete
 
 Reconciliation output deliberately omits unmasked customer emails and raw message content. Console output is aggregate counts only. Never commit private exports, HMAC secrets, customer addresses, or prospect identities.
 
+
+## New source slice: shared cold outreach reservation and owned Gmail metadata import
+
+`atomic-send-reservations.mjs` implements a **single-owned-filesystem, cross-process, atomic cold-target reservation**, coupled to the real `EvercraftInteractionLedger.prepareContactPermit` method and Passport. It requires a *private HMAC-signed*, fresh, complete Gmail reconciliation report from an independently trusted authorized backfill agent, legal footer actually present in the exact outgoing email, an explicitly verified first-party buyer, recent QA signoff, scope/fulfillment evidence, sender authentication, suppression health, and available rolling quota after the 100 reserved customer-reply units. It persists no raw email address or message body. A second attempt from another agent, same customer, or same opportunity is rejected. Reservations do **not** send mail or finalize a Passport permit. Unknown outcomes remain reserved; recovery needs authoritative Gmail reconciliation.
+
+The shared reservation directory and Passport/Interaction Ledger directories **must reside on one genuinely shared, POSIX-atomic owned filesystem**. Separate Penguin and NextGen local storage, or separate agent copies of the directory, are NOT one shared global ledger. A cluster-safe durable transaction store or single authoritative owned coordinator must be proven before distributed worker rollout. The lock never auto-expires or self-heals a process crash; a stale lock is a hard hold needing controlled owner recovery.
+
+`owned-gmail-import.mjs` is an **independent read-only Gmail REST metadata collector** that can be executed on an Evercraft-owned compute node using a valid user-authorized Google OAuth token stored in a mode-0600 file. It paginates through the selected mailbox and fetches `format=metadata` only; it does not ask Gmail for email bodies, attachments or any send privilege. Google documents `users.messages.list` pagination and `users.messages.get` metadata headers; for the filtered query the account needs `gmail.readonly` or another authorized non-metadata-only read scope, because Google's `gmail.metadata` scope does not allow the `q` parameter. **OAuth authorization and restricted-scope Google app verification are independent deployment requirements.** The existing connected Gmail app in ChatGPT is not itself an owned-node OAuth credential, and neither this PR nor the current conversation exports or obtains its secrets.
+
+```bash
+# All files and directory private, owned by Evercraft's operator account.
+node systemia/revenue-desk/owned-gmail-import.mjs \
+  --oauth-token-file /private/systemia/google-gmail-readonly.token \
+  --full-history 1 \
+  --out-file /private/systemia/gmail-history.json
+```
+
+Default is a bounded 30-hour window; it is sufficient to analyze recent activity but **not sufficient to claim complete historical de-duplication**. `--full-history 1` enumerates the accessible mailbox until pagination is fully exhausted; if its bounded page limit is reached, ingestion fails closed. All sending accounts and aliases still need cross-verified scope, and Gmail history collection alone cannot establish a provider's real effective sending limit or delivery complaints.
+
+The importer writes its snapshot privately but does NOT sign a Gmail coverage authority receipt. No general source-controlled CLI or synthetic flag can grant itself permission to send: an independently reviewed owned signer and provider quota/DSN integration must be implemented before live sends. In current source tests the signature is generated from fixture data; fixtures are not production authorization.
+
+Source tests:
+```bash
+node --test systemia/revenue-desk/gmail-reconciliation.test.mjs \
+  systemia/revenue-desk/atomic-send-reservations.test.mjs \
+  systemia/revenue-desk/owned-gmail-import.test.mjs
+```
+
 ## Release gates to true owned 400/day operation
 
-1. Build an authorized Gmail export adapter that pages Sent/Inbox and DSNs, records coverage checkpoints and de-duplicates actual Gmail message IDs. Verify all accounts/agents that share quota; the existing connected Gmail connector is not an owned runtime adapter.
-2. Bind the private report to the existing Systemia Interaction Ledger and Passport (not a second sender or an unsynchronized alternative ledger). Build an atomic single-use recipient/opportunity reservation around the actual send provider action; read-only advisory is not that reservation.
+1. DONE IN SOURCE ONLY: authorized read-only Gmail metadata importer with paging, private storage and synthetic tests. STILL NEEDED: provider OAuth/read-scope verification on owned compute, complete coverage and truthful scoped signer, DSN/opt-out handling, full cross-sender and alias inventory and independent live canary. Verify all accounts/agents that share quota; the existing connected Gmail connector is not an owned runtime adapter.
+2. DONE IN SOURCE ONLY: atomic single-filesystem reservation that calls the real Interaction Ledger/Passport exact-message permit on an admitted private report. STILL NEEDED: shared authoritative owned runtime across all agents/nodes, live provider execution that rechecks consent/expiry and second-stage atomic finalization with Gmail provider-retrieved send receipts. Source-only reservation is not sending authority.
 3. Verify all legal email disclosures, physical business mailing address, opt-out channel, real suppression/complaint health and sender SPF/DKIM/DMARC. Stop if any gate is missing. Validate recipient geography/marketplace rules.
 4. Controlled sender canary and gradual deliverability-based ramp. Strong source-grounded uniqueness checks per actual buyer and role. A target is not required quota use. Never turn on 400/day blindly.
 5. Reconcile received Gmail provider receipts and replies, quoted/accepted contracts, actual Stripe or other verified payment rails, and delivery. Keep `researched / verified / contact-ready / sent / replied / quoted / accepted / invoiced / paid` separate.
