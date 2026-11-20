@@ -116,6 +116,8 @@ try{
  assert.equal(runwayResponse?.status(),200,'Seattle training field unavailable in source');
  assert.equal(await runwayPage.locator('#beginRunway').isVisible(),true,'Runway start choice hidden');
  assert.equal(await runwayPage.locator('#beginApproach').isVisible(),true,'Landing practice choice hidden');
+ assert.equal(await runwayPage.locator('#airportSelect').inputValue(),'KBFI');
+ assert.ok((await runwayPage.locator('#airportSelect option').allTextContents()).some(x=>x.includes('Sea-Tac')));
  await runwayPage.locator('#beginRunway').click();
  await runwayPage.waitForFunction(()=>document.querySelector('#startScreen')?.style.display==='none',null,{timeout:10000});
  await runwayPage.waitForFunction(()=>document.getElementById('flightStatus')?.textContent==='ON RUNWAY / TAXI',null,{timeout:10000});
@@ -133,19 +135,26 @@ try{
  await runwayPage.locator('#mobileMoreToggle').click();
  assert.equal(await runwayPage.locator('#runwayReset').isVisible(),true,'Runway reset hidden behind More');
  assert.equal(await runwayPage.locator('#approachReset').isVisible(),true,'Landing practice hidden behind More');
+ await runwayPage.locator('#airportSide').selectOption('KSEA');
+ assert.equal(await runwayPage.locator('#airportSelect').inputValue(),'KSEA','Side airport selection did not sync to school launcher');
  await runwayPage.locator('#approachReset').click();
  await runwayPage.waitForFunction(()=>document.getElementById('flightStatus')?.textContent==='SIMULATION ACTIVE',null,{timeout:10000});
  const school=await runwayPage.evaluate(()=>({
   model:window.AAARGroundOps?.schema,
   level:window.AAARGroundOps?.field.level,
-  synthetic:window.AAARGroundOps?.world,
+  world:window.AAARGroundOps?.world,
+  airports:window.AAARGroundOps?.fields.map(f=>({code:f.code,x:f.x,z:f.z,length:f.length,yaw:f.yaw})),
+  active:window.AAARGroundOps?.field.code,
   runwayVisible:window.AAARSceneMetrics?.().terrainPolygons>300
  }));
- assert.equal(school.model,'evercraft.aaar.flight-ground-ops.v1');
- assert.equal(school.synthetic,'FICTIONAL_GAMEPLAY_AIRFIELD');
+ assert.equal(school.model,'evercraft.aaar.flight-ground-ops.v2');
+ assert.equal(school.world,'SOURCE_LOCATED_VISUAL_GAMEPLAY_AIRFIELDS');
+ assert.deepEqual(school.airports.map(f=>f.code),['KBFI','KSEA']);
+ assert.equal(school.active,'KSEA');
+ assert.ok(Math.hypot(school.airports[0].x-school.airports[1].x,school.airports[0].z-school.airports[1].z)>8000);
  assert.ok(school.runwayVisible,'Phone runway scene missing terrain');
  receipts.push({school:'Seattle runway and landing controls',runway_start:true,brake_visible:true,
-  menu_runway:true,menu_approach:true,practice_mode:true,synthetic:true});
+  menu_runway:true,menu_approach:true,practice_mode:true,selected_airport:'KSEA',source_located_runways:true,fictional_physics:true});
  await runwayPage.close();
 
  // Seattle loads in a fresh page: changing only the URL fragment cannot reinitialize
