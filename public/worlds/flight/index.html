@@ -261,6 +261,9 @@ html.seattle-mode .sky-haze{
 .seattle-mode #beginRunway{background:#a6e7c1;color:#07263b}
 .seattle-mode #beginApproach{background:#18415a;color:#e7f9ee;border:1px solid #90c7c7}
 .seattle-mode #runwaySchool{display:flex;gap:6px;flex-direction:column;margin-top:7px}
+.seattle-mode #runwaySchool label{font:800 10px ui-monospace;color:#b6d8d6}
+.seattle-mode #runwaySchool select,.seattle-mode .flight-airport-choice select{width:100%;min-height:36px;padding:6px;background:#0c3445;color:#f3fff5;border:1px solid #8fcbbf;border-radius:5px}
+.flight-airport-choice{display:none}.seattle-mode .flight-airport-choice{display:flex;flex:1 1 100%;align-items:center;gap:10px;font:800 10px ui-monospace;color:#b6d8d6}
 #runwaySchool button{font-size:11px;font-weight:800;letter-spacing:.015em;min-height:36px;
  background:#123e4b;color:#e1fbf2;border:1px solid #76c8bc;border-radius:5px}
 #runwaySchool button:hover{background:#2b5965}
@@ -277,7 +280,7 @@ html.seattle-mode .sky-haze{
  <canvas id="flightCanvas" tabindex="0" aria-label="Playable 3D Anniston flight range. Use W/S for pitch, A/D for bank, Shift/Ctrl for throttle, C to switch camera, R reset."></canvas><div class="sky-sun"></div><div class="sky-haze"></div><div class="scanlines"></div>
  <div class="hud" id="hud">
    <header class="flight-top"><div class="flight-brand"><span class="flight-logo">△</span><div><strong>ANNISTON / WORLDS</strong><small>CEDAR BASIN FLIGHT RANGE · 3D SANDBOX</small></div></div><div class="flight-session"><span class="chip live" id="flightStatus">SIMULATION ACTIVE</span><span class="chip" id="flightTime">T+ 00:00</span><span class="chip">SYNTHETIC TERRAIN</span></div></header>
-   <aside class="hud-side"><div class="mission-box glass"><span class="overline">MISSION / 001</span><h1>Valley transit.</h1><p>Fly through three training gates. Try a new aircraft, switch cameras, then save a flight record to Anniston.</p><div class="mission-progress" id="gateProgress"><i></i><i></i><i></i></div><div class="mission-target" id="nextGate">NEXT: RUNWAY DEPARTURE · 0 / 3</div></div><div class="plane-select glass"><label class="model-label" for="planeType">FLYABLE AIRCRAFT</label><select id="planeType"><option value="trainer">A-01 Kestrel · Trainer</option><option value="glider">A-02 Albatross · Glider</option><option value="jet">A-03 Peregrine · Jet</option></select><small>Changing aircraft starts a fresh local flight.</small><a id="worldSwitch" href="./#seattle">✈ Seattle Sky Tour</a><div id="runwaySchool" aria-label="Seattle flight school"><button id="runwayReset" type="button">✈ Start on runway</button><button id="approachReset" type="button">↘ Try landing</button></div></div></aside>
+   <aside class="hud-side"><div class="mission-box glass"><span class="overline">MISSION / 001</span><h1>Valley transit.</h1><p>Fly through three training gates. Try a new aircraft, switch cameras, then save a flight record to Anniston.</p><div class="mission-progress" id="gateProgress"><i></i><i></i><i></i></div><div class="mission-target" id="nextGate">NEXT: RUNWAY DEPARTURE · 0 / 3</div></div><div class="plane-select glass"><label class="model-label" for="planeType">FLYABLE AIRCRAFT</label><select id="planeType"><option value="trainer">A-01 Kestrel · Trainer</option><option value="glider">A-02 Albatross · Glider</option><option value="jet">A-03 Peregrine · Jet</option></select><small>Changing aircraft starts a fresh local flight.</small><a id="worldSwitch" href="./#seattle">✈ Seattle Sky Tour</a><div id="runwaySchool" aria-label="Seattle flight school"><label for="airportSide">AIRPORT</label><select id="airportSide" aria-label="Choose airport"><option value="KBFI">Boeing Field · KBFI</option><option value="KSEA">Sea-Tac · KSEA</option></select><button id="runwayReset" type="button">✈ Start on runway</button><button id="approachReset" type="button">↘ Try landing</button></div></div></aside>
    <div class="hud-center"><div class="flight-reticle"><span class="nose-cue"></span></div></div>
    <aside class="flight-telemetry glass" aria-label="Flight instruments"><div class="telemetry-row"><span>AIRSPEED</span><div><strong id="speedOut">—</strong> <em>KTS</em></div></div><div class="telemetry-row"><span>ALTITUDE</span><div><strong id="altOut">—</strong> <em>FT</em></div></div><div class="telemetry-row"><span>HEADING</span><div><strong id="headOut">—</strong> <em>°</em></div></div><div class="telemetry-row"><span>PITCH</span><div><strong id="pitchOut">—</strong> <em>°</em></div></div><div class="telemetry-row"><span>BANK</span><div><strong id="bankOut">—</strong> <em>°</em></div></div><div class="telemetry-row"><span>THROTTLE</span><div><strong id="throttleOut">—</strong> <em>%</em></div></div></aside>
    <div class="floating-alert" id="flightAlert" role="status" aria-live="polite"></div><div id="skyQuest" role="status" aria-label="Seattle Sky Passport"><strong id="skyQuestCount">0 / 8 LANDMARKS DISCOVERED</strong><span id="skyQuestTarget">TODAY'S SKY QUEST · SEARCHING</span></div>
@@ -285,7 +288,7 @@ html.seattle-mode .sky-haze{
    <div class="license">ENTERTAINMENT MODEL / NOT CFD / NOT FLIGHT TRAINING / NO PHYSICAL CONTROL</div>
    <div class="flight-bottom"><div class="flight-controls"><div class="control-guide"><b>W / S</b> Pitch <b>A / D</b> Bank <b>Q / E</b> Rudder <b>SHIFT / CTRL</b> Throttle <b>C</b> Camera <b>B</b> Brake <b>P</b> Pause <b>R</b> Reset</div></div><div class="action-row"><button id="openFoundry" class="foundry-launch" type="button">✦ Design machine</button><button id="cameraToggle" type="button">◉ Chase view</button><button id="pauseToggle" type="button">Ⅱ Pause</button><button id="resetFlight" type="button">↺ Restart</button><button id="saveFlight" class="primary" type="button">Save flight ↗</button><button id="fullscreenToggle" type="button">⤢</button><button id="mobileHudToggle" type="button" aria-label="Show all flight instruments" aria-pressed="false">HUD</button><button id="mobileMoreToggle" type="button" aria-label="Aircraft selection and more flight actions" aria-expanded="false">More</button></div></div>
  </div>
- <div class="start-screen" id="startScreen"><div class="start-card"><span class="overline">EVERCRAFT WORLDS × ANNISTON AAAR / EXPERIENCE 001</span><h2>THE SKY<br/>IS <em>YOURS.</em></h2><p>Take a trainer, glider or fast jet through a fictional mountain valley. Fly with your keyboard or on-screen touch controls. Save a local flight record back to Anniston when you're done.</p><p id="cityTourSources">CITY OF SEATTLE 2023 GIS BUILDING FOOTPRINTS · APPROXIMATE HEIGHTS & COASTLINE · GAME SIMULATION, NOT REAL AIRSPACE OR FLIGHT GUIDANCE</p><p class="flight-orientation-hint">On your phone: rotate sideways for the full cockpit. Left thumb steers; right thumb controls throttle. Portrait works too.</p><div class="start-foot"><button id="designFromStart" class="foundry-launch" type="button">✦ Design your own machine</button> <button id="beginFlight" type="button">ENTER FLIGHT RANGE ↗</button><button id="beginRunway" type="button">✈ START ON RUNWAY</button><button id="beginApproach" type="button">↘ TRY LANDING</button><a id="seattleStart" href="./#seattle">✈ Fly over Seattle ↗</a><a id="basinStart" href="./">← Cedar Basin</a><button class="secondary" id="skipToControls" type="button">VIEW CONTROLS</button></div><small>A playable procedural 3D sandbox. The physics and terrain are deliberately simplified, not validated engineering models. Full Evercraft Worlds world-state integration is a separate milestone.</small></div></div>
+ <div class="start-screen" id="startScreen"><div class="start-card"><span class="overline">EVERCRAFT WORLDS × ANNISTON AAAR / EXPERIENCE 001</span><h2>THE SKY<br/>IS <em>YOURS.</em></h2><p>Take a trainer, glider or fast jet through a fictional mountain valley. Fly with your keyboard or on-screen touch controls. Save a local flight record back to Anniston when you're done.</p><p id="cityTourSources">CITY OF SEATTLE 2023 GIS BUILDING FOOTPRINTS · APPROXIMATE HEIGHTS & COASTLINE · GAME SIMULATION, NOT REAL AIRSPACE OR FLIGHT GUIDANCE</p><p class="flight-orientation-hint">On your phone: rotate sideways for the full cockpit. Left thumb steers; right thumb controls throttle. Portrait works too.</p><div class="start-foot"><button id="designFromStart" class="foundry-launch" type="button">✦ Design your own machine</button> <button id="beginFlight" type="button">ENTER FLIGHT RANGE ↗</button><label class="flight-airport-choice" for="airportSelect">AIRPORT <select id="airportSelect" aria-label="Choose airport"><option value="KBFI">Boeing Field (KBFI)</option><option value="KSEA">Sea-Tac (KSEA)</option></select></label><button id="beginRunway" type="button">✈ START ON RUNWAY</button><button id="beginApproach" type="button">↘ TRY LANDING</button><a id="seattleStart" href="./#seattle">✈ Fly over Seattle ↗</a><a id="basinStart" href="./">← Cedar Basin</a><button class="secondary" id="skipToControls" type="button">VIEW CONTROLS</button></div><small>A playable procedural 3D sandbox. The physics and terrain are deliberately simplified, not validated engineering models. Full Evercraft Worlds world-state integration is a separate milestone.</small></div></div>
  <div class="screen-reader" id="flightA11y" aria-live="polite"></div>
 </div>
 <script>/* Anniston Aircraft Foundry v0.6 — screening model, NOT CFD, flight certification or a digital twin.
@@ -660,18 +663,20 @@ function start(kind='trainer',design=null){
   yaw:spawn.yaw,pitch:0,bank:0,path:0,speed:p.cruise,throttle:p.id==='glider'?0:.68,
   flightTime:0,distance:0,maxAlt:280,maxSpeed:p.cruise,checkpoints:0,events:[],paused:false,condition:'FLYING',track:[]};
 }
-function startRunway(kind='trainer'){
+function startRunway(kind='trainer',airportCode='KBFI'){
  if(!aircraft[kind]||!window.AAARGroundOps?.enabled)throw Error('Runway start requires Seattle preset aircraft');
+ window.AAARGroundOps.select(airportCode);
  const s=start(kind),pos=window.AAARGroundOps.spawn();
  Object.assign(s,pos,{pitch:0,bank:0,path:0,speed:0,throttle:0,maxAlt:pos.y,maxSpeed:0,condition:'ON_GROUND'});
- s.events.push({kind:'runway_spawn',at:0,field:window.AAARGroundOps.field.name});
+ s.events.push({kind:'runway_spawn',at:0,field:window.AAARGroundOps.field.name,airport:pos.airport});
  return s;
 }
-function startApproach(kind='trainer'){
+function startApproach(kind='trainer',airportCode='KBFI'){
  if(!aircraft[kind]||!window.AAARGroundOps?.enabled)throw Error('Approach requires Seattle preset aircraft');
+ window.AAARGroundOps.select(airportCode);
  const s=start(kind),pos=window.AAARGroundOps.approach();
  Object.assign(s,pos,{pitch:kind==='glider'?0:kind==='jet'?-.07:-.095,bank:0,path:-.055,speed:kind==='jet'?s.speed*.8:s.speed,throttle:kind==='jet'?.47:.68,maxAlt:pos.y});
- s.events.push({kind:'approach_spawn',at:0,field:window.AAARGroundOps.field.name});
+ s.events.push({kind:'approach_spawn',at:0,field:window.AAARGroundOps.field.name,airport:pos.airport});
  return s;
 }
 function groundHeight(x,z){
@@ -755,9 +760,11 @@ function step(s,input,dt){
  if(s.y<=groundHeight(s.x,s.z)+4){
   const terrain=groundHeight(s.x,s.z);
   if(window.AAARGroundOps?.enabled&&window.AAARGroundOps.landing(s,terrain)){
+   const destination=window.AAARGroundOps.at(s.x,s.z);
+   if(destination){window.AAARGroundOps.select(destination.code);s.airport=destination.code;}
    s.y=terrain+4;s.condition='ON_GROUND';s.pitch=0;s.bank=0;s.path=0;
    s.throttle=Math.min(s.throttle,.22);
-   s.events.push({kind:'landing',at:+s.flightTime.toFixed(1),speedMps:+s.speed.toFixed(1)});
+   s.events.push({kind:'landing',at:+s.flightTime.toFixed(1),airport:s.airport,speedMps:+s.speed.toFixed(1)});
   }else{
    s.y=terrain+4;s.condition='GROUND_CONTACT';s.events.push({kind:'ground_contact',at:Math.round(s.flightTime*10)/10});
   }
@@ -785,7 +792,7 @@ if(seattle){
  document.querySelector('.mission-box h1').textContent='Seattle flight school.';
  document.querySelector('.mission-box p').textContent='Explore Seattle and collect eight Sky Passport landmarks. A fresh challenge rotates each local day. Footprint locations are source-linked; heights are synthetic.';
  document.querySelector('#startScreen .start-card h2').innerHTML='SEATTLE<br/>IS <em>YOURS.</em>';
- document.querySelector('#startScreen .start-card > p').textContent='Take off from a fictional Seattle training strip, fly a guided landing approach, or explore eight landmark discoveries. Throttle up, pull the stick back to lift off, and hold B to brake. Source-located city buildings have synthetic heights; airport, terrain and flight physics are game creations.';
+ document.querySelector('#startScreen .start-card > p').textContent='Take off at Boeing Field or Sea-Tac, fly between the two airports, practice a landing, or explore eight landmark discoveries. Throttle up, pull the stick back to lift off, and hold B to brake. Source-located city buildings have synthetic heights; airport, terrain and flight physics are game creations.';
  document.getElementById('beginFlight').textContent='FLY OVER SEATTLE ↗';
  document.getElementById('worldSwitch').href='./';
  document.getElementById('worldSwitch').textContent='← Cedar Basin';
@@ -1491,12 +1498,14 @@ function flightSchool(kind){
  if(!seattle)return;
  resetThumbStick();held.clear();touch.clear();
  const craft=core.aircraft[state.craft]?state.craft:'trainer';
- state=kind==='approach'?core.startApproach(craft):core.startRunway(craft);
+ const airport=$('airportSelect').value;
+ $('airportSide').value=airport;
+ state=kind==='approach'?core.startApproach(craft,airport):core.startRunway(craft,airport);
  view='chase';state.paused=false;
  shell.dataset.more='closed';$('mobileMoreToggle').setAttribute('aria-expanded','false');
  if(!running)begin();
  hud();
- notify(kind==='approach'?'LANDING PRACTICE · LINE UP WITH RUNWAY · GENTLE DESCENT':'RUNWAY READY · RAISE THROTTLE · PULL BACK TO ROTATE',5);
+ notify((kind==='approach'?'LANDING PRACTICE':'RUNWAY READY')+' · '+state.airport+' · SIMULATED RUNWAY',5);
 }
 function togglePause(){resetThumbStick();state.paused=!state.paused;$('pauseToggle').dataset.paused=String(state.paused);hud();notify(state.paused?'SIMULATION PAUSED':'SIMULATION RESUMED',1.2);}
 function saveFlight(){const receipt=core.flightReceipt(state);try{localStorage.setItem('evercraft-aaar-last-flight',JSON.stringify(receipt));}catch{}
@@ -1548,7 +1557,8 @@ function initEvents(){
    if(gl&&program)buildCustomMesh(design);view='chase';if(!running)begin();else{state.paused=false;}hud();notify('CUSTOM '+(design.type==='wing'?'WING':'ROTORCRAFT')+' LAUNCHED · ANALYTICAL GAME MODEL',4);
  });
  $('beginFlight').addEventListener('click',begin);
- for(const [id,kind] of [['beginRunway','runway'],['runwayReset','runway'],['beginApproach','approach'],['approachReset','approach']])$(id).addEventListener('click',()=>flightSchool(kind));
+ $('airportSide').addEventListener('change',()=>{$('airportSelect').value=$('airportSide').value;});
+ for(const [id,kind] of [['beginRunway','runway'],['runwayReset','runway'],['beginApproach','approach'],['approachReset','approach']])$(id).addEventListener('click',()=>{if(id.endsWith('Reset'))$('airportSelect').value=$('airportSide').value;flightSchool(kind);});
  $('skipToControls').addEventListener('click',()=>{notify(shell.classList.contains('touch-cockpit')?'LEFT STICK PITCH/BANK · RIGHT LEVER THROTTLE · HUD FOR DETAILS':'W/S PITCH · A/D BANK · SHIFT/CTRL THROTTLE',5);$('beginFlight').focus();});
  $('planeType').addEventListener('change',e=>{if(e.target.value==='custom'&&state.design)reset('custom');else if(e.target.value!=='custom')reset(e.target.value);});
  $('cameraToggle').addEventListener('click',()=>{view=view==='chase'?'cockpit':'chase';hud();});
