@@ -265,6 +265,16 @@ export function createFaieRuntime({
   function historyArchiveIntegrity(){
     return historyStore?historyStore.verifyChain():{ok:false,reason:'database_unavailable'};
   }
+  function historyPublicRegions({limit=50}={}){
+    if(!historyStore)throw new Error('land_history_database_unavailable');
+    return {
+      schema:'evercraft.faie.public-history-region-index.v1',
+      regions:historyStore.listPublicRegions(limit),
+      public_only:true,
+      exhaustive_history:false,
+      visitor_site_locations_persisted:false
+    };
+  }
 
   function health() {
     const collectorReceipts = Array.isArray(state.last_cycle?.official_collector_receipts)
@@ -447,6 +457,7 @@ export function createFaieRuntime({
     start,
     stop,
     historyForRegion,
+    historyPublicRegions,
     historyArchiveIntegrity,
     close(){stop();historyStore?.close()},
     markdown: investigationToMarkdown
