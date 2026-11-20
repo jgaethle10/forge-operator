@@ -65,9 +65,7 @@ export async function runRehearsalShadowBrokerTransaction({
   // A rehearsal root must be an actual temporary fixture, not a copied
   // receipt placed under another real service root.
   const tmp=fs.realpathSync(os.tmpdir());
-  requireOk(contained(tmp,nodeRoot) &&
-    /^(shadow-|installed-old-compute-)/.test(String(nodeSeedReceipt.node_id||'')),
-    'rehearsal_fixture_identity_required');
+  requireOk(contained(tmp,nodeRoot),'rehearsal_tmp_root_required');
   requireOk(contained(nodeRoot,parent),'journal_not_inside_node_root');
   requireOk(fs.lstatSync(parent).isDirectory() &&
     (fs.lstatSync(parent).mode&0o077)===0,'journal_root_not_private');
@@ -84,6 +82,9 @@ export async function runRehearsalShadowBrokerTransaction({
     recordedReceipt.endpoint===nodeSeedReceipt.endpoint,
     'on_disk_nodeseed_receipt_mismatch'
   );
+  requireOk(/^(shadow-|installed-old-compute-)/.test(
+    String(nodeSeedReceipt.node_id||'')),
+    'rehearsal_fixture_identity_required');
   const origin=loopbackFromReceipt(nodeSeedReceipt);
   // Never let a fabricated disposable receipt target Penguin's actual
   // production NodeSeed endpoint, even if all copied receipt fields agree.
