@@ -15,6 +15,8 @@ export const STATIC_PATHS=Object.freeze({
  '/leiland/pulse-bridge.mjs':'leiland/pulse-bridge.mjs',
  '/kaidance/index.html':'kaidance/index.html',
  '/kaidance/style.css':'kaidance/style.css',
+ '/kaidance/experience.css':'kaidance/experience.css',
+ '/kaidance/visual.mjs':'kaidance/visual.mjs',
  '/kaidance/app.mjs':'kaidance/app.mjs',
  '/kaidance/work-source.mjs':'kaidance/work-source.mjs',
  '/kaidance/pulse-source.mjs':'kaidance/pulse-source.mjs',
