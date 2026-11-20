@@ -19,6 +19,16 @@ Visitors can:
 
 No login, browser analytics, private endpoint requests, cookies, third-party JavaScript, model chat control, or outbound customer data are involved. A request to GitHub's public REST API retrieves the latest four **public Raven commits**; failure leaves the public activity list intact. GitHub is canonical source, not the site's runtime. The page uses only native browser APIs and the static first-party files. Deploy the files to an Evercraft-owned runtime using Yard.
 
+## Neural Universe visual upgrade
+
+The centerpiece is an immersive, full-width Canvas 2D **architectural illustration** with five connected neighborhoods, synthetic traveling light, gentle depth/parallax, a central Leiland nucleus, and in-stage navigation. It also contains responsive mobile controls and a larger 9:16 broadcast presentation. Select any region in the artwork or the existing architecture strip; both controls operate on the same selected system and show its actual public source link and description.
+
+Implementation: `neural-universe.mjs` exports a deterministic, self-contained synthetic graph with no network calls or user tracking. A desktop can display up to 850 illustrative points; phones and reduced-motion visitors use smaller point budgets. Frames are throttled to 30 FPS desktop and 24 FPS mobile, stopped when offscreen/hidden, and paused for the OS reduced-motion preference. No WebGL, camera, microphone, third-party shaders, analytics, or persistent browser permissions are required.
+
+**Visual truth boundary:** Ordinary sparks, bridges, orbit lines and parallax **do not represent AI thoughts, model inference, actual hardware execution or active Systemia missions**. The only data-coupled effects are a discrete acknowledgement ripple when the existing KAIDANCE public pulse gate confirms a *new*, source-attested cycle, and small gold witnesses when a recent vetted public activity feed contains receipt-linked public events. Neither effect reveals private content or operates the model.
+
+The larger stage, native perspective geometry and hover parallax create depth. Buttons are actual `button` elements with `aria-pressed`, keyboard focus and reduced-motion fallback. No claim is made that this visual upgrade has launched on an independently verified live owned HTTPS origin.
+
 ## Honesty gates
 
 1. An empty `feed.json` is intentionally disconnected, even while the illustration animates. KAIDANCE's separate public pulse reader may show a real observed coordination cycle on the same origin, but this is **not Raven inference or proof of any brain activation**.
