@@ -9,6 +9,11 @@ where visitors can play, make predictions, test physical models, examine
 evidence, and move between connected exhibits. This is the first practical
 exhibit-program layer, not a claim that the full immersive facility exists.
 
+- **Physics investigation bench:** run a controlled two-trial comparison on
+  the current launch, pendulum or wave model: capture Trial A; change a
+  parameter; predict increase/decrease/similar; record Trial B; view numerical
+  differences, ratio, and bars tied to the actual deterministic formula.
+  Measurements are local in-tab and are not persisted or remotely submitted.
 - **Physics Atlas:** nine authored museum challenges across three actual
   controllable science models. Challenges verify current model variables and
   derived measurements; wrong attempts get a clue rather than a fake reward.
