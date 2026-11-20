@@ -2,7 +2,27 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import net from 'node:net';
 import { startLocalOrganism } from './local-organism.mjs';
+
+// Diagnostic only inside this synthetic CI proof. Track the responsible
+// source module of any net.Server still LISTENING after the organism closes.
+// Never report bound ports, external IPs, credentials or host filesystem paths.
+const listenerOrigins = new WeakMap();
+const nativeListen = net.Server.prototype.listen;
+net.Server.prototype.listen = function(...args) {
+  const caller = String(new Error().stack || '').split('\n').find(
+    line => /\/systemia\/[A-Za-z0-9./_-]+\.mjs:\d+:\d+/.test(line)
+  ) || '';
+  const match = caller.match(/\/(systemia\/[A-Za-z0-9./_-]+\.mjs):\d+:\d+/);
+  listenerOrigins.set(this, match?.[1] || 'unattributed');
+  return Reflect.apply(nativeListen, this, args);
+};
+function syntheticListenerSources() {
+  return (process._getActiveHandles?.() || [])
+    .filter(handle => handle instanceof net.Server && handle.listening === true)
+    .map(handle => listenerOrigins.get(handle) || 'unattributed').sort();
+}
 
 const nativeBrowserProofPreparer=async()=>({
   schema:'evercraft.browser.native-runtime-preflight.v1',
@@ -168,7 +188,9 @@ try {
       if(/^[A-Za-z][A-Za-z0-9]{0,50}$/.test(key))acc[key]=(acc[key]||0)+1;
       return acc;
     },{});
-    console.error('LOCAL_ORGANISM_PROOF_TEARDOWN_TIMEOUT',JSON.stringify({resource_types:types}));
+    console.error('LOCAL_ORGANISM_PROOF_TEARDOWN_TIMEOUT',JSON.stringify({
+      resource_types:types, synthetic_listener_sources:syntheticListenerSources()
+    }));
     process.exit(1);
   },45000);
   teardownWatchdog.unref();
@@ -189,5 +211,7 @@ try {
     if (/^[A-Za-z][A-Za-z0-9]{0,50}$/.test(name))acc[name]=(acc[name]||0)+1;
     return acc;
   }, {});
-  console.error('LOCAL_ORGANISM_PROOF_TEARDOWN_DONE', JSON.stringify({resource_types:types}));
+  console.error('LOCAL_ORGANISM_PROOF_TEARDOWN_DONE', JSON.stringify({
+    resource_types:types, synthetic_listener_sources:syntheticListenerSources()
+  }));
 }
