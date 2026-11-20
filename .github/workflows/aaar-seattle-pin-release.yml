@@ -1,0 +1,27 @@
+name: AAAR Seattle pinned owner release proof
+on:
+  pull_request:
+    paths:
+      - "scripts/publish-aaar-seattle-now.mjs"
+      - "tests/aaar-seattle-pin-release.test.mjs"
+      - ".github/workflows/aaar-seattle-pin-release.yml"
+  push:
+    branches: [main]
+    paths:
+      - "scripts/publish-aaar-seattle-now.mjs"
+      - "tests/aaar-seattle-pin-release.test.mjs"
+permissions:
+  contents: read
+jobs:
+  static-release-gates:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Node parse check
+        run: node --check scripts/publish-aaar-seattle-now.mjs
+      - name: Source hash, owner host, and fail-closed gate tests
+        run: node --test tests/aaar-seattle-pin-release.test.mjs
