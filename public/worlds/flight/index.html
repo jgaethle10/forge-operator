@@ -1160,101 +1160,110 @@ function labelSeattleLandmarks(ctx,project,w,h){
 /* Flight School 1.3: shared fictional runway coordinates, two native renderers.
  * Static paved surfaces and markings are never claimed as real airport geometry.
  */
+function runwayVisuals(){
+ const ops=window.AAARGroundOps;
+ // KSEA has three parallel runways. 16C and 16R are scenery only, not gameplay surfaces.
+ const sea=ops.fields.find(f=>f.code==='KSEA');
+ const offsets=[{name:'16C / 34C',offset:-245,length:2873},{name:'16R / 34L',offset:-760,length:2591}];
+ return ops.fields.concat(offsets.map((x,i)=>({...sea,code:'KSEA_SCENERY_'+i,
+  name:'SEA-TAC RUNWAY '+x.name,designation:x.name,x:sea.x+x.offset,
+  length:x.length,visualOnly:true})));
+}
+/* All runway rectangles are aligned by the real-world runway-end coordinates.
+ * Taxiways, aprons, facilities, markings and elevations are artistic approximations.
+ */
 function forRunwayQuads(emit){
  if(!seattle||!window.AAARGroundOps?.enabled)return;
- const f=window.AAARGroundOps.field,{x,z,width,length,level:y}=f;
- const rect=(x1,z1,x2,z2,height,c,color)=>emit([x1,height,z1],[x2,height,z1],[x2,height,z2],[x1,height,z2],c,color);
- const band=(x1,z1,x2,z2,height,c,color)=>{
-  for(let a=z1;a<z2;a+=85)rect(x1,a,x2,Math.min(a+85,z2),height,c,color);
- };
- const start=z-length/2,end=z+length/2,left=x-width/2,right=x+width/2;
- band(left-9,start-13,right+9,end+13,y+.12,[.46,.47,.44],'#666f6b');
- band(left,start,right,end,y+.32,[.105,.16,.19],'#243640');
- band(left+3,start+3,left+4,end-3,y+.40,[.90,.90,.73],'#f1e6ac');
- band(right-4,start+3,right-3,end-3,y+.40,[.90,.90,.73],'#f1e6ac');
- // Centerline, runway thresholds, aiming marks and a high-contrast hold-short bar.
- for(let a=start+130;a<end-100;a+=135)rect(x-2.25,a,x+2.25,a+68,y+.44,[.96,.94,.83],'#fff5d9');
- for(const tip of [start+38,end-38]){
-  for(const side of [-1,1])for(let i=0;i<4;i++){
-   const cx=x+side*(12+i*9.5);
-   rect(cx-2.2,tip-24,cx+2.2,tip+24,y+.48,[.94,.93,.85],'#faf7e7');
+ const ops=window.AAARGroundOps;
+ for(const f of runwayVisuals()){
+  const y=f.level,half=f.width/2,start=-f.length/2,end=f.length/2;
+  const rect=(u1,v1,u2,v2,height,c,color)=>{
+   const a=ops.point(f,u1,v1),b=ops.point(f,u2,v1),d=ops.point(f,u1,v2),e=ops.point(f,u2,v2);
+   emit([a.x,height,a.z],[b.x,height,b.z],[e.x,height,e.z],[d.x,height,d.z],c,color);
+  };
+  const band=(u1,v1,u2,v2,height,c,color)=>{
+   for(let v=v1;v<v2;v+=95)rect(u1,v,u2,Math.min(v+95,v2),height,c,color);
+  };
+  band(-half-9,start-11,half+9,end+11,y+.12,[.42,.45,.43],'#68716b');
+  band(-half,start,half,end,y+.32,[.13,.17,.21],'#26343c');
+  band(-half+2,start+5,-half+3,end-5,y+.43,[.93,.91,.75],'#f6edc8');
+  band(half-3,start+5,half-2,end-5,y+.43,[.93,.91,.75],'#f6edc8');
+  for(let v=start+115;v<end-80;v+=130)
+   rect(-2.2,v,2.2,Math.min(v+62,end-60),y+.46,[.95,.94,.86],'#fff9e9');
+  for(const v of [start+42,end-42])
+   for(const side of [-1,1])for(let i=0;i<3;i++){
+    const u=side*(10+i*9);
+    rect(u-2,v-23,u+2,v+23,y+.47,[.95,.95,.87],'#f6f7f0');
+   }
+  for(const v of [start+400,end-400])for(const side of [-1,1])
+   rect(side*16-2.6,v-28,side*16+2.6,v+28,y+.48,[.95,.92,.84],'#f7edd3');
+  if(f.visualOnly)continue;
+  const side=f.code==='KSEA'?-1:1;
+  rect(side*half-4,start+120,side*(half+158),start+177,y+.27,[.28,.34,.37],'#455258');
+  band(side*(half+80),start+60,side*(half+295),start+560,y+.27,[.27,.33,.36],'#4a5659');
+  for(let v=start+70;v<end-90;v+=145){
+   rect(-half-10,v,-half-5,v+12,y+.53,[.28,.82,.95],'#67d3e7');
+   rect(half+5,v,half+10,v+12,y+.53,[.28,.82,.95],'#67d3e7');
   }
  }
- for(const az of [start+450,end-450])for(const side of [-1,1])rect(x+side*18-3,az-36,x+side*18+3,az+36,y+.49,[.95,.94,.85],'#fcf5df');
- // Apron, connecting taxiway and terminal walk edges; artistic scenery only.
- rect(right-1,start+125,right+166,start+180,y+.27,[.29,.32,.34],'#475259');
- band(right+93,start+65,right+286,start+510,y+.29,[.29,.31,.33],'#47515a');
- rect(right+95,start+75,right+100,start+490,y+.35,[.89,.66,.30],'#efb763');
- for(let j=0;j<12;j++){
-  const z0=start+40+j*155;
-  rect(left-8,z0,left-4,z0+16,y+.53,[.37,.81,.91],'#7bddec');
-  rect(right+4,z0,right+8,z0+16,y+.53,[.37,.81,.91],'#7bddec');
+}
+function airportStructures(emitBox){
+ if(!seattle||!window.AAARGroundOps?.enabled)return;
+ const ops=window.AAARGroundOps;
+ for(const f of ops.fields){
+  const y=f.level,start=-f.length/2,side=f.code==='KSEA'?-1:1;
+  const b=(u,v,up,w,h,d,color,roof)=>{
+   const p=ops.point(f,u*side,v);emitBox(p.x,y+up,p.z,w,h,d,color,roof);
+  };
+  for(let i=0;i<(f.code==='KSEA'?5:3);i++){
+   b(f.width/2+190+i*88,start+165+i*85,20,73,40,85,[.59,.65,.69],[.27,.34,.39]);
+   b(f.width/2+190+i*88,start+125+i*85,18,56,28,3,[.21,.33,.39],[.22,.30,.35]);
+  }
+  b(f.width/2+400,start+420,42,20,82,20,[.7,.74,.72],[.46,.53,.57]);
+  b(f.width/2+400,start+420,88,39,14,33,[.28,.54,.67],[.29,.38,.43]);
+  b(f.width/2+210,start+480,16,116,32,70,[.72,.74,.7],[.25,.35,.41]);
+  for(let i=0;i<5;i++)b(f.width/2+130+i*38,start+125+i*76,3,21,6,11,
+   i%2?[.87,.73,.46]:[.30,.58,.70],[.26,.37,.42]);
  }
 }
 function addRunwaySoftware(quad,project,ctx,w,h){
- if(!seattle||!window.AAARGroundOps?.enabled)return;
- const f=window.AAARGroundOps.field,x=f.x,y=f.level,z=f.z-f.length/2;
- function box(cx,cy,cz,wid,hei,dep,color,roof){
-  const ax=cx-wid/2,bx=cx+wid/2,az=cz-dep/2,bz=cz+dep/2,top=cy+hei/2,bottom=cy-hei/2;
-  quad([ax,bottom,az],[bx,bottom,az],[bx,top,az],[ax,top,az],color);
-  quad([bx,bottom,az],[bx,bottom,bz],[bx,top,bz],[bx,top,az],color);
-  quad([ax,top,az],[bx,top,az],[bx,top,bz],[ax,top,bz],roof||color);
- }
- for(let i=0;i<3;i++){
-  const bx=x+220+i*95,bz=z+160+i*116;
-  box(bx,y+21,bz,78,40,82,'#9caeb6','#4b6068');
-  box(bx,y+18,bz-42,56,30,1.6,'#274857','#324d5e');
- }
- box(x+370,y+41,z+450,20,81,20,'#bec4bc','#d4d9d3');
- box(x+370,y+87,z+450,37,14,34,'#42788b','#819ca4');
- box(x+155,y+14,z+365,83,27,62,'#aebcb8','#42616b');
- for(let i=0;i<4;i++)box(x+120+i*45,y+3,z+93+i*95,20,5,11,i%2?'#dac484':'#438da3','#e9f0e5');
- const loc=project([x+50,y+17,z+140]);
- if(loc&&loc.d<2500&&loc.u>50&&loc.u<w-50&&loc.v>25&&loc.v<h-35){
-  ctx.save();ctx.fillStyle='#071d2ee5';ctx.fillRect(loc.u-85,loc.v-21,170,24);
-  ctx.fillStyle='#ffe1b2';ctx.font='bold 11px system-ui';ctx.textAlign='center';
-  ctx.fillText('SEATTLE TRAINING FIELD',loc.u,loc.v-5);ctx.restore();
+ airportStructures((x,y,z,wid,hei,dep,color,roof)=>{
+  const ax=x-wid/2,bx=x+wid/2,az=z-dep/2,bz=z+dep/2,top=y+hei/2,bottom=y-hei/2;
+  const toHex=c=>'#'+c.map(v=>Math.round(v*255).toString(16).padStart(2,'0')).join('');
+  quad([ax,bottom,az],[bx,bottom,az],[bx,top,az],[ax,top,az],toHex(color));
+  quad([bx,bottom,az],[bx,bottom,bz],[bx,top,bz],[bx,top,az],toHex(color));
+  quad([ax,top,az],[bx,top,az],[bx,top,bz],[ax,top,bz],toHex(roof));
+ });
+ for(const f of window.AAARGroundOps.fields){
+  const p=project([f.x,f.level+95,f.z]);
+  if(!p||p.d>4000||p.u<65||p.u>w-65||p.v<26||p.v>h-35)continue;
+  const label=f.code+' · '+f.name;
+  ctx.save();ctx.font='bold 11px system-ui';ctx.textAlign='center';
+  const width=Math.min(w-30,ctx.measureText(label).width+19);
+  ctx.fillStyle='#071d2ee2';ctx.fillRect(p.u-width/2,p.v-20,width,24);
+  ctx.strokeStyle='#84e1e2';ctx.strokeRect(p.u-width/2,p.v-20,width,24);
+  ctx.fillStyle='#fcebc5';ctx.fillText(label,p.u,p.v-4);ctx.restore();
  }
 }
 function addRunwayWebGL(w){
  forRunwayQuads((a,b,c,d,color)=>w.quad(a,b,c,d,color,3));
- const f=window.AAARGroundOps.field,x=f.x,y=f.level,z=f.z-f.length/2;
- // Airport hangars, glazed terminal, tower, runway lights and ground vehicles.
- for(let i=0;i<3;i++){
-  const bx=x+220+i*95,bz=z+160+i*116;
-  w.box(bx,y+21,bz,78,40,82,[.61,.67,.70],1);
-  w.box(bx,y+41,bz,87,4,90,[.27,.38,.45]);
-  w.box(bx,y+18,bz-42,56,30,1.6,[.16,.28,.35],1);
-  for(let k=0;k<5;k++)w.box(bx-28+k*14,y+19,bz-43,2.5,26,2,[.52,.66,.71],1);
- }
- const towerX=x+370,towerZ=z+450;
- w.box(towerX,y+41,towerZ,20,81,20,[.71,.75,.73]);
- w.box(towerX,y+87,towerZ,37,14,34,[.31,.56,.67],1);
- w.box(towerX,y+96,towerZ,39,3,36,[.23,.29,.34]);
- // Terminal windows and parked service vehicles hint at a future walk-and-drive world.
- w.box(x+155,y+14,z+365,83,27,62,[.72,.74,.68]);
- w.box(x+155,y+28,z+365,91,3,69,[.25,.34,.38]);
- for(let j=0;j<5;j++)w.box(x+119+j*17,y+18,z+333,12,14,1.4,[.29,.57,.69],1);
- for(let i=0;i<4;i++){
-  const bx=x+120+i*45,bz=z+93+i*95;
-  w.box(bx,y+3,bz,20,5,11,i%2?[.84,.72,.45]:[.25,.56,.69]);
-  w.box(bx,y+7,bz-1,11,5,9,[.22,.34,.38]);
-  for(const side of [-1,1])for(const axle of [-1,1])w.box(bx+side*8,y+1.3,bz+axle*3.7,2,2.5,3.4,[.11,.14,.16]);
- }
- for(let j=0;j<12;j++){
-  const pz=z+40+j*155;
-  for(const side of [-1,1]){
-   const px=x+side*(f.width/2+6);
-   w.box(px,y+1.7,pz,4,2.7,4,[.32,.76,.83],4);
+ airportStructures((x,y,z,width,height,depth,color,roof)=>{
+  w.box(x,y,z,width,height,depth,color,1);
+  w.box(x,y+height*.5+1,z,width+3,2,depth+3,roof);
+ });
+ for(const f of window.AAARGroundOps.fields){
+  const ops=window.AAARGroundOps,half=f.width/2;
+  for(let v=-f.length/2+60;v<f.length/2-40;v+=145){
+   for(const side of [-1,1]){
+    const p=ops.point(f,side*(half+8),v);
+    w.box(p.x,f.level+1.7,p.z,3.3,2.8,3.3,[.34,.81,.95],4);
+   }
+  }
+  for(let j=0;j<9;j++){
+   const p=ops.point(f,0,-f.length/2-50-j*55),y=seattle.ground(p.x,p.z)+2;
+   w.box(p.x,y,p.z,4,2,3,[.99,.79,.52],4);
   }
  }
- // Runway approach lights follow artistic terrain, not real airfield charts.
- for(let i=0;i<9;i++){
-  const lz=z-50-i*55,ly=seattle.ground(x,lz)+3;
-  w.box(x,ly,lz,5,1.8,3,[.99,.75,.49],4);
- }
- w.box(x+82,y+11,z+100,1.8,22,1.8,[.76,.81,.83]);
- w.cone(x+88,y+24,z+100,6.5,5,[.99,.47,.33]);
 }
 function addSeattleWebGL(b){
  const height=seattle.ground,water=seattle.water,seed=seattle.seed;
