@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Reviewed Seattle Sky Passport 1.2 one-asset release on the EXISTING owned Penguin Worlds vault.
+// Reviewed Seattle Flight School 1.3 one-asset release on the EXISTING owned Penguin Worlds vault.
 // No server restart, repo reset, Journal edits, DNS or edge changes.
 // Run only on the actual Penguin host after fetching approved GitHub main.
 // This temporarily updates ONE tracked page; source checkout reconciliation
@@ -12,10 +12,10 @@ import {spawnSync} from 'node:child_process';
 
 const SCHEMA='evercraft.aaar.single-asset-release.v1';
 const REPO='jgaethle10/forge-operator';
-const PIN='350d241863986e46dd93e51fd058b116aee74b9e';
+const PIN='f2c4d5bb1f4332fd66bc42401ee043bc1e0b004e';
 const RELEASE='public/worlds/flight/index.html';
-const EXPECTED='1f8280fe6e05de30dab9b6f7a6954df334990571e78bdd30d91dd64dcf3aa13f';
-const ALLOWED_OLD='4914c2eef58750031169469b3884692035b93fb1d2e1ece3a7d6f2802c609134';
+const EXPECTED='20c11cb1e66ddda792d842a30758c60c898a30f5874c4bb618c806eac530805d';
+const ALLOWED_OLD='1f8280fe6e05de30dab9b6f7a6954df334990571e78bdd30d91dd64dcf3aa13f';
 const ORIGIN='https://worlds.systemiacommandcenters.com';
 const apply=process.argv.includes('--apply');
 const hash=x=>createHash('sha256').update(x).digest('hex');
