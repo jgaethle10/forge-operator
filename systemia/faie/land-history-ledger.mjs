@@ -149,6 +149,7 @@ export function openFaieLandHistory({databasePath}={}){
   const select=db.prepare('SELECT * FROM records WHERE land_id=? ORDER BY event_start,event_end,id LIMIT ?');
   const all=db.prepare('SELECT * FROM records ORDER BY id');
   const counts=db.prepare('SELECT COUNT(*) AS records,COUNT(DISTINCT land_id) AS regions,MIN(event_start) AS first_date,MAX(event_end) AS last_date FROM records');
+  const regionsQuery=db.prepare('SELECT land_id,COUNT(*) AS records,MIN(event_start) AS earliest,MAX(event_end) AS latest FROM records GROUP BY land_id ORDER BY records DESC,land_id LIMIT ?');
   let closed=false;
   function openCheck(){if(closed)throw new Error('history_database_closed')}
   function append(input){
@@ -215,6 +216,12 @@ export function openFaieLandHistory({databasePath}={}){
       return rec?append(rec):{action:'skipped',reason:'not_allowlisted_public_official_source'};
     },
     listLand,verifyChain,stats,
+    listPublicRegions(limit=50){
+      openCheck();
+      return regionsQuery.all(Math.max(1,Math.min(200,Number(limit)||50))).map(row=>({
+        land_id:row.land_id,records:Number(row.records),earliest:row.earliest,latest:row.latest
+      }));
+    },
     close(){if(!closed){db.close();closed=true}}
   };
 }
