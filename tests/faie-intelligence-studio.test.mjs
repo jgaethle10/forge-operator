@@ -143,3 +143,28 @@ test('specific-site USDA soil proof is opt-in, source-backed and separate from r
   assert.match(html,/data\.request_persisted!==false/);
   assert.match(html,/data\.site_suitability_verdict!==null/);
 });
+
+
+test('site intelligence scanner has simple entry, real source boundaries, and downloadable proof', () => {
+  for(const marker of [
+    'id="heroSiteScanJump"',
+    'id="siteScanRun"',
+    'id="siteScanExample"',
+    'id="siteScanResult"',
+    'id="siteScanDownload"',
+    '/api/faie/site/scan',
+    'Run two-source site scan',
+    'USDA NRCS · Reported',
+    'NOAA NWS · Modeled',
+    'weather.screening_flags',
+    'source_receipts',
+    'data.site_suitability_verdict!==null',
+    'latestSiteScan=data',
+    'evercraft-faie-site-scan.json',
+    'public_lookup_persisted!==false',
+    'upstream',
+    'Official site scan unavailable'
+  ]) assert.ok(html.includes(marker),'site-scan experience contract missing: '+marker);
+  assert.match(html,/Coordinates go to both official services/);
+  assert.match(html,/No automatic build, farm or investment recommendation/);
+});
