@@ -25,32 +25,39 @@
       </a>
       <nav aria-label="Main navigation">
         <a href="#worlds">Learning worlds</a><a href="#explore">Science atlas</a>
-        <a href="#medical">Medical research</a>
-        <a href="#method">Our method</a>
+        <a class="nav-secondary" href="#medical">Medical research</a>
+        <a class="nav-secondary" href="#method">Our method</a>
         <a class="nav-action" href="#sources">Source desk <span aria-hidden="true">↗</span></a>
       </nav>
     </div>
   </header>
   <main>
-    <section class="hero wrap" aria-labelledby="hero-title">
-      <div class="hero-copy">
-        <div class="eyebrow"><span class="signal-dot" aria-hidden="true"></span> AN OPEN DOOR TO EVERCRAFT SCIENCE</div>
-        <h1 id="hero-title">Curiosity<br>has a <em>home.</em></h1>
-        <p class="lead">One doorway to our learning universe. Play in Infinite Classroom, discover the Physics and World Atlases, follow Sentinel’s history, and explore the science behind it all.</p>
+    <section class="hero hero--v2 wrap" aria-labelledby="hero-title">
+      <div class="hero-copy hero-copy--v2">
+        <div class="eyebrow hero-eyebrow"><span class="signal-dot" aria-hidden="true"></span> EVERCRAFT · THE LEARNING UNIVERSE</div>
+        <h1 id="hero-title">The universe<br>is your <em>classroom.</em></h1>
+        <p class="lead">Step inside. Choose a world, chase a question, and discover where it leads.</p>
         <div class="hero-actions">
-          <a class="primary-button" href="#worlds">Choose a learning world <span aria-hidden="true">↗</span></a>
-          <button class="ghost-button" id="surprise" type="button">✦ Surprise me</button>
+          <a class="primary-button hero-main-cta" href="#worlds">Explore the worlds <span aria-hidden="true">↗</span></a>
+          <a class="ghost-button hero-quick-cta" href="./classroom/">✦ Play Infinite Classroom</a>
         </div>
-        <p class="hero-note">Open exploration. Real source trails. No account required.</p>
+        <p class="hero-note"><span class="hero-tiny-star">✳</span> Real projects. Real questions. New worlds taking shape.</p>
       </div>
-      <div class="hero-art" aria-hidden="true">
-        <div class="art-grid"></div>
-        <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="orbit orbit-three"></div>
-        <div class="core"><div class="core-inner">A<span>✳</span></div></div>
-        <span class="satellite s1">◌ <small>QUESTION</small></span>
-        <span class="satellite s2">⌁ <small>DISCOVER</small></span>
-        <span class="satellite s3">✧ <small>VERIFY</small></span>
-        <div class="art-bottom"><span>THE SCIENCE OF ASKING WHY</span><span>EST. EVERCRAFT</span></div>
+      <div class="universe" id="universe" aria-label="Interactive visual map of Aiden's Lab learning worlds">
+        <canvas id="universeCanvas" class="universe-canvas" aria-hidden="true"></canvas>
+        <div class="universe-atmosphere" aria-hidden="true"></div>
+        <div class="universe-orbit universe-orbit--outer" aria-hidden="true"></div>
+        <div class="universe-orbit universe-orbit--middle" aria-hidden="true"></div>
+        <div class="universe-orbit universe-orbit--inner" aria-hidden="true"></div>
+        <div class="universe-core" aria-hidden="true"><div class="universe-core-a">A<span>✳</span></div><div class="universe-core-caption">AIDEN'S<br>LAB</div></div>
+        <button class="universe-node universe-node--classroom" type="button" data-world-id="infinite-classroom" aria-label="Discover Infinite Classroom"><span class="node-glyph">🏰</span><span class="node-name">CLASSROOM</span></button>
+        <button class="universe-node universe-node--physics" type="button" data-world-id="physics-atlas" aria-label="Discover Physics Atlas"><span class="node-glyph">⚛️</span><span class="node-name">PHYSICS</span></button>
+        <button class="universe-node universe-node--earth" type="button" data-world-id="earth-atlas" aria-label="Discover Earth and World Atlas"><span class="node-glyph">🌎</span><span class="node-name">EARTH</span></button>
+        <button class="universe-node universe-node--cosmos" type="button" data-world-id="cosmos-atlas" aria-label="Discover Cosmos Atlas"><span class="node-glyph">🪐</span><span class="node-name">COSMOS</span></button>
+        <button class="universe-node universe-node--wildlife" type="button" data-world-id="wildlife-atlas" aria-label="Discover Wildlife Atlas"><span class="node-glyph">🦋</span><span class="node-name">WILDLIFE</span></button>
+        <button class="universe-node universe-node--sentinel" type="button" data-world-id="sentinel-intelligence" aria-label="Discover Sentinel Intelligence"><span class="node-glyph">🛡️</span><span class="node-name">SENTINEL</span></button>
+        <div class="universe-instruction"><span class="touch-pulse">◎</span> TOUCH A WORLD TO EXPLORE</div>
+        <div class="universe-meta" aria-hidden="true"><span>01 / THE DISCOVERY FIELD</span><span>EVERCRAFT ORIGINAL WORLDS</span></div>
       </div>
     </section>
     <section class="promise-strip" aria-label="Our commitments">
@@ -73,8 +80,19 @@
             <span>🧮 <small>MATH</small></span><span>📚 <small>READ</small></span><span>🔬 <small>SCIENCE</small></span><span>🗣️ <small>LANGUAGE</small></span><span>🎨 <small>CREATE</small></span><span>🌿 <small>CALM</small></span>
           </div>
         </div>
-        <div class="worlds-heading"><h3>The learning universe</h3><p>Open a playable preview when available, or follow a project’s verified source and restoration work.</p></div>
-        <div id="learningWorldGrid" class="learning-world-grid" aria-live="polite"></div>
+        <div class="worlds-heading"><h3>Choose your next portal.</h3><p>Tap a world to discover its story. Only verified previews offer a Play entrance.</p></div>
+        <div id="learningWorldGrid" class="learning-world-grid" aria-label="Choose a learning world"></div>
+        <section id="worldSpotlight" class="world-spotlight" aria-labelledby="worldSpotlightTitle">
+          <div class="spotlight-visual"><div id="spotlightIcon" class="spotlight-icon" aria-hidden="true">🏰</div><span class="spotlight-orbit spotlight-orbit-a" aria-hidden="true"></span><span class="spotlight-orbit spotlight-orbit-b" aria-hidden="true"></span></div>
+          <div class="spotlight-copy">
+            <p id="spotlightKind" class="kicker">LEARN AND PLAY</p>
+            <h3 id="worldSpotlightTitle">Infinite Classroom</h3>
+            <p id="spotlightDescription" class="spotlight-description">Six learning rooms to explore.</p>
+            <span id="spotlightStatus" class="world-state">Playable practice preview</span>
+            <details class="spotlight-evidence"><summary>What actually exists?</summary><p id="spotlightEvidence">This is a practice preview, not the full restored conversational tutor.</p></details>
+            <a id="spotlightLink" class="primary-button spotlight-cta" href="./classroom/">Enter the practice classroom ↗</a>
+          </div>
+        </section>
         <noscript><p class="world-nojs">JavaScript is needed for the world catalog. <a href="./classroom/">Open the Infinite Classroom practice preview</a> or continue to the science atlas below.</p></noscript>
         <div class="learning-steps" aria-label="The Deep Learning method">
           <span class="steps-label">OUR LEARNING LOOP</span>
@@ -84,7 +102,7 @@
     </section>
     <section class="explorer wrap" id="explore" aria-labelledby="explore-title">
       <div class="section-header">
-        <div><p class="kicker">THE SCIENCE ATLAS</p><h2 id="explore-title">Pick a rabbit hole.</h2><p class="sub">Every room has a question, a real evidence trail, and a next thing to investigate.</p></div>
+        <div><p class="kicker">THE SCIENCE ATLAS</p><h2 id="explore-title">Follow your curiosity.</h2><p class="sub">Every room has a question, a real evidence trail, and a next thing to investigate.</p></div>
         <span class="section-symbol" aria-hidden="true">✳</span>
       </div>
       <div class="toolbox">
@@ -94,6 +112,7 @@
       <div id="filters" class="filters" role="group" aria-label="Filter topics by science field"></div>
       <div class="results-head"><p id="resultsCount" aria-live="polite"></p><p class="results-hint">Select a room to see its sources and open questions.</p></div>
       <div id="topicGrid" class="topic-grid" aria-live="off"></div>
+      <button id="showMoreTopics" class="show-more-topics" type="button" hidden>Reveal more science rooms ↗</button>
       <div id="empty" class="empty" hidden><strong>No discoveries under that name, yet.</strong><p>Try a different subject or clear your filters.</p><button type="button" id="reset">Show all topics</button></div>
     </section>
     <section id="medical" class="medical-band">
