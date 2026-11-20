@@ -95,6 +95,12 @@ vm.runInContext(source,context,{timeout:4000});
  const prior=revoke.length;
  vm.runInContext('window.__evercraftPdf.invalidate()',context);
  if(!get('pdfReady').hidden||!get('pdfDownload').hidden||revoke.length!==prior+1)throw Error('Stale PDF was not invalidated');
+ context.window.__evercraftDrawingVersion=7;
+ let rasterCount=0;
+ context.Image=class {set src(url){rasterCount++;if(rasterCount===2)context.window.__evercraftDrawingVersion=8;this.onload?.()}};
+ await click();
+ if(!get('pdfReady').hidden||!get('pdfDownload').hidden)throw Error('Mid-render edit allowed stale PDF');
+ if(!get('messages').textContent.includes('The drawing changed while the PDF was being made'))throw Error('No clear retry message after edit');
  console.log('PHONE PDF FLOW PASS');
 })().catch(e=>{console.error(e);process.exitCode=1});
 """
