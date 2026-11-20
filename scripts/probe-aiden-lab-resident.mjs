@@ -17,6 +17,8 @@ export const ASSETS=Object.freeze([
   {name:'styles.css',type:/^text\/css\b/i},
   {name:'mark.svg',type:/^image\/svg\+xml\b/i},
   {name:'classroom/index.html',source:'public/apps/infinite-classroom/play/index.html',type:/^text\/html\b/i,learningMarker:'classroom-practice-v1'},
+  {name:'physics/index.html',type:/^text\/html\b/i,learningMarker:'physics-model-v1'},
+  {name:'world/index.html',type:/^text\/html\b/i,learningMarker:'earth-globe-v1'},
 ]);
 const sha256=(data)=>createHash('sha256').update(data).digest('hex');
 
