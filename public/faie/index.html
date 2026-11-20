@@ -189,6 +189,18 @@
     .scope-hint strong{color:#e0e8d7}
     .compare-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
     .compare-actions button{margin-top:18px}
+    .source-ledger{margin:26px 0 20px}
+    .source-ledger-head{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;flex-wrap:wrap}
+    .source-ledger-head h2{margin:6px 0}
+    .source-ledger-summary{color:#b9cdbb;font-size:.83rem;line-height:1.5}
+    .source-ledger-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(225px,1fr));gap:10px;margin-top:16px}
+    .source-ledger-card{border:1px solid #3b5845;border-radius:15px;padding:15px;background:rgba(6,22,13,.48)}
+    .source-ledger-card strong{display:block;font-size:.9rem;margin-bottom:8px}
+    .source-ledger-state{font-size:.76rem;display:block;color:#c7d9cb;margin-bottom:7px}
+    .source-ledger-state[data-state="error"],.source-ledger-state[data-state="partial"]{color:#f2c69c}
+    .source-ledger-state[data-state="disabled"]{color:#a6afaa}
+    .source-ledger-card p{font-size:.75rem;line-height:1.5;color:#adbeae;margin:0}
+    .source-ledger-guidance{margin-top:12px;color:#b8cbb9;font-size:.76rem;line-height:1.55}
     .plain-results{display:flex;flex-direction:column;gap:5px;border:1px solid #46654a;border-radius:15px;background:#102719;padding:15px;margin-top:16px}
     .plain-results strong{font-size:.82rem;color:#d7edce}
     .plain-results span{font-size:.85rem;color:#e5ebe0;line-height:1.5}
@@ -367,7 +379,7 @@
     </a>
     <div class="nav-links">
       <a href="#investigation">Ask a question</a>
-      <a href="#field">Live sources</a>
+      <a href="#sources">Data sources</a>
       <a href="#comparison">Compare</a>
       <a class="nav-cta" href="#investigation">Try FAIE ↗</a>
     </div>
@@ -532,6 +544,20 @@
       </div>
     </section>
   </div>
+
+  <section class="panel source-ledger" id="sources">
+    <div class="source-ledger-head">
+      <div>
+        <div class="section-kicker">Where the information comes from</div>
+        <h2>What is actually feeding FAIE?</h2>
+        <div class="meta">These are the last source-collector receipts from the running engine. A connected feed is not the same thing as a useful finding.</div>
+      </div>
+      <span class="tag" id="sourceLedgerCycle">Checking last collection…</span>
+    </div>
+    <div id="sourceLedgerSummary" class="source-ledger-summary" aria-live="polite">Checking source receipts.</div>
+    <div id="sourceLedger" class="source-ledger-grid" aria-live="polite"><div class="quiet">Loading source status…</div></div>
+    <div class="source-ledger-guidance">A successful check may return zero observations. A missing or failed feed never becomes a verified finding. Region-level evidence does not establish conditions at a particular property or water right.</div>
+  </section>
 
   <div class="grid2">
     <section class="panel" id="field">
@@ -917,6 +943,49 @@ function renderComparison(comparison) {
   el.innerHTML = html;
 }
 
+const faieCollectorNames = Object.freeze({
+  'nws-active-alerts':'National Weather Service alerts',
+  'usgs-water-latest-continuous':'USGS stream and water measurements',
+  'nwps-river-gauges':'NOAA river gauges and forecasts',
+  'usdm-county-weekly':'U.S. Drought Monitor county assessments'
+});
+function renderFaieSourceLedger(health) {
+  const cycle = health.last_cycle && typeof health.last_cycle==='object' ? health.last_cycle : null;
+  const list = Array.isArray(cycle?.official_collector_receipts) ? cycle.official_collector_receipts : [];
+  const ledger = document.getElementById('sourceLedger');
+  const summary = document.getElementById('sourceLedgerSummary');
+  const last = document.getElementById('sourceLedgerCycle');
+  if (!health.ok) {
+    last.textContent='Runtime needs attention';
+    summary.textContent='The engine did not report healthy operation. These receipts must not be treated as current verified coverage.';
+  } else {
+    last.textContent=cycle?.finished_at ? 'Last collection: '+fmt(cycle.finished_at) : 'No completed collection yet';
+    summary.textContent=cycle
+      ? 'Last cycle: '+String(cycle.official_observations_seen??0)+' observations returned by official collectors; '+String(cycle.admitted??0)+' newly admitted across all inputs; '+String(cycle.radar_signals_seen??0)+' Radar candidates seen. These totals are different counts.'
+      : 'No collection receipt is available yet. The presence of a connector does not prove any intelligence was received.';
+  }
+  if (!list.length) {
+    ledger.innerHTML='<div class="quiet">No individual source receipts were returned. Source activity cannot be confirmed from this snapshot.</div>';
+    return;
+  }
+  const rowStatus=(row)=>{
+    const status=String(row?.status||'unknown').toLowerCase();
+    if(status==='disabled')return {state:'disabled',label:'Not configured',detail:String(row.reason||'Collector disabled').replaceAll('_',' ')};
+    if(status==='error'||status==='partial')return {state:status,label:status==='error'?'Check failed':'Partial / degraded',detail:'Review collector receipt; do not assume complete evidence'};
+    if(status==='ok'&&Number(row?.item_count||0)>0)return {state:'ok',label:'Returned '+String(row.item_count)+' observation(s)',detail:'Source responded; findings still pass separate evidence checks'};
+    if(status==='ok')return {state:'ok',label:'Checked; no observations returned',detail:'Reachable does not mean an actionable finding was detected'};
+    return {state:'unknown',label:'Unverified collector state',detail:'No success evidence in latest receipt'};
+  };
+  ledger.innerHTML=list.map((row)=>{
+    const status=rowStatus(row);
+    const label=faieCollectorNames[String(row?.source_id||'')]||String(row?.source_id||'Other source');
+    const time=row?.checked_at?' · checked '+fmt(row.checked_at):'';
+    return '<article class="source-ledger-card"><strong>'+esc(label)+'</strong>'
+      +'<span class="source-ledger-state" data-state="'+esc(status.state)+'">'+esc(status.label)+'</span>'
+      +'<p>'+esc(status.detail+time)+'</p></article>';
+  }).join('');
+}
+
 async function loadState() {
   const statusbar = document.getElementById('statusbar');
   const signalsEl = document.getElementById('signals');
@@ -927,6 +996,8 @@ async function loadState() {
     ]);
     const health = await healthRes.json();
     const state = await signalsRes.json();
+    if (!healthRes.ok || !signalsRes.ok || health.ok !== true) throw new Error('Live FAIE health or signal endpoint is unavailable.');
+    renderFaieSourceLedger(health);
 
     const sources = health.official_collectors || {};
     const sourceLabel = sources.enabled === false
@@ -954,6 +1025,10 @@ async function loadState() {
     ).join('') : '<div class="quiet">FAIE is running, but no relevant signals have been admitted yet.</div>';
   } catch (error) {
     setFaieMetrics({error});
+    const ledger=document.getElementById('sourceLedger');
+    document.getElementById('sourceLedgerCycle').textContent='Not verified';
+    document.getElementById('sourceLedgerSummary').textContent='Source activity cannot be confirmed while FAIE is unavailable.';
+    ledger.innerHTML='<div class="quiet error">Source receipts unavailable. Do not interpret previous counts as live.</div>';
     statusbar.innerHTML = '<span class="pill error">FAIE API unavailable</span>';
     signalsEl.innerHTML = '<div class="quiet error">' + esc(error && error.message ? error.message : error) + '</div>';
   }
