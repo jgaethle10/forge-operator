@@ -72,7 +72,7 @@ export async function runLeilandFieldCanary({checkout,publicationRoot,expectedSh
    let parsed;try{parsed=JSON.parse(pulse.data.toString('utf8'))}catch{deny('local_public_pulse_json_invalid')}
    const assessment=assessPublicPulse(parsed);
    if(!assessment.ok)deny('local_public_pulse_schema_invalid');
-   pulseState=assessment.verified?'source_reported_attested':assessment.sourceFresh?'unverified':'stale';
+   pulseState=assessment.verified?'source_reported_attested':(!assessment.sourceFresh||!assessment.cycleFresh)?'stale':'unverified';
    cycle=assessment.cycle_number;
   }else if(pulse.response.status!==404)deny('public_pulse_invalid_at_origin');
   const feed=await readLocal(fetchImpl,app.origin+'/leiland/feed.json',20000);
