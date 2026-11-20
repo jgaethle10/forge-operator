@@ -20,18 +20,18 @@ export const LEARNING_WORLDS=Object.freeze([
   },
   {
     id:'physics-atlas',icon:'⚛️',title:'Physics Atlas',kind:'Experiment and predict',
-    description:'Forces, motion, waves, circuits and matter. The goal is to predict, manipulate, measure and explain, not just read an answer.',
+    description:'Play nine hands-on challenges across launches, swinging pendulums and traveling waves. Predict, change the model, test your setup and collect discoveries.',
     state:'interactive_preview',action:'Experiment with physics',
     url:'./physics/',
-    evidence:'New original Evercraft-owned browser preview with ideal projectile, small-angle pendulum and one-dimensional wave models. It is not a recovery or production-parity proof of the former Physics Atlas.',
+    evidence:'First-party interactive preview: three idealized mathematical models, nine model-checked museum challenges and an optional opt-in device-local discovery passport. Original Physics Atlas parity is not established.',
     source:'https://github.com/jgaethle10/forge-operator/tree/main/registry/evercraft-physics-atlas'
   },
   {
     id:'earth-atlas',icon:'🌍',title:'Earth & World Atlas',kind:'Explore our planet',
-    description:'Maps, places, natural systems, hazards, geography and history. Return the Earth Atlas as an interactive evidence-led world.',
+    description:'Spin a source-linked globe with real public-domain land shapes, then travel three guided science expeditions through watersheds, tectonics and ecosystems.',
     state:'interactive_preview',action:'Explore the Earth globe',
     url:'./world/',
-    evidence:'New first-party educational globe with schematic coastlines and coordinate-based source-linked expeditions. The original Earth Atlas code and feature parity are not recovered; no authoritative map, live sensor or hazard forecast.',
+    evidence:'First-party globe using generalized public-domain Natural Earth land geometry, eight source-linked locations and three authored science museum expeditions. This is a teaching preview, not original Earth Atlas parity or a live sensor, precise hazard or navigation map.',
     source:'https://github.com/jgaethle10/forge-operator/blob/main/systemia/migrations/base44-exit/EDUCATION-REBUILD-2026-11-04.md'
   },
   {
