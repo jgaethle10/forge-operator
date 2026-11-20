@@ -5,11 +5,13 @@ on:
     paths:
       - 'systemia/boardroom/**'
       - 'tests/boardroom-runtime.test.mjs'
+      - 'tests/boardroom-provider-canary.test.mjs'
       - '.github/workflows/boardroom-runtime.yml'
   pull_request:
     paths:
       - 'systemia/boardroom/**'
       - 'tests/boardroom-runtime.test.mjs'
+      - 'tests/boardroom-provider-canary.test.mjs'
       - '.github/workflows/boardroom-runtime.yml'
   workflow_dispatch:
 permissions:
@@ -28,8 +30,9 @@ jobs:
           node --check systemia/boardroom/engine.mjs
           node --check systemia/boardroom/providers.mjs
           node --check systemia/boardroom/server.mjs
+          node --check systemia/boardroom/provider-canary.mjs
       - name: Run independent council tests without provider credentials
-        run: node --test tests/boardroom-runtime.test.mjs
+        run: node --test tests/boardroom-runtime.test.mjs tests/boardroom-provider-canary.test.mjs
       - name: Assert private runtime boundary
         run: |
           node --input-type=module <<'NODE'
