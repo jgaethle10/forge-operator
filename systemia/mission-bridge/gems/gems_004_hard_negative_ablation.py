@@ -12,6 +12,7 @@ The mapped-fault DTI is a proxy, never DrivenData's hidden new-fault score.
 No candidate GeoTIFF, scored submission, or automatic promotion.
 """
 import argparse
+import hashlib
 import json
 import time
 from pathlib import Path
@@ -91,13 +92,50 @@ def select_hard_training_indices(labels,train,distances,pilot_indices,pilot_scor
         "hard_score_quantiles":np.quantile(pilot_scores[ranked[:needed]],
                                             [0,.25,.5,.75,1]).tolist(),
         "hard_distance_min":float(np.min(distances[hard])),
-        "mined_index_sha256_unavailable":True}
+        "mined_flat_indices_sha256":hashlib.sha256(np.asarray(hard,dtype="<i8").tobytes()).hexdigest()}
 
 def mining_indices(labels,train,distances,pilot_indices,min_dist=HARD_MIN_DISTANCE_PIXELS):
     """All mining candidates restricted to training region and not pilot samples."""
     allowed=train & ~labels & (distances>min_dist)
     allowed[np.asarray(pilot_indices,np.int64)]=False
     return np.flatnonzero(allowed)
+
+def select_distance_matched_random_indices(labels,train,distances,pilot_indices,
+                                           eligible_indices,fold):
+    """Unmined negative control: same 3 pilot + 2 fresh distant negatives per positive.
+
+    Fresh pool is EXACTLY the same training-only, >10px pool that pilot scores
+    would rank for the hard variant. No prediction-derived ranking here.
+    """
+    labels=np.asarray(labels,bool);train=np.asarray(train,bool)
+    distances=np.asarray(distances,float)
+    pilot_indices=np.asarray(pilot_indices,np.int64)
+    eligible_indices=np.asarray(eligible_indices,np.int64)
+    pos=np.flatnonzero(train&labels)
+    p=int(len(pos));needed=HARD_PER_POSITIVE*p
+    if (not p or pilot_indices.shape!=(6*p,) or
+        not np.array_equal(pilot_indices[:p],pos) or
+        eligible_indices.size<needed):
+        raise ValueError("distance_control_training_counts_invalid")
+    if (np.any(~train[eligible_indices]) or np.any(labels[eligible_indices])
+        or np.any(distances[eligible_indices]<=HARD_MIN_DISTANCE_PIXELS)
+        or np.intersect1d(pilot_indices,eligible_indices).size
+        or len(np.unique(eligible_indices))!=len(eligible_indices)):
+        raise ValueError("distance_control_training_leakage")
+    rng=np.random.default_rng(SEED+1009+fold)
+    extra=rng.choice(eligible_indices,size=needed,replace=False)
+    final=np.concatenate((pos,pilot_indices[p:p+RANDOM_PER_POSITIVE*p],extra))
+    if (np.any(~train[final]) or len(np.unique(final))!=len(final)
+        or np.any(labels[final[p:]]) or len(final)!=6*p):
+        raise AssertionError("distance_control_contract_violation")
+    return final,{
+        "positives":p,"final_pilot_random_negatives":RANDOM_PER_POSITIVE*p,
+        "final_fresh_distance_matched_random_negatives":int(len(extra)),
+        "minimum_distance_pixels":HARD_MIN_DISTANCE_PIXELS,
+        "fresh_flat_indices_sha256":hashlib.sha256(
+            np.asarray(extra,dtype="<i8").tobytes()).hexdigest(),
+        "seed":int(SEED+1009+fold)}
+
 
 def measure(original,model,matrix,north_flat,north,truth,full,corridor,known):
     prob=np.zeros(north.shape,np.float32)
@@ -157,13 +195,25 @@ def execute(data,evidence):
         mine_scores=original.predict(pilot,matrix,mine_mask,matrix.shape[1])
         candidate_indices,hard_receipt=select_hard_training_indices(
             labels,train,distances,pilot_indices,mine_scores,mine)
+        control_indices,control_receipt=select_distance_matched_random_indices(
+            labels,train,distances,pilot_indices,mine,fold)
         del mine_scores, mine_mask, mine, pilot
-        if np.any(~train[candidate_indices]):
+        if np.any(~train[candidate_indices]) or np.any(~train[control_indices]):
             raise AssertionError("candidate_training_leakage")
+        # Both variants use identical positives and the same 3P pilot negatives.
+        common=4*hard_receipt["positives"]
+        if not np.array_equal(candidate_indices[:common],control_indices[:common]):
+            raise AssertionError("nonmatched_training_controls")
         hard_model=new_model()
         hard_model.fit(matrix[candidate_indices],labels[candidate_indices])
         hardened=measure(original,hard_model,matrix,north_flat,north,
                          truth,full,corridor,known)
+        del hard_model
+        control_model=new_model()
+        control_model.fit(matrix[control_indices],labels[control_indices])
+        dist_control=measure(original,control_model,matrix,north_flat,north,
+                             truth,full,corridor,known)
+        del control_model
         ledger.append({"fold":fold,
             "heldout_connected_segments":len(ids),
             "heldout_mapped_fault_pixels":int(truth.sum()),
@@ -171,7 +221,9 @@ def execute(data,evidence):
             "corridor_scoreable_pixels":int(corridor.sum()),
             "baseline_training":pilot_counts,
             "hard_negative_training":hard_receipt,
-            "baseline":baseline,"hard_mined":hardened})
+            "distance_matched_control_training":control_receipt,
+            "baseline":baseline,"distance_matched_random":dist_control,
+            "hard_mined":hardened})
     def pooled(choice,region):
         terms=[row[choice][region+"_terms"] for row in ledger]
         return {"dti":score_pooled_terms(terms),
@@ -179,6 +231,7 @@ def execute(data,evidence):
             "fp":sum(x["fp"] for x in terms),
             "fn":sum(x["fn"] for x in terms)}
     full_base=pooled("baseline","full")
+    full_control=pooled("distance_matched_random","full")
     full_hard=pooled("hard_mined","full")
     report={
       "schema":"evercraft.gems.hard-negative-full-area-ablation.v1",
@@ -189,12 +242,17 @@ def execute(data,evidence):
       "southern_region_excluded_from_train_and_scoring":True,
       "baseline_negative_scheme":"5 random eligible negatives per known mapped fault; 0m",
       "experimental_negative_scheme":"3 pilot random + 2 fresh mined training-only hard negatives per known fault, >1000m from train-known faults",
+      "distance_matched_control_scheme":"3 identical pilot random + 2 fresh uniformly random, training-only negatives from EXACT mined eligibility pool (>1000m from train-known faults)",
       "model_predicted_hard_negative_labels_are_unverified":True,
       "heldout_labels_never_mined":True,
       "threshold":THRESHOLD,"ridge":True,
-      "full_area_baseline":full_base,"full_area_hard_negative":full_hard,
+      "full_area_baseline":full_base,
+      "full_area_distance_matched_random_control":full_control,
+      "full_area_hard_negative":full_hard,
       "full_area_gain":full_hard["dti"]-full_base["dti"],
+      "hard_mining_gain_over_distance_control":full_hard["dti"]-full_control["dti"],
       "corridor_baseline":pooled("baseline","corridor"),
+      "corridor_distance_matched_random":pooled("distance_matched_random","corridor"),
       "corridor_hard_negative":pooled("hard_mined","corridor"),
       "fold_ledger":ledger,
       "fold_counts":fold_counts,"segment_inventory":inventory,
@@ -211,7 +269,9 @@ if __name__=="__main__":
     args=p.parse_args()
     result=execute(args.data_dir,args.evidence_dir)
     print(json.dumps({"baseline":result["full_area_baseline"]["dti"],
+        "distance_matched_random":result["full_area_distance_matched_random_control"]["dti"],
         "hard_negative":result["full_area_hard_negative"]["dti"],
         "gain":result["full_area_gain"],
+        "hard_vs_distance_control":result["hard_mining_gain_over_distance_control"],
         "official_score_known":False,
         "submission_made":False},indent=2))
