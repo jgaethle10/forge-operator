@@ -73,25 +73,36 @@ export function createFallenBootstrap({enabled=false,packageFile='',signerPublic
   }
   if(req.method!=='POST')return deny(res,405),true;
   let bytes=0,chunks=[];
+  let stage='read_body';
   try{
    for await(const chunk of req){bytes+=chunk.length;if(bytes>2048)throw Error('oversized');chunks.push(chunk);}
+   stage='parse_claim';
    const input=JSON.parse(Buffer.concat(chunks).toString('utf8'));
    if(Object.keys(input).sort().join(',')!=='nonce,signature'||typeof input.nonce!=='string'||!nonceSafe(input.nonce)||typeof input.signature!=='string')throw Error('malformed');
+   stage='find_challenge';
    const expiry=nonces.get(input.nonce);
    nonces.delete(input.nonce); // consume before verification, including failures
    if(!expiry||expiry<now())throw Error('nonce_expired');
+   stage='verify_signature';
    const statement=Buffer.from(JSON.stringify({schema:'evercraft.wing-courier.enrollment-claim.v1',nonce:input.nonce,sha256:expectedSha256,recipientFingerprint}));
    const sig=Buffer.from(input.signature,'base64');
    if(sig.length!==64||!crypto.verify(null,statement,crypto.createPublicKey(checkedFile(signerPublicKeyFile,8192)),sig))throw Error('signature_invalid');
    // Re-read at claim time: a changed package cannot be delivered.
+   stage='read_package';
    const payload=checkedFile(packageFile,LIMIT,true);
    if(crypto.createHash('sha256').update(payload).digest('hex')!==expectedSha256)throw Error('package_changed');
+   stage='consume_durable_claim';
    consumeClaim(marker,input.nonce);
    claims++;
    nonces.clear();
    const body=Buffer.from(JSON.stringify({schema:'evercraft.wing-courier.enrollment-delivery.v1',sha256:expectedSha256,payloadBase64:payload.toString('base64')}));
    res.writeHead(200,{'content-type':'application/json','content-length':body.length,'cache-control':'no-store','x-content-type-options':'nosniff'});res.end(body);return true;
-  }catch{return deny(res,403),true;}
+  }catch{
+   // Fixed, nonsecret stage labels only. No nonce, signature, key, path, token or request body.
+   // Public response deliberately remains indistinguishable across POST failures.
+   console.error('fallen_bootstrap_claim_denied stage='+stage);
+   return deny(res,403),true;
+  }
  }
  return {handle};
 }
