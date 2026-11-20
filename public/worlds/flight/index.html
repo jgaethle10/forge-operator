@@ -1206,6 +1206,25 @@ function forRunwayQuads(emit){
   band(half-3,start+5,half-2,end-5,y+.43,[.93,.91,.75],'#f6edc8');
   for(let v=start+115;v<end-80;v+=130)
    rect(-2.2,v,2.2,Math.min(v+62,end-60),y+.46,[.95,.94,.86],'#fff9e9');
+  // Runway designation pavement lettering in original 5x7 block glyph geometry.
+  // Names and direction labels follow public runway identifiers, not NOTAMs.
+  const glyph={
+   '1':['00100','01100','00100','00100','00100','00100','01110'],
+   '4':['10010','10010','10010','11111','00010','00010','00010'],
+   '6':['01110','10000','10000','11110','10001','10001','01110'],
+   'R':['11110','10001','10001','11110','10100','10010','10001'],
+   'L':['10000','10000','10000','10000','10000','10000','11111'],
+   'C':['01110','10001','10000','10000','10000','10001','01110']
+  };
+  const numbers=f.designation.split(' / ')[0],cell=1.7,textW=numbers.length*11+3;
+  for(let n=0;n<numbers.length;n++){
+   const rows=glyph[numbers[n]]||[];
+   for(let row=0;row<rows.length;row++)for(let col=0;col<5;col++){
+    if(rows[row][col]!=='1')continue;
+    const u=-textW/2+n*11+col*cell,v=start+95+row*cell*1.35;
+    rect(u,v,u+cell*.96,v+cell*1.3,y+.5,[.96,.95,.88],'#fbfaf1');
+   }
+  }
   for(const v of [start+42,end-42])
    for(const side of [-1,1])for(let i=0;i<3;i++){
     const u=side*(10+i*9);
