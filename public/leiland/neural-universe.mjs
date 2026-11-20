@@ -168,7 +168,7 @@ export function createNeuralUniverse({canvas,stage,reduce,initialFocus='systemia
    const drift=still?0:.12*Math.sin(clock*.0012+line.phase*TAU);
    const opacity=line.region==='bridge'?.085:(matched?.43:.115)+drift*(matched?1:.4);
    ctx.strokeStyle=rgba(color,opacity);
-   ctx.lineWidth=matched?small?.75:1.07:.53;
+   ctx.lineWidth=matched?(small?0.75:1.07):0.53;
    ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();
    // Traveling pinpricks are synthetic atmosphere and never claimed as jobs.
    if(!still&&matched&&i%5===0){
