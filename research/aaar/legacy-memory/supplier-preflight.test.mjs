@@ -1,0 +1,10 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import {readFileSync} from "node:fs";
+import {assess} from "./supplier-preflight.mjs";
+const basic={"schema":"evercraft.aaar.legacy-memory-supplier-candidates.v1","market_notice":{"identifier":"FA8611-27-R-F-22","official_pdf_independently_reviewed":false},"eligibility":{},"candidates":[{"id":"TEST","company":"SYNTHETIC","verification_status":"public_lead_only","authorized_relationship":false,"verified_traceability":false,"confirmed_quote":false}]};
+test("unknown schema blocked",()=>assert.throws(()=>assess({}),/Unsupported/));
+test("unqualified supplier blocked",()=>{let r=assess(basic);assert.equal(r.candidates[0].state,"RESEARCH_HOLD");assert.equal(r.candidates[0].documentary_fields_present,0);assert.equal(r.automatic_submission_permitted,false)});
+test("16 synthetic pointers do not authorize supply",()=>{let x=JSON.parse(JSON.stringify(basic));x.candidates[0].response_evidence=Object.fromEntries(assess(x).requirement_keys.map(k=>[k,{status:"documented_pending_independent_review",source_url:"https://example.com/fiction",document_description:"Synthetic illustration"}]));let r=assess(x);assert.equal(r.candidates[0].documentary_fields_present,16);assert.equal(r.candidates[0].state,"RESEARCH_HOLD");assert.equal(r.candidates[0].response_authorized,false)});
+test("unsupported evidence URI rejected",()=>{let x=JSON.parse(JSON.stringify(basic));x.candidates[0].response_evidence={warranty:{status:"documented_pending_independent_review",source_url:"file:///tmp/fake",document_description:"Synthetic illustration"}};assert.equal(assess(x).candidates[0].documentary_fields_present,0)});
+test("current live ledger remains held",()=>{const x=JSON.parse(readFileSync(new URL("./supplier-candidates-2026-11-19.json",import.meta.url),"utf8"));const r=assess(x);assert.equal(r.candidate_count,4);assert.ok(r.candidates.every(c=>c.state==="RESEARCH_HOLD"&&!c.response_authorized));});
