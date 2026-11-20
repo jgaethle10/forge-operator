@@ -111,10 +111,20 @@ for service in evercraft-fabric.service evercraft-public-edge.service; do
   fi
 done
 if test -f /etc/evercraft/Caddyfile; then
-  if /usr/bin/caddy validate --config /etc/evercraft/Caddyfile --adapter caddyfile >/dev/null 2>&1; then
-    echo "EXISTING CADDY: valid (no modifications)"
+  # Match the existing resident Caddy service's public-edge environment.
+  # Never source an env file as executable shell code.
+  EDGE_ENV=/etc/evercraft/public-edge.env
+  EDGE_HOST=""
+  EDGE_EMAIL=""
+  if test -r "$EDGE_ENV"; then
+    EDGE_HOST="$(awk -F= '$1=="EVERCRAFT_PUBLIC_HOST"{print substr($0,index($0,"=")+1)}' "$EDGE_ENV" | tail -1)"
+    EDGE_EMAIL="$(awk -F= '$1=="EVERCRAFT_ACME_EMAIL"{print substr($0,index($0,"=")+1)}' "$EDGE_ENV" | tail -1)"
+  fi
+  if env EVERCRAFT_PUBLIC_HOST="$EDGE_HOST" EVERCRAFT_ACME_EMAIL="$EDGE_EMAIL" \
+      /usr/bin/caddy validate --config /etc/evercraft/Caddyfile --adapter caddyfile >/dev/null 2>&1; then
+    echo "EXISTING CADDY: valid with installed public-edge environment (no modifications)"
   else
-    echo "EXISTING CADDY: validation failed; public release held"
+    echo "EXISTING CADDY: blocked even with public-edge environment; public release held"
   fi
 else
   echo "EXISTING CADDY: missing; public release held"
