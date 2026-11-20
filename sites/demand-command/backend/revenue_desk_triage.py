@@ -11,6 +11,7 @@ import json
 import os
 from pathlib import Path
 import sys
+from zoneinfo import ZoneInfo
 
 from revenue_desk_bridge import (
     REVENUE_URL, MAX_DOWNLOAD, collect, entries, get_json,
@@ -45,7 +46,7 @@ def is_due(value, today):
 def build_triage(source, today=None):
     """Only aggregate metrics. Never emit any source field values or record IDs."""
     if today is None:
-        today = dt.datetime.now(dt.timezone.utc).date()
+        today = dt.datetime.now(ZoneInfo('America/Los_Angeles')).date()
     rows = entries(source)
     eligible, rejected = collect(source)
     stats = Counter()
