@@ -390,6 +390,23 @@
       "optional_env_args": {
         "--expected-facebook-page-id": "EVERCRAFT_CLIP_WORK_SABAN_FACEBOOK_PAGE_ID"
       }
+    },
+    {
+      "service_key": "leiland-owned-observatory",
+      "mode": "resident",
+      "manifest": "systemia/organism/leiland-owned-observatory.workflow.json",
+      "executable": "systemia/leiland/resident-host-runner.mjs",
+      "optional_when_unconfigured": true,
+      "env_args": {
+        "--static-root": "LEILAND_STATIC_PUBLIC_ROOT",
+        "--publication-root": "LEILAND_PUBLICATION_ROOT",
+        "--release-sha": "LEILAND_RELEASE_SHA"
+      },
+      "optional_env_args": {
+        "--port": "LEILAND_PORT"
+      },
+      "max_restarts_per_hour": 8,
+      "restart_backoff_ms": 5000
     }
   ]
 }
