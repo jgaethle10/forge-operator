@@ -58,8 +58,8 @@ test('rollback rejects changes generated after the initial clean gate',()=>{
 
 test('release doctor warns operators if on-disk updater still contains destructive Journal cleaning',()=>{
   assert.match(releaseDoctor,/updater_journal_preservation=UNSAFE_DESTRUCTIVE_LEGACY/);
-  assert.match(releaseDoctor,/restore --staged --worktree -- public\\/journal/);
-  assert.match(releaseDoctor,/clean -fdx -- public\\/journal/);
+  assert.match(releaseDoctor,/restore --staged --worktree -- public\/journal/);
+  assert.match(releaseDoctor,/clean -fdx -- public\/journal/);
   assert.match(releaseDoctor,/updater_journal_preservation=non_destructive_source_guard_present/);
 });
 
