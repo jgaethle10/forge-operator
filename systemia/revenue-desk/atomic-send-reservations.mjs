@@ -78,7 +78,8 @@ export function reserveColdOutreach({
  if(!Number.isFinite(at))throw Error('reservation_time_invalid');
  if(!OPAQUE.test(prospect?.contact_ref||'')||!OPAQUE.test(opportunityRef||''))
   throw Error('opaque_contact_and_opportunity_required');
- if(!clean(subjectRef)||!clean(actorRef))throw Error('passport_actor_and_resource_required');
+ if(!/^contact:[A-Za-z0-9_.:-]{1,120}$/.test(subjectRef||'')||!/[A-Za-z0-9]+:[A-Za-z0-9_.:-]{1,120}$/.test(actorRef||'')||String(actorRef).includes('@'))
+  throw Error('passport_actor_and_opaque_contact_resource_required');
  if(!clean(subject)||!clean(body))throw Error('exact_email_required');
  if(!body.includes(clean(sender.postal_address))||!clean(sender.postal_address)||
     !body.includes(clean(sender.opt_out_instructions))||!clean(sender.opt_out_instructions))
