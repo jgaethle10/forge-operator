@@ -16,6 +16,7 @@ from urllib.parse import urlsplit
 from email.parser import BytesParser
 from email.policy import default
 from report_bridge import fetch_owned_ready_report
+from aerial_sources import preview_from_address
 
 ROOT = Path(__file__).resolve().parent
 DATA = Path(os.environ.get('EVERCRAFT_SITE_DATA', str(ROOT / 'data'))).resolve()
@@ -307,6 +308,8 @@ class Handler(BaseHTTPRequestHandler):
             m=re.fullmatch(r'/api/(evidence|plans)/([A-Za-z0-9-]+)/file',p)
             if m:return self.send(201,self.upload(m[1],None,m[2]))
             v=self.body()
+            if p=='/api/aerial/preview':
+                return self.send(200,preview_from_address(v.get('address','')))
             m=re.fullmatch(r'/api/sites/([A-Za-z0-9-]+)/source-reports/import',p)
             if m:
                 upstream_id=str(v.get('external_report_id','')).strip()
