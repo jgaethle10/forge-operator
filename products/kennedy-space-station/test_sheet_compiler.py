@@ -117,9 +117,12 @@ class TwoSheetTests(unittest.TestCase):
         self.assertIn(b"/ImContext Do Q",result)
         self.assertIn(b"S-0  |  SYNTHETIC TEST ONLY",result)
         self.assertIn(b"A-0  |  SYNTHETIC TEST ONLY",result)
-        self.assertIn(study["model_sha256"].encode(),result)
-        self.assertIn(sm["expected_sha256"].encode(),result)
-        self.assertIn(cm["expected_sha256"].encode(),result)
+        for sha in (study["model_sha256"],
+                    sm["expected_sha256"], cm["expected_sha256"]):
+            # Title block splits 64-character fingerprints into two
+            # complete 32-character lines to avoid right-column clipping.
+            self.assertIn(sha[:32].encode(), result)
+            self.assertIn(sha[32:].encode(), result)
         self.assertIn(b"NO SURVEY, ADA, ZONING OR CODE QA",result)
         self.assertIn(b"NOT FOR EXTERNAL DELIVERY",result)
         self.assertIn(b"Workshop",result)
