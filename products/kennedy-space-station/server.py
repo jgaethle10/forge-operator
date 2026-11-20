@@ -185,8 +185,14 @@ def serve():
     site_planner.init()
     SPATIAL.init()
     bind = site_planner.BIND
-    if bind not in ("127.0.0.1", "localhost", "::1") and not site_planner.TOKEN:
-        raise SystemExit("Refusing non-loopback Kennedy binding without EVERCRAFT_SITE_TOKEN")
+    # The current site-data API is operator-wide, not tenant-scoped. A single
+    # shared bearer token does NOT make it safe on the public internet.
+    # Owned HTTPS + authentication may terminate at a local reverse proxy.
+    if bind not in ("127.0.0.1", "localhost", "::1"):
+        raise SystemExit("KSS_PRIVATE_PREVIEW: refusing non-loopback binding")
+    if site_planner.TOKEN:
+        raise SystemExit("KSS_PRIVATE_PREVIEW: browser cannot use shared bearer token; "
+                         "keep it unset and authenticate at the owned HTTPS gateway")
     print(f"Kennedy Space Station private preview at http://{bind}:{PORT}", flush=True)
     ThreadingHTTPServer((bind, PORT), KennedyHandler).serve_forever()
 

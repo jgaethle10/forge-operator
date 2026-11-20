@@ -75,6 +75,25 @@ class KennedyHomeTest(unittest.TestCase):
         self.assertFalse(value["public_customer_access"])
         self.assertFalse(value["spatial_rendering_integrated"])
 
+    def test_nonloopback_bind_refused_even_with_shared_token(self):
+        """A bearer token must not authorize KSS to listen on every interface."""
+        import os
+        import subprocess
+        import sys
+        import tempfile
+        from pathlib import Path
+        with tempfile.TemporaryDirectory() as tmp:
+            env = {**os.environ,
+                   "EVERCRAFT_SITE_HOST": "0.0.0.0",
+                   "EVERCRAFT_SITE_TOKEN": "synthetic-token-does-not-open-port",
+                   "EVERCRAFT_SITE_DATA": tmp,
+                   "KENNEDY_DATA": str(Path(tmp) / "kennedy"),
+                   "KENNEDY_PORT": "8811"}
+            p = subprocess.run([sys.executable, str(ROOT / "server.py")],
+                               env=env, capture_output=True, text=True, timeout=8)
+            self.assertNotEqual(p.returncode, 0)
+            self.assertIn("refusing non-loopback", p.stderr)
+
     def test_site_created_in_site_planner_is_visible_from_kennedy(self):
         data = json.dumps({"name": "Owned synthetic parcel", "address": "100 Example Road",
                            "site_type": "preliminary site planning"}).encode()

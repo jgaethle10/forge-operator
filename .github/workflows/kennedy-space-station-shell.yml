@@ -40,3 +40,19 @@ jobs:
                   path.write_text(script)
                   subprocess.run(['node','--check',str(path)],check=True)
           PY
+      - name: Validate private-host template safety (offline)
+        run: |
+          python3 - <<'PY'
+          import importlib.util
+          from pathlib import Path
+          f=Path('products/kennedy-space-station/ops/private_gateway_preflight.py')
+          spec=importlib.util.spec_from_file_location("kss_private_gateway_preflight",f)
+          obj=importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(obj)
+          assert obj.CADDY.exists() and obj.SERVICE.exists()
+          # Without confidential operator credentials, preflight must HOLD.
+          import os
+          for name in ('KENNEDY_DOMAIN','KENNEDY_OPERATOR_USER','KENNEDY_PASSWORD_BCRYPT'):
+              os.environ.pop(name,None)
+          assert obj.preflight()==2
+          PY
