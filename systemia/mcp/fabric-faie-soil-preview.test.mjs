@@ -71,13 +71,21 @@ test('public exact-point USDA mapped soil preview returns actual source semantic
 
 test('public soil preview requires explicitly supplied US coordinates and rejects invalid requests before USDA',async()=>{
   let calls=0;
-  await withSoilServer(async()=>{calls++;throw new Error('unexpected upstream request');},async({post})=>{
-    for(const body of [{},{latitude:0,longitude:0},{latitude:46.6},{latitude:'',longitude:-120.5},{latitude:91,longitude:-120.5},{latitude:46.6,longitude:-220},{latitude:'not a latitude',longitude:-120.5}]){
-      const reply=await post(body);
-      assert.equal(reply.status,400);
-      assert.equal(reply.body.ok,false);
-    }
-  });
+  const invalid=[
+    {},{latitude:0,longitude:0},{latitude:46.6},{latitude:'',longitude:-120.5},
+    {latitude:91,longitude:-120.5},{latitude:46.6,longitude:-220},{latitude:'not a latitude',longitude:-120.5}
+  ];
+  // Invalid traffic also consumes the protective per-client limit.
+  // Divide the negative cases across fresh isolated windows.
+  for (const batch of [invalid.slice(0,4),invalid.slice(4)]) {
+    await withSoilServer(async()=>{calls++;throw new Error('unexpected upstream request');},async({post})=>{
+      for(const body of batch){
+        const reply=await post(body);
+        assert.equal(reply.status,400);
+        assert.equal(reply.body.ok,false);
+      }
+    });
+  }
   assert.equal(calls,0);
 });
 
