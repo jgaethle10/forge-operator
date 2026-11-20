@@ -7,7 +7,6 @@ export const USDM_COUNTY_PROFILES=Object.freeze({
   '53005':{label:'Benton County',state:'WA',region_key:'Benton County, Washington',region_group:'tri-cities-wa'},
   '53021':{label:'Franklin County',state:'WA',region_key:'Franklin County, Washington',region_group:'tri-cities-wa'}
 });
-const sleepNotNeeded=undefined; // Keep calls bounded, deterministic and synchronous to the run.
 
 function dateOnly(value){
   const str=String(value??'').trim();
