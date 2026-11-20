@@ -64,6 +64,31 @@ node --test systemia/revenue-desk/gmail-reconciliation.test.mjs \
   systemia/revenue-desk/owned-gmail-import.test.mjs
 ```
 
+
+## Delivery-status evidence tied to an exact Gmail send (November 19 source patch)
+
+A real campaign bounce revealed a reconciliation gap: Gmail may label an outgoing message `SENT` while Gmail later returns a **permanent delivery failure** for that recipient. Never equate a sent message with an accepted inbox delivery.
+
+The private `messages` export can now include an optional **`delivery_events`** array, with each manually inspected DSN entry shaped as:
+
+```json
+{
+  "dsn_message_id": "fixture-dsn-001",
+  "original_sent_message_id": "fixture-mail-001",
+  "recipient_address": "test-recipient@example.test",
+  "delivery_state": "permanent_failure",
+  "occurred_at": "2026-11-19T19:12:00-08:00",
+  "source_kind": "gmail_delivery_status_notification",
+  "source_verified_by_operator": true
+}
+```
+
+Allowed `delivery_state`: `permanent_failure` or `temporary_delay`. This is an **operator-supplied private evidence assertion**, not a live Gmail provider attestation and not an automatic DSN body extractor. The operator must compare the actual Gmail failure notice to the **original SENT message ID and exact recipient**. The reconciler checks the message and recipient against imported Gmail history, timestamps and event identity. A permanent failure suppresses that contact as `bounced`; a temporary delay holds it as `delivery_delayed`. An unrelated recipient, missing exact sent receipt, unverified source assertion, malformed event or bad timestamp fails closed and invalidates complete-history quota confidence. Duplicate DSN IDs are counted once, and a hard bounce takes precedence over later delay notices.
+
+**Privacy boundary:** only HMAC-protected contact references and Gmail DSN message IDs appear in private report rows. No recipient addresses or email bodies are written to the reconciliation output or GitHub. The real DSN and message body remain private, never committed. Do not infer a bounced recipient from the sender's domain or a similarly named company. Do not retry, switch to an alternate mailbox, or treat `SENT` as `DELIVERED` based on this report.
+
+**Authority boundary:** the reconciler remains shadow-only; neither a source assertion nor passing tests can verify real delivery, activate a sending agent or grant contact permits. This patch adds only conservative **holds**. A future owned-node implementation still needs authorized provider access, private DSN reading/identity verification, signed reporting, same-sender complete history and genuine Passport/Interaction Ledger approval. Private fixture tests use `example.test`, not real counterparties.
+
 ## Release gates to true owned 400/day operation
 
 1. DONE IN SOURCE ONLY: authorized read-only Gmail metadata importer with paging, private storage and synthetic tests. STILL NEEDED: provider OAuth/read-scope verification on owned compute, complete coverage and truthful scoped signer, DSN/opt-out handling, full cross-sender and alias inventory and independent live canary. Verify all accounts/agents that share quota; the existing connected Gmail connector is not an owned runtime adapter.
