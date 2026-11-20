@@ -214,3 +214,37 @@ test('Harbor config refuses overbroad/cross-wing trusted signers',()=>withFixtur
  assert.match(unit,/NoNewPrivileges=true/);
  assert.doesNotMatch(unit,/curl|wget|sudo|bash -c/);
 }));
+
+test('private Systemia goal checkpoint is explicit Fallen-only opt-in and never creates directories',()=>withFixture(async fx=>{
+ const dir=path.join(fx.root,'private-goals');fs.mkdirSync(dir,{mode:0o700});
+ fx.cfg.goalStateDir=dir;fx.write();
+ const pre=evaluateWingResidentConfig({configPath:fx.file});
+ assert.equal(pre.privateGoalCheckpointConfigured,true);
+ assert.equal(pre.liveHttpsVerified,false);
+ assert.equal(pre.customerReleaseAuthorized,false);
+ assert.equal(fs.readdirSync(dir).length,0);
+ const dry=await installWingResident({configPath:fx.file});
+ assert.equal(dry.mode,'DRY_RUN');
+ assert.equal(dry.unitInstalled,false);
+ fx.cfg.wing='harbor';
+ fx.cfg.senderVerifyPublicKeys={fallen:fx.cfg.senderVerifyPublicKeys.harbor};
+ fx.write();
+ assert.throws(()=>evaluateWingResidentConfig({configPath:fx.file,wingExpected:'harbor'}),
+  /goal_checkpoint_requires_fallen_passport_intake/);
+ fx.cfg.wing='fallen';fx.cfg.senderVerifyPublicKeys={harbor:fx.cfg.senderVerifyPublicKeys.fallen};
+ delete fx.cfg.passportStateDir;fx.write();
+ assert.throws(()=>evaluateWingResidentConfig({configPath:fx.file}),
+  /incomplete_systemia_intake/);
+}));
+test('world-readable or symlinked goal checkpoint directory fails before service install',()=>withFixture(async fx=>{
+ const dir=path.join(fx.root,'private-goals');fs.mkdirSync(dir,{mode:0o700});
+ fx.cfg.goalStateDir=dir;fx.write();
+ fs.chmodSync(dir,0o755);
+ assert.throws(()=>evaluateWingResidentConfig({configPath:fx.file}),
+  /untrusted_private_directory/);
+ fs.chmodSync(dir,0o700);
+ const link=path.join(fx.root,'redirected-goals');fs.symlinkSync(dir,link);
+ fx.cfg.goalStateDir=link;fx.write();
+ assert.throws(()=>evaluateWingResidentConfig({configPath:fx.file}),
+  /untrusted_private_directory/);
+});
