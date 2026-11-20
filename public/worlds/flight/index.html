@@ -203,6 +203,25 @@ html,body{height:100%;height:100dvh;overscroll-behavior:none;-webkit-text-size-a
   .flight-shell.touch-cockpit .flight-bottom{bottom:calc(5px + env(safe-area-inset-bottom,0px))}
   .flight-shell.touch-cockpit .mobile-panel{bottom:calc(67px + env(safe-area-inset-bottom,0px))!important}
 }
+/* Preserve aircraft switching without taking up permanent mobile screen space. */
+.flight-shell.touch-cockpit[data-more="open"] .hud-side{
+  display:block;position:absolute;z-index:7;left:max(8px,env(safe-area-inset-left,0px));
+  top:calc(119px + env(safe-area-inset-top,0px));width:177px
+}
+.flight-shell.touch-cockpit[data-more="open"] .mission-box{display:none}
+.flight-shell.touch-cockpit[data-more="open"] .plane-select{
+  display:block!important;padding:11px;border-radius:11px;background:#072231ef
+}
+.flight-shell.touch-cockpit[data-more="open"] .plane-select small{font-size:9px}
+@media (orientation:landscape) and (pointer:coarse){
+  .flight-shell.touch-cockpit[data-more="open"] .hud-side{top:calc(112px + env(safe-area-inset-top,0px))}
+}
+@media (orientation:portrait) and (pointer:coarse){
+  .flight-shell.touch-cockpit[data-more="open"] #resetFlight,
+  .flight-shell.touch-cockpit[data-more="open"] #fullscreenToggle{
+    bottom:calc(100% + 157px);top:auto
+  }
+}
 </style>
 </head><body>
 <div class="flight-shell" id="flightShell">
@@ -215,7 +234,7 @@ html,body{height:100%;height:100dvh;overscroll-behavior:none;-webkit-text-size-a
    <div class="floating-alert" id="flightAlert" role="status" aria-live="polite"></div>
    <div class="mobile-panel" aria-label="Touch flight controls"><div class="flight-stick" id="flightStick" role="group" tabindex="0" aria-label="Flight stick: drag up for pitch up, sideways to bank, release to center"><span class="flight-stick-knob" id="flightStickKnob" aria-hidden="true"></span><span class="flight-stick-label">PITCH / BANK</span></div><div class="touch-group"><button type="button" data-touch="pitchUp" aria-label="Pitch up">↑</button><button type="button" data-touch="left" aria-label="Bank left">↶</button><button type="button" data-touch="pitchDown" aria-label="Pitch down">↓</button><button type="button" data-touch="right" aria-label="Bank right">↷</button></div><div class="touch-throttle"><label for="flightThrottleRange" class="flight-throttle-label">THR</label><div class="flight-throttle-rail"><input type="range" id="flightThrottleRange" min="0" max="100" step="1" value="68" aria-label="Engine throttle percent"></div><output class="flight-throttle-value" id="flightThrottleValue" for="flightThrottleRange">68%</output><button type="button" data-touch="throttleUp">THR +</button><button type="button" data-touch="throttleDown">THR −</button></div></div>
    <div class="license">ENTERTAINMENT MODEL / NOT CFD / NOT FLIGHT TRAINING / NO PHYSICAL CONTROL</div>
-   <div class="flight-bottom"><div class="flight-controls"><div class="control-guide"><b>W / S</b> Pitch <b>A / D</b> Bank <b>Q / E</b> Rudder <b>SHIFT / CTRL</b> Throttle <b>C</b> Camera <b>P</b> Pause <b>R</b> Reset</div></div><div class="action-row"><button id="openFoundry" class="foundry-launch" type="button">✦ Design machine</button><button id="cameraToggle" type="button">◉ Chase view</button><button id="pauseToggle" type="button">Ⅱ Pause</button><button id="resetFlight" type="button">↺ Restart</button><button id="saveFlight" class="primary" type="button">Save flight ↗</button><button id="fullscreenToggle" type="button">⤢</button><button id="mobileHudToggle" type="button" aria-label="Show all flight instruments" aria-pressed="false">HUD</button><button id="mobileMoreToggle" type="button" aria-label="More flight actions" aria-expanded="false">More</button></div></div>
+   <div class="flight-bottom"><div class="flight-controls"><div class="control-guide"><b>W / S</b> Pitch <b>A / D</b> Bank <b>Q / E</b> Rudder <b>SHIFT / CTRL</b> Throttle <b>C</b> Camera <b>P</b> Pause <b>R</b> Reset</div></div><div class="action-row"><button id="openFoundry" class="foundry-launch" type="button">✦ Design machine</button><button id="cameraToggle" type="button">◉ Chase view</button><button id="pauseToggle" type="button">Ⅱ Pause</button><button id="resetFlight" type="button">↺ Restart</button><button id="saveFlight" class="primary" type="button">Save flight ↗</button><button id="fullscreenToggle" type="button">⤢</button><button id="mobileHudToggle" type="button" aria-label="Show all flight instruments" aria-pressed="false">HUD</button><button id="mobileMoreToggle" type="button" aria-label="Aircraft selection and more flight actions" aria-expanded="false">More</button></div></div>
  </div>
  <div class="start-screen" id="startScreen"><div class="start-card"><span class="overline">EVERCRAFT WORLDS × ANNISTON AAAR / EXPERIENCE 001</span><h2>THE SKY<br/>IS <em>YOURS.</em></h2><p>Take a trainer, glider or fast jet through a fictional mountain valley. Fly with your keyboard or on-screen touch controls. Save a local flight record back to Anniston when you're done.</p><p class="flight-orientation-hint">On your phone: rotate sideways for the full cockpit. Left thumb steers; right thumb controls throttle. Portrait works too.</p><div class="start-foot"><button id="designFromStart" class="foundry-launch" type="button">✦ Design your own machine</button> <button id="beginFlight" type="button">ENTER FLIGHT RANGE ↗</button><button class="secondary" id="skipToControls" type="button">VIEW CONTROLS</button></div><small>A playable procedural 3D sandbox. The physics and terrain are deliberately simplified, not validated engineering models. Full Evercraft Worlds world-state integration is a separate milestone.</small></div></div>
  <div class="screen-reader" id="flightA11y" aria-live="polite"></div>
