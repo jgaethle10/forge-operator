@@ -482,9 +482,20 @@ function step(s,input,dt){
  // Banks self-settle gradually when controls released; keeps touch play approachable.
  if(Math.abs(bank)<.05)s.bank*=Math.exp(-.17*dt);
  if(Math.abs(pitch)<.05)s.pitch*=Math.exp(-.08*dt);
- const v=Math.max(s.speed,0),accel=p.accel*s.throttle-p.drag*v*v-9.81*Math.sin(s.path)*.9;
+ // Low-order educational approximations: exponential air-density profile, bank load
+ // factor and accelerated-stall margin. NOT measured coefficients or flight validation.
+ const densityRatio=Math.exp(-Math.max(0,s.y)/8500);
+ const loadFactor=clamp(1/Math.max(.34,Math.cos(s.bank)),1,3);
+ const indicatedSpeed=s.speed*Math.sqrt(densityRatio);
+ const effectiveStall=p.stall*Math.sqrt(loadFactor);
+ const inducedDrag=p.drag*.22*Math.pow(loadFactor-1,2);
+ const v=Math.max(s.speed,0);
+ const accel=p.accel*s.throttle*Math.sqrt(densityRatio)-(p.drag+inducedDrag)*v*v-9.81*Math.sin(s.path)*.9;
  s.speed=clamp(v+accel*dt,0,p.maxSpeed);
- const stalled=s.speed<p.stall;
+ const stalled=indicatedSpeed<effectiveStall;
+ s.aeroFlight={densityRatio:+densityRatio.toFixed(3),gLoad:+loadFactor.toFixed(2),
+    indicatedSpeedMps:+indicatedSpeed.toFixed(1),acceleratedStallMps:+effectiveStall.toFixed(1),
+    stallMargin:+(indicatedSpeed-effectiveStall).toFixed(1),model:'LOW_ORDER_GAMEPLAY'};
  const desiredPath=stalled?Math.min(-.24,s.pitch-.24):s.pitch-(s.craft==='glider'?.055:.015);
  s.path=clamp(s.path+(desiredPath-s.path)*(stalled?1.3:.8)*dt,-.65,.54);
  const turn=(9.81*Math.tan(s.bank)/Math.max(s.speed,12))*.88+rudder*.24;
@@ -500,7 +511,7 @@ function step(s,input,dt){
  if(Math.floor(s.flightTime*2)>s.track.length&&s.track.length<1200)s.track.push({x:Math.round(s.x),y:Math.round(s.y),z:Math.round(s.z),at:+s.flightTime.toFixed(1)});
  return s;
 }
-function flightReceipt(s){return {schema:'evercraft.aaar.worlds-flight.v1',model_state:'GAME_SIMULATION_ONLY',evidence_state:'UNVALIDATED_GAMEPLAY',id:'AAAR-WFL-'+Date.now().toString(36).toUpperCase(),created_at:new Date().toISOString(),aircraft:s.craft,aircraft_name:s.craft==='custom'?s.design.name:aircraft[s.craft].name,design:s.craft==='custom'?Foundry.validate(s.design):null,screening_model:s.craft==='custom'?Foundry.analyze(s.design).schema:null,world:window.AAARSeattle?.enabled?'seattle-sky-tour-stylized-gis-preview':'anniston-cedar-basin-synthetic-v1',flight_time_seconds:+s.flightTime.toFixed(1),distance_m:Math.round(s.distance),max_altitude_m:Math.round(s.maxAlt),max_speed_mps:+s.maxSpeed.toFixed(1),checkpoints:s.checkpoints,condition:s.condition,events:s.events.slice(-20),track:s.track.slice(-300),limitations:'Low-order flight dynamics and synthetic scenery. Aircraft Foundry uses approximate lift/drag or rotor momentum screening, NOT CFD, measured stability, rotor blade models, structures, certification, real terrain or flight authorization.',canonical_sync:'local_preview_only'};}
+function flightReceipt(s){return {schema:'evercraft.aaar.worlds-flight.v1',model_state:'GAME_SIMULATION_ONLY',evidence_state:'UNVALIDATED_GAMEPLAY',id:'AAAR-WFL-'+Date.now().toString(36).toUpperCase(),created_at:new Date().toISOString(),aircraft:s.craft,aircraft_name:s.craft==='custom'?s.design.name:aircraft[s.craft].name,design:s.craft==='custom'?Foundry.validate(s.design):null,screening_model:s.craft==='custom'?Foundry.analyze(s.design).schema:null,world:window.AAARSeattle?.enabled?'seattle-sky-tour-stylized-gis-preview':'anniston-cedar-basin-synthetic-v1',aerodynamic_approximations:s.aeroFlight||null,flight_time_seconds:+s.flightTime.toFixed(1),distance_m:Math.round(s.distance),max_altitude_m:Math.round(s.maxAlt),max_speed_mps:+s.maxSpeed.toFixed(1),checkpoints:s.checkpoints,condition:s.condition,events:s.events.slice(-20),track:s.track.slice(-300),limitations:'Low-order flight dynamics and synthetic scenery. Aircraft Foundry uses approximate lift/drag or rotor momentum screening, NOT CFD, measured stability, rotor blade models, structures, certification, real terrain or flight authorization.',canonical_sync:'local_preview_only'};}
 return Object.freeze({aircraft,gates,start,step,groundHeight,flightReceipt,constants:{RAD,DEG}});
 });
 </script>
@@ -902,14 +913,27 @@ function render(){
  const vp=mul(perspective(view==='cockpit'?78*Math.PI/180:70*Math.PI/180,canvas.width/canvas.height,.5,15000),lookAt(eye,focus,up));
  gl.useProgram(program);gl.uniformMatrix4fv(uVP,false,vp);drawMesh(meshes.world,identity());if(view!=='cockpit')drawMesh(meshes[state.craft],planeModel(state));
 }
-function hud(){const round=n=>Math.round(n).toLocaleString('en-US');$('speedOut').textContent=round(state.speed*1.94384);$('altOut').textContent=round(state.y*3.28084);$('headOut').textContent=String(Math.round((state.yaw*180/Math.PI+3600)%360)).padStart(3,'0');$('pitchOut').textContent=(state.pitch*180/Math.PI).toFixed(0);$('bankOut').textContent=(state.bank*180/Math.PI).toFixed(0);$('throttleOut').textContent=round(state.throttle*100);const slider=$('flightThrottleRange');if(slider&&document.activeElement!==slider)slider.value=String(Math.round(state.throttle*100));const lever=$('flightThrottleValue');if(lever)lever.textContent=round(state.throttle*100)+'%';$('pauseToggle').dataset.paused=String(state.paused);const sec=Math.floor(state.flightTime);$('flightTime').textContent='T+ '+String(Math.floor(sec/60)).padStart(2,'0')+':'+String(sec%60).padStart(2,'0');$('gateProgress').querySelectorAll('i').forEach((el,i)=>el.classList.toggle('done',i<state.checkpoints));const next=core.gates[state.checkpoints];$('nextGate').textContent=next?`NEXT: ${next.title} · ${state.checkpoints} / 3`:'MISSION COMPLETE · 3 / 3';$('flightStatus').textContent=state.condition==='GROUND_CONTACT'?'GROUND CONTACT':state.paused?'PAUSED':state.craft==='custom'?'FOUNDRY FLIGHT / SCREENING':'SIMULATION ACTIVE';$('pauseToggle').textContent=state.paused?'▶ Resume':'Ⅱ Pause';$('cameraToggle').textContent=view==='chase'?'◉ Chase view':'◉ Cockpit view';}
+function hud(){const round=n=>Math.round(n).toLocaleString('en-US');$('speedOut').textContent=round(state.speed*1.94384);$('altOut').textContent=round(state.y*3.28084);$('headOut').textContent=String(Math.round((state.yaw*180/Math.PI+3600)%360)).padStart(3,'0');$('pitchOut').textContent=(state.pitch*180/Math.PI).toFixed(0);$('bankOut').textContent=(state.bank*180/Math.PI).toFixed(0);$('throttleOut').textContent=round(state.throttle*100);const slider=$('flightThrottleRange');if(slider&&document.activeElement!==slider)slider.value=String(Math.round(state.throttle*100));const lever=$('flightThrottleValue');if(lever)lever.textContent=round(state.throttle*100)+'%';$('pauseToggle').dataset.paused=String(state.paused);const sec=Math.floor(state.flightTime);$('flightTime').textContent='T+ '+String(Math.floor(sec/60)).padStart(2,'0')+':'+String(sec%60).padStart(2,'0');$('gateProgress').querySelectorAll('i').forEach((el,i)=>el.classList.toggle('done',i<state.checkpoints));const next=core.gates[state.checkpoints];$('nextGate').textContent=next?`NEXT: ${next.title} · ${state.checkpoints} / 3`:'MISSION COMPLETE · 3 / 3';$('flightStatus').textContent=state.condition==='BUILDING_CONTACT'?'CITY CONTACT':state.condition==='GROUND_CONTACT'?'GROUND CONTACT':state.paused?'PAUSED':state.craft==='custom'?'FOUNDRY FLIGHT / SCREENING':'SIMULATION ACTIVE';$('pauseToggle').textContent=state.paused?'▶ Resume':'Ⅱ Pause';$('cameraToggle').textContent=view==='chase'?'◉ Chase view':'◉ Cockpit view';}
 function controls(){const has=(...a)=>a.some(k=>held.has(k));const t=k=>touch.has(k);const limit=v=>Math.max(-1,Math.min(1,v));return {pitch:limit(stickInput.pitch+(has('w','arrowup')||t('pitchUp')?1:0)-(has('s','arrowdown')||t('pitchDown')?1:0)),bank:limit(stickInput.bank+(has('d','arrowright')||t('right')?1:0)-(has('a','arrowleft')||t('left')?1:0)),rudder:(has('e')?1:0)-(has('q')?1:0),throttle:(has('shift')||t('throttleUp')?1:0)-(has('control')||t('throttleDown')?1:0)};}
 function notify(message,seconds=3){$('flightAlert').textContent=message;$('flightAlert').classList.add('active');alertUntil=performance.now()+seconds*1000;$('flightA11y').textContent=message;}
 function frame(timestamp){if(!running)return;const dt=Math.min(.05,(timestamp-last)/1000||.016);last=timestamp;
  const was=state.checkpoints,prior=state.condition;core.step(state,controls(),dt);
+ if(seattle&&state.condition==='FLYING'){
+  // Simplified axis-aligned collision screening against modeled roofs.
+  // Only game simulation, NOT a real city safety/airspace model.
+  const list=seattle.buildings.concat(seattle.landmarks.filter(l=>l.type!=='wheel'));
+  for(const b of list){
+   const dx=Math.abs(state.x-b.x),dz=Math.abs(state.z-b.z),roof=seattle.ground(b.x,b.z)+b.h;
+   if(dx<b.w/2+3&&dz<b.d/2+3&&state.y<roof+2&&state.y>seattle.ground(b.x,b.z)-10){
+    state.condition='BUILDING_CONTACT';state.paused=true;
+    state.events.push({kind:'synthetic_building_contact',building:b.name||'city_footprint',at:+state.flightTime.toFixed(1)});
+    notify('CITY OBSTACLE CONTACT · RESET FLIGHT',5);break;
+   }
+  }
+ }
  if(was!==state.checkpoints)notify(state.checkpoints>=3?'MISSION COMPLETE · SAVE YOUR FLIGHT':`GATE ${state.checkpoints} CLEARED`,4);
  if(prior!==state.condition&&state.condition==='GROUND_CONTACT'){state.paused=true;notify('GROUND CONTACT · RESTART OR SAVE FLIGHT',5);}
- if((state.craft==='custom'?state.aero?.stall:state.speed<core.aircraft[state.craft].stall)&&!state.paused&&Math.floor(timestamp/800)!==Math.floor((timestamp-16)/800))notify('LOW AIRSPEED · SIMULATED STALL',1.0);
+ if((state.craft==='custom'?state.aero?.stall:state.aeroFlight?.stallMargin<0)&&!state.paused&&Math.floor(timestamp/800)!==Math.floor((timestamp-16)/800))notify('LOW AIRSPEED · SIMULATED STALL',1.0);
  if(!fallback2D||timestamp-lastDraw>Math.max(39,Math.min(90,scenePerf.renderCostMs*2.2))){render();lastDraw=timestamp;}if(timestamp-lastHUD>100){hud();lastHUD=timestamp;}if(alertUntil&&timestamp>alertUntil){$('flightAlert').classList.remove('active');alertUntil=0;}
  frames++;requestAnimationFrame(frame);
 }
