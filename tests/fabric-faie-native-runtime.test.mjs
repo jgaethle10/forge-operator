@@ -124,6 +124,22 @@ test('owned Fabric serves FAIE UI, public preview API, and native FAIE MCP witho
     assert.equal(faieHealth.design_partner_surface,'/faie/agnormal/');
     assert.equal(faieHealth.base44_transport_enabled,false);
     assert.equal(faieHealth.decision_authority,false);
+    assert.equal(faieHealth.land_history_archive.status,'active');
+    assert.equal(faieHealth.land_history_archive.public_region_history_only,true);
+    assert.equal(faieHealth.land_history_archive.visitor_point_queries_persisted,false);
+    const indexResponse=await fetch(runtime.url+'/api/faie/history/regions');
+    assert.equal(indexResponse.status,200);
+    const historyIndex=await indexResponse.json();
+    assert.equal(historyIndex.schema,'evercraft.faie.public-history-region-index.v1');
+    assert.equal(historyIndex.exhaustive_history,false);
+    const regionResponse=await fetch(runtime.url+'/api/faie/history/region?key=yakima-wa');
+    assert.equal(regionResponse.status,200);
+    const regionHistory=await regionResponse.json();
+    assert.equal(regionHistory.schema,'evercraft.faie.public-land-timeline.v1');
+    assert.equal(regionHistory.site_suitability_verdict,null);
+    const privateHistory=await fetch(runtime.url+'/api/faie/history/region?key=46.6021,-120.5059');
+    assert.equal(privateHistory.status,400);
+
 
     const investigateResponse=await fetch(runtime.url+'/api/faie/investigate',{
       method:'POST',

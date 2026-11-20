@@ -83,6 +83,12 @@ jobs:
       - name: FAIE NOAA NCEI station history source and privacy tests
         run: node --test systemia/faie/ncei-climate-history.test.mjs systemia/mcp/fabric-faie-climate-history.test.mjs
 
+      - name: FAIE historical preservation ledger, official source ingestion, privacy and timeline tests
+        run: |
+          node --test systemia/faie/land-history-ledger.test.mjs systemia/faie/land-history-runtime.test.mjs
+          node --check scripts/faie-land-history.mjs
+          node --check scripts/faie-land-history-live-acceptance.mjs
+
       - name: FAIE Saban swarm proof
         run: npm run proof:saban-faie
 
