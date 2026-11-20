@@ -6,17 +6,17 @@ import {spawnSync} from 'node:child_process';
 
 const script=fs.readFileSync('scripts/publish-aaar-seattle-now.mjs','utf8');
 const html=fs.readFileSync('public/worlds/flight/index.html');
-const expected='e7b7a0fe3b1ee6aa65721d2952118d236a77aa3db24450404075b17aceeb2ccd';
+const expected='1f8280fe6e05de30dab9b6f7a6954df334990571e78bdd30d91dd64dcf3aa13f';
 
 test('Sky Passport 1.2 owner release pins approved candidate and exact new flight asset',()=>{
- const pin='71a456a46756fce7fbd2f87a91e41b3ea00cfc3b';
+ const pin='350d241863986e46dd93e51fd058b116aee74b9e';
  const pinned=spawnSync('git',['show',pin+':public/worlds/flight/index.html'],{encoding:'buffer',maxBuffer:2*1024*1024,timeout:5000});
  // GitHub Actions checkout is shallow; the parent pin may be absent there.
  // The owner-side helper still requires the pinned commit to exist and be an
  // ancestor of fetched main before it can run, failing closed on Penguin.
  if(pinned.status===0)assert.equal(createHash('sha256').update(pinned.stdout).digest('hex'),expected);
  assert.equal(createHash('sha256').update(html).digest('hex'),expected);
- assert.match(script,/71a456a46756fce7fbd2f87a91e41b3ea00cfc3b/);
+ assert.match(script,/350d241863986e46dd93e51fd058b116aee74b9e/);
  assert.ok(script.includes(expected));
  assert.match(html.toString('utf8'),/id="aaar-seattle-geography"/);
  assert.match(html.toString('utf8'),/Space Needle/);
