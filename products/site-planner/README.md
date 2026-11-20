@@ -178,3 +178,11 @@ connected. No endpoint can mark a commercial quote paid or release it.
    signed expiring customer report access before public deployment.
 
 Run the full suite: `python3 -m unittest discover -v`.
+
+### Network exposure hard stop
+
+v1.5 explicitly rejects any non-loopback bind, even when a shared bearer token
+is configured. The authentication model is not customer-ready. This is not a
+substitute for real tenancy, permissions, CSRF controls, secure upload
+processing or signed customer shares. Do not place it behind a public reverse
+proxy or port-forward its loopback listener.
