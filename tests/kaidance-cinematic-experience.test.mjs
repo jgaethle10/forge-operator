@@ -47,3 +47,25 @@ test('owned Leiland host and Caddy static route explicitly serve newly-required 
   assert.ok(caddy.includes('/kaidance/'+file),file);
  }
 });
+
+
+test('the Collider is a dimensional accelerator rather than a flat brand orbit',()=>{
+ const engine=read('../public/kaidance/collider-engine.mjs');
+ const css=read('../public/kaidance/collider-v3.css');
+ assert.match(html,/id="colliderField"/);
+ assert.match(html,/src="\.\/collider-engine\.mjs"/);
+ assert.match(html,/href="\.\/collider-v3\.css"/);
+ assert.match(engine,/AMBIENT ART/);
+ assert.match(engine,/function torus\(/);
+ assert.match(engine,/function magneticRing\(/);
+ assert.match(engine,/function particleBeams\(/);
+ assert.match(engine,/function interactionChamber\(/);
+ assert.match(engine,/function structuralAccents\(/);
+ assert.match(engine,/MutationObserver/);
+ assert.match(engine,/verifiedMarker\.classList\.contains\('beat'\)/);
+ assert.match(engine,/prefers-reduced-motion/);
+ assert.match(engine,/IntersectionObserver/);
+ assert.match(css,/#colliderField/);
+ assert.doesNotMatch(engine,/fetch\(|XMLHttpRequest|WebSocket|EventSource|localStorage|sessionStorage|\.setInterval\(/);
+ assert.equal(fs.existsSync(new URL('../public/kaidance/pulse.json',import.meta.url)),false);
+});
