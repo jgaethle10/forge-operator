@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#081928">
+<meta name="description" content="Interactive Earth and World Atlas. Rotate a source-aware globe to explore geography, geology, oceans and the natural world.">
+<title>Earth & World Atlas | Aiden's Lab</title>
+<style>
+:root{color-scheme:dark;--ink:#f4faff;--muted:#bad0db;--mint:#aff4d0;--line:#375c6e}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:var(--ink);background:radial-gradient(ellipse at 60% -10%,#174456,transparent 40%),#071824;font:16px/1.55 system-ui,-apple-system,sans-serif}
+a{color:var(--mint)}button{font:inherit;cursor:pointer}button:focus-visible,a:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
+.wrap{max-width:1190px;padding-inline:clamp(18px,4vw,38px);margin:auto}
+header{border-bottom:1px solid var(--line);background:#061926d9}.head{display:flex;align-items:center;justify-content:space-between;gap:14px;min-height:67px;flex-wrap:wrap}.brand{color:#f3f9fa;text-decoration:none;letter-spacing:.09em;font-size:13px;font-weight:900}.breadcrumb{font-size:12px;color:var(--muted)}
+main{padding-top:40px;padding-bottom:70px}.kicker{font-size:11px;color:var(--mint);letter-spacing:.18em;font-weight:900}
+h1{font:500 clamp(45px,7vw,78px)/1.07 Georgia,serif;letter-spacing:-.05em;margin:12px 0}h1 em{color:var(--mint)}
+.lead{max-width:810px;color:#bed3df;font-size:17px;margin:0 0 25px}
+.deck{display:grid;grid-template-columns:minmax(0,1.38fr) minmax(300px,.82fr);gap:17px;align-items:start}
+.globe-shell{border:1px solid #46728a;background:radial-gradient(ellipse at 48% 44%,#0b3146,#071b2a 70%);border-radius:25px;overflow:hidden;box-shadow:0 23px 80px #0006}
+.globe-top,.globe-foot{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:15px 19px;border-bottom:1px solid #294c63;flex-wrap:wrap;font-size:12px;color:#d2e5ee}
+.globe-top b{color:#b9edce;letter-spacing:.08em}
+.globe-foot{border-top:1px solid #294c63;border-bottom:0}.globe-foot button{border:1px solid #5b849a;background:#112f44;color:white;padding:8px 13px;border-radius:9px;font-size:13px;font-weight:750}
+canvas{display:block;width:100%;height:clamp(340px,42vw,520px);touch-action:none;cursor:grab}
+canvas:active{cursor:grabbing}
+.fact{background:#102c3b;border:1px solid #3c6373;border-radius:24px;padding:26px;min-height:530px;display:flex;flex-direction:column;gap:11px}
+.fact .tag{font-size:11px;letter-spacing:.12em;font-weight:900;color:#b4efd0}
+.fact h2{font:500 clamp(31px,3.6vw,45px)/1.05 Georgia,serif;letter-spacing:-.04em;margin:0}
+.fact .coords{font-size:12px;color:#bad7e2;font-variant-numeric:tabular-nums}
+.fact p{margin:0;color:#c8dce4;font-size:14px;line-height:1.68}
+.fact h3{font-size:12px;letter-spacing:.1em;color:#b6f0cb;margin:8px 0 0}
+.fact .source{display:block;padding:11px 14px;margin-top:auto;border-radius:11px;background:#c5f0d8;color:#0d352e;font-weight:900;font-size:13px;text-decoration:none}
+.fact .source:hover{background:#e1ffec}
+.choices-head{display:flex;align-items:end;justify-content:space-between;gap:15px;flex-wrap:wrap;margin:29px 0 13px}
+.choices-head h2{font:500 28px Georgia,serif;margin:0}.choices-head span{font-size:12px;color:#b1c9d4}
+.destinations{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px}
+.place{padding:16px;border-radius:14px;border:1px solid #3f6476;background:#0f2939;color:white;text-align:left;display:flex;align-items:center;gap:10px;min-height:75px}
+.place:hover{border-color:#a8e8cb;background:#163849}.place[aria-pressed=true]{border-color:#b7f8da;background:#18473e;box-shadow:inset 0 0 0 1px #b7f8da}
+.place .emoji{font-size:27px}.place .label{display:grid;gap:3px}.place strong{font-size:13px;line-height:1.25}.place small{font-size:11px;color:#b3cdd7}
+.method{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;margin-top:30px}
+.method article{background:#0e2b38;border:1px solid #365e6d;border-radius:17px;padding:23px}
+.method b{display:block;color:#d4f7bd;font-size:12px;letter-spacing:.1em;margin-bottom:10px}
+.method h2{font:500 24px Georgia,serif;margin:0 0 8px}
+.method p{color:#bfd3df;font-size:13px;margin:0;line-height:1.67}
+.footnote{color:#a9c4d1;font-size:12px;margin-top:27px}
+@media(max-width:900px){.deck{grid-template-columns:1fr}.fact{min-height:0}.destinations{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:520px){main{padding-top:28px}.destinations{grid-template-columns:repeat(2,minmax(0,1fr))}.place{padding:12px}.method{grid-template-columns:1fr}.globe-top,.globe-foot{padding:12px}.fact{padding:22px}canvas{height:350px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<header><div class="wrap head"><a class="brand" href="../">✳ AIDEN'S LAB / EVERCRAFT</a><span class="breadcrumb">LEARNING WORLDS · EARTH & WORLD ATLAS</span></div></header>
+<main class="wrap">
+<p class="kicker">EARTH SYSTEMS / INTERACTIVE OWNED PREVIEW</p>
+<h1>One planet.<br><em>Infinite questions.</em></h1>
+<p class="lead">Spin the globe, choose a place, and explore the science behind it. The glowing land outlines are intentionally schematic, while the featured places are pinned by published geographic coordinates.</p>
+<div class="deck">
+<section class="globe-shell" aria-label="Interactive globe">
+<div class="globe-top"><b>🌍 EARTH EXPLORER</b><span>Drag to rotate · tap a bright marker</span></div>
+<canvas id="globe" role="img" aria-label="A rotatable schematic globe displaying source-linked destination markers. You can also select each destination using the buttons below."></canvas>
+<div class="globe-foot"><span id="position">Viewing: 15° N, 30° W</span><button id="reset" type="button">↺ Reset view</button></div>
+</section>
+<aside class="fact" aria-live="polite">
+<div class="tag" id="type">GEOGRAPHY / FIELD EXPLORATION</div>
+<h2 id="name">Where will you explore?</h2>
+<div class="coords" id="coordinates">Choose a location on the globe or below.</div>
+<p id="summary">The planet is a connected system. Mountains alter weather, oceans shape climate, and geological boundaries record extraordinary processes.</p>
+<h3>THE QUESTION</h3><p id="question">What makes a place behave the way it does?</p>
+<h3>WHAT THE EVIDENCE SHOWS</h3><p id="evidence">Every featured place has a geographic coordinate and a source trail for further reading.</p>
+<h3>WHAT IS STILL UNCERTAIN</h3><p id="uncertainty">This simplified view is not a navigation chart, hazard map, or live environmental data feed.</p>
+<a class="source" id="source" href="https://earthobservatory.nasa.gov/" target="_blank" rel="noopener noreferrer">Explore NASA Earth Observatory ↗</a>
+</aside>
+</div>
+<div class="choices-head"><h2>Choose your expedition</h2><span>Each destination is a study starting point, not a live sensor.</span></div>
+<div class="destinations" id="places" aria-label="Choose a place to explore"></div>
+<section class="method" aria-label="How to explore the Earth">
+<article><b>01 / NOTICE</b><h2>Find a pattern.</h2><p>Where are mountain ranges, deep basins, islands and dry regions? What do they have in common?</p></article>
+<article><b>02 / EXPLAIN</b><h2>Follow the forces.</h2><p>Trace tectonic motion, water, climate and ecosystems. Separate observations from simplified teaching models.</p></article>
+<article><b>03 / CONNECT</b><h2>Travel across subjects.</h2><p>Bring geography questions back to Physics Atlas to investigate forces, waves and motion.</p></article>
+</section>
+<p class="footnote">Evercraft-owned, offline-first educational globe. Land silhouettes are schematic and do not represent authoritative borders, coastline surveys, bathymetry or current conditions. No precise user location, tracking, third-party map SDK, or live military data.</p>
+</main>
+<script>
+(()=>{
+'use strict';
+const $=id=>document.getElementById(id),canvas=$('globe'),ctx=canvas.getContext('2d',{alpha:false}),RAD=Math.PI/180;
+const DATA=[
+ {id:'yakima',emoji:'💧',name:'Yakima Basin',kind:'WATERSHED SYSTEMS',region:'Washington, USA',lat:46.6,lon:-120.5,
+  summary:'Mountain snowpack, rivers, agriculture and people meet in a major Pacific Northwest watershed.',
+  question:'How can the timing of snowmelt change a river valley far downstream?',
+  evidence:'USGS water science and NW basin observations give context for streamflow and watershed processes. These are location-level science references, not live measurements here.',
+  uncertainty:'Today’s snowpack, water allocations and flows require current dated local readings.',
+  source:'https://www.usgs.gov/mission-areas/water-resources'},
+ {id:'everest',emoji:'🏔️',name:'Mount Everest',kind:'PLATE TECTONICS',region:'Himalaya',lat:27.9881,lon:86.9250,
+  summary:'Earth’s highest mountain above sea level sits within the Himalayan collision zone.',
+  question:'How can continents collide and still move without becoming one flat sheet?',
+  evidence:'Plate convergence thickens and lifts crust over geologic time. Elevation and rates vary with measurement methods and dates.',
+  uncertainty:'The schematic model does not show precise uplift rates, terrain detail, or mountaineering conditions.',
+  source:'https://www.usgs.gov/programs/earthquake-hazards'},
+ {id:'mariana',emoji:'🌊',name:'Mariana Trench',kind:'DEEP OCEAN',region:'Western Pacific',lat:11.35,lon:142.2,
+  summary:'A remarkable ocean trench shows where one tectonic plate descends beneath another.',
+  question:'Why do some plate boundaries create trenches while others build mountains?',
+  evidence:'Convergent-plate subduction produces ocean trenches; sonar and scientific surveys are used to measure depth.',
+  uncertainty:'The point marks an illustrative trench location, not a survey-certified Challenger Deep measurement.',
+  source:'https://oceanservice.noaa.gov/facts/trench.html'},
+ {id:'iceland',emoji:'🌋',name:'Iceland Rift',kind:'VOLCANOES & RIFTS',region:'North Atlantic',lat:64.26,lon:-21.13,
+  summary:'Iceland crosses the Mid-Atlantic Ridge, where tectonic extension and magma shape the island.',
+  question:'How can the same planet make both spreading rifts and crushing mountain belts?',
+  evidence:'Global plate tectonics explains many ocean ridges, rifts and volcanic zones.',
+  uncertainty:'This is not a current eruption warning or an assessment of access and field safety.',
+  source:'https://www.usgs.gov/programs/volcano-hazards'},
+ {id:'amazon',emoji:'🌳',name:'Amazon Basin',kind:'RAINFOREST & WATER',region:'South America',lat:-3.12,lon:-60.02,
+  summary:'Rivers, forests, rainfall and atmospheric circulation form a connected tropical system.',
+  question:'What changes when forests help recycle water into the atmosphere?',
+  evidence:'Earth observation satellites and hydrology studies examine vegetation, river systems and atmospheric water.',
+  uncertainty:'No present-day forest-loss or precipitation estimate is provided by this static explorer.',
+  source:'https://earthobservatory.nasa.gov/'},
+ {id:'reef',emoji:'🪸',name:'Great Barrier Reef',kind:'COASTAL ECOLOGY',region:'Australia',lat:-18.29,lon:147.7,
+  summary:'Warm shallow seas support complex coral habitats vulnerable to changing environmental conditions.',
+  question:'Why do heat, water clarity and ocean chemistry matter for coral organisms?',
+  evidence:'NOAA ocean science explains coral biology, bleaching pressures and environmental variability.',
+  uncertainty:'Current reef health differs by location and observation date; this point is a geographic learning marker.',
+  source:'https://oceanservice.noaa.gov/education/tutorial_corals/welcome.html'},
+ {id:'sahara',emoji:'☀️',name:'Sahara Desert',kind:'CLIMATE & LAND',region:'North Africa',lat:23.42,lon:25.66,
+  summary:'A vast hot desert reveals how atmospheric circulation, seasonal rainfall and landscape interact.',
+  question:'Why can different parts of the same planet receive so much less rain?',
+  evidence:'Latitude, large-scale atmospheric circulation, geography and changing seasonal conditions help explain regional dryness.',
+  uncertainty:'This is not a live drought, dust-storm, or temperature forecast.',
+  source:'https://earthobservatory.nasa.gov/'},
+ {id:'yellowstone',emoji:'♨️',name:'Yellowstone',kind:'GEOTHERMAL SYSTEMS',region:'Wyoming, USA',lat:44.43,lon:-110.59,
+  summary:'Geothermal activity reveals a landscape influenced by an active volcanic system.',
+  question:'What causes a geyser, and how is it different from a volcano erupting?',
+  evidence:'The National Park Service documents Yellowstone’s geothermal and geological systems.',
+  uncertainty:'This display does not predict eruptions or provide trail, weather, or visitor-safety conditions.',
+  source:'https://www.nps.gov/yell/learn/nature/geology.htm'}
+];
+// Schematic latitude/longitude rings; deliberately not authoritative basemap geography.
+const LANDS=[
+ [[-165,70],[-135,72],[-125,53],[-115,50],[-125,35],[-117,31],[-105,23],[-97,17],[-84,10],[-80,23],[-97,29],[-89,40],[-83,48],[-95,55],[-130,65],[-165,70]],
+ [[-81,11],[-71,12],[-60,5],[-50,-1],[-36,-8],[-41,-22],[-51,-34],[-66,-56],[-75,-43],[-80,-12],[-81,11]],
+ [[-17,36],[0,37],[14,33],[31,31],[43,12],[50,10],[45,-11],[34,-25],[18,-35],[10,-34],[7,-15],[-2,2],[-16,16],[-17,36]],
+ [[-12,37],[-10,58],[5,72],[35,70],[62,57],[92,55],[115,54],[143,52],[161,59],[180,67],[180,44],[136,34],[124,22],[110,2],[98,-8],[80,9],[67,24],[47,33],[35,45],[23,39],[11,47],[-1,43],[-12,37]],
+ [[112,-10],[129,-11],[147,-15],[155,-24],[145,-37],[129,-38],[114,-24],[112,-10]],
+ [[-51,60],[-43,84],[-22,82],[-42,59],[-51,60]],
+ [[-180,-70],[-135,-73],[-70,-71],[0,-69],[70,-73],[150,-70],[180,-73]]
+];
+let centerLon=-30,centerLat=15,w=600,h=420,ratio=1,selected=null,drag=null,rotateStart=0;
+const clamp=(x,a,b)=>Math.min(b,Math.max(a,x));
+const wrap=x=>((x+180)%360+360)%360-180;
+const fmt=x=>(Math.abs(x).toFixed(2)+(x>=0?'°':'°'));
+function coordinates(lat,lon){return Math.abs(lat).toFixed(2)+'° '+(lat>=0?'N':'S')+' · '+Math.abs(lon).toFixed(2)+'° '+(lon>=0?'E':'W')}
+function project(lat,lon){
+ const la=lat*RAD,lo=wrap(lon-centerLon)*RAD,cl=centerLat*RAD;
+ const visibility=Math.sin(cl)*Math.sin(la)+Math.cos(cl)*Math.cos(la)*Math.cos(lo);
+ const radius=Math.min(w*.46,h*.455);
+ return {x:w/2+radius*Math.cos(la)*Math.sin(lo),
+  y:h/2-radius*(Math.cos(cl)*Math.sin(la)-Math.sin(cl)*Math.cos(la)*Math.cos(lo)),
+  visible:visibility>=0,radius};
+}
+function arc(lonRange,latRange,color,weight=1){
+ let previous=null;
+ ctx.strokeStyle=color;ctx.lineWidth=weight;
+ ctx.beginPath();
+ for(let v=lonRange[0];v<=lonRange[1]+.001;v+=(lonRange[2]||3)){
+  const p=project(latRange,v);
+  if(p.visible){if(previous)ctx.lineTo(p.x,p.y);else ctx.moveTo(p.x,p.y);previous=p}
+  else previous=null;
+ }
+ ctx.stroke();
+}
+function dot(x,y,r,c){ctx.fillStyle=c;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill()}
+function render(){
+ ctx.fillStyle='#071826';ctx.fillRect(0,0,w,h);
+ const r=Math.min(w*.46,h*.455),cx=w/2,cy=h/2;
+ const ocean=ctx.createRadialGradient(cx-r*.32,cy-r*.33,5,cx,cy,r);
+ ocean.addColorStop(0,'#247d97');ocean.addColorStop(.68,'#10475f');ocean.addColorStop(1,'#082f47');
+ ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fillStyle=ocean;ctx.fill();
+ ctx.save();ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.clip();
+ for(let lat=-75;lat<=75;lat+=15){
+  let started=false;ctx.beginPath();
+  for(let lon=-180;lon<=180;lon+=2){
+   const p=project(lat,lon);
+   if(p.visible){if(started)ctx.lineTo(p.x,p.y);else ctx.moveTo(p.x,p.y);started=true}else started=false;
+  }
+  ctx.strokeStyle='#ffffff21';ctx.lineWidth=.8;ctx.stroke();
+ }
+ for(let lon=-180;lon<180;lon+=20){
+  let started=false;ctx.beginPath();
+  for(let lat=-90;lat<=90;lat+=2){
+   const p=project(lat,lon);
+   if(p.visible){if(started)ctx.lineTo(p.x,p.y);else ctx.moveTo(p.x,p.y);started=true}else started=false;
+  }
+  ctx.strokeStyle='#ffffff26';ctx.lineWidth=.8;ctx.stroke();
+ }
+ // Conceptual landmass outlines only. Segment strokes stop at globe horizon.
+ for(const poly of LANDS){
+  let prev=null;ctx.beginPath();
+  for(const [lon,lat] of poly){
+   const p=project(lat,lon);
+   if(p.visible){if(prev)ctx.lineTo(p.x,p.y);else ctx.moveTo(p.x,p.y);prev=p}else prev=null;
+  }
+  ctx.strokeStyle='#b4d89f8c';ctx.lineWidth=2.2;ctx.stroke();
+ }
+ for(const item of DATA){
+  const p=project(item.lat,item.lon);
+  if(!p.visible)continue;
+  const chosen=selected===item.id;
+  dot(p.x,p.y,chosen?12:9,chosen?'#ffe7a9':'#a6f2cf');
+  dot(p.x,p.y,chosen?6:4,'#103b45');
+ }
+ ctx.restore();
+ ctx.beginPath();ctx.arc(cx,cy,r+.4,0,Math.PI*2);ctx.strokeStyle='#a2e6e6b0';ctx.lineWidth=1.8;ctx.stroke();
+ $('position').textContent='Viewing: '+coordinates(centerLat,centerLon);
+}
+function select(id){
+ const entry=DATA.find(x=>x.id===id);if(!entry)return;
+ selected=id;centerLon=entry.lon;centerLat=clamp(entry.lat,-65,65);
+ $('type').textContent=entry.kind;$('name').textContent=entry.name;
+ $('coordinates').textContent=entry.region+' · '+coordinates(entry.lat,entry.lon);
+ for(const key of ['summary','question','evidence','uncertainty'])$(key).textContent=entry[key];
+ $('source').href=entry.source;$('source').textContent='Inspect the original science source ↗';
+ for(const btn of document.querySelectorAll('.place'))btn.setAttribute('aria-pressed',String(btn.dataset.id===id));
+ render();
+}
+function nearest(x,y){
+ let best=null,dist=25*25;
+ for(const item of DATA){
+  const p=project(item.lat,item.lon);if(!p.visible)continue;
+  const d=(p.x-x)**2+(p.y-y)**2;
+  if(d<dist){dist=d;best=item}
+ }
+ return best;
+}
+function pointerPos(e){
+ const rect=canvas.getBoundingClientRect();return {x:(e.clientX-rect.left)*w/rect.width,y:(e.clientY-rect.top)*h/rect.height};
+}
+function resize(){const box=canvas.getBoundingClientRect();w=Math.max(270,box.width);h=Math.max(280,box.height);ratio=Math.min(2,window.devicePixelRatio||1);canvas.width=Math.floor(w*ratio);canvas.height=Math.floor(h*ratio);ctx.setTransform(ratio,0,0,ratio,0,0);render()}
+function start(e){if(e.button!==0)return;const p=pointerPos(e);drag={pointer:e.pointerId,x:p.x,y:p.y,lon:centerLon,lat:centerLat,moved:false};canvas.setPointerCapture(e.pointerId)}
+function move(e){
+ if(!drag||drag.pointer!==e.pointerId)return;
+ const p=pointerPos(e),dx=p.x-drag.x,dy=p.y-drag.y;
+ if(Math.abs(dx)+Math.abs(dy)>7)drag.moved=true;
+ if(!drag.moved)return;
+ centerLon=wrap(drag.lon-dx/Math.min(w,h)*240);
+ centerLat=clamp(drag.lat+dy/Math.min(w,h)*130,-80,80);
+ render();
+}
+function end(e){
+ if(!drag||drag.pointer!==e.pointerId)return;
+ const p=pointerPos(e);if(!drag.moved){const item=nearest(p.x,p.y);if(item)select(item.id)}
+ drag=null;
+ if(canvas.hasPointerCapture(e.pointerId))canvas.releasePointerCapture(e.pointerId);
+}
+canvas.addEventListener('pointerdown',start);canvas.addEventListener('pointermove',move);canvas.addEventListener('pointerup',end);canvas.addEventListener('pointercancel',()=>drag=null);
+const places=$('places');
+for(const entry of DATA){
+ const btn=document.createElement('button');btn.type='button';btn.className='place';btn.dataset.id=entry.id;btn.setAttribute('aria-pressed','false');
+ const icon=document.createElement('span');icon.className='emoji';icon.setAttribute('aria-hidden','true');icon.textContent=entry.emoji;
+ const holder=document.createElement('span');holder.className='label';const name=document.createElement('strong');name.textContent=entry.name;
+ const region=document.createElement('small');region.textContent=entry.region;
+ holder.append(name,region);btn.append(icon,holder);btn.addEventListener('click',()=>select(entry.id));places.append(btn);
+}
+$('reset').addEventListener('click',()=>{centerLon=-30;centerLat=15;selected=null;for(const btn of document.querySelectorAll('.place'))btn.setAttribute('aria-pressed','false');render()});
+window.addEventListener('resize',resize,{passive:true});
+resize();select('yakima');
+})();
+</script>
+</body>
+</html>

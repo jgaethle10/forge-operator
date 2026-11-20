@@ -34,6 +34,13 @@ export function resolveAidenLabRequest(url) {
   const pathname = parsed.pathname;
   if (pathname === '/aiden-lab') return { handled: true, redirect: '/aiden-lab/' };
   if (pathname === '/aiden-lab/classroom') return { handled: true, redirect: '/aiden-lab/classroom/' };
+  for (const name of ['physics', 'world']) {
+    if (pathname === '/aiden-lab/' + name)
+      return { handled: true, redirect: '/aiden-lab/' + name + '/' };
+    if (pathname === '/aiden-lab/' + name + '/' || pathname === '/aiden-lab/' + name + '/index.html')
+      return { handled: true, name: 'index.html', sourceGroup: name,
+        contentType: 'text/html; charset=utf-8' };
+  }
   if (pathname === '/aiden-lab/classroom/' || pathname === '/aiden-lab/classroom/index.html')
     return { handled: true, name: 'index.html', sourceGroup: 'classroom',
       contentType: 'text/html; charset=utf-8' };
@@ -94,7 +101,12 @@ export function serveAidenLab(req, res, { repoRoot = ROOT } = {}) {
     plain(res, 404, 'Research asset not found', method);
     return true;
   }
-  const sourceRoot = path.resolve(repoRoot, route.sourceGroup === 'classroom' ? 'public/apps/infinite-classroom/play' : 'public/aiden-lab');
+  const sourceFolder = {
+    classroom: 'public/apps/infinite-classroom/play',
+    physics: 'public/aiden-lab/physics',
+    world: 'public/aiden-lab/world'
+  }[route.sourceGroup] || 'public/aiden-lab';
+  const sourceRoot = path.resolve(repoRoot, sourceFolder);
   const target = path.resolve(sourceRoot, route.name);
   if (path.dirname(target) !== sourceRoot) {
     plain(res, 404, 'Research asset not found', method);
@@ -119,8 +131,10 @@ export function serveAidenLab(req, res, { repoRoot = ROOT } = {}) {
     'x-frame-options': 'DENY',
     'referrer-policy': 'no-referrer',
     'cross-origin-resource-policy': 'same-origin',
-    'content-security-policy': route.sourceGroup === 'classroom' ? classroomCsp(body) : CSP,
-    ...(route.sourceGroup === 'classroom' ? {'x-evercraft-learning-world': 'classroom-practice-v1'} : {}),
+    'content-security-policy': route.sourceGroup ? classroomCsp(body) : CSP,
+    ...(route.sourceGroup ? {'x-evercraft-learning-world': {
+      classroom: 'classroom-practice-v1', physics: 'physics-model-v1', world: 'earth-globe-v1'
+    }[route.sourceGroup]} : {}),
     'x-evercraft-static-program': 'aidens-lab-v1'
   });
   if (method === 'HEAD') res.end();

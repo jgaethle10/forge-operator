@@ -58,13 +58,23 @@ test('Aiden is the first-party home for restored Deep Learning build lineage', (
     assert.ok(world.description.length>40,world.id);
     const u=new URL(world.url,'https://fabric.systemiacommandcenters.com/aiden-lab/');
     assert.equal(u.protocol,'https:');
-    if(world.state!=='practice_preview'){
+    if(world.state==='interactive_preview'){
+      assert.equal(u.origin,'https://fabric.systemiacommandcenters.com',world.id);
+      assert.ok(['./physics/','./world/'].includes(world.url),world.id);
+      assert.match(world.evidence,/original|not recovered|not a recovery/i);
+    } else if(world.state!=='practice_preview'){
       assert.equal(u.hostname,'github.com',world.id);
       assert.notEqual(world.url,'./classroom/',world.id);
     }
     assert.equal(new URL(world.source).hostname,'github.com');
   }
   assert.equal(LEARNING_SEQUENCE.map(x=>x.title).join(' > '),'Predict > Try it > Observe > Explain > Connect');
+  const physics=LEARNING_WORLDS.find(x=>x.id==='physics-atlas');
+  const earth=LEARNING_WORLDS.find(x=>x.id==='earth-atlas');
+  assert.equal(physics.state,'interactive_preview');
+  assert.equal(physics.url,'./physics/');
+  assert.equal(earth.state,'interactive_preview');
+  assert.equal(earth.url,'./world/');
   const sentinel=LEARNING_WORLDS.find(x=>x.id==='sentinel-intelligence');
   assert.equal(sentinel.state,'historical_rebuild');
   assert.match(sentinel.description,/No live military tracking or tactical controls/);

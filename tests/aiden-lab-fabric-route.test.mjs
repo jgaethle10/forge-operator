@@ -98,6 +98,42 @@ test('the reviewed Infinite Classroom practice preview opens through owned Fabri
   }finally{await rt.close()}
 });
 
+
+test('Physics and World Atlases are first-party, read-only interactive experiences',async()=>{
+  const rt=await startFabricLocalRuntime({host:'127.0.0.1',port:0,catalog:[],faieSurfaceEnabled:false});
+  try{
+    for(const world of [
+      {name:'physics',marker:'physics-model-v1',identity:'Physics Atlas',words:/PROJECTILE MOTION|pendulum/i},
+      {name:'world',marker:'earth-globe-v1',identity:'Earth & World Atlas',words:/Mariana Trench|Yakima Basin/}
+    ]){
+      const sourceHtml=fs.readFileSync(path.join(repoRoot,'public/aiden-lab',world.name,'index.html'),'utf8');
+      const r=await fetch(rt.url+'/aiden-lab/'+world.name+'/');
+      assert.equal(r.status,200,world.name);
+      assert.equal(r.headers.get('x-evercraft-static-program'),'aidens-lab-v1');
+      assert.equal(r.headers.get('x-evercraft-learning-world'),world.marker);
+      assert.equal(r.headers.get('content-type'),'text/html; charset=utf-8');
+      const csp=r.headers.get('content-security-policy');
+      assert.match(csp,/script-src 'sha256-/);
+      assert.match(csp,/style-src 'sha256-/);
+      assert.match(csp,/connect-src 'none'/);
+      assert.doesNotMatch(csp,/unsafe-inline|unsafe-eval|https?:/i);
+      assert.equal(await r.text(),sourceHtml);
+      assert.match(sourceHtml,world.words);
+      assert.match(sourceHtml,new RegExp(world.identity.replace('&','&')));
+      const redirect=await fetch(rt.url+'/aiden-lab/'+world.name,{redirect:'manual'});
+      assert.equal(redirect.status,308);
+      assert.equal(redirect.headers.get('location'),'/aiden-lab/'+world.name+'/');
+      const exact=await fetch(rt.url+'/aiden-lab/'+world.name+'/index.html');
+      assert.equal(exact.status,200);
+      assert.equal(await exact.text(),sourceHtml);
+      assert.equal((await fetch(rt.url+'/aiden-lab/'+world.name+'/README.md')).status,404);
+      assert.equal((await fetch(rt.url+'/aiden-lab/'+world.name+'/.env')).status,404);
+      assert.equal((await fetch(rt.url+'/aiden-lab/'+world.name+'/',{method:'POST'})).status,405);
+    }
+    assert.equal((await fetch(rt.url+'/health')).status,200);
+  }finally{await rt.close()}
+});
+
 test('URL traversal cannot read repository private or unrelated files', async () => {
   const rt = await startFabricLocalRuntime({
     host:'127.0.0.1', port:0, catalog:[], faieSurfaceEnabled:false

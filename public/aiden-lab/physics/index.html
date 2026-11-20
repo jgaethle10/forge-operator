@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#061627">
+<meta name="description" content="Explore physics through three interactive, simplified experiments. Change a variable, predict, and compare the model.">
+<title>Physics Atlas | Aiden's Lab</title>
+<style>
+:root{color-scheme:dark;--ink:#f4fbff;--mute:#b7cedb;--bg:#061627;--panel:#102b3a;--line:#416675;--lime:#c5f4ad;--gold:#ffd78b}
+*{box-sizing:border-box}body{margin:0;color:var(--ink);background:radial-gradient(ellipse at 85% 0,#18445d,transparent 44%),var(--bg);font:16px/1.5 system-ui,-apple-system,sans-serif}
+button,input{font:inherit}a{color:var(--lime)}button{cursor:pointer}button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(--lime);outline-offset:3px}
+.wrap{max-width:1160px;padding-inline:clamp(18px,4vw,38px);margin:auto}
+header{border-bottom:1px solid var(--line);background:#061b2cd9}
+.head{display:flex;justify-content:space-between;align-items:center;gap:15px;min-height:65px;flex-wrap:wrap}
+.brand{font-weight:900;letter-spacing:.09em;text-decoration:none;color:var(--ink);font-size:13px}
+.breadcrumb{font-size:12px;color:var(--mute)}
+main{padding-block:42px 80px}
+.eyebrow{font-size:11px;letter-spacing:.16em;font-weight:900;color:var(--lime)}
+h1{font:500 clamp(46px,7vw,84px)/1.05 Georgia,serif;letter-spacing:-.05em;margin:13px 0}
+h1 em{color:var(--lime)}.intro{max-width:770px;color:var(--mute);font-size:17px;margin:0 0 28px}
+.tabs{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:20px}
+.tab{border:1px solid #557989;border-radius:999px;background:#173342;color:#e2f3f7;padding:11px 17px;font-weight:800;min-height:45px}
+.tab[aria-pressed=true]{color:#092427;background:var(--lime);border-color:var(--lime)}
+.lab{display:grid;grid-template-columns:minmax(0,1fr) 295px;gap:19px}
+.stage{background:linear-gradient(#102f44,#071a2b);border:1px solid #3d6b76;border-radius:24px;overflow:hidden;position:relative}
+.stage-label{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:17px 20px;border-bottom:1px solid #345263;font-size:12px;color:#cae0e8;flex-wrap:wrap}
+.stage-label b{color:var(--lime);letter-spacing:.08em}
+canvas{display:block;width:100%;height:clamp(280px,38vw,440px);touch-action:pan-y}
+.stage-footer{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:15px 20px;border-top:1px solid #345263}
+.stage-footer .hint{font-size:12px;color:var(--mute)}
+.stage-footer button{border-radius:10px;padding:10px 18px;background:var(--lime);border:0;color:#112828;font-weight:900}
+.controls{background:#0f2735;border:1px solid #365466;border-radius:22px;padding:22px;display:flex;flex-direction:column;gap:19px}
+.controls h2{font:500 27px Georgia,serif;margin:0 0 2px}
+.control{display:grid;gap:8px}.control label{display:flex;justify-content:space-between;gap:12px;font-size:13px;color:#deedf3}
+.control output{color:var(--lime);font-weight:900;font-variant-numeric:tabular-nums}
+input[type=range]{width:100%;accent-color:#c5f4ad;cursor:pointer}
+.result{padding:16px;background:#214034;border:1px solid #57816c;border-radius:13px;display:grid;gap:3px}
+.result small{color:#b5dbcc}.result strong{font-size:26px;color:#eaffdb;line-height:1.15}
+.result span{color:#c4e3db;font-size:12px}
+.concept{margin-top:22px;background:#0d2431;border:1px solid #35576a;border-radius:18px;padding:24px;display:grid;grid-template-columns:1.25fr .75fr;gap:26px}
+.concept h2{font:500 29px Georgia,serif;margin:0 0 9px}
+.concept p{color:var(--mute);margin:0;line-height:1.7}
+.concept aside{border-left:2px solid var(--gold);padding-left:20px;color:#f1e6c4;font-size:13px}
+.concept aside strong{display:block;font-size:14px;margin-bottom:8px}
+.footnote{font-size:12px;color:#acc5d1;margin-top:20px}
+@media(max-width:800px){.lab,.concept{grid-template-columns:1fr}.controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}.controls h2{grid-column:1/-1}.concept aside{border-left:0;border-top:2px solid var(--gold);padding:14px 0 0}}
+@media(max-width:460px){.controls{display:flex}.stage-label{padding:13px 14px}.stage-footer{padding:12px 14px}main{padding-top:30px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header><div class="wrap head"><a class="brand" href="../">✳ AIDEN'S LAB / EVERCRAFT</a><span class="breadcrumb">LEARNING WORLDS · PHYSICS ATLAS</span></div></header>
+<main class="wrap">
+<p class="eyebrow">INTERACTIVE SCIENCE / OWNED MODEL PREVIEW</p>
+<h1>Make a prediction.<br><em>Test the universe.</em></h1>
+<p class="intro">What makes something fly, swing, or ripple? Change the numbers and watch the physics respond. The models are simplified on purpose so you can see the relationships clearly.</p>
+<nav class="tabs" aria-label="Choose an experiment">
+<button class="tab" type="button" data-mode="launch" aria-pressed="true">🚀 Launch Lab</button>
+<button class="tab" type="button" data-mode="pendulum" aria-pressed="false">🕰️ Pendulum</button>
+<button class="tab" type="button" data-mode="wave" aria-pressed="false">🌊 Wave Tank</button>
+</nav>
+<section class="lab" aria-label="Interactive physics experiment">
+<div class="stage">
+<div class="stage-label"><b id="stageName">01 / PROJECTILE MOTION</b><span id="stageHint">Ideal motion · no air resistance</span></div>
+<canvas id="view" role="img" aria-label="Animated physics model, with its current measurements described in the nearby result panel."></canvas>
+<div class="stage-footer"><span class="hint" id="stageQuestion">Predict: What launch angle sends a projectile farthest?</span><button id="toggle" type="button" aria-pressed="false">Pause animation</button></div>
+</div>
+<div class="controls">
+<h2 id="controlTitle">Set your launch</h2>
+<div class="control" id="controlA"><label for="a"><span id="labelA">Launch angle</span><output id="valueA" for="a">45°</output></label><input id="a" type="range" min="10" max="80" step="1" value="45"></div>
+<div class="control" id="controlB"><label for="b"><span id="labelB">Initial speed</span><output id="valueB" for="b">20 m/s</output></label><input id="b" type="range" min="5" max="35" step="1" value="20"></div>
+<div class="control" id="controlC"><label for="c"><span id="labelC">Gravity</span><output id="valueC" for="c">9.8 m/s²</output></label><input id="c" type="range" min="2" max="20" step=".1" value="9.8"></div>
+<div class="result" aria-live="polite"><small id="resultLabel">Predicted range</small><strong id="resultValue">40.8 m</strong><span id="resultDetail">Flight: 2.9 s</span></div>
+</div>
+</section>
+<section class="concept" aria-labelledby="conceptTitle">
+<div><p class="eyebrow">UNDERSTAND THE MODEL</p><h2 id="conceptTitle">The arc is not magic.</h2><p id="conceptText">Without air resistance, horizontal speed stays constant while gravity changes vertical speed. Try keeping your speed fixed and changing only the launch angle.</p></div>
+<aside><strong>SCIENCE INTEGRITY</strong><span id="formula">Range = v² × sin(2θ) ÷ g</span><p id="limits">This is an ideal projectile model. Real launches also involve drag, wind, terrain and safety constraints.</p></aside>
+</section>
+<p class="footnote">Built as a self-contained educational preview on Evercraft-owned source. No account, remote inference, tracking, experiments on real equipment, or live field measurements. <a href="https://openstax.org/details/books/university-physics-volume-1" target="_blank" rel="noopener noreferrer">Read the OpenStax physics textbook ↗</a></p>
+</main>
+<script>
+(()=>{
+'use strict';
+const $=id=>document.getElementById(id);
+const TAU=Math.PI*2;
+const MODES={
+ launch:{heading:'01 / PROJECTILE MOTION',hint:'Ideal motion · no air resistance',title:'Set your launch',question:'Predict: What launch angle sends a projectile farthest?',labels:['Launch angle','Initial speed','Gravity'],units:['°',' m/s',' m/s²'],min:[10,5,2],max:[80,35,20],step:[1,1,.1],defaults:[45,20,9.8],concept:'The arc is not magic.',explain:'Without air resistance, horizontal speed stays constant while gravity changes vertical speed. Keep the speed fixed and change only the angle.',formula:'Range = v² × sin(2θ) ÷ g',limits:'Ideal projectile motion: no wind, air drag, changing elevation or obstacles.'},
+ pendulum:{heading:'02 / PENDULUM',hint:'Small-angle approximation · no friction',title:'Build a swing',question:'Predict: Which matters more for the period, mass or length?',labels:['Length','Starting angle','Gravity'],units:[' m','°',' m/s²'],min:[.4,5,2],max:[3,30,20],step:[.1,1,.1],defaults:[1.5,15,9.8],concept:'Time follows length.',explain:'For small swings, a longer pendulum takes more time to complete a cycle. In this approximation the mass cancels out.',formula:'Period ≈ 2π × √(length ÷ gravity)',limits:'This small-angle approximation becomes less accurate for large starting angles; the model ignores friction.'},
+ wave:{heading:'03 / WAVE TANK',hint:'Illustrative one-dimensional traveling wave',title:'Shape a ripple',question:'Predict: If wave speed stays fixed, what happens when frequency doubles?',labels:['Frequency','Wave speed','Amplitude'],units:[' Hz',' m/s',' m'],min:[.25,1,.2],max:[3,8,2],step:[.05,.25,.1],defaults:[1,4,1],concept:'Space and time dance together.',explain:'For a traveling wave, wavelength is speed divided by frequency. Higher frequency makes the wave crests closer together at fixed speed.',formula:'Wavelength = speed ÷ frequency',limits:'This is a one-dimensional sinusoid, not a fluid simulator or an ocean-wave prediction.'}
+};
+let mode='launch',playing=true,last=0,clock=0,w=600,h=360,ratio=1;
+const cvs=$('view'),ctx=cvs.getContext('2d',{alpha:false});
+const clamp=(x,min,max)=>Math.max(min,Math.min(max,x));
+const fmt=x=>Number(x.toFixed(2)).toString();
+function values(){return [Number($('a').value),Number($('b').value),Number($('c').value)]}
+function formatValue(i,v){return fmt(v)+MODES[mode].units[i]}
+function currentResult(){
+ const [a,b,c]=values();
+ if(mode==='launch'){
+  const rad=a*Math.PI/180,range=b*b*Math.sin(2*rad)/c,duration=2*b*Math.sin(rad)/c;
+  return {label:'Predicted range',value:fmt(range)+' m',detail:'Flight: '+fmt(duration)+' s',range,duration};
+ }
+ if(mode==='pendulum'){
+  const period=TAU*Math.sqrt(a/c);
+  return {label:'Approximate period',value:fmt(period)+' s',detail:'Small-angle model · starting angle '+fmt(b)+'°',period};
+ }
+ const wavelength=b/a;
+ return {label:'Wavelength',value:fmt(wavelength)+' m',detail:'At '+fmt(a)+' Hz, the wave moves at '+fmt(b)+' m/s',wavelength};
+}
+function text(x,y,string,color='#c9e1e8',size=12){
+ ctx.fillStyle=color;ctx.font='600 '+size+'px system-ui';ctx.fillText(string,x,y);
+}
+function line(x1,y1,x2,y2,color,width=1){
+ ctx.strokeStyle=color;ctx.lineWidth=width;ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();
+}
+function dot(x,y,r,color){
+ ctx.beginPath();ctx.arc(x,y,r,0,TAU);ctx.fillStyle=color;ctx.fill();
+}
+function background(){
+ ctx.fillStyle='#081d2d';ctx.fillRect(0,0,w,h);
+ ctx.strokeStyle='#214257';ctx.lineWidth=1;
+ for(let x=0;x<w;x+=45)line(x,0,x,h,'#17384b');
+ for(let y=0;y<h;y+=45)line(0,y,w,y,'#17384b');
+}
+function paintLaunch(){
+ const [angle,speed,g]=values(),rad=angle*Math.PI/180,r=currentResult();
+ const x0=34,y0=h-40,xend=w-28,top=26,land=xend-x0;
+ line(x0,y0,xend,y0,'#bdeab7',2);
+ const ymax=speed*speed*Math.sin(rad)**2/(2*g),span=Math.max(10,ymax*1.2),k=Math.min(land/Math.max(1,r.range), (y0-top)/span);
+ const xAt=t=>x0+speed*Math.cos(rad)*t*k,yAt=t=>y0-(speed*Math.sin(rad)*t-.5*g*t*t)*k;
+ ctx.beginPath();
+ for(let i=0;i<=80;i++){const t=r.duration*i/80,x=xAt(t),y=yAt(t);if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y)}
+ ctx.strokeStyle='#8de0ef';ctx.lineWidth=3;ctx.stroke();
+ const t=playing?clock%(r.duration+.6):Math.min(clock,r.duration);
+ dot(xAt(Math.min(r.duration,t)),yAt(Math.min(r.duration,t)),8,'#f6c977');
+ dot(x0,y0,5,'#c5f4ad');
+ text(15,22,'START  •  0 m');text(w-132,24,'RANGE '+fmt(r.range)+' m','#f6df98');
+}
+function paintPendulum(){
+ const [length,angle,g]=values(),r=currentResult();
+ const scale=Math.min((h-100)/3.2,125),pivotX=w/2,pivotY=40;
+ const theta=angle*Math.PI/180*Math.cos(TAU*clock/r.period),px=pivotX+length*scale*Math.sin(theta),py=pivotY+length*scale*Math.cos(theta);
+ line(pivotX,pivotY,pivotX,pivotY+length*scale,'#42627a',1);
+ ctx.beginPath();ctx.arc(pivotX,pivotY,length*scale,-Math.PI/2+Math.PI/2-angle*Math.PI/180,-Math.PI/2+Math.PI/2+angle*Math.PI/180);ctx.strokeStyle='#385b76';ctx.lineWidth=2;ctx.stroke();
+ line(pivotX,pivotY,px,py,'#a8def0',3);
+ dot(pivotX,pivotY,6,'#c5f4ad');dot(px,py,16,'#f6c977');
+ text(16,26,'LENGTH  '+fmt(length)+' m');text(w-170,26,'PERIOD  '+fmt(r.period)+' s','#f6df98');
+}
+function paintWave(){
+ const [freq,speed,amp]=values(),r=currentResult();
+ const center=h/2,worldSpan=12,scale=w/worldSpan,amplitude=amp*Math.min(35,h/11);
+ line(0,center,w,center,'#476981');
+ ctx.beginPath();
+ for(let x=0;x<=w;x+=3){const distance=x/scale;const y=center-amplitude*Math.sin(TAU*(distance/r.wavelength-freq*clock));if(x===0)ctx.moveTo(x,y);else ctx.lineTo(x,y)}
+ ctx.strokeStyle='#92e7ea';ctx.lineWidth=3;ctx.stroke();
+ for(let x=0;x<=w;x+=scale*2)line(x,center-6,x,center+6,'#6c93a2');
+ text(16,24,'WAVELENGTH  '+fmt(r.wavelength)+' m','#f6df98');
+ text(16,h-18,'Model window: 12 meters');
+}
+function paint(){background();if(mode==='launch')paintLaunch();else if(mode==='pendulum')paintPendulum();else paintWave()}
+function refresh(){
+ const x=currentResult();$('resultLabel').textContent=x.label;$('resultValue').textContent=x.value;$('resultDetail').textContent=x.detail;
+ for(let i=0;i<3;i++)$('value'+['A','B','C'][i]).textContent=formatValue(i,values()[i]);
+ paint();
+}
+function select(next){
+ if(!Object.hasOwn(MODES,next))return;
+ mode=next;clock=0;last=0;
+ const m=MODES[next];$('stageName').textContent=m.heading;$('stageHint').textContent=m.hint;
+ $('controlTitle').textContent=m.title;$('stageQuestion').textContent=m.question;
+ $('conceptTitle').textContent=m.concept;$('conceptText').textContent=m.explain;$('formula').textContent=m.formula;$('limits').textContent=m.limits;
+ for(let i=0;i<3;i++){const key=['a','b','c'][i],letter=['A','B','C'][i],input=$(key);input.min=m.min[i];input.max=m.max[i];input.step=m.step[i];input.value=m.defaults[i];$('label'+letter).textContent=m.labels[i]}
+ for(const tab of document.querySelectorAll('.tab'))tab.setAttribute('aria-pressed',String(tab.dataset.mode===next));
+ refresh();
+}
+function resize(){
+ const rect=cvs.getBoundingClientRect();w=Math.max(280,rect.width);h=Math.max(240,rect.height);ratio=Math.min(2,window.devicePixelRatio||1);
+ cvs.width=Math.floor(w*ratio);cvs.height=Math.floor(h*ratio);ctx.setTransform(ratio,0,0,ratio,0,0);paint();
+}
+const reduced=window.matchMedia('(prefers-reduced-motion: reduce)');
+function step(time){
+ if(!last)last=time;
+ const elapsed=clamp((time-last)/1000,0,.055);last=time;
+ if(playing && !reduced.matches && !document.hidden)clock+=elapsed;
+ paint();
+ requestAnimationFrame(step);
+}
+for(const tab of document.querySelectorAll('.tab'))tab.addEventListener('click',()=>select(tab.dataset.mode));
+for(const key of ['a','b','c'])$(key).addEventListener('input',()=>{clock=0;refresh()});
+$('toggle').addEventListener('click',()=>{playing=!playing;$('toggle').setAttribute('aria-pressed',String(!playing));$('toggle').textContent=playing?'Pause animation':'Resume animation'});
+window.addEventListener('resize',resize,{passive:true});
+select('launch');resize();requestAnimationFrame(step);
+})();
+</script>
+</body>
+</html>

@@ -44,6 +44,48 @@ a sign-in, network model, or learner analytics. It is not allowed to acquire
 new inference authority, save children’s identifiable answers, or claim
 personalized AI tutoring merely by appearing in Aiden's Lab.
 
+## Physics and Earth/World interactive explorers (November 19, 2026)
+
+Two **new, original, owned-browser previews** now exist beneath the Aiden
+campus. These are built as independent experiences, not merely cards, source
+readers, or fictional restorations of unverified legacy app code.
+
+- `/aiden-lab/physics/` serves exactly
+  `public/aiden-lab/physics/index.html`. Three playable model stations:
+  ideal projectile (angle, speed, gravity), pendulum (length, angle, gravity),
+  and traveling wave (frequency, speed, amplitude). The controls recompute
+  physical relationships, display expected units and update animated canvas
+  scenes. Mathematical models are teaching approximations, not flight
+  engineering certification or field measurements.
+- `/aiden-lab/world/` serves exactly
+  `public/aiden-lab/world/index.html`. An offline-first drag-to-rotate
+  orthographic globe with keyboard-accessible destination buttons and clickable
+  coordinate markers. Eight geography/earth-system expeditions include a
+  question, evidence explanation, uncertainty and external educational source.
+  Coastlines are **schematic**, not cartographic data. Site coordinates are
+  educational point markers, not a navigation map or measurements.
+- The two preview doors are `interactive_preview` in
+  `learning-worlds.mjs`. The historical Physics/Earth Atlas names remain
+  linked to their canonical original records. No claim is made that the old
+  apps, user progress, assets or feature parity have been recovered.
+- Only two additional exact HTML assets are authorized on the existing owned
+  Fabric route; no arbitrary static directories, external JavaScript imports,
+  browser APIs for personal location, or third-party rendering engine.
+- Inline CSS and JS on these two reviewed standalone pages receive source-byte
+  SHA-256 Content Security Policy hashes, not a permissive inline policy.
+  The owned Fabric runtime emits the separate
+  `physics-model-v1` and `earth-globe-v1` identity headers.
+- Both are included in the independent source-to-owned-HTTPS parity check and
+  the resident updater's source-to-loopback gate. A source merge or green CI
+  is **not** a physical-host release receipt or browser acceptance.
+- Before advertising broadly, verify touchscreen/keyboard behavior, all
+  adjustable controls and model results on an actual phone, independent HTTPS,
+  resource limits, and the correct browser CSP execution.
+
+The original conversational Infinite Classroom, a complete scientific Physics
+Atlas, an authoritative cartographic World Atlas and the full legacy education
+estate remain separate restoration and QA workstreams.
+
 ## Living universe visual redesign (November 19, 2026)
 
 The founding experience is **a navigable universe, not a long list of product

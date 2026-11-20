@@ -3,6 +3,7 @@
 // Discovery-only and historical entries never masquerade as playable experiences.
 export const WORLD_STATES=Object.freeze({
   practice_preview:'Playable practice preview',
+  interactive_preview:'Interactive science model preview',
   source_viewer:'Source viewer preserved',
   discovery_only:'Product record only',
   historical_rebuild:'Historical build · rebuilding'
@@ -20,17 +21,17 @@ export const LEARNING_WORLDS=Object.freeze([
   {
     id:'physics-atlas',icon:'⚛️',title:'Physics Atlas',kind:'Experiment and predict',
     description:'Forces, motion, waves, circuits and matter. The goal is to predict, manipulate, measure and explain, not just read an answer.',
-    state:'discovery_only',action:'View the Physics Atlas record',
-    url:'https://github.com/jgaethle10/forge-operator/tree/main/registry/evercraft-physics-atlas',
-    evidence:'Approved public product record exists; no independently verified owned interactive Physics Atlas release is established.',
+    state:'interactive_preview',action:'Experiment with physics',
+    url:'./physics/',
+    evidence:'New original Evercraft-owned browser preview with ideal projectile, small-angle pendulum and one-dimensional wave models. It is not a recovery or production-parity proof of the former Physics Atlas.',
     source:'https://github.com/jgaethle10/forge-operator/tree/main/registry/evercraft-physics-atlas'
   },
   {
     id:'earth-atlas',icon:'🌍',title:'Earth & World Atlas',kind:'Explore our planet',
     description:'Maps, places, natural systems, hazards, geography and history. Return the Earth Atlas as an interactive evidence-led world.',
-    state:'historical_rebuild',action:'Read the education rebuild plan',
-    url:'https://github.com/jgaethle10/forge-operator/blob/main/systemia/migrations/base44-exit/EDUCATION-REBUILD-2026-11-04.md',
-    evidence:'Historical Earth Atlas is preserved in the Evercraft estate inventory. Its original interactive source and production parity are not verified.',
+    state:'interactive_preview',action:'Explore the Earth globe',
+    url:'./world/',
+    evidence:'New first-party educational globe with schematic coastlines and coordinate-based source-linked expeditions. The original Earth Atlas code and feature parity are not recovered; no authoritative map, live sensor or hazard forecast.',
     source:'https://github.com/jgaethle10/forge-operator/blob/main/systemia/migrations/base44-exit/EDUCATION-REBUILD-2026-11-04.md'
   },
   {
