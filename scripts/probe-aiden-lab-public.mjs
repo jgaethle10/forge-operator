@@ -93,7 +93,7 @@ export async function runPublicCanary({origin = DEFAULT_ORIGIN, fetcher = fetch,
     receipt.assets.every((row) => row.state === 'EXACT_SOURCE_VERIFIED');
   receipt.publication_state = receipt.public_https_verified ? 'EXACT_SOURCE_PUBLIC_VERIFIED' : 'HOLD_UNVERIFIED_PUBLIC_ROUTE';
   receipt.limits = [
-    'The owned Fabric program marker and exact source parity are checked, but deployment receipts still need independent review.'
+    'The owned Fabric program marker and exact source parity are checked, but deployment receipts still need independent review.',
     'This is not medical appraisal, clinical validity, a five-minute live heartbeat, or a backend research runner.'
   ];
   return receipt;
