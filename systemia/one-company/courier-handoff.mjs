@@ -98,7 +98,7 @@ export function projectOneCompanyCourierHandoff({receipt,intake,rootDir=MODULE_R
   const name=asset?.filename;
   if(typeof name!=='string'||name.length>200||!name||
      name!==path.basename(name)||name.startsWith('.')||
-     name.includes('\\\\')||names.has(name.toLowerCase())||
+     name.includes('\\')||names.has(name.toLowerCase())||
      !HEX64.test(asset.sha256||'')||
      !Number.isSafeInteger(asset.bytes)||asset.bytes<1)
      fail('asset_manifest_invalid');
