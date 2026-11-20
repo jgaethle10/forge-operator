@@ -1,0 +1,86 @@
+{
+  "schema": "evercraft.gems.full-area-replay-independent-verification.v1",
+  "date_utc": "2026-11-20",
+  "archive_sha256": "68e1eea1bf6d4c565bee61e161f23dcd902e9711dee4a0e64322095b3ef04bc9",
+  "archive_name": "GEMS_002_Full_Area_Replay_20261120(1).zip",
+  "source_commit": "a1dd3b4d0569f2274ffdcec77de39213382a602a",
+  "original_model_sha256": "db07aef8eb3edaa78efdc704d867cc8c2cf12ae1c8d17152fd0280238c92ca8b",
+  "archive_inner_sha256_checks_verified": 8,
+  "recalculated_pooled_dti_and_tp_fp_fn_from_each_fold": true,
+  "all_21_csv_and_json_fold_records_present": true,
+  "scientific_regression_tests_rerun_locally": "4 passed",
+  "original_organizer_tiffs_in_archive": false,
+  "training_independently_rerun_here": false,
+  "one_real_data_run": true,
+  "second_run": false,
+  "proxy_target": "Full northern scoreable area, known-fault mapped-label proxy; not hidden newly mapped faults",
+  "results": [
+    {
+      "key": "r0_t0.2_min1",
+      "pooled_dti": 0.07104721208075535,
+      "tp": 5339.379294716753,
+      "fp": 235095.38030855823,
+      "fn": 28492.620705283247
+    },
+    {
+      "key": "r10_t0.2_min1",
+      "pooled_dti": 0.06653486825298381,
+      "tp": 6464.327294583432,
+      "fp": 343992.6050512872,
+      "fn": 27367.672705416568
+    },
+    {
+      "key": "r10_t0.2_min2",
+      "pooled_dti": 0.06305379208487248,
+      "tp": 5555.864804142155,
+      "fp": 299681.6127379363,
+      "fn": 28276.135195857845
+    },
+    {
+      "key": "r10_t0.35_min1",
+      "pooled_dti": 0.06442404739757064,
+      "tp": 5332.543094329536,
+      "fp": 273202.2387192375,
+      "fn": 28499.456905670464
+    },
+    {
+      "key": "r10_t0.35_min2",
+      "pooled_dti": 0.0607588051595734,
+      "tp": 4696.227138802409,
+      "fp": 246440.51047976257,
+      "fn": 29135.77286119759
+    },
+    {
+      "key": "r10_t0.5_min1",
+      "pooled_dti": 0.05908433174335368,
+      "tp": 4105.2475869990885,
+      "fp": 207972.52530311086,
+      "fn": 29726.75241300091
+    },
+    {
+      "key": "r10_t0.5_min2",
+      "pooled_dti": 0.055631047885554785,
+      "tp": 3707.607892740518,
+      "fp": 194196.28631567676,
+      "fn": 30124.392107259482
+    }
+  ],
+  "decision": {
+    "strongest_tested_proxy": "r0_t0.2_min1",
+    "baseline_minus_1000m": 0.004512343827771534,
+    "relative_decline_1000m_percent": 6.351190561344769,
+    "tp_gain_1000m_percent": 21.07,
+    "fp_increase_1000m_percent": 46.32,
+    "corridor_only_dti_baseline": 0.14102317238698014,
+    "corridor_only_dti_1000m": 0.15357335957738685,
+    "promote_1000m": false,
+    "promote_other_variants": false,
+    "recommend_official_entry": "Retain GEMS-001 as scored incumbent; no replacement on this evidence",
+    "future_research": "Try substantive training/modeling changes; measure full-area geographically buffered holdouts and mapped-fault segment holdouts before using another scored slot."
+  },
+  "official_scores": {
+    "gems001_public": "0.0552, archived participant receipt in prior work",
+    "gems002_public": "0.0461, user-reported; not independently shown in this archive"
+  },
+  "no_new_scored_submission": true
+}
