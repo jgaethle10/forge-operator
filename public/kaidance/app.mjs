@@ -187,12 +187,15 @@ function eventTicker(){
  $('portraitProofProgress').style.width=progress;
  $('heroProgress').style.width=progress;
 }
-$('portraitBtn').addEventListener('click',()=>{
- const active=document.body.classList.toggle('portrait');
+function setBroadcastView(active){
+ document.body.classList.toggle('portrait',active);
  $('portraitBtn').setAttribute('aria-pressed',String(active));
  $('portraitBtn').querySelector('span:last-child').textContent=active?'EXIT LIVE VIEW':'9:16 LIVE VIEW';
  $('portraitBtn').setAttribute('aria-label',active?'Exit broadcast view':'Open 9:16 broadcast view');
-});
+}
+$('portraitBtn').addEventListener('click',()=>setBroadcastView(!document.body.classList.contains('portrait')));
+// Direct, shareable streaming layout. Changes presentation only, never pulse state.
+if(new URLSearchParams(window.location.search).get('view')==='live')setBroadcastView(true);
 $('filmBtn').addEventListener('click',async()=>{
  try{
    if(document.fullscreenElement)await document.exitFullscreen();
