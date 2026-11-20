@@ -18,15 +18,6 @@ test -d "$BASE/.git" || git -C "$BASE" rev-parse --git-dir >/dev/null
 mkdir -p "$(dirname "$WORKTREE")"
 cd "$BASE"
 git cat-file -e "$SOURCE_COMMIT^{commit}" || { echo "STOP: pinned release source commit absent"; exit 1; }
-if git ls-remote --exit-code --heads origin "$BRANCH" >/dev/null 2>&1; then
-  echo "STOP: exact courier branch exists; will not overwrite or force-push."
-  exit 1
-fi
-if [ -e "$WORKTREE" ]; then
-  echo "STOP: courier worktree already exists; inspect previous attempt. No force push."
-  exit 1
-fi
-
 echo "=== VERIFY LOCAL BUNDLE BEFORE ANY PUSH ==="
 python3 - "$ARCHIVE" "$SOURCE_COMMIT" <<'PY'
 from pathlib import Path
@@ -61,6 +52,39 @@ print("PUBLIC-SAFE STATIC ARCHIVE: VERIFIED")
 print("ARCHIVE SHA256:",hashlib.sha256(p.read_bytes()).hexdigest())
 print("BYTES:",p.stat().st_size)
 PY
+
+echo "=== CHECK FOR ALREADY PUBLISHED EXACT COURIER ==="
+ARCHIVE_SHA="$(sha256sum "$ARCHIVE" | awk '{print $1}')"
+ARCHIVE_BYTES="$(stat -c '%s' "$ARCHIVE")"
+if git ls-remote --exit-code --heads origin "$BRANCH" >/dev/null 2>&1; then
+  git -C "$BASE" fetch --no-tags origin "$BRANCH"
+  REMOTE_COMMIT="$(git -C "$BASE" rev-parse FETCH_HEAD)"
+  REMOTE_DIGEST="$(git -C "$BASE" show "$REMOTE_COMMIT:$PAYLOAD" | sha256sum | awk '{print $1}')"
+  REMOTE_RECEIPT="$(git -C "$BASE" show "$REMOTE_COMMIT:$RECEIPT")"
+  if [ "$REMOTE_DIGEST" = "$ARCHIVE_SHA" ] &&
+     python3 - "$REMOTE_RECEIPT" "$ARCHIVE_SHA" "$ARCHIVE_BYTES" "$SOURCE_COMMIT" <<'PY'
+import json,sys
+r=json.loads(sys.argv[1])
+assert r['schema']=='evercraft.aiw.github-courier.v1'
+assert r['archive_sha256']==sys.argv[2]
+assert r['archive_bytes']==int(sys.argv[3])
+assert r['source_commit']==sys.argv[4]
+PY
+  then
+    echo "EXACT GITHUB COURIER ALREADY PRESENT; no overwrite."
+    echo "BRANCH: $BRANCH"
+    echo "COURIER COMMIT: $REMOTE_COMMIT"
+    echo "ARCHIVE SHA256: $ARCHIVE_SHA"
+    echo "PUBLIC EDGE: UNCHANGED"
+    exit 0
+  fi
+  echo "STOP: existing courier branch contains different bytes. No force push."
+  exit 1
+fi
+if [ -e "$WORKTREE" ]; then
+  echo "STOP: prior courier worktree exists without verified remote push. Inspect manually."
+  exit 1
+fi
 
 echo "=== CREATE IMMUTABLE GITHUB COURIER BRANCH ==="
 git -C "$BASE" worktree add --detach "$WORKTREE" "$SOURCE_COMMIT"
