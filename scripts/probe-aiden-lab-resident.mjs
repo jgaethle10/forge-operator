@@ -11,6 +11,7 @@ export const RESIDENT_ORIGIN='http://127.0.0.1:8787';
 export const ASSETS=Object.freeze([
   {name:'index.html',type:/^text\/html\b/i},
   {name:'app.mjs',type:/^(text|application)\/javascript\b/i},
+  {name:'learning-worlds.mjs',type:/^(text|application)\/javascript\b/i},
   {name:'catalog.mjs',type:/^(text|application)\/javascript\b/i},
   {name:'styles.css',type:/^text\/css\b/i},
   {name:'mark.svg',type:/^image\/svg\+xml\b/i},
