@@ -14,18 +14,18 @@ const mime=(name)=>name.endsWith('.html')?'text/html; charset=utf-8':
 const server=(overrides={})=>async(url)=>{
   const name=assetPath(url);
   const fixture={status:200,url,
-    headers:{get:(key)=>key==='x-evercraft-static-program'?'aidens-lab-v1':key==='x-evercraft-learning-world'?(name==='classroom/index.html'?'classroom-practice-v1':null):
+    headers:{get:(key)=>key==='x-evercraft-static-program'?'aidens-lab-v1':key==='x-evercraft-learning-world'?({'classroom/index.html':'classroom-practice-v1','physics/index.html':'physics-model-v1','world/index.html':'earth-globe-v1'}[name]||null):
       key==='content-type'?mime(name):null},
     text:async()=>bytes(name)};
   return {...fixture,...overrides};
 };
 
-test('owned resident release proof matches all seven public campus assets',async()=>{
-  assert.equal(ASSETS.length,8);
+test('owned resident release proof matches all ten public campus assets',async()=>{
+  assert.equal(ASSETS.length,10);
   const receipt=await probeAidenLabResident({sourceRoot:ROOT,fetcher:server(),now:new Date('2026-11-20T00:00:00Z')});
   assert.equal(receipt.verified,true);
   assert.equal(receipt.release_state,'RESIDENT_PARITY_VERIFIED');
-  assert.equal(receipt.assets.length,8);
+  assert.equal(receipt.assets.length,10);
   assert.equal(receipt.no_external_action_taken,true);
   assert.equal(receipt.no_private_data_accessed,true);
 });
@@ -45,7 +45,7 @@ test('resident checker rejects missing route and partial deployment',async()=>{
   const mock=async(url)=>{
     const name=assetPath(url);
     return {status:name==='app.mjs'?404:200,url,
-      headers:{get:(key)=>key==='x-evercraft-static-program'?'aidens-lab-v1':key==='x-evercraft-learning-world'?(name==='classroom/index.html'?'classroom-practice-v1':null):
+      headers:{get:(key)=>key==='x-evercraft-static-program'?'aidens-lab-v1':key==='x-evercraft-learning-world'?({'classroom/index.html':'classroom-practice-v1','physics/index.html':'physics-model-v1','world/index.html':'earth-globe-v1'}[name]||null):
         key==='content-type'?mime(name):null},
       text:async()=>name==='app.mjs'?'Not Found':bytes(name)};
   };
