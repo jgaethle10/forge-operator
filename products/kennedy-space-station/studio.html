@@ -66,6 +66,10 @@ function svgNode(name,attrs,txt){const e=document.createElementNS(NS,name);for(c
 function clamp(n,lo,hi){return Math.min(hi,Math.max(lo,n))}
 function precision(n){return Math.round(n*2)/2}
 function scaleInfo(){const w=Math.max(1,Number(model.parcel.width)||1),d=Math.max(1,Number(model.parcel.depth)||1),s=Math.min(745/w,495/d);return {w,d,s,x:(900-w*s)/2,y:(660-d*s)/2}}
+function imageAffineToSvg(coeff,scale,left,top){
+ const [a,b,c,d,e,f]=coeff;
+ return [scale*a,scale*d,scale*b,scale*e,left+scale*c,top+scale*f];
+}
 function paint(){
 const svg=$('drawing');svg.replaceChildren();svg.append(svgNode('rect',{width:900,height:660,fill:'#e9edf7'}));
 const {w,d,s,x,y}=scaleInfo();
@@ -80,14 +84,14 @@ if(underlay && underlay.siteId===sid() && $('show-underlay').checked){
   const defs=svgNode('defs',{}),clip=svgNode('clipPath',{id:'private-site-clip'});
   clip.append(svgNode('rect',{x,y,width:w*s,height:d*s}));defs.append(clip);svg.append(defs);
   const img=svgNode('image',{href:underlay.url,width:rec.pixel_width,height:rec.pixel_height,
-     preserveAspectRatio:'none',transform:'matrix('+[s*a,s*d0,s*b,s*e,x+s*c,y+s*f].join(' ')+')',
+     preserveAspectRatio:'none',transform:'matrix('+imageAffineToSvg(affine,s,x,y).join(' ')+')',
      opacity:Number($('underlay-opacity').value)/100,'pointer-events':'none'});
   const group=svgNode('g',{'clip-path':'url(#private-site-clip)','pointer-events':'none'});
   group.append(img);svg.append(group);
  }
 }
 for(const obj of model.objects){const ox=x+obj.x*s,oz=y+obj.z*s,ow=obj.width*s,od=obj.depth*s;
-const r=svgNode('rect',{x:ox,y:oz,width:ow,height:od,fill:kinds[obj.kind]||'#ccc',stroke:obj.id===selected?'#4c2dc8':'#696c8d','stroke-width':obj.id===selected?4:2,'data-id':obj.id,class:'shape',rx:2});svg.append(r);
+const r=svgNode('rect',{x:ox,y:oz,width:ow,height:od,fill:kinds[obj.kind]||'#ccc',stroke:obj.id===selected?'#4c2dc8':'#696c8d','stroke-width':obj.id===selected?4:2,'fill-opacity':underlay&&$('show-underlay').checked?.72:1,'data-id':obj.id,class:'shape',rx:2});svg.append(r);
 if(ow>50&&od>26){svg.append(svgNode('text',{x:ox+ow/2,y:oz+od/2,'text-anchor':'middle','dominant-baseline':'middle','font-size':Math.min(14,Math.max(8,ow/10)),fill:'#293153','pointer-events':'none','font-weight':700},obj.label||labels[obj.kind]))}}
 svg.append(svgNode('text',{x:32,y:35,'font-size':15,'font-weight':800,fill:'#4d5478'},'PRELIMINARY STUDY · NOT GEOREFERENCED'));
 svg.append(svgNode('text',{x:32,y:632,'font-size':13,fill:'#6c7494'},'LOCAL X →  |  LOCAL Z ↓  ·  USER-ENTERED SCALE'));

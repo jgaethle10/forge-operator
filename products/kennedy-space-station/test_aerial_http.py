@@ -73,6 +73,37 @@ class AerialHTTPTest(KennedyHomeTest):
         code,notfound=self.api("GET",f"/api/kss/sites/{b}/aerial-sources/{result['source_id']}")
         self.assertEqual(code,404,notfound)
 
+    def test_private_png_underlay_route_returns_only_same_site_original_bytes(self):
+        sid=self.site("Private overlay source A")
+        other=self.site("Private overlay source B")
+        payload=self.model(sid)
+        code,rec=self.api("POST",f"/api/kss/sites/{sid}/aerial-sources",payload)
+        self.assertEqual(code,201,rec)
+        image=base64.b64decode(payload["png_base64"])
+        url=f"http://127.0.0.1:{self.port}/api/kss/sites/{sid}/aerial-sources/{rec['source_id']}/private-preview.png"
+        req=Request(url,method="GET")
+        with urlopen(req,timeout=8) as response:
+            self.assertEqual(response.status,200)
+            self.assertEqual(response.headers["Content-Type"],"image/png")
+            self.assertEqual(response.headers["Cache-Control"],"no-store")
+            self.assertEqual(response.headers["Cross-Origin-Resource-Policy"],"same-origin")
+            self.assertEqual(response.headers["X-Kennedy-Review-Only"],"true")
+            self.assertEqual(response.headers["X-Kennedy-Image-SHA256"],rec["image_sha256"])
+            self.assertIn("inline",response.headers["Content-Disposition"])
+            self.assertEqual(response.read(),image)
+        wrong=url.replace(f"/{sid}/",f"/{other}/")
+        with self.assertRaises(HTTPError) as other_err:
+            urlopen(Request(wrong,method="GET"),timeout=8)
+        self.assertEqual(other_err.exception.code,404)
+        unknown=url.replace(rec["source_id"],"AIR-"+"F"*20)
+        with self.assertRaises(HTTPError) as missing:
+            urlopen(Request(unknown,method="GET"),timeout=8)
+        self.assertEqual(missing.exception.code,404)
+        # No raw PNG is available by referencing an arbitrary path.
+        with self.assertRaises(HTTPError) as bad_path:
+            urlopen(Request(url.replace("private-preview.png","public.png"),method="GET"),timeout=8)
+        self.assertEqual(bad_path.exception.code,404)
+
     def test_forged_digest_wrong_site_invalid_payload_and_rights_refuse(self):
         a=self.site("Image rejection QA")
         payload=self.model(a)
