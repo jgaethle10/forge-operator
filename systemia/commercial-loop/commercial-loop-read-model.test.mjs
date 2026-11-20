@@ -60,7 +60,7 @@ function fixture(){
    shippingReceiptRef:'shipping:001',recipientReadbackRef:'delivery:001'};
  return {order:o,custody:{observedBy:'trusted-owned-receiver',receipt:r},
    intake:{schema:'evercraft.wing-courier.intake-handoff.v1',packageId:o.packageId,
-     intakeState:'candidate_only',candidateId:'intake-001',intakeReceiptHash:H,
+     intakeState:'candidate_only',candidateId:'intake-001',intakeReceiptHash:'sha256:'+H,
      admissionGranted:false,executionGranted:false},
    assignment,fallenGate,previewSendRequest,providerSends:[],
    providerPreview,clientFeedback,payment,finalDelivery};
