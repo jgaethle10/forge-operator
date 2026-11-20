@@ -49,3 +49,9 @@ Add explicitly approved, permission-filtered public receipts for mission results
 Run `node --test systemia/hudson/probe-public.test.mjs` then `node systemia/hudson/probe-public.mjs`. The probe reads only the canonical owned public origin, requests the HTML, same-origin JSON, public Fabric health, and one intentionally disallowed path. Every receipt has `verified` and explicit `holds`. No login or secrets are used.
 
 The scheduled GitHub proof workflow is a CI/observation mechanism, **not a third-party production app runtime**. A passing workflow with `verified:false` still means **HOLD**. A prior source commit, queued CI run or live-looking animation is not external deployment proof. The owned-node deployment and authenticated Systemia release receipt remain separate.
+
+## Public release evidence correction (November 19, 2026)
+
+A source-backed external GitHub Actions probe observed the owned HUDSON HTML, Fabric health declaration, private route denial and 69 source events. Its feed was rejected solely because the publisher clock was **854 ms ahead** of the observer. The browser and independent release canary now tolerate up to **10,000 ms** of future publisher timestamp skew, while retaining the unchanged 120-second age ceiling and rejecting excessive future timestamps. Source history evidence does not imply live private HUDSON or model-inference activity.
+
+The public proof workflow now uploads its JSON receipt before enforcing a failing status on any external HOLD. A green CI run therefore requires an externally verified feed (on push/schedule/dispatch), while PR tests run source/route contracts only. Use the newest external receipt to confirm deployment after this fix; merged code alone is not proof.

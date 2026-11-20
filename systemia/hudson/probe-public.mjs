@@ -10,6 +10,7 @@ import path from 'node:path';
 export const HUDSON_ORIGIN='https://fabric.systemiacommandcenters.com';
 export const HUDSON_SCHEMA='evercraft.hudson.public-activity.v1';
 const COMMIT=/^https:\/\/github\.com\/jgaethle10\/forge-operator\/commit\/([a-f0-9]{40})$/;
+export const CLOCK_SKEW_TOLERANCE_MS=10_000;
 const SYSTEMS=new Set(['hudson','systemia','kaidance','raven','saban','evidence','discovery']);
 const PUBLIC_TITLES={hudson:'HUDSON source lineage updated',systemia:'Evercraft orchestration source updated',kaidance:'Continuity source updated',raven:'Communications source updated',saban:'Execution coordination source updated',evidence:'Evidence and provenance source updated',discovery:'Public discovery source updated'};
 
@@ -20,7 +21,9 @@ export function validateHudsonSnapshot(data,{now=Date.now()}={}){
  if(data?.coverage!=='public_git_history_only_not_total_hudson_activity')reasons.push('source_coverage_unverified');
  const published=Date.parse(data?.published_at||'');
  const age=now-published;
- if(!Number.isFinite(published)||age<0||age>=120000)reasons.push('source_timestamp_stale_or_invalid');
+ // A verified publisher/observer pair may differ by milliseconds.
+ // Reject future publication beyond ten seconds, never extend the two-minute stale limit.
+ if(!Number.isFinite(published)||age < -CLOCK_SKEW_TOLERANCE_MS||age>=120000)reasons.push('source_timestamp_stale_or_invalid');
  if(!Array.isArray(data?.events)||data.events.length>200)reasons.push('event_set_invalid');
  const seen=new Set();
  for(const e of Array.isArray(data?.events)?data.events.slice(0,201):[]){
@@ -34,7 +37,7 @@ export function validateHudsonSnapshot(data,{now=Date.now()}={}){
   }
   seen.add(e.id);
  }
- return {ok:reasons.length===0,reasons,age_ms:Number.isFinite(age)?age:null,listed_events:Array.isArray(data?.events)?data.events.length:null};
+ return {ok:reasons.length===0,reasons,age_ms:Number.isFinite(age)?age:null,clock_skew_ms:Number.isFinite(age)?Math.max(0,-age):null,listed_events:Array.isArray(data?.events)?data.events.length:null};
 }
 
 async function getText(url,fetchImpl,timeoutMs=8000){

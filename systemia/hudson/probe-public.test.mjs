@@ -13,6 +13,13 @@ function specimen({published_at=new Date(now-30000).toISOString(),events}={}){
 }
 test('only fresh, limited public source records can earn verification',()=>{
  assert.equal(validateHudsonSnapshot(specimen(),{now}).ok,true);
+ // External runner observed real owned Fabric feed at -854ms on Nov 20.
+ const slightAhead=specimen({published_at:new Date(now+854).toISOString()});
+ assert.equal(validateHudsonSnapshot(slightAhead,{now}).ok,true);
+ assert.equal(validateHudsonSnapshot(slightAhead,{now}).clock_skew_ms,854);
+ assert.equal(validateHudsonSnapshot(specimen({published_at:new Date(now+10000).toISOString()}),{now}).ok,true);
+ assert.equal(validateHudsonSnapshot(specimen({published_at:new Date(now+10001).toISOString()}),{now}).ok,false);
+
  assert.ok(validateHudsonSnapshot(specimen({published_at:new Date(now-3*60000).toISOString()}),{now}).reasons.includes('source_timestamp_stale_or_invalid'));
  assert.equal(validateHudsonSnapshot(specimen({events:[{...specimen().events[0],source_url:'https://private.example/secret'}]}),{now}).ok,false);
  assert.equal(validateHudsonSnapshot(specimen({events:[{...specimen().events[0],public:false}]}),{now}).ok,false);
