@@ -12,7 +12,7 @@ const code=watch.match(/<script>([\s\S]*?)<\/script>/)?.[1];
 test('river Watch is an interactive site and not an image stand-in',()=>{
  assert.match(home,/href="\.\/watch\/"/);
  assert.match(home,/Enter the Current/);
- assert.match(watch,/hudson-watch-release" content="river-current-v4-living-pulse"/);
+ assert.match(watch,/hudson-watch-release" content="river-current-v5-responsive-watershed"/);
  assert.match(watch,/canvas id="current"/);
  assert.match(watch,/id="explore"/);
  assert.match(watch,/id="pause"/);
@@ -75,7 +75,7 @@ test('the watcher becomes an ambiguous changing presence, not a recognizable bug
  assert.doesNotMatch(code,/for\(var leg=0;/);
  assert.doesNotMatch(code,/for\(var ray=0;/);
  assert.doesNotMatch(code,/ctx\.shadowBlur=14/);
- assert.match(watch,/river-current-v4-living-pulse/);
+ assert.match(watch,/river-current-v5-responsive-watershed/);
 });
 test('probing filaments fold, disappear and return without fixed mirrored anatomy',()=>{
  const a=code.indexOf('function presencePulse(time){');
