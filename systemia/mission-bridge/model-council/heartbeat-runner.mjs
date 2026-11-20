@@ -38,6 +38,7 @@ export async function runAdvisoryHeartbeatOnce({
   budget_cents_remaining:budget,max_calls:4
  });
  if(!execute)return {state:'dry_run',plan,results:[],provider_calls_performed:0};
+ if(plan.queue.length===0)return {state:'quiet',plan,results:[],provider_calls_performed:0};
  if(budget===0) return {state:'held',plan,results:[],provider_calls_performed:0};
  const invoke=invokeOverride||createRavenAdvisoryInvoker({credentialStateDir});
  const results=[];
