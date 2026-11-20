@@ -68,6 +68,13 @@ jobs:
           print("PASS: two rendered source-bound synthetic sheets and integrity receipt")
           print("HOLD: human visual QA, real source rights and georeferencing")
           PY
+      - name: Independently sample real rendered pixels and create QA receipt
+        run: |
+          set -euo pipefail
+          OUT=/tmp/kss-sheet-proof
+          pdftoppm -f 1 -l 2 -r 72 "$OUT/kennedy-synthetic-s0-a0.pdf" "$OUT/qa" >/dev/null 2>&1
+          python3 products/kennedy-space-station/verify_rendered_sheets.py "$OUT"
+          rm "$OUT/qa-1.ppm" "$OUT/qa-2.ppm"
       - name: Upload synthetic PDF, source raster inputs, and page renders
         uses: actions/upload-artifact@v4
         with:

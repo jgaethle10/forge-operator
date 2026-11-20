@@ -136,6 +136,20 @@ class TwoSheetTests(unittest.TestCase):
             pos=int(entries[i+2].split()[0])
             self.assertTrue(result[pos:].startswith(f"{i} 0 obj\n".encode()))
 
+    def test_pdf_embeds_identical_decoded_png_pixels_not_generated_filler(self):
+        import re
+        study,site,sm,context,cm,address=self.args
+        result=self.compile()
+        originals=(comp.decode_rgb_png(site)[2],comp.decode_rgb_png(context)[2])
+        for i,expected in zip((7,8),originals):
+            block=re.search(rb"\n"+str(i).encode()+rb" 0 obj\n(.*?)\nendobj",result,re.S)
+            self.assertIsNotNone(block)
+            obj=block.group(1)
+            self.assertIn(b"/Subtype /Image",obj)
+            stream=obj.split(b"\nstream\n",1)[1].rsplit(b"\nendstream",1)[0]
+            self.assertEqual(zlib.decompress(stream),expected)
+            self.assertGreater(len(set(expected[::27])),5)
+
     def test_png_decoder_roundtrip_all_filters(self):
         for filt in range(5):
             png=synthetic_map_png(32,24,False,filter_type=filt)
