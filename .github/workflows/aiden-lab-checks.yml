@@ -25,4 +25,4 @@ jobs:
         with:
           node-version: '22'
       - name: Verify static atlas source and medical guardrails
-        run: node --test tests/aiden-lab-public.test.mjs
+        run: node --test tests/aiden-lab-public.test.mjs tests/aiden-lab-living-universe.test.mjs
