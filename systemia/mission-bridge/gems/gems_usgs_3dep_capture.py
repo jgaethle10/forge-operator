@@ -126,7 +126,26 @@ def capture(atlas, *, max_per_group=1, allow_public_query=False,
               'balanced_queries_per_group': max_per_group,
               'responses': responses}
     # End-to-end validation before any receipt is written.
-    ingest(chosen, bundle)
+    summaries = ingest(chosen, bundle)
+    by_tile = {item['tile_id']: item for item in summaries}
+    groups = {}
+    for group in GROUPS:
+        group_tiles = [q for q in chosen if q['diagnostic_group'] == group]
+        ids = set()
+        counts = []
+        for q in group_tiles:
+            row = by_tile[q['tile_id']]
+            counts.append(row['index_polygon_intersections_reported'])
+            ids.update(feature['objectid'] for feature in row['usgs_index_records'])
+        groups[group] = {
+            'tiles_queried': len(group_tiles),
+            'tile_index_intersection_counts': counts,
+            'unique_usgs_index_objectids': len(ids),
+            'actual_dem_pixel_coverage_verified': False}
+    bundle['index_summary_by_group'] = groups
+    bundle['all_three_groups_have_index_matches'] = all(
+        groups[g]['unique_usgs_index_objectids'] > 0 for g in GROUPS)
+    bundle['index_counts_are_not_comparable_dem_area'] = True
     return bundle
 
 
