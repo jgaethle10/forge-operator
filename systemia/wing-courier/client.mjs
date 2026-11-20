@@ -49,6 +49,40 @@ function readConfig(file){
 function emitJsonPrivate(file,body){
  fs.writeFileSync(file,JSON.stringify(body,null,2)+'\n',{flag:'wx',mode:0o600});
 }
+export async function readWingDeliveryStatus({baseUrl,tokenFile,metaFile}={}){
+ const st=fs.lstatSync(metaFile);
+ if(!st.isFile()||st.isSymbolicLink()||(st.mode&0o077)!==0)
+  fail('status_metadata_not_private');
+ const meta=JSON.parse(fs.readFileSync(metaFile,'utf8'));
+ if(meta?.schema!=='evercraft.wing-courier.encrypted-outbox.v1'||
+   !/^[a-f0-9]{32}$/.test(meta.id||'')||
+   !HEX.test(meta.ciphertextSha256||'')||
+   !/^[a-z][a-z0-9-]{1,47}$/.test(meta.fromWing||'')||
+   !/^[a-z][a-z0-9-]{1,47}$/.test(meta.toWing||''))
+  fail('status_expected_metadata_invalid');
+ const base=resolveWingCourierBase(baseUrl),token=keyText(tokenFile);
+ const response=await request(base,token,'GET','/v1/envelopes/'+meta.id+'/status');
+ const status=await response.json();
+ if(status?.schema!=='evercraft.wing-courier.sender-delivery-status.v1'||
+   status.id!==meta.id||status.fromWing!==meta.fromWing||
+   status.toWing!==meta.toWing||
+   status.ciphertextSha256!==meta.ciphertextSha256||
+   !['STAGED','READY','ACK_REPORTED_BY_RECEIVER'].includes(status.state)||
+   typeof status.receiverSignedCustodyVerified!=='boolean')
+  fail('status_identity_or_state_mismatch');
+ if(status.receiverSignedCustodyVerified&&
+   (status.state!=='ACK_REPORTED_BY_RECEIVER'||!HEX.test(status.receiptSha256||'')))
+  fail('status_receipt_binding_invalid');
+ if(status.state==='ACK_REPORTED_BY_RECEIVER'&&!status.receiverSignedCustodyVerified)
+  fail('status_missing_receiver_signature');
+ return {
+  schema:'evercraft.wing-courier.sender-status.v1',id:meta.id,
+  stage:status.receiverSignedCustodyVerified?'VERIFIED_RECEIVER_ACK_RECORDED':
+   status.state==='READY'?'BROKER_STORED_AWAITING_RECEIVER':'BROKER_RESERVATION_ONLY',
+  receiptSha256:status.receiverSignedCustodyVerified?status.receiptSha256:null,
+  systemiaAdmitted:false,studioProduced:false,customerDeliveryAuthorized:false
+ };
+}
 export async function pushEncryptedWingBundle({baseUrl,tokenFile,metaFile,bundleFile}){
  const cfg=JSON.parse(fs.readFileSync(metaFile,'utf8'));
  if(cfg?.schema!=='evercraft.wing-courier.encrypted-outbox.v1'||!HEX.test(cfg.ciphertextSha256||'')||
@@ -167,11 +201,15 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
    const [configFile,bundleFile]=args;const cfg=readConfig(configFile);
    console.log(JSON.stringify(await pushEncryptedWingBundle({baseUrl:cfg.baseUrl,tokenFile:cfg.sendTokenFile,
     bundleFile,metaFile:bundleFile+'.json'})));
+  }else if(cmd==='status'){
+   const [configFile,bundleFile]=args;const cfg=readConfig(configFile);
+   console.log(JSON.stringify(await readWingDeliveryStatus({baseUrl:cfg.baseUrl,
+    tokenFile:cfg.sendTokenFile,metaFile:bundleFile+'.json'})));
   }else if(cmd==='poll'){
    const [configFile]=args;const cfg=readConfig(configFile);
    console.log(JSON.stringify(await pollWingInbox({baseUrl:cfg.baseUrl,tokenFile:cfg.receiveTokenFile,
     wing:cfg.wing,destinationDir:cfg.destinationDir,receiverPrivateKeyFile:cfg.receiverPrivateKeyFile,
     receiverSigningKeyFile:cfg.receiverSigningKeyFile,senderVerifyPublicKeys:cfg.senderVerifyPublicKeys})));
-  }else throw Error('usage: keys <private-dir> <wing> | prepare <private-config> <source-dir> <output.wing> <kind> <filenames...> | push <private-config> <bundle.wing> | poll <private-config>');
+  }else throw Error('usage: keys <private-dir> <wing> | prepare <private-config> <source-dir> <output.wing> <kind> <filenames...> | push <private-config> <bundle.wing> | status <private-config> <bundle.wing> | poll <private-config>');
  }catch(e){console.error(e?.message||String(e));process.exitCode=2}
 }

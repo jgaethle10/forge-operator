@@ -6,7 +6,7 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import {generateWingKeys,createWingBundle,openWingBundle} from './envelope.mjs';
 import {startWingCourierBroker} from './broker.mjs';
-import {pushEncryptedWingBundle,pollWingInbox} from './client.mjs';
+import {pushEncryptedWingBundle,pollWingInbox,readWingDeliveryStatus} from './client.mjs';
 
 function temp(){
  const root=fs.mkdtempSync(path.join(os.tmpdir(),'wing-courier-'));fs.chmodSync(root,0o700);
@@ -177,5 +177,31 @@ test('receiver bearer token alone cannot forge authenticated custody acknowledge
   assert.equal(done.received,1);
   const final=JSON.parse(fs.readFileSync(path.join(fx.broker,'packages',fx.info.id,'state.json')));
   assert.equal(final.ack.receiverKeyVerified,true);
+ }finally{await broker.close();remove(fx)}
+});
+
+test('sender sees reliable signed receipt progression without retrying media or accessing destination',async()=>{
+ const fx=temp();const broker=await startWingCourierBroker({stateDir:fx.broker,wingCredentials:fx.auth});fx.url=broker.url;
+ try{
+  await pushEncryptedWingBundle(base(fx));
+  const waiting=await readWingDeliveryStatus({baseUrl:fx.url,tokenFile:fx.sendToken,
+   metaFile:fx.bundle+'.json'});
+  assert.equal(waiting.stage,'BROKER_STORED_AWAITING_RECEIVER');
+  assert.equal(waiting.studioProduced,false);
+  const forbidden=await fetch(fx.url+'/v1/envelopes/'+fx.info.id+'/status',
+   {headers:{authorization:'Bearer '+fx.auth[1].receiveToken}});
+  assert.equal(forbidden.status,403,'receiver role token cannot inspect sender-only status');
+  const received=await pollWingInbox(pollArgs(fx));assert.equal(received.received,1);
+  const acknowledged=await readWingDeliveryStatus({baseUrl:fx.url,tokenFile:fx.sendToken,
+   metaFile:fx.bundle+'.json'});
+  assert.equal(acknowledged.stage,'VERIFIED_RECEIVER_ACK_RECORDED');
+  assert.match(acknowledged.receiptSha256,/^[a-f0-9]{64}$/);
+  assert.equal(acknowledged.customerDeliveryAuthorized,false);
+  assert.equal(acknowledged.systemiaAdmitted,false);
+  // forged local metadata cannot make the result claim a different package
+  const fake=path.join(fx.outbox,'forged.json');
+  fs.writeFileSync(fake,JSON.stringify({...fx.info,ciphertextSha256:'0'.repeat(64)}),{mode:0o600});
+  await assert.rejects(readWingDeliveryStatus({baseUrl:fx.url,tokenFile:fx.sendToken,metaFile:fake}),
+   /status_identity_or_state_mismatch/);
  }finally{await broker.close();remove(fx)}
 });

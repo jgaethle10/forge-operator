@@ -29,10 +29,11 @@ export function routeWingCourierPath(value){
  const match=(pathname,method)=>{
   if(method==='POST'&&pathname==='/v1/envelopes')return true;
   if(method==='GET'&&pathname==='/v1/inbox')return true;
-  const parts=/^\/v1\/envelopes\/([a-f0-9]{32})\/(blob|ack)$/.exec(pathname);
+  const parts=/^\/v1\/envelopes\/([a-f0-9]{32})\/(blob|ack|status)$/.exec(pathname);
   if(!parts||!ID.test(parts[1]))return false;
   return (parts[2]==='blob'&&['GET','PUT'].includes(method))||
-   (parts[2]==='ack'&&method==='POST');
+   (parts[2]==='ack'&&method==='POST')||
+   (parts[2]==='status'&&method==='GET');
  };
  return {suffix,search:u.search,query:u.searchParams,allowedMethod:match};
 }

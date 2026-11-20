@@ -172,6 +172,18 @@ Client-side `baseUrl` is pinned to this exact **owned HTTPS origin + path** for 
 See P0 issues #2294 (deployment), #2280 (first customer), #2284 (rejected-preview incident).
 
 
+## Sender-side verified custody checks (no upload retry required)
+
+Once the actual Harbor sender has prepared and pushed an encrypted private bundle with its scoped token, it can read back its **own** tracked package status over the exact existing Fabric route:
+
+```bash
+node systemia/wing-courier/client.mjs status /private/harbor-config.json /private/outbox/exotic-chiles.wing
+```
+
+The `status` command reads the exact private sender-side `*.wing.json` metadata and authenticates as the original sender to the broker's `GET /v1/envelopes/:id/status`. It rejects any reply with a mismatched ciphertext hash, ID, origin or recipient, or a missing signed custody ACK. The broker checks the original sender's send-role token; neither an anonymous caller nor the receiving wing's token can inspect the sender-only status.
+
+Distinct states: `BROKER_RESERVATION_ONLY` means upload not completed, `BROKER_STORED_AWAITING_RECEIVER` means ciphertext arrived but no verified receiving ACK, and `VERIFIED_RECEIVER_ACK_RECORDED` means the broker verified the receiver's pinned Ed25519 signature over a real local receipt digest. **None is Systemia admission, Studio QA, an approved customer preview, payment or Messenger send.**
+
 
 ## Fabric shared-route resource guards (2026-11-19)
 

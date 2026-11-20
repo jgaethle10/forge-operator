@@ -112,6 +112,23 @@ export async function startWingCourierBroker({stateDir,wingCredentials,host='127
       createdAt:new Date().toISOString(),ack:null};
     atomicJson(stateFile,record);return reply(res,201,{id,state:'STAGED',idempotent:false});
    }
+   const senderStatus=/^\/v1\/envelopes\/([a-f0-9]{32})\/status$/.exec(url.pathname);
+   if(senderStatus && req.method==='GET'){
+    if(url.search)throw fail('unexpected_query');
+    const {state}=location(senderStatus[1]);
+    auth(req,state.fromWing,'send');
+    return reply(res,200,{
+     schema:'evercraft.wing-courier.sender-delivery-status.v1',
+     id:state.id,fromWing:state.fromWing,toWing:state.toWing,
+     ciphertextSha256:state.ciphertextSha256,
+     state:state.state,
+     receiverSignedCustodyVerified:state.state==='ACK_REPORTED_BY_RECEIVER'&&
+       state.ack?.receiverKeyVerified===true,
+     receiptSha256:state.ack?.receiverKeyVerified===true?state.ack.receiptSha256:null,
+     acknowledgedAt:state.ack?.receiverKeyVerified===true?state.ack.receivedAt:null,
+     systemiaAdmitted:false,studioProduced:false,customerDeliveryAuthorized:false,
+    });
+   }
    const blob=/^\/v1\/envelopes\/([a-f0-9]{32})\/blob$/.exec(url.pathname);
    if(blob&&req.method==='PUT'){
     const {dir,file,state}=location(blob[1]);auth(req,state.fromWing,'send');
