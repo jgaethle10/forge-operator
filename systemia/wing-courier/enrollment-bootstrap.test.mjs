@@ -15,7 +15,7 @@ async function fixture(){
  const payload=Buffer.from(JSON.stringify({schema:'evercraft.fallen.receiver-enrollment.v1',recipientFingerprint,ciphertext:'synthetic-only'}));
  const pkg=path.join(dir,'package.json');fs.writeFileSync(pkg,payload,{mode:0o600});
  const sha=crypto.createHash('sha256').update(payload).digest('hex');
- const opts={enabled:true,packageFile:pkg,signerPublicKeyFile:signer,expectedSha256:sha,recipientFingerprint};
+ const opts={enabled:true,packageFile:pkg,signerPublicKeyFile:signer,expectedSha256:sha,recipientFingerprint,claimStateDir:dir};
  return {dir,pkg,privateKey,payload,sha,opts};
 }
 async function serve(handler){
@@ -46,6 +46,8 @@ test('signed claim delivers exact bytes once; anonymous and replay denied',async
   r=await request(server.url,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({nonce:again.nonce,signature:signed})});
   assert.equal(r.status,410);
   r=await request(server.url);assert.equal(r.status,410);
+  const restarted=await serve(createFallenBootstrap(f.opts));
+  try{const blocked=await request(restarted.url);assert.equal(blocked.status,410);}finally{await restarted.close();}
  }finally{await server.close();fs.rmSync(f.dir,{recursive:true,force:true});}
 });
 test('hash tampering before activation rejected',async()=>{
@@ -60,4 +62,13 @@ test('cross-host and unexpected path do not expose enrollment',async()=>{
   assert.equal(r.status,404);
   const other=await request(server.url+'?redirect=1');assert.equal(other.status,404);
  }finally{await server.close();fs.rmSync(f.dir,{recursive:true,force:true});}
+});
+
+test('requires private durable claim directory when enabled',async()=>{
+ const f=await fixture();
+ try{
+  assert.throws(()=>createFallenBootstrap({...f.opts,claimStateDir:''}),/absolute_claim_state_required/);
+  fs.chmodSync(f.dir,0o755);
+  assert.throws(()=>createFallenBootstrap(f.opts),/claim_state_dir_not_private/);
+ }finally{fs.rmSync(f.dir,{recursive:true,force:true});}
 });
