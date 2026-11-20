@@ -49,7 +49,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: hudson-public-mobile-preview
-          path: public/hudson/index.html
+          path: |
+            public/hudson/index.html
+            public/hudson/watch/index.html
           retention-days: 7
       - name: External HTTPS snapshot and privacy admission
         if: github.event_name != 'pull_request'
