@@ -31,6 +31,39 @@ class StaticReleaseTests(unittest.TestCase):
         self.assertNotIn('href="/advanced"',text)
         self.assertNotIn("fetch('/api/wa26/bridges",text)
 
+    def test_mobile_selection_is_a_preview_not_a_forced_zoom_or_scroll(self):
+        html=mod.static_page(PRIVATE.read_bytes()).decode()
+        # The real shipped static bundle must retain the new first-tap glance.
+        for snippet in (
+            'id="map-selection" hidden',
+            'id="map-selection-name"',
+            'id="map-selection-glance"',
+            'id="show-state-details"',
+            'id="return-map"',
+            "if(again && selectedName===name && !deep && !isMobile())",
+            "if(map&&regionLayers.has(name)&&source==='control')",
+            "map.panTo(regionLayers.get(name).getBounds().getCenter()",
+            "animate:!reducedMotion(),duration:.55",
+            "if(isMobile()){",
+            "$('map-selection').hidden=false",
+            "$('map-selection').hidden=true",
+            "map.fitBounds(bounds,{padding:[35,35],maxZoom:7})",
+            "L.control.zoom({position:isMobile()?'topright':'bottomright'})",
+            "'show-state-details').addEventListener('click'",
+            "behavior:reducedMotion()?'auto':'smooth'",
+            "@media(prefers-reduced-motion:reduce)",
+        ):
+            self.assertIn(snippet,html)
+        choose=html.split("  function choose(name,again=false,source='map'){",1)[1].split("  async function openDeep(){",1)[0]
+        mobile=choose.split("    if(isMobile()){",1)[1].split("    }else{",1)[0]
+        self.assertNotIn("fitBounds",mobile)
+        self.assertNotIn("scrollIntoView",mobile)
+        self.assertNotIn("openDeep()",mobile)
+        # Only deliberate tapping of the View details control scrolls the page.
+        self.assertNotIn("if(isMobile())$('state-info').scrollIntoView",html)
+        self.assertIn("'show-state-details').addEventListener('click'",html)
+        self.assertIn("L.control.zoom({position:isMobile()?'topright':'bottomright'})",html)
+
     def test_mutated_page_is_not_silently_repackaged(self):
         changed=PRIVATE.read_bytes().replace(b"function hoverPreview(name)",b"function renamed(name)")
         with self.assertRaisesRegex(ValueError,"Approved hover experience missing"):
