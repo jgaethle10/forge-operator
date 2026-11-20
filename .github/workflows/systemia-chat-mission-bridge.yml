@@ -97,6 +97,7 @@ jobs:
           python -m unittest -v test_gems_002_segment_holdouts.py
           python -m unittest -v test_gems_002_prepare_candidate.py
           python -m unittest -v test_audit_candidate_comparison.py
+          python -m unittest -v test_gems_002_full_area_validation.py
           python -m unittest -v test_gems_003_exploratory_overlay.py
           python -m unittest -v test_verify_official_input_hashes.py
       - name: Assert no scored submission or production tasks were invoked
