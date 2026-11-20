@@ -1,0 +1,337 @@
+{
+  "schema": "evercraft.harbor.gravity-flywheel-plan.v3",
+  "mission": "gravity-flywheel-cadence-20261119",
+  "date_pacific": "2026-11-19",
+  "state": "PROPOSED_NOT_SENT_NOT_SCHEDULED",
+  "owner": "Evercraft LLC",
+  "orchestrator": "Systemia",
+  "publishing_wing": "Harbor",
+  "publication_authority": "Existing founder standing ordinary Page authorization only; high-stakes and founder-profile gates retained",
+  "handoff": "GITHUB_SOURCE_ONLY_NO_VERIFIED_HARBOR_ACK",
+  "authoritative_issue": "https://github.com/jgaethle10/forge-operator/issues/2271",
+  "related_unmerged_dispatch_pr": "https://github.com/jgaethle10/forge-operator/pull/2255",
+  "current_network": {
+    "pages_in_scope_last_verified": 22,
+    "excluded": [
+      "R&B Chicken & Soul",
+      "Space Dudz"
+    ],
+    "frozen": [
+      "Little Red Writing Press"
+    ],
+    "held_identity": [
+      "Evercraft Transparency Atlas"
+    ],
+    "editorial_gated": [
+      "Evercraft Journal",
+      "TOWI",
+      "Week in Motion"
+    ],
+    "brand_registry_rule": "Harbor latest 22 Page register v2 and Graph readback; no superseded November 17 mappings"
+  },
+  "cadence": {
+    "systemia_candidate_review_minutes": 5,
+    "harbor_existing_morning_briefing": true,
+    "network_primary_posts_target_per_7_days": 7,
+    "additional_distinct_posts_max_per_7_days": 5,
+    "friday_week_in_motion": "ONLY_IF_VERIFIED_FOOTAGE_APPROVALS_AND_JOURNAL_ACCESS",
+    "new_scheduler_requested": false,
+    "breaking_news_posts_cap": "NO_ARTIFICIAL_QUOTA; case-by-case verified news significance and per-Page cool-down",
+    "continuous_scout_intent": true,
+    "continuous_scout_verified_live": false
+  },
+  "formats": {
+    "facebook": "Original Page posts through verified existing provider route with ID/readback",
+    "instagram": "Distinct native version only when actual media and scopes verified",
+    "tiktok": "Distinct native original video only with footage and scopes",
+    "linkedin": "Distinct evidence-based professional version only with authenticated destination",
+    "founder_profile": "Founder authentic native post/upload only"
+  },
+  "candidate_queue": [
+    {
+      "id": "GF-20261120-01",
+      "date": "2026-11-20",
+      "franchise": "Week's verified work",
+      "page_id": "1253915241138545",
+      "property": "Evercraft",
+      "status": "DRAFT_VERIFY_3_MILESTONES",
+      "asset": "Verified real milestone citations",
+      "medium": "company page post"
+    },
+    {
+      "id": "GF-20261120-02",
+      "date": "2026-11-20",
+      "franchise": "Week in Motion",
+      "page_id": "108624442073018",
+      "property": "Evercraft Journal",
+      "status": "HOLD_JOURNAL_AND_FOOTAGE",
+      "asset": "Original footage and narration"
+    },
+    {
+      "id": "GF-20261121-01",
+      "date": "2026-11-21",
+      "franchise": "ESAN play analysis",
+      "page_id": "513781131811732",
+      "property": "ESAN (currently Edge of the Play)",
+      "status": "DRAFT_RIGHTS_AND_SPORTS_FACTS",
+      "asset": "Licensed sports video or original analysis graphic"
+    },
+    {
+      "id": "GF-20261122-01",
+      "date": "2026-11-22",
+      "franchise": "Everyday Heroes nominations",
+      "page_id": "839409312582152",
+      "property": "Yakima Life",
+      "status": "DRAFT_EDITORIAL_AND_DUPLICATE_CHECK",
+      "asset": "Original text, approved illustration optional"
+    },
+    {
+      "id": "GF-20261122-02",
+      "date": "2026-11-22",
+      "franchise": "How to verify an AI demo",
+      "page_id": "356956657493951",
+      "property": "Evercraft Learning Network",
+      "status": "DRAFT_EDITORIAL_AND_DUPLICATE_CHECK",
+      "asset": "Original text, tutorial carousel optional"
+    },
+    {
+      "id": "GF-20261123-01",
+      "date": "2026-11-23",
+      "franchise": "Systemia proof of work",
+      "page_id": "955525380981999",
+      "property": "Systemia (currently Systemia Radar)",
+      "status": "DRAFT_GENUINE_RECEIPT_REQUIRED",
+      "asset": "Genuine logged proof or actual screen recording"
+    },
+    {
+      "id": "GF-20261123-02",
+      "date": "2026-11-23",
+      "franchise": "Raven Nexus problem story",
+      "page_id": "426647487192435",
+      "property": "Raven Nexus (currently Replay Fuel)",
+      "status": "DRAFT_RESEARCH_LABEL_REQUIRED",
+      "asset": "Original conceptual diagram"
+    },
+    {
+      "id": "GF-20261124-01",
+      "date": "2026-11-24",
+      "franchise": "AAAR aviation safety evidence",
+      "page_id": null,
+      "property": "Relevant authorized Page per latest register",
+      "status": "DRAFT_PRIMARY_SOURCE_AND_TARGET_REQUIRED",
+      "asset": "Primary FAA source or own measured simulator result"
+    },
+    {
+      "id": "GF-20261124-02",
+      "date": "2026-11-24",
+      "franchise": "Fallen Studios commercial proof",
+      "page_id": "1047855798412865",
+      "property": "Evercraft Fallen Studios",
+      "status": "HOLD_SAMPLE_CAPACITY_AND_INTAKE",
+      "asset": "Approved playable proof reel and working intake"
+    },
+    {
+      "id": "GF-20261125-01",
+      "date": "2026-11-25",
+      "franchise": "ForensiScope frame-by-frame",
+      "page_id": "517990454723203",
+      "property": "ForensiScope (currently Frame by Frame)",
+      "status": "DRAFT_GENUINE_DEMO_RIGHTS",
+      "asset": "Real rights-cleared or clearly synthetic original footage"
+    },
+    {
+      "id": "GF-20261125-02",
+      "date": "2026-11-25",
+      "franchise": "AI workforce Journal feature",
+      "page_id": "108624442073018",
+      "property": "Evercraft Journal (currently Newsroom)",
+      "status": "HOLD_FOUNDER_ARTICLE_APPROVAL",
+      "asset": "Approved sourced article"
+    },
+    {
+      "id": "GF-20261126-01",
+      "date": "2026-11-26",
+      "franchise": "People behind the systems",
+      "page_id": "1253915241138545",
+      "property": "Evercraft",
+      "status": "DRAFT_COMMUNITY_CONSENT_TONE",
+      "asset": "Original people/systems material with permission"
+    }
+  ],
+  "publish_gates": [
+    "latest_page_id_and_brand_readback",
+    "source_evidence",
+    "content_origin_and_rights",
+    "validated_exact_text_and_sensitive_claims",
+    "existing_post_dedupe",
+    "approved_account_scope",
+    "permission_and_applicable_editorial_approval",
+    "provider_post_id_and_public_permalink",
+    "independent_public_readback",
+    "separate_lead_revenue_attribution"
+  ],
+  "outcomes": {
+    "scheduled": 0,
+    "published_by_this_plan": 0,
+    "harbor_ack_received": false,
+    "provider_receipts": [],
+    "customer_payments_attributable_to_plan": 0
+  },
+  "revision_note": "Founder added global breaking/discovery and media-first coverage plus relevant Journal-deep-dive first-comment linking; editorial amendment supersedes routine-post caps for independently verified breaking events.",
+  "live_news_desk": {
+    "mission": "Source-grounded global relevant breaking news, entertainment, viral original moments and useful discoveries matched to exactly appropriate properties",
+    "workflow": [
+      "public_source_discovery",
+      "source_provenance_and_time",
+      "substantive_page_match",
+      "editorial_verification",
+      "media_rights_and_native_share_preflight",
+      "journal_story_link_or_queue",
+      "approved_exact_post_and_page_id",
+      "provider_public_readback",
+      "first_comment_journal_link_when_live_and_authorized",
+      "corrections_updates_attribution"
+    ],
+    "journal_default": "RELEVANT_LIVE_ARTICLE_LINK_IN_FIRST_COMMENT_WHEN_COMMENT_ROUTE_VERIFIED",
+    "journal_missing": "ORIGINAL_SOURCE_LINK_AND_JOURNAL_PENDING; no fabricated or retired-domain link",
+    "journal_live": "VERIFY_CANONICAL_OWNED_URL_AND_RELATED_CONTENT",
+    "journal_programs": [
+      "Verified global Journal desk",
+      "TOWI",
+      "Rockies",
+      "Week in Motion"
+    ],
+    "media_priority": [
+      "authentic_Evercraft_original_or_licensed",
+      "verified_native_share_embed_original_creator",
+      "verified_rights_cleared_licensed_media",
+      "original_fact_based_diagram_or_reconstruction_labeled",
+      "source_backed_text_when_no_safe_media"
+    ],
+    "misinformation_rule": "Primary credible evidence or independent corroboration; explicit attribution and uncertainty; sensitive unverified material held",
+    "timekeeping": [
+      "event_time_utc",
+      "observed_time_utc",
+      "verified_time_utc",
+      "published_time_utc",
+      "journal_updated_time_utc",
+      "first_comment_verified_time_utc"
+    ],
+    "beats": [
+      "global_and_science",
+      "aviation_and_aerospace",
+      "sports",
+      "manufacturing_and_machines",
+      "AI_and_autonomy",
+      "telecommunications",
+      "local_and_community",
+      "education",
+      "defensive_security",
+      "public_records",
+      "history"
+    ],
+    "property_constraints": {
+      "frozen": [
+        "Little Red Writing Press"
+      ],
+      "held": [
+        "Evercraft Transparency Atlas to Black Box"
+      ],
+      "excluded": [
+        "R&B Chicken & Soul",
+        "Space Dudz"
+      ],
+      "evercraft_network_meaning": "sovereign communications not social media network",
+      "journal_status": "GATED_UNTIL_VERIFIED_LIVE_CANONICAL_ORIGIN_AND_EDITORIAL_APPROVAL",
+      "comment_automation_status": "UNVERIFIED_SEPARATE_PROVIDER_PERMISSION_AND_EXACT_APPROVAL_REQUIRED"
+    },
+    "publication_state": "NOT_ACTIVATED_NO_HARBOR_ACK",
+    "metric_targets": {
+      "media_search_attempt_rate": "100% of editorial candidate packets",
+      "rights_clean_media_majority": "aspirational",
+      "first_comment_link_rate": "report live relevant Journal link eligible denominator, not invented",
+      "source_and_correction_compliance": "must pass preflight"
+    },
+    "provider_receipts": []
+  },
+  "publishing_truth": {
+    "sourced_publication_receipts_generated_by_plan": 0,
+    "comment_receipts_generated_by_plan": 0,
+    "journal_pages_generated_by_plan": 0,
+    "schedules_created_by_plan": 0
+  },
+  "mission_type": "PERMANENT_OPERATIONS_NO_END_DATE",
+  "standing_mission_issue": "https://github.com/jgaethle10/forge-operator/issues/2348",
+  "media_network_scope": "ALL_CURRENTLY_APPROVED_PAGES_PLUS_FUTURE_FOUNDER_APPROVED_PAGES",
+  "dynamic_page_registry": {
+    "source": "current owner-verified provider Page and founder-approved brand register; never hardcode 22 as permanent target count",
+    "scopes": [
+      "FACEBOOK",
+      "INSTAGRAM",
+      "OTHER_VERIFIED_PROVIDER"
+    ],
+    "exclusions_override_all": true,
+    "activation_states": [
+      "CANDIDATE",
+      "FOUNDER_APPROVED_PENDING_SETUP",
+      "IDENTITY_AND_PERMISSION_VERIFIED",
+      "FIRST_PUBLICATION_PROOF_PENDING",
+      "ACTIVE",
+      "HELD",
+      "FROZEN",
+      "EXCLUDED",
+      "RETIRED"
+    ],
+    "required_per_page_fields": [
+      "provider",
+      "page_id",
+      "current_name",
+      "approval_reference",
+      "audience",
+      "beats",
+      "status",
+      "identity_last_readback",
+      "allowed_post_formats",
+      "allowed_comment_scopes",
+      "journal_franchise",
+      "license_and_media_rules",
+      "last_successful_publication",
+      "owner_operator"
+    ],
+    "current_existing_baseline": {
+      "last_known_page_count": 22,
+      "live_page_count_as_of_handoff": "UNRECHECKED",
+      "actual_active_pages": "MUST_VERIFY_BEFORE_PUBLISH"
+    },
+    "new_page_rule": "Founder-approved identity and coverage mission plus provider Page ID readback, live scopes, rights, original media, safe source feeds, initial authorizations and real publish receipts",
+    "gaps_to_review": [
+      "unserved_topic",
+      "unserved_geography",
+      "new_product_public_launch",
+      "high_quality_story_with_no_fit",
+      "audience_request_pattern"
+    ],
+    "never_autocreate_pages": true
+  },
+  "coverage_operations": {
+    "service_horizon": "PERPETUAL_24_7_TARGET",
+    "actual_24_7_transport_status": "NOT_PROVEN",
+    "normal_tick_minutes_goal": 5,
+    "allowed_source_candidate_work": "Continuous deduplicated evidence and original/rights-approved media sourcing; only publish through verified Harbor account permissions",
+    "cadence_commercial": "Sparse, source/offer-driven, never broadcast to unrelated audiences",
+    "weekly_review": "Coverage-gap register, new product page candidates, franchise placement, reach and audience-retention, real attribution, trust/correction quality",
+    "failsafe": "Hold stale/badly sourced stories and any mismatched or unknown Page; continue read-only intake and retry after authorization",
+    "publication_requirements": [
+      "proper_page_status_ACTIVE",
+      "evidence_sources",
+      "claims_reviewed",
+      "rights_known",
+      "native_asset_or_link_choice",
+      "dedup",
+      "authorized_media_and_comment_tools",
+      "post_id_public_readback"
+    ],
+    "journal_comments": "Related live Journal record in first authorized comment with exact receipt; otherwise original source link and JOURNAL_PENDING",
+    "never_auto_harbor_publish_without_live_authenticated_pipeline": true
+  }
+}
