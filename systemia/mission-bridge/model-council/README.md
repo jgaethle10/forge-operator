@@ -1,6 +1,6 @@
 # Systemia heartbeat advisory council (Claude + Grok)
 
-**Status:** owned-source integration and offline proof only. This is not a live five-minute dispatch, a provider subscription, a credential enrollment or a spending authorization. Mission control stays Systemia; Raven is the private inference boundary; GitHub records code and receipts, not private customer material.
+**Status:** owned-source integration and offline proof only. The advisor is now declared as an **optional 300-second cycle in Systemia's existing Core resident supervisor**, but is intentionally DISABLED until its private mission packet and ledger paths are bound. This is not proof of live deployment, provider enrollment or inference spending. Mission control stays Systemia; Raven is the private inference boundary; GitHub records code and receipts, not private customer material.
 
 ## Participants and intended jobs
 
@@ -11,12 +11,12 @@
 
 ## Every five minutes: observe for free, ask selectively
 
-The existing KAIDANCE/Systemia heartbeat should export only *admitted, source-backed, privacy-classified changes* as a private mission-delta envelope. Call `planHeartbeatAdvisories` against that sanitized envelope. There are two triggers:
+The existing KAIDANCE/Systemia Core supervisor now has an optional cycle service for this planner. The upstream Systemia mission authority must export only *admitted, source-backed, privacy-classified changes* as a private mission-delta envelope. **KAIDANCE's aggregate counts are not per-mission admission and cannot be expanded into private mission prompts.** Call `planHeartbeatAdvisories` against that sanitized envelope. There are two triggers:
 
 1. `material_change`: new evidence, newly failed CI, an urgent market signal, a deadline change, a customer reply, or a meaningful blocker.
 2. `review_due`: bounded periodic specialist review that has a fresh `change_ref`, not the same prompt resent without changes.
 
-No triggering change means `quiet`, **zero** provider calls. The plan includes provider, model, specialist role, mission and evidence references, bounded public-safe brief, cost reservation ceiling, unique idempotency key and hold reasons. The default budget is zero, so integration cannot quietly start spending.
+No triggering change means `quiet`, **zero** provider calls. The plan includes provider, model, specialist role, mission and evidence references, bounded public-safe brief, cost reservation ceiling, unique idempotency key and hold reasons. The default budget is zero, and execute mode defaults to OFF. In live mode the mission packet additionally needs a fresh HMAC signature from an operator-controlled 0600 private signing key; guessed `origin:systemia-admitted` strings alone are insufficient. A separate private results directory is required; successful and held adviser results remain mode-0600, never exposed to public dashboards.
 
 A heartbeat worker MAY call `executeAdvisory` only after it has atomically persisted the unique attempt key, verified cloud-export authorization, available total/day/mission budget, provider key/model metadata and Systemia's accepted mission authority. The existing Raven `createInferenceEngine` performs the request using the Evercraft encrypted credential vault. If a request fails or has an uncertain outcome, the key remains attempted and cannot be replayed automatically. A receipt reports the provider invocation and its status, never an invented success.
 
@@ -41,10 +41,10 @@ Official references:
 
 ## Integration work still required before live operation
 
-- Consume the canonical five-minute KAIDANCE/Saban mission-delta stream, not a second independent timer.
+- DONE IN SOURCE: register disabled optional cycle in Systemia's canonical 300-second resident supervisor and include it in the matching Evercraft Compute manifest. STILL NEEDED: a trusted upstream Systemia admission writer producing signed, fresh mission-delta packets.
 - Wire the new private atomic attempt/rolling-budget ledger and heartbeat runner into the resident KAIDANCE-owned mission-delta event stream. It fails closed on stale lock or clock rollback; operational lock recovery and provider 429 backoff still require an authorized runbook.
 - Add authorized live provider metadata/inference canaries on owned runtime and measure actual per-request usage/cost.
-- Add adviser-suggestion triage to Systemia's existing mission queue and public sanitized heartbeat view without revealing private context.
+- DONE IN SOURCE: private adviser-result receipt store. STILL NEEDED: review/triage of bounded suggestions into Systemia's mission queue and a public sanitized heartbeat projection without revealing internal context.
 - Run tests before enabling hosted inference. No third-party application/runtime hosts, no Base44 and no unsanctioned consumer-site automation.
 
 ## Private runner prepared (OFF by default)
@@ -59,11 +59,13 @@ export SYSTEMIA_ADVISOR_ANTHROPIC_MODEL=<exact-authorized-model-id>
 export SYSTEMIA_ADVISOR_XAI_MODEL=<exact-authorized-model-id>
 export SYSTEMIA_ADVISOR_ANTHROPIC_EST_COST_CENTS=<conservative-quoted-call-ceiling>
 export SYSTEMIA_ADVISOR_XAI_EST_COST_CENTS=<conservative-quoted-call-ceiling>
+export SYSTEMIA_ADVISORY_PRIVATE_RECEIPT_DIR=/private/systemia/advisory-receipts
+export SYSTEMIA_ADVISORY_ADMISSION_KEY_FILE=/private/systemia/admission-signing.key
 export SYSTEMIA_ADVISORY_ROLLING_BUDGET_CENTS=0
 node systemia/mission-bridge/model-council/heartbeat-runner.mjs
 ```
 
-No inference occurs until a valid private packet and keys are present, the rolling budget is nonzero, and `SYSTEMIA_ADVISORY_EXECUTE=1` is explicitly set by the authorized owned supervisor. This environment variable is intentionally **not** set by source or tests. The default command is dry-run, not a live mission. The runner prints only a sanitized summary, never private briefs or model advice.
+No inference occurs until a valid signed private packet (fresh for at most 10 minutes) and keys are present, the rolling budget is nonzero, a private receipt directory exists, and `SYSTEMIA_ADVISORY_EXECUTE=1` is explicitly set by the authorized owned supervisor. The private HMAC signing-key file must be generated/managed by Systemia's trusted admission service, never committed or printed. No signed mission packets are generated by this PR. This environment variable is intentionally **not** set by source or tests. The default command is dry-run, not a live mission. The runner prints only a sanitized summary, never private briefs or model advice.
 
 Offline check:
 
