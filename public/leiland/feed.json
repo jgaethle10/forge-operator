@@ -1,0 +1,10 @@
+{
+  "schema": "evercraft.leiland.public-feed.v1",
+  "published_at": null,
+  "status": "not_connected",
+  "signals": {
+    "inference": { "state": "unverified", "observed_at": null, "receipt_url": null },
+    "missions": { "state": "unverified", "observed_at": null, "receipt_url": null }
+  },
+  "events": []
+}

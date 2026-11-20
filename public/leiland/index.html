@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#070b14">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self'; script-src 'self'; connect-src 'self' https://api.github.com; img-src 'self' data:; base-uri 'none'; form-action 'none'; object-src 'none'; frame-src 'none'">
+<meta name="description" content="Leiland: a public, privacy-safe observatory for Evercraft Sovereign AI. Explore the architecture, its public evidence, and a living visual map of development.">
+<meta name="robots" content="index,follow">
+<meta property="og:title" content="Leiland | The Living Mind">
+<meta property="og:description" content="Watch intelligence take shape. Explore Evercraft Sovereign AI without exposing its private brain.">
+<meta property="og:type" content="website">
+<title>Leiland | The Living Mind · Evercraft</title>
+<link rel="stylesheet" href="./style.css">
+<script type="module" src="./brain.js"></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to the observatory</a>
+<header class="topbar">
+  <a class="wordmark" href="../systemia/" aria-label="Evercraft Systemia"><span class="mark">E<span class="mark-dot">.</span></span><span>EVERCRAFT <small>LEILAND / SOVEREIGN AI</small></span></a>
+  <nav aria-label="Primary">
+    <a href="#brain">The Brain</a><a href="#systems">Explore</a><a href="#evidence">Evidence</a>
+  </nav>
+  <button class="broadcast-trigger" id="broadcast" type="button" aria-pressed="false">◉ Broadcast mode</button>
+</header>
+<main id="main">
+  <section class="intro" aria-labelledby="page-title">
+    <div class="eyebrow"><span class="pulse-dot"></span> EVERCRAFT SOVEREIGN AI / OPEN OBSERVATORY</div>
+    <h1 id="page-title">Watch intelligence <em>take shape.</em></h1>
+    <p>Meet Leiland, a living window into the systems that help Evercraft learn, reason, coordinate, and build. Follow what is happening, explore how it works, and watch the architecture come alive.</p>
+  </section>
+  <section id="brain" class="observatory" aria-label="Animated sovereign AI architecture visualization">
+    <div class="visual">
+      <div class="visual-header">
+        <div><span class="kicker">LEILAND / THE LIVING MIND</span><h2>A mind in motion.</h2></div>
+        <div class="source-indicator"><span id="status-lamp" class="lamp"></span><span id="feed-status">Public activity feed not connected</span></div>
+      </div>
+      <div class="brain-stage" id="brain-stage">
+        <canvas id="brain-canvas" role="img" aria-label="An animated, conceptual neural network. Animated paths are illustrative and do not depict live private model activations."></canvas>
+        <div class="brain-core"><span class="core-kicker">EVERCRAFT</span><strong>LEILAND</strong><span class="core-sub">THE LIVING MIND</span></div>
+        <span class="field-note note-top">COORDINATION / INFERENCE / COMPUTE</span>
+        <span class="field-note note-bottom" id="visual-truth">CONCEPTUAL ANIMATION · NOT MODEL ACTIVATIONS</span>
+      </div>
+      <div class="visual-footer"><span id="last-observed">No verified live observation</span><span id="heartbeat-cycle">KAIDANCE cycle: not connected</span><span>Refreshes public feed every 30 seconds</span></div>
+    </div>
+    <aside class="side-panel" aria-labelledby="telemetry-title">
+      <div class="panel-title"><span class="kicker">01 / PUBLIC READOUT</span><h2 id="telemetry-title">What is happening?</h2></div>
+      <div class="readout"><span>PUBLIC SOURCE STATE</span><strong id="source-state">Not connected</strong><small id="source-caption">Motion is illustrative until a vetted publisher supplies evidence.</small></div>
+      <div class="readout"><span>LAST OBSERVATION</span><strong id="observation-age">Unavailable</strong><small>Updates require an actual source timestamp.</small></div>
+      <div class="readout"><span>INFERENCE SIGNAL</span><strong id="inference-state">Unverified</strong><small>Live prompts and model output are never exposed.</small></div>
+      <div class="readout"><span>MISSION SIGNAL</span><strong id="mission-state">Unverified</strong><small>Claims require sanitized Systemia receipts.</small></div>
+      <div class="readout"><span>KAIDANCE PUBLIC PULSE</span><strong id="collider-state">Not connected</strong><small id="collider-note">Public cycle evidence is observed separately from private model inference.</small><a class="inline-source" href="../kaidance/">See KAIDANCE source ↗</a></div>
+      <div class="privacy-note"><span class="lock">◇</span><div><strong>A window, not a doorway.</strong><p>This public experience has no access to private models, control endpoints, prompts, customers, or credentials.</p></div></div>
+    </aside>
+  </section>
+  <section id="systems" class="systems section-wrap">
+    <div class="section-heading"><div><span class="kicker">02 / EXPLORE THE ARCHITECTURE</span><h2>Five parts. One evolving mind.</h2></div><p>Select a system to see what it does. These are architectural roles, not literal AI neurons.</p></div>
+    <div class="system-buttons" role="group" aria-label="Explore brain regions">
+      <button type="button" class="system-button selected" data-system="systemia" aria-pressed="true">01 <strong>Systemia</strong></button>
+      <button type="button" class="system-button" data-system="raven" aria-pressed="false">02 <strong>Raven Nexus</strong></button>
+      <button type="button" class="system-button" data-system="saban" aria-pressed="false">03 <strong>Saban</strong></button>
+      <button type="button" class="system-button" data-system="compute" aria-pressed="false">04 <strong>Compute</strong></button>
+      <button type="button" class="system-button" data-system="passport" aria-pressed="false">05 <strong>Passport</strong></button>
+    </div>
+    <div class="system-detail" aria-live="polite"><div><span id="system-label" class="kicker">COORDINATION / MISSION CONTROL</span><h3 id="system-name">Systemia</h3></div><p id="system-description">Systemia coordinates missions, boundaries, and evidence, deciding what can proceed and what remains held.</p><a id="system-evidence" href="https://github.com/jgaethle10/forge-operator/tree/main/systemia" target="_blank" rel="noopener noreferrer">Explore public source ↗</a></div>
+  </section>
+  <section id="evidence" class="evidence-section section-wrap">
+    <div class="section-heading"><div><span class="kicker">03 / FOLLOW THE BUILD</span><h2>See the receipts, not just the lights.</h2></div><p>Public activity appears here when a source-backed event is published. No invented breakthroughs, training sessions, or performance numbers.</p></div>
+    <ol id="event-list" class="event-list" aria-live="polite"><li class="event-empty">Waiting for the first approved public activity feed. <a href="https://github.com/jgaethle10/forge-operator/tree/main/systemia/raven">Explore the existing Raven source.</a></li></ol>
+    <div class="evidence-footer"><a href="https://github.com/jgaethle10/forge-operator/tree/main/systemia/raven" target="_blank" rel="noopener noreferrer">Raven source ↗</a><a href="https://github.com/jgaethle10/forge-operator/tree/main/systemia/collider" target="_blank" rel="noopener noreferrer">Systemia Collider source ↗</a><a href="../systemia/">Meet Systemia ↗</a></div>
+  </section>
+  <section class="invitation section-wrap"><div><span class="kicker">BUILT IN THE OPEN, WITH PRIVATE INTELLIGENCE PROTECTED</span><h2>The future isn't just something to read about.<br><em>It's something to witness.</em></h2></div><p>Leiland is the public face of an owned AI engineering program. Follow the real milestones as Evercraft makes more of the system observable, verified, and useful.</p></section>
+</main>
+<footer><span>LEILAND · AN EVERCRAFT PROJECT</span><span id="footer-mode">Visualized architecture / source-backed events only</span><a href="../systemia/">EVERCRAFT OS</a></footer>
+</body>
+</html>
