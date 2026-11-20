@@ -122,7 +122,15 @@ try {
   if (duringOutage.ok !== true) {
     // Boolean-only diagnosis, never emit service endpoints, credentials,
     // deployment IDs or private workload response bodies to CI logs.
+    const coreCheck = await organism.yard.verifyRoute('systemia-core-local-resident').catch(
+      () => ({ state: 'core_health_read_error' })
+    );
     console.error('LOCAL_ORGANISM_OUTAGE_HEALTH_DIAGNOSTIC', JSON.stringify({
+      core_route_state: String(coreCheck.state || 'unknown').slice(0,60),
+      core_running: coreCheck.health?.running === true,
+      core_failed_count: Number(coreCheck.health?.failed_count ?? -1),
+      core_held_count: Number(coreCheck.health?.held_count ?? -1),
+      core_services: Number(coreCheck.health?.service_count ?? -1),
       kaidance_ok: duringOutage.kaidance?.ok === true,
       systemia_core_ok: duringOutage.systemia_core?.ok === true,
       fabric_ok: duringOutage.fabric?.ok === true,
