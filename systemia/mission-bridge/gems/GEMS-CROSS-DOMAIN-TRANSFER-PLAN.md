@@ -127,6 +127,8 @@ Optional `--index /PRIVATE/verified-dem-source-footprints.json` accepts a
 `sources=[{"id":"...","metadata_reference":"...","bbox_wgs84":[west,south,east,north],
 "acquisition_date":null,"vertical_datum":null,"rights_reference":null}]`.
 These values are **example schema placeholders**, not discovered DEM tiles.
+The optional metadata index may also declare `horizontal_crs`, `nominal_resolution_m`, `acquisition_date`, `vertical_datum`, and `rights_reference`. Missing fields appear in `source_metadata_gaps_by_id`. `bbox_candidates_balanced_across_review_and_controls` checks whether all three groups have the same nonzero count of metadata bbox hits, not real pixel coverage. `source_ids_with_bbox_hit_in_each_group` lists source IDs with at least one intersection in each group. `next_research_gate` remains a manual-review or missing-evidence state even when every metadata field is populated. A claimed 1m resolution or cited license still needs independent verification; neither constitutes permission to train. No partial or uneven sample should be used to infer comparative model performance.
+
 The tool never retrieves `metadata_reference` or other URLs. A coarse bbox
 intersection is a candidate for **manual metadata review**, not proof that a
 pixel is present, that the tile covers the polygon, or that use/share rights
