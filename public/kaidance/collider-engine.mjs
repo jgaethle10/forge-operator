@@ -301,7 +301,7 @@ if (stage && canvas && verifiedMarker) {
   function draw(now){
     if(disposed)return;
     frame=requestAnimationFrame(draw);
-    if(!visible||document.hidden)return;
+    if(!visible||document.hidden||!document.body.classList.contains('reactor'))return;
     const maxFps=powerSave()?2:mobile()?15:20;
     if(now-previous<Math.max(1000/maxFps,adaptiveGap))return;
     previous=now;
