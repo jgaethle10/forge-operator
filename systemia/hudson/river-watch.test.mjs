@@ -105,7 +105,7 @@ test('Archive Ship is a recognizably majestic vessel, not a generic abstract sha
  assert.match(code,/for\(var windowIndex=0;windowIndex<10;windowIndex\+\+\)/);
  assert.match(code,/var size=width<=620\?clamp\(width\*\.19,70,93\):clamp\(width\*\.105,105,163\)/);
  assert.match(code,/ctx\.scale\(size\*facing,size\)/);
- assert.match(code,/var drawX=clamp\(pos\.x,size\*1\.70/);
+ assert.match(code,/var drawX=clamp\(pos\.x,size\*1\.95/);
  assert.match(code,/var drawY=clamp\(pos\.y,size\*2\.12\+12/);
  assert.match(code,/A royal swallowtail streams from the high central mast/);
  assert.match(code,/drawTraveler\(trip\.from,trip\.to,\.04\+trip\.t\*\.92\)/);
