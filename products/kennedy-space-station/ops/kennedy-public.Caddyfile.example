@@ -1,0 +1,28 @@
+# PUBLIC STATIC ONLY. STAGED, NOT INSTALLED OR PUBLISHED.
+# Choose a separately owned hostname and verified TLS on the actual Evercraft
+# server. Never co-host the private Kennedy API or Site Planner at this root.
+#
+# Set KENNEDY_PUBLIC_DOMAIN in owned Caddy environment.
+# Replace /ABSOLUTE/OWNED/REPO with an authorized deployment path.
+# Caddy's file_server serves only the static, self-contained /public tree.
+
+{$KENNEDY_PUBLIC_DOMAIN} {
+    root * /ABSOLUTE/OWNED/REPO/products/kennedy-space-station/public
+    encode zstd gzip
+    header {
+        Strict-Transport-Security "max-age=31536000"
+        X-Content-Type-Options "nosniff"
+        Referrer-Policy "no-referrer"
+        X-Frame-Options "DENY"
+        Content-Security-Policy "default-src 'none'; style-src 'unsafe-inline'; img-src 'self'; font-src 'none'; script-src 'none'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
+    }
+    @public_index path /
+    rewrite @public_index /index.html
+    @allowed path /index.html /favicon.svg
+    handle @allowed {
+        file_server
+    }
+    handle {
+        respond "Not found" 404
+    }
+}
