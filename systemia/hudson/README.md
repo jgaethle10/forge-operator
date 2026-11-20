@@ -35,3 +35,17 @@ No Base44, DigitalOcean, TinyFish, or other third-party app runtime is necessary
 ## Next adapters
 
 Add explicitly approved, permission-filtered public receipts for mission results, research decisions, KAIDANCE continuity, Raven findings and Saban QA. Do not feed raw private HUDSON into public pages. This Git adapter tracks public repository source changes only; it does not represent total HUDSON growth, activity or uptime.
+
+## Viewing mode, proven pulses
+
+- Film view condenses the display into a portrait-friendly, focused stage for screen capture. It is **not** a streaming service and does not stream to TikTok automatically.
+- The stage rotates already-published, source-linked Git changes, prominently labeled **SOURCE HISTORY · REPLAY**. On first load none is presented as newly occurring.
+- On a subsequent successful fresh feed refresh, only a previously unseen event ID with a source timestamp from the preceding ten minutes gets the **NEW VERIFIED PUBLIC SOURCE** treatment. This indicates newly observed source history, not a newly deployed service, active agent or successful commercial transaction.
+- Motion pauses manually and under reduced-motion preference; selecting graph nodes remains independent.
+- Run visual syntax and semantic checks with: `node --test systemia/hudson/visual-stage.test.mjs`.
+
+## Public release canary
+
+Run `node --test systemia/hudson/probe-public.test.mjs` then `node systemia/hudson/probe-public.mjs`. The probe reads only the canonical owned public origin, requests the HTML, same-origin JSON, public Fabric health, and one intentionally disallowed path. Every receipt has `verified` and explicit `holds`. No login or secrets are used.
+
+The scheduled GitHub proof workflow is a CI/observation mechanism, **not a third-party production app runtime**. A passing workflow with `verified:false` still means **HOLD**. A prior source commit, queued CI run or live-looking animation is not external deployment proof. The owned-node deployment and authenticated Systemia release receipt remain separate.

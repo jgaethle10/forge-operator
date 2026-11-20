@@ -1,0 +1,70 @@
+name: HUDSON Living Spine Public Proof
+
+on:
+  pull_request:
+    paths:
+      - 'public/hudson/**'
+      - 'systemia/hudson/**'
+      - 'systemia/mcp/fabric-local-runtime.mjs'
+      - 'tests/hudson-owned-fabric-route.test.mjs'
+      - '.github/workflows/hudson-public-observatory.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'public/hudson/**'
+      - 'systemia/hudson/**'
+      - 'systemia/mcp/fabric-local-runtime.mjs'
+      - 'tests/hudson-owned-fabric-route.test.mjs'
+      - '.github/workflows/hudson-public-observatory.yml'
+  schedule:
+    - cron: '19 */2 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: hudson-public-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  hudson-source-contract:
+    name: Public source and hosted-route contract
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate parser, read-only publication and privacy
+        run: |
+          node --check systemia/hudson/publish-public-snapshot.mjs
+          node --check systemia/hudson/probe-public.mjs
+          node --test systemia/hudson/publish-public-snapshot.test.mjs systemia/hudson/probe-public.test.mjs systemia/hudson/visual-stage.test.mjs
+      - name: Prove owned Fabric HTTP routes
+        run: node --test tests/hudson-owned-fabric-route.test.mjs
+      - name: External HTTPS snapshot and privacy admission
+        if: github.event_name != 'pull_request'
+        shell: bash
+        run: |
+          set -euo pipefail
+          node systemia/hudson/probe-public.mjs > "$RUNNER_TEMP/hudson-public-canary.json"
+          node - "$RUNNER_TEMP/hudson-public-canary.json" >> "$GITHUB_STEP_SUMMARY" <<'NODE'
+          const fs=require('node:fs');
+          const r=JSON.parse(fs.readFileSync(process.argv[2],'utf8'));
+          process.stdout.write('## HUDSON external release gate\n\n');
+          process.stdout.write('**'+(r.verified?'VERIFIED PUBLIC SOURCE':'HOLD · PUBLIC DEPLOYMENT NOT VERIFIED')+'**\n\n');
+          process.stdout.write('Origin: '+r.origin+'\n\n');
+          process.stdout.write('Observed: '+r.observed_at+'\n\n');
+          process.stdout.write('Holds: '+(r.holds.join(', ')||'none')+'\n\n');
+          process.stdout.write('A successful workflow does not override a false external verified state.\n');
+          NODE
+      - name: Preserve public canary receipt
+        if: always() && github.event_name != 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: hudson-public-external-canary
+          path: ${{ runner.temp }}/hudson-public-canary.json
+          if-no-files-found: warn
+          retention-days: 30
