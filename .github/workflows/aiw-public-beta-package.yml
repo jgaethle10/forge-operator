@@ -1,0 +1,34 @@
+name: AIW public beta release bundle gates
+on:
+  pull_request:
+    paths:
+      - "research/infrastructure-watch/release/**"
+      - "research/infrastructure-watch/tests/test_aiw_public_beta_bundle.py"
+      - ".github/workflows/aiw-public-beta-package.yml"
+permissions:
+  contents: read
+jobs:
+  static-preview-export-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Python syntax
+        run: python3 -m py_compile research/infrastructure-watch/release/aiw_public_beta_bundle.py
+      - name: Verify immutable hover -> static public beta contract
+        run: python3 -m unittest discover -s research/infrastructure-watch/tests -p 'test_aiw_public_beta_bundle.py' -v
+      - name: Verify no third-party executable hosting introduced
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('research/infrastructure-watch/release/aiw_public_beta_bundle.py').read_text()
+          assert 'public_release_ready":False' in p
+          assert 'public_url_verified":False' in p
+          assert 'https://cdn.jsdelivr.net/' not in p
+          assert 'https://base44' not in p
+          assert 'https://render.com' not in p
+          assert 'http://127.0.0.1' in p
+          PY
