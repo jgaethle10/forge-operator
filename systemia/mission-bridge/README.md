@@ -200,3 +200,22 @@ bash systemia/mission-bridge/gems/execute_candidate_qc.sh \
 ```
 
 Do not rerun into the same output directory or upload the resulting TIFF without a separate submission decision. Archive both evidence JSON files, the untouched GEMS-001 ZIP hash, candidate GeoTIFF hash, scientific-environment versions, and output logs in private evidence storage. After this run, assess prediction footprint/fragmentation, newly covered areas, and independent mapped-fault holdouts. These cannot infer the organizer's newly mapped fault score. If missing authorized TIFF files, stop rather than rebuilding infrastructure or spending money.
+
+## GEMS-002 full scoreable-area proxy and sparse challengers (Nov 19)
+
+**Scientific correction:** The earlier 8.75% 1000m negative-exclusion uplift was measured on 1.5 km corridors around held-out known fault components, not the full study area. This omits false positives distant from those held-out traces, whereas the actual GEMS metric penalizes off-trace prediction mass across all scoreable pixels. DrivenData staff confirmed that existing USGS/INGENIOUS fault labels are excluded from scoring by an **exact known-fault pixel mask**, NOT by a 300 m buffer, and nearby predictions still receive false-positive penalties: https://community.drivendata.org/t/scoring-clarification-are-known-usgs-ingenious-faults-masked-when-scoring-and-are-they-in-the-final-round-label-set/11516 . We therefore cannot infer better official DTI from the 8.75% corridor gain alone.
+
+**New study:** `gems/gems_002_full_area_validation.py` reuses the original official-input SHA/CRS/19-band/source hash gates and 3 northern 8-connected mapped-fault holdout groups. For each fold, train fixed 0 vs 1000m negative-exclusion HGB models with the same archived 34 features and settings; predict all northern valid pixels; zero known-training-fault predictions before scoring; score against heldout mapped faults over **all northern valid scoreable pixels**, except the exact known-training-fault cells. Also report the **same predictions** scored in old 1.5km corridors, allowing an apples-to-apples audit of how restricting the evaluation window biased the result. For the preselected 1000m variant alone, evaluate fixed postprocess combinations of .20/.35/.50 probability threshold and retain-all/omit-singletons. Compute and pool the original weighted TP, FP and FN components. No candidate is automatically selected, no hidden new fault labels used, and no scored submission occurs. All three fold groups were previously used to validate 1000m exclusion; this study is **not a pristine independent unseen validation**, nor a surrogate public leaderboard.
+
+A read-only audit of the user's real **unsubmitted** GEMS-002 candidate found 62,862 single-pixel regions among 444,269 selected pixels; those singletons carry approximately 10.995% of selected confidence mass. Two legitimate but **unevaluated** sparse variants were generated as private experimental GeoTIFFs with original geometry/NaN mask: (a) removing singletons retains 381,407 cells / 7.381% of valid area; (b) raising threshold to 0.35 retains 256,619 cells / 4.966%. These are not better scoring models until the full-area mapped-fault proxy shows evidence and (ultimately) an official eligible score confirms generalization.
+
+**One isolated free CPU Work command, after confirming authorized GeoDAWN TIFFs are mounted**:
+
+```bash
+bash systemia/mission-bridge/gems/execute_full_area_replay.sh \
+  /PRIVATE/official-geodawn-data \
+  /PRIVATE/gems_001_verified_submission.zip \
+  /PRIVATE/new-output/gems-002-full-area-20261119
+```
+
+The runner executes regression tests and two independent full-area model/scoring runs; it compares their JSON fold ledgers exactly apart from elapsed times and writes `full-area-replay-summary.json`. If original organizer files aren't accessible, stop. It does not upload data or contact DrivenData. Preserve original GEMS-001 and verified GEMS-002 candidate unchanged. Keep the one-per-UTC-day scored submission slot untouched unless the founder explicitly decides what exact file to submit.
