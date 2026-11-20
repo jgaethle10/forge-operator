@@ -36,6 +36,77 @@ function fixture(){
 }
 const plain=v=>JSON.parse(JSON.stringify(v));
 
+test('source readiness is always HOLD even after complete operator source declaration',()=>{
+ const f=fixture();
+ assert.equal(f.api.qualification().source_class,'synthetic_demonstration');
+ assert.equal(f.api.qualification().production_plan_release_allowed,false);
+ f.state.siteImage='data:image/png;base64,AAAA';
+ f.state.siteSource='source.png';
+ f.state.siteHash='a'.repeat(64);
+ f.$('siteProvider').value='Example original supplier';
+ f.$('siteReference').value='example-record-001';
+ f.$('siteCaptured').value='2025-04-19';
+ f.$('siteRights').value='licensed';
+ const d=plain(f.api.makeDraft());
+ assert.equal(d.source_declarations.site.rights_basis,'licensed');
+ assert.equal(d.source_declarations.site.source_sha256,'a'.repeat(64));
+ assert.equal(d.source_declarations.site.independent_rights_verification,false);
+ assert.equal(d.source_declarations.site.geographic_registration_verified,false);
+ assert.equal(d.source_declarations.context,null);
+ assert.equal(f.api.qualification().production_plan_release_allowed,false);
+ assert.ok(f.api.qualification().missing.includes('context_image_missing'));
+ assert.ok(f.api.qualification().missing.includes('geographic_registration_unverified'));
+ assert.equal(f.api.restoreDraft(d),1);
+ assert.equal(f.$('siteRights').value,'licensed');
+});
+
+test('source declaration tampering cannot introduce independent verification or wrong image identity',()=>{
+ const f=fixture();
+ f.state.siteImage='data:image/png;base64,AAAA';
+ f.state.siteSource='source.png';f.state.siteHash='a'.repeat(64);
+ const valid=plain(f.api.makeDraft());
+ for(const mutate of [
+  d=>{d.source_declarations.site.independent_rights_verification=true},
+  d=>{d.source_declarations.site.geographic_registration_verified=true},
+  d=>{d.source_declarations.site.approved_for_construction=true},
+  d=>{d.source_declarations.site.source_sha256='b'.repeat(64)},
+  d=>{d.source_declarations.site.file_name='other.png'},
+  d=>{d.source_declarations.context={schema:'evercraft.kennedy.operator-source-declaration.v1'}}
+ ]){
+  const bad=plain(valid);mutate(bad);
+  assert.throws(()=>f.api.restoreDraft(bad),/Source declaration|Unbound source/);
+ }
+ const raw=plain(valid);raw.source_declarations.site.rights_basis='admin_approved';
+ assert.throws(()=>f.api.restoreDraft(raw),/Source declaration/);
+});
+
+test('source provenance date and rights values validate; changing imagery clears stale declarations',()=>{
+ const f=fixture();
+ f.state.siteImage='data:image/png;base64,AAAA';
+ f.state.siteSource='source.png';f.state.siteHash='a'.repeat(64);
+ f.$('siteCaptured').value='2025-02-30';
+ assert.throws(()=>f.api.makeDraft(),/Invalid image source declaration/);
+ f.$('siteCaptured').value='2024-02-29';
+ f.$('siteRights').value='public_domain';
+ assert.equal(plain(f.api.makeDraft()).source_declarations.site.capture_date,'2024-02-29');
+ f.api.resetSourceFields('site');
+ assert.equal(f.$('siteCaptured').value,'');
+ assert.equal(f.$('siteRights').value,'unknown');
+ assert.equal(plain(f.api.makeDraft()).source_declarations.site.rights_basis,'unknown');
+});
+
+test('legacy real-image drafts without source fields restore in HOLD without synthetic promotion',()=>{
+ const f=fixture();
+ f.state.siteImage='data:image/png;base64,AAAA';
+ f.state.siteSource='source.png';f.state.siteHash='a'.repeat(64);
+ const d=plain(f.api.makeDraft());
+ delete d.source_declarations;
+ f.$('siteProvider').value='Stale provider';
+ assert.equal(f.api.restoreDraft(d),1);
+ assert.equal(f.$('siteProvider').value,'');
+ assert.equal(f.api.qualification().production_plan_release_allowed,false);
+});
+
 test('fictional demo can be saved as editable JSON without any uploaded images',()=>{
  const f=fixture(),draft=plain(f.api.makeDraft());
  assert.equal(draft.schema,'evercraft.site-planner.draft.v1');
