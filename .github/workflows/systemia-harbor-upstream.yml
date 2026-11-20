@@ -4,6 +4,9 @@ on:
     paths:
       - 'systemia/newsroom/systemia-harbor-upstream.mjs'
       - 'systemia/newsroom/systemia-harbor-upstream.test.mjs'
+      - 'systemia/newsroom/founder-creator-upstream.test.mjs'
+      - 'systemia/creator/founder-editorial-preflight.*'
+      - 'docs/publishing/FOUNDER-PERSONAL-SOURCE-FIRST.md'
       - 'docs/research/TOWI-SYSTEMIA-HARBOR-UPSTREAM-20261120.md'
       - '.github/workflows/systemia-harbor-upstream.yml'
   push:
@@ -11,6 +14,9 @@ on:
     paths:
       - 'systemia/newsroom/systemia-harbor-upstream.mjs'
       - 'systemia/newsroom/systemia-harbor-upstream.test.mjs'
+      - 'systemia/newsroom/founder-creator-upstream.test.mjs'
+      - 'systemia/creator/founder-editorial-preflight.*'
+      - 'docs/publishing/FOUNDER-PERSONAL-SOURCE-FIRST.md'
       - 'docs/research/TOWI-SYSTEMIA-HARBOR-UPSTREAM-20261120.md'
       - '.github/workflows/systemia-harbor-upstream.yml'
 permissions:
@@ -29,4 +35,4 @@ jobs:
       - name: Parse source
         run: node --check systemia/newsroom/systemia-harbor-upstream.mjs
       - name: Fail-closed synthetic boundary tests
-        run: node --test systemia/newsroom/systemia-harbor-upstream.test.mjs
+        run: node --test systemia/newsroom/systemia-harbor-upstream.test.mjs systemia/newsroom/founder-creator-upstream.test.mjs systemia/creator/founder-editorial-preflight.test.mjs
