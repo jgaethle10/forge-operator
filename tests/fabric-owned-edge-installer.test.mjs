@@ -55,15 +55,16 @@ test('Fabric self updater accepts only the authorized Forge repository and fast-
   assert.doesNotMatch(updater,/git reset --hard origin\/main/);
 });
 
-test('Fabric self updater normalizes generated Journal state before dirty-checkout gating',()=>{
-  const normalizeIndex=updater.indexOf('normalizing generated public/journal surface before checkout preflight');
+test('Fabric self updater preserves Journal before dirty-checkout gating',()=>{
   const statusIndex=updater.indexOf('status --porcelain --untracked-files=all');
-  assert.ok(normalizeIndex>=0,'generated Journal normalization must exist');
-  assert.ok(statusIndex>=0,'dirty-checkout preflight must exist');
-  assert.ok(normalizeIndex<statusIndex,'Journal normalization must happen before dirty-checkout gating');
-  assert.match(updater,/git -C "\$REPO_ROOT" restore --staged --worktree -- public\/journal/);
-  assert.match(updater,/git -C "\$REPO_ROOT" clean -fdx -- public\/journal/);
-  assert.match(updater,/classify-fabric-checkout-dirt\.mjs/);
+  const journalHoldIndex=updater.indexOf('HOLD: local Journal work is present; preserved without automated restore/clean');
+  const fetchIndex=updater.indexOf('fetch --prune "$REMOTE" "$BRANCH"');
+  assert.ok(statusIndex>=0,'status preflight required');
+  assert.ok(journalHoldIndex>statusIndex&&fetchIndex>journalHoldIndex,
+    'unreviewed local Journal edits must block source update before Git mutation');
+  assert.ok(updater.includes('classify-fabric-checkout-dirt.mjs'));
+  assert.doesNotMatch(updater,/git -C "\$REPO_ROOT" restore --staged --worktree -- public\/journal/);
+  assert.doesNotMatch(updater,/git -C "\$REPO_ROOT" clean -fdx -- public\/journal/);
 });
 
 test('Fabric self updater proves the release, self-heals attestation wiring, and rolls back failed runtime verification',()=>{
