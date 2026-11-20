@@ -19,6 +19,8 @@ export const STATIC_PATHS=Object.freeze({
  '/kaidance/index.html':'kaidance/index.html',
  '/kaidance/style.css':'kaidance/style.css',
  '/kaidance/experience.css':'kaidance/experience.css',
+ '/kaidance/collider-v3.css':'kaidance/collider-v3.css',
+ '/kaidance/collider-engine.mjs':'kaidance/collider-engine.mjs',
  '/kaidance/visual.mjs':'kaidance/visual.mjs',
  '/kaidance/app.mjs':'kaidance/app.mjs',
  '/kaidance/work-source.mjs':'kaidance/work-source.mjs',
