@@ -1,0 +1,43 @@
+name: KAIDANCE Independent Public HTTPS Readback
+
+on:
+  push:
+    paths:
+      - 'public/kaidance/**'
+      - 'scripts/probe-kaidance-fallback.mjs'
+      - 'tests/kaidance-public-fallback-readback.test.mjs'
+      - '.github/workflows/kaidance-independent-readback.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: kaidance-external-public-https-check
+  cancel-in-progress: true
+
+jobs:
+  external-viewer-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify public readback parser contracts
+        run: node --test tests/kaidance-public-fallback-readback.test.mjs
+      - name: Independently read back deployed Kaidance over public HTTPS
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/probe-kaidance-fallback.mjs \
+            --root https://jgaethle10.github.io/forge-operator/
+      - name: Retain sanitized Kaidance public source and asset readback
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: kaidance-v04-independent-public-https-receipt
+          path: artifacts/kaidance-fallback-readback.json
+          if-no-files-found: warn
+          retention-days: 30
