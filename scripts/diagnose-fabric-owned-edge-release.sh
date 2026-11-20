@@ -82,6 +82,17 @@ else
   printf 'source_dirty_blocker=false\n'
 fi
 
+# Flag an older on-disk updater that destroys local Journal files before
+# it ever inspects Git status. This check never executes the updater.
+updater_script="$REPO_ROOT/scripts/update-fabric-owned-edge.sh"
+if [[ ! -f "$updater_script" ]]; then
+  printf 'updater_journal_preservation=unknown_missing_script\n'
+elif grep -Eq 'restore --staged --worktree -- public/journal|clean -fdx -- public/journal' "$updater_script"; then
+  printf 'updater_journal_preservation=UNSAFE_DESTRUCTIVE_LEGACY\n'
+else
+  printf 'updater_journal_preservation=non_destructive_source_guard_present\n'
+fi
+
 printf 'fabric_service_active=%s\n' "$(service_state "$FABRIC_SERVICE")"
 printf 'update_service_active=%s\n' "$(service_state "$UPDATE_SERVICE")"
 printf 'update_timer_active=%s\n' "$(service_state "$UPDATE_TIMER")"
