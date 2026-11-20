@@ -333,8 +333,11 @@ def pdf(study):
         fill, stroke = COLORS[obj["kind"]]
         shape_rect(x, y, w, h, fill, stroke)
         if w >= 80 and h >= 26:
-            label(x + 4, y + h/2, obj["label"] or obj["kind"].replace("_", " "), 8, True)
-    label(35, 508, f"{model['title']}", 13, True, "#28204f")
+            max_chars = max(1, int((w - 9) / 5))
+            caption = obj["label"] or obj["kind"].replace("_", " ")
+            caption = caption[:max_chars]
+            label(x + 4, y + h/2, caption, 8, True)
+    label(35, 508, f"{model['title'][:72]}", 13, True, "#28204f")
     label(35, 491, f"Parcel: {width:g} x {depth:g} m | Basis: {model['measurement_basis']} | Revision: {study['revision']}", 9, False, "#5e6682")
     shape_rect(0, 0, 792, 111, "#251c56")
     label(30, 87, f"Site: {model['site_id']}  |  Model SHA-256: {study['model_sha256']}", 8, True, "#ffffff")

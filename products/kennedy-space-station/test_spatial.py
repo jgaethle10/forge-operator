@@ -121,6 +121,16 @@ class StudyHTTPTest(KennedyHomeTest):
         self.assertIn(b"xref", pdf_content)
         self.assertIn("attachment", pdf_headers["Content-Disposition"])
         self.assertGreater(len(pdf_content), 1000)
+        # Validate cross-reference offsets and object boundaries without
+        # adding a third-party PDF dependency to the owned runtime.
+        xref_at = int(pdf_content.split(b"startxref\n")[-1].split(b"\n")[0])
+        self.assertEqual(pdf_content[xref_at:xref_at+4], b"xref")
+        pdf_lines = pdf_content[xref_at:].split(b"\n")
+        self.assertEqual(pdf_lines[1], b"0 7")
+        for number in range(1, 7):
+            offset = int(pdf_lines[number+2].split()[0])
+            self.assertEqual(pdf_content[offset:offset+len(str(number))+6],
+                             f"{number} 0 obj".encode())
         model["parcel"]["width"] = 100
         status, content, _ = self.api("POST", f"/api/kss/sites/{a}/studies", model)
         self.assertEqual(status, 201, content)
