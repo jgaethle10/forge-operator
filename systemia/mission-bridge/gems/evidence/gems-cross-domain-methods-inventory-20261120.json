@@ -1,0 +1,96 @@
+{
+  "schema": "evercraft.gems.cross-domain-catalog.v1",
+  "purpose": "Read-only mapping-method inventory, not training dataset and not provenance proof of any outside source",
+  "study_area": "GeoDAWN western Nevada",
+  "study_grid": "3292x3730 EPSG32611 100m; x243350..572550 y4135550..4508550",
+  "external_data_rule": "Competition use and sponsor sharing rights required, with independent review",
+  "sources": [
+    {
+      "id": "evermaps-wa-aggregates",
+      "title": "EverMaps Mineral Intelligence: Washington aggregate polygons and historical mine evidence",
+      "source_project": "EverMaps Mineral Intelligence",
+      "source_kind": "method_only",
+      "source_reference": "https://github.com/jgaethle10/forge-operator/pull/1681",
+      "geography": "Washington State, especially Grant County",
+      "reuse_methods": [
+        "source count reconciliation",
+        "geometry and duplicate validation",
+        "versioned source hashes",
+        "spatial join and assumption boundaries"
+      ],
+      "reason": "Existing mineral site records do not cover western Nevada, and aggregate site counts are not geological fault labels."
+    },
+    {
+      "id": "geolab-synthetic-borehole-workbench",
+      "title": "Evercraft GeoLab synthetic three-layer borehole interpolation workbench",
+      "source_project": "GeoLab RC001",
+      "source_kind": "method_only",
+      "source_reference": "Evercraft GeoLab RC001 research workbench, earlier 2026 project",
+      "geography": "Synthetic field geometry, no verified Nevada survey",
+      "reuse_methods": [
+        "coordinate registration",
+        "gridded interpolation uncertainty",
+        "coverage hull warnings"
+      ],
+      "reason": "Synthetic borehole examples have no surveyed fault geometry or validation for GEMS."
+    },
+    {
+      "id": "watershed-yakima",
+      "title": "Evercraft Watershed Intelligence: sourced Yakima hydrology research",
+      "source_project": "Watershed Intelligence",
+      "source_kind": "method_only",
+      "source_reference": "https://github.com/jgaethle10/forge-operator/pull/1774",
+      "geography": "Yakima Basin, Washington",
+      "reuse_methods": [
+        "source timestamp and provenance",
+        "missing-data distinction",
+        "stream alignment and DEM feature concepts"
+      ],
+      "reason": "Yakima river gauge measurements are not Nevada geology; possible useful transferable idea is stream-offset morphology from verified Nevada terrain."
+    },
+    {
+      "id": "subsea-watch-noaa-kodiak",
+      "title": "Evercraft Subsea Watch: NOAA Kodiak Seep ROV track research",
+      "source_project": "Subsea Watch",
+      "source_kind": "method_only",
+      "source_reference": "https://github.com/jgaethle10/forge-operator/blob/main/public/subsea-watch/README.md",
+      "geography": "Kodiak Seep, Alaska ocean study",
+      "reuse_methods": [
+        "provenance of surveyed tracks",
+        "coordinate/time uncertainty",
+        "bathymetric lineament algorithms conceptually adaptable to DEM"
+      ],
+      "reason": "The procedural scene is fictional and NOAA dive tracks are not west Nevada bathymetry or fault surveys."
+    },
+    {
+      "id": "hidden-worlds-underground",
+      "title": "Evercraft Hidden World Atlas: Yakima and Pacific Northwest historical underground exhibits",
+      "source_project": "Hidden World Atlas",
+      "source_kind": "method_only",
+      "source_reference": "https://github.com/jgaethle10/forge-operator/blob/main/docs/worlds/HIDDEN-WORLD-ATLAS.md",
+      "geography": "Yakima and Pacific Northwest, historical-site display",
+      "reuse_methods": [
+        "observed versus inferred claim gating",
+        "3D visual interpretation",
+        "map source citations"
+      ],
+      "reason": "Invented illustrative tunnels and historical basements must never become fault-training data."
+    },
+    {
+      "id": "geodawn-1m-dem-research",
+      "title": "Official GEMS-linked 1-meter DEM URLs: Nevada morphology candidate",
+      "source_project": "GEMS official data",
+      "source_kind": "external_raster",
+      "source_reference": "https://www.drivendata.org/competitions/306/competition-doe-gems/page/967/",
+      "geography": "GeoDAWN western Nevada, subject to selected tile's actual bounds",
+      "reuse_methods": [
+        "terrain slope and curvature",
+        "multi-scale scarps and lineaments",
+        "drainage offsets"
+      ],
+      "reason": "Promising potential real new feature input; no original 1m DEM bytes, verified tile hash, alignment, data rights packet or spatial holdout gain yet. No automatic use.",
+      "competition_use_rights_declared": false,
+      "sponsor_sharing_rights_declared": false
+    }
+  ]
+}
