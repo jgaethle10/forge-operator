@@ -84,3 +84,19 @@ The source-controlled pure analytical module `site/aero-core.js` adds NACA four-
 A corresponding single-file AAAR 0.4 interface and upgraded owner API were built and browser-tested locally (1440px and 390px). They are bundled in the user's downloadable AAAR 0.4 artifact **but are not yet committed in this PR**. The canonical index and API in this branch remain the 0.3 versions. Never present AAAR 0.4 as deployed or running on Systemia until those files are reviewed, committed and deployed.
 
 Model truth boundary: screening only, not CFD, drag/stall/structural assessment, hardware operation, or certification. User interface study records are labeled `UNVALIDATED_SCREENING`; local API code rejects attempts to call them certified. NASA Glenn lift equation: https://www1.grc.nasa.gov/beginners-guide-to-aeronautics/lift-equation/ . GitHub program data sync and live orchestration remain pending.
+
+
+## AAAR 0.5 | Worlds Flight Range
+
+The owner-only Anniston site now includes a **Fly in Worlds** section: a playable, browser-local synthetic aircraft sandbox, with a counterpart at `public/worlds/flight/index.html` and a new flight portal link from `public/worlds/index.html`. Three fictional aircraft (Kestrel trainer, Albatross glider, Peregrine experimental) have keyboard/touch pitch, bank, rudder and throttle, chase/cockpit views, runway, 3 mission gates, game-HUD instruments, terrain contact and local flight records.
+
+The flight range renders original procedural 3D geometry with native WebGL2 where available and a Canvas2D perspective fallback on restricted browsers. It does not call external game/rendering libraries, hosted asset services, remote control systems, aircraft, or robotics hardware. This is an **entertainment-grade gameplay simulation**, explicitly not the authoritative World Engine, flight training credit, aerodynamic validation or certification.
+
+- Owner AAAR site source: `systemia/anniston-aaar/site/index.html`.
+- Flight runtime: `systemia/anniston-aaar/site/worlds-flight/index.html` and separated `flight-core.js`/`flight-runtime.js` for tests.
+- Owned Worlds static route source: `public/worlds/flight/index.html`.
+- Flight data classification: `evercraft.aaar.worlds-flight.v1`, `GAME_SIMULATION_ONLY`, `UNVALIDATED_GAMEPLAY`, `local_preview_only`. The authenticated service rejects promotion to certified or arbitrary tracks.
+- Reproduced local tests: 8 flight physics, 6 airfoil, 6 owner API; browser flight input and saved-record check on desktop and separate 390px mobile fallback rendering. Hardware WebGL2 and physical Safari validation are **not claimed**.
+- Next release gates: private AAAR deployment, independent Worlds HTTPS route verification, real-device performance/camera/touch testing, canonical GitHub-backed session evidence and Systemia work-order integration, then optionally authoritative World Engine adapter.
+
+No production URL or hardware execution is implied by GitHub commits or simulated flight metrics.
