@@ -70,7 +70,7 @@ export function createWingCourierFabricProxy({enabled=false,
    respond(res,401,{error:'wing_authentication_required'});return true;
   }
   const upstream=http.request({
-   host:BROKER_HOST,port:BROKER_PORT,method:req.method,
+   host:brokerHost,port:brokerPort,method:req.method,
    path:route.suffix+route.search,headers,timeout:timeoutMs,
   },(response)=>{
    const allowed={};
