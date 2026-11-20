@@ -148,5 +148,7 @@ jobs:
               os.environ.pop(name,None)
           assert module.preflight()==2
           PY
+      - name: Playable Kennedy Discovery World offline interactions
+        run: node products/kennedy-space-station/test_explore_ui.mjs
       - name: Public homepage security and isolation gate
         run: python3 products/kennedy-space-station/verify_public_home.py

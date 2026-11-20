@@ -1,10 +1,7 @@
 # PUBLIC STATIC ONLY. STAGED, NOT INSTALLED OR PUBLISHED.
-# Choose a separately owned hostname and verified TLS on the actual Evercraft
-# server. Never co-host the private Kennedy API or Site Planner at this root.
-#
-# Set KENNEDY_PUBLIC_DOMAIN in owned Caddy environment.
-# Replace /ABSOLUTE/OWNED/REPO with an authorized deployment path.
-# Caddy's file_server serves only the static, self-contained /public tree.
+# Deploy on an Evercraft-controlled server and owned domain with verified TLS.
+# NEVER reverse proxy the private Kennedy operator server from this origin.
+# Keep the public file_server rooted only in public/ with explicit path allowlist.
 
 {$KENNEDY_PUBLIC_DOMAIN} {
     root * /ABSOLUTE/OWNED/REPO/products/kennedy-space-station/public
@@ -14,12 +11,18 @@
         X-Content-Type-Options "nosniff"
         Referrer-Policy "no-referrer"
         X-Frame-Options "DENY"
-        Content-Security-Policy "default-src 'none'; style-src 'unsafe-inline'; img-src 'self'; font-src 'none'; script-src 'none'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
     }
     @public_index path /
     rewrite @public_index /index.html
-    @allowed path /index.html /favicon.svg
-    handle @allowed {
+    @static_pages path /index.html /favicon.svg
+    handle @static_pages {
+        header Content-Security-Policy "default-src 'none'; style-src 'unsafe-inline'; img-src 'self'; font-src 'none'; script-src 'none'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
+        file_server
+    }
+    handle /explore.html {
+        # The self-contained interactive Canvas needs one inline script.
+        # No network or private application endpoints can be contacted.
+        header Content-Security-Policy "default-src 'none'; style-src 'unsafe-inline'; img-src 'self' data:; font-src 'none'; script-src 'unsafe-inline'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
         file_server
     }
     handle {

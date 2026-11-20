@@ -13,6 +13,7 @@ ROOT = Path(__file__).resolve().parent
 PUBLIC = ROOT / "public"
 HTML = PUBLIC / "index.html"
 CADDY = ROOT / "ops" / "kennedy-public.Caddyfile.example"
+EXPLORE = PUBLIC / "explore.html"
 
 class Check(HTMLParser):
     def __init__(self):
@@ -79,6 +80,27 @@ def inspect():
                     "window.location", "Stripe(", "checkout", "document.cookie"):
         if private in html:
             errors.append("Forbidden private/commerce marker: " + private)
+    if not EXPLORE.is_file():
+        errors.append("Missing standalone interactive Discovery World")
+    else:
+        scene = EXPLORE.read_text(encoding="utf-8")
+        scripts = re.findall(r"<script\\b[^>]*>(.*?)</script>", scene, re.S | re.I)
+        if len(scripts) != 1:
+            errors.append("Discovery World must be a single inline, self-contained script")
+        if not all(token in scene for token in (
+            'id="world"', 'id="add-charger"', 'id="add-tree"',
+            'id="add-solar"', 'id="night"', 'id="orbit"',
+            "FICTIONAL DATA", "not a real address")):
+            errors.append("Missing playable controls or fictional-world disclosure")
+        for forbidden in ("fetch(", "XMLHttpRequest", "WebSocket(", "EventSource(",
+                          "sendBeacon(", "localStorage", "sessionStorage",
+                          "document.cookie", "eval(", "new Function(",
+                          "/api/", "/studio", "/workspace", "https://", "http://",
+                          "<iframe", "<form", "<script src=", "import("):
+            if forbidden in scene:
+                errors.append("Discovery World contains forbidden private/network dependency: " + forbidden)
+        if 'href="explore.html"' not in html:
+            errors.append("Public home missing visible Explorer entrypoint")
     if not (PUBLIC / "favicon.svg").is_file():
         errors.append("Missing local favicon")
     if not CADDY.is_file():
@@ -90,9 +112,16 @@ def inspect():
             errors.append("Static public Caddy routing missing")
         if "reverse_proxy" in active or "KENNEDY_DOMAIN}" in active or "basic_auth" in active:
             errors.append("Static Caddy template must not route to private app")
-        if "script-src 'none'" not in active or "connect-src 'none'" not in active or "form-action 'none'" not in active:
+        if ("script-src 'none'" not in active or
+            "script-src 'unsafe-inline'" not in active or
+            active.count("connect-src 'none'") < 2 or
+            active.count("form-action 'none'") < 2):
+            errors.append("Homepage and Explorer need separate restrictive policies")
+        if "reverse_proxy" in active or "handle /api" in active or "root * /ABSOLUTE/OWNED/REPO/products/kennedy-space-station/public" not in active:
+            errors.append("Explorer gateway cannot route outside the static public directory")
+        if False:
             errors.append("Strict public CSP missing")
-        if "@allowed path /index.html /favicon.svg" not in active:
+        if "@static_pages path /index.html /favicon.svg" not in active or "handle /explore.html" not in active:
             errors.append("Public Caddy routes must be restricted")
     return errors
 
@@ -102,5 +131,5 @@ if __name__ == "__main__":
         for item in problems:
             print("FAIL: " + item)
         sys.exit(1)
-    print("PASS: standalone KSS public home has no private route, active form, external dependency, script, or checkout.")
+    print("PASS: separate static homepage and self-contained interactive Explorer; no private API, network, form or checkout.")
     print("No site was published; hostname, DNS, TLS and live mobile checks remain unverified.")
