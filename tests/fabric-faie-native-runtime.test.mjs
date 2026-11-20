@@ -99,10 +99,17 @@ test('owned Fabric serves FAIE UI, public preview API, and native FAIE MCP witho
     assert.match(page,/id="siteScanExample"/);
     assert.match(page,/id="siteScanResult"/);
     assert.match(page,/id="siteScanDownload"/);
+    assert.match(page,/id="historicalClimateRun"/);
+    assert.match(page,/id="historicalClimateResult"/);
     const absentSite=await fetch(runtime.url+'/api/faie/site/scan',{
       method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({})
     });
     assert.equal(absentSite.status,400,'site scan must reject missing coordinates without calling upstream services');
+
+    const missingClimate=await fetch(runtime.url+'/api/faie/climate/history',{
+      method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({})
+    });
+    assert.equal(missingClimate.status,400,'NOAA history must reject absent coordinates before external requests');
 
     const missingSoil=await fetch(runtime.url+'/api/faie/soil/preview',{
       method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({})

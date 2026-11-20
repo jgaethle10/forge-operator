@@ -58,6 +58,14 @@ try{
     return response.status;
   });
   mark('soil_preview_rejects_missing_location_without_source_call',invalidSoilHttp===400);
+  mark('observed_climate_is_opt_in',await page.locator('#historicalClimateRun').isVisible());
+  const invalidClimateHttp=await page.evaluate(async()=>{
+    const response=await fetch('/api/faie/climate/history',{
+      method:'POST',headers:{'content-type':'application/json'},body:'{}'
+    });
+    return response.status;
+  });
+  mark('historical_climate_requires_explicit_point',invalidClimateHttp===400);
   await page.locator('#siteScanExample').click();
   await page.locator('#siteScanResult .site-scan-scaffold').waitFor({timeout:47000});
   const scanText=await page.locator('#siteScanResult').innerText();

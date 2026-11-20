@@ -189,6 +189,13 @@
     .scope-hint strong{color:#e0e8d7}
     .compare-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
     .compare-actions button{margin-top:18px}
+    .climate-history-panel{margin-top:14px;padding:14px 16px;border:1px solid #4a624f;border-radius:14px;background:rgba(5,29,17,.54)}
+    .climate-history-panel h3{margin:0 0 8px;font-size:1rem}
+    .climate-history-panel p{font-size:.78rem;color:#b8cbb9;line-height:1.5}
+    .climate-metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:9px;margin:12px 0}
+    .climate-metric{border:1px solid #425846;border-radius:10px;padding:12px;background:#0d2218}
+    .climate-metric strong{font-size:1.25rem;color:#e6f4dd;display:block}
+    .climate-metric span{display:block;color:#acbfad;font-size:.75rem;line-height:1.5}
     .site-scan-header{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:10px 0}
     .site-scan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(235px,1fr));gap:12px;margin:14px 0}
     .site-scan-card{border:1px solid #4a6451;background:#0d2218;border-radius:14px;padding:16px;min-width:0}
@@ -608,6 +615,14 @@
       </form>
       <div class="soil-preview-result" id="siteScanResult" role="status" aria-live="polite">No site scan run yet. Pick a location or use the public Yakima sample above.</div>
       <button id="siteScanDownload" type="button" hidden>Download scan evidence (JSON)</button>
+      <section class="climate-history-panel" id="historicalClimatePanel">
+        <div class="section-kicker">03 / Observed history</div>
+        <h3>What actually happened in past years?</h3>
+        <p>Optional: check NOAA's 2023–2024 daily measurements from Yakima Airport if your selected point is within 40 km of that station. This is nearby station history, not property weather, 30-year climate normals or a crop-risk prediction.</p>
+        <button id="historicalClimateRun" type="button">Check actual NOAA historical records ↗</button>
+        <div id="historicalClimateResult" role="status" aria-live="polite">No historical archive checked yet.</div>
+        <button id="historicalClimateDownload" type="button" hidden>Download historical evidence (JSON)</button>
+      </section>
       <details class="soil-preview" style="margin-top:16px">
         <summary>Show soil-only lookup result</summary>
         <div class="soil-preview-result" id="soilPreviewResult" role="status" aria-live="polite">No soil-only lookup yet.</div>
@@ -1046,6 +1061,74 @@ function renderFaieSourceLedger(health) {
 }
 
 let latestSiteScan=null;
+let latestHistoricalClimate=null;
+function renderHistoricalClimate(data){
+  const metrics=data.metrics||{};
+  const tiles=[
+    ['Days at or above 95°F',metrics.hot_days_ge_95f],
+    ['Nights at or below 32°F',metrics.freeze_nights_le_32f],
+    ['Days with precipitation at least 0.01 inch',metrics.wet_days_ge_0_01in]
+  ];
+  let html='<div class="site-scan-scaffold"><strong>NOAA station observations, 2023–2024</strong>'
+    +'<p>Station: '+esc(data.station?.name||'Unknown')
+    +' · '+esc(data.station?.distance_km??'?')+' km from selected point · '+esc(data.received_calendar_dates??'?')+'/'+esc(data.expected_days??'?')+' dates returned.</p>'
+    +'<p>Measured at the station, not at your property. This is not a 30-year climate normal.</p></div>';
+  html+='<div class="climate-metrics">';
+  for(const [label,metric] of tiles){
+    html+='<div class="climate-metric"><strong>'+esc(metric?.threshold_days??'—')+' days</strong>'
+      +'<span>'+esc(label)+'</span><span>'
+      +esc(metric?.observed_days??'?')+'/'+esc(data.expected_days??'?')+' valid days · '
+      +esc(metric?.missing_days??'?')+' missing</span></div>';
+  }
+  html+='</div><p>Counts depend on observed days and are not adjusted for missing records. This report does not predict future losses, water rights, soil conditions or crop yields.</p>'
+    +'<p><a href="https://www.ncei.noaa.gov/cdo-web/datasets/GHCND/stations/GHCND%3AUSW00024243/detail" target="_blank" rel="noopener noreferrer">NOAA station record and data source ↗</a></p>';
+  return html;
+}
+async function runHistoricalClimate(){
+  const result=document.getElementById('historicalClimateResult');
+  const button=document.getElementById('historicalClimateRun');
+  const download=document.getElementById('historicalClimateDownload');
+  const latRaw=document.getElementById('soilLatitude').value.trim();
+  const lonRaw=document.getElementById('soilLongitude').value.trim();
+  const latitude=Number(latRaw),longitude=Number(lonRaw);
+  latestHistoricalClimate=null;download.hidden=true;
+  if(!latRaw||!lonRaw||!Number.isFinite(latitude)||!Number.isFinite(longitude)||
+     latitude<24||latitude>50||longitude< -125||longitude> -66){
+    result.textContent='Enter the location coordinates above before checking station history.';
+    return;
+  }
+  button.disabled=true;button.textContent='Checking historical observations…';
+  result.textContent='Requesting NOAA NCEI station records. Missing days will not be counted as zero.';
+  try{
+    const response=await fetchWithTimeout('/api/faie/climate/history',{
+      method:'POST',headers:{'content-type':'application/json','accept':'application/json'},
+      body:JSON.stringify({latitude,longitude})
+    },44000);
+    if(!response.ok){
+      if(response.status===422)throw new Error('No approved historical station within 40 km. We will not infer climate from a distant station.');
+      if(response.status===429)throw new Error('Archive request budget reached. Retry later.');
+      throw new Error('Official historical climate data could not be verified for this point.');
+    }
+    const data=await response.json();
+    if(data?.schema!=='evercraft.faie.ncei-station-history.v1'||
+      data.status!=='historical_station_context_available'||
+      data.evidence_state!=='OBSERVED'||data.request_persisted!==false||
+      data.site_suitability_verdict!==null||!data.metrics)throw new Error('Historical source, coverage or privacy verification failed.');
+    latestHistoricalClimate=data;
+    result.innerHTML=renderHistoricalClimate(data);
+    download.hidden=false;
+  }catch(error){result.textContent=error?.message||'No source-backed historical climate result.';}
+  finally{button.disabled=false;button.textContent='Check actual NOAA historical records ↗';}
+}
+document.getElementById('historicalClimateRun').addEventListener('click',runHistoricalClimate);
+document.getElementById('historicalClimateDownload').addEventListener('click',()=>{
+  if(!latestHistoricalClimate)return;
+  const blob=new Blob([JSON.stringify(latestHistoricalClimate,null,2)+'\n'],{type:'application/json'});
+  const url=URL.createObjectURL(blob);const a=document.createElement('a');
+  a.href=url;a.download='evercraft-faie-historical-climate.json';
+  document.body.append(a);a.click();a.remove();URL.revokeObjectURL(url);
+});
+
 function safeNwsSource(value) {
   if(typeof value!=='string')return null;
   try{
