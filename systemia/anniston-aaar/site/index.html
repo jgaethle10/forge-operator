@@ -89,8 +89,8 @@
 
 
         <section class="view hidden" id="view-worlds">
-          <div class="worlds-hello"><div><div class="eyebrow">AAAR / EVERCRAFT WORLDS / PLAYABLE EXPERIENCE 001</div><h1>Enter the <em>flight range.</em></h1><p>Pick your aircraft. Explore a procedural valley in 3D. Fly through checkpoints and capture a local simulation record for Anniston. Play first, then turn the interesting questions into engineering work.</p></div><div class="worlds-state"><span>✳ PLAYABLE LOCAL SANDBOX</span><small>NO PHYSICAL FLIGHT CONTROLS</small></div></div>
-          <div class="worlds-frame-wrap"><iframe id="flightFrame" title="Playable 3D Anniston Worlds flight range" loading="lazy" allow="fullscreen" src="./worlds-flight/index.html"></iframe></div>
+          <div class="worlds-hello"><div><div class="eyebrow">AAAR / EVERCRAFT WORLDS / PLAYABLE EXPERIENCE 001</div><h1>Design it. <em>Then fly it.</em></h1><p>Design your own flying machine or pick a ready-built aircraft. Explore a procedural valley in 3D. Fly through checkpoints and capture a local simulation record for Anniston. Play first, then turn the interesting questions into engineering work.</p></div><div class="worlds-state"><span>✳ PLAYABLE LOCAL SANDBOX</span><small>NO PHYSICAL FLIGHT CONTROLS</small></div></div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:0 0 14px"><button id="aaLaunchFoundry" type="button" class="btn btn-sun">✦ Open Aircraft Foundry</button><span style="font:800 10px var(--mono);letter-spacing:.08em;color:#6b858a">ADJUST MASS · WINGS · THRUST · ROTORS · FLY</span></div><div class="worlds-frame-wrap"><iframe id="flightFrame" title="Playable 3D Anniston Worlds flight range" loading="lazy" allow="fullscreen" src="./worlds-flight/index.html"></iframe></div>
           <div class="worlds-actions"><div><span class="eyebrow">FLIGHT WORLD / CEDAR BASIN</span><h2>Explore here. Engineer next.</h2><p>Runs in your browser on synthetic terrain. This is Anniston's first playable flight-world scene, not yet the authoritative Evercraft Worlds engine or a validated flight simulator.</p></div><div class="worlds-buttons"><a href="https://worlds.systemiacommandcenters.com/worlds/" target="_blank" rel="noopener noreferrer" class="btn btn-dark">Open main Evercraft Worlds ↗</a><button type="button" class="btn btn-line" data-jump="aero">Open Airfoil Lab ↗</button></div></div>
           <div class="worlds-ledger"><div><div class="eyebrow">LOCAL FLIGHT RECORDS / ENGINEERING HANDOFF</div><h2>Flight log <span id="worldsRecordCount">0</span></h2></div><p>Save a flight inside the simulator to add an entertainment-grade telemetry record here. These are not CFD, certification, training credit, or independently reproduced simulation receipts.</p><div id="worldsRecordList" class="worlds-record-list" aria-live="polite"></div></div>
           <div class="worlds-truth"><strong>WORLD ENGINE INTEGRATION GATE</strong><span>The embedded Flight Range is an independently implemented local WebGL2 scene. The main Evercraft Worlds portal is linked separately, and its current public reachability has not been verified here. Shared authoritative world-state, multiplayer, backend synchronization and physical aircraft testing remain outstanding.</span></div>
@@ -272,19 +272,28 @@
     $('#worldsRecordList').innerHTML=flights.length?flights.map(x=>`<article class="worlds-record"><div><strong>${esc(x.aircraft_name||x.aircraft||'Worlds aircraft')} · ${esc(x.condition||'Flight')}</strong><small>${esc(x.created_at||'')} · ${esc(x.id||'')}</small></div><div class="record-meta">${Number(x.flight_time_seconds||0).toFixed(0)} SEC · ${Math.round(Number(x.distance_m||0))} M · ${Number(x.checkpoints||0)}/3 GATES</div></article>`).join(''):'<div class="worlds-empty">No saved flights yet. Enter the range above, fly, then use Save flight ↗.</div>';
   }
   const flightFrame=document.getElementById('flightFrame');
+  document.getElementById('aaLaunchFoundry')?.addEventListener('click',()=>{
+    flightFrame.contentWindow?.postMessage({type:'AAAR_OPEN_FOUNDRY'},'*');flightFrame.scrollIntoView({behavior:'smooth',block:'center'});
+  });
   window.addEventListener('message',event=>{
     if(event.source!==flightFrame.contentWindow)return;
     const packet=event.data;
     if(!packet||packet.type!=='AAAR_FLIGHT_RECEIPT'||packet.schema!=='evercraft.aaar.worlds-flight.message.v1')return;
     const r=packet.receipt;
     if(!r||r.schema!=='evercraft.aaar.worlds-flight.v1'||r.model_state!=='GAME_SIMULATION_ONLY'||r.evidence_state!=='UNVALIDATED_GAMEPLAY')return;
-    const allowed=['trainer','jet','glider'];if(!allowed.includes(r.aircraft))return;
+    const allowed=['trainer','jet','glider','custom'];if(!allowed.includes(r.aircraft))return;
+    let customDesign=null;if(r.aircraft==='custom'){
+       const d=r.design;if(!d||d.schema!=='evercraft.aaar.airframe-design.v1'||!['wing','rotor'].includes(d.type)||typeof d.name!=='string'||d.name.length>64||!d.name.trim())return;
+       const ranges={massKg:[.4,30000],spanM:[.6,60],chordM:[.15,9],sweepDeg:[0,60],bodyLengthM:[.5,40],bodyWidthM:[.15,8],tailAreaM2:[0,30],cgFraction:[.05,.85],thrustN:[0,160000],cd0:[.012,.25],clMax:[.65,2.5],rotors:[2,12],rotorRadiusM:[.09,3.5],totalPowerW:[100,1500000]};
+       if(Object.keys(d).length!==Object.keys(ranges).length+3)return;
+       customDesign={schema:d.schema,name:d.name,type:d.type};for(const [k,[lo,hi]] of Object.entries(ranges)){const n=d[k];if(typeof n!=='number'||!Number.isFinite(n)||n<lo||n>hi||(k==='rotors'&&!Number.isInteger(n)))return;customDesign[k]=n;}
+    }
     if(!Number.isFinite(r.flight_time_seconds)||r.flight_time_seconds<0||r.flight_time_seconds>14400)return;
     if(!Number.isFinite(r.distance_m)||r.distance_m<0||r.distance_m>3000000)return;
     if(!Array.isArray(r.track)||r.track.length>300||!Array.isArray(r.events)||r.events.length>20)return;
     if(!data.experiments)data.experiments=[];
     const id='AAAR-WFL-'+Date.now().toString(36).toUpperCase()+'-'+Math.random().toString(36).slice(2,6);
-    const record={schema:'evercraft.aaar.worlds-flight.v1',id,created_at:new Date().toISOString(),world:'anniston-cedar-basin-synthetic-v1',model_state:'GAME_SIMULATION_ONLY',evidence_state:'UNVALIDATED_GAMEPLAY',aircraft:r.aircraft,aircraft_name:String(r.aircraft_name||'').slice(0,80),condition:String(r.condition||'').slice(0,60),flight_time_seconds:r.flight_time_seconds,distance_m:r.distance_m,max_altitude_m:Math.max(0,Math.min(Number(r.max_altitude_m)||0,100000)),max_speed_mps:Math.max(0,Math.min(Number(r.max_speed_mps)||0,250)),checkpoints:Math.min(3,Math.max(0,Number(r.checkpoints)||0)),events:r.events.map(e=>({kind:String(e.kind||'').slice(0,40),at:Number(e.at)||0})),track:r.track.filter(p=>p&&Number.isFinite(p.x)&&Number.isFinite(p.y)&&Number.isFinite(p.z)).slice(-300),limitations:'Synthetic browser-flight sandbox only, not validated flight data or CFD.',canonical_sync:'local_preview_only'};
+    const record={schema:'evercraft.aaar.worlds-flight.v1',id,created_at:new Date().toISOString(),world:'anniston-cedar-basin-synthetic-v1',model_state:'GAME_SIMULATION_ONLY',evidence_state:'UNVALIDATED_GAMEPLAY',aircraft:r.aircraft,aircraft_name:String(r.aircraft_name||'').slice(0,80),design:customDesign,condition:String(r.condition||'').slice(0,60),flight_time_seconds:r.flight_time_seconds,distance_m:r.distance_m,max_altitude_m:Math.max(0,Math.min(Number(r.max_altitude_m)||0,100000)),max_speed_mps:Math.max(0,Math.min(Number(r.max_speed_mps)||0,400)),checkpoints:Math.min(3,Math.max(0,Number(r.checkpoints)||0)),events:r.events.map(e=>({kind:String(e.kind||'').slice(0,40),at:Number(e.at)||0})),track:r.track.filter(p=>p&&Number.isFinite(p.x)&&Number.isFinite(p.y)&&Number.isFinite(p.z)).slice(-300),limitations:'Synthetic browser-flight sandbox only, not validated flight data or CFD.',canonical_sync:'local_preview_only'};
     data.experiments.push(record);data.experiments=data.experiments.slice(-100);
     data.history.push({kind:'worlds_gameplay_flight',flight_id:id,at:record.created_at});persist();if(view==='worlds')renderWorlds();toast('AAAR flight saved locally as unvalidated gameplay.');
   });
