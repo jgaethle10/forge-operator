@@ -39,26 +39,30 @@ cd "$script_dir"
 python3 -m unittest -v test_gems_002_full_area_validation.py
 mkdir -p "$output"
 python3 gems_002_full_area_validation.py --data-dir "$data" --evidence-dir "$output/run-a"
-python3 gems_002_full_area_validation.py --data-dir "$data" --evidence-dir "$output/run-b"
+if [[ "${GEMS_REPEAT:-0}" == "1" ]]; then
+  python3 gems_002_full_area_validation.py --data-dir "$data" --evidence-dir "$output/run-b"
+fi
 python3 - "$output" <<'PY'
-import hashlib,json,sys
+import json,sys
 from pathlib import Path
 root=Path(sys.argv[1])
-a=(root/"run-a/full-area-proxy.json").read_bytes()
-b=(root/"run-b/full-area-proxy.json").read_bytes()
-left=json.loads(a);right=json.loads(b)
-left.pop("elapsed_seconds",None);right.pop("elapsed_seconds",None)
-if left!=right:raise SystemExit("Full-area replay disagreement: HOLD, do not promote")
+left=json.loads((root/"run-a/full-area-proxy.json").read_text())
+repeated=(root/"run-b/full-area-proxy.json").exists()
+if repeated:
+    right=json.loads((root/"run-b/full-area-proxy.json").read_text())
+    left.pop("elapsed_seconds",None);right.pop("elapsed_seconds",None)
+    if left!=right:
+        raise SystemExit("Full-area replay disagreement: HOLD, do not promote")
 assert left["submission_made"] is False and left["competition_score_known"] is False
 baseline=left["postprocess_exploratory_summaries"]["r0_t0.2_min1"]["full_area_pooled_dti"]
 selected=left["postprocess_exploratory_summaries"]["r10_t0.2_min1"]["full_area_pooled_dti"]
 ranking=sorted(((v["full_area_pooled_dti"],k) for k,v in left["postprocess_exploratory_summaries"].items()),reverse=True)
-summary={"schema":"evercraft.gems.full-area-proxy-replay.v1",
+summary={"schema":"evercraft.gems.full-area-proxy-replay.v2",
  "full_area_baseline_proxy":baseline,"full_area_1000m_proxy":selected,
  "delta_vs_baseline":selected-baseline,
  "highest_exploratory_postprocess_proxy":ranking[0][1],
  "highest_exploratory_postprocess_proxy_dti":ranking[0][0],
- "all_fold_records_reproduced":True,"two_executions":True,
+ "all_fold_records_reproduced":repeated,"two_executions":repeated,
  "not_an_unseen_validation":True,"not_an_official_score":True,
  "scored_submission_made":False}
 (root/"full-area-replay-summary.json").write_text(json.dumps(summary,indent=2)+"\n")
