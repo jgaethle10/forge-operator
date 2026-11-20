@@ -63,6 +63,15 @@ footer{margin-top:24px;color:#a6c4cf;font-size:12px;line-height:1.7}
 @media(max-width:920px){.layout,.below{grid-template-columns:1fr}.sidebar{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}.sidebar h2,.sidebar .hint,.preset-heading{grid-column:1/-1}.scene{order:0}.sidebar{order:1}}
 @media(max-width:580px){.sidebar{display:flex}.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.mission-grid{grid-template-columns:1fr}#landscape{height:330px}.scene-head,.scene-footer{padding:11px 13px}.metric{padding:13px}h1{font-size:44px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+.sculpt-bar{display:flex;align-items:center;flex-wrap:wrap;gap:8px;padding:12px 15px;background:#092b39;border-top:1px solid #32596c}
+.sculpt-bar span{font-size:12px;color:#c4dfe6;flex:1 1 180px}
+.sculpt-bar button{padding:9px 12px;border-radius:10px;min-height:44px;background:#163f4b;color:#eaf8f4;border:1px solid #5c8a8e;font:800 12px/1.4 system-ui}
+.sculpt-bar button[aria-pressed=true]{background:#c3f9dc;color:#073837}
+.sculpt-bar button:disabled{opacity:.43;cursor:not-allowed}
+.sculpt-bar .altitude{font-size:12px;font-weight:900;color:#d4f8d9;min-width:80px;text-align:center;font-variant-numeric:tabular-nums}
+#landscape[data-sculpt=true]{touch-action:none;cursor:ns-resize}
+.zone-list button{min-height:44px}
+@media(max-width:580px){.sculpt-bar span{flex-basis:100%}.sculpt-bar .altitude{min-width:72px}}
 </style>
 </head>
 <body>
@@ -70,16 +79,24 @@ footer{margin-top:24px;color:#a6c4cf;font-size:12px;line-height:1.7}
 <main class="wrap">
 <p class="eyebrow">ENTER THE SCIENCE CENTER / EXHIBIT 04</p>
 <h1>Make a mountain.<br><em>Follow every drop.</em></h1>
-<p class="lede">Build a tiny watershed, send rain or snow across five elevations, change the forest and slope, and watch the river respond. Every drop in this <strong>simplified teaching model</strong> is accounted for.</p>
+<p class="lede">Build a tiny watershed, sculpt five elevations, send rain or snow across the mountains, change the forest and slope, and watch the river respond. Every drop in this <strong>simplified teaching model</strong> is accounted for.</p>
 <div class="layout">
 <section class="scene" aria-label="Illustrated watershed simulation">
  <div class="scene-head"><b>💧 THE LIVING WATERSHED</b><span id="dayLabel">DAY 0 · Ready to explore</span></div>
  <canvas id="landscape" role="img" aria-label="Illustrated side view of five mountain-to-valley watershed zones. Use the zone buttons below for an accessible readout of water stored in each zone."></canvas>
  <div class="zone-list" id="zoneList" aria-label="Inspect a watershed zone"></div>
+ <div class="sculpt-bar" aria-label="Sculpt mountain elevation">
+  <button type="button" id="sculptMode" aria-pressed="false">✦ Sculpt terrain: off</button>
+  <span>Choose a zone, then raise or lower it. Turn on sculpting to drag a ridge vertically.</span>
+  <button type="button" id="lowerZone" aria-label="Lower selected zone elevation by 100 meters">− 100 m</button>
+  <strong id="selectedElevation" class="altitude">1050 m</strong>
+  <button type="button" id="raiseZone" aria-label="Raise selected zone elevation by 100 meters">+ 100 m</button>
+  <button type="button" id="restoreMountains">Restore ridges</button>
+ </div>
  <div class="zone-info" id="zoneInfo" aria-live="polite">Tap a landscape zone or choose a named zone to inspect its water storage.</div>
  <div class="scene-footer">
   <span id="sceneStatus">Run one day to watch the water move.</span>
-  <div class="toolbar"><button type="button" id="step">Advance 1 day</button><button type="button" id="play">▶ Play days</button><button type="button" id="reset" class="secondary">Reset</button></div>
+  <div class="toolbar"><button type="button" id="step">Advance 1 day</button><button type="button" id="play">▶ Play days</button><button type="button" id="reset" class="secondary">Reset water stores</button></div>
  </div>
 </section>
 <aside class="sidebar" aria-label="Watershed controls">
@@ -121,7 +138,7 @@ footer{margin-top:24px;color:#a6c4cf;font-size:12px;line-height:1.7}
 </div>
 <section class="compare" aria-labelledby="compareHeading">
  <span class="eyebrow">INVESTIGATION STATION · CHANGE ONE THING</span><h2 class="section-title" id="compareHeading">Test your watershed hypothesis.</h2>
- <p>Capture a seven-day Trial A. Change the forest, slope, temperature or precipitation. Run Trial B from the <strong>same starting water stores</strong> and compare total modeled river output. The model computes both trials, not a fabricated result.</p>
+ <p>Capture a seven-day Trial A. Change the elevation of a ridge, forest, slope, temperature or precipitation. Run Trial B from the <strong>same starting water stores</strong> and compare total modeled river output. The model computes both trials, not a fabricated result.</p>
  <div class="toolbar"><button type="button" id="captureA">Capture Trial A</button><button type="button" id="compareB" disabled>Compare with Trial B</button><button type="button" id="clearCompare" class="secondary">Clear comparison</button></div>
  <p class="compare-readout" id="compareResult" role="status" aria-live="polite">Begin by capturing seven days with the current controls. Then change one or more inputs and compare.</p>
 </section>
