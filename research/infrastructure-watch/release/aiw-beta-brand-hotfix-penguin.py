@@ -242,7 +242,10 @@ def apply(mode, exporter):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--exporter", required=True, help="Reviewed pinned public beta exporter")
-    parser.add_argument("mode", choices=["--check", "--activate"], nargs="?", default="--check")
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument("--check", dest="mode", action="store_const", const="--check")
+    mode.add_argument("--activate", dest="mode", action="store_const", const="--activate")
+    parser.set_defaults(mode="--check")
     args = parser.parse_args()
     apply(args.mode, load_exporter(args.exporter))
 
