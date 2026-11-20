@@ -21,3 +21,7 @@ jobs:
       - name: Test provenance, queue state machine, and outbox checks
         working-directory: products/site-planner
         run: python3 -m unittest discover -v
+      - name: Probe live Census/USGS public fixture (diagnostic; no user data)
+        working-directory: products/site-planner
+        continue-on-error: true
+        run: python3 live_aerial_acceptance.py

@@ -269,3 +269,15 @@ Technical controls are still preserved in a **collapsed More tools & project det
 On phones, the diagram remains large enough for tapping and can be swiped horizontally rather than becoming an unreadable thumbnail. The PDF/print path still contains both engineering-style sheets. Real photo upload clears all fictional demo placements and resets calibration; if the site name is the unchanged demonstration placeholder it becomes an explicit operator-review concept. All outputs remain **not for construction**.
 
 `test_simple_ui.py` locks the three visible steps, verifies expert controls stay collapsed but available, and compiles the inline browser code. Run `python3 -m unittest discover -v`. This is a **UX simplification**, not an automated aerial fetch, engineering review, customer login or production deployment. The commercial order hold remains in place.
+
+## v2.3 federal aerial lookup (screening-only)
+
+The default three-step Kennedy workflow has **Find public aerial** inside step 1, with manual upload still available. Enter a complete mainland-U.S. street address. The private local server asks the U.S. Census address-range geocoder for an unambiguous match and then obtains site/vicinity previews from **USGS The National Map imagery** through fixed HTTPS endpoints. These are government data sources, not third-party application runtimes.
+
+The browser gets source-labeled JPEGs and byte SHA-256 fingerprints. Their display **does not prove** the parcel, aerial date, property boundary, utilities, rights-of-way, charger clearance, or engineering feasibility. Public aerials may be too old or too coarse for detailed stall layout. The UI clearly labels address and image uncertainty. Operators can keep the original JPGs alongside their editable drafts.
+
+Both lookup paths reject ambiguous or unavailable sources **without changing the active drawing**. A new real site photo clears all previous overlay marks, reference measurements and the **old vicinity photo** to prevent cross-site contamination. Requests use the existing loopback-only authenticated endpoint; results are ephemeral, non-persistent, and do not create orders, outbox events or transactions.
+
+The browser now permits local `data:` imagery under a narrowly scoped image Content Security Policy. No arbitrary URL fetching, unknown third-party API, address tracking, public hosting, or hosted checkout has been enabled.
+
+`test_aerial_sources.py` and `test_aerial_ui.py` test the federal-source client and the private browser flow using fake providers. **Real provider connectivity from the Evercraft operator host still requires live acceptance.** See [FEDERAL-IMAGERY.md](./FEDERAL-IMAGERY.md) for provider contracts, privacy and verification boundaries.
