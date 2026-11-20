@@ -15,7 +15,8 @@ permissions:
 
 jobs:
   encrypted-handoff:
-    runs-on: ubuntu-latest
+    # Match the supported, successfully exercised Forge LTS image.
+    runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
