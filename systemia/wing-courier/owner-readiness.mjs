@@ -84,7 +84,11 @@ export function observeOwnerReadiness({
    'SEPARATE_AUTHENTICATED_COURIER_INBOX_CANARY',
   localPrivatePathsPublished:false,
   tokensReadByThisTool:false,
-  signingKeysReadByThisTool:false,
+  // When --config is supplied, canonical local preflight parses private
+  // signing/decryption keys in memory to validate their *type*; it never
+  // includes the bytes or paths in this public-safe output.
+  signingKeysReadByThisTool:configPath!==undefined&&configPath!==null,
+  signingKeysPublished:false,
   outboundNetworkRequested:false,
   serviceMutationPerformed:false,
   customerFilesMoved:false,
