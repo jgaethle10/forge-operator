@@ -6,7 +6,7 @@ class QueueHTTPTest(WorkflowTest):
         status,s=self.api('/sites','POST',{'address':'100 Queue Drive','name':'Queue test'})
         self.assertEqual(status,201)
         _,sc=self.api(f'/sites/{s["id"]}/scenarios','POST',{'sc_name':'EV baseline','chargers':2})
-        _,order=self.api(f'/sites/{s["id"]}/orders','POST',{'scenario_id':sc['id'],'scope':'Preliminary EV plan','requested_by':'Owner'})
+        _,order=self.api(f'/sites/{s["id"]}/orders','POST',{'scenario_id':sc['id'],'scope':'Preliminary EV plan','requested_by':'Owner','order_kind':'internal_planning'})
         code,queue=self.api('/engineering/queue')
         self.assertEqual(code,200)
         self.assertTrue(any(x['order_id']==order['id'] and x['status']=='queued' for x in queue))
