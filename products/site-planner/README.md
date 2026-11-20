@@ -247,3 +247,15 @@ The tool exports `Evercraft-Site-Concept-Evidence.json` with source filenames an
 Replacing the site aerial clears all overlays and measurements to prevent cross-property carryover; switching tools cancels an unfinished calibration. The editor remains **private and local**; no customer-facing claims of engineering validity, sales, paid orders or Systemia dispatch. See `CALIBRATION.md` for limitations and tests.
 
 `test_calibration.py` adds a Node VM regression test. The complete local v2.0 suite contains 22 tests.
+
+## v2.1: offline, source-bound project save and restore
+
+The Kennedy editor has **Save editable project** and **Restore project JSON** controls. The saved JSON contains project labels, conceptual placements and optional operator reference calibration. It intentionally excludes aerial image pixels, payment data and customer entitlements.
+
+To reopen a draft, first upload **the same original site image and vicinity image**. The editor requires SHA-256 fingerprints of those files and validates them against the draft; file names alone are not proof. Restoration is refused when the source bytes, context imagery, reference baseline, placement geometry or status flags are incompatible. Rejected files cannot change the active drawing.
+
+Drafts are plain, human-inspectable JSON with a fixed schema and limits on marks and file size. They are **not** encrypted, electronically signed, cloud-synchronized, georeferenced, verified surveying documents or guaranteed recoverable backups. Keep source imagery and saved JSON privately, and do not include confidential site data in public issue attachments. No remote tracking, Base44 runtime, or automatic field approvals are used.
+
+The standalone editor loads `plan-drafts.js` relative to `plan-studio.html`; the private loopback server serves the script from `/plan-drafts.js` behind the same operator authorization check. The `test_plan_drafts.py` regression tests verify the private route, successful round-trip, source mismatch, malformed placement, tampered certification, reference recalibration and no partial writes.
+
+The local v2.1 suite has **24 passing tests**. Site Planner commercial orders remain held, and neither Stripe checkout link is enabled.
