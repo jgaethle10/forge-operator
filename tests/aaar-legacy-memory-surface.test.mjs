@@ -43,3 +43,10 @@ test('preview never claims a customer or verified fitment',()=>{
   assert.match(example,/No actual customer equipment was examined/i);
   assert.match(example,/no installation or safety-critical compatibility is claimed/i);
 });
+
+test('PCU 20 update-media minimums stay distinct from CCU ceiling',()=>{
+  assert.match(example,/Different subsystem, different rule/);
+  assert.match(example,/2004 PCU 20 HMI upgrade instructions/);
+  assert.match(example,/minimum<\/strong> CF capacities of 16 MB for an 8 MB update image and 32 MB for a 16 MB image/);
+  assert.match(example,/do <strong>not<\/strong> establish that any particular larger CF card works/);
+});
