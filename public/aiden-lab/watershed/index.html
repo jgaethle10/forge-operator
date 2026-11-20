@@ -63,6 +63,15 @@ footer{margin-top:24px;color:#a6c4cf;font-size:12px;line-height:1.7}
 @media(max-width:920px){.layout,.below{grid-template-columns:1fr}.sidebar{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}.sidebar h2,.sidebar .hint,.preset-heading{grid-column:1/-1}.scene{order:0}.sidebar{order:1}}
 @media(max-width:580px){.sidebar{display:flex}.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.mission-grid{grid-template-columns:1fr}#landscape{height:330px}.scene-head,.scene-footer{padding:11px 13px}.metric{padding:13px}h1{font-size:44px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+.sculpt-bar{display:flex;align-items:center;flex-wrap:wrap;gap:8px;padding:12px 15px;background:#092b39;border-top:1px solid #32596c}
+.sculpt-bar span{font-size:12px;color:#c4dfe6;flex:1 1 180px}
+.sculpt-bar button{padding:9px 12px;border-radius:10px;min-height:44px;background:#163f4b;color:#eaf8f4;border:1px solid #5c8a8e;font:800 12px/1.4 system-ui}
+.sculpt-bar button[aria-pressed=true]{background:#c3f9dc;color:#073837}
+.sculpt-bar button:disabled{opacity:.43;cursor:not-allowed}
+.sculpt-bar .altitude{font-size:12px;font-weight:900;color:#d4f8d9;min-width:80px;text-align:center;font-variant-numeric:tabular-nums}
+#landscape[data-sculpt=true]{touch-action:none;cursor:ns-resize}
+.zone-list button{min-height:44px}
+@media(max-width:580px){.sculpt-bar span{flex-basis:100%}.sculpt-bar .altitude{min-width:72px}}
 </style>
 </head>
 <body>
@@ -70,16 +79,24 @@ footer{margin-top:24px;color:#a6c4cf;font-size:12px;line-height:1.7}
 <main class="wrap">
 <p class="eyebrow">ENTER THE SCIENCE CENTER / EXHIBIT 04</p>
 <h1>Make a mountain.<br><em>Follow every drop.</em></h1>
-<p class="lede">Build a tiny watershed, send rain or snow across five elevations, change the forest and slope, and watch the river respond. Every drop in this <strong>simplified teaching model</strong> is accounted for.</p>
+<p class="lede">Build a tiny watershed, sculpt five elevations, send rain or snow across the mountains, change the forest and slope, and watch the river respond. Every drop in this <strong>simplified teaching model</strong> is accounted for.</p>
 <div class="layout">
 <section class="scene" aria-label="Illustrated watershed simulation">
  <div class="scene-head"><b>💧 THE LIVING WATERSHED</b><span id="dayLabel">DAY 0 · Ready to explore</span></div>
  <canvas id="landscape" role="img" aria-label="Illustrated side view of five mountain-to-valley watershed zones. Use the zone buttons below for an accessible readout of water stored in each zone."></canvas>
  <div class="zone-list" id="zoneList" aria-label="Inspect a watershed zone"></div>
+ <div class="sculpt-bar" aria-label="Sculpt mountain elevation">
+  <button type="button" id="sculptMode" aria-pressed="false">✦ Sculpt terrain: off</button>
+  <span>Choose a zone, then raise or lower it. Turn on sculpting to drag a ridge vertically.</span>
+  <button type="button" id="lowerZone" aria-label="Lower selected zone elevation by 100 meters">− 100 m</button>
+  <strong id="selectedElevation" class="altitude">1050 m</strong>
+  <button type="button" id="raiseZone" aria-label="Raise selected zone elevation by 100 meters">+ 100 m</button>
+  <button type="button" id="restoreMountains">Restore ridges</button>
+ </div>
  <div class="zone-info" id="zoneInfo" aria-live="polite">Tap a landscape zone or choose a named zone to inspect its water storage.</div>
  <div class="scene-footer">
   <span id="sceneStatus">Run one day to watch the water move.</span>
-  <div class="toolbar"><button type="button" id="step">Advance 1 day</button><button type="button" id="play">▶ Play days</button><button type="button" id="reset" class="secondary">Reset</button></div>
+  <div class="toolbar"><button type="button" id="step">Advance 1 day</button><button type="button" id="play">▶ Play days</button><button type="button" id="reset" class="secondary">Reset water stores</button></div>
  </div>
 </section>
 <aside class="sidebar" aria-label="Watershed controls">
@@ -116,12 +133,13 @@ footer{margin-top:24px;color:#a6c4cf;font-size:12px;line-height:1.7}
   <p><strong>Snow:</strong> At below-freezing zone temperatures, precipitation is stored as snow-water equivalent. Warmer temperatures melt existing snow.</p>
   <p><strong>Soil:</strong> Liquid water infiltrates until the simplified infiltration rate or soil capacity is reached. Vegetation raises both in this model.</p>
   <p><strong>River:</strong> Excess surface water reaches the river quickly. Groundwater releases more slowly. Plants and warm air remove some soil water as evaporation and transpiration.</p>
+  <p><strong>Altitude experiment:</strong> Drag a ridge while sculpt mode is on, or use the elevation buttons. This model lowers zone air temperature by a fixed 6.5°C per kilometer above the valley; that changes simulated rain, snowfall and thaw. The lapse rate is an illustrative assumption, not a real local measurement.</p>
   <p><strong>Reality check:</strong> Five equal-area zones, constant daily weather, fixed soil properties and no routing delays. This is a transparent learning model, not a calibrated watershed, flood prediction or official hydrology dataset.</p>
  </section>
 </div>
 <section class="compare" aria-labelledby="compareHeading">
  <span class="eyebrow">INVESTIGATION STATION · CHANGE ONE THING</span><h2 class="section-title" id="compareHeading">Test your watershed hypothesis.</h2>
- <p>Capture a seven-day Trial A. Change the forest, slope, temperature or precipitation. Run Trial B from the <strong>same starting water stores</strong> and compare total modeled river output. The model computes both trials, not a fabricated result.</p>
+ <p>Capture a seven-day Trial A. Change the elevation of a ridge, forest, slope, temperature or precipitation. Run Trial B from the <strong>same starting water stores</strong> and compare total modeled river output. The model computes both trials, not a fabricated result.</p>
  <div class="toolbar"><button type="button" id="captureA">Capture Trial A</button><button type="button" id="compareB" disabled>Compare with Trial B</button><button type="button" id="clearCompare" class="secondary">Clear comparison</button></div>
  <p class="compare-readout" id="compareResult" role="status" aria-live="polite">Begin by capturing seven days with the current controls. Then change one or more inputs and compare.</p>
 </section>
@@ -153,8 +171,8 @@ const PRESETS={
 const cap=x=>Math.max(0,x),clamp=(x,a,b)=>Math.min(b,Math.max(a,x));
 const fmt=x=>Number(x.toFixed(1)).toFixed(1);
 function params(){return {rain:Number($('rain').value),temp:Number($('temp').value),forest:Number($('forest').value),slope:Number($('slope').value)}}
-function makeWatershed(initial='temperate'){
- const cells=ELEVATIONS.map((e,i)=>({
+function makeWatershed(initial='temperate',mountains=ELEVATIONS){
+ const cells=mountains.map((e,i)=>({
   elevation:e,
   soil:initial==='drought'?9:initial==='winter'?55:42,
   groundwater:initial==='drought'?6:24,
@@ -209,11 +227,12 @@ function stepWatershed(state,p){
  if(state.history.length>24)state.history.shift();
  return reading;
 }
-function simulateScenario(p,initial='temperate',days=7){
- const state=makeWatershed(initial);
+function simulateScenario(p,initial='temperate',days=7,mountains=ELEVATIONS){
+ const state=makeWatershed(initial,mountains);
  for(let i=0;i<days;i++)stepWatershed(state,p);
  return {outflow:state.totalOutput,evaporation:state.totalEvap,storage:stores(state),state};
 }
+let elevations=[...ELEVATIONS],sculpting=false,terrainDrag=null;
 let state=makeWatershed(),initialCondition='temperate',selectedZone=2,playing=false,frame=0,last=0,accumulator=0;
 let width=800,height=440,dpr=1,currentPreset=null,trialA=null;
 const canvas=$('landscape'),ctx=canvas.getContext('2d');
@@ -225,12 +244,41 @@ function showInputs(){
 }
 function updateZone(){
  const c=state.cells[selectedZone];
+ $('selectedElevation').textContent=elevations[selectedZone]+' m';
+ $('lowerZone').disabled=elevations[selectedZone]<=elevationBounds(selectedZone)[0];
+ $('raiseZone').disabled=elevations[selectedZone]>=elevationBounds(selectedZone)[1];
  const temp=params().temp-.0065*(c.elevation-250);
  $('zoneInfo').textContent=ZONES[selectedZone]+' · '+c.elevation+' m elevation · '+fmt(temp)+'°C modeled air · Snow '+fmt(c.snow)+' mm · Soil '+fmt(c.soil)+' mm · Groundwater '+fmt(c.groundwater)+' mm';
  for(const btn of $('zoneList').querySelectorAll('button'))
   btn.setAttribute('aria-pressed',String(Number(btn.dataset.zone)===selectedZone));
 }
-function terrain(i){const s=params().slope;return .26+i*s*.017+Math.sin(i*2.13)*.023}
+// Render each ridge from the actual model elevation; slope adds perspective.
+function terrain(i){
+ const s=params().slope;
+ return clamp(.77-(elevations[i]-250)/1500*.47+(i-2)*(s-5)*.015,-.07,.87);
+}
+// Adjacent ridges stay ordered from mountain to valley.
+function elevationBounds(i){
+ return [i===elevations.length-1?150:elevations[i+1]+100,
+   i===0?3000:elevations[i-1]-100];
+}
+function sculptElevation(i,m){
+ if(i<0||i>=elevations.length)return;
+ const [low,high]=elevationBounds(i);
+ const next=clamp(Math.round(m/25)*25,low,high);
+ if(next===elevations[i])return;
+ stop();
+ selectedZone=i;
+ elevations[i]=next;state.cells[i].elevation=next;
+ currentPreset=null;
+ for(const button of document.querySelectorAll('[data-preset]'))button.setAttribute('aria-pressed','false');
+ refresh();
+}
+function restoreMountains(){
+ stop();elevations=[...ELEVATIONS];
+ for(let i=0;i<state.cells.length;i++)state.cells[i].elevation=elevations[i];
+ refresh();
+}
 function dot(x,y,r,color){ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fillStyle=color;ctx.fill()}
 function drawLandscape(){
  const w=width,h=height,p=params();
@@ -265,6 +313,12 @@ function drawLandscape(){
    ctx.beginPath();ctx.moveTo(x-w*.057,y+h*.022);ctx.lineTo(x,y-h*.027-snowAmount*16);ctx.lineTo(x+w*.053,y+h*.025);ctx.closePath();
    ctx.fillStyle='rgba(234,252,255,'+(.26+snowAmount*.7)+')';ctx.fill();
   }
+  // Altitude readouts are model parameters, not decorative measurements.
+  ctx.font='700 11px system-ui';ctx.textAlign='center';
+  const label=Math.round(elevations[i])+' m',labelWidth=ctx.measureText(label).width;
+  ctx.fillStyle='rgba(3,30,48,.75)';
+  ctx.fillRect(x-labelWidth/2-6,y-63,labelWidth+12,20);
+  ctx.fillStyle='#eaf9ed';ctx.fillText(label,x,y-47);ctx.textAlign='start';
   const c=state.cells[i],groundY=Math.min(h*.91,y+h*.22);
   const moisture=clamp(c.soil/200,0,1);
   ctx.fillStyle='rgba(111,196,217,'+(.12+moisture*.36)+')';
@@ -289,7 +343,7 @@ function drawLandscape(){
    const x=w*(.19+c*.18),y=h*(.14+(c%2)*.043);
    ctx.fillStyle='#d8edf0d2';
    for(let j=-1;j<=1;j++){ctx.beginPath();ctx.ellipse(x+j*15,y+(j===0?-8:0),23,13,0,0,Math.PI*2);ctx.fill()}
-   const cold=p.temp-.0065*(ELEVATIONS[Math.min(c,4)]-250)<0;
+   const cold=p.temp-.0065*(elevations[Math.min(c,4)]-250)<0;
    for(let j=0;j<10;j++){
     const phase=(state.day*.16+j*.23+accumulator*.001)%1;
     const dx=x+((j*17)%50)-24,dy=y+27+phase*h*.18;
@@ -338,13 +392,14 @@ function refresh(){
  updateZone();drawLandscape();drawHydrograph();
 }
 function advance(){const next=stepWatershed(state,params());refresh();return next}
-function stop(){playing=false;last=0;accumulator=0;$('play').textContent='▶ Play days'}
+function stop(){playing=false;last=0;accumulator=0;if(frame)cancelAnimationFrame(frame);frame=0;$('play').textContent='▶ Play days'}
 function reset(initial=initialCondition){
- stop();initialCondition=initial;state=makeWatershed(initial);refresh();
+ stop();initialCondition=initial;state=makeWatershed(initial,elevations);refresh();
 }
 function choosePreset(name){
  const preset=PRESETS[name];if(!preset)return;
  for(const id of ['rain','temp','forest','slope'])setControl(id,preset[id]);
+ elevations=[...ELEVATIONS];
  currentPreset=name;showInputs();reset(preset.initial);
  for(const btn of document.querySelectorAll('[data-preset]'))btn.setAttribute('aria-pressed',String(btn.dataset.preset===name));
 }
@@ -364,9 +419,9 @@ function resize(){
 function compare(){
  if(!trialA)return;
  const next=params();
- const changed=['rain','temp','forest','slope'].some(id=>Math.abs(next[id]-trialA.settings[id])>1e-8);
- if(!changed){$('compareResult').textContent='Change at least one of the four controls before running Trial B.';return;}
- const b=simulateScenario(next,trialA.initial,7),a=trialA.result;
+ const changed=['rain','temp','forest','slope'].some(id=>Math.abs(next[id]-trialA.settings[id])>1e-8)||elevations.some((h,i)=>h!==trialA.elevations[i]);
+ if(!changed){$('compareResult').textContent='Change a control or sculpt a mountain before running Trial B.';return;}
+ const b=simulateScenario(next,trialA.initial,7,elevations),a=trialA.result;
  const diff=b.outflow-a.outflow;
  $('compareResult').textContent='Trial A: '+fmt(a.outflow)+' mm of modeled river outflow over 7 days. Trial B: '+fmt(b.outflow)+' mm. Difference B − A: '+(diff>0?'+':'')+fmt(diff)+' mm. '+(Math.abs(diff)<.1?'The modeled result was nearly unchanged.':diff>0?'Your second watershed released more water to the river.':'Your second watershed released less water to the river.')+' Both runs started with the same snow, soil and groundwater stores. Compare which inputs changed and what the model assumes.';
 }
@@ -380,8 +435,18 @@ $('play').addEventListener('click',()=>{
  playing=true;$('play').textContent='Ⅱ Pause days';last=0;accumulator=0;frame=requestAnimationFrame(renderFrame);refresh();
 });
 $('reset').addEventListener('click',()=>reset());
+$('lowerZone').addEventListener('click',()=>sculptElevation(selectedZone,elevations[selectedZone]-100));
+$('raiseZone').addEventListener('click',()=>sculptElevation(selectedZone,elevations[selectedZone]+100));
+$('restoreMountains').addEventListener('click',restoreMountains);
+$('sculptMode').addEventListener('click',()=>{
+ sculpting=!sculpting;
+ canvas.dataset.sculpt=String(sculpting);
+ $('sculptMode').setAttribute('aria-pressed',String(sculpting));
+ $('sculptMode').textContent='✦ Sculpt terrain: '+(sculpting?'on':'off');
+ updateZone();
+});
 $('captureA').addEventListener('click',()=>{
- stop();trialA={settings:params(),initial:initialCondition,result:simulateScenario(params(),initialCondition,7)};
+ stop();trialA={settings:params(),initial:initialCondition,elevations:[...elevations],result:simulateScenario(params(),initialCondition,7,elevations)};
  $('compareB').disabled=false;
  $('compareResult').textContent='Trial A captured: '+fmt(trialA.result.outflow)+' mm total modeled river output over seven days. Now change one or more controls and compare.';
 });
@@ -397,11 +462,35 @@ for(let i=0;i<ZONES.length;i++){
  const b=document.createElement('button');b.type='button';b.dataset.zone=String(i);b.textContent=ZONES[i];
  b.setAttribute('aria-pressed','false');b.addEventListener('click',()=>{selectedZone=i;refresh()});$('zoneList').append(b);
 }
-canvas.addEventListener('pointerup',e=>{
- const rect=canvas.getBoundingClientRect();const x=(e.clientX-rect.left)/rect.width;
- if(x<0||x>1)return;
- selectedZone=clamp(Math.round((x-.065)/.22),0,4);refresh();
+function zoneFromPointer(e){
+ const rect=canvas.getBoundingClientRect();
+ const fraction=(e.clientX-rect.left)/rect.width;
+ if(fraction<0||fraction>1)return null;
+ return clamp(Math.round((fraction-.065)/.22),0,4);
+}
+canvas.addEventListener('pointerdown',e=>{
+ const index=zoneFromPointer(e);
+ if(index===null)return;
+ selectedZone=index;
+ if(!sculpting){refresh();return;}
+ e.preventDefault();
+ terrainDrag={id:e.pointerId,startY:e.clientY,startElevation:elevations[index],index};
+ canvas.setPointerCapture(e.pointerId);
+ refresh();
 });
+canvas.addEventListener('pointermove',e=>{
+ if(!terrainDrag||terrainDrag.id!==e.pointerId)return;
+ const distance=e.clientY-terrainDrag.startY;
+ sculptElevation(terrainDrag.index,terrainDrag.startElevation-
+   distance/Math.max(180,canvas.getBoundingClientRect().height)*1050);
+});
+function endTerrainDrag(e){
+ if(!terrainDrag||terrainDrag.id!==e.pointerId)return;
+ terrainDrag=null;
+ if(canvas.hasPointerCapture(e.pointerId))canvas.releasePointerCapture(e.pointerId);
+}
+canvas.addEventListener('pointerup',endTerrainDrag);
+canvas.addEventListener('pointercancel',endTerrainDrag);
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&playing){stop();refresh()}});
 window.addEventListener('resize',resize,{passive:true});
 if(window.matchMedia('(prefers-reduced-motion:reduce)').matches)stop();

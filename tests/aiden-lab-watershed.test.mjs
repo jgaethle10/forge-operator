@@ -97,8 +97,47 @@ test('the experiment controls and scenario comparison are real parameter-driven 
   assert.ok(js.includes('function '+method+'('),method);
  }
  assert.match(js,/const changed=\['rain','temp','forest','slope'\]/);
- assert.match(js,/simulateScenario\(next,trialA\.initial,7\)/);
- assert.match(js,/simulateScenario\(params\(\),initialCondition,7\)/);
+ assert.match(js,/simulateScenario\(next,trialA\.initial,7,elevations\)/);
+ assert.match(js,/simulateScenario\(params\(\),initialCondition,7,elevations\)/);
  assert.match(js,/if\(!changed\)/);
  assert.match(js,/stop\(\);advance\(\)/);
+});
+
+
+test('terrain sculpting actually changes zone elevation, air temperature and snow phase',()=>{
+ const {makeWatershed,stepWatershed,simulateScenario,ELEVATIONS}=getHydrology();
+ const low=makeWatershed('temperate');
+ const heights=[2700,2100,1500,650,250];
+ const high=makeWatershed('temperate',heights);
+ assert.equal(high.cells[0].elevation,2700);
+ assert.equal(low.cells[0].elevation,1750);
+ const inputs={rain:30,temp:8,forest:65,slope:5};
+ const a=stepWatershed(low,inputs),b=stepWatershed(high,inputs);
+ assert.ok(b.precipSnow>a.precipSnow,'raised ridges must create more snowfall for this fixed valley temperature');
+ assert.ok(Math.abs(a.residual)<1e-9&&Math.abs(b.residual)<1e-9,'water budget remains closed');
+ const original=simulateScenario(inputs,'temperate',7,ELEVATIONS);
+ const changed=simulateScenario(inputs,'temperate',7,heights);
+ assert.notEqual(changed.outflow,original.outflow,'elevation must alter modeled river response, not only the illustration');
+ assert.equal(simulateScenario(inputs,'temperate',7,heights).outflow,changed.outflow,'sculpted terrain must be reproducible');
+});
+test('terrain interaction supports touch, accessible buttons, bounded relief and proper trial alignment',()=>{
+ for(const id of ['sculptMode','lowerZone','raiseZone','restoreMountains','selectedElevation']){
+  assert.match(html,new RegExp('id="'+id+'"'),id);
+ }
+ for(const fragment of ['function elevationBounds(i)','function sculptElevation(i,m)',
+  'function restoreMountains()','function zoneFromPointer(e)',
+  "canvas.addEventListener('pointerdown'","canvas.addEventListener('pointermove'",
+  "canvas.setPointerCapture(e.pointerId)","canvas.releasePointerCapture(e.pointerId)",
+  'state.cells[i].elevation=next','terrainDrag','elevations:[...elevations]',
+  "canvas.dataset.sculpt=String(sculpting)","cancelAnimationFrame(frame)"]){
+  assert.ok(js.includes(fragment),fragment);
+ }
+ assert.match(html,/#landscape\[data-sculpt=true\]\{touch-action:none/);
+ assert.match(js,/elevations\.some\(\(h,i\)=>h!==trialA\.elevations\[i\]\)/);
+ assert.match(js,/const b=simulateScenario\(next,trialA\.initial,7,elevations\)/);
+ assert.match(js,/function makeWatershed\(initial='temperate',mountains=ELEVATIONS\)/);
+ assert.match(js,/const cells=mountains\.map/);
+ assert.match(html,/Reset water stores/);
+ assert.match(html,/Restore ridges/);
+ assert.doesNotMatch(js,/\bfetch\s*\(|XMLHttpRequest|WebSocket|sendBeacon|navigator\.geolocation|localStorage/);
 });
