@@ -78,3 +78,17 @@ Challenging evidence is preserved and forces explicit editorial treatment. It is
 TOWI does not scrape headlines as its truth layer. It consumes Systemia Radar editions. Radar now includes official USGS earthquake observations, NOAA space-weather alerts, NOAA/NWS active hazards, and NASA EONET open-event discovery. NASA EONET is explicitly an event-discovery source, not independent corroboration by itself.
 
 Additional Worldstate/Sentinel feeds can enter the same evidence pipeline without changing TOWI's publication rules.
+
+
+## Current supported private runtime mount (November 20, 2026)
+
+`systemia/towi/private-http.mjs` registers private owner-only paths in the existing Forge Express server, reusing the resident from this directory and the *actual in-process Radar resident*. The server source registers these routes, but no live Fabric deployment or owner-host activation is asserted by a GitHub merge.
+
+- `GET /api/internal/towi/health`: authenticated resident evidence.
+- `GET /api/internal/towi/dossiers`: authenticated working dossiers.
+- `GET /api/internal/towi/production-candidates`: authenticated downstream draft packet seeds, **not approval to publish**.
+- `POST /api/internal/towi/run`: authenticated one-cycle run, only with the in-process Radar edition, ignoring any caller-provided research object.
+
+All four require `Authorization: Bearer <TOWI_INTERNAL_TOKEN>` with a strong 32-256 character URL-safe token. Without it the routes return 503/401 and the resident cannot auto-start. Owner-host service auto-start is **opt-in only**, requiring both an authenticated private token and `TOWI_RESIDENT_ENABLED=true`. It never starts solely because the Forge app runs in production. Keep the token inside the existing private owner-managed secrets system; do not commit, paste, print or email it.
+
+A restored kernel does **not** independently scrape original research records, validate source-ownership at a laboratory standard, store an institutional outreach ledger, contact institutions, or publish. Its current candidate scores require actual independent review and a properly verified Systemia -> Harbor handoff. The previous PR #735's public `/towi/` pages and public case APIs are **not enabled**, because raw working dossiers are not public-release-safe. An authorized operator must independently verify the live service, source custody, required environment and actual resident cycle before marking it operating.
