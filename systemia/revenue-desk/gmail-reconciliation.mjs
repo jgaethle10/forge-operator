@@ -92,7 +92,16 @@ export function reconcileGmailOutreach({
   const a=byThread.get(m.thread_id)||[];
   a.push(m);byThread.set(m.thread_id,a);
  }
- const keyedProspects=[],usedKeys=new Set();
+ const groupedOpportunityLastSend=new Map();
+ for(const p of prospects){
+  const prospectId=clean(p?.prospect_key);
+  const email=canonicalEmail(p?.business_email);
+  if(!prospectId||!email)continue;
+  const sent=addressed.get(digest(hmacKey,email));
+  if(sent&&(!groupedOpportunityLastSend.get(prospectId)||groupedOpportunityLastSend.get(prospectId).time<sent.time))
+    groupedOpportunityLastSend.set(prospectId,sent);
+ }
+ const keyedProspects=[],usedKeys=new Set(),usedContacts=new Set(),usedOpportunities=new Set();
  for(const p of prospects){
   const prospectKey=clean(p?.prospect_key);
   const email=canonicalEmail(p?.business_email);
@@ -103,7 +112,7 @@ export function reconcileGmailOutreach({
   const composite=prospectKey+'|'+emailKey;
   if(usedKeys.has(composite))continue;
   usedKeys.add(composite);
-  const latest=addressed.get(emailKey)||null;
+  const latest=addressed.get(emailKey)||groupedOpportunityLastSend.get(prospectKey)||null;
   const status=BLOCK_STATES.has(p.contact_state)?p.contact_state:clean(p.contact_state)||'unknown';
   const stage=VALID_STAGES.has(p.stage)?p.stage:'researched';
   const inbound=mail.filter(m=>m.direction==='inbound'&&m.sender_key===emailKey&&!m.is_auto_reply&&!m.is_bounce);
@@ -112,6 +121,10 @@ export function reconcileGmailOutreach({
   const priorContact=Boolean(latest);
   const suppressed=BLOCK_STATES.has(status)||p.opted_out===true;
   const reasons=[];
+  if(usedContacts.has(emailKey))reasons.push('duplicate_contact_across_agents');
+  if(usedOpportunities.has(prospectKey))reasons.push('duplicate_opportunity_across_agents');
+  usedContacts.add(emailKey);
+  usedOpportunities.add(prospectKey);
   if(suppressed)reasons.push('suppressed_or_customer_hold');
   if(priorContact)reasons.push('prior_contact_reconcile_before_new_outreach');
   if(cooldown)reasons.push('cooldown_active');
