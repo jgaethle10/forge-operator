@@ -1,5 +1,5 @@
 {
-  "schema": "evercraft.harbor.gravity-flywheel-plan.v1",
+  "schema": "evercraft.harbor.gravity-flywheel-plan.v2",
   "mission": "gravity-flywheel-cadence-20261119",
   "date_pacific": "2026-11-19",
   "state": "PROPOSED_NOT_SENT_NOT_SCHEDULED",
@@ -35,7 +35,10 @@
     "network_primary_posts_target_per_7_days": 7,
     "additional_distinct_posts_max_per_7_days": 5,
     "friday_week_in_motion": "ONLY_IF_VERIFIED_FOOTAGE_APPROVALS_AND_JOURNAL_ACCESS",
-    "new_scheduler_requested": false
+    "new_scheduler_requested": false,
+    "breaking_news_posts_cap": "NO_ARTIFICIAL_QUOTA; case-by-case verified news significance and per-Page cool-down",
+    "continuous_scout_intent": true,
+    "continuous_scout_verified_live": false
   },
   "formats": {
     "facebook": "Original Page posts through verified existing provider route with ID/readback",
@@ -173,5 +176,88 @@
     "harbor_ack_received": false,
     "provider_receipts": [],
     "customer_payments_attributable_to_plan": 0
+  },
+  "revision_note": "Founder added global breaking/discovery and media-first coverage plus relevant Journal-deep-dive first-comment linking; editorial amendment supersedes routine-post caps for independently verified breaking events.",
+  "live_news_desk": {
+    "mission": "Source-grounded global relevant breaking news, entertainment, viral original moments and useful discoveries matched to exactly appropriate properties",
+    "workflow": [
+      "public_source_discovery",
+      "source_provenance_and_time",
+      "substantive_page_match",
+      "editorial_verification",
+      "media_rights_and_native_share_preflight",
+      "journal_story_link_or_queue",
+      "approved_exact_post_and_page_id",
+      "provider_public_readback",
+      "first_comment_journal_link_when_live_and_authorized",
+      "corrections_updates_attribution"
+    ],
+    "journal_default": "RELEVANT_LIVE_ARTICLE_LINK_IN_FIRST_COMMENT_WHEN_COMMENT_ROUTE_VERIFIED",
+    "journal_missing": "ORIGINAL_SOURCE_LINK_AND_JOURNAL_PENDING; no fabricated or retired-domain link",
+    "journal_live": "VERIFY_CANONICAL_OWNED_URL_AND_RELATED_CONTENT",
+    "journal_programs": [
+      "Verified global Journal desk",
+      "TOWI",
+      "Rockies",
+      "Week in Motion"
+    ],
+    "media_priority": [
+      "authentic_Evercraft_original_or_licensed",
+      "verified_native_share_embed_original_creator",
+      "verified_rights_cleared_licensed_media",
+      "original_fact_based_diagram_or_reconstruction_labeled",
+      "source_backed_text_when_no_safe_media"
+    ],
+    "misinformation_rule": "Primary credible evidence or independent corroboration; explicit attribution and uncertainty; sensitive unverified material held",
+    "timekeeping": [
+      "event_time_utc",
+      "observed_time_utc",
+      "verified_time_utc",
+      "published_time_utc",
+      "journal_updated_time_utc",
+      "first_comment_verified_time_utc"
+    ],
+    "beats": [
+      "global_and_science",
+      "aviation_and_aerospace",
+      "sports",
+      "manufacturing_and_machines",
+      "AI_and_autonomy",
+      "telecommunications",
+      "local_and_community",
+      "education",
+      "defensive_security",
+      "public_records",
+      "history"
+    ],
+    "property_constraints": {
+      "frozen": [
+        "Little Red Writing Press"
+      ],
+      "held": [
+        "Evercraft Transparency Atlas to Black Box"
+      ],
+      "excluded": [
+        "R&B Chicken & Soul",
+        "Space Dudz"
+      ],
+      "evercraft_network_meaning": "sovereign communications not social media network",
+      "journal_status": "GATED_UNTIL_VERIFIED_LIVE_CANONICAL_ORIGIN_AND_EDITORIAL_APPROVAL",
+      "comment_automation_status": "UNVERIFIED_SEPARATE_PROVIDER_PERMISSION_AND_EXACT_APPROVAL_REQUIRED"
+    },
+    "publication_state": "NOT_ACTIVATED_NO_HARBOR_ACK",
+    "metric_targets": {
+      "media_search_attempt_rate": "100% of editorial candidate packets",
+      "rights_clean_media_majority": "aspirational",
+      "first_comment_link_rate": "report live relevant Journal link eligible denominator, not invented",
+      "source_and_correction_compliance": "must pass preflight"
+    },
+    "provider_receipts": []
+  },
+  "publishing_truth": {
+    "sourced_publication_receipts_generated_by_plan": 0,
+    "comment_receipts_generated_by_plan": 0,
+    "journal_pages_generated_by_plan": 0,
+    "schedules_created_by_plan": 0
   }
 }
