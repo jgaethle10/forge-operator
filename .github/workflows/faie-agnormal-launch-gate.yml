@@ -16,6 +16,10 @@ on:
       - 'scripts/faie-fema-flood-live-acceptance.mjs'
       - 'scripts/faie-nfip-wa-live-acceptance.mjs'
       - 'scripts/faie-land-history-live-acceptance.mjs'
+      - 'scripts/provision-faie-owned-history.mjs'
+      - 'scripts/update-fabric-owned-edge.sh'
+      - 'scripts/install-fabric-owned-edge.sh'
+      - 'tests/faie-owned-history-provisioning.test.mjs'
       - '.github/workflows/faie-agnormal-launch-gate.yml'
       - 'tests/faie-agnormal-external-canary-contract.test.mjs'
   workflow_dispatch:
@@ -123,6 +127,9 @@ jobs:
 
       - name: Verify partner product end to end on owned HTTPS
         id: partner
+        # Keep independent source receipts visible even when an earlier UI or source gate fails.
+        # GitHub outcome remains failure; the terminal composite gate fails the workflow.
+        continue-on-error: true
         shell: bash
         run: |
           set -euo pipefail
@@ -155,6 +162,9 @@ jobs:
 
       - name: Test partner journey in a real browser
         id: browser
+        # Keep independent source receipts visible even when an earlier UI or source gate fails.
+        # GitHub outcome remains failure; the terminal composite gate fails the workflow.
+        continue-on-error: true
         shell: bash
         run: |
           set -euo pipefail
@@ -164,6 +174,9 @@ jobs:
 
       - name: Verify official USDA site-soil preview from public edge
         id: soil
+        # Keep independent source receipts visible even when an earlier UI or source gate fails.
+        # GitHub outcome remains failure; the terminal composite gate fails the workflow.
+        continue-on-error: true
         shell: bash
         run: |
           set -euo pipefail
@@ -191,6 +204,9 @@ jobs:
 
       - name: Verify actual USDA + NWS point intelligence in live FAIE
         id: site_scan
+        # Keep independent source receipts visible even when an earlier UI or source gate fails.
+        # GitHub outcome remains failure; the terminal composite gate fails the workflow.
+        continue-on-error: true
         shell: bash
         run: |
           set -euo pipefail
@@ -218,6 +234,9 @@ jobs:
 
       - name: Verify official NOAA historical station observations on the public edge
         id: climate_history
+        # Keep independent source receipts visible even when an earlier UI or source gate fails.
+        # GitHub outcome remains failure; the terminal composite gate fails the workflow.
+        continue-on-error: true
         shell: bash
         run: |
           set -euo pipefail
@@ -245,6 +264,9 @@ jobs:
 
       - name: Verify owned historical preservation and public regional timeline
         id: land_history
+        # Keep independent source receipts visible even when an earlier UI or source gate fails.
+        # GitHub outcome remains failure; the terminal composite gate fails the workflow.
+        continue-on-error: true
         shell: bash
         run: |
           set -euo pipefail
@@ -272,6 +294,9 @@ jobs:
 
       - name: Verify FEMA effective flood hazard and FIRM panel from owned public edge
         id: fema_flood
+        # Keep independent source receipts visible even when an earlier UI or source gate fails.
+        # GitHub outcome remains failure; the terminal composite gate fails the workflow.
+        continue-on-error: true
         shell: bash
         run: |
           set -euo pipefail
@@ -299,6 +324,9 @@ jobs:
 
       - name: Verify actual FEMA NFIP Washington statewide historical claim aggregate from owned edge
         id: nfip_area
+        # Keep independent source receipts visible even when an earlier UI or source gate fails.
+        # GitHub outcome remains failure; the terminal composite gate fails the workflow.
+        continue-on-error: true
         shell: bash
         run: |
           set -euo pipefail
@@ -355,3 +383,33 @@ jobs:
             artifacts/faie-nfip-wa-live-acceptance.json
           if-no-files-found: error
           retention-days: 90
+
+      - name: Enforce complete FAIE public launch verification
+        if: always()
+        env:
+          VERIFY_OUTCOME: ${{ steps.verify.outcome }}
+          PARTNER_OUTCOME: ${{ steps.partner.outcome }}
+          BROWSER_OUTCOME: ${{ steps.browser.outcome }}
+          SOIL_OUTCOME: ${{ steps.soil.outcome }}
+          SITE_SCAN_OUTCOME: ${{ steps.site_scan.outcome }}
+          CLIMATE_OUTCOME: ${{ steps.climate_history.outcome }}
+          LAND_HISTORY_OUTCOME: ${{ steps.land_history.outcome }}
+          FLOOD_OUTCOME: ${{ steps.fema_flood.outcome }}
+          NFIP_OUTCOME: ${{ steps.nfip_area.outcome }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          failed=()
+          for stage in VERIFY PARTNER BROWSER SOIL SITE_SCAN CLIMATE LAND_HISTORY FLOOD NFIP; do
+            key="${stage}_OUTCOME"
+            outcome="${!key:-missing}"
+            if [ "$outcome" != "success" ]; then
+              failed+=("$stage=$outcome")
+            fi
+          done
+          if [ "${#failed[@]}" -ne 0 ]; then
+            printf 'FAIE public launch remains HELD; source stages that did not pass: %s\n' "${failed[*]}" >&2
+            exit 1
+          fi
+          echo 'FAIE all independent launch stages passed.'
+
