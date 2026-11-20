@@ -10,6 +10,7 @@ import { bootstrapPrivateOrigin } from '../core/bootstrap/private-origin.mjs';
 import { KaidanceRuntime, startKaidanceHealthService } from '../collider/runtime.mjs';
 import { createNodeAttestation } from './device-identity.mjs';
 import { SystemiaCoreResidentSupervisor } from '../core/resident-supervisor.mjs';
+import { resolveLeilandCoreBindings } from '../leiland/core-admission.mjs';
 import { runRegisteredAssignment } from '../saban/registered-worker.mjs';
 import { startChumPublicOrigin } from '../chum/public-origin-runtime.mjs';
 import { startOutboundCapacityBroker } from '../network/outbound-capacity-broker.mjs';
@@ -2897,6 +2898,25 @@ export async function startEvercraftComputeNode({
             return send(res, 422, { error: 'core_clip_facebook_credential_ref_invalid' });
           }
 
+          // An admitted Core service may opt into the already-registered
+          // Leiland resident, but only with exact, pre-provisioned workspace
+          // and source-release bindings. No binding is inherited accidentally.
+          let leilandEnv;
+          try {
+            leilandEnv = resolveLeilandCoreBindings({
+              admission: body.input?.leiland_observatory,
+              releaseRef,
+              repoRoot: CODE_ROOT,
+              workspaceRoot,
+            });
+          } catch (error) {
+            const code = String(error?.message || '');
+            return send(res, 422, {
+              error: /^leiland_[a-z_]{3,90}$/.test(code)
+                ? code : 'leiland_admission_invalid',
+            });
+          }
+
           const serviceEnv = {
             NODE_ENV: String(process.env.NODE_ENV || 'production'),
             EVERCRAFT_RELEASE_REF: releaseRef,
@@ -2969,6 +2989,7 @@ export async function startEvercraftComputeNode({
             RAVEN_PRIVATE_PORT: ravenInference.configured ? '4321' : '',
             RAVEN_INFERENCE_GATEWAY_PORT: ravenInference.configured ? '4322' : '',
             RAVEN_OLLAMA_ORIGIN: ravenInference.ollama_origin,
+            ...leilandEnv,
           };
 
           if (serviceEnv.EVERCRAFT_CLIP_EPS_INGRESS_URL) {
