@@ -2,6 +2,66 @@
 
 Aiden's Lab is Evercraft's **public science exploration front door**. It is not an alternate Systemia authority, clinical-research validation system, or separate source of truth.
 
+## Watershed Laboratory, first original landscape simulation (November 20, 2026)
+
+The next connected science-center hall is an actual **playable five-zone
+mountain-to-valley watershed**, not another static Earth article. It lives at
+`public/aiden-lab/watershed/index.html` and has its own tightly allowlisted
+owned Fabric route `/aiden-lab/watershed/`. The Earth Atlas has a visible
+door into this exhibit, and the campus home lists it with an
+`interactive_preview` status, not as recovered legacy code.
+
+What visitors can do:
+
+- Reshape the illustrated slope and forest cover, set daily precipitation and
+  valley air temperature, and inspect five named geographic zones.
+- Advance a day or play a time sequence showing illustrative clouds,
+  mountains, snowpack, river and groundwater.
+- Observe modeled river outflow, snow-water equivalent, soil and groundwater
+  stores, a 24-day hydrograph, and daily water mass-balance residual.
+- Load four reproducible experiments: mountain storm, spring thaw,
+  drought, forest recovery. Reset to known initial water stores.
+- Capture seven-day Trial A, alter at least one physical parameter and run
+  seven-day Trial B from exactly the **same** baseline store state. Compare
+  the sum of river outflow and investigate the difference.
+
+**Model contract:** Each of five equal-area elevation bands has three stores:
+snow, soil water, groundwater. Inputs are uniform daily precipitation;
+outputs are fast runoff, slow aquifer release and temperature-dependent
+soil evaporation/transpiration. Snow falls below freezing, melts above
+freezing according to an illustrative degree-day coefficient, and feeds
+soil or runoff. Infiltration has bounded daily rate and soil capacity;
+forest cover changes those classroom assumptions. Percolation transfers
+water to groundwater before slow release. Units are mm water equivalent;
+1 mm means 1 liter per square meter. A residual verifies that
+precipitation minus evaporation and river outflow equals changes in
+those three stores. Every model coefficient is a **teaching assumption**,
+not a calibrated basin characteristic. The cartoon landscape is
+illustrative, not satellite, terrain survey, official flood guidance,
+real watershed operations or a weather forecast.
+
+**Technical boundaries:** pure device-side computations and canvas drawing;
+no third-party runtime, remote API, login, child profiles, analytics,
+session storage or network requests. Evidence links explain background
+hydrologic principles (USGS and NOAA), but do not independently validate
+the values predicted by this model.
+
+**Release proof:** Adding this room increases the fail-closed resident and
+independent public checks from ten to **eleven** source-identical assets.
+The new HTTP route must have the
+`x-evercraft-learning-world: watershed-water-balance-v1` marker and strict
+CSP hashes for the reviewed inline script/styles. Read-only diagnosis
+must report route 404/stale markers. Merge != deployment != confirmed
+phone usability. Manual device acceptance must test five-zone selection,
+presets, time advancement, play/pause, seven-day comparison, reduced
+motion and scroll behavior.
+
+**Scientific QA:** `tests/aiden-lab-watershed.test.mjs` exercises 21
+40-day scenarios (840 idealized model days), proves per-day and
+whole-run mass conservation, nonnegative stores, snowmelt and snowfall,
+forest-vs-bare comparison and deterministic seven-day replay, alongside
+source privacy and UX contracts.
+
 ## The science museum floor (November 20, 2026)
 
 Aiden's Lab should feel like visiting a science center on a phone or laptop,
