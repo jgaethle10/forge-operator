@@ -92,7 +92,17 @@
       "confirmed_quote": false,
       "host_test_passed": false,
       "qualification_confirmed": false,
-      "commercial_contacted": false
+      "commercial_contacted": false,
+      "warranty_document_discrepancy": {
+        "state": "UNRESOLVED_PUBLIC_DOCUMENT_CONFLICT",
+        "vendor_catalog_claim_years": 3,
+        "vendor_catalog_url": "https://www.californiapc.com/Industrial-Flash-Memory/Industrial-Grade-PCMCIA-Tough-Metal-Series-2/",
+        "manufacturer_pdf_claim_years": 5,
+        "manufacturer_pdf_url": "https://californiapc.com/core/media/media.nl?c=3379633&h=2514f768f155d536786e&id=1047935",
+        "current_sku_warranty": "UNKNOWN_PENDING_VENDOR_WRITTEN_CONFIRMATION",
+        "independently_read_original_vendor_pdf": true,
+        "last_seen_date": "2026-11-19"
+      }
     }
   ],
   "claim_constraints": [
@@ -100,6 +110,7 @@
     "Supplier product specifications do not prove compatibility with a government-furnished host",
     "No product/firm has been qualified by the Air Force",
     "No supplier contacted, order placed, bid submitted, or government payment observed",
-    "A catalog 'compatibility guaranteed' statement is not F-22 compatibility evidence; the EOL product is not necessarily interchangeable with the advertised available product."
+    "A catalog 'compatibility guaranteed' statement is not F-22 compatibility evidence; the EOL product is not necessarily interchangeable with the advertised available product.",
+    "California PC FLASH series warranty: current vendor catalog states three years and vendor PDF states five years; do not infer which applies to an exact current purchase."
   ]
 }
