@@ -21,6 +21,14 @@ export function configuredProviders(env=process.env,transport=fetch){
       {model:env.BOARDROOM_ANTHROPIC_MODEL,max_tokens:maxTokens||1000,system,messages:[{role:'user',content:user}]},
       j=>(j.content||[]).filter(x=>x.type==='text').map(x=>x.text).join('\n'),transport)});
   }
+  // xAI Grok Responses API: evidence and decisions remain server-side only.
+  // store:false prevents provider-side conversation persistence where supported.
+  if(env.XAI_API_KEY&&env.BOARDROOM_XAI_MODEL){
+    providers.push({id:'xai',model:env.BOARDROOM_XAI_MODEL,respond:({system,user,maxTokens})=>
+      invoke('https://api.x.ai/v1/responses',{authorization:'Bearer '+env.XAI_API_KEY},
+      {model:env.BOARDROOM_XAI_MODEL,input:[{role:'system',content:system},{role:'user',content:user}],max_output_tokens:maxTokens||1000,store:false},
+      j=>(j.output||[]).flatMap(x=>x.type==='message'?(x.content||[]):[]).filter(x=>x.type==='output_text').map(x=>x.text||'').join('\n'),transport)});
+  }
   if(env.GOOGLE_API_KEY&&env.BOARDROOM_GOOGLE_MODEL){
     const model=encodeURIComponent(env.BOARDROOM_GOOGLE_MODEL);
     providers.push({id:'google',model:env.BOARDROOM_GOOGLE_MODEL,respond:({system,user,maxTokens})=>
