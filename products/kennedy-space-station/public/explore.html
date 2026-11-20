@@ -100,7 +100,8 @@ a{color:inherit;text-decoration:none}
 const el=id=>document.getElementById(id);
 const canvas=el('world'),ctx=canvas.getContext('2d',{alpha:false});
 if(!ctx){el('story').textContent='Your browser does not support the 2D drawing surface.';return}
-const reduced=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+const still=typeof location!=='undefined' && new URLSearchParams(location.search).has('still');
+const reduced=(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)||still;
 const TAU=Math.PI*2;
 let W=0,H=0,dpr=1,angle=-.44,zoom=1,orbit=!reduced,night=false,blueprint=false,last=0,frame=0,drag=null,pinches=new Map(),pinchDist=0;
 let chargers=4,solar=12;
@@ -248,7 +249,11 @@ function endPointer(e){pinches.delete(e.pointerId);pinchDist=0;drag=null}
 canvas.addEventListener('pointerup',endPointer);canvas.addEventListener('pointercancel',endPointer);
 canvas.addEventListener('wheel',e=>{e.preventDefault();setZoom(zoom*(e.deltaY>0?.94:1.06))},{passive:false});
 canvas.addEventListener('keydown',e=>{if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefault();orbit=false;angle+=e.key==='ArrowLeft'?-.16:.16;mode();draw()}else if(e.key==='+'||e.key==='='){setZoom(zoom+.1)}else if(e.key==='-'){setZoom(zoom-.1)}});
-let pending=false;function tick(now){if(!pending){pending=true;frame=now;if(orbit)angle+=.00155*(last?Math.min(33,now-last):16);draw();pending=false}last=now;if(!reduced)requestAnimationFrame(tick)}
+let pending=false;function tick(now){
+ if(!reduced&&last&&now-last<32){requestAnimationFrame(tick);return}
+ if(!pending){pending=true;frame=now;if(orbit)angle+=.00155*(last?Math.min(50,now-last):16);draw();pending=false}
+ last=now;if(!reduced&&!document.hidden)requestAnimationFrame(tick)
+}
 window.addEventListener('resize',resize,{passive:true});
 document.addEventListener('visibilitychange',()=>{last=0});
 metrics();mode();resize();if(!reduced)requestAnimationFrame(tick);
