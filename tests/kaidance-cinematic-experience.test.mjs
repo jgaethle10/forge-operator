@@ -102,3 +102,28 @@ test('V04 centers a flowing, explorable field rather than a lone glowing ring',(
  assert.match(app,/new CustomEvent\('kaidance:public-record'/);
  assert.equal(fs.existsSync(new URL('../public/kaidance/pulse.json',import.meta.url)),false);
 });
+
+
+test('V05 story follows the traveler and reserves true heartbeat celebration for verified data',()=>{
+ const field=read('../public/kaidance/current-field.mjs');
+ const chapters=read('../public/kaidance/field-chapters.mjs');
+ const css=read('../public/kaidance/confluence.css');
+ for(const id of ['fieldRouteFrom','fieldRouteTo','fieldRouteProgress','fieldRecordTopic']){
+  assert.ok(html.includes('id="'+id+'"'),id+' missing from screen');
+ }
+ assert.match(field,/from '\.\/field-chapters\.mjs'/);
+ assert.match(field,/function syncStory\(/);
+ assert.match(field,/chapter\.ordinal!==lastNarratedOrdinal/);
+ assert.match(field,/storyTitle\.textContent=chapter\.title/);
+ assert.match(field,/function arrivalBloom\(chapter\)/);
+ assert.match(field,/arrivalBloom\(chapter\);collisions\(\)/);
+ assert.match(field,/Not a live mission|ILLUSTRATIVE/);
+ assert.match(field,/recordFocus=found\[1\]/);
+ assert.doesNotMatch(field,/if\(found\)selection\(/);
+ assert.match(chapters,/SCENIC_LEG_SECONDS=10\.5/);
+ assert.match(chapters,/kind:'ILLUSTRATED JOURNEY'/);
+ assert.match(css,/\.field-route-track/);
+ assert.match(css,/\.field-record-topic\[hidden\]/);
+ assert.doesNotMatch(field,/fetch\(|WebSocket|EventSource|localStorage|sessionStorage/);
+ assert.equal(fs.existsSync(new URL('../public/kaidance/pulse.json',import.meta.url)),false);
+});
