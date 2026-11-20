@@ -7,6 +7,7 @@ import { ProviderCredentialVault } from '../../evercraft-home/credential-vault.m
 import { planHeartbeatAdvisories,executeAdvisory } from './heartbeat-advisory.mjs';
 import { createRavenAdvisoryInvoker } from './raven-invoker.mjs';
 import { reserveAdvisoryAttempt,loadAdvisoryHistory } from './advisory-ledger.mjs';
+import {persistPrivateAdvisory} from './private-advice-store.mjs';
 
 const asInt=v=>Number.isSafeInteger(Number(v))&&Number(v)>=0?Number(v):0;
 function arg(name,fallback=''){
@@ -56,7 +57,7 @@ export function availableAdvisers({credentialStateDir,settings={}}={}) {
  });
 }
 export async function runAdvisoryHeartbeatOnce({
- missions=[],providers=[],ledgerDir,credentialStateDir='',rollingBudgetCents=0,
+ missions=[],providers=[],ledgerDir,receiptDir='',credentialStateDir='',rollingBudgetCents=0,
  execute=false,now=new Date().toISOString(),invokeOverride=null
 }={}){
  if(!ledgerDir)throw Error('owned_advisory_ledger_required');
@@ -69,6 +70,7 @@ export async function runAdvisoryHeartbeatOnce({
  if(!execute)return {state:'dry_run',plan,results:[],provider_calls_performed:0};
  if(plan.queue.length===0)return {state:'quiet',plan,results:[],provider_calls_performed:0};
  if(budget===0) return {state:'held',plan,results:[],provider_calls_performed:0};
+ if(!receiptDir||!path.isAbsolute(receiptDir))throw Error('private_advisory_receipt_directory_required');
  const invoke=invokeOverride||createRavenAdvisoryInvoker({credentialStateDir});
  const results=[];
  for(const job of plan.queue){
@@ -78,7 +80,8 @@ export async function runAdvisoryHeartbeatOnce({
     ledgerDir,job,rolling_budget_cents:budget,now_ms:Date.parse(now)
    })
   });
-  results.push(result);
+  const saved=persistPrivateAdvisory({receiptDir,result,now});
+  results.push({...result,private_receipt_ref:saved.receipt_ref});
  }
  return {state:results.some(x=>x.state==='advisory_received')?'advisories_received':'held',
   plan,results,
@@ -87,6 +90,7 @@ export async function runAdvisoryHeartbeatOnce({
 async function main(){
  const input=arg('--packet-file',process.env.SYSTEMIA_ADVISORY_MISSION_PACKET_FILE||'');
  const ledgerDir=arg('--ledger-dir',process.env.SYSTEMIA_ADVISORY_LEDGER_DIR||'');
+ const receiptDir=arg('--receipts-dir',process.env.SYSTEMIA_ADVISORY_PRIVATE_RECEIPT_DIR||'');
  const credentialStateDir=arg('--credential-state-dir',process.env.RAVEN_PROVIDER_CREDENTIAL_STATE_DIR||'');
  const execute=arg('--execute',process.env.SYSTEMIA_ADVISORY_EXECUTE||'0')==='1';
  const packet=privateJson(input);
@@ -100,7 +104,7 @@ async function main(){
  };
  const providers=availableAdvisers({credentialStateDir,settings});
  const result=await runAdvisoryHeartbeatOnce({
-  missions:packet.missions,providers,ledgerDir,credentialStateDir,
+  missions:packet.missions,providers,ledgerDir,receiptDir,credentialStateDir,
   rollingBudgetCents:arg('--rolling-budget-cents',process.env.SYSTEMIA_ADVISORY_ROLLING_BUDGET_CENTS||'0'),
   execute
  });
