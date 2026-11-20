@@ -60,7 +60,8 @@ The public probe's final_public_launch_authorized flag intentionally remains fal
 - The server exposes GET and HEAD only, disallows unauthorized paths, and does not expose source .mjs files outside the exact approved static list.
 - No private directories, raw source pulses, mission payloads, model inference gateways, management or write endpoints are served.
 - All JSON is no-store. CSP, nosniff, no-referrer, deny-framing and permissions restrictions are present.
-- The dynamic pulse and activity feed are public-only publisher artifacts; the host does not grant them credibility simply by serving their bytes. Client and independent external readback validation remain required.
+- The dynamic pulse and activity feed are public-only publisher artifacts. **Before serving any dynamic JSON**, the host enforces the exact KAIDANCE field allowlist, schema and receipt constraints; for Leiland events it rejects fields outside the reviewed schema, unsafe evidence links and sensitive/redacted titles. Malformed/unapproved public records return HTTP 503 with no source content. Client and independent external readback validation remain additional controls.
+- Structurally valid but expired KAIDANCE pulses remain readable as historical observations and must render as **stale**, not a new successful heartbeat. Fail-closed handling does not fabricate a replacement timestamp.
 - The KAIDANCE pulse can be absent/stale without taking the static page offline. Private service health does not become a fake public heartbeat.
 - Symlinks, unknown extensions, and arbitrary file paths are denied. No directory listing.
 - For source upgrades, first run tests/QA, roll out a pinned source revision, repeat external probes, and retain a separately authorized rollback route and release receipt.
