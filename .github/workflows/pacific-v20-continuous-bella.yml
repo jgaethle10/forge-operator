@@ -1,0 +1,28 @@
+name: Pacific V20 Continuous Bella Narration
+on:
+  push:
+    branches: [studio/pacific-real-music-audition-20261115]
+    paths: [systemia/media-studio/pacific-v20-continuous-bella.py,.github/workflows/pacific-v20-continuous-bella.yml]
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  render:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 28
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq espeak-ng libsndfile1
+          python -m pip install --disable-pip-version-check 'kokoro==0.9.4' 'soundfile>=0.12,<1.0'
+      - name: Produce continuous native Bella voice takes
+        env: {HF_HUB_DISABLE_TELEMETRY: "1"}
+        run: python systemia/media-studio/pacific-v20-continuous-bella.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pacific-v20-continuous-bella-founder-review
+          path: pacific-v20-private/
+          retention-days: 7
+          if-no-files-found: error
