@@ -201,3 +201,13 @@ On Evercraft LLC's **live** Stripe account, the dedicated founding-pilot objects
 The ID-only `stripe_pilot.json` is a **read-only recorded snapshot** of Stripe objects. It carries no credentials and does not prove current link state, a customer payment, a webhook event, or a released job. The local readiness API displays this as a prepared catalog with an INACTIVE checkout and keeps `checkout_configured=false`, `payment_verification_connected=false`, and `commercial_release_allowed=false`.
 
 Do not enable the link or share it for paid intake until the pilot price/scope, tax, identity, authorized customer data, private Stripe provider-receipt verification, refunds, scope/capacity approvals, and signed Systemia dispatch are implemented and tested. The link was created separately, not by editing seven other offers.
+
+## v1.7 founding five price experiment (both checkout links inactive)
+
+Evercraft LLC live Stripe catalog, independently verified:
+- Founding Five: **$349 USD**, price `price_1UdiIw5rgRECaZMDDUwbMux8`, link `plink_1UdiJV5rgRECaZMD3URffDU5` (inactive), maximum **five completed Checkout Sessions**. This does not guarantee five distinct customers.
+- Standard: **$499 USD**, price `price_1Udhqa5rgRECaZMDsK7sstdv`, link `plink_1UdhsM5rgRECaZMDczQW5JTr` (inactive).
+- Both prices share `prod_Vf1uyMq3FiZRfB` (inactive) and the same limited, non-stamped single-property concept-plan scope.
+- Founding Five is a provisional price test: keep both links inactive pending tax review, owner-approved scope, private provider-verified settlement handling, customer authentication and Systemia receipts.
+
+`stripe_pilot.json` stores only non-secret identity and last-checked status. It is **not a Stripe webhook, authenticated account lookup, payment receipt, or fulfillment entitlement**. `GET /api/commercial/readiness` presents the recorded prices while keeping `checkout_configured=false`, `payment_verification_connected=false`, `commercial_release_allowed=false`.
