@@ -51,6 +51,9 @@ test('aggregates only state-level loss payments, with no claim detail leakage',a
   assert.equal(result.total_paid_usd,13200);
   assert.equal(result.building_paid_usd,12000);
   assert.equal(result.contents_paid_usd,1200);
+  assert.equal(result.payment_completeness,'complete');
+  assert.equal(result.known_payment_components_usd,13200);
+  assert.equal(result.payment_coverage.records_with_missing_components,0);
   assert.equal(result.geography.level,'state');
   assert.equal(result.request_persisted,false);
   assert.equal(result.decision_authority,false);
@@ -70,6 +73,29 @@ test('small cohorts suppress totals and amounts rather than disclosing individua
   assert.equal(result.claim_transactions,null);
   assert.equal(result.total_paid_usd,null);
   assert.equal(result.building_paid_usd,null);
+});
+
+test('a missing FEMA payment value is unknown, not zero or a fabricated complete total',async()=>{
+  const rows=Array.from({length:12},(_,i)=>claim(i+1));
+  rows[0].amountPaidOnContentsClaim=null;
+  rows[1].amountPaidOnBuildingClaim=undefined;
+  rows[2].amountPaidOnIncreasedCostOfComplianceClaim='';
+  const result=await collectNfipStateLossHistory({...window,fetchImpl:fakeFeed(rows).fetchImpl});
+  assert.equal(result.status,'area_aggregate_available');
+  assert.equal(result.payment_completeness,'partial');
+  assert.equal(result.payment_coverage.complete_records,9);
+  assert.equal(result.payment_coverage.records_with_missing_components,3);
+  assert.equal(result.payment_coverage.building_present_records,11);
+  assert.equal(result.payment_coverage.contents_present_records,11);
+  assert.equal(result.payment_coverage.compliance_present_records,11);
+  assert.equal(result.total_paid_usd,null);
+  assert.equal(result.building_paid_usd,null);
+  assert.equal(result.contents_paid_usd,null);
+  assert.equal(result.compliance_paid_usd,null);
+  assert.equal(result.known_payment_components_usd,12100);
+  assert.equal(result.claim_transactions,12);
+  assert.equal(result.request_persisted,false);
+  assert.equal(result.insurance_eligibility_decision,null);
 });
 
 test('source error, row outside requested scope, malformed schema, and replay fail closed',async()=>{
