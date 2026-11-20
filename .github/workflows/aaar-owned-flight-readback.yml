@@ -11,6 +11,7 @@ on:
       - "tests/aaar-public-readback.test.mjs"
       - "scripts/probe-aaar-mobile-cockpit-source.mjs"
       - "tests/aaar-flight-static.test.mjs"
+      - "tests/aaar-seattle-ground-ops.test.mjs"
       - ".github/workflows/aaar-owned-flight-readback.yml"
   push:
     branches: [main]
@@ -31,7 +32,7 @@ jobs:
         with:
           node-version: "22"
       - name: Pure Node release probe contract tests
-        run: node --test tests/aaar-public-readback.test.mjs tests/aaar-flight-static.test.mjs
+        run: node --test tests/aaar-public-readback.test.mjs tests/aaar-flight-static.test.mjs tests/aaar-seattle-ground-ops.test.mjs
       - name: Read-only external verification from GitHub network
         id: probe
         shell: bash
