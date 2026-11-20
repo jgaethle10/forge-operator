@@ -97,6 +97,9 @@ jobs:
       - name: FAIE official FEMA hazard and panel source privacy tests
         run: node --test systemia/faie/fema-flood-point.test.mjs systemia/mcp/fabric-faie-flood-preview.test.mjs
 
+      - name: FAIE NFIP v3 state aggregate source, disclosure and completeness tests
+        run: node --test systemia/faie/nfip-claims-v3.test.mjs
+
       - name: FAIE Saban swarm proof
         run: npm run proof:saban-faie
 
