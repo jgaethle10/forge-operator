@@ -1,6 +1,9 @@
 name: AAAR owned flight readback (non-deployment)
 on:
   workflow_dispatch:
+  # Read-only half-hourly check. This is CI monitoring, not server deployment.
+  schedule:
+    - cron: '17,47 * * * *'
   pull_request:
     paths:
       - "public/worlds/flight/index.html"
@@ -39,9 +42,14 @@ jobs:
           rc=$?
           cat artifacts/aaar-public-readback/receipt.json
           if test "$rc" -ne 0; then
-            echo "::warning::AAAR owned HTTPS route not independently verified; source commit is NOT evidence of iPhone availability."
+            echo "::warning::AAAR owned HTTPS flight route is stale or unavailable; code merge is not proof of public release."
           fi
           echo "probe_exit_code=$rc" >> "$GITHUB_OUTPUT"
+          # Source PRs and immediate main pushes may precede the authorized updater.
+          # Scheduled/manual audits must fail visibly on a stale or unreachable website.
+          if test "$GITHUB_EVENT_NAME" = "schedule" || test "$GITHUB_EVENT_NAME" = "workflow_dispatch"; then
+            exit "$rc"
+          fi
           exit 0
       - name: Preserve inspection receipt
         uses: actions/upload-artifact@v4
@@ -51,6 +59,7 @@ jobs:
           path: artifacts/aaar-public-readback/receipt.json
           if-no-files-found: warn
   hosted-mobile-controls:
+    if: github.event_name != 'schedule'
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
@@ -85,6 +94,7 @@ jobs:
           path: artifacts/aaar-public-readback/mobile-controls.json
           if-no-files-found: warn
   hosted-webkit-controls:
+    if: github.event_name != 'schedule'
     runs-on: ubuntu-24.04
     # Pinned test-only browser image. No Evercraft application runs here in production.
     container:
