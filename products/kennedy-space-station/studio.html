@@ -23,7 +23,16 @@
 <div class="canvas"><svg id="drawing" viewBox="0 0 900 660" aria-label="Editable preliminary site rectangle diagram" role="img"></svg></div>
 <div class="fig"><span><strong id="dim">80 × 65 m</strong> user-entered parcel</span><span><strong id="object-count">3</strong> shapes</span><span><strong id="area">5,200 m²</strong> assumed area</span></div>
 <div class="actions"><button id="save" class="button" type="button">Save revision</button><a id="download" class="button secondary disabled" aria-disabled="true">Export saved SVG ↗</a><a id="download-pdf" class="button secondary disabled" aria-disabled="true">Download PDF sheet ↗</a><button id="reset" class="button secondary" type="button">Reset draft</button></div>
-<div id="message" class="notice" role="status">Select a site to save an immutable concept revision. This is not a permit-ready site plan.</div>
+<div id="message" class="notice" role="status">Select a site to save an immutable concept revision. This is not a permit-ready site plan.</div><div class="line"></div>
+<div class="over">PRIVATE AERIAL REVIEW · NOT FOR CLIENTS</div>
+<h2>Preview your source-linked layout</h2>
+<p class="muted">Choose two staged PNG source records from the Aerial Source Lab. Kennedy can build an <strong>internal-only, unverified S-0/A-0 review PDF</strong> from saved geometry and the exact stored bytes. It does not certify aerial rights, geographic location, north, scale, utilities or ADA compliance.</p>
+<div class="two">
+  <div class="field"><label for="review-site">Site image source</label><select id="review-site"><option value="">No site raster yet</option></select></div>
+  <div class="field"><label for="review-context">Context image source</label><select id="review-context"><option value="">No context raster yet</option></select></div>
+</div>
+<div class="actions"><button id="review-download" class="button secondary" type="button">Build private two-sheet review PDF</button><a class="button secondary" id="review-aerial-link" href="/aerial">Stage source images ↗</a></div>
+<div class="notice">OPERATOR REVIEW ONLY · Source rights and geographic alignment have not been independently verified. Never provide this draft as an engineered, permit-ready or customer-approved plan.</div>
 </section>
 <aside class="panel history-panel"><div class="over">03 / SCENE OBJECTS</div><h2>Everything in the study</h2>
 <div class="actions" style="margin-bottom:13px"><button class="button secondary" data-add="building" type="button">+ Building</button><button class="button secondary" data-add="parking" type="button">+ Parking</button><button class="button secondary" data-add="charging_bay" type="button">+ Charger</button><button class="button secondary" data-add="equipment_pad" type="button">+ Pad</button><button class="button secondary" data-add="path" type="button">+ Path</button></div>
@@ -100,7 +109,40 @@ async function loadReportContext(){
     el.textContent='Report '+x.report_id+' · SHA-256 '+x.snapshot_sha256.slice(0,16)+'… · '+(c.verified||0)+' recorded verified, '+(c.unverified||0)+' unverified, '+(c.assumption||0)+' assumptions, '+(c.other||0)+' other. Source metadata only; NO spatial accuracy, code compliance or independent field verification.';
   }catch(err){if(siteId===sid()&&reportId===$('report').value)el.textContent='Report context unavailable: '+err.message+'. Study save will require a valid same-site report.'}
 }
-async function siteChanged(){const id=sid(),s=sites.find(x=>x.id===id);$('site-meta').textContent=s?(s.name||'Project')+' · '+(s.address||'User-entered address'):'Choose a site';$('planner-link').href='/workspace?site='+encodeURIComponent(id);$('aerial-link').href='/aerial?site='+encodeURIComponent(id);model=defaultModel();selected='building-1';studyId=null;fillFields();paint();changed();$('report').replaceChildren();const empty=document.createElement('option');empty.value='';empty.textContent='No report attached';$('report').append(empty);if(!id)return;try{const detail=await api('/api/sites/'+encodeURIComponent(id));for(const r of detail.reports||[]){const o=document.createElement('option');o.value=r.id;o.textContent=r.id+' · '+r.created_at;$('report').append(o)}await loadHistory();await loadReportContext()}catch(e){show('Cannot load site: '+e.message,'error')}}
+async function loadAerialSources(){
+ const siteId=sid(),entries=[['review-site','site'],['review-context','context']];
+ for(const [element,role] of entries){const select=$(element);select.replaceChildren();const o=document.createElement('option');o.value='';o.textContent='Choose '+role+' image';select.append(o)}
+ if(!siteId)return;
+ try{
+   const rows=await api('/api/kss/sites/'+encodeURIComponent(siteId)+'/aerial-sources');
+   if(siteId!==sid())return;
+   for(const item of rows){const pair=entries.find(([_,role])=>role===item.role);if(!pair)continue;
+     const opt=document.createElement('option');opt.value=item.source_id;opt.textContent=item.source_id+' · '+(item.registration?.source_ref||'Unknown source').slice(0,32);
+     $(pair[0]).append(opt)
+   }
+ }catch(err){show('Aerial source list unavailable: '+err.message,'error')}
+}
+$('review-download').addEventListener('click',async()=>{
+ if(!sid()||!studyId){show('Save or load an immutable study revision before building a private review.','error');return}
+ const siteSource=$('review-site').value,contextSource=$('review-context').value;
+ if(!siteSource||!contextSource||siteSource===contextSource){show('Select one site raster and a different context raster.','error');return}
+ const btn=$('review-download');btn.disabled=true;
+ try{
+   const endpoint='/api/kss/sites/'+encodeURIComponent(sid())+'/studies/'+encodeURIComponent(studyId)+'/private-review';
+   const response=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/pdf'},cache:'no-store',
+    body:JSON.stringify({site_source_id:siteSource,context_source_id:contextSource})});
+   if(!response.ok){const failure=await response.json();throw Error(failure.error||'Private review unavailable')}
+   if(!(response.headers.get('Content-Type')||'').startsWith('application/pdf'))throw Error('Non-PDF response rejected');
+   const blob=await response.blob();
+   if(blob.size<1000)throw Error('Private review PDF was unexpectedly small');
+   const href=URL.createObjectURL(blob);const a=document.createElement('a');a.href=href;
+   a.download='kennedy-private-operator-review-'+studyId+'.pdf';
+   document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(href),60000);
+   show('Created PRIVATE unverified two-sheet draft from the saved study and exact archived source images. Not approved for customer use.','success')
+ }catch(err){show('Private preview not generated: '+err.message,'error')}
+ finally{btn.disabled=false}
+});
+async function siteChanged(){const id=sid(),s=sites.find(x=>x.id===id);$('site-meta').textContent=s?(s.name||'Project')+' · '+(s.address||'User-entered address'):'Choose a site';$('planner-link').href='/workspace?site='+encodeURIComponent(id);$('aerial-link').href='/aerial?site='+encodeURIComponent(id);$('review-aerial-link').href='/aerial?site='+encodeURIComponent(id);model=defaultModel();selected='building-1';studyId=null;fillFields();paint();changed();$('report').replaceChildren();const empty=document.createElement('option');empty.value='';empty.textContent='No report attached';$('report').append(empty);if(!id)return;try{const detail=await api('/api/sites/'+encodeURIComponent(id));for(const r of detail.reports||[]){const o=document.createElement('option');o.value=r.id;o.textContent=r.id+' · '+r.created_at;$('report').append(o)}await loadHistory();await loadReportContext();await loadAerialSources()}catch(e){show('Cannot load site: '+e.message,'error')}}
 $('site').addEventListener('change',siteChanged);
 function fillFields(){$('title').value=model.title;$('width').value=model.parcel.width;$('depth').value=model.parcel.depth;$('basis').value=model.measurement_basis;$('source').value=model.source_note;$('report').value=model.source_report_id||''}
 async function loadHistory(){const area=$('history');area.replaceChildren();const items=await api('/api/kss/sites/'+encodeURIComponent(sid())+'/studies');if(!items.length){const p=document.createElement('p');p.className='muted';p.textContent='No saved study revisions yet.';area.append(p);return}for(const r of items){const line=document.createElement('div');line.className='history-item';const t=document.createElement('span');const bold=document.createElement('b');bold.textContent='Revision '+r.revision;const sm=document.createElement('small');sm.textContent=r.title+' · '+r.model_sha256.slice(0,10)+'…';t.append(bold,sm);const b=document.createElement('button');b.type='button';b.textContent='Load';b.addEventListener('click',()=>loadStudy(r.id));line.append(t,b);area.append(line)}}
