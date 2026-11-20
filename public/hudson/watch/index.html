@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#040b13">
-<meta name="hudson-watch-release" content="river-current-v7-cinematic-confluences"><meta name="description" content="Watch HUDSON's flowing knowledge currents and source-linked replay on Evercraft's owned public observatory.">
+<meta name="hudson-watch-release" content="river-current-v8-undertow-cathedral"><meta name="description" content="Watch HUDSON's flowing knowledge currents and source-linked replay on Evercraft's owned public observatory.">
 <title>HUDSON | Enter the Current</title>
 <style>
 :root{color-scheme:dark;--aqua:#9affdc;--chalk:#e2f7f1;--soft:#9ebabb}
@@ -181,10 +181,26 @@ function strokeSamples(points,offset){
  ctx.beginPath();for(var j=0;j<points.length;j++){var p=points[j],a=points[Math.max(0,j-1)],b=points[Math.min(points.length-1,j+1)],dx=b.x-a.x,dy=b.y-a.y,m=Math.hypot(dx,dy)||1;var x=p.x-dy/m*offset,y=p.y+dx/m*offset;if(j===0)ctx.moveTo(x,y);else ctx.lineTo(x,y)}ctx.stroke();
 }
 function drawBackdrop(){
- var bg=ctx.createLinearGradient(0,0,width,height);bg.addColorStop(0,"#030b13");bg.addColorStop(.48,"#071825");bg.addColorStop(1,"#050b18");
+ // Vast submerged atmosphere: deep navy, electric teal and violet light wells.
+ var bg=ctx.createLinearGradient(0,0,width,height);
+ bg.addColorStop(0,"#020611");bg.addColorStop(.46,"#041628");bg.addColorStop(1,"#04081a");
  ctx.fillStyle=bg;ctx.fillRect(0,0,width,height);
- var f=ctx.createRadialGradient(width*.5,height*.52,6,width*.5,height*.52,Math.max(width,height)*.60);f.addColorStop(0,"rgba(14,90,89,.23)");f.addColorStop(.35,"rgba(16,64,88,.11)");f.addColorStop(1,"rgba(0,0,0,0)");ctx.fillStyle=f;ctx.fillRect(0,0,width,height);
- for(var i=0;i<scene.stars.length;i++){var p=scene.stars[i],w=.55+.45*Math.sin(clock*.4+i*3.1);ctx.fillStyle="rgba(160,232,238,"+(p.a*w).toFixed(3)+")";ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,7);ctx.fill()}
+ var wells=[[.19,.32,[17,166,176],.38],[.82,.63,[82,74,190],.35],[.52,.52,[9,200,171],.37]];
+ for(var j=0;j<wells.length;j++){
+  var w=wells[j],x=width*w[0],y=height*w[1],r=Math.max(width*.33,height*.37);
+  var fog=ctx.createRadialGradient(x,y,0,x,y,r);
+  fog.addColorStop(0,rgba(w[2],w[3]));fog.addColorStop(.40,rgba(w[2],w[3]*.18));fog.addColorStop(1,rgba(w[2],0));
+  ctx.fillStyle=fog;ctx.fillRect(x-r,y-r,r*2,r*2);
+ }
+ for(var i=0;i<scene.stars.length;i++){
+  var p=scene.stars[i],w=.48+.52*Math.sin(clock*.27+i*2.13);
+  ctx.fillStyle="rgba(188,235,252,"+(p.a*w*.61).toFixed(3)+")";
+  ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,7);ctx.fill();
+ }
+ // The illuminated river fades toward deep black at the outer frame.
+ var shade=ctx.createRadialGradient(width*.5,height*.46,Math.min(width,height)*.13,width*.5,height*.46,Math.max(width,height)*.82);
+ shade.addColorStop(0,"rgba(0,1,10,0)");shade.addColorStop(1,"rgba(0,0,9,.53)");
+ ctx.fillStyle=shade;ctx.fillRect(0,0,width,height);
 }
 function drawWatershed(field){
  // Long translucent streamlines form a river-shaped atmospheric current.
@@ -217,16 +233,24 @@ function drawWatershed(field){
  ctx.restore();
 }
 function drawRivers(){
+ // Braided bands instead of hairline pipes: three optical depths per river.
  for(var i=0;i<scene.edges.length;i++){
   var e=scene.edges[i],rgb=e.color,major=i<6,water=e.warpedPoints||e.points;
-  ctx.save();ctx.globalCompositeOperation="lighter";
-  ctx.strokeStyle=rgba(rgb,major?.055:.03);ctx.lineWidth=major?56:30;ctx.shadowBlur=major?28:12;ctx.shadowColor=rgba(rgb,.22);strokeSamples(water,0);
+  ctx.save();ctx.lineCap="round";ctx.globalCompositeOperation="lighter";
+  ctx.strokeStyle=rgba(rgb,major?.052:.028);ctx.lineWidth=major?79:44;
+  ctx.shadowColor=rgba(rgb,.18);ctx.shadowBlur=major?34:17;strokeSamples(water,0);
   ctx.shadowBlur=0;
+  ctx.strokeStyle=rgba(rgb,major?.075:.047);ctx.lineWidth=major?34:19;strokeSamples(water,0);
   for(var lane=-3;lane<=3;lane++){
-   var shift=lane*(major?7:5)+Math.sin(clock*.12+i*.9+lane)*1.4;
-   ctx.lineWidth=lane===0?1.65:.55;ctx.strokeStyle=rgba(rgb,lane===0?.46:major?.13:.09);strokeSamples(water,shift);
+   var shift=lane*(major?6.4:4.7)+Math.sin(clock*.19+i*.73+lane)*1.7;
+   ctx.lineWidth=lane===0?2.8:.9;
+   ctx.strokeStyle=rgba(rgb,lane===0?.79:major?.23:.16);
+   strokeSamples(water,shift);
   }
-  ctx.restore();
+  // A moving seam flows inside the water, not a blinking road dashed line.
+  ctx.globalAlpha=.7;ctx.setLineDash([2,14,1,38]);ctx.lineDashOffset=-clock*(17+i%4*5);
+  ctx.strokeStyle=rgba(rgb,.65);ctx.lineWidth=1.5;
+  strokeSamples(water,0);ctx.setLineDash([]);ctx.restore();
  }
 }
 function drawParticles(dt){
@@ -324,42 +348,58 @@ function drawBranchingSurge(trip){
 }
 
 function drawConfluences(){
+ // Each confluence is a suspended deep-water lens, not an atomic icon.
  var trip=routeAt();
  Object.keys(TOPICS).forEach(function(key,i){
-  var p=TOPICS[key],o=coordinates(key),r=key==="hudson"?Math.min(width*.13,76):Math.min(width*.09,45),surge=junctionExcitation(trip,key);
-  if(width>700)r=Math.min(width*.09,p.r*1.35);
-  var halo=ctx.createRadialGradient(o.x,o.y,1,o.x,o.y,r*3.6);
-  halo.addColorStop(0,rgba(p.color,key==="hudson"?.28:.18));halo.addColorStop(.5,rgba(p.color,.075));halo.addColorStop(1,rgba(p.color,0));
-  ctx.fillStyle=halo;ctx.fillRect(o.x-r*3.6,o.y-r*3.6,r*7.2,r*7.2);
-  ctx.save();ctx.translate(o.x,o.y);ctx.globalCompositeOperation="lighter";
-  for(var ring=0;ring<7;ring++){
-   var scale=.40+ring*.19,twist=clock*(ring%2===0?.12:-.09)+i+ring*.45;
-   ctx.beginPath();ctx.ellipse(0,0,r*scale*(1+surge*.25),r*scale*(.49+surge*.14),twist,0,Math.PI*2);
-   ctx.strokeStyle=rgba(p.color,.15+(ring%3)*.05+surge*.24);ctx.lineWidth=(ring===0?1.5:.65)+surge*.8;ctx.stroke();
+  var p=TOPICS[key],o=coordinates(key),surge=junctionExcitation(trip,key),central=key==="hudson";
+  var r=central?clamp(width*.157,57,112):clamp(width*.088,31,58);
+  // Large atmospheric wells give every basin its own volume and color.
+  var well=ctx.createRadialGradient(o.x,o.y,r*.12,o.x,o.y,r*2.7);
+  well.addColorStop(0,"rgba(2,9,21,.91)");
+  well.addColorStop(.24,rgba(p.color,.16+surge*.16));
+  well.addColorStop(.50,rgba(p.color,.08+surge*.08));
+  well.addColorStop(1,rgba(p.color,0));
+  ctx.fillStyle=well;ctx.fillRect(o.x-r*2.7,o.y-r*2.7,r*5.4,r*5.4);
+  ctx.save();ctx.translate(o.x,o.y);ctx.globalCompositeOperation="source-over";
+  // A dark opening is edged by light so the lens has readable negative space.
+  var glass=ctx.createRadialGradient(-r*.18,-r*.23,0,0,0,r*.95);
+  glass.addColorStop(0,"rgba(1,6,20,.99)");glass.addColorStop(.7,"rgba(2,16,31,.92)");
+  glass.addColorStop(1,rgba(p.color,.17+surge*.11));
+  ctx.fillStyle=glass;ctx.beginPath();ctx.arc(0,0,r*.79*(1+surge*.08),0,Math.PI*2);ctx.fill();
+  ctx.globalCompositeOperation="lighter";
+  // Three incomplete elliptical horizons move independently like refracted water.
+  for(var ring=0;ring<3;ring++){
+   var angle=clock*(ring===1?-.083:.05)+(i*1.37)+ring*2.06;
+   var outer=r*(.83+ring*.21),opening=.9+surge*.48;
+   ctx.beginPath();ctx.ellipse(0,0,outer,outer*(.53+ring*.075),angle,angle+.28,angle+.28+Math.PI*opening);
+   ctx.lineWidth=central?3.6-ring*.7:2.1-ring*.4;
+   ctx.strokeStyle=rgba(p.color,.47-ring*.095+surge*.18);
+   ctx.shadowBlur=central?21:12;ctx.shadowColor=rgba(p.color,.55);
+   ctx.stroke();ctx.shadowBlur=0;
   }
-  for(var dot=0;dot<25;dot++){
-   var a=dot*2.39996+clock*(dot%2===0?.05:-.035),d=r*(.45+seeded(dot*17+i)*1.65);
-   ctx.fillStyle=rgba(p.color,.08+seeded(dot*14+i)*.35);ctx.beginPath();ctx.arc(Math.cos(a)*d,Math.sin(a)*d*.69,.5+seeded(dot+i)*1.1,0,7);ctx.fill();
+  // Broken light jaws and caustic fragments recur slowly with different phases.
+  var facets=central?11:7;
+  for(var shard=0;shard<facets;shard++){
+   var angle=shard*Math.PI*2/facets+clock*(shard%2?-.035:.047)+i*.55;
+   var dist=r*(.67+.15*Math.sin(clock*.39+shard*1.7));
+   var tip=dist+r*(.16+surge*.21),skew=(shard%3-1)*.18;
+   ctx.beginPath();ctx.moveTo(Math.cos(angle)*dist,Math.sin(angle)*dist*.75);
+   ctx.quadraticCurveTo(Math.cos(angle+skew)*tip,Math.sin(angle+skew)*tip*.83,
+     Math.cos(angle+.34)*tip,Math.sin(angle+.34)*tip*.75);
+   ctx.strokeStyle=rgba(p.color,.14+surge*.29+(central?.12:0));ctx.lineWidth=central?1.4:.85;ctx.stroke();
   }
-  if(surge>.02){
-   // River petals flare briefly rather than drawing a repetitive pulse halo.
-   for(var petal=0;petal<5;petal++){
-    var a=petal*2.399963+clock*.14,reach=r*(.72+surge*.95);
-    ctx.beginPath();ctx.moveTo(Math.cos(a)*r*.38,Math.sin(a)*r*.24);
-    ctx.quadraticCurveTo(Math.cos(a+.5)*reach,Math.sin(a+.5)*reach*.75,
-       Math.cos(a+.91)*reach*.79,Math.sin(a+.91)*reach*.54);
-    ctx.strokeStyle=rgba(p.color,surge*.32);ctx.lineWidth=.65+surge*.9;ctx.stroke();
-   }
-  }
-  ctx.fillStyle=rgba(p.color,.85);ctx.beginPath();ctx.arc(0,0,key==="hudson"?5:3,0,7);ctx.fill();
+  // The pupil is a void, not a claimed computing core.
+  ctx.globalCompositeOperation="source-over";
+  ctx.fillStyle="rgba(1,5,16,.98)";ctx.beginPath();ctx.arc(0,0,r*(central?.41:.34),0,7);ctx.fill();
+  ctx.strokeStyle=rgba(p.color,.28+surge*.29);ctx.lineWidth=central?2.1:1.1;
+  ctx.beginPath();ctx.arc(0,0,r*(central?.41:.34),clock*.12,clock*.12+Math.PI*1.35);ctx.stroke();
   ctx.restore();
-  // Distinct animated basins give each topic spatial identity without a dashboard grid.
-  var focus=selectedTopic===key;
-  ctx.save();ctx.textAlign="center";ctx.shadowColor=rgba(p.color,.65);ctx.shadowBlur=focus?18:8;ctx.fillStyle=focus?"#ffffff":"#e3f6f1";
-  ctx.font=(key==="hudson"?"22px":"12px")+" Georgia,serif";
-  ctx.fillText(p.name,o.x,o.y-r-10);
-  if(focus){ctx.strokeStyle=rgba(p.color,.85);ctx.lineWidth=1.2;ctx.beginPath();ctx.arc(o.x,o.y,r*1.45,0,7);ctx.stroke()}
-  ctx.restore();
+  var selected=selectedTopic===key;
+  ctx.save();ctx.textAlign="center";
+  ctx.shadowColor=rgba(p.color,.82);ctx.shadowBlur=selected?18:8;
+  ctx.fillStyle=selected?"#ffffff":"#ecfff9";
+  ctx.font=(central?"bold 18px":"bold 11px")+" Georgia,serif";
+  ctx.fillText(p.name,o.x,o.y-r*1.35-8);ctx.restore();
  });
 }
 // Eight articulated, short limbs replace the old straight filament fan.
@@ -447,89 +487,66 @@ function drawPresenceRipple(from,to,t){
 // The traveler is deliberately not an insect, orb or fixed spinning logo.
 // Each ribbon has volume and changes silhouette as it moves through the river.
 function drawTraveler(from,to,t){
+ // The Fold: angular living architecture suspended inside a refractive rift.
+ // It cannot be mistaken for a bug, jellyfish, eye or a live AI thought.
  var pos=locate(from,to,t),ahead=locate(from,to,Math.min(.999,t+.013));
- var angle=Math.atan2(ahead.y-pos.y,ahead.x-pos.x);
- var size=width<=620?clamp(width*.155,54,76):clamp(width*.092,84,124);
- var state=travelerState(clock,t);
- ctx.save();ctx.translate(pos.x,pos.y);ctx.rotate(angle+state.yaw);
- ctx.globalCompositeOperation="source-over";
- // Briefly assemble from water on departure and unravel on arrival.
- ctx.globalAlpha=state.integrity;
- // Its dark, refractive envelope is a distinct focal point in bright currents.
- var atmosphere=ctx.createRadialGradient(0,0,size*.09,0,0,size*1.85);
- atmosphere.addColorStop(0,"rgba(1,9,23,.97)");
- atmosphere.addColorStop(.28,"rgba(5,30,51,.77)");
- atmosphere.addColorStop(.62,"rgba(32,90,105,.19)");
- atmosphere.addColorStop(1,"rgba(3,24,43,0)");
- ctx.fillStyle=atmosphere;ctx.beginPath();ctx.arc(0,0,size*1.85,0,Math.PI*2);ctx.fill();
- // Three short, fluid echoes keep movement perceptible without a comet tail.
- for(var echo=0;echo<3;echo++){
-  var lift=(echo-1)*size*.15;
-  ctx.beginPath();ctx.moveTo(-size*.19,lift);
-  ctx.bezierCurveTo(-size*.54,lift+Math.sin(clock*.58+echo)*size*.21,
-   -size*1.05,lift-Math.sin(clock*.31+echo)*size*.18,-size*1.28,lift*.48);
-  ctx.strokeStyle=echo===1?"rgba(122,251,220,.15)":"rgba(158,152,255,.095)";
-  ctx.lineWidth=echo===1?2.1:1;ctx.stroke();
- }
- // Five independent volumetric veils roll and fold around a central void.
- var shades=[
-  ["rgba(47,181,188,0)","rgba(101,240,216,.48)","rgba(191,251,236,.91)"],
-  ["rgba(68,93,183,0)","rgba(116,139,240,.48)","rgba(205,184,255,.90)"],
-  ["rgba(31,156,154,0)","rgba(109,236,202,.49)","rgba(198,255,229,.90)"],
-  ["rgba(71,111,176,0)","rgba(151,143,248,.46)","rgba(222,207,255,.84)"],
-  ["rgba(40,178,171,0)","rgba(105,219,235,.47)","rgba(178,251,243,.84)"]
- ];
+ var angle=Math.atan2(ahead.y-pos.y,ahead.x-pos.x),state=travelerState(clock,t);
+ var size=width<=620?clamp(width*.205,73,99):clamp(width*.112,112,188);
+ ctx.save();ctx.translate(pos.x,pos.y);ctx.rotate(angle+state.yaw*.5);
+ ctx.globalCompositeOperation="source-over";ctx.globalAlpha=state.integrity;
+ // Dense shadow separates the body from the luminous river.
+ var shadow=ctx.createRadialGradient(0,0,size*.06,0,0,size*1.33);
+ shadow.addColorStop(0,"rgba(0,3,13,.99)");
+ shadow.addColorStop(.35,"rgba(1,9,26,.93)");
+ shadow.addColorStop(.67,"rgba(3,28,47,.44)");
+ shadow.addColorStop(1,"rgba(0,5,20,0)");
+ ctx.fillStyle=shadow;ctx.beginPath();ctx.arc(0,0,size*1.33,0,7);ctx.fill();
+ // Irregular torn veils encircle the hole from different 3D-facing directions.
+ var shades=[[74,251,223],[164,149,255],[46,182,235],[177,250,225],[128,114,246]];
  for(var layer=0;layer<5;layer++){
-  var f=ribbonForm(clock,layer,state),span=size*f.length,thick=size*f.width;
-  ctx.save();ctx.rotate(f.angle);
-  var curl=f.bend*size,outer=-size*.21+span;
-  ctx.beginPath();ctx.moveTo(-size*.42,-thick*.20);
-  ctx.bezierCurveTo(span*.18,-thick*2.15+curl,span*.72,-thick*1.65+curl,outer,-thick*.12);
-  ctx.bezierCurveTo(span*.88,thick*.93+curl,span*.50,thick*1.31+curl,-size*.13,thick*.68);
-  ctx.quadraticCurveTo(-size*.42,thick*.38,-size*.42,-thick*.20);
+  var f=ribbonForm(clock,layer,state),phi=layer*2.399963+clock*(layer%2?.062:-.048)+f.angle*.13;
+  var span=size*(.58+.16*layer+state.opening*.38),thick=size*(.20+f.width*.40);
+  var bend=Math.sin(clock*.36+layer*2.1)*size*.28;
+  ctx.save();ctx.rotate(phi);ctx.globalAlpha=clamp(.48+f.opacity*.37,.3,.78)*state.integrity;
+  ctx.beginPath();ctx.moveTo(-size*.07,-thick*.22);
+  ctx.bezierCurveTo(span*.19,-thick*1.48+bend,span*.61,-thick*.98+bend,span,-thick*.38);
+  ctx.quadraticCurveTo(span*.69,thick*1.29+bend,span*.10,thick*.40);
   ctx.closePath();
-  var colors=shades[layer],grad=ctx.createLinearGradient(-size*.33,-thick*1.6,outer,thick*1.4);
-  grad.addColorStop(0,colors[0]);grad.addColorStop(.49,colors[1]);grad.addColorStop(1,colors[2]);
-  ctx.globalAlpha=f.opacity*state.integrity;ctx.fillStyle=grad;ctx.fill();
-  ctx.strokeStyle=layer%2===0?"rgba(192,255,235,.57)":"rgba(197,191,255,.55)";
-  ctx.lineWidth=1.1;ctx.stroke();
-  ctx.beginPath();ctx.moveTo(-size*.12,-thick*.12);
-  ctx.bezierCurveTo(span*.17,-thick*.56+curl*.4,span*.68,-thick*.58+curl*.3,outer,-thick*.08);
-  ctx.strokeStyle="rgba(223,255,248,.31)";ctx.lineWidth=.65;ctx.stroke();
+  var col=shades[layer],grad=ctx.createLinearGradient(0,-thick,span,thick);
+  grad.addColorStop(0,"rgba("+col.join(",")+",.02)");
+  grad.addColorStop(.52,"rgba("+col.join(",")+",.57)");
+  grad.addColorStop(1,"rgba("+col.join(",")+",.90)");
+  ctx.fillStyle=grad;ctx.fill();
+  ctx.strokeStyle="rgba("+col.join(",")+",.81)";ctx.lineWidth=1.8;ctx.stroke();
+  ctx.strokeStyle="rgba(236,255,249,.24)";ctx.lineWidth=.7;
+  ctx.beginPath();ctx.moveTo(size*.12,-thick*.08);
+  ctx.quadraticCurveTo(span*.53,-thick*.34+bend*.42,span*.94,-thick*.29);ctx.stroke();
   ctx.restore();
  }
- // A partially hidden aperture, never a fixed eye, face or mechanical core.
- ctx.save();ctx.rotate(-state.roll*.22+Math.sin(clock*.31)*.26);
- var aperture=size*(.24+.13*state.opening);
- ctx.beginPath();
- ctx.moveTo(-aperture*.90,-aperture*.26);
- ctx.lineTo(-aperture*.18,-aperture*.94);
- ctx.lineTo(aperture*.18,-aperture*.41);
- ctx.lineTo(aperture*.86,-aperture*.54);
- ctx.lineTo(aperture*.56,aperture*.08);
- ctx.lineTo(aperture*.31,aperture*.76);
- ctx.lineTo(-aperture*.41,aperture*.35);
- ctx.closePath();ctx.fillStyle="rgba(1,8,24,.95)";ctx.fill();
- ctx.strokeStyle="rgba(182,253,231,"+(.46+.14*state.pulse).toFixed(3)+")";
- ctx.lineWidth=1.3;ctx.stroke();ctx.restore();
- // Thin broken caustics reveal depth only fleetingly.
- for(var arc=0;arc<3;arc++){
-  var spread=size*(.70+arc*.24),rot=clock*(arc%2?.12:-.075)+arc*1.9;
-  ctx.beginPath();ctx.ellipse(0,0,spread,spread*(.42+.05*Math.sin(clock*.4+arc)),
-    rot*.25,rot,rot+(.65+state.opening*.67));
-  ctx.strokeStyle=arc===1?"rgba(180,173,255,.22)":"rgba(155,255,224,.25)";
-  ctx.lineWidth=.8;ctx.stroke();
- }
- // On arrival, the membranes bloom briefly as though examining a junction.
- // This is scenic behavior, not evidence of real agent deliberation.
- if(state.scan>.28){
-  var alpha=(state.scan-.28)*.29;
-  ctx.strokeStyle="rgba(181,254,230,"+alpha.toFixed(3)+")";
-  ctx.lineWidth=.75;
-  ctx.beginPath();ctx.ellipse(0,0,size*(1.37+state.opening*.16),
-     size*(.58+state.opening*.11),clock*.12,0,Math.PI*1.32);ctx.stroke();
+ // Broken polar ridges imply internal volume without forming eyes or a face.
+ ctx.save();ctx.rotate(clock*.13);
+ for(var i=0;i<4;i++){
+  var phi=i*Math.PI*.5+Math.sin(clock*.22+i)*.14;
+  ctx.beginPath();ctx.ellipse(0,0,size*(.58+i*.16),size*(.28+i*.054),phi,phi+.18,phi+.85);
+  ctx.strokeStyle=i%2?"rgba(185,154,255,.20)":"rgba(133,255,223,.30)";
+  ctx.lineWidth=i===0?2:.8;ctx.stroke();
  }
  ctx.restore();
+ // A rotating jagged rift interrupts the colored veils. No fixed glowing dot.
+ ctx.save();ctx.rotate(-state.roll*.55);var r=size*(.34+state.opening*.10);
+ ctx.beginPath();
+ for(var k=0;k<9;k++){
+  var a=k*Math.PI*2/9+Math.sin(clock*.33+k)*.12;
+  var d=r*(k%3===0?1.17:k%2===0?.73:.98);
+  if(!k)ctx.moveTo(Math.cos(a)*d,Math.sin(a)*d);
+  else ctx.lineTo(Math.cos(a)*d,Math.sin(a)*d);
+ }
+ ctx.closePath();ctx.fillStyle="rgba(0,2,12,.99)";ctx.fill();
+ ctx.strokeStyle="rgba(143,255,230,.92)";ctx.lineWidth=2.1;ctx.shadowBlur=12;
+ ctx.shadowColor="rgba(91,251,223,.9)";ctx.stroke();ctx.shadowBlur=0;
+ ctx.beginPath();ctx.arc(0,0,r*.52,-.7,2.3);
+ ctx.strokeStyle="rgba(1,14,35,.93)";ctx.lineWidth=5;ctx.stroke();
+ ctx.restore();ctx.restore();
 }
 function routeAt(){
  // A public Git commit may drive historical replay; visual paths never claim a live mission.
