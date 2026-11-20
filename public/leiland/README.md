@@ -75,6 +75,14 @@ Only allowlist public receipt links on `github.com/jgaethle10/forge-operator/*` 
 
 A recommended publisher cadence is the five-minute Systemia cycle, while the browser checks the same-origin feed every 30 seconds. The published report should be immutable per cycle in a privately stored receipt, with its public projection updated atomically through an Evercraft-owned read-only delivery origin. No public write endpoints. Missing/failed upstream observations must fail closed to `not_connected` / `unverified`, never synthetic green.
 
+## Real-browser visual acceptance and portrait share link
+
+Leiland's first-party visual QA script is `scripts/qa-leiland-browser.py`. It starts a **temporary loopback-only static server** and launches a real locally available Chromium. It checks iPhone, desktop, and iPhone reduced-motion cases: nonblank changing canvas pixels, navigation of all five regions using real clicks, no horizontal overflow, missing/unknown pulse and private inference represented as disconnected, no uncaught JS exceptions, portrait live view, exit control, Escape behavior and static reduced-motion frames. The public GitHub metadata request is intentionally blocked in QA to prove graceful disconnected operation.
+
+Run: `python -m pip install playwright==1.58.0 && python scripts/qa-leiland-browser.py`. The dedicated CI workflow archives human-reviewable browser screenshots in the `leiland-neural-universe-browser-frames` artifact. These are browser tests against actual public files, **not** evidence of real node deployment, real iPhone hardware, production HTTPS or authentic KAIDANCE field activity.
+
+On an approved owned origin, `/leiland/?view=live` enters portrait broadcast view directly. `Esc` and the visible exit control return to the normal observatory. This query option affects **display only**: it cannot authorize a publisher, publish events, turn on inference or change the evidence labels.
+
 ## Release acceptance
 
 - Run `node --test tests/leiland-public.test.mjs` and `node --check public/leiland/brain.js`, with the dedicated `leiland-public.yml` CI check.
