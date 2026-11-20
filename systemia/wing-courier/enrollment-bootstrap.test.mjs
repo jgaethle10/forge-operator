@@ -19,7 +19,7 @@ async function fixture(){
  return {dir,pkg,privateKey,payload,sha,opts};
 }
 async function serve(handler){
- const server=http.createServer((req,res)=>handler.handle(req,res));
+ const server=http.createServer((req,res)=>{req.headers.host=req.headers['x-test-host']||'fabric.systemiacommandcenters.com';handler.handle(req,res);});
  await new Promise(r=>server.listen(0,'127.0.0.1',r));
  return {url:'http://127.0.0.1:'+server.address().port+BOOTSTRAP_PATH,close:()=>new Promise(r=>server.close(r))};
 }
@@ -56,7 +56,7 @@ test('hash tampering before activation rejected',async()=>{
 test('cross-host and unexpected path do not expose enrollment',async()=>{
  const f=await fixture(),server=await serve(createFallenBootstrap(f.opts));
  try{
-  const r=await fetch(server.url,{headers:{host:'attacker.example'}});
+  const r=await fetch(server.url,{headers:{'x-test-host':'attacker.example'}});
   assert.equal(r.status,404);
   const other=await request(server.url+'?redirect=1');assert.equal(other.status,404);
  }finally{await server.close();fs.rmSync(f.dir,{recursive:true,force:true});}
