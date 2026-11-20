@@ -88,11 +88,11 @@ These commands are examples and belong on their respective different machines, *
  "fromWing":"harbor","toWing":"fallen",
  "recipientPublicKeyFile":"/private/trusted/fallen.decrypt.pub",
  "senderSigningKeyFile":"/private/keys/harbor/sign.key",
- "baseUrl":"https://verified-owned-relay.example",
+ "baseUrl":"https://fabric.systemiacommandcenters.com/api/internal/wing-courier",
  "sendTokenFile":"/private/secrets/harbor.send"
 }
 ```
-The URL is an **illustrative placeholder**, not verified or live.
+The existing Fabric public hostname is independently verified, but this private Wing Courier route is **not enabled or verified live**. Its exact path is pinned in client code to prevent bearer-token leakage to third-party hosts.
 
 ```bash
 node systemia/wing-courier/client.mjs prepare /private/harbor-config.json \
@@ -106,7 +106,7 @@ The example lists only three filenames for readability; the real first case has 
 ```json
 {
  "wing":"fallen",
- "baseUrl":"https://verified-owned-relay.example",
+ "baseUrl":"https://fabric.systemiacommandcenters.com/api/internal/wing-courier",
  "receiveTokenFile":"/private/secrets/fallen.receive",
  "destinationDir":"/home/coach/.local/share/evercraft/fallen-intake/media",
  "receiverPrivateKeyFile":"/private/keys/fallen/decrypt.key",
@@ -148,3 +148,26 @@ node systemia/wing-courier/install-resident.mjs --config /path/to/private/fallen
 The second command is **not authorized by publication of this README or by a GitHub CI pass**. Actual deployment requires the named owner-controlled operator, private credentials and a verified broker endpoint; the publisher must never auto-run activation from a PR. No root, no public incoming NextGen port, no Tailscale requirement. Whether the service remains connected requires an independent private-machine + external TLS receipt.
 
 No customer contact, payment, release or rendering is enabled by starting this resident. For the first recovery, Ricky remains `CUSTOMER_REJECTED_PREVIEW / RECOVERY_REQUIRED` until producer assignment, independent Studio review, founder exact-file approval and governed native Meta send.
+
+## Reuse the owned Fabric HTTPS edge (optional route, NOT activated by code merge)
+
+Independent external checks on 2026-11-20 UTC established that `fabric.systemiacommandcenters.com` resolves through public DNS, has a valid TLS handshake, returns HTTP 200 for `/health`, and identifies itself as `evercraft-fabric-local`. **Its existing deployment-receipt-bound field was false**. These checks do NOT prove an authenticated Courier route.
+
+The source now offers an **explicitly disabled-by-default** route at:
+
+`https://fabric.systemiacommandcenters.com/api/internal/wing-courier`
+
+The Fabric runtime imports `systemia/wing-courier/fabric-proxy.mjs`, but returns 404 for the entire prefix unless the **actual owner-controlled Fabric environment** sets `EVERCRAFT_WING_COURIER_ROUTE_ENABLED=1`. This owner-local flag must not be set from GitHub CI, an untrusted chat, or a client-claimed identity. A verified, already-running loopback broker at `127.0.0.1:8791` with genuine wing-scoped credentials must exist first. The proxy forwards only the declared Courier API methods, exactly to that loopback socket. It does not accept arbitrary upstream URLs, cross-origin browser requests, hostnames, or broad remote controls. If the broker is absent, authenticated requests return an unavailable response.
+
+Client-side `baseUrl` is pinned to this exact **owned HTTPS origin + path** for remote traffic. Only local loopback HTTP is permitted for isolated tests. This allows both Harbor (outbound push) and NextGen (outbound poll) to reuse the already-owned Fabric domain with **no new DNS name, broad tailnet access, Caddy edits, or incoming NextGen port**.
+
+**Operator-controlled activation prerequisites:**
+
+1. Reconcile Fabric's actual signed deployment receipt/identity and current public TLS origin; do not infer approved runtime provenance from a 200 response alone.
+2. Provision broker-specific private state and unique per-wing send/receive token files under owner-controlled, nonpublic 0600/0700 storage. Pin the genuine public Ed25519 receiver-ACK signing key for each wing. Never commit secrets.
+3. Have a named trusted operator start the loopback broker using a reviewed owner-only config, verify its private health and forbidden-auth tests, then opt-in the private Fabric route via the owner-controlled environment. Recheck the live authenticated path from an independent machine. A public 404 before activation is intended.
+4. Only after verified credentials/public keys exist, activate the NextGen outbound receiver with the dry-run-first `install-resident.mjs` and authenticate the private Harbor sender; keep provider-side customer-send guard independent.
+5. Collect an actual 12/12 source-byte receiving receipt and an explicit Systemia intake/producer assignment before any creative rendering or customer messaging.
+
+See P0 issues #2294 (deployment), #2280 (first customer), #2284 (rejected-preview incident).
+
