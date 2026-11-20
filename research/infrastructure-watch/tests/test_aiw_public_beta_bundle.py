@@ -51,7 +51,7 @@ class StaticReleaseTests(unittest.TestCase):
         wa={"scope":"WA_only_2026","records":8619,
             "conditions":{"G":4298,"F":3918,"P":403},
             "flagged_coordinate_count":1,"historical_condition_not_emergency":True,
-            "national_2026_complete":False,"source_sha256":"synthetic-test"}
+            "national_2026_complete":False,"source_sha256":mod.EXPECTED_WA_SHA256}
         rows=[{"bridge_id":f"WA-TEST-{i:05d}","name":f"Synthetic bridge {i}",
                "condition":"P" if i<403 else "F",
                "county_code":"077","latitude":46.6,"longitude":-120.5,
@@ -72,10 +72,12 @@ class StaticReleaseTests(unittest.TestCase):
             vendor=root/"vendor";vendor.mkdir()
             (vendor/"leaflet.js").write_bytes(b"fake-map-js")
             (vendor/"leaflet.css").write_bytes(b"fake-map-css")
-            (vendor/"LICENSE").write_text("license test")
+            (vendor/"LICENSE").write_text("BSD license test")
+            (vendor/"us-atlas-LICENSE").write_text('Copyright Michael Bostock. THE SOFTWARE IS PROVIDED AS IS.')
             approved=root/"approved.html";approved.write_bytes(preview)
             args=type("Args",(),{"origin":"http://127.0.0.1:8796",
                 "source_html":str(approved),"leaflet_dir":str(vendor),
+                "us_atlas_license":str(vendor/"us-atlas-LICENSE"),
                 "output":str(root/"release"),"commit":"a"*40})()
             with patch.object(mod,"acquire",side_effect=lambda _base,p:response[p]):
                 with patch.dict(mod.LEAFLET_SRI,{
@@ -103,6 +105,7 @@ class StaticReleaseTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             a=type("Args",(),{"origin":"https://fabric.systemiacommandcenters.com",
                 "source_html":tmp+"/nonexistent.html","leaflet_dir":tmp,
+                "us_atlas_license":tmp+"/nonexistent-license",
                 "output":tmp+"/out","commit":"a"*40})()
             with self.assertRaisesRegex(ValueError,"loopback"):
                 mod.export(a)
