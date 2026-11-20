@@ -56,6 +56,7 @@ jobs:
           python3 -m py_compile systemia/mission-bridge/gems/gems_002_negative_ablation.py
           python3 -m py_compile systemia/mission-bridge/gems/gems_external_layer_gate.py
           python3 -m py_compile systemia/mission-bridge/gems/gems_nevada_disagreement_atlas.py
+          python3 -m py_compile systemia/mission-bridge/gems/gems_dem_metadata_recon.py
           python3 -m py_compile systemia/mission-bridge/gems/gems_005_directional_features.py systemia/mission-bridge/gems/gems_005_directional_ablation.py
           bash -n systemia/mission-bridge/gems/execute_directional_ablation.sh
           python3 -m py_compile systemia/mission-bridge/gems/test_gems_002_negative_ablation.py
@@ -107,6 +108,7 @@ jobs:
           python -m unittest -v test_gems_004_hard_negative_ablation.py
           python -m unittest -v test_gems_external_layer_gate.py
           python -m unittest -v test_gems_nevada_disagreement_atlas.py
+          python -m unittest -v test_gems_dem_metadata_recon.py
           python -m unittest -v test_gems_005_directional_features.py
           python -m unittest -v test_gems_005_directional_ablation.py
           python -m unittest -v test_gems_003_exploratory_overlay.py
