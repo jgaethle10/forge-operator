@@ -838,6 +838,19 @@ function drawMesh(mesh,model){gl.bindBuffer(gl.ARRAY_BUFFER,mesh.buffer);gl.enab
 function buildMeshes(){
  const w=builder(),rad=core.constants.RAD,terrain=core.groundHeight;
  const cells=125,min=-6500,span=13000;
+ // South Seattle terrain corridor links downtown, Boeing Field and Sea-Tac.
+ // Low-poly invented ground mesh (not DEM), with elevation flattened by airport pads.
+ if(seattle){
+  const step=190;
+  for(let z=-22500;z< -6500;z+=step)for(let x=-2600;x<6100;x+=step){
+   const dz=Math.min(step,-6500-z),dx=Math.min(step,6100-x);
+   const a=[x,terrain(x,z),z],b=[x+dx,terrain(x+dx,z),z],c=[x+dx,terrain(x+dx,z+dz),z+dz],d=[x,terrain(x,z+dz),z+dz];
+   const water=seattle.water(x,z),level=(a[1]+b[1]+c[1]+d[1])/4;
+   const v=.5+.5*Math.sin(x*.007+z*.013),color=water?[.10,.34,.48]:level>160?[.41,.49,.43]:[.38+.045*v,.49+.04*v,.43+.03*v];
+   w.quad(a,b,c,d,color,water?2:0);
+  }
+ }
+
  for(let iz=0;iz<cells;iz++)for(let ix=0;ix<cells;ix++){
   const x=min+span*ix/cells,z=min+span*iz/cells,dx=span/cells,dz=dx;
   const a=[x,terrain(x,z),z],b=[x+dx,terrain(x+dx,z),z],c=[x+dx,terrain(x+dx,z+dz),z+dz],d=[x,terrain(x,z+dz),z+dz];
