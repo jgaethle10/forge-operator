@@ -95,3 +95,14 @@ It adds `current-field.mjs` and `confluence.css` as first-party, standalone asse
 **Source boundaries:** currents and the explorer are explicitly artistic, not live missions. A verified public GitHub record can change the depicted *conceptual* focus and appears with its source receipt in the normal activity overlay. It does not promote anything into Collider execution. Only an independently verified increment in `#collider.beat` may cause a special collision flash. The static Pages preview has no published pulse, and the live signed publisher remains a separate field approval.
 
 QA checks interactive routes, pixel production, animation, both viewing modes, iPhone safe area, reduced-motion behavior, no browser exceptions, and owned static route parity.
+
+
+## V05 · A journey with chapters
+
+V04 made the network dynamic; V05 makes it narrate its **illustrative** travel. A pure `field-chapters.mjs` module derives a destination, chapter number, phase, 10.5-second scenic segment and 0-100% progress independently of any private runtime, clock authority or operational telemetry. The first-screen story card follows the explorer instead of remaining stuck on KAIDANCE. When the explorer approaches a named system, a local system-colored bloom marks the conceptual destination. That local glow is visually distinct from the special verified heartbeat flash, which remains gated on the separately validated `#collider.beat` signal.
+
+The public GitHub receipt carousel continues to show recorded, source-linked work. Its selected topic may receive a clearly labeled **PUBLIC GITHUB TOPIC** halo, but it no longer restarts the illustrative journey, overwrites the story as a purported mission, or changes any verified Collider state. Manual Explore selections temporarily hold their explanatory card before the tour resumes.
+
+V05 assets are on the Pages readback list, exact Caddy allowlist, and read-only Leiland host. The owned private signed publisher contract remains untouched. Static Pages **must** continue to return 404 for `/kaidance/pulse.json`.
+
+The browser acceptance test verifies a genuinely advancing chapter progress rail, interactive Explore selections, iPhone broadcast view, and both field and reactor renderers. The separate unit tests cover deterministic chapter transitions and prevent any arrival scene from being represented as a verified cycle.
