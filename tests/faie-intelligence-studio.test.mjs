@@ -88,3 +88,12 @@ test('first screen remains usable without loading system diagnostics', () => {
   assert.ok(form.indexOf('id="region"') < form.indexOf('id="advancedScope"'));
   assert.ok(form.indexOf('id="run"') > form.indexOf('</details>'));
 });
+
+test('optional comparison starter connects to the real comparison flow', () => {
+  assert.match(html, /id="compareExample"/);
+  assert.match(html, /id="compareRun"/);
+  assert.match(html, /Compare evidence for two places/);
+  assert.match(html, /document\.getElementById\('compareExample'\)\.addEventListener\('click'/);
+  assert.match(html, /document\.getElementById\('compareRun'\)\.click\(\)/);
+  assert.match(html, /body\[data-pilot="agnormal"\] \.pilot-actions/);
+});
