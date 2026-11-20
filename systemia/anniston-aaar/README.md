@@ -77,3 +77,10 @@ python3 -m unittest -v test_server
 ```
 
 These test authentication, stale revision conflicts, atomic write path, duplicate work order suppression, misleading execution-state prevention, and malformed input. **No flight, drone or robot commands are exposed.**
+
+## AAAR 0.4 analytical airfoil lab (local integration candidate)
+The source-controlled pure analytical module `site/aero-core.js` adds NACA four-digit geometry, thin-airfoil mean-camber zero-lift angle, simplified finite-wing linear lift coefficient, dynamic pressure, and lift/weight screening. Run `node --test systemia/anniston-aaar/tests/aero.test.cjs` (six passed locally).
+
+A corresponding single-file AAAR 0.4 interface and upgraded owner API were built and browser-tested locally (1440px and 390px). They are bundled in the user's downloadable AAAR 0.4 artifact **but are not yet committed in this PR**. The canonical index and API in this branch remain the 0.3 versions. Never present AAAR 0.4 as deployed or running on Systemia until those files are reviewed, committed and deployed.
+
+Model truth boundary: screening only, not CFD, drag/stall/structural assessment, hardware operation, or certification. User interface study records are labeled `UNVALIDATED_SCREENING`; local API code rejects attempts to call them certified. NASA Glenn lift equation: https://www1.grc.nasa.gov/beginners-guide-to-aeronautics/lift-equation/ . GitHub program data sync and live orchestration remain pending.
