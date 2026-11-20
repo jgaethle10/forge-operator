@@ -135,14 +135,12 @@ async function loadReportContext(){
 }
 function forgetUnderlay(){
  ++underlaySequence;
- if(underlay?.url)URL.revokeObjectURL(underlay.url);
  underlay=null;
  $('underlay-status').textContent='No site image selected. Shapes use operator-entered geometry only.';
  paint();
 }
 async function selectUnderlay(){
  const mySeq=++underlaySequence;
- if(underlay?.url)URL.revokeObjectURL(underlay.url);
  underlay=null;
  const siteId=sid(),sourceId=$('review-site').value;
  if(!sourceId||!siteId){$('underlay-status').textContent='No site image selected. Diagram remains an unverified local-coordinate study.';paint();return}
@@ -152,7 +150,8 @@ async function selectUnderlay(){
   $('underlay-status').textContent='Source receipt does not belong to the selected site.';paint();return}
  $('underlay-status').textContent='Loading private source bytes and verifying SHA-256…';
  try{
-  const r=await fetch('/api/kss/sites/'+encodeURIComponent(siteId)+'/aerial-sources/'+encodeURIComponent(sourceId)+'/private-preview.png',{cache:'no-store',headers:{Accept:'image/png'}});
+  const privateSrc='/api/kss/sites/'+encodeURIComponent(siteId)+'/aerial-sources/'+encodeURIComponent(sourceId)+'/private-preview.png';
+  const r=await fetch(privateSrc,{cache:'no-store',headers:{Accept:'image/png'}});
   if(!r.ok)throw Error('Private source unavailable (HTTP '+r.status+')');
   if(!(r.headers.get('Content-Type')||'').startsWith('image/png'))throw Error('Unexpected image media type');
   const bytes=await r.arrayBuffer();
@@ -168,8 +167,9 @@ async function selectUnderlay(){
      record.review_state!=='pending_independent_rights_and_geographic_qa' ||
      record.public_access_authorized!==false||record.customer_access_authorized!==false)
     throw Error('The selected source has not passed the private review gate');
-  const blob=new Blob([bytes],{type:'image/png'});
-  underlay={siteId,sourceId,receipt:record,url:URL.createObjectURL(blob)};
+  // SVG must use a same-origin source. Strict Kennedy CSP deliberately
+  // excludes blob: and data: URLs; the private route rechecks SHA on access.
+  underlay={siteId,sourceId,receipt:record,url:privateSrc};
   $('underlay-status').textContent='PRIVATE UNVERIFIED IMAGE · '+sourceId+' · SHA-256 '+sha.slice(0,16)+'… · Operator-local affine alignment only. Not a verified map, boundary or north.';
   paint()
  }catch(e){
@@ -183,7 +183,7 @@ async function selectUnderlay(){
 $('review-site').addEventListener('change',selectUnderlay);
 $('show-underlay').addEventListener('change',paint);
 $('underlay-opacity').addEventListener('input',paint);
-window.addEventListener('pagehide',()=>{if(underlay?.url)URL.revokeObjectURL(underlay.url)});
+window.addEventListener('pagehide',()=>{underlay=null;});
 async function loadAerialSources(){
  forgetUnderlay();
  const siteId=sid(),entries=[['review-site','site'],['review-context','context']];
