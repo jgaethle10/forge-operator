@@ -30,6 +30,11 @@ test('the production Fabric transport is not mounted by default',async()=>{
   assert.equal(proxy.enabled,false);
  }finally{await local.close()}
 });
+test('production Courier route rejects the Saban Microseed Gateway port',()=>{
+ assert.throws(()=>createWingCourierFabricProxy({enabled:true,brokerPort:8791}),
+  /wing_fabric_broker_loopback_route_fixed/);
+ assert.doesNotThrow(()=>createWingCourierFabricProxy({enabled:false,brokerPort:8851}));
+});
 test('caller cannot route credentials to unrelated HTTPS services or embedded URL credentials',()=>{
  const allowed='https://fabric.systemiacommandcenters.com'+WING_COURIER_FABRIC_PREFIX;
  assert.equal(resolveWingCourierBase(allowed),allowed);
