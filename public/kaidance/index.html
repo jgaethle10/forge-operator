@@ -3,66 +3,103 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#050912">
-<meta name="description" content="Watch KAIDANCE, Evercraft's five-minute operating rhythm. Verified Collider health when connected, and a separate public record of real engineering activity.">
+<meta name="theme-color" content="#02070e">
+<meta name="description" content="Watch the public work of Evercraft move through KAIDANCE, Systemia's five-minute Collider. A cinematic evidence-first observatory with real public development receipts.">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self'; script-src 'self'; connect-src 'self' https://api.github.com; img-src 'self' data:; base-uri 'none'; form-action 'none'; object-src 'none'; frame-src 'none'">
-<title>KAIDANCE | The Evercraft Pulse</title>
+<title>KAIDANCE | Evercraft in Motion</title>
 <link rel="icon" href="./mark.svg" type="image/svg+xml">
 <link rel="stylesheet" href="./style.css">
+<link rel="stylesheet" href="./experience.css">
 </head>
 <body>
 <a class="skip" href="#main">Skip to observatory</a>
 <div id="shell">
-<header class="top">
- <a class="identity" href="../systemia/"><span class="mark">✳</span><span><b>EVERCRAFT</b><small>SYSTEMIA / PUBLIC OBSERVATORY</small></span></a>
- <div class="topright"><span class="topcaption">A WINDOW INTO THE WORK</span><span id="statusBadge" class="status-badge waiting"><i></i><span>HEARTBEAT NOT CONNECTED</span></span></div>
-</header>
-<main id="main">
- <section class="hero">
-  <div class="eyebrow"><span class="sliver"></span> THE FIVE-MINUTE RHYTHM OF EVERCRAFT <span class="issue">001 / OBSERVATORY</span></div>
-  <div class="hero-grid"><div><h1>A COMPANY<br>WITH A <em>PULSE.</em></h1><p>Meet KAIDANCE. The Collider is where Systemia's operating cycle comes together. When a verified public heartbeat arrives, you'll see it here. In the meantime, the engineering record speaks for itself.</p></div><div class="hero-aside"><span class="tiny">THE RULE</span><strong>Watch the real work.<br>Never invent the motion.</strong><span class="tiny">EVIDENCE FIRST · EVERCRAFT OWNED</span></div></div>
- </section>
- <section class="observatory-layout">
-  <article class="stage" id="stage" aria-label="KAIDANCE Collider visualization and source status">
-   <div class="stage-top"><div class="stage-label"><span class="cross">✳</span><span>KAIDANCE <small>THE COLLIDER</small></span></div><span class="readout" id="streamType">AWAITING APPROVED TELEMETRY</span></div>
-   <div class="starfield" aria-hidden="true"></div>
-   <div class="collider" id="collider" aria-hidden="true">
-    <div class="orbital orbital-one"><i></i><i></i></div>
-    <div class="orbital orbital-two"><i></i></div>
-    <div class="orbital orbital-three"></div>
-    <div class="orbital orbital-four"></div>
-    <div class="collider-cross cross-one"></div><div class="collider-cross cross-two"></div>
-    <div class="core-wrap"><div class="core-halo"></div><div class="core"><span class="core-letter">K</span><span class="core-caption">KAIDANCE</span></div></div>
-    <div class="pulse-flash"></div>
-   </div>
-   <div class="vertical-label" aria-hidden="true">SYSTEMIA · CONTROLLED OBSERVABILITY</div>
-   <div class="stage-bottom">
-    <div class="stage-caption"><span class="overline">CURRENT COLLIDER STATE</span><strong id="colliderState">UNKNOWN</strong><span id="stageNote">No approved live Collider export is connected.</span></div>
-    <div class="cycle-box"><span class="overline">CYCLE</span><strong id="cycleLarge">—</strong><span id="cycleUpdated">NO SOURCE TIMESTAMP</span></div>
-   </div>
-   <div class="portrait-proof" aria-live="off">
-      <span class="portrait-proof-label" id="portraitEventKind">PUBLIC ENGINEERING RECEIPTS</span>
-      <strong id="portraitEventTitle">Waiting for verified source events</strong>
-      <small id="portraitEventMeta">This is recorded GitHub work, separate from live Collider telemetry.</small>
-      <span class="portrait-proof-line"><i id="portraitProofProgress"></i></span>
+  <header class="top">
+    <a class="identity" href="../systemia/" aria-label="Evercraft Systemia home"><span class="brand-symbol">✳</span><span class="brand-type"><b>EVERCRAFT</b><small>SYSTEMIA / PUBLIC WINDOW</small></span></a>
+    <div class="topright">
+      <div id="statusBadge" class="status-badge waiting"><i></i><span>HEARTBEAT NOT CONNECTED</span></div>
+      <button id="portraitBtn" class="live-button" type="button" aria-pressed="false"><span class="live-button-icon">◉</span> <span>9:16 LIVE VIEW</span></button>
     </div>
-    <div class="portrait-footer"><span>EVERCRAFT / SYSTEMIA</span><span id="portraitSource">PUBLIC TELEMETRY PENDING</span></div>
-  </article>
-  <aside class="telemetry" aria-label="Collider details">
-   <div class="panel-heading"><span class="tiny">01 / COLLIDER</span><h2>The five-minute heartbeat</h2><p>Source: KAIDANCE's approved, privacy-safe public pulse. The visual never advances the actual cycle counter.</p></div>
-   <div class="timebox"><span class="tiny">HEARTBEAT TARGET</span><strong>05<span>:</span>00</strong><div><span id="heartbeatTiming">Not connected</span><span id="lastBeat">Last observation unknown</span></div></div>
-   <div class="metrics"><div><span>Completed cycles</span><strong id="cycleCount">—</strong></div><div><span>Admitted this cycle</span><strong id="admittedCount">—</strong></div><div><span>Held this cycle</span><strong id="heldCount">—</strong></div><div><span>Coverage receipt</span><strong class="metric-state" id="coverageState">UNKNOWN</strong></div></div>
-   <div class="verification"><div><i class="verification-light" id="verificationLight"></i><span id="verificationText">No independent field verification reported</span></div><p>Visual orbits are artwork. Actual cycle transitions and numbers require source evidence. No simulated agent activity.</p></div>
-  </aside>
- </section>
- <section class="record">
-  <div class="record-title"><div><span class="tiny">02 / PUBLIC DEVELOPMENT RECORD</span><h2>While the machines move,<br><em>the receipts remain.</em></h2><p>This is separate from Collider telemetry. These are recorded GitHub reviews, commits, and checks, not proof that a Systemia agent performed a mission.</p></div><span class="record-status" id="githubStatus">CHECKING SOURCE</span></div>
-  <div class="event-grid"><article class="event-spotlight"><span class="tiny" id="eventKind">WAITING FOR VERIFIED SOURCE</span><h3 id="eventTitle">Checking actual engineering records…</h3><p id="eventMeta">No event loaded yet.</p><div class="event-bottom"><span id="eventAge">SOURCE TIMESTAMP UNKNOWN</span><a id="eventLink" hidden target="_blank" rel="noopener noreferrer">VIEW SOURCE RECEIPT ↗</a></div><div class="event-progress"><div id="eventProgress"></div></div></article><div class="event-list" id="eventList"><p class="empty">Public events will appear here only after a successful source read.</p></div></div>
- </section>
- <section class="about"><div><span class="tiny">SYSTEMIA IS THE COORDINATOR</span><h2>KAIDANCE is the rhythm.<br>HUDSON is the spine.</h2></div><p>One source of truth, many specialized systems. This observatory is a public window, never an execution console. A verified heartbeat tells us that a cycle was observed, not that every Evercraft service is healthy or that revenue was earned.</p><a href="../systemia/">MEET SYSTEMIA ↗</a></section>
-</main>
-<footer><span>© EVERCRAFT · OBSERVATORY BUILD 01</span><span id="sourceFoot">LIVE COLLIDER FEED: NOT CONNECTED · PUBLIC GITHUB: CHECKING</span><div><button id="portraitBtn" type="button" aria-pressed="false">9:16 LIVE VIEW</button><button id="filmBtn" type="button" aria-pressed="false">FULL SCREEN ⛶</button><button id="reloadBtn" type="button">REFRESH</button></div></footer>
+  </header>
+  <main id="main">
+    <section class="hero">
+      <div class="eyebrow"><span class="sliver"></span> THE EVERCRAFT OBSERVATORY <span class="issue">SYSTEMIA / KAIDANCE / 001</span></div>
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <h1>WATCH THE<br>WORK <em>MOVE.</em></h1>
+          <p>A public window into a company that builds in cycles. Explore the real engineering record now. Watch the Collider's five-minute heartbeat when its verified feed is connected.</p>
+          <div class="hero-pills" aria-label="Data sources"><span><i></i> PUBLIC GITHUB ACTIVITY</span><span class="hero-pulse-label"><i></i> COLLIDER TELEMETRY: PENDING</span></div>
+        </div>
+        <div class="hero-aside"><span class="tiny">THE PROMISE</span><strong>Nothing staged.<br>Nothing invented.</strong><span class="tiny">THE MOTION IS ART · THE EVIDENCE IS REAL</span></div>
+      </div>
+    </section>
+    <section class="observatory-layout">
+      <article class="stage" id="stage" aria-label="KAIDANCE living network visualization and approved public source states">
+        <canvas id="visualField" class="visual-field" aria-hidden="true"></canvas>
+        <div class="scene-light" aria-hidden="true"></div>
+        <div class="stage-top">
+          <div class="stage-label"><span class="cross">✳</span><span>KAIDANCE <small>THE COLLIDER · EVERCRAFT</small></span></div>
+          <span class="readout" id="streamType">NO APPROVED COLLIDER FEED</span>
+        </div>
+        <div class="scene-index" aria-hidden="true"><span>EVERCRAFT NETWORK</span><span>V · 02 / OBSERVATORY</span></div>
+        <div class="collider" id="collider" aria-hidden="true">
+          <div class="orbital orbital-one"><i></i><i></i></div>
+          <div class="orbital orbital-two"><i></i></div>
+          <div class="orbital orbital-three"></div>
+          <div class="orbital orbital-four"></div>
+          <div class="collider-cross cross-one"></div>
+          <div class="collider-cross cross-two"></div>
+          <div class="orbit-label orbit-label-1">SYSTEMIA</div>
+          <div class="orbit-label orbit-label-2">HUDSON</div>
+          <div class="orbit-label orbit-label-3">RAVEN NEXUS</div>
+          <div class="orbit-label orbit-label-4">EVERCRAFT WORLDS</div>
+          <div class="core-wrap"><div class="core-halo"></div><div class="core"><span class="core-letter">K</span><span class="core-caption">KAIDANCE</span></div></div>
+          <div class="pulse-flash"></div>
+        </div>
+        <div class="scene-note">ANIMATED NETWORK ART · NOT AGENT TELEMETRY</div>
+        <div class="stage-bottom">
+          <div class="stage-caption"><span class="overline">COLLIDER / SOURCE STATE</span><strong id="colliderState">NOT CONNECTED</strong><span id="stageNote">No approved live Collider export is connected.</span></div>
+          <div class="cycle-box"><span class="overline">VERIFIED CYCLE</span><strong id="cycleLarge">—</strong><span id="cycleUpdated">NO SOURCE TIMESTAMP</span></div>
+        </div>
+        <div class="stage-headline" aria-label="Latest sourced public engineering activity">
+          <div class="headline-bar"><span><i class="indicator"></i> NOW IN THE PUBLIC BUILD LOG</span><span id="heroEventKind">CHECKING SOURCE</span></div>
+          <h2 id="heroEventTitle">Loading source-backed engineering activity…</h2>
+          <div class="headline-bottom"><span id="heroEventMeta">This is recorded GitHub work, separate from Collider telemetry.</span><a id="heroEventLink" hidden target="_blank" rel="noopener noreferrer">OPEN RECEIPT ↗</a></div>
+          <div class="headline-progress"><i id="heroProgress"></i></div>
+        </div>
+        <div class="portrait-proof" aria-live="off">
+          <span class="portrait-proof-label" id="portraitEventKind">PUBLIC ENGINEERING RECEIPTS</span>
+          <strong id="portraitEventTitle">Waiting for verified source events</strong>
+          <small id="portraitEventMeta">Recorded GitHub activity, separate from live Collider data.</small>
+          <span class="portrait-proof-line"><i id="portraitProofProgress"></i></span>
+        </div>
+        <div class="portrait-footer"><span>EVERCRAFT · SYSTEMIA</span><span id="portraitSource">PUBLIC TELEMETRY PENDING</span></div>
+      </article>
+      <aside class="telemetry" aria-label="Source-backed Collider telemetry">
+        <div class="panel-heading"><span class="tiny">01 / ACTUAL COLLIDER</span><h2>Five-minute<br><em>heartbeat.</em></h2><p>The real counter and cycle state only update from an approved, fresh source. No pretend agents or fabricated activity.</p></div>
+        <div class="timebox"><span class="tiny">TARGET CYCLE LENGTH</span><strong>05<span>:</span>00</strong><div><span id="heartbeatTiming">Not connected</span><span id="lastBeat">Last observation unknown</span></div></div>
+        <div class="metrics">
+          <div><span>Completed cycles</span><strong id="cycleCount">—</strong></div>
+          <div><span>Admitted this cycle</span><strong id="admittedCount">—</strong></div>
+          <div><span>Held this cycle</span><strong id="heldCount">—</strong></div>
+          <div><span>Coverage receipt</span><strong class="metric-state" id="coverageState">UNKNOWN</strong></div>
+        </div>
+        <div class="verification"><div><i class="verification-light" id="verificationLight"></i><span id="verificationText">No independent field verification reported</span></div><p>Only verified, new Collider cycles produce the heartbeat flare. Ambient movement is decorative.</p></div>
+        <button id="refreshStage" class="refresh-stage" type="button"><span>↻</span> REFRESH PUBLIC SOURCES</button>
+      </aside>
+    </section>
+    <section class="record">
+      <div class="record-title"><div><span class="tiny">02 / THE RECORDED WORK</span><h2>Real receipts.<br><em>Real progress.</em></h2><p>Source-linked public GitHub checks, reviews and commits. These are recorded engineering events, not evidence of a new private Systemia mission.</p></div><span class="record-status" id="githubStatus">CHECKING SOURCE</span></div>
+      <div class="event-grid">
+        <article class="event-spotlight"><span class="tiny" id="eventKind">WAITING FOR VERIFIED SOURCE</span><h3 id="eventTitle">Checking actual engineering records…</h3><p id="eventMeta">No event loaded yet.</p><div class="event-bottom"><span id="eventAge">SOURCE TIMESTAMP UNKNOWN</span><a id="eventLink" hidden target="_blank" rel="noopener noreferrer">VIEW SOURCE RECEIPT ↗</a></div><div class="event-progress"><div id="eventProgress"></div></div></article>
+        <div class="event-list" id="eventList"><p class="empty">Public events appear here only after a successful source read.</p></div>
+      </div>
+    </section>
+    <section class="about"><div><span class="tiny">THE OPERATING SYSTEM OF EVERCRAFT</span><h2>KAIDANCE is the rhythm.<br>HUDSON is the spine.</h2></div><p>Systemia orchestrates work across Evercraft. This is a public window, not an execution console. A verified heartbeat means a cycle was observed, not that every service is healthy or a payment was received.</p><a href="../systemia/">EXPLORE SYSTEMIA ↗</a></section>
+  </main>
+  <footer><span>© EVERCRAFT · KAIDANCE V02</span><span id="sourceFoot">COLLIDER: NOT CONNECTED · PUBLIC GITHUB: CHECKING</span><div><button id="filmBtn" type="button" aria-pressed="false">FULL SCREEN ⛶</button><button id="reloadBtn" type="button">REFRESH</button></div></footer>
 </div>
 <script type="module" src="./app.mjs"></script>
+<script type="module" src="./visual.mjs"></script>
 </body>
 </html>
