@@ -95,8 +95,8 @@ export async function cycle({config,admit=true}={}){
      passportStateDir:config.passportStateDir,adapterActorRef:config.adapterActorRef});
     // An owner must explicitly configure a private goal directory. This
     // creates a durable HELD mission plan, not a Saban lease or job.
-    if(config.goalStateDir){
-     if(config.wing!=='fallen'||!result.oneCompanyPlan)
+    if(config.goalStateDir && result.oneCompanyPlan){
+     if(config.wing!=='fallen')
       fail('goal_checkpoint_requires_verified_fallen_media');
      result.goalCheckpoint=stageOneCompanyGoalCandidate({
       handoff:result,privateGoalDir:config.goalStateDir
