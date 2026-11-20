@@ -74,12 +74,32 @@
       "host_test_passed": false,
       "qualification_confirmed": false,
       "commercial_contacted": false
+    },
+    {
+      "id": "CALIFORNIAPC-256-2162TM2",
+      "company": "California PC FLASH",
+      "role": "industrial flash-card product line and catalog vendor",
+      "public_product_family": "Tough Metal Series 2 industrial PCMCIA Type II ATA flash",
+      "part_number": "FPCI-256MB-2162TM2",
+      "public_price_usd": 114.2,
+      "public_price_quantity": "1–9 units",
+      "public_price_observed_date": "2026-11-19",
+      "source_url": "https://www.californiapc.com/Industrial-Flash-Memory/Industrial-Grade-PCMCIA-Tough-Metal-Series-2/",
+      "observed": "Catalog describes 256 MB Type II removable-PCMCIA / fixed-IDE, PIO4 (no DMA), industrial -40°C to +85°C, SLC, three-year warranty and published 1–9 quantity unit price. Related 256MB UDMA part FPCI-256MB-4162TM2 is marked EOL; not equivalent without verification.",
+      "verification_status": "public_lead_only",
+      "authorized_relationship": false,
+      "verified_traceability": false,
+      "confirmed_quote": false,
+      "host_test_passed": false,
+      "qualification_confirmed": false,
+      "commercial_contacted": false
     }
   ],
   "claim_constraints": [
     "Public catalog is not a confirmed quote or authorized supplier relationship",
     "Supplier product specifications do not prove compatibility with a government-furnished host",
     "No product/firm has been qualified by the Air Force",
-    "No supplier contacted, order placed, bid submitted, or government payment observed"
+    "No supplier contacted, order placed, bid submitted, or government payment observed",
+    "A catalog 'compatibility guaranteed' statement is not F-22 compatibility evidence; the EOL product is not necessarily interchangeable with the advertised available product."
   ]
 }
