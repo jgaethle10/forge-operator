@@ -52,7 +52,7 @@ export async function runAdvisoryHeartbeatOnce({
  }
  return {state:results.some(x=>x.state==='advisory_received')?'advisories_received':'held',
   plan,results,
-  provider_calls_performed:results.filter(x=>x.state==='advisory_received').length};
+  provider_calls_performed:results.filter(x=>x.attempt_consumed===true).length};
 }
 async function main(){
  const input=process.env.SYSTEMIA_ADVISORY_MISSION_PACKET_FILE;
