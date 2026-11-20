@@ -18,7 +18,7 @@ PasswordAuthentication no
 KbdInteractiveAuthentication no
 PermitRootLogin no
 PermitEmptyPasswords no
-UsePAM no
+UsePAM yes
 AllowTcpForwarding remote
 PermitListen 127.0.0.1:18897
 PermitOpen none
