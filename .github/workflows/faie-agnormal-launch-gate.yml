@@ -8,6 +8,9 @@ on:
       - 'systemia/mcp/fabric-faie-runtime.mjs'
       - 'systemia/faie/**'
       - 'scripts/faie-agnormal-external-canary.mjs'
+      - 'scripts/faie-browser-partner-acceptance.mjs'
+      - 'scripts/faie-partner-end-to-end.mjs'
+      - 'scripts/faie-soil-live-acceptance.mjs'
       - '.github/workflows/faie-agnormal-launch-gate.yml'
       - 'tests/faie-agnormal-external-canary-contract.test.mjs'
   workflow_dispatch:
@@ -132,7 +135,8 @@ jobs:
             if [ "$attempt" -lt 15 ] && { \
               { [ "$stage" = "public_pages" ] && [[ "$error" == source_live_parity_* ]]; } || \
               { [[ "$stage" == "public_pages" || "$stage" == "live_health" ]] && \
-                [[ "$error" == "fetch failed" || "$error" == *"TimeoutError"* || "$error" == *"_http_502" || "$error" == *"_http_503" ]]; }; \
+                [[ "$error" == "fetch failed" || "$error" == *"TimeoutError"* || "$error" == *"_http_502" || "$error" == *"_http_503" ]]; } || \
+              { [ "$stage" = "real_water_investigation" ] && [ "$error" = "usdm_drought_not_misclassified_as_soil_or_crop_evidence" ]; }; \
             }; then
               echo "FAIE partner gate retry for deployment convergence/transient edge ($stage: $error; $attempt/15)."
               sleep 15
@@ -153,6 +157,33 @@ jobs:
           node scripts/faie-browser-partner-acceptance.mjs | tee artifacts/faie-browser-partner-acceptance.json
           test "$(jq -r '.state' artifacts/faie-browser-partner-acceptance.json)" = 'BROWSER_UX_ACCEPTED'
 
+      - name: Verify official USDA site-soil preview from public edge
+        id: soil
+        shell: bash
+        run: |
+          set -euo pipefail
+          for attempt in $(seq 1 12); do
+            set +e
+            node scripts/faie-soil-live-acceptance.mjs > artifacts/faie-soil-live-acceptance.json
+            status=$?
+            set -e
+            if [ "$status" -eq 0 ]; then
+              cat artifacts/faie-soil-live-acceptance.json
+              break
+            fi
+            error="$(jq -r '.error // ""' artifacts/faie-soil-live-acceptance.json)"
+            stage="$(jq -r '.stage_failed // ""' artifacts/faie-soil-live-acceptance.json)"
+            if [ "$attempt" -lt 12 ] && [ "$stage" = "usda_soil_read" ] && \
+              { [[ "$error" == *"_http_404"* || "$error" == *"_http_502"* || "$error" == *"_http_503"* || "$error" == *"fetch failed"* ]]; }; then
+              echo "Public soil service not converged/temporarily unavailable: $error ($attempt/12)"
+              sleep 15
+              continue
+            fi
+            cat artifacts/faie-soil-live-acceptance.json >&2
+            exit "$status"
+          done
+          test "$(jq -r '.state' artifacts/faie-soil-live-acceptance.json)" = 'SOIL_LIVE_SOURCE_VERIFIED'
+
       - name: Publish FAIE launch status
         if: always()
         env:
@@ -160,15 +191,16 @@ jobs:
           VERIFY_OUTCOME: ${{ steps.verify.outcome }}
           PARTNER_OUTCOME: ${{ steps.partner.outcome }}
           BROWSER_OUTCOME: ${{ steps.browser.outcome }}
+          SOIL_OUTCOME: ${{ steps.soil.outcome }}
         shell: bash
         run: |
           set -euo pipefail
-          if [ "$VERIFY_OUTCOME" = "success" ] && [ "$PARTNER_OUTCOME" = "success" ] && [ "$BROWSER_OUTCOME" = "success" ]; then
+          if [ "$VERIFY_OUTCOME" = "success" ] && [ "$PARTNER_OUTCOME" = "success" ] && [ "$BROWSER_OUTCOME" = "success" ] && [ "$SOIL_OUTCOME" = "success" ]; then
             state="success"
-            description="FAIE technical UI/API/browser verified; partnership source scope separate"
+            description="FAIE public UI/API/browser and official soil source verified"
           else
             state="failure"
-            stage="verify=$VERIFY_OUTCOME partner=$PARTNER_OUTCOME browser=$BROWSER_OUTCOME"
+            stage="verify=$VERIFY_OUTCOME partner=$PARTNER_OUTCOME browser=$BROWSER_OUTCOME soil=$SOIL_OUTCOME"
             error="$(jq -r '.error // "verification_failed"' artifacts/faie-partner-end-to-end.json 2>/dev/null || echo verification_failed)"
             description="FAIE launch failure: ${stage} (${error})"
             description="${description:0:140}"
@@ -185,5 +217,6 @@ jobs:
             artifacts/faie-agnormal-launch-gate.json
             artifacts/faie-partner-end-to-end.json
             artifacts/faie-browser-partner-acceptance.json
+            artifacts/faie-soil-live-acceptance.json
           if-no-files-found: error
           retention-days: 90

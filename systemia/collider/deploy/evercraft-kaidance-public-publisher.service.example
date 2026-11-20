@@ -1,7 +1,12 @@
-# EXAMPLE ONLY. Operator must replace paths/identity and separately approve publication.
-# Never install/enable until the real private Yard route and owned public edge are verified.
+# STAGED EXAMPLE ONLY. DO NOT INSTALL until actual owner-reviewed field deployment.
+# Uses the signed Leiland publication gate; the former loose JSON approval CLI
+# is disabled. Service account/paths are examples, not evidence of deployment.
+#
+# Operator must create private 0700 source & receipt directories, exact-release
+# checkout, Ed25519-signed 0600 approval bound to the exact source & target,
+# verified public key, and a separately authorized owned public HTTPS ingress.
 [Unit]
-Description=Evercraft KAIDANCE approved public pulse projector
+Description=Evercraft KAIDANCE signed public pulse publisher
 After=network-online.target
 Wants=network-online.target
 
@@ -10,11 +15,15 @@ Type=oneshot
 User=evercraft
 Group=evercraft
 WorkingDirectory=/opt/evercraft/forge-operator
-ExecStart=/usr/bin/node /opt/evercraft/forge-operator/systemia/collider/public-publisher.mjs --yard-state-dir /srv/evercraft/private/yard --deployment-id kaidance-local-resident --approval-file /srv/evercraft/private/kaidance-public-approval.json --public-root /srv/evercraft/public
+# First read the real private authenticated Yard resident and stage 0600 bytes.
+ExecStartPre=/usr/bin/node /opt/evercraft/forge-operator/systemia/collider/private-safe-pulse-snapshot.mjs --yard-state-dir /srv/evercraft/private/yard --deployment-id kaidance-local-resident --private-root /var/lib/evercraft/leiland/private-stage
+# Publish only after an exact source+destination bound Ed25519 signature passes.
+ExecStart=/usr/bin/node /opt/evercraft/forge-operator/systemia/leiland/owned-pulse-publisher.mjs --input /var/lib/evercraft/leiland/private-stage/kaidance-safe-pulse.json --owned-public-root /var/lib/evercraft/leiland/public-projections --approval /srv/evercraft/private/kaidance-signed-publication-approval.json --signature /srv/evercraft/private/kaidance-signed-publication-approval.sig --verify-key /srv/evercraft/private/kaidance-publication-verify-key.pem --receipt-dir /var/lib/evercraft/leiland/private-receipts
 NoNewPrivileges=true
 PrivateTmp=true
 ProtectHome=true
 ProtectSystem=strict
-ReadWritePaths=/srv/evercraft/public/kaidance
-TimeoutStartSec=25s
-# No EnvironmentFile, API token, private key, or credential is passed to a public page.
+ReadWritePaths=/var/lib/evercraft/leiland/private-stage /var/lib/evercraft/leiland/public-projections/kaidance /var/lib/evercraft/leiland/private-receipts
+TimeoutStartSec=35s
+# The owned Leiland read-only host separately serves the public JSON.
+# This unit itself never opens a listener or modifies DNS/Caddy.

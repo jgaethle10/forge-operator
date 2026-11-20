@@ -158,6 +158,16 @@ Pilot acceptance gate:
 - one-click Yakima Valley food-infrastructure scope is available on the real UI
 - human review remains required before consequential action
 
+### Public mapped-soil point preview
+
+The Evercraft-owned Fabric edge provides `POST /api/faie/soil/preview` for an explicitly supplied latitude/longitude in the contiguous United States. A visitor opens the collapsed "Have a specific location?" panel, enters the coordinates, and submits an opt-in on-demand request. The server performs a bounded read from USDA NRCS Soil Data Access with fixed SQL and capped provider concurrency, checks rate limits, and returns a compact `evercraft.faie.public-soil-preview.v1` response.
+
+- Public coordinates and soil results are **not ingested into FAIE shared investigation history**, nor does this route save the visitor's requested location in FAIE state. The upstream USDA service receives the coordinates to make the query.
+- No parcel owner or individual is looked up; source evidence remains `REPORTED` mapped survey context, **not field sampling** or an automatic site or investment verdict.
+- If USDA returns no map unit, FAIE says no mapped soil was returned, not that no soil exists. On provider errors, it returns a fail-closed 502.
+- If official survey-update metadata are unavailable, survey date is unknown; the retrieval date never masquerades as an official survey update.
+- The sample startup and QA harness use injected fixtures, never real third-party source calls. Source details and privacy/rate limits are covered in `systemia/mcp/fabric-faie-soil-preview.test.mjs`.
+
 ### USDA NRCS site soil acquisition
 
 The internal `POST /api/faie/acquire/soil` route performs a bounded read from USDA NRCS Soil Data Access when an exact latitude and longitude are supplied. It uses the official WGS84 map-unit intersection function and retrieves SSURGO map-unit, component, horizon and texture-related fields.
@@ -187,7 +197,7 @@ FAIE also reuses existing Sentinel official-source adapters. NWS active alerts a
 
 ### Independent U.S. Drought Monitor county evidence
 
-The bounded collector in `usdm-source.mjs` reads the official National Drought Mitigation Center/USDA/NOAA U.S. Drought Monitor CountyStatistics percent-area REST service, using **traditional cumulative** D0–D4 percentages and the actual weekly `MapDate`. Its initial whitelist is Yakima County (53077), Benton County (53005), and Franklin County (53021), with region labels `yakima-wa` and `tri-cities-wa`. It is enabled automatically only for the independently configured `yakima-basin-wa` profile; other profiles fail closed until explicitly mapped. County observations remain `REPORTED`, not field measurements. FAIE never infers a parcel's water rights, crop viability, buildability, or irrigation allocation from county statistics. An unavailable, stale, future, wrong-county, malformed, or internally inconsistent result yields an error/partial receipt, not a made-up signal. The source is independent of USGS stream monitoring but still is **not** a site-level decision.
+The bounded collector in `usdm-source.mjs` reads the official National Drought Mitigation Center/USDA/NOAA U.S. Drought Monitor CountyStatistics percent-area REST service, using **traditional cumulative** D0–D4 percentages and the actual weekly `MapDate`. Its initial whitelist is Yakima County (53077), Benton County (53005), and Franklin County (53021), with region labels `yakima-wa` and `tri-cities-wa`. It is enabled automatically only for the independently configured `yakima-basin-wa` profile; other profiles fail closed until explicitly mapped. County observations remain `REPORTED`, not field measurements. The FAIE dimension classifier treats those county drought assessments as **resilience** context only, regardless of soil, water-right or crop caveats in the text. Previously admitted USDM signal dimensions are reconciled conservatively on runtime startup and recorded in a source-scope repair receipt; a drought report does not satisfy a soil or crop-evidence gap. FAIE never infers a parcel's water rights, crop viability, buildability, or irrigation allocation from county statistics. An unavailable, stale, future, wrong-county, malformed, or internally inconsistent result yields an error/partial receipt, not a made-up signal. The source is independent of USGS stream monitoring but still is **not** a site-level decision.
 
 Official API documentation: https://droughtmonitor.unl.edu/DmData/DataDownload/WebServiceInfo.aspx
 

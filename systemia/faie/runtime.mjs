@@ -5,7 +5,8 @@ import {
   buildFaieInvestigation,
   emptyFaieState,
   ingestFaieObservation,
-  publicFaieSnapshot
+  publicFaieSnapshot,
+  reconcileFaieSourceDimensions
 } from './core.mjs';
 import { collectFaieOfficialSources, faieCollectorConfigFromEnv } from './collectors.mjs';
 
@@ -135,7 +136,21 @@ export function createFaieRuntime({
   const investigationsDir = path.join(stateDir, 'investigations');
   const comparisonsDir = path.join(stateDir, 'comparisons');
 
-  let state = readJson(stateFile, emptyFaieState());
+  // Previously ingested USDM rows used keyword matching on their cautionary
+  // summaries. Reconcile only those rows on startup, before serving previews.
+  const reconciliation = reconcileFaieSourceDimensions(readJson(stateFile, emptyFaieState()));
+  let state = reconciliation.state;
+  if (reconciliation.corrected) {
+    appendJsonl(receiptsFile, {
+      schema:'evercraft.faie.source-scope-repair.v1',
+      corrected_signal_count:reconciliation.corrected,
+      source_family:'us-drought-monitor-ndmc',
+      reason:'drought_caveat_text_was_not_soil_evidence',
+      created_at:new Date().toISOString(),
+      decision_authority:false,
+      publication_authority:false
+    });
+  }
   let timer = null;
   let running = false;
 
@@ -304,7 +319,7 @@ export function createFaieRuntime({
       const finishedAt = new Date().toISOString();
       const receipt = {
         schema: 'evercraft.faie.cycle-receipt.v1',
-        status: errors.length || (officialCollectorRun.receipts || []).some((row) => row.status === 'error') ? 'partial' : 'ok',
+        status: errors.length || (officialCollectorRun.receipts || []).some((row) => ['error', 'partial'].includes(row.status)) ? 'partial' : 'ok',
         started_at: startedAt,
         finished_at: finishedAt,
         radar_signals_seen: radarSignalsSeen,

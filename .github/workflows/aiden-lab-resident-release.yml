@@ -1,0 +1,41 @@
+name: Aiden's Lab resident release acceptance
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/probe-aiden-lab-resident.mjs'
+      - 'scripts/update-fabric-owned-edge.sh'
+      - 'scripts/diagnose-fabric-owned-edge-release.sh'
+      - 'tests/aiden-lab-resident-release.test.mjs'
+      - 'tests/aiden-lab-resident-updater-contract.test.mjs'
+      - '.github/workflows/aiden-lab-resident-release.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/probe-aiden-lab-resident.mjs'
+      - 'scripts/update-fabric-owned-edge.sh'
+      - 'scripts/diagnose-fabric-owned-edge-release.sh'
+      - 'tests/aiden-lab-resident-release.test.mjs'
+      - 'tests/aiden-lab-resident-updater-contract.test.mjs'
+      - '.github/workflows/aiden-lab-resident-release.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  resident-proof:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Check exact-source resident proof syntax
+        run: node --check scripts/probe-aiden-lab-resident.mjs
+      - name: Check shell syntax and source-to-loopback release boundaries
+        run: |
+          bash -n scripts/update-fabric-owned-edge.sh
+          bash -n scripts/diagnose-fabric-owned-edge-release.sh
+          node --test tests/aiden-lab-resident-release.test.mjs tests/aiden-lab-resident-updater-contract.test.mjs

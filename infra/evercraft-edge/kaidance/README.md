@@ -9,9 +9,11 @@ The intended public viewer is served by an already approved **Evercraft-owned HT
 ```
 private KAIDANCE resident Collider
   -> authenticated YardOperator.getKaidancePulse
-  -> independently field-attested and approved public-publisher.mjs
-  -> /srv/evercraft/public/kaidance/pulse.json
-  -> allowlisted HTTPS file_server path /kaidance/pulse.json
+  -> private-safe-pulse-snapshot.mjs (0600 private source)
+  -> Leiland owned-pulse-publisher.mjs (path-bound signed approval)
+  -> /var/lib/evercraft/leiland/public-projections/kaidance/pulse.json
+  -> Leiland read-only owned-observatory-host.mjs on loopback
+  -> separately authorized existing Caddy HTTPS edge
   -> KAIDANCE viewer (20-second poll, fail closed)
 ```
 
@@ -27,7 +29,7 @@ The `public/kaidance/` directory contains all its own CSS, JS, public-only GitHu
 
 1. Identify an independently verified owner-controlled HTTPS host and the applicable existing Caddy site block. Do not infer a hostname, DNS control, or route health from source code. Never overwrite the shared Caddyfile.
 2. Confirm real KAIDANCE resident deployment ID, private Yard state path, valid field-attestation receipt, and recent consecutive Collider coverage receipts on the actual host.
-3. Obtain and record explicit private operator authorization for publication of the allowlisted aggregates and selected public host. The publisher's approval-file contract is in `public/kaidance/README.md` and `systemia/collider/public-publisher.mjs`. Approval must be stored **outside** this served root.
+3. Obtain and record explicit private operator authorization for publication of the allowlisted aggregates and selected public host. The publisher's Ed25519 signature and exact-path authorization contract is in `public/kaidance/README.md` and `systemia/leiland/owned-pulse-publisher.mjs`. Signed approval files must stay **outside** every served root.
 4. Stage **only** these reviewed static files on the selected owned host:
    ```text
    /srv/evercraft/public/kaidance/index.html
@@ -38,7 +40,7 @@ The `public/kaidance/` directory contains all its own CSS, JS, public-only GitHu
    /srv/evercraft/public/kaidance/mark.svg
    ```
 5. After inspecting the real site configuration and securing a rollback copy, adapt the **staged** `Caddyfile.route.example` into the approved existing site block, preserving existing site handlers and their precedence. Validate the **complete** effective Caddy configuration with `caddy validate` before a controlled reload. A fragment-level CI proof does not prove coexistence with an operator's actual shared Caddyfile.
-6. Run **one** separately approved `systemia/collider/public-publisher.mjs` publication. It fails closed for missing approval, unhealthy field status, stale cycle, and unsafe outputs. Only enable the 30-second example timer once a real operator verifies the first export and its origin.
+6. Use the staged private-safe snapshot collector and **separately signed** `systemia/leiland/owned-pulse-publisher.mjs`, with the signed policy bound to the real private input and exact public projection path. The older unsigned publisher CLI is disabled. Verify the read-only Leiland host's existing loopback route independently before importing it into the actual approved Caddy site. The `Caddyfile.route.example` is for **static preview only**, not the canonical signed live projection path. Only enable the 30-second example timer after field authorization and the first valid end-to-end export.
 7. From outside the network, run `node systemia/collider/public-readback.mjs --url https://ACTUAL-OWNED-HOST/kaidance/pulse.json`. Then verify the actual /kaidance/ page over HTTPS, real-time cycle transitions across at least two **real** 300-second cycles, field attestation, safe receipt count, mobile layout, portrait lower third, and stale-data denial.
 8. Only then put the viewer URL into TikTok Live screen capture. The page is not an RTMP broadcaster. Keep the visible source-state label in the broadcast.
 

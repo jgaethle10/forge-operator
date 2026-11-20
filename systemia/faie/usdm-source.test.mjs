@@ -121,6 +121,8 @@ test('Yakima USDM is independent of USGS water evidence; Tri-Cities cannot inher
   assert.ok(inv.coverage.independent_source_family_count>=2);
   assert.ok(inv.coverage.covered_dimensions.includes('water'));
   assert.ok(inv.coverage.covered_dimensions.includes('resilience'));
+  assert.ok(!inv.coverage.covered_dimensions.includes('soil'), 'a disclaimer about unknown soil conditions must never count as measured soil evidence');
+  assert.ok(!droughts.some(x=>x.evidence_state!=='reported'), 'USDM county estimates remain reported, not site measurements');
   assert.equal(inv.decision_authority,false);
   assert.equal(inv.publication_authority,false);
 

@@ -1,8 +1,5 @@
 // Explicit, narrow public export from the *existing* privacy-safe KAIDANCE pulse.
 // Never accept raw runtime state, mission snapshots, evidence refs, or node topology.
-import fs from 'node:fs';
-import path from 'node:path';
-import {fileURLToPath} from 'node:url';
 import {assertPulsePrivacy} from './pulse.mjs';
 
 export const PUBLIC_SCHEMA='evercraft.kaidance.public-pulse.v1';
@@ -44,25 +41,5 @@ export function projectPublicKaidancePulse(pulse,{now=new Date()}={}){
    published_at:now.toISOString()
  };
 }
-function flag(name){
- const idx=process.argv.indexOf(name);
- return idx>=0?process.argv[idx+1]:null;
-}
-if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)){
- const input=flag('--input'),output=flag('--output'),approval=flag('--approval-ref');
- if(!input||!output||!approval||!/^approved:[a-z0-9][a-z0-9:._-]{5,100}$/i.test(approval)){
-   console.error('usage: node systemia/collider/public-projection.mjs --input /private/safe-pulse.json --output /approved-export-dir/pulse.json --approval-ref approved:<operator-record>');
-   process.exitCode=2;
- }else{
-   try{
-     const pulse=JSON.parse(fs.readFileSync(input,'utf8'));
-     const publicPulse=projectPublicKaidancePulse(pulse);
-     // This writes only explicitly requested output. Serving that directory is a separate operator action.
-     fs.mkdirSync(path.dirname(path.resolve(output)),{recursive:true,mode:0o750});
-     const tmp=output+'.'+process.pid+'.tmp';
-     fs.writeFileSync(tmp,JSON.stringify(publicPulse,null,2)+'\n',{mode:0o640,flag:'wx'});
-     fs.renameSync(tmp,output);
-     console.log(JSON.stringify({schema:'evercraft.kaidance.public-export-receipt.v1',status:'staged',approval_ref:approval,output:path.resolve(output),cycle_number:publicPulse.cycle_number}));
-   }catch(error){console.error('public-export-held:',error.message);process.exitCode=1}
- }
-}
+// Deliberately library-only. The signed Leiland owned-pulse-publisher is the
+// sole authorized writer for a publicly exposed KAIDANCE pulse.

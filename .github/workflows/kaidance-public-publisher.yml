@@ -4,21 +4,29 @@ on:
   pull_request:
     paths:
       - 'systemia/collider/public-publisher.mjs'
+      - 'systemia/collider/private-safe-pulse-snapshot.mjs'
+      - 'systemia/leiland/owned-pulse-publisher.mjs'
       - 'systemia/collider/public-readback.mjs'
       - 'systemia/collider/public-projection.mjs'
       - 'systemia/collider/deploy/**'
       - 'public/kaidance/**'
       - 'tests/kaidance-public-publisher.test.mjs'
+      - 'tests/kaidance-private-snapshot.test.mjs'
+      - 'tests/leiland-owned-pulse-publisher.test.mjs'
       - 'tests/kaidance-public-readback.test.mjs'
       - '.github/workflows/kaidance-public-publisher.yml'
   push:
     paths:
       - 'systemia/collider/public-publisher.mjs'
+      - 'systemia/collider/private-safe-pulse-snapshot.mjs'
+      - 'systemia/leiland/owned-pulse-publisher.mjs'
       - 'systemia/collider/public-readback.mjs'
       - 'systemia/collider/public-projection.mjs'
       - 'systemia/collider/deploy/**'
       - 'public/kaidance/**'
       - 'tests/kaidance-public-publisher.test.mjs'
+      - 'tests/kaidance-private-snapshot.test.mjs'
+      - 'tests/leiland-owned-pulse-publisher.test.mjs'
       - 'tests/kaidance-public-readback.test.mjs'
       - '.github/workflows/kaidance-public-publisher.yml'
   workflow_dispatch:
@@ -40,7 +48,9 @@ jobs:
           node --test \
             tests/kaidance-public-observatory.test.mjs \
             tests/kaidance-public-publisher.test.mjs \
-            tests/kaidance-public-readback.test.mjs
+            tests/kaidance-private-snapshot.test.mjs \
+            tests/kaidance-public-readback.test.mjs \
+            tests/leiland-owned-pulse-publisher.test.mjs
       - name: Existing Collider source-level proofs
         run: |
           node systemia/collider/proof.mjs

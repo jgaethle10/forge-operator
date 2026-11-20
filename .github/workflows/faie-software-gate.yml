@@ -4,6 +4,10 @@ on:
   pull_request:
     paths:
       - 'systemia/faie/**'
+      - 'scripts/faie-browser-partner-acceptance.mjs'
+      - 'scripts/faie-soil-live-acceptance.mjs'
+      - 'systemia/mcp/fabric-faie-runtime.mjs'
+      - 'systemia/mcp/fabric-faie-soil-preview.test.mjs'
       - 'public/faie/**'
       - 'systemia/sentinel/sources/**'
       - 'systemia/sentinel/region-profile.mjs'
@@ -17,6 +21,10 @@ on:
       - main
     paths:
       - 'systemia/faie/**'
+      - 'scripts/faie-browser-partner-acceptance.mjs'
+      - 'scripts/faie-soil-live-acceptance.mjs'
+      - 'systemia/mcp/fabric-faie-runtime.mjs'
+      - 'systemia/mcp/fabric-faie-soil-preview.test.mjs'
       - 'public/faie/**'
       - 'systemia/sentinel/sources/**'
       - 'systemia/sentinel/region-profile.mjs'
@@ -55,6 +63,14 @@ jobs:
 
       - name: FAIE intelligence studio experience contract
         run: node --test tests/faie-intelligence-studio.test.mjs
+
+      - name: FAIE external browser and soil verifier syntax
+        run: |
+          node --check scripts/faie-browser-partner-acceptance.mjs
+          node --check scripts/faie-soil-live-acceptance.mjs
+
+      - name: FAIE USDA mapped soil public preview source, privacy and rate-limit tests
+        run: node --test systemia/mcp/fabric-faie-soil-preview.test.mjs
 
       - name: FAIE Saban swarm proof
         run: npm run proof:saban-faie

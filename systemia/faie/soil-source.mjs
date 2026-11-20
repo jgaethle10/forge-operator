@@ -203,14 +203,14 @@ export async function collectUsdaSoilAtPoint({
 
   const rows = tableObjects(payload);
   const mapunits = summarizeRows(rows);
-  const sourceUpdatedAt = newestSourceDate(rows, retrievedAt);
+  const sourceUpdatedAt = newestSourceDate(rows, null);
   const regions = [...new Set((Array.isArray(regionKeys) ? regionKeys : [regionKeys]).map(clean).filter(Boolean))];
 
   const observation = mapunits.length ? {
-    observation_id: 'usda-soil:' + [lat.toFixed(6), lon.toFixed(6), sourceUpdatedAt].join(':'),
+    observation_id: 'usda-soil:' + [lat.toFixed(6), lon.toFixed(6), sourceUpdatedAt || retrievedAt].join(':'),
     source_system: 'usda_nrcs_soil_data_access',
     source_family: 'USDA NRCS Soil Data Access',
-    observed_at: sourceUpdatedAt,
+    observed_at: sourceUpdatedAt || retrievedAt,
     region_keys: regions.length ? regions : ['site:' + lat.toFixed(5) + ',' + lon.toFixed(5)],
     domains: ['agriculture', 'environment'],
     kind: 'soil_site_profile',

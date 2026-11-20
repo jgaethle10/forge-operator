@@ -68,8 +68,9 @@ export async function probeHudsonPublic({origin=HUDSON_ORIGIN,fetchImpl=fetch,no
  let page,feed,health,privateProbe;
  try{
   page=await getText(url,fetchImpl);
-  checks.public_html=page.status===200&&/^text\/html/i.test(page.type)&&page.content.includes('HUDSON | The Living Spine')&&page.content.includes('ANIMATED PATHS ARE NOT VERIFIED EVENTS');
-  if(!checks.public_html)errors.push('public_html_not_verified');
+  checks.public_html=page.status===200&&/^text\/html/i.test(page.type)&&page.content.includes('HUDSON | The Living Spine')&&page.content.includes('ANIMATED PATHS ARE NOT VERIFIED EVENTS')&&page.content.includes('name="hudson-release" content="v2-mobile-cinematic"')&&page.content.includes('id="ambient-field"')&&page.content.includes('id="next-signal"');
+  checks.visual_release_version=checks.public_html?'v2-mobile-cinematic':null;
+  if(!checks.public_html)errors.push('public_v2_html_not_verified');
  }catch(e){checks.public_html=false;checks.public_html_error_class=classifyPublicFetchFailure(e);errors.push('public_html_unreachable')}
  try{
   feed=await getText(url+'activity.json?proof=1',fetchImpl);
@@ -83,6 +84,9 @@ export async function probeHudsonPublic({origin=HUDSON_ORIGIN,fetchImpl=fetch,no
  try{
   health=await getText(origin+'/health',fetchImpl);
   let body=null;try{body=JSON.parse(health.content)}catch{}
+  const sourceRef=String(body?.source_release_ref||'');
+  checks.fabric_source_release_ref=/^[a-f0-9]{40,64}$/.test(sourceRef)?sourceRef:null;
+  checks.fabric_source_release_ref_bound=body?.source_release_ref_bound===true&&Boolean(checks.fabric_source_release_ref);
   checks.fabric_route_claim=health.status===200&&body?.hudson_public_path==='/hudson/'&&
     body?.hudson_public_source_ready===true&&body?.hudson_public_feed_authority==='public_git_source_history_only';
   if(!checks.fabric_route_claim)errors.push('fabric_runtime_route_claim_absent');
