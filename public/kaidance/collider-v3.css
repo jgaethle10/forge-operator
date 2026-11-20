@@ -1,0 +1,38 @@
+/* KAIDANCE COLLIDER V03. An immersive accelerator sculpture instead of
+   the legacy rotating K emblem. The data/readback UI is unchanged. */
+.stage{
+ background:
+  radial-gradient(ellipse 48% 46% at 51% 35%,rgba(20,92,153,.29),transparent 100%),
+  radial-gradient(ellipse 82% 72% at 52% 47%,rgba(9,24,53,.75),transparent 95%),
+  #01070f;
+}
+#colliderField{
+ position:absolute;inset:0;
+ display:block;width:100%;height:100%;z-index:3;
+ pointer-events:none;overflow:hidden;
+ filter:saturate(1.14) contrast(1.08);
+}
+/* The legacy DOM collider remains solely as the verified .beat signal source.
+   Its circular logo/rings are not the user-facing reactor. */
+#collider{opacity:0!important;pointer-events:none}
+.scene-light{z-index:1;mix-blend-mode:screen;
+ background:radial-gradient(ellipse 38% 30% at 50% 35%,rgba(46,111,190,.15),transparent)}
+#visualField{z-index:1;opacity:.38}
+.stage:before{opacity:.09}
+.stage-top{z-index:8}
+.scene-index,.scene-note{z-index:7}
+.stage-bottom{z-index:8}
+.stage-headline{z-index:9;background:linear-gradient(115deg,rgba(10,30,48,.97),rgba(4,14,28,.96) 72%)}
+.portrait-proof{z-index:9!important}
+.stage:after{z-index:10}
+.stage-caption strong{letter-spacing:-.05em}
+body.portrait #colliderField{filter:saturate(1.2) contrast(1.11)}
+@media(max-width:760px){
+ .stage{background:radial-gradient(ellipse 68% 40% at 51% 34%,rgba(20,88,154,.3),transparent 100%),#01070f}
+ .scene-index{display:none}
+ .stage-bottom{bottom:173px}
+ .stage-headline{min-height:147px}
+}
+@media(prefers-reduced-motion:reduce){
+ #colliderField{filter:saturate(.85) contrast(1)}
+}
