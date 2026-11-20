@@ -1,0 +1,31 @@
+name: Evercraft partner opportunity two-lane handoff
+on:
+  pull_request:
+    paths:
+      - 'systemia/partners/**'
+      - 'systemia/opportunity-fabric/engine.mjs'
+      - 'systemia/mcp/partners-public-inquiry.mjs'
+      - '.github/workflows/evercraft-partner-prospect-triage.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/partners/**'
+      - 'systemia/opportunity-fabric/engine.mjs'
+      - 'systemia/mcp/partners-public-inquiry.mjs'
+      - '.github/workflows/evercraft-partner-prospect-triage.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  safe-prospect-routing:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prove dual-lane partner safety and existing Opportunity Fabric
+        run: node --test systemia/partners/two-lane-discovery.test.mjs systemia/opportunity-fabric/engine.test.mjs tests/evercraft-partners-launch.test.mjs
