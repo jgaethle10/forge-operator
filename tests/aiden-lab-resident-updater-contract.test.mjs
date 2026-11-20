@@ -29,6 +29,7 @@ test('release doctor separates source-drift and ingress-drift without mutation',
   assert.match(s,/aidens_lab_source_route_present=/);
   assert.match(s,/aidens_lab_local_owned_route_marker=/);
   assert.match(s,/merged_source_present_but_resident_runtime_route_missing/);
-  assert.match(s,/resident_routes_present_public_https_and_exact_hash_proof_still_required/);
+  assert.match(s,/resident_world_routes_present_public_https_and_exact_hash_proof_still_required/);
+  assert.match(s,/existing_atlas_live_but_new_interactive_world_routes_missing/);
   assert.match(s,/doctor_mutation_performed=false/);
 });
