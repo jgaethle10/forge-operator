@@ -75,10 +75,10 @@ test('the watcher becomes an ambiguous changing presence, not a recognizable bug
  assert.doesNotMatch(code,/for\(var leg=0;/);
  assert.doesNotMatch(code,/for\(var ray=0;/);
  assert.doesNotMatch(code,/ctx\.shadowBlur=14/);
- assert.match(watch,/river-current-v3-anomaly/);
+ assert.match(watch,/river-current-v4-living-pulse/);
 });
 test('probing filaments fold, disappear and return without fixed mirrored anatomy',()=>{
- const a=code.indexOf('function anomalyFilament(time,index){');
+ const a=code.indexOf('function presencePulse(time){');
  const b=code.indexOf('function drawAnomaly(',a);
  assert.ok(a>=0&&b>a);
  const forms=new vm.Script(code.slice(a,b)+';({anomalyFilament,anomalyForm})').runInNewContext({Math});
