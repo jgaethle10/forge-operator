@@ -3,7 +3,9 @@
 // The ONLY verified heartbeat trigger is controlled by app.mjs.
 const canvas=document.getElementById('visualField');
 const stage=document.getElementById('stage');
-if(canvas&&stage){
+// V03 owns the stage when available. Avoid running two competing 2-D
+// engines on mobile during long screen-capture sessions.
+if(canvas&&stage&&!document.getElementById('colliderField')){
  const context=canvas.getContext('2d',{alpha:true});
  if(context){
   const reduced=window.matchMedia('(prefers-reduced-motion: reduce)');
