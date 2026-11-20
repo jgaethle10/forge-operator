@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Emergency file-scoped AAAR release on the EXISTING owned Penguin Worlds vault.
+// Reviewed Seattle Graphics 1.0 one-asset release on the EXISTING owned Penguin Worlds vault.
 // No server restart, repo reset, Journal edits, DNS or edge changes.
 // Run only on the actual Penguin host after fetching approved GitHub main.
 // This temporarily updates ONE tracked page; source checkout reconciliation
@@ -12,10 +12,10 @@ import {spawnSync} from 'node:child_process';
 
 const SCHEMA='evercraft.aaar.single-asset-release.v1';
 const REPO='jgaethle10/forge-operator';
-const PIN='a88b2d7d0bcbfbcf8a084add3fa6e50727dad271';
+const PIN='6dce44dd35aad415354c7d0659850c959f9735a7';
 const RELEASE='public/worlds/flight/index.html';
-const EXPECTED='c57de0eec09b1aadc1124c7464a0e825ce30251fdd05f1f088f4549a7915feed';
-const ALLOWED_OLD='5adcb1bf5647b59838c53b182d5125ec45863aaf8a28b4b487de4529f315e94f';
+const EXPECTED='d34fc1fb244565236880c3922cd2e7b89923768bfe2812f5fed652875ef0b2e0';
+const ALLOWED_OLD='c57de0eec09b1aadc1124c7464a0e825ce30251fdd05f1f088f4549a7915feed';
 const ORIGIN='https://worlds.systemiacommandcenters.com';
 const apply=process.argv.includes('--apply');
 const hash=x=>createHash('sha256').update(x).digest('hex');
