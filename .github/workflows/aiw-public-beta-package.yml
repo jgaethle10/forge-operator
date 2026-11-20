@@ -21,9 +21,13 @@ jobs:
       - name: Read-only and staging operator shell syntax
         run: |
           bash -n research/infrastructure-watch/release/aiw-beta-build-nextgen.sh
+          bash -n research/infrastructure-watch/release/aiw-beta-courier-nextgen.sh
+          bash -n research/infrastructure-watch/release/aiw-beta-receive-penguin.sh
           bash -n research/infrastructure-watch/release/aiw-beta-edge-preflight.sh
           bash -n research/infrastructure-watch/release/aiw-beta-stage-owned-edge.sh
           grep -Fq 'publication_mutation=NONE' research/infrastructure-watch/release/aiw-beta-edge-preflight.sh
+          grep -Fq 'PUBLIC EDGE: UNCHANGED' research/infrastructure-watch/release/aiw-beta-courier-nextgen.sh
+          grep -Fq 'CADDY / DNS / TLS LEFT UNCHANGED' research/infrastructure-watch/release/aiw-beta-receive-penguin.sh
           grep -Fq 'LIVE CADDY ROUTE: UNCHANGED' research/infrastructure-watch/release/aiw-beta-stage-owned-edge.sh
           grep -Fq 'handle_path /infrastructure-watch/*' research/infrastructure-watch/release/AIW-public-beta.Caddyfile.fragment
 
