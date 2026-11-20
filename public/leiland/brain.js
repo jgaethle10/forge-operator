@@ -142,6 +142,7 @@ for(let i=0;i<208;i++){
  while(tries<200&&!((Math.pow((x+(x<0?.33:-.33))/.78,2)+Math.pow(y/.76,2)<1) && !(Math.abs(x)<.065&&y<-.28)));
  nodes.push({x,y,phase:rand()*6.283,rad:rand()*1.45+.55,side:x<0?0:1});
 }
+function zone(n){if(n.y<-.16&&Math.abs(n.x)<.36)return 'systemia';if(n.x<-.12&&n.y<.27)return 'raven';if(n.x>=.12&&n.y<.27)return 'saban';return n.x<0?'compute':'passport';}
 const links=[];const seen=new Set();
 for(let i=0;i<nodes.length;i++){
  const ranked=nodes.map((p,j)=>({j,d:(nodes[i].x-p.x)**2+(nodes[i].y-p.y)**2})).filter(o=>o.j!==i).sort((a,b)=>a.d-b.d).slice(0,3);
@@ -170,7 +171,8 @@ function draw(t){
  ctx.fillStyle=halo;ctx.fillRect(0,0,w,h);
  for(let i=0;i<links.length;i++){
   const [a,b]=links[i],p=points[a],q=points[b],left=nodes[a].side===0;
-  const v=reduce.matches?.20:.14+.12*(1+Math.sin(t*.001+i*.7))/2;
+  const focused=zone(nodes[a])===selected||zone(nodes[b])===selected;
+  const v=reduce.matches?(focused?.42:.09):focused?.28+.20*(1+Math.sin(t*.001+i*.7))/2:.07;
   ctx.strokeStyle=left?'rgba(102,216,225,'+v+')':'rgba(155,153,254,'+v+')';
   ctx.lineWidth=.75;ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(q.x,q.y);ctx.stroke();
   if(!reduce.matches && i%8===0){
@@ -180,9 +182,10 @@ function draw(t){
  }
  for(let i=0;i<points.length;i++){
   const p=points[i],n=nodes[i];
-  const glow=reduce.matches?.55:.38+.38*(1+Math.sin(t*.0016+n.phase))/2;
+  const focused=zone(n)===selected;
+  const glow=reduce.matches?(focused?.82:.22):focused?.58+.36*(1+Math.sin(t*.0016+n.phase))/2:.16+.10*(1+Math.sin(t*.0016+n.phase))/2;
   ctx.fillStyle=n.side===0?'rgba(125,235,228,'+glow+')':'rgba(170,177,255,'+glow+')';
-  ctx.beginPath();ctx.arc(p.x,p.y,n.rad,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.arc(p.x,p.y,n.rad*(focused?1.38:.86),0,Math.PI*2);ctx.fill();
  }
  // Slow perimeter sweep is a purely illustrative broadcast visual.
  if(!reduce.matches){
