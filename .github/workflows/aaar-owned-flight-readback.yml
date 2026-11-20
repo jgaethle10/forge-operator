@@ -75,6 +75,13 @@ jobs:
         run: npx playwright install chromium
       - name: Validate v0.8 source cockpit stick and throttle in portrait and landscape
         run: node scripts/probe-aaar-mobile-cockpit-source.mjs
+      - name: Preserve source-rendered Chromium Vista scenes
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aaar-vista-chromium-screens
+          path: artifacts/aaar-vista/chromium/*.png
+          if-no-files-found: warn
       - name: Execute actual owned HTTPS AAAR buttons in phone emulation
         id: live
         shell: bash
@@ -114,6 +121,13 @@ jobs:
         env:
           AAAR_BROWSER: webkit
         run: node scripts/probe-aaar-mobile-cockpit-source.mjs
+      - name: Preserve source-rendered WebKit Vista scenes
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aaar-vista-webkit-screens
+          path: artifacts/aaar-vista/webkit/*.png
+          if-no-files-found: warn
       - name: Execute owned HTTPS AAAR buttons in mobile WebKit
         shell: bash
         run: |
