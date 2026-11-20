@@ -19,6 +19,40 @@ const nativeBrowserProofPreparer=async()=>({
 });
 import { startOutboundCapacityBroker } from '../network/outbound-capacity-broker.mjs';
 
+const coreStatus = (health) => {
+  // Only report existing coded status names and bounded service identifiers.
+  // Never print full health objects, paths, keys, receipts, HTTP responses.
+  const statuses = (health?.services || []).filter(row =>
+    row?.status === 'held' || row?.status === 'failed'
+  );
+  return {
+    running: health?.running === true,
+    failed_count: Number(health?.failed_count ?? -1),
+    held_count: Number(health?.held_count ?? -1),
+    service_count: Number(health?.service_count ?? -1),
+    affected: statuses.slice(0,12).map(row => ({
+      key: /^[a-z0-9._-]{1,90}$/i.test(row.service_key || '')
+        ? row.service_key : 'redacted',
+      state: row.status,
+      // Error reason strings can contain internal detail, so do not emit.
+      has_reason: Boolean(row.hold_reason),
+    }))
+  };
+};
+async function logDegradedCore(organism, stage, localHealth) {
+  if (localHealth?.ok === true) return;
+  const route = await organism.yard.verifyRoute('systemia-core-local-resident')
+    .catch(() => ({state:'route_read_error'}));
+  console.error('LOCAL_ORGANISM_CORE_PROOF_DIAGNOSTIC', JSON.stringify({
+    stage, core_route_state: String(route.state || 'unknown').slice(0,60),
+    kaidance_ok: localHealth?.kaidance?.ok === true,
+    core_ok: localHealth?.systemia_core?.ok === true,
+    fabric_ok: localHealth?.fabric?.ok === true,
+    remote_connected: localHealth?.remote_admission?.connected === true,
+    core: coreStatus(route.health),
+  }));
+}
+
 async function freeTcpPort() {
   const server = net.createServer();
   await new Promise((resolve, reject) => {
@@ -61,6 +95,7 @@ try {
   });
 
   const initialHealth = await organism.health();
+  await logDegradedCore(organism, 'initial', initialHealth);
   assert.equal(initialHealth.ok, true);
   assert.equal(initialHealth.kaidance.ok, true);
   assert.equal(initialHealth.systemia_core.ok, true);
@@ -119,24 +154,7 @@ try {
   await sleep(500);
 
   const duringOutage = await organism.health();
-  if (duringOutage.ok !== true) {
-    // Boolean-only diagnosis, never emit service endpoints, credentials,
-    // deployment IDs or private workload response bodies to CI logs.
-    const coreCheck = await organism.yard.verifyRoute('systemia-core-local-resident').catch(
-      () => ({ state: 'core_health_read_error' })
-    );
-    console.error('LOCAL_ORGANISM_OUTAGE_HEALTH_DIAGNOSTIC', JSON.stringify({
-      core_route_state: String(coreCheck.state || 'unknown').slice(0,60),
-      core_running: coreCheck.health?.running === true,
-      core_failed_count: Number(coreCheck.health?.failed_count ?? -1),
-      core_held_count: Number(coreCheck.health?.held_count ?? -1),
-      core_services: Number(coreCheck.health?.service_count ?? -1),
-      kaidance_ok: duringOutage.kaidance?.ok === true,
-      systemia_core_ok: duringOutage.systemia_core?.ok === true,
-      fabric_ok: duringOutage.fabric?.ok === true,
-      broker_connected: duringOutage.remote_admission?.connected === true,
-    }));
-  }
+  await logDegradedCore(organism, 'broker_outage', duringOutage);
   assert.equal(duringOutage.ok, true);
   assert.equal(duringOutage.kaidance.ok, true);
   assert.equal(duringOutage.systemia_core.ok, true);
@@ -170,6 +188,7 @@ try {
   assert.equal(reconnected.device_fingerprint, identity.fingerprint);
 
   const finalHealth = await organism.health();
+  await logDegradedCore(organism, 'reconnected', finalHealth);
   assert.equal(finalHealth.ok, true);
   assert.equal(finalHealth.remote_admission.connected, true);
 
