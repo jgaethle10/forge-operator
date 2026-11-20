@@ -116,6 +116,7 @@ class KennedyHandler(site_planner.Handler):
                     "aerial_upload_mode": "private_operator_json_png_only",
                     "aerial_sources_export_authorized": False,
                     "private_two_sheet_operator_review": True,
+                    "private_aerial_canvas_underlay": True,
                     "private_review_human_qa_completed": False,
                     "real_aerial_customer_export": False,
                     "aerial_underlay_sheet_export": False,
@@ -144,6 +145,34 @@ class KennedyHandler(site_planner.Handler):
                 return self.send(200, SPATIAL.outbox())
             except sqlite3.Error:
                 return self.bad("spatial_store_unavailable", 500)
+        m = re.fullmatch(r"/api/kss/sites/([A-Za-z0-9_-]+)/aerial-sources/(AIR-[A-F0-9]{20})/private-preview.png", path)
+        if m:
+            if not self.authorized():
+                return
+            site_id,source_id=m.groups()
+            try:
+                validate_site_and_report(site_id)
+                receipt,png=AERIAL.get(site_id,source_id,include_bytes=True)
+                if (receipt.get("review_state") != "pending_independent_rights_and_geographic_qa"
+                    or receipt.get("public_access_authorized") is not False
+                    or receipt.get("customer_access_authorized") is not False
+                    or receipt.get("real_site_sheet_export_authorized") is not False
+                    or receipt.get("registration",{}).get("mime_type") != "image/png"):
+                    raise aerial_vault.SourceError("image_preview_not_private_reviewable")
+                # Only local operator origin, no remote file retrieval, no
+                # marketing route, no customer entitlement implication.
+                return self.send(200,png,"image/png",{
+                    "Content-Disposition":'inline; filename="kennedy-private-source.png"',
+                    "X-Kennedy-Review-Only":"true",
+                    "X-Kennedy-Image-SHA256":receipt["image_sha256"],
+                    "Cross-Origin-Resource-Policy":"same-origin",
+                    "Content-Security-Policy":"default-src 'none'; sandbox"})
+            except LookupError as exc:
+                return self.bad(str(exc),404)
+            except (aerial_vault.SourceError,raster_registration.RegistrationError) as exc:
+                return self.bad(str(exc),422)
+            except sqlite3.Error:
+                return self.bad("aerial_source_store_unavailable",500)
         m = re.fullmatch(r"/api/kss/sites/([A-Za-z0-9_-]+)/aerial-sources(?:/([A-Za-z0-9_-]+))?", path)
         if m:
             if not self.authorized():

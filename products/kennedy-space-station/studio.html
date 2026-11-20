@@ -19,7 +19,12 @@
 <div class="notice">No verified parcel boundaries, topography, aerial imagery, ADA checks, utilities, setbacks, or engineering approvals. Everything drawn here is a local preliminary layout assumption.</div>
 </aside>
 <section class="panel"><div class="bar"><div><div class="over">02 / INTERACTIVE STUDIO</div><h1>Shape your possibility.</h1></div><span class="pill">LOCAL COORDINATES · METERS</span></div>
-<p class="muted">Edit an object on the right, or drag its rectangle to move it. Dimensions are user-entered, not linked to an actual parcel map.</p>
+<p class="muted">Edit an object on the right, or drag its rectangle to move it. Dimensions are operator-entered. Registered imagery can be layered underneath, but is <strong>not independently georeferenced</strong>.</p>
+<div class="actions" style="align-items:center;margin-bottom:12px">
+<label class="pill" for="show-underlay"><input id="show-underlay" type="checkbox" checked> Show private site imagery under shapes</label>
+<label class="pill" for="underlay-opacity">Image opacity <input id="underlay-opacity" type="range" min="25" max="100" step="5" value="85" style="vertical-align:middle;width:100px"></label>
+</div>
+<div class="notice" id="underlay-status" role="status" aria-live="polite">Choose a staged site image below to see its operator-calibrated position. All image coordinates are unverified.</div>
 <div class="canvas"><svg id="drawing" viewBox="0 0 900 660" aria-label="Editable preliminary site rectangle diagram" role="img"></svg></div>
 <div class="fig"><span><strong id="dim">80 × 65 m</strong> user-entered parcel</span><span><strong id="object-count">3</strong> shapes</span><span><strong id="area">5,200 m²</strong> assumed area</span></div>
 <div class="actions"><button id="save" class="button" type="button">Save revision</button><a id="download" class="button secondary disabled" aria-disabled="true">Export saved SVG ↗</a><a id="download-pdf" class="button secondary disabled" aria-disabled="true">Download PDF sheet ↗</a><button id="reset" class="button secondary" type="button">Reset draft</button></div>
@@ -47,6 +52,7 @@
 'use strict';
 const $=id=>document.getElementById(id), NS='http://www.w3.org/2000/svg';
 let sites=[], studyId=null, selected='building-1', drag=null, model=defaultModel();
+let underlay=null,underlaySequence=0;
 const kinds={building:'#c5c6e3',pavement:'#dfe3ec',parking:'#bfd4ff',charging_bay:'#9b80e8',equipment_pad:'#f1c884',path:'#afe3d6'};
 const labels={building:'Building',pavement:'Pavement',parking:'Parking area',charging_bay:'Charging bay',equipment_pad:'Equipment pad',path:'Pedestrian path'};
 function defaultModel(){return {schema:'evercraft.kss.spatial-study.v1',title:'First concept',units:'meters',measurement_basis:'assumed',source_note:'',source_report_id:'',parcel:{width:80,depth:65},objects:[
@@ -66,6 +72,20 @@ const {w,d,s,x,y}=scaleInfo();
 for(let gx=0;gx<=900;gx+=28)svg.append(svgNode('line',{x1:gx,y1:0,x2:gx,y2:660,stroke:'#dce1ee','stroke-width':'.7'}));
 for(let gy=0;gy<=660;gy+=28)svg.append(svgNode('line',{x1:0,y1:gy,x2:900,y2:gy,stroke:'#dce1ee','stroke-width':'.7'}));
 svg.append(svgNode('rect',{x,y,width:w*s,height:d*s,fill:'#e9f4eb',stroke:'#6b907e','stroke-width':2,'stroke-dasharray':'8 5'}));
+if(underlay && underlay.siteId===sid() && $('show-underlay').checked){
+ const rec=underlay.receipt.registration,affine=rec.pixel_to_local_m;
+ const [a,b,c,d0,e,f]=affine;
+ const det=a*e-b*d0;
+ if(affine.every(Number.isFinite) && Math.abs(det)>1e-10){
+  const defs=svgNode('defs',{}),clip=svgNode('clipPath',{id:'private-site-clip'});
+  clip.append(svgNode('rect',{x,y,width:w*s,height:d*s}));defs.append(clip);svg.append(defs);
+  const img=svgNode('image',{href:underlay.url,width:rec.pixel_width,height:rec.pixel_height,
+     preserveAspectRatio:'none',transform:'matrix('+[s*a,s*d0,s*b,s*e,x+s*c,y+s*f].join(' ')+')',
+     opacity:Number($('underlay-opacity').value)/100,'pointer-events':'none'});
+  const group=svgNode('g',{'clip-path':'url(#private-site-clip)','pointer-events':'none'});
+  group.append(img);svg.append(group);
+ }
+}
 for(const obj of model.objects){const ox=x+obj.x*s,oz=y+obj.z*s,ow=obj.width*s,od=obj.depth*s;
 const r=svgNode('rect',{x:ox,y:oz,width:ow,height:od,fill:kinds[obj.kind]||'#ccc',stroke:obj.id===selected?'#4c2dc8':'#696c8d','stroke-width':obj.id===selected?4:2,'data-id':obj.id,class:'shape',rx:2});svg.append(r);
 if(ow>50&&od>26){svg.append(svgNode('text',{x:ox+ow/2,y:oz+od/2,'text-anchor':'middle','dominant-baseline':'middle','font-size':Math.min(14,Math.max(8,ow/10)),fill:'#293153','pointer-events':'none','font-weight':700},obj.label||labels[obj.kind]))}}
@@ -109,7 +129,59 @@ async function loadReportContext(){
     el.textContent='Report '+x.report_id+' · SHA-256 '+x.snapshot_sha256.slice(0,16)+'… · '+(c.verified||0)+' recorded verified, '+(c.unverified||0)+' unverified, '+(c.assumption||0)+' assumptions, '+(c.other||0)+' other. Source metadata only; NO spatial accuracy, code compliance or independent field verification.';
   }catch(err){if(siteId===sid()&&reportId===$('report').value)el.textContent='Report context unavailable: '+err.message+'. Study save will require a valid same-site report.'}
 }
+function forgetUnderlay(){
+ ++underlaySequence;
+ if(underlay?.url)URL.revokeObjectURL(underlay.url);
+ underlay=null;
+ $('underlay-status').textContent='No site image selected. Shapes use operator-entered geometry only.';
+ paint();
+}
+async function selectUnderlay(){
+ const mySeq=++underlaySequence;
+ if(underlay?.url)URL.revokeObjectURL(underlay.url);
+ underlay=null;
+ const siteId=sid(),sourceId=$('review-site').value;
+ if(!sourceId||!siteId){$('underlay-status').textContent='No site image selected. Diagram remains an unverified local-coordinate study.';paint();return}
+ const opt=$('review-site').selectedOptions[0];
+ const record=opt?._sourceRecord;
+ if(!record || record.site_id!==siteId || record.role!=='site'){
+  $('underlay-status').textContent='Source receipt does not belong to the selected site.';paint();return}
+ $('underlay-status').textContent='Loading private source bytes and verifying SHA-256…';
+ try{
+  const r=await fetch('/api/kss/sites/'+encodeURIComponent(siteId)+'/aerial-sources/'+encodeURIComponent(sourceId)+'/private-preview.png',{cache:'no-store',headers:{Accept:'image/png'}});
+  if(!r.ok)throw Error('Private source unavailable (HTTP '+r.status+')');
+  if(!(r.headers.get('Content-Type')||'').startsWith('image/png'))throw Error('Unexpected image media type');
+  const bytes=await r.arrayBuffer();
+  if(bytes.byteLength>5*1024*1024)throw Error('Source image too large');
+  if(!globalThis.crypto?.subtle)throw Error('Secure browser cryptography unavailable');
+  const hash=await crypto.subtle.digest('SHA-256',bytes);
+  const sha=[...new Uint8Array(hash)].map(v=>v.toString(16).padStart(2,'0')).join('');
+  if(sha!==record.image_sha256)throw Error('Stored source image fingerprint mismatch');
+  if(mySeq!==underlaySequence||sid()!==siteId||$('review-site').value!==sourceId)return;
+  const meta=record.registration;
+  if(!Array.isArray(meta?.pixel_to_local_m)||meta.pixel_to_local_m.length!==6 || !meta.pixel_to_local_m.every(Number.isFinite) ||
+     !Number.isInteger(meta.pixel_width)||!Number.isInteger(meta.pixel_height) ||
+     record.review_state!=='pending_independent_rights_and_geographic_qa' ||
+     record.public_access_authorized!==false||record.customer_access_authorized!==false)
+    throw Error('The selected source has not passed the private review gate');
+  const blob=new Blob([bytes],{type:'image/png'});
+  underlay={siteId,sourceId,receipt:record,url:URL.createObjectURL(blob)};
+  $('underlay-status').textContent='PRIVATE UNVERIFIED IMAGE · '+sourceId+' · SHA-256 '+sha.slice(0,16)+'… · Operator-local affine alignment only. Not a verified map, boundary or north.';
+  paint()
+ }catch(e){
+  if(mySeq===underlaySequence&&sid()===siteId){
+   underlay=null;
+   $('underlay-status').textContent='Private image not shown: '+e.message;
+   paint()
+  }
+ }
+}
+$('review-site').addEventListener('change',selectUnderlay);
+$('show-underlay').addEventListener('change',paint);
+$('underlay-opacity').addEventListener('input',paint);
+window.addEventListener('pagehide',()=>{if(underlay?.url)URL.revokeObjectURL(underlay.url)});
 async function loadAerialSources(){
+ forgetUnderlay();
  const siteId=sid(),entries=[['review-site','site'],['review-context','context']];
  for(const [element,role] of entries){const select=$(element);select.replaceChildren();const o=document.createElement('option');o.value='';o.textContent='Choose '+role+' image';select.append(o)}
  if(!siteId)return;
@@ -118,6 +190,7 @@ async function loadAerialSources(){
    if(siteId!==sid())return;
    for(const item of rows){const pair=entries.find(([_,role])=>role===item.role);if(!pair)continue;
      const opt=document.createElement('option');opt.value=item.source_id;opt.textContent=item.source_id+' · '+(item.registration?.source_ref||'Unknown source').slice(0,32);
+     opt._sourceRecord=item;
      $(pair[0]).append(opt)
    }
  }catch(err){show('Aerial source list unavailable: '+err.message,'error')}
@@ -142,7 +215,7 @@ $('review-download').addEventListener('click',async()=>{
  }catch(err){show('Private preview not generated: '+err.message,'error')}
  finally{btn.disabled=false}
 });
-async function siteChanged(){const id=sid(),s=sites.find(x=>x.id===id);$('site-meta').textContent=s?(s.name||'Project')+' · '+(s.address||'User-entered address'):'Choose a site';$('planner-link').href='/workspace?site='+encodeURIComponent(id);$('aerial-link').href='/aerial?site='+encodeURIComponent(id);$('review-aerial-link').href='/aerial?site='+encodeURIComponent(id);model=defaultModel();selected='building-1';studyId=null;fillFields();paint();changed();$('report').replaceChildren();const empty=document.createElement('option');empty.value='';empty.textContent='No report attached';$('report').append(empty);if(!id)return;try{const detail=await api('/api/sites/'+encodeURIComponent(id));for(const r of detail.reports||[]){const o=document.createElement('option');o.value=r.id;o.textContent=r.id+' · '+r.created_at;$('report').append(o)}await loadHistory();await loadReportContext();await loadAerialSources()}catch(e){show('Cannot load site: '+e.message,'error')}}
+async function siteChanged(){forgetUnderlay();const id=sid(),s=sites.find(x=>x.id===id);$('site-meta').textContent=s?(s.name||'Project')+' · '+(s.address||'User-entered address'):'Choose a site';$('planner-link').href='/workspace?site='+encodeURIComponent(id);$('aerial-link').href='/aerial?site='+encodeURIComponent(id);$('review-aerial-link').href='/aerial?site='+encodeURIComponent(id);model=defaultModel();selected='building-1';studyId=null;fillFields();paint();changed();$('report').replaceChildren();const empty=document.createElement('option');empty.value='';empty.textContent='No report attached';$('report').append(empty);if(!id)return;try{const detail=await api('/api/sites/'+encodeURIComponent(id));for(const r of detail.reports||[]){const o=document.createElement('option');o.value=r.id;o.textContent=r.id+' · '+r.created_at;$('report').append(o)}await loadHistory();await loadReportContext();await loadAerialSources()}catch(e){show('Cannot load site: '+e.message,'error')}}
 $('site').addEventListener('change',siteChanged);
 function fillFields(){$('title').value=model.title;$('width').value=model.parcel.width;$('depth').value=model.parcel.depth;$('basis').value=model.measurement_basis;$('source').value=model.source_note;$('report').value=model.source_report_id||''}
 async function loadHistory(){const area=$('history');area.replaceChildren();const items=await api('/api/kss/sites/'+encodeURIComponent(sid())+'/studies');if(!items.length){const p=document.createElement('p');p.className='muted';p.textContent='No saved study revisions yet.';area.append(p);return}for(const r of items){const line=document.createElement('div');line.className='history-item';const t=document.createElement('span');const bold=document.createElement('b');bold.textContent='Revision '+r.revision;const sm=document.createElement('small');sm.textContent=r.title+' · '+r.model_sha256.slice(0,10)+'…';t.append(bold,sm);const b=document.createElement('button');b.type='button';b.textContent='Load';b.addEventListener('click',()=>loadStudy(r.id));line.append(t,b);area.append(line)}}
