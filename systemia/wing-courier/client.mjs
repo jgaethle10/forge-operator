@@ -15,13 +15,20 @@ function keyText(file){
  const st=fs.lstatSync(file);if(!st.isFile()||st.isSymbolicLink()||(st.mode&0o077))fail('token_not_private');
  const s=fs.readFileSync(file,'utf8').trim();if(s.length<32||s.length>512)fail('token_invalid');return s;
 }
-function resolveBase(value){
- const u=new URL(value);u.username='';u.password='';
+export function resolveWingCourierBase(value){
+ let u;try{u=new URL(value)}catch{fail('endpoint_url_invalid')}
+ if(u.username||u.password)fail('endpoint_credentials_forbidden');
  if(u.search||u.hash)fail('endpoint_query_forbidden');
- if(u.protocol==='http:'&&!['127.0.0.1','localhost','::1'].includes(u.hostname))fail('remote_http_forbidden');
- if(!['http:','https:'].includes(u.protocol))fail('endpoint_scheme');
- if(u.pathname!=='/'&&u.pathname!=='')fail('endpoint_path_invalid');
- return u.origin;
+ const pathname=u.pathname.replace(/\\/+$/,'');
+ if(u.protocol==='https:'){
+  if(u.origin!=='https://fabric.systemiacommandcenters.com'||
+    pathname!=='/api/internal/wing-courier')
+   fail('endpoint_must_be_owned_fabric_route');
+ }else if(u.protocol==='http:'&&['127.0.0.1','localhost','::1'].includes(u.hostname)){
+  if(pathname!==''&&pathname!=='/api/internal/wing-courier')
+   fail('loopback_endpoint_path_invalid');
+ }else fail('endpoint_must_be_owned_fabric_or_loopback');
+ return u.origin+pathname;
 }
 async function request(base,token,method,route,{json,stream,headers={}}={}){
  const res=await fetch(base+route,{method,redirect:'manual',
@@ -48,7 +55,7 @@ export async function pushEncryptedWingBundle({baseUrl,tokenFile,metaFile,bundle
  !Number.isSafeInteger(cfg.bytes)||!(/^[a-f0-9]{32}$/).test(cfg.id||''))fail('outbox_meta_invalid');
  const actual=fs.statSync(bundleFile);
  if(!actual.isFile()||actual.size!==cfg.bytes||hashFileSync(bundleFile)!==cfg.ciphertextSha256)fail('outbox_mutated');
- const base=resolveBase(baseUrl),token=keyText(tokenFile);
+ const base=resolveWingCourierBase(baseUrl),token=keyText(tokenFile);
  const req={id:cfg.id,fromWing:cfg.fromWing,toWing:cfg.toWing,
   ciphertextSha256:cfg.ciphertextSha256,bytes:cfg.bytes};
  const begin=await request(base,token,'POST','/v1/envelopes',{json:req});
@@ -94,7 +101,7 @@ function recoverLocalCustody({root,item,wing}){
 export async function pollWingInbox({baseUrl,tokenFile,wing,destinationDir,receiverPrivateKeyFile,
  receiverSigningKeyFile,senderVerifyPublicKeys}){
  if(!/^[a-z][a-z0-9-]{1,47}$/.test(wing||''))fail('wing_invalid');
- const base=resolveBase(baseUrl),token=keyText(tokenFile);
+ const base=resolveWingCourierBase(baseUrl),token=keyText(tokenFile);
  const root=path.resolve(destinationDir);const ds=fs.lstatSync(root);
  if(!ds.isDirectory()||ds.isSymbolicLink()||(ds.mode&0o077))fail('destination_not_private');
  const resp=await request(base,token,'GET','/v1/inbox?wing='+encodeURIComponent(wing));
