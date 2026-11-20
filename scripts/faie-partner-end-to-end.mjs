@@ -183,7 +183,7 @@ try {
       ...(!receipt.comparison.candidate_source_coverage.every((row) => Number(row.independent_source_family_count) > 0) ? ['The sample comparison includes a region without matching admitted evidence.'] : [])
     ]
   };
-  receipt.ready_for_outreach = requireUiParity && enoughSourceFamilies && enoughDimensions;
+  receipt.ready_for_outreach = requireUiParity && enoughSourceFamilies && enoughDimensions && receipt.partner_evidence_scope.comparison_has_two_evidenced_regions;
   receipt.state = requireUiParity ? 'PARTNER_TECHNICAL_GATE_PASSED' : 'ENGINE_VALIDATED_UI_DEPLOY_PENDING';
 } catch (error) {
   receipt.stage_failed = receipt.stage;
