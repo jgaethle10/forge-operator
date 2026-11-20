@@ -210,11 +210,20 @@ try{
   return {...g,gl_program_linked:gl?!!gl.getParameter(gl.CURRENT_PROGRAM):false,
     webgl_error:gl?gl.getError():null};
  });
- assert.equal(graphics.lighting_pipeline,'flat-lit-glass-water-v10','new desktop graphics pipeline missing');
+ assert.equal(graphics.lighting_pipeline,'seattle-vista-v11','Seattle Vista laptop pipeline missing');
+ const relief=await laptopPage.evaluate(()=>({
+  central:window.AAARSeattle.ground(0,0),
+  highland:window.AAARSeattle.ground(5700,0),
+  isStylized:window.AAARGraphicsMetrics().terrain_model==='STYLIZED_GAMEPLAY_HIGHLANDS'
+ }));
+ assert.equal(relief.isStylized,true,'relief provenance missing');
+ assert.ok(relief.highland>relief.central+180,'distant synthetic terrain relief not being generated');
  assert.ok(graphics.seattle_building_count>500,'Seattle GIS geometry missing');
  if(graphics.renderer==='webgl2'){
   assert.equal(graphics.shading_active,true,'3D shader not linked');
   assert.ok(graphics.world_triangles>25000,'city world geometry unexpectedly empty');
+  assert.ok(graphics.cloud_triangles>1500,'3D cloud volume unexpectedly missing');
+  assert.equal(graphics.cloud_anchors,28,'deterministic cloud anchor count changed');
   assert.equal(graphics.gl_program_linked,true,'WebGL program inactive');
   assert.equal(graphics.webgl_error,0,'WebGL renderer reports a GPU error');
  }
