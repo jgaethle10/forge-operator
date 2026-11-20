@@ -44,10 +44,12 @@ jobs:
           node --test tests/kaidance-public-observatory.test.mjs
           node --test tests/kaidance-public-fallback-readback.test.mjs
           node --test tests/kaidance-cinematic-experience.test.mjs
+          node --test tests/kaidance-field-chapters.test.mjs
           node --check public/kaidance/app.mjs
           node --check public/kaidance/visual.mjs
           node --check public/kaidance/collider-engine.mjs
           node --check public/kaidance/current-field.mjs
+          node --check public/kaidance/field-chapters.mjs
       - name: Validate example Caddy route without networking or deployment
         run: |
           set -euo pipefail
