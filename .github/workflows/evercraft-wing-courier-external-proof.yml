@@ -1,0 +1,41 @@
+name: Evercraft Wing Courier | independently observe owned Fabric edge
+on:
+  pull_request:
+    paths:
+      - 'systemia/wing-courier/edge-observation.mjs'
+      - 'systemia/wing-courier/edge-observation.test.mjs'
+      - '.github/workflows/evercraft-wing-courier-external-proof.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/wing-courier/edge-observation.mjs'
+      - 'systemia/wing-courier/edge-observation.test.mjs'
+      - '.github/workflows/evercraft-wing-courier-external-proof.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  owned-public-edge:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Pinned, read-only observer contract
+        run: node --test systemia/wing-courier/edge-observation.test.mjs
+      - name: Observe EXISTING Fabric public health from an independent network
+        run: |
+          mkdir -p artifacts/wing-courier
+          node systemia/wing-courier/edge-observation.mjs --receipt artifacts/wing-courier/edge.json
+      - name: Preserve redacted external observation
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-wing-courier-public-edge-observation
+          path: artifacts/wing-courier/edge.json
+          if-no-files-found: warn
+          retention-days: 14
