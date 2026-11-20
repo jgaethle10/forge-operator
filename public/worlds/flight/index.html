@@ -622,18 +622,58 @@ function buildMeshes(){
  }
  meshes.world=w.upload();
  for(const craft of Object.values(core.aircraft)){
-  const p=builder(),isJet=craft.id==='jet',isGlider=craft.id==='glider',wing=isGlider?18:isJet?11:13;
-  const body=isJet?[.72,.73,.73]:isGlider?[.78,.91,.95]:[.92,.92,.86],accent=isJet?[.95,.60,.29]:[.95,.55,.32];
-  p.box(0,0,0,1.9,1.85,isGlider?18:17,body);
-  p.tri([0,.2,11],[-.9,-.7,7],[.9,-.7,7],body);
-  p.box(0,.16,1.3,wing*2,.35,isJet?3.7:3.1,body);
-  p.box(0,.3,-7,wing*.9,.25,2.3,body);
-  p.tri([0,4.6,-8],[0,0,-9],[0,.35,-4],[.71,.78,.81]);
-  p.box(0,1.23,2,1.25,.75,3.7,[.19,.42,.57]);
-  p.box(-wing+1,.2,1.3,2.2,.31,3.2,accent);
-  p.box(wing-1,.2,1.3,2.2,.31,3.2,accent);
-  if(isJet){p.box(-.95,-.5,-8,.5,.7,3,[.26,.34,.36]);p.box(.95,-.5,-8,.5,.7,3,[.26,.34,.36]);}
-  else p.box(0,0,10,.35,4,.35,[.27,.35,.38]);
+  const p=builder(),isJet=craft.id==='jet',isGlider=craft.id==='glider',wing=isGlider?19:isJet?12:14;
+  const fuselage=isJet?[.70,.74,.75]:isGlider?[.83,.91,.92]:[.92,.91,.87];
+  const trim=isJet?[.97,.61,.32]:isGlider?[.48,.69,.79]:[.96,.55,.32];
+  // Original all-geometry 3D aircraft: tapered polygonal fuselage, swept airfoil wings,
+  // tailplanes, fin, canopy, engine details. No external model or texture dependency.
+  const rings=isGlider?[[-10.2,.22,.23],[-7.1,.59,.50],[-2.2,.67,.61],[2.8,.75,.65],[7.8,.35,.38],[11.5,.04,.05]]:
+    [[-10.1,.27,.27],[-7.5,.65,.61],[-2.6,.89,.80],[3.3,.94,.84],[8.7,.48,.49],[12,.03,.03]];
+  const faces=12;
+  for(let r=0;r<rings.length-1;r++){
+   const [z1,xr1,yr1]=rings[r],[z2,xr2,yr2]=rings[r+1];
+   for(let j=0;j<faces;j++){
+    const a=j*2*Math.PI/faces,b=(j+1)*2*Math.PI/faces;
+    p.quad([xr1*Math.cos(a),yr1*Math.sin(a),z1],
+      [xr1*Math.cos(b),yr1*Math.sin(b),z1],
+      [xr2*Math.cos(b),yr2*Math.sin(b),z2],
+      [xr2*Math.cos(a),yr2*Math.sin(a),z2],fuselage.map(v=>v*(.92+.07*j/faces)));
+   }
+  }
+  for(const sign of [-1,1]){
+   const root=sign*.75,tip=sign*wing;
+   const rootFront=isJet?4.5:3.3,tipFront=isJet?-1.4:isGlider?.9:0.2;
+   const rootBack=isJet?-1.5:-1.8,tipBack=isJet?-3.8:isGlider?-1.5:-2.1;
+   const wingA=[root,.05,rootFront],wingB=[tip,.18,tipFront],
+     wingC=[tip,.18,tipBack],wingD=[root,.05,rootBack];
+   p.quad(wingA,wingB,wingC,wingD,fuselage);
+   p.quad([wingA[0],-.23,wingA[2]],[wingD[0],-.23,wingD[2]],
+       [wingC[0],-.09,wingC[2]],[wingB[0],-.09,wingB[2]],fuselage.map(v=>v*.85));
+   p.quad([sign*wing*.77,.2,tipFront*.88],[tip,.2,tipFront],
+      [tip,.2,tipBack],[sign*wing*.77,.2,tipBack*.7],trim);
+   const tailTip=sign*(isGlider?7:6.5),tailZ=-7.5;
+   p.quad([root,.35,tailZ+1.4],[tailTip,.45,tailZ+.55],
+      [tailTip,.45,tailZ-1],[root,.35,tailZ-1.7],fuselage.map(v=>v*.90));
+   if(!isGlider){
+    p.tri([tip,.18,tipBack],[tip,.18,tipFront],[tip,.18+(isJet?1.4:.8),tipBack-.15],trim);
+   }
+   if(isJet)p.box(sign*.94,-.35,-8.1,.68,.85,3.4,[.31,.36,.40]);
+  }
+  // Characterful tail silhouette and glass canopy.
+  p.tri([0,3.35,-8.65],[0,.34,-9.45],[0,.40,-4.9],fuselage.map(v=>v*.81));
+  p.tri([0,3.35,-8.65],[0,.40,-4.9],[.12,.34,-9.45],trim);
+  p.box(0,1.02,3.8,1.40,.47,4.5,[.16,.39,.54]);
+  p.box(0,1.34,3.5,1.05,.19,2.7,[.28,.54,.66]);
+  p.box(0,-.22,11.5,.29,.35,.78,[.33,.36,.37]);
+  if(!isJet&&!isGlider){
+   // Visible prop disk and two blades, purely illustrative; not a blade simulation.
+   p.box(0,0,12.14,3.8,.15,.12,[.25,.30,.33]);
+   p.box(0,0,12.2,.15,3.8,.12,[.25,.30,.33]);
+  }
+  if(isJet){
+   p.box(-.94,-.35,-10.2,.50,.40,.44,[.17,.25,.32]);
+   p.box(.94,-.35,-10.2,.50,.40,.44,[.17,.25,.32]);
+  }
   meshes[craft.id]=p.upload();
  }
 }
