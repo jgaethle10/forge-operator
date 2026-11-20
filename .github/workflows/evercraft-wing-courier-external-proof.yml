@@ -4,6 +4,8 @@ on:
     paths:
       - 'systemia/wing-courier/edge-observation.mjs'
       - 'systemia/wing-courier/edge-observation.test.mjs'
+      - 'systemia/wing-courier/route-observation.mjs'
+      - 'systemia/wing-courier/route-observation.test.mjs'
       - 'systemia/wing-courier/edge-network-diagnostics.mjs'
       - 'systemia/wing-courier/edge-network-diagnostics.test.mjs'
       - '.github/workflows/evercraft-wing-courier-external-proof.yml'
@@ -12,6 +14,8 @@ on:
     paths:
       - 'systemia/wing-courier/edge-observation.mjs'
       - 'systemia/wing-courier/edge-observation.test.mjs'
+      - 'systemia/wing-courier/route-observation.mjs'
+      - 'systemia/wing-courier/route-observation.test.mjs'
       - 'systemia/wing-courier/edge-network-diagnostics.mjs'
       - 'systemia/wing-courier/edge-network-diagnostics.test.mjs'
       - '.github/workflows/evercraft-wing-courier-external-proof.yml'
@@ -30,12 +34,13 @@ jobs:
         with:
           node-version: '22'
       - name: Pinned, read-only observer contract
-        run: node --test systemia/wing-courier/edge-observation.test.mjs systemia/wing-courier/edge-network-diagnostics.test.mjs
+        run: node --test systemia/wing-courier/edge-observation.test.mjs systemia/wing-courier/edge-network-diagnostics.test.mjs systemia/wing-courier/route-observation.test.mjs
       - name: Observe EXISTING Fabric public health from an independent network
         run: |
           mkdir -p artifacts/wing-courier
           node systemia/wing-courier/edge-network-diagnostics.mjs --receipt artifacts/wing-courier/network.json
           node systemia/wing-courier/edge-observation.mjs --receipt artifacts/wing-courier/edge.json
+          node systemia/wing-courier/route-observation.mjs --receipt artifacts/wing-courier/route.json
       - name: Preserve redacted external observation
         if: always()
         uses: actions/upload-artifact@v4
