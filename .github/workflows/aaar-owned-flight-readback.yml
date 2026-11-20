@@ -90,8 +90,9 @@ jobs:
           node-version: "22"
       - name: Install browser test dependencies
         run: npm install --no-save --no-audit --no-fund playwright@1.55.1
-      - name: Install WebKit browser and required Linux libraries
-        run: npx playwright install --with-deps webkit
+      # Avoid apt mirror downloads that previously stalled the owned Worlds CI; use runner libraries.
+      - name: Install WebKit without apt mirror downloads
+        run: npx playwright install webkit
       - name: Execute owned HTTPS AAAR buttons in mobile WebKit
         shell: bash
         run: |
