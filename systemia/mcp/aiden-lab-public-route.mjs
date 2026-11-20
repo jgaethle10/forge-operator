@@ -34,7 +34,7 @@ export function resolveAidenLabRequest(url) {
   const pathname = parsed.pathname;
   if (pathname === '/aiden-lab') return { handled: true, redirect: '/aiden-lab/' };
   if (pathname === '/aiden-lab/classroom') return { handled: true, redirect: '/aiden-lab/classroom/' };
-  for (const name of ['physics', 'world']) {
+  for (const name of ['physics', 'world', 'watershed']) {
     if (pathname === '/aiden-lab/' + name)
       return { handled: true, redirect: '/aiden-lab/' + name + '/' };
     if (pathname === '/aiden-lab/' + name + '/' || pathname === '/aiden-lab/' + name + '/index.html')
@@ -104,7 +104,8 @@ export function serveAidenLab(req, res, { repoRoot = ROOT } = {}) {
   const sourceFolder = {
     classroom: 'public/apps/infinite-classroom/play',
     physics: 'public/aiden-lab/physics',
-    world: 'public/aiden-lab/world'
+    world: 'public/aiden-lab/world',
+    watershed: 'public/aiden-lab/watershed'
   }[route.sourceGroup] || 'public/aiden-lab';
   const sourceRoot = path.resolve(repoRoot, sourceFolder);
   const target = path.resolve(sourceRoot, route.name);
@@ -133,7 +134,7 @@ export function serveAidenLab(req, res, { repoRoot = ROOT } = {}) {
     'cross-origin-resource-policy': 'same-origin',
     'content-security-policy': route.sourceGroup ? classroomCsp(body) : CSP,
     ...(route.sourceGroup ? {'x-evercraft-learning-world': {
-      classroom: 'classroom-practice-v1', physics: 'physics-model-v1', world: 'earth-globe-v1'
+      classroom: 'classroom-practice-v1', physics: 'physics-model-v1', world: 'earth-globe-v1', watershed: 'watershed-water-balance-v1'
     }[route.sourceGroup]} : {}),
     'x-evercraft-static-program': 'aidens-lab-v1'
   });

@@ -10,19 +10,24 @@ test('Aiden release doctor remains read-only and shell-parsable',()=>{
   for(const term of [
     'aidens_lab_physics_source_present=',
     'aidens_lab_world_source_present=',
+    'aidens_lab_watershed_source_present=',
     'aidens_lab_local_physics_http=',
     'aidens_lab_local_world_http=',
+    'aidens_lab_local_watershed_http=',
     'aidens_lab_local_physics_marker=',
     'aidens_lab_local_world_marker=',
+    'aidens_lab_local_watershed_marker=',
     'existing_atlas_live_but_new_interactive_world_routes_missing',
     'resident_world_routes_present_public_https_and_exact_hash_proof_still_required',
     'doctor_mutation_performed=false'
   ])assert.ok(src.includes(term),term);
   assert.match(src,/x-evercraft-learning-world: physics-model-v1/);
   assert.match(src,/x-evercraft-learning-world: earth-globe-v1/);
+  assert.match(src,/x-evercraft-learning-world: watershed-water-balance-v1/);
   assert.match(src,/--max-time 5/);
   assert.match(src,/local_probe '\/aiden-lab\/physics\/index\.html'/);
   assert.match(src,/local_probe '\/aiden-lab\/world\/index\.html'/);
+  assert.match(src,/local_probe '\/aiden-lab\/watershed\/index\.html'/);
   // No imperative rollout or source/secret mutations in a diagnostic.
   assert.doesNotMatch(src,/\bsystemctl\s+(restart|start|stop|enable|disable)|\bgit\s+reset\b|curl\s+[^;\n]*(-X\s+POST|--request\s+POST)/);
 });
@@ -33,4 +38,5 @@ test('Aiden diagnosis distinguishes old atlas from new world delivery',()=>{
   assert.ok(failed>0&&passed>failed);
   assert.match(src,/aidens_physics_http" != '200'/);
   assert.match(src,/aidens_world_marker" != 'true'/);
+  assert.match(src,/aidens_watershed_marker" != 'true'/);
 });

@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#061a28">
+<meta name="description" content="Aiden's Lab Watershed Laboratory: reshape a simulated landscape, change rain, temperature, tree cover and slope, and investigate a transparent daily water balance.">
+<title>Watershed Laboratory | Aiden's Lab</title>
+<style>
+:root{color-scheme:dark;--paper:#eefaf5;--sub:#bdd4d7;--teal:#9fe9c5;--line:#376578;--gold:#ffdb95;--navy:#061825}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at 48% -5%,#16465b,transparent 48%),#061825;color:var(--paper);font:15px/1.54 system-ui,-apple-system,sans-serif}
+button,input{font:inherit}button{cursor:pointer}a{color:#b4f8d1}button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid #bffbd4;outline-offset:3px}
+.wrap{max-width:1240px;margin:auto;padding-inline:clamp(16px,3.5vw,38px)}
+header{border-bottom:1px solid #305463;background:#071d2bdf}
+.head{min-height:68px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.brand{text-decoration:none;font-size:12px;letter-spacing:.1em;font-weight:900;color:#f2fbf8}.crumb{color:#aecbd0;font-size:12px}
+main{padding-top:clamp(24px,5vw,54px);padding-bottom:80px}
+.eyebrow{color:var(--teal);font-size:11px;letter-spacing:.17em;font-weight:900}
+h1{font:500 clamp(40px,7vw,78px)/1.04 Georgia,serif;letter-spacing:-.045em;margin:12px 0 16px}h1 em{color:var(--teal)}
+.lede{max-width:850px;color:#c4dbe2;font-size:17px;margin:0 0 28px}
+.layout{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(275px,.78fr);gap:17px}
+.scene,.sidebar,.notes,.compare,.missions{border:1px solid #436c7c;border-radius:24px;background:#0b293a;overflow:hidden;box-shadow:0 16px 50px #0005}
+.scene-head,.scene-footer{padding:12px 17px;display:flex;justify-content:space-between;gap:13px;align-items:center;flex-wrap:wrap;color:#c7e0e1;font-size:12px;border-bottom:1px solid #315b69}
+.scene-head b{color:#b6f8d5;letter-spacing:.1em;font-size:12px}
+.scene-footer{border-top:1px solid #315b69;border-bottom:0}
+.scene-footer button,.toolbar button,.compare button,.mission button,.zone-list button{padding:10px 14px;border-radius:11px;min-height:44px;background:#bdf5d8;border:1px solid #c8f4de;color:#0a2a32;font-weight:850;font-size:13px}
+.toolbar button:disabled,.compare button:disabled{opacity:.45;cursor:not-allowed}
+.toolbar button.secondary,.compare button.secondary{background:#183d4c;border-color:#527f8b;color:#e5f6f7}
+canvas{display:block;width:100%}#landscape{height:clamp(310px,39vw,470px);background:#0c2c41;touch-action:pan-y;cursor:crosshair}
+.scene-footer span{font-variant-numeric:tabular-nums}
+.zone-list{display:flex;flex-wrap:wrap;gap:7px;padding:12px 16px;border-top:1px solid #315b69}
+.zone-list button{min-height:40px;padding:8px 10px;background:#153746;border-color:#43697c;color:#cceaf0;font-size:11px}
+.zone-list button[aria-pressed=true]{background:#bdf5d8;border-color:#bdf5d8;color:#08333c}
+.zone-info{padding:12px 17px;background:#103b48;font-size:13px;min-height:42px;color:#e4f5ec}
+.sidebar{padding:22px;display:flex;flex-direction:column;gap:18px}
+.sidebar h2,.section-title{font:500 30px/1.1 Georgia,serif;letter-spacing:-.035em;margin:4px 0}
+.hint{color:var(--sub);font-size:13px;margin:0}
+.control{display:grid;gap:8px}.control label{display:flex;justify-content:space-between;gap:8px;color:#e1f2f0;font-size:13px}.control output{font-weight:900;color:#c9f6d7;font-variant-numeric:tabular-nums}
+input[type=range]{width:100%;accent-color:#9fe9c5;min-height:26px}
+.preset-list{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.preset-list button{min-height:44px;padding:10px;border:1px solid #60818c;background:#163d4b;border-radius:11px;color:#f0f9f6;font-size:12px;font-weight:800}
+.preset-list button:hover,.preset-list button[aria-pressed=true]{border-color:#c4f5d3;background:#234e4f}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px}
+.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:17px 0}
+.metric{border:1px solid #396d79;background:#0c2c3c;border-radius:16px;padding:16px}
+.metric small{display:block;color:#bcd6db;font-size:11px;letter-spacing:.04em}.metric strong{font-size:clamp(18px,2.4vw,29px);font-variant-numeric:tabular-nums;color:#e7fbe9}
+.metric em{display:block;font-size:11px;font-style:normal;color:#b9cccf}
+.below{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(280px,.88fr);gap:17px;margin-top:17px}
+.notes,.compare,.missions{padding:clamp(19px,3vw,27px)}
+.notes p,.compare p,.missions p{color:#c6dce0;line-height:1.62;font-size:14px}
+#hydrograph{height:190px;background:#0a2232;border:1px solid #416775;border-radius:13px}
+.legend{display:flex;flex-wrap:wrap;gap:16px;color:#c0dae0;font-size:12px;margin-top:8px}.legend b{color:#a3f2d4}
+.legend .blue{color:#64c7ea}.legend .yellow{color:#efd59e}
+.budget{border:1px solid #4c8183;border-radius:12px;padding:13px 16px;background:#123b46;font-size:13px}
+.budget b{color:#c7f6da}.budget span{display:block;color:#a6d1d4;font-size:12px;margin-top:4px}
+.compare{margin-top:17px}.compare .toolbar{margin-top:13px}
+.compare-readout{margin-top:14px;border-radius:13px;padding:13px 15px;border:1px solid #57818c;background:#0d3442;color:#edf9f4;min-height:65px;font-variant-numeric:tabular-nums}
+.missions{margin-top:17px}.mission-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.mission{background:#103647;border:1px solid #386678;padding:18px;border-radius:15px;display:flex;flex-direction:column;align-items:start;gap:9px}
+.mission h3{font:500 22px/1.16 Georgia,serif;margin:0}.mission p{font-size:13px;margin:0}.mission button{margin-top:auto;background:#1e5260;color:#e1f8f2;border-color:#569b9d}
+footer{margin-top:24px;color:#a6c4cf;font-size:12px;line-height:1.7}
+@media(max-width:920px){.layout,.below{grid-template-columns:1fr}.sidebar{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}.sidebar h2,.sidebar .hint,.preset-heading{grid-column:1/-1}.scene{order:0}.sidebar{order:1}}
+@media(max-width:580px){.sidebar{display:flex}.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.mission-grid{grid-template-columns:1fr}#landscape{height:330px}.scene-head,.scene-footer{padding:11px 13px}.metric{padding:13px}h1{font-size:44px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<header><div class="wrap head"><a href="../" class="brand">✳ AIDEN'S LAB / EVERCRAFT</a><span class="crumb">EARTH SYSTEMS · WATERSHED LABORATORY</span></div></header>
+<main class="wrap">
+<p class="eyebrow">ENTER THE SCIENCE CENTER / EXHIBIT 04</p>
+<h1>Make a mountain.<br><em>Follow every drop.</em></h1>
+<p class="lede">Build a tiny watershed, send rain or snow across five elevations, change the forest and slope, and watch the river respond. Every drop in this <strong>simplified teaching model</strong> is accounted for.</p>
+<div class="layout">
+<section class="scene" aria-label="Illustrated watershed simulation">
+ <div class="scene-head"><b>💧 THE LIVING WATERSHED</b><span id="dayLabel">DAY 0 · Ready to explore</span></div>
+ <canvas id="landscape" role="img" aria-label="Illustrated side view of five mountain-to-valley watershed zones. Use the zone buttons below for an accessible readout of water stored in each zone."></canvas>
+ <div class="zone-list" id="zoneList" aria-label="Inspect a watershed zone"></div>
+ <div class="zone-info" id="zoneInfo" aria-live="polite">Tap a landscape zone or choose a named zone to inspect its water storage.</div>
+ <div class="scene-footer">
+  <span id="sceneStatus">Run one day to watch the water move.</span>
+  <div class="toolbar"><button type="button" id="step">Advance 1 day</button><button type="button" id="play">▶ Play days</button><button type="button" id="reset" class="secondary">Reset</button></div>
+ </div>
+</section>
+<aside class="sidebar" aria-label="Watershed controls">
+ <div><span class="eyebrow">BUILD YOUR CLIMATE</span><h2>Change the system.</h2><p class="hint">Each advance represents one idealized day. These controls are experiment inputs, not a real forecast.</p></div>
+ <div class="control"><label for="rain">Precipitation <output id="rainValue">28 mm/day</output></label><input id="rain" type="range" min="0" max="80" step="2" value="28"></div>
+ <div class="control"><label for="temp">Valley air temperature <output id="tempValue">12°C</output></label><input id="temp" type="range" min="-8" max="30" step="1" value="12"></div>
+ <div class="control"><label for="forest">Forest cover <output id="forestValue">65%</output></label><input id="forest" type="range" min="0" max="100" step="5" value="65"></div>
+ <div class="control"><label for="slope">Landscape slope <output id="slopeValue">5 / 10</output></label><input id="slope" type="range" min="1" max="10" step="1" value="5"></div>
+ <div class="preset-heading"><span class="eyebrow">LOAD AN EXPERIMENT</span><p class="hint">A preset resets the model to a documented starting condition so you can repeat the trial.</p></div>
+ <div class="preset-list">
+  <button type="button" data-preset="storm">🌧️ Mountain storm</button>
+  <button type="button" data-preset="snowmelt">❄️ Spring thaw</button>
+  <button type="button" data-preset="drought">☀️ Dry season</button>
+  <button type="button" data-preset="forest">🌲 Forest recovery</button>
+ </div>
+</aside>
+</div>
+<section class="metrics" aria-label="Water measurements">
+ <div class="metric"><small>RIVER OUTFLOW</small><strong id="flowMetric">0.0</strong><em>mm/day, area-averaged</em></div>
+ <div class="metric"><small>SNOWPACK</small><strong id="snowMetric">0.0</strong><em>mm water equivalent</em></div>
+ <div class="metric"><small>SOIL WATER</small><strong id="soilMetric">42.0</strong><em>mm stored</em></div>
+ <div class="metric"><small>GROUNDWATER</small><strong id="groundMetric">24.0</strong><em>mm stored</em></div>
+</section>
+<div class="below">
+ <section class="notes" aria-labelledby="graphHeading">
+  <span class="eyebrow">THE RIVER'S MEMORY</span><h2 id="graphHeading" class="section-title">Read the hydrograph.</h2>
+  <p>Each point shows a modeled daily volume per unit area. Rain and snow are inputs; the river responds immediately to surface runoff and more slowly to groundwater release.</p>
+  <canvas id="hydrograph" role="img" aria-label="A 24-day graph of precipitation and river outflow; the current values and water balance are written below."></canvas>
+  <div class="legend"><span class="blue"><b>●</b> River outflow</span><span class="yellow"><b>●</b> Rain and snow input</span></div>
+  <div class="budget" id="balance">Day 0: Water is held in the model's snow, soil and groundwater stores.<span>Each modeled millimeter means one liter per square meter, averaged over five equal-size terrain zones.</span></div>
+ </section>
+ <section class="notes" aria-labelledby="forcesHeading">
+  <span class="eyebrow">LOOK UNDER THE LANDSCAPE</span><h2 id="forcesHeading" class="section-title">Where does it go?</h2>
+  <p><strong>Snow:</strong> At below-freezing zone temperatures, precipitation is stored as snow-water equivalent. Warmer temperatures melt existing snow.</p>
+  <p><strong>Soil:</strong> Liquid water infiltrates until the simplified infiltration rate or soil capacity is reached. Vegetation raises both in this model.</p>
+  <p><strong>River:</strong> Excess surface water reaches the river quickly. Groundwater releases more slowly. Plants and warm air remove some soil water as evaporation and transpiration.</p>
+  <p><strong>Reality check:</strong> Five equal-area zones, constant daily weather, fixed soil properties and no routing delays. This is a transparent learning model, not a calibrated watershed, flood prediction or official hydrology dataset.</p>
+ </section>
+</div>
+<section class="compare" aria-labelledby="compareHeading">
+ <span class="eyebrow">INVESTIGATION STATION · CHANGE ONE THING</span><h2 class="section-title" id="compareHeading">Test your watershed hypothesis.</h2>
+ <p>Capture a seven-day Trial A. Change the forest, slope, temperature or precipitation. Run Trial B from the <strong>same starting water stores</strong> and compare total modeled river output. The model computes both trials, not a fabricated result.</p>
+ <div class="toolbar"><button type="button" id="captureA">Capture Trial A</button><button type="button" id="compareB" disabled>Compare with Trial B</button><button type="button" id="clearCompare" class="secondary">Clear comparison</button></div>
+ <p class="compare-readout" id="compareResult" role="status" aria-live="polite">Begin by capturing seven days with the current controls. Then change one or more inputs and compare.</p>
+</section>
+<section class="missions" aria-labelledby="missionsHeading">
+ <span class="eyebrow">FOLLOW A MYSTERY</span><h2 class="section-title" id="missionsHeading">Three investigations. Infinite variations.</h2>
+ <div class="mission-grid">
+  <article class="mission"><h3>The storm that became a river</h3><p>Make a mountain storm. Does the river rise as the soil fills? Compare the same storm on gentle and steep terrain.</p><button type="button" data-mission="storm">Load storm experiment</button></article>
+  <article class="mission"><h3>The mountain remembers winter</h3><p>Start with stored snow. Warm the valley, then watch meltwater travel through the basin.</p><button type="button" data-mission="snowmelt">Load snowmelt experiment</button></article>
+  <article class="mission"><h3>Bring the forest back</h3><p>Compare bare soil with a forest under identical rainfall. Does more infiltration change the river output?</p><button type="button" data-mission="forest">Load forest experiment</button></article>
+ </div>
+</section>
+<footer>
+ <p><strong>Evidence:</strong> Background hydrology from <a href="https://www.usgs.gov/special-topics/water-science-school" target="_blank" rel="noopener noreferrer">USGS Water Science School ↗</a> and <a href="https://www.noaa.gov/education/resource-collections/freshwater/water-cycle" target="_blank" rel="noopener noreferrer">NOAA Water Cycle education ↗</a>. These sources explain physical processes but do not validate this toy model's coefficients or predict a real flood.</p>
+ <p>Built on Evercraft-owned infrastructure. All calculations and artwork run locally in the browser. No third-party map SDK, tracking, API calls, saved student profile or live environmental measurements. <a href="../world/">Return to Earth & World Atlas ↗</a> · <a href="../physics/">Explore Physics Atlas ↗</a> · <a href="../">All of Aiden's Lab ↗</a></p>
+</footer>
+</main>
+<script>
+(()=>{
+'use strict';
+const $=id=>document.getElementById(id);
+const ELEVATIONS=[1750,1400,1050,650,250];
+const ZONES=['Summit','Alpine forest','Upper watershed','River terraces','Valley'];
+const PRESETS={
+ storm:{rain:68,temp:16,forest:35,slope:8,initial:'temperate'},
+ snowmelt:{rain:14,temp:21,forest:65,slope:6,initial:'winter'},
+ drought:{rain:0,temp:29,forest:25,slope:5,initial:'drought'},
+ forest:{rain:46,temp:15,forest:95,slope:4,initial:'temperate'}
+};
+const cap=x=>Math.max(0,x),clamp=(x,a,b)=>Math.min(b,Math.max(a,x));
+const fmt=x=>Number(x.toFixed(1)).toFixed(1);
+function params(){return {rain:Number($('rain').value),temp:Number($('temp').value),forest:Number($('forest').value),slope:Number($('slope').value)}}
+function makeWatershed(initial='temperate'){
+ const cells=ELEVATIONS.map((e,i)=>({
+  elevation:e,
+  soil:initial==='drought'?9:initial==='winter'?55:42,
+  groundwater:initial==='drought'?6:24,
+  snow:initial==='winter'?(i<3?175:35):initial==='temperate'?(i<2?24:0):0
+ }));
+ return {day:0,cells,history:[],totalInput:0,totalOutput:0,totalEvap:0};
+}
+function stores(state){
+ return state.cells.reduce((sum,c)=>sum+c.soil+c.groundwater+c.snow,0)/state.cells.length;
+}
+// All water amounts are mm water equivalent per day per equal-area cell.
+// Stores are soil, groundwater and snow. Inputs = river + evap + delta stores.
+// The coefficients are intentionally classroom assumptions, not fitted hydrology.
+function stepWatershed(state,p){
+ const before=stores(state);
+ let outflow=0,evaporation=0,precipSnow=0,melt=0,surface=0;
+ for(const cell of state.cells){
+  const localTemp=p.temp-.0065*(cell.elevation-250);
+  const snowfall=localTemp<0?p.rain:0;
+  const rainfall=localTemp>=0?p.rain:0;
+  cell.snow+=snowfall;precipSnow+=snowfall;
+  const thaw=Math.min(cell.snow,cap(localTemp)*2.6);
+  cell.snow-=thaw;melt+=thaw;
+  const liquid=rainfall+thaw;
+  const soilCapacity=85+p.forest*1.1;
+  const infiltrationRate=cap(26+p.forest*.72-p.slope*1.65);
+  const infiltration=Math.min(liquid,infiltrationRate,cap(soilCapacity-cell.soil));
+  cell.soil+=infiltration;
+  const fastFlow=liquid-infiltration;
+  surface+=fastFlow;
+  const evaporated=Math.min(cell.soil,cap(localTemp)*.17*(.35+p.forest/135));
+  cell.soil-=evaporated;evaporation+=evaporated;
+  const percolation=Math.min(cell.soil,cell.soil*.035);
+  cell.soil-=percolation;cell.groundwater+=percolation;
+  const slowFlow=cell.groundwater*.042;
+  cell.groundwater-=slowFlow;
+  outflow+=fastFlow+slowFlow;
+ }
+ const n=state.cells.length;
+ outflow/=n;evaporation/=n;precipSnow/=n;melt/=n;surface/=n;
+ const after=stores(state);
+ const residual=p.rain-outflow-evaporation-(after-before);
+ state.day++;
+ state.totalInput+=p.rain;
+ state.totalOutput+=outflow;
+ state.totalEvap+=evaporation;
+ const reading={day:state.day,rain:p.rain,outflow,evaporation,snow:state.cells.reduce((t,c)=>t+c.snow,0)/n,
+  soil:state.cells.reduce((t,c)=>t+c.soil,0)/n,
+  groundwater:state.cells.reduce((t,c)=>t+c.groundwater,0)/n,
+  precipSnow,melt,surface,residual,storage:after};
+ state.history.push(reading);
+ if(state.history.length>24)state.history.shift();
+ return reading;
+}
+function simulateScenario(p,initial='temperate',days=7){
+ const state=makeWatershed(initial);
+ for(let i=0;i<days;i++)stepWatershed(state,p);
+ return {outflow:state.totalOutput,evaporation:state.totalEvap,storage:stores(state),state};
+}
+let state=makeWatershed(),initialCondition='temperate',selectedZone=2,playing=false,frame=0,last=0,accumulator=0;
+let width=800,height=440,dpr=1,currentPreset=null,trialA=null;
+const canvas=$('landscape'),ctx=canvas.getContext('2d');
+const chart=$('hydrograph'),gctx=chart.getContext('2d');
+function setControl(id,value){$(id).value=value}
+function showInputs(){
+ for(const [id,suffix] of [['rain',' mm/day'],['temp','°C'],['forest','%'],['slope',' / 10']])
+  $(id+'Value').textContent=$(id).value+suffix;
+}
+function updateZone(){
+ const c=state.cells[selectedZone];
+ const temp=params().temp-.0065*(c.elevation-250);
+ $('zoneInfo').textContent=ZONES[selectedZone]+' · '+c.elevation+' m elevation · '+fmt(temp)+'°C modeled air · Snow '+fmt(c.snow)+' mm · Soil '+fmt(c.soil)+' mm · Groundwater '+fmt(c.groundwater)+' mm';
+ for(const btn of $('zoneList').querySelectorAll('button'))
+  btn.setAttribute('aria-pressed',String(Number(btn.dataset.zone)===selectedZone));
+}
+function terrain(i){const s=params().slope;return .26+i*s*.017+Math.sin(i*2.13)*.023}
+function dot(x,y,r,color){ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fillStyle=color;ctx.fill()}
+function drawLandscape(){
+ const w=width,h=height,p=params();
+ const sky=ctx.createLinearGradient(0,0,0,h);sky.addColorStop(0,'#113b56');sky.addColorStop(.66,'#287389');sky.addColorStop(1,'#80a4a1');
+ ctx.fillStyle=sky;ctx.fillRect(0,0,w,h);
+ const sun=ctx.createRadialGradient(w*.78,h*.14,0,w*.78,h*.14,h*.27);
+ sun.addColorStop(0,'#fee5afbb');sun.addColorStop(.25,'#e6e6b966');sun.addColorStop(1,'#fff8db00');ctx.fillStyle=sun;ctx.fillRect(0,0,w,h);
+ // Five connected hills, with slope visibly controlled by the terrain slider.
+ const pts=Array.from({length:5},(_,i)=>[w*(.065+i*.22),h*terrain(i)]);
+ pts.unshift([0,pts[0][1]+h*.09]);pts.push([w,h*.8]);
+ ctx.beginPath();ctx.moveTo(0,h);
+ for(const pt of pts)ctx.lineTo(pt[0],pt[1]);
+ ctx.lineTo(w,h);ctx.closePath();
+ const earth=ctx.createLinearGradient(0,h*.23,0,h);earth.addColorStop(0,'#588c67');earth.addColorStop(.42,'#366857');earth.addColorStop(.44,'#234957');earth.addColorStop(1,'#152e44');
+ ctx.fillStyle=earth;ctx.fill();
+ // Soil / aquifer band is an illustrative diagram. No geologic precision implied.
+ ctx.beginPath();for(let i=0;i<pts.length;i++){const pt=pts[i];if(i===0)ctx.moveTo(pt[0],pt[1]+h*.23);else ctx.lineTo(pt[0],pt[1]+h*.23)}
+ ctx.strokeStyle='#81c2a370';ctx.lineWidth=3;ctx.stroke();
+ for(let i=0;i<5;i++){
+  const x=w*(.065+i*.22),y=h*terrain(i);
+  // Trees are deterministic, with density proportional to the vegetation input.
+  const trees=Math.round(p.forest/17);
+  for(let t=0;t<trees;t++){
+   const tx=x+(t-(trees-1)/2)*w*.022,ty=y+((t%2)*7);
+   const scale=(i===0?.65:1)*(height/430);
+   ctx.fillStyle='#513f33';ctx.fillRect(tx-1.7*scale,ty-15*scale,3.4*scale,16*scale);
+   ctx.beginPath();ctx.moveTo(tx,ty-43*scale);ctx.lineTo(tx-12*scale,ty-8*scale);ctx.lineTo(tx+12*scale,ty-8*scale);ctx.closePath();
+   ctx.fillStyle=i<2?'#337e79':'#3baf8c';ctx.fill();
+  }
+  if(i<3&&state.cells[i].snow>8){
+   const snowAmount=clamp(state.cells[i].snow/170,0,1);
+   ctx.beginPath();ctx.moveTo(x-w*.057,y+h*.022);ctx.lineTo(x,y-h*.027-snowAmount*16);ctx.lineTo(x+w*.053,y+h*.025);ctx.closePath();
+   ctx.fillStyle='rgba(234,252,255,'+(.26+snowAmount*.7)+')';ctx.fill();
+  }
+  const c=state.cells[i],groundY=Math.min(h*.91,y+h*.22);
+  const moisture=clamp(c.soil/200,0,1);
+  ctx.fillStyle='rgba(111,196,217,'+(.12+moisture*.36)+')';
+  ctx.beginPath();ctx.ellipse(x,groundY,w*.065,12+moisture*14,0,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.arc(x,y-24,selectedZone===i?13:6,0,Math.PI*2);
+  ctx.fillStyle=selectedZone===i?'#ffe3a1':'#b4f6d3';ctx.fill();
+  if(selectedZone===i){ctx.beginPath();ctx.arc(x,y-24,20,0,Math.PI*2);ctx.strokeStyle='#ffe4a7aa';ctx.lineWidth=2;ctx.stroke()}
+ }
+ const flow=state.history.at(-1)?.outflow||0;
+ // River connects the high watershed with the valley, widening under stronger outflow.
+ const riverWidth=clamp(4+flow*.24,5,30);
+ ctx.beginPath();ctx.moveTo(w*.27,h*terrain(1)+6);
+ ctx.bezierCurveTo(w*.43,h*.61,w*.59,h*.63,w*.72,h*.78);
+ ctx.bezierCurveTo(w*.84,h*.87,w*.92,h*.78,w*1.04,h*.86);
+ ctx.strokeStyle='#23536c';ctx.lineWidth=riverWidth+8;ctx.lineCap='round';ctx.stroke();
+ ctx.strokeStyle='#5bcbe3';ctx.lineWidth=riverWidth;ctx.stroke();
+ ctx.strokeStyle='#d1f9f7a1';ctx.lineWidth=Math.max(1,riverWidth*.17);ctx.stroke();
+ // Clouds, snow and rain are weather indicators, not precipitation particle counts.
+ if(p.rain>0){
+  const cloudCount=Math.round(p.rain/20)+1;
+  for(let c=0;c<cloudCount;c++){
+   const x=w*(.19+c*.18),y=h*(.14+(c%2)*.043);
+   ctx.fillStyle='#d8edf0d2';
+   for(let j=-1;j<=1;j++){ctx.beginPath();ctx.ellipse(x+j*15,y+(j===0?-8:0),23,13,0,0,Math.PI*2);ctx.fill()}
+   const cold=p.temp-.0065*(ELEVATIONS[Math.min(c,4)]-250)<0;
+   for(let j=0;j<10;j++){
+    const phase=(state.day*.16+j*.23+accumulator*.001)%1;
+    const dx=x+((j*17)%50)-24,dy=y+27+phase*h*.18;
+    if(cold){dot(dx,dy,2.1,'#f2ffff')}else{
+     ctx.strokeStyle='#b8eeff91';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(dx,dy);ctx.lineTo(dx-4,dy+11);ctx.stroke()
+    }
+   }
+  }
+ }
+ ctx.textBaseline='middle';ctx.font='800 '+Math.max(10,w*.018)+'px system-ui';
+ ctx.fillStyle='#eafef8';ctx.fillText('RIDGE',w*.055,h*.06);ctx.fillText('RIVER',w*.83,h*.89);
+}
+function drawHydrograph(){
+ const rect=chart.getBoundingClientRect(),w=Math.max(290,rect.width),h=Math.max(140,rect.height);
+ const scale=Math.min(2,window.devicePixelRatio||1);chart.width=Math.round(w*scale);chart.height=Math.round(h*scale);
+ gctx.setTransform(scale,0,0,scale,0,0);
+ gctx.fillStyle='#0a2232';gctx.fillRect(0,0,w,h);
+ for(let i=1;i<5;i++){gctx.strokeStyle='#315c6d';gctx.beginPath();gctx.moveTo(36,i*h/5);gctx.lineTo(w-14,i*h/5);gctx.stroke()}
+ const records=state.history,max=Math.max(10,...records.flatMap(r=>[r.rain,r.outflow]))*1.18,origin=h-29;
+ gctx.font='11px system-ui';gctx.fillStyle='#aacad3';gctx.fillText('mm/day',10,17);
+ const draw=(key,color)=>{
+  if(!records.length)return;
+  gctx.beginPath();records.forEach((r,i)=>{
+   const x=42+i/(Math.max(1,records.length-1))*(w-65),y=origin-r[key]/max*(h-48);
+   if(!i)gctx.moveTo(x,y);else gctx.lineTo(x,y);
+  });
+  gctx.lineWidth=3;gctx.strokeStyle=color;gctx.stroke();
+  if(records.length===1){gctx.beginPath();gctx.arc(42,origin-records[0][key]/max*(h-48),4,0,Math.PI*2);gctx.fillStyle=color;gctx.fill()}
+ };
+ draw('rain','#e9d99c');draw('outflow','#69cde9');
+ gctx.fillStyle='#b5cfd9';gctx.fillText('Day '+(records[0]?.day||0),44,h-7);
+ gctx.fillText('Day '+(records.at(-1)?.day||0),Math.max(w-80,44),h-7);
+}
+function refresh(){
+ const reading=state.history.at(-1),cells=state.cells,n=cells.length;
+ $('dayLabel').textContent='DAY '+state.day+' · '+(playing?'Simulation running':'Simulation paused');
+ $('flowMetric').textContent=fmt(reading?.outflow||0);
+ $('snowMetric').textContent=fmt(cells.reduce((s,c)=>s+c.snow,0)/n);
+ $('soilMetric').textContent=fmt(cells.reduce((s,c)=>s+c.soil,0)/n);
+ $('groundMetric').textContent=fmt(cells.reduce((s,c)=>s+c.groundwater,0)/n);
+ $('sceneStatus').textContent=reading?'River '+fmt(reading.outflow)+' mm/day · snowmelt '+fmt(reading.melt)+' mm/day':'Advance one day to begin the experiment.';
+ $('balance').textContent=reading
+  ?'Day '+state.day+' · Input '+fmt(reading.rain)+' mm = river '+fmt(reading.outflow)+' + evap '+fmt(reading.evaporation)+' + storage change '+fmt(reading.rain-reading.outflow-reading.evaporation)+' mm. Budget residual '+reading.residual.toExponential(1)+' mm.'
+  :'Day 0 · Water begins in snow, soil and groundwater storage.';
+ const foot=document.createElement('span');foot.textContent='One mm is one liter per square meter, averaged over five equal-area zones. Values are educational simulations, not measurements.';$('balance').append(foot);
+ updateZone();drawLandscape();drawHydrograph();
+}
+function advance(){const next=stepWatershed(state,params());refresh();return next}
+function stop(){playing=false;last=0;accumulator=0;$('play').textContent='▶ Play days'}
+function reset(initial=initialCondition){
+ stop();initialCondition=initial;state=makeWatershed(initial);refresh();
+}
+function choosePreset(name){
+ const preset=PRESETS[name];if(!preset)return;
+ for(const id of ['rain','temp','forest','slope'])setControl(id,preset[id]);
+ currentPreset=name;showInputs();reset(preset.initial);
+ for(const btn of document.querySelectorAll('[data-preset]'))btn.setAttribute('aria-pressed',String(btn.dataset.preset===name));
+}
+function renderFrame(time){
+ if(!playing)return;
+ if(document.hidden){last=time;frame=requestAnimationFrame(renderFrame);return;}
+ if(!last)last=time;
+ accumulator+=Math.min(80,time-last);last=time;
+ if(accumulator>=700){accumulator=0;advance()}else drawLandscape();
+ frame=requestAnimationFrame(renderFrame);
+}
+function resize(){
+ const rect=canvas.getBoundingClientRect();width=Math.max(290,rect.width);height=Math.max(280,rect.height);
+ dpr=Math.min(2,window.devicePixelRatio||1);canvas.width=Math.round(width*dpr);canvas.height=Math.round(height*dpr);
+ ctx.setTransform(dpr,0,0,dpr,0,0);refresh();
+}
+function compare(){
+ if(!trialA)return;
+ const next=params();
+ const changed=['rain','temp','forest','slope'].some(id=>Math.abs(next[id]-trialA.settings[id])>1e-8);
+ if(!changed){$('compareResult').textContent='Change at least one of the four controls before running Trial B.';return;}
+ const b=simulateScenario(next,trialA.initial,7),a=trialA.result;
+ const diff=b.outflow-a.outflow;
+ $('compareResult').textContent='Trial A: '+fmt(a.outflow)+' mm of modeled river outflow over 7 days. Trial B: '+fmt(b.outflow)+' mm. Difference B − A: '+(diff>0?'+':'')+fmt(diff)+' mm. '+(Math.abs(diff)<.1?'The modeled result was nearly unchanged.':diff>0?'Your second watershed released more water to the river.':'Your second watershed released less water to the river.')+' Both runs started with the same snow, soil and groundwater stores. Compare which inputs changed and what the model assumes.';
+}
+for(const id of ['rain','temp','forest','slope'])$(id).addEventListener('input',()=>{
+ currentPreset=null;for(const btn of document.querySelectorAll('[data-preset]'))btn.setAttribute('aria-pressed','false');
+ showInputs();refresh();
+});
+$('step').addEventListener('click',()=>{stop();advance()});
+$('play').addEventListener('click',()=>{
+ if(playing){stop();refresh();return}
+ playing=true;$('play').textContent='Ⅱ Pause days';last=0;accumulator=0;frame=requestAnimationFrame(renderFrame);refresh();
+});
+$('reset').addEventListener('click',()=>reset());
+$('captureA').addEventListener('click',()=>{
+ stop();trialA={settings:params(),initial:initialCondition,result:simulateScenario(params(),initialCondition,7)};
+ $('compareB').disabled=false;
+ $('compareResult').textContent='Trial A captured: '+fmt(trialA.result.outflow)+' mm total modeled river output over seven days. Now change one or more controls and compare.';
+});
+$('compareB').addEventListener('click',compare);
+$('clearCompare').addEventListener('click',()=>{
+ trialA=null;$('compareB').disabled=true;$('compareResult').textContent='Comparison cleared. Capture a seven-day Trial A to begin.';
+});
+for(const btn of document.querySelectorAll('[data-preset]'))btn.addEventListener('click',()=>choosePreset(btn.dataset.preset));
+for(const btn of document.querySelectorAll('[data-mission]'))btn.addEventListener('click',()=>{
+ choosePreset(btn.dataset.mission);document.querySelector('.scene').scrollIntoView({behavior:'instant',block:'start'});
+});
+for(let i=0;i<ZONES.length;i++){
+ const b=document.createElement('button');b.type='button';b.dataset.zone=String(i);b.textContent=ZONES[i];
+ b.setAttribute('aria-pressed','false');b.addEventListener('click',()=>{selectedZone=i;refresh()});$('zoneList').append(b);
+}
+canvas.addEventListener('pointerup',e=>{
+ const rect=canvas.getBoundingClientRect();const x=(e.clientX-rect.left)/rect.width;
+ if(x<0||x>1)return;
+ selectedZone=clamp(Math.round((x-.065)/.22),0,4);refresh();
+});
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&playing){stop();refresh()}});
+window.addEventListener('resize',resize,{passive:true});
+if(window.matchMedia('(prefers-reduced-motion:reduce)').matches)stop();
+showInputs();resize();
+})();
+</script>
+</body>
+</html>

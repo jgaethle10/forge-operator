@@ -21,7 +21,8 @@ test('strictly allowlists five exact science assets', () => {
     '/aiden-lab/README.md', '/aiden-lab/server.ts', '/aiden-lab/secrets',
     '/aiden-lab/nested/index.html', '/aiden-lab/%2Fserver.ts',
     '/aiden-lab/index.html.js', '/aiden-lab/.env',
-    '/aiden-lab/classroom/README.md', '/aiden-lab/classroom/.env'
+    '/aiden-lab/classroom/README.md', '/aiden-lab/classroom/.env',
+    '/aiden-lab/watershed/.env','/aiden-lab/watershed/README.md'
   ]) {
     const r = resolveAidenLabRequest(p);
     assert.equal(r.handled, true, p);
@@ -99,12 +100,13 @@ test('the reviewed Infinite Classroom practice preview opens through owned Fabri
 });
 
 
-test('Physics and World Atlases are first-party, read-only interactive experiences',async()=>{
+test('Physics, World and Watershed Atlases are first-party, read-only interactive experiences',async()=>{
   const rt=await startFabricLocalRuntime({host:'127.0.0.1',port:0,catalog:[],faieSurfaceEnabled:false});
   try{
     for(const world of [
       {name:'physics',marker:'physics-model-v1',identity:'Physics Atlas',words:/PROJECTILE MOTION|pendulum/i},
-      {name:'world',marker:'earth-globe-v1',identity:'Earth & World Atlas',words:/Mariana Trench|Yakima Basin/}
+      {name:'world',marker:'earth-globe-v1',identity:'Earth & World Atlas',words:/Mariana Trench|Yakima Basin/},
+      {name:'watershed',marker:'watershed-water-balance-v1',identity:'Watershed Laboratory',words:/WATER BALANCE|Watershed Laboratory|SNOWPACK/}
     ]){
       const sourceHtml=fs.readFileSync(path.join(repoRoot,'public/aiden-lab',world.name,'index.html'),'utf8');
       const r=await fetch(rt.url+'/aiden-lab/'+world.name+'/');

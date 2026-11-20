@@ -35,6 +35,14 @@ export const LEARNING_WORLDS=Object.freeze([
     source:'https://github.com/jgaethle10/forge-operator/blob/main/systemia/migrations/base44-exit/EDUCATION-REBUILD-2026-11-04.md'
   },
   {
+    id:'watershed-lab',icon:'💧',title:'Watershed Laboratory',kind:'Build a landscape · run the water cycle',
+    description:'Change mountains, rainfall, temperature and forest cover in a five-zone watershed. Play a mass-balanced daily simulation, inspect snow/soil/groundwater stores and compare two seven-day river outcomes.',
+    state:'interactive_preview',action:'Enter the watershed laboratory',
+    url:'./watershed/',
+    evidence:'Original first-party classroom hydrology simulation with transparent water accounting and adjustable modeled assumptions. This is not a calibrated real watershed, flood forecast, sensor feed or proof of prior Deep Learning parity.',
+    source:'https://github.com/jgaethle10/forge-operator/tree/main/public/aiden-lab/watershed'
+  },
+  {
     id:'cosmos-atlas',icon:'🪐',title:'Cosmos Atlas',kind:'Journey into space',
     description:'Planets, stars, galaxies, signals and space science, always separating observations, models and open questions.',
     state:'discovery_only',action:'View the Cosmos Atlas record',

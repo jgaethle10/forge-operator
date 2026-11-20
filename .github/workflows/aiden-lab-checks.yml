@@ -7,6 +7,7 @@ on:
       - 'public/aiden-lab/**'
       - 'tests/aiden-lab-public.test.mjs'
       - 'tests/aiden-lab-interactive-atlases.test.mjs'
+      - 'tests/aiden-lab-watershed.test.mjs'
       - 'tests/aiden-lab-living-universe.test.mjs'
       - '.github/workflows/aiden-lab-checks.yml'
   workflow_dispatch:
@@ -26,4 +27,4 @@ jobs:
         with:
           node-version: '22'
       - name: Verify static atlas source and medical guardrails
-        run: node --test tests/aiden-lab-public.test.mjs tests/aiden-lab-interactive-atlases.test.mjs tests/aiden-lab-living-universe.test.mjs
+        run: node --test tests/aiden-lab-public.test.mjs tests/aiden-lab-interactive-atlases.test.mjs tests/aiden-lab-living-universe.test.mjs tests/aiden-lab-watershed.test.mjs

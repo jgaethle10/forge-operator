@@ -60,7 +60,7 @@ test('Aiden is the first-party home for restored Deep Learning build lineage', (
     assert.equal(u.protocol,'https:');
     if(world.state==='interactive_preview'){
       assert.equal(u.origin,'https://fabric.systemiacommandcenters.com',world.id);
-      assert.ok(['./physics/','./world/'].includes(world.url),world.id);
+      assert.ok(['./physics/','./world/','./watershed/'].includes(world.url),world.id);
       assert.match(world.evidence,/original|not recovered|not a recovery/i);
     } else if(world.state!=='practice_preview'){
       assert.equal(u.hostname,'github.com',world.id);
@@ -75,6 +75,10 @@ test('Aiden is the first-party home for restored Deep Learning build lineage', (
   assert.equal(physics.url,'./physics/');
   assert.equal(earth.state,'interactive_preview');
   assert.equal(earth.url,'./world/');
+  const watershed=LEARNING_WORLDS.find(x=>x.id==='watershed-lab');
+  assert.equal(watershed.state,'interactive_preview');
+  assert.equal(watershed.url,'./watershed/');
+  assert.match(watershed.evidence,/not a calibrated real watershed/i);
   const sentinel=LEARNING_WORLDS.find(x=>x.id==='sentinel-intelligence');
   assert.equal(sentinel.state,'historical_rebuild');
   assert.match(sentinel.description,/No live military tracking or tactical controls/);

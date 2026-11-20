@@ -205,17 +205,23 @@ printf 'aidens_lab_local_mark_http=%s\n' "$aidens_mark_http"
 # These calls remain loopback GET/HEAD only and never disclose HTTP bodies.
 aidens_physics_source_present=false
 aidens_world_source_present=false
+aidens_watershed_source_present=false
 [[ -f "$REPO_ROOT/public/aiden-lab/physics/index.html" ]] && aidens_physics_source_present=true
 [[ -f "$REPO_ROOT/public/aiden-lab/world/index.html" ]] && aidens_world_source_present=true
+[[ -f "$REPO_ROOT/public/aiden-lab/watershed/index.html" ]] && aidens_watershed_source_present=true
 printf 'aidens_lab_physics_source_present=%s\n' "$aidens_physics_source_present"
 printf 'aidens_lab_world_source_present=%s\n' "$aidens_world_source_present"
+printf 'aidens_lab_watershed_source_present=%s\n' "$aidens_watershed_source_present"
 aidens_physics_http="$(local_probe '/aiden-lab/physics/index.html')"
 aidens_world_http="$(local_probe '/aiden-lab/world/index.html')"
+aidens_watershed_http="$(local_probe '/aiden-lab/watershed/index.html')"
 printf 'aidens_lab_local_physics_http=%s\n' "$aidens_physics_http"
 printf 'aidens_lab_local_world_http=%s\n' "$aidens_world_http"
+printf 'aidens_lab_local_watershed_http=%s\n' "$aidens_watershed_http"
 # A 200 from some other HTML service cannot be accepted as the right world.
 aidens_physics_marker=false
 aidens_world_marker=false
+aidens_watershed_marker=false
 if [[ "$aidens_physics_http" == '200' ]] && \
     curl --silent --show-error --max-time 5 --head \
       'http://127.0.0.1:8787/aiden-lab/physics/index.html' 2>/dev/null \
@@ -228,8 +234,15 @@ if [[ "$aidens_world_http" == '200' ]] && \
       | tr -d '\r' | grep -Fqi 'x-evercraft-learning-world: earth-globe-v1'; then
   aidens_world_marker=true
 fi
+if [[ "$aidens_watershed_http" == '200' ]] && \
+    curl --silent --show-error --max-time 5 --head \
+      'http://127.0.0.1:8787/aiden-lab/watershed/index.html' 2>/dev/null \
+      | tr -d '\r' | grep -Fqi 'x-evercraft-learning-world: watershed-water-balance-v1'; then
+  aidens_watershed_marker=true
+fi
 printf 'aidens_lab_local_physics_marker=%s\n' "$aidens_physics_marker"
 printf 'aidens_lab_local_world_marker=%s\n' "$aidens_world_marker"
+printf 'aidens_lab_local_watershed_marker=%s\n' "$aidens_watershed_marker"
 aidens_marker_present=false
 if curl --silent --show-error --max-time 5 --dump-header - --output /dev/null \
      'http://127.0.0.1:8787/aiden-lab/index.html' 2>/dev/null \
@@ -237,17 +250,17 @@ if curl --silent --show-error --max-time 5 --dump-header - --output /dev/null \
   aidens_marker_present=true
 fi
 printf 'aidens_lab_local_owned_route_marker=%s\n' "$aidens_marker_present"
-if [[ "$aidens_physics_source_present" == 'true' && "$aidens_world_source_present" == 'true' &&
+if [[ "$aidens_physics_source_present" == 'true' && "$aidens_world_source_present" == 'true' && "$aidens_watershed_source_present" == 'true' &&
       "$aidens_home_http" == '200' &&
-      ( "$aidens_physics_http" != '200' || "$aidens_world_http" != '200' ||
-        "$aidens_physics_marker" != 'true' || "$aidens_world_marker" != 'true' ) ]]; then
+      ( "$aidens_physics_http" != '200' || "$aidens_world_http" != '200' || "$aidens_watershed_http" != '200' ||
+        "$aidens_physics_marker" != 'true' || "$aidens_world_marker" != 'true' || "$aidens_watershed_marker" != 'true' ) ]]; then
   printf 'aidens_lab_diagnosis=existing_atlas_live_but_new_interactive_world_routes_missing\n'
   printf 'aidens_lab_next=check_updater_timer_release_ref_source_dirty_and_recent_hold_reason\n'
 elif [[ "$aidens_home_http" == '200' && "$aidens_app_http" == '200' &&
       "$aidens_catalog_http" == '200' && "$aidens_css_http" == '200' &&
       "$aidens_mark_http" == '200' && "$aidens_marker_present" == 'true' &&
-      "$aidens_physics_http" == '200' && "$aidens_world_http" == '200' &&
-      "$aidens_physics_marker" == 'true' && "$aidens_world_marker" == 'true' ]]; then
+      "$aidens_physics_http" == '200' && "$aidens_world_http" == '200' && "$aidens_watershed_http" == '200' &&
+      "$aidens_physics_marker" == 'true' && "$aidens_world_marker" == 'true' && "$aidens_watershed_marker" == 'true' ]]; then
   printf 'aidens_lab_diagnosis=resident_world_routes_present_public_https_and_exact_hash_proof_still_required\n'
 elif [[ "$aidens_source_present" == 'true' && "$aidens_home_http" == '404' ]]; then
   printf 'aidens_lab_diagnosis=merged_source_present_but_resident_runtime_route_missing\n'
