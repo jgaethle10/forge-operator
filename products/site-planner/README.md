@@ -134,3 +134,80 @@ Tests:
 python3 -m unittest discover -v
 # Expected local package: 13 tests (10 earlier + 2 upstream bridge checks + 1 server smoke test)
 ```
+
+## v1.5 commercial quote safety gate
+
+**Site Planner has a dedicated provisional Stripe product and inactive payment link, but still does not have an approved/active checkout or verified payment-to-fulfillment bridge.** The
+canonical `public/mesh/checkout-ready/verified-links.json` lists seven other
+products; none is a Site Planner preliminary plan. Do not reuse those products'
+checkout receipts to claim this product is paid.
+
+A browser-created preliminary plan request now defaults to
+`order_kind="commercial_quote"`. The request creates an immutable report
+snapshot, an order with `queued` status, and an `order_controls` record:
+`payment_state="checkout_unconfigured"`, `fulfillment_release_state="held"`.
+The outbox records both `site.plan.requested.v1` and
+`site.plan.commercial_hold.v1`. An attempted transition into assignment/review
+or registration of a returned plan is rejected on the **server**, regardless
+of any untrusted fields such as `payment_status`, `paid`, `checkout_session`,
+or `provider_receipt_ref` sent in the request.
+
+Explicit `order_kind="internal_planning"` is a local QA/operator lane only.
+It does not represent a paid sale, a customer entitlement, certified
+engineering, or actual Systemia dispatch. The current local workspace has no
+per-user authorization or approved public runtime. It MUST NOT be exposed to
+untrusted clients, especially as the internal lane is selected by a plain
+request field. Existing pre-v1.5 orders with no `order_controls` record are
+**unclassified and held** for engineering transitions and returned plans.
+
+The `GET /api/commercial/readiness` endpoint reports that checkout, payment
+verification, authenticated Systemia dispatch and customer sign-in are not
+connected. No endpoint can mark a commercial quote paid or release it.
+
+### Payment-to-engineering requirements before launch
+1. Register a distinct approved Site Planner product/price and a real checkout
+   in Evercraft Payments. Do not infer success from user-supplied URLs or redirects.
+2. Correlate the exact provider-verified payment to the right Site Planner
+   order using account/offer/amount/currency IDs and durable private receipts.
+3. Explicitly approve customer scope and available engineering capacity, with
+   audited roles, before authorizing commercial work.
+4. Hold/reverse promptly for chargebacks/refunds and maintain idempotent state.
+5. Deliver assignments through a signed Systemia outbox worker with acknowledgments;
+   without an authenticated receipt, leave events `pending`.
+6. Add user identity, tenant/site permissions, upload content inspection and
+   signed expiring customer report access before public deployment.
+
+Run the full suite: `python3 -m unittest discover -v`.
+
+### Network exposure hard stop
+
+v1.5 explicitly rejects any non-loopback bind, even when a shared bearer token
+is configured. The authentication model is not customer-ready. This is not a
+substitute for real tenancy, permissions, CSRF controls, secure upload
+processing or signed customer shares. Do not place it behind a public reverse
+proxy or port-forward its loopback listener.
+
+## v1.6: Separate live Stripe catalog entries, checkout held
+
+On Evercraft LLC's **live** Stripe account, the dedicated founding-pilot objects were created and independently read back:
+
+- Product: `prod_Vf1uyMq3FiZRfB` (inactive).
+- One-time price: `price_1Udhqa5rgRECaZMDsK7sstdv` ($499 USD, provisional).
+- Payment link: `plink_1UdhsM5rgRECaZMDczQW5JTr` (inactive).
+- Product key: `evercraft-site-planner-concept-pilot-v1`.
+- Product scope: one property, evidence-labeled non-stamped EV charger site concept and PDF, one revision after scope acceptance; no certified engineering or permits.
+- Managed Payments explicitly disabled for this bespoke service link; automatic tax was also disabled. **Obtain the correct tax classification/collection setup before activation.**
+
+The ID-only `stripe_pilot.json` is a **read-only recorded snapshot** of Stripe objects. It carries no credentials and does not prove current link state, a customer payment, a webhook event, or a released job. The local readiness API displays this as a prepared catalog with an INACTIVE checkout and keeps `checkout_configured=false`, `payment_verification_connected=false`, and `commercial_release_allowed=false`.
+
+Do not enable the link or share it for paid intake until the pilot price/scope, tax, identity, authorized customer data, private Stripe provider-receipt verification, refunds, scope/capacity approvals, and signed Systemia dispatch are implemented and tested. The link was created separately, not by editing seven other offers.
+
+## v1.7 founding five price experiment (both checkout links inactive)
+
+Evercraft LLC live Stripe catalog, independently verified:
+- Founding Five: **$349 USD**, price `price_1UdiIw5rgRECaZMDDUwbMux8`, link `plink_1UdiJV5rgRECaZMD3URffDU5` (inactive), maximum **five completed Checkout Sessions**. This does not guarantee five distinct customers.
+- Standard: **$499 USD**, price `price_1Udhqa5rgRECaZMDsK7sstdv`, link `plink_1UdhsM5rgRECaZMDczQW5JTr` (inactive).
+- Both prices share `prod_Vf1uyMq3FiZRfB` (inactive) and the same limited, non-stamped single-property concept-plan scope.
+- Founding Five is a provisional price test: keep both links inactive pending tax review, owner-approved scope, private provider-verified settlement handling, customer authentication and Systemia receipts.
+
+`stripe_pilot.json` stores only non-secret identity and last-checked status. It is **not a Stripe webhook, authenticated account lookup, payment receipt, or fulfillment entitlement**. `GET /api/commercial/readiness` presents the recorded prices while keeping `checkout_configured=false`, `payment_verification_connected=false`, `commercial_release_allowed=false`.

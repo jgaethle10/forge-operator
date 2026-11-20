@@ -50,7 +50,7 @@ class WorkflowTest(unittest.TestCase):
         sid=a['id']
         _,s=self.api(f'/sites/{sid}/scenarios','POST',{'sc_name':'Two chargers','chargers':2})
         _,e=self.api(f'/sites/{sid}/evidence','POST',{'category':'Utilities','status':'unverified','finding':'Service capacity unknown'})
-        status,order=self.api(f'/sites/{sid}/orders','POST',{'scenario_id':s['id'],'scope':'Preliminary','requested_by':'Owner'})
+        status,order=self.api(f'/sites/{sid}/orders','POST',{'scenario_id':s['id'],'scope':'Preliminary','requested_by':'Owner','order_kind':'internal_planning'})
         self.assertEqual(status,201)
         _,record=self.api(f'/sites/{sid}')
         self.assertEqual(record['reports'][0]['id'],order['report_id'])

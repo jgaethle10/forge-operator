@@ -23,6 +23,7 @@ class QueueTests(unittest.TestCase):
                     report=server.newreport(db,'S1')
                     db.execute('INSERT INTO orders(id,site_id,report_id,scenario_id,status,created_at) VALUES (?,?,?,?,?,?)',
                                ('ORDER1','S1',report['id'],'CS1','queued',server.now()))
+                    db.execute("INSERT INTO order_controls (order_id,site_id,product_key,lane,payment_state,created_at) VALUES (?,?,?,?,?,?)",('ORDER1','S1','evercraft-site-planner','internal_planning','not_applicable',server.now()))
                     db.commit()
                     self.assertEqual(len(server.engineering_queue(db)),1)
                     with self.assertRaises(ValueError):

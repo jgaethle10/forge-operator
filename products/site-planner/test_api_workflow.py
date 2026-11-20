@@ -36,7 +36,7 @@ class APIWorkflowTests(unittest.TestCase):
                     _,b=req('/sites','POST',{'address':'200 Test Ave','name':'Property B'})
                     _,scenario=req(f'/sites/{a["id"]}/scenarios','POST',{'sc_name':'Two stations','chargers':2})
                     _,evidence=req(f'/sites/{a["id"]}/evidence','POST',{'category':'Utilities','status':'unverified','finding':'Service capacity unknown'})
-                    _,order=req(f'/sites/{a["id"]}/orders','POST',{'scenario_id':scenario['id'],'scope':'Concept layout','requested_by':'Owner'})
+                    _,order=req(f'/sites/{a["id"]}/orders','POST',{'scenario_id':scenario['id'],'scope':'Concept layout','requested_by':'Owner','order_kind':'internal_planning'})
                     _,report=req('/reports/'+order['report_id']+'/export')
                     self.assertEqual(report['evidence'][0]['id'],evidence['id'])
                     self.assertEqual(report['evidence'][0]['status'],'unverified')
