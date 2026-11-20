@@ -153,3 +153,17 @@ body.portrait .orbit-label-2{right:9%}
 body.portrait .orbit-label-4{left:9%}
 body.portrait .live-button:hover,
 body.portrait .live-button:focus-visible{background:#092335;color:#cbf3ff;transform:none}
+
+/* Keep the exit button legible even while a screen-capture pointer is held
+   above it after tapping on mobile. */
+body.portrait .top .live-button,
+body.portrait .top .live-button:hover,
+body.portrait .top .live-button:active,
+body.portrait .top .live-button:focus,
+body.portrait .top .live-button:focus-visible{
+ background:#092335!important;
+ color:#d9f6ff!important;
+ border-color:#6aa6c3!important;
+ box-shadow:0 10px 25px #000b!important;
+ transform:none!important;
+}
