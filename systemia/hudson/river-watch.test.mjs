@@ -60,6 +60,9 @@ test('v7 scenic junctions branch only toward their current destination',()=>{
  assert.match(code,/function drawBranchingSurge\(trip\)/);
  assert.match(code,/drawBranchingSurge\(trip\);drawFoldingWake\(trip\)/);
  assert.match(code,/edge\.warpedPoints\|\|edge\.points/);
+ assert.match(code,/var wakeBands=Array\.from\(\{length:3\}/);
+ assert.match(code,/left=wakeBands\[band\]\.left,right=wakeBands\[band\]\.right/);
+ assert.doesNotMatch(code,/left\.push\(/);
  const start=code.indexOf('function junctionExcitation(trip,key){');
  const end=code.indexOf('function drawFoldingWake(trip){',start);
  const bloom=new vm.Script(code.slice(start,end)+';junctionExcitation')
