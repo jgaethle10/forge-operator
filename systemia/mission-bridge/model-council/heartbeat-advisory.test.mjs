@@ -4,6 +4,7 @@ import {planHeartbeatAdvisories,executeAdvisory} from './heartbeat-advisory.mjs'
 import {createRavenAdvisoryInvoker} from './raven-invoker.mjs';
 import {reserveAdvisoryAttempt,loadAdvisoryHistory} from './advisory-ledger.mjs';
 import {runAdvisoryHeartbeatOnce,packetAuth} from './heartbeat-runner.mjs';
+import {persistPrivateAdvisory} from './private-advice-store.mjs';
 import {createHmac} from 'node:crypto';
 import fs from 'node:fs';
 import os from 'node:os';
@@ -96,7 +97,7 @@ test('private heartbeat runner starts shadow-only and activates both approved ad
  const root=fs.mkdtempSync(path.join(os.tmpdir(),'systemia-runner-'));
  let calls=0;
  try{
-  const settings={missions:[mission()],providers,ledgerDir:root,rollingBudgetCents:20,
+  const settings={missions:[mission()],providers,ledgerDir:root,receiptDir:path.join(root,'advice'),rollingBudgetCents:20,
     invokeOverride:async x=>{calls++;return {status:'completed',text:'Advisory',provider_receipt:'sha256:ok',model:x.model};}};
   const preview=await runAdvisoryHeartbeatOnce(settings);
   assert.equal(preview.state,'dry_run');assert.equal(calls,0);
@@ -104,6 +105,10 @@ test('private heartbeat runner starts shadow-only and activates both approved ad
   const live=await runAdvisoryHeartbeatOnce({...settings,execute:true});
   assert.equal(live.state,'advisories_received');assert.equal(live.provider_calls_performed,2);
   assert.equal(calls,2);assert.equal(loadAdvisoryHistory({ledgerDir:root}).length,2);
+  const adviceFiles=fs.readdirSync(path.join(root,'advice'));assert.equal(adviceFiles.length,2);
+  const saved=JSON.parse(fs.readFileSync(path.join(root,'advice',adviceFiles[0]),'utf8'));
+  assert.equal(saved.schema,'evercraft.systemia.private-model-advisory.v1');
+  assert.equal(saved.verified_external_facts,false);
   const repeat=await runAdvisoryHeartbeatOnce({...settings,execute:true});
   assert.equal(repeat.state,'quiet');assert.equal(calls,2);
  }finally{fs.rmSync(root,{recursive:true,force:true});}
@@ -139,4 +144,20 @@ test('multimodel council is an optional heartbeat cycle in canonical owned super
  assert.equal(manifest.authority.customer_outreach,'held');
  assert.equal(manifest.safety.default_execute,false);
  assert.ok(managed.supervised_workflows.includes(service.service_key));
+});
+
+test('private advice storage refuses duplicate result and publishes no customer payload',()=>{
+ const root=fs.mkdtempSync(path.join(os.tmpdir(),'council-private-advice-'));
+ try{
+  const result={key:'advice:'+'1'.repeat(32),state:'advisory_received',mission_id:'test',
+    provider:'anthropic',model:'claude-fixture',provider_receipt:'sha256:test',
+    advice:'Check evidence before proposing a fix',evidence_refs:['github:issue:1860']};
+  const got=persistPrivateAdvisory({receiptDir:root,result});
+  assert.equal(got.state,'private_receipt_saved');
+  assert.throws(()=>persistPrivateAdvisory({receiptDir:root,result}),/EEXIST/);
+  const file=path.join(root,'1'.repeat(32)+'.json');
+  const stat=fs.statSync(file);assert.equal(stat.mode&0o077,0);
+  const content=JSON.parse(fs.readFileSync(file,'utf8'));
+  assert.equal(content.authorization,'advisory_only_no_external_action');
+ }finally{fs.rmSync(root,{recursive:true,force:true});}
 });
