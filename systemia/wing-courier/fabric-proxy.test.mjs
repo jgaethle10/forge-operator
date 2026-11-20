@@ -71,6 +71,16 @@ test('enabled Fabric path forwards exactly scoped broker API and preserves broke
     ciphertextSha256:'b'.repeat(64),bytes:150})});
   assert.equal(write.status,201);
   assert.equal((await write.json()).state,'STAGED');
+  const status=await fetch(url+'/v1/envelopes/'+('a'.repeat(32))+'/status',
+   {headers:{authorization:'Bearer '+hs}});
+  assert.equal(status.status,200);
+  const statusBody=await status.json();
+  assert.equal(statusBody.state,'STAGED');
+  assert.equal(statusBody.receiverSignedCustodyVerified,false);
+  assert.equal(statusBody.customerDeliveryAuthorized,false);
+  const denied=await fetch(url+'/v1/envelopes/'+('a'.repeat(32))+'/status',
+   {headers:{authorization:'Bearer '+frecv}});
+  assert.equal(denied.status,403);
   // undici fetch can normalize/replace Host; use a raw HTTP request for this
   // exact-name host-spoof regression.
   const wrongHostCode=await new Promise((resolve,reject)=>{
