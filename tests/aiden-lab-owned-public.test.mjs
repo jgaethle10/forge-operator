@@ -35,15 +35,15 @@ test('accepts exact sourced assets but rejects rewritten homepages and stale fil
   assert.ok(assessAsset({...observed,programMarker:null},asset,body,DEFAULT_ORIGIN).findings.includes('OWNED_FABRIC_ROUTE_IDENTITY_MISSING'));
 });
 
-test('five source-verified assets give a bounded proof, not a medical outcome', async () => {
+test('ten source-verified assets give a bounded proof, not a medical outcome', async () => {
   const mock = async (url) => {
     const path = assetPath(url);
-    return {status:200,url,headers:{get:(name)=>name==='x-evercraft-static-program'?'aidens-lab-v1':name==='x-evercraft-learning-world'?(path==='classroom/index.html'?'classroom-practice-v1':null):path.endsWith('.html')?'text/html':path.endsWith('.css')?'text/css':path.endsWith('.svg')?'image/svg+xml':'text/javascript'},text:async()=>source(path)};
+    return {status:200,url,headers:{get:(name)=>name==='x-evercraft-static-program'?'aidens-lab-v1':name==='x-evercraft-learning-world'?({'classroom/index.html':'classroom-practice-v1','physics/index.html':'physics-model-v1','world/index.html':'earth-globe-v1'}[path]||null):path.endsWith('.html')?'text/html':path.endsWith('.css')?'text/css':path.endsWith('.svg')?'image/svg+xml':'text/javascript'},text:async()=>source(path)};
   };
   const result = await runPublicCanary({fetcher:mock,now:new Date('2026-11-20T00:00:00Z')});
   assert.equal(result.public_https_verified,true);
   assert.equal(result.publication_state,'EXACT_SOURCE_PUBLIC_VERIFIED');
-  assert.equal(result.assets.length,8);
+  assert.equal(result.assets.length,10);
   assert.equal(result.medical_outcome_validated,false);
   assert.equal(result.external_action_taken,false);
   assert.equal(result.patient_data_accessed,false);
@@ -62,7 +62,7 @@ test('Classroom requires a first-party learning-world marker as well as exact so
 
 test('partial or stale publication fails closed', async () => {
   const mock = async (url) => ({
-    status:200,url,headers:{get:(name)=>name==='x-evercraft-static-program'?'aidens-lab-v1':name==='x-evercraft-learning-world'?(assetPath(url)==='classroom/index.html'?'classroom-practice-v1':null):url.endsWith('.html')?'text/html':'text/javascript'},
+    status:200,url,headers:{get:(name)=>name==='x-evercraft-static-program'?'aidens-lab-v1':name==='x-evercraft-learning-world'?({'classroom/index.html':'classroom-practice-v1','physics/index.html':'physics-model-v1','world/index.html':'earth-globe-v1'}[assetPath(url)]||null):url.endsWith('.html')?'text/html':'text/javascript'},
     text:async()=>url.endsWith('catalog.mjs')?'stale code':source(assetPath(url))
   });
   const result = await runPublicCanary({fetcher:mock});
