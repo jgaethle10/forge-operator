@@ -50,7 +50,7 @@ On the owned server with the real approved private config:
 node systemia/wing-courier/install-broker.mjs --config /approved/private/wing-broker.json
 \`\`\`
 
-Expected state is \`DRY_RUN\` with \`publicRouteEnabled:false\`, \`liveProcessObserved:false\` and zero customer custody. Do not treat this as a green light to route public network traffic.
+Expected state is \`DRY_RUN\` with \`publicRouteActivatedByThisTool:false\`, \`unitInstalled:false\` and zero customer custody. Do not treat this as a green light to route public network traffic.
 
 Only after confirming actual machine/user, service identity, separate owner approval, key custody, quotas/retention and loopback security may the operator use:
 
