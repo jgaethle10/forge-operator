@@ -38,7 +38,9 @@ export function createWingCourierFabricProxy({enabled=false,
  timeoutMs=120000}={}){
  if(![true,false].includes(enabled))throw Error('wing_fabric_enabled_boolean_required');
  if(![EXPECTED_HOST,'127.0.0.1'].includes(approvedHost))throw Error('wing_fabric_approved_host_invalid');
- if(brokerHost!==BROKER_HOST||brokerPort!==BROKER_PORT)
+ if(brokerHost!==BROKER_HOST||
+   (approvedHost===EXPECTED_HOST&&brokerPort!==BROKER_PORT)||
+   !Number.isInteger(brokerPort)||brokerPort<1||brokerPort>65535)
   throw Error('wing_fabric_broker_loopback_route_fixed');
  if(!Number.isInteger(timeoutMs)||timeoutMs<1000||timeoutMs>600000)
   throw Error('wing_fabric_timeout_invalid');
