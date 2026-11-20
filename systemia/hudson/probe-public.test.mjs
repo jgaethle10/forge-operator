@@ -33,8 +33,10 @@ function response(status,body,contentType='application/json; charset=utf-8',cach
 function fakeFetch(mode='pass'){
  return async (url)=>{
   if(url===HUDSON_ORIGIN+'/hudson/')return response(200,mode==='old-layout'?'<title>HUDSON | The Living Spine</title> ANIMATED PATHS ARE NOT VERIFIED EVENTS':'<title>HUDSON | The Living Spine</title><meta name="hudson-release" content="v2-mobile-cinematic"> ANIMATED PATHS ARE NOT VERIFIED EVENTS <canvas id="ambient-field"></canvas><button id="next-signal">Next</button>','text/html; charset=utf-8');
+  if(url===HUDSON_ORIGIN+'/hudson/watch/')return response(200,mode==='missing-watch'?'Legacy page':'<title>HUDSON | Enter the Current</title><meta name="hudson-watch-release" content="river-current-v1"><canvas id="current"></canvas> PUBLIC GIT HISTORY · REPLAY SCENIC CURRENT · NOT A LIVE MISSION function spider(from,to,t) credentials:"omit"','text/html; charset=utf-8');
+  if(url===HUDSON_ORIGIN+'/hudson/watch/private.json')return response(mode==='exposed-watch'?200:404,{error:'not_found'});
   if(url.includes('/hudson/activity.json'))return response(200,specimen({published_at:mode==='stale'?new Date(now-200000).toISOString():undefined}));
-  if(url===HUDSON_ORIGIN+'/health')return response(200,{hudson_public_path:'/hudson/',hudson_public_source_ready:true,hudson_public_feed_authority:'public_git_source_history_only',source_release_ref:sha,source_release_ref_bound:true});
+  if(url===HUDSON_ORIGIN+'/health')return response(200,{hudson_public_path:'/hudson/',hudson_public_source_ready:true,hudson_public_feed_authority:'public_git_source_history_only',hudson_watch_path:'/hudson/watch/',hudson_watch_source_ready:true,source_release_ref:sha,source_release_ref_bound:true});
   if(url===HUDSON_ORIGIN+'/hudson/private.json')return response(mode==='exposed'?200:404,{error:'not_found'});
   return response(404,{error:'missing'});
  };
@@ -45,6 +47,17 @@ test('external canary requires HTML, health, fresh JSON, and private denial',asy
  assert.equal(p.checks.fabric_source_release_ref,sha);
  assert.equal(p.checks.fabric_source_release_ref_bound,true);
  assert.equal(p.checks.visual_release_version,'v2-mobile-cinematic');
+ assert.equal(p.checks.watch_river,true);
+ assert.equal(p.checks.watch_river_version,'river-current-v1');
+ assert.equal(p.checks.watch_private_route_denied,true);
+ assert.equal(p.checks.watch_fabric_route_claim,true);
+ const missingWatch=await probeHudsonPublic({fetchImpl:fakeFetch('missing-watch'),now});
+ assert.equal(missingWatch.verified,false);
+ assert.ok(missingWatch.holds.includes('public_hudson_river_watch_not_verified'));
+ const exposedWatch=await probeHudsonPublic({fetchImpl:fakeFetch('exposed-watch'),now});
+ assert.equal(exposedWatch.verified,false);
+ assert.ok(exposedWatch.holds.includes('hudson_watch_private_route_exposed'));
+
  const legacy=await probeHudsonPublic({fetchImpl:fakeFetch('old-layout'),now});
  assert.equal(legacy.verified,false);
  assert.ok(legacy.holds.includes('public_v2_html_not_verified'));
