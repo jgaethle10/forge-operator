@@ -24,14 +24,14 @@ function temp(){
   senderSigningKeyFile:path.join(harbor,'sign.key'),fromWing:'harbor',toWing:'fallen',kind:'media',filenames:names});
  fs.writeFileSync(bundle+'.json',JSON.stringify(info),{mode:0o600});
  const auth=[
-  {wing:'harbor',sendToken:hs,receiveToken:hr,allowedDestinations:['fallen']},
-  {wing:'fallen',sendToken:fsToken,receiveToken:fr,allowedDestinations:['harbor']}];
+  {wing:'harbor',sendToken:hs,receiveToken:hr,allowedDestinations:['fallen'],ackVerifyPublicKeyFile:path.join(harbor,'sign.pub')},
+  {wing:'fallen',sendToken:fsToken,receiveToken:fr,allowedDestinations:['harbor'],ackVerifyPublicKeyFile:path.join(fallen,'sign.pub')}];
  return {root,harbor,fallen,media,outbox,inbox,broker,names,bundle,info,auth,sendToken,recvToken};
 }
 const remove=x=>fs.rmSync(x.root,{recursive:true,force:true});
 const base=fx=>({baseUrl:fx.url,tokenFile:fx.sendToken,metaFile:fx.bundle+'.json',bundleFile:fx.bundle});
 const pollArgs=fx=>({baseUrl:fx.url,tokenFile:fx.recvToken,wing:'fallen',destinationDir:fx.inbox,
- receiverPrivateKeyFile:path.join(fx.fallen,'decrypt.key'),senderVerifyPublicKeys:{harbor:path.join(fx.harbor,'sign.pub')}});
+ receiverPrivateKeyFile:path.join(fx.fallen,'decrypt.key'),receiverSigningKeyFile:path.join(fx.fallen,'sign.key'),senderVerifyPublicKeys:{harbor:path.join(fx.harbor,'sign.pub')}});
 test('12-source end-to-end encrypted push, outbound pull, receiver verification and idempotent broker',async()=>{
  const fx=temp();
  try{
@@ -158,4 +158,24 @@ test('queue capacity binds reserved bytes and package count before ciphertext up
   const existing=await pushEncryptedWingBundle(base(fx));
   assert.equal(existing.state,'BROKER_CIPHERTEXT_STORED','identical retry should not use new quota');
  }finally{await server.close();remove(fx)}
+});
+
+test('receiver bearer token alone cannot forge authenticated custody acknowledgement',async()=>{
+ const fx=temp();const broker=await startWingCourierBroker({stateDir:fx.broker,wingCredentials:fx.auth});fx.url=broker.url;
+ try{
+  await pushEncryptedWingBundle(base(fx));
+  const fake={schema:'evercraft.wing-courier.receiver-ack.v1',id:fx.info.id,
+   fromWing:'harbor',toWing:'fallen',ciphertextSha256:fx.info.ciphertextSha256,
+   receiptSha256:'b'.repeat(64),signature:Buffer.alloc(64).toString('base64')};
+  const res=await fetch(fx.url+'/v1/envelopes/'+fx.info.id+'/ack',{
+   method:'POST',headers:{authorization:'Bearer '+fx.auth[1].receiveToken,'content-type':'application/json'},
+   body:JSON.stringify(fake)});
+  assert.equal(res.status,403);
+  const state=JSON.parse(fs.readFileSync(path.join(fx.broker,'packages',fx.info.id,'state.json')));
+  assert.equal(state.state,'READY','unauthenticated receiver ACK must not change delivery state');
+  const done=await pollWingInbox(pollArgs(fx));
+  assert.equal(done.received,1);
+  const final=JSON.parse(fs.readFileSync(path.join(fx.broker,'packages',fx.info.id,'state.json')));
+  assert.equal(final.ack.receiverKeyVerified,true);
+ }finally{await broker.close();remove(fx)}
 });
