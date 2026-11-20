@@ -142,12 +142,58 @@ export function sampleCinematicArtery(artery,t){
  });
 }
 
+// Living canopy V4: seeded, source-independent organic architecture.
+// These are NOT model neurons, inference events, signals or live missions.
+export function buildLivingCanopy({seed=20261120,armsPerRegion=10}={}){
+ if(!Number.isInteger(armsPerRegion)||armsPerRegion<3||armsPerRegion>14)
+  throw Error('canopy_arm_budget_invalid');
+ const rand=random(seed),arms=[];
+ for(const region of REGIONS){
+  const center=CENTERS[region],heading=Math.atan2(center[1],center[0]);
+  for(let i=0;i<armsPerRegion;i++){
+   const fan=(i-(armsPerRegion-1)/2)*(.26*10/armsPerRegion);
+   const angle=heading+fan+(rand()-.5)*.13;
+   arms.push(Object.freeze({
+    region,index:i,center:Object.freeze([...center]),angle,
+    reach:.33+rand()*.25,curl:.026+rand()*.036,
+    elevation:(rand()-.5)*.38,phase:rand()*TAU,
+    drift:.68+rand()*.57
+   }));
+  }
+ }
+ return Object.freeze(arms);
+}
+export function sampleLivingCanopyStem(stem,u,motion=0){
+ const t=clamp(Number.isFinite(u)?u:0,0,1);
+ const clock=Number.isFinite(motion)?motion:0;
+ const flex=Math.sin(t*Math.PI)*(Math.sin(t*4.8+stem.phase+clock*.37)*stem.curl);
+ return Object.freeze({
+  x:stem.center[0]+Math.cos(stem.angle)*stem.reach*t-Math.sin(stem.angle)*flex,
+  y:stem.center[1]+Math.sin(stem.angle)*stem.reach*t*.98+Math.cos(stem.angle)*flex*.84,
+  z:stem.center[2]+stem.elevation*t+Math.sin(t*5.1+stem.phase+clock*.24)*.046*t
+ });
+}
+export function sampleLivingCanopyFork(stem,side,u,motion=0){
+ const t=clamp(Number.isFinite(u)?u:0,0,1);
+ const origin=sampleLivingCanopyStem(stem,.51+side*.10,motion);
+ const angle=stem.angle+(side===0?-.64:.64)+
+  Math.sin(stem.phase+motion*.3)*.10;
+ const reach=stem.reach*(side===0?.38:.33);
+ const bend=Math.sin(Math.PI*t)*stem.curl*.9;
+ return Object.freeze({
+  x:origin.x+Math.cos(angle)*reach*t-Math.sin(angle)*bend,
+  y:origin.y+Math.sin(angle)*reach*t*.95+Math.cos(angle)*bend,
+  z:origin.z+stem.elevation*t*.19+Math.sin(t*Math.PI)*.036*(side===0?1:-1)
+ });
+}
+
 export function createNeuralUniverse({canvas,stage,reduce,initialFocus='systemia'}={}){
  if(!canvas||!stage||!reduce)throw Error('visual_mount_required');
  const ctx=canvas.getContext('2d',{alpha:false});
  if(!ctx)throw Error('canvas_2d_unavailable');
  const atlas=buildNeuralAtlas();
  const arteries=buildCinematicArteries();
+ const canopy=buildLivingCanopy();
  let width=640,height=550,dpr=1,selected=REGIONS.includes(initialFocus)?initialFocus:'systemia';
  let originX=0,originY=0,pointerX=0,pointerY=0,active=true,onscreen=true,disposed=false;
  let lastDraw=-1000,lastNow=0,cycleAt=-1,eventCount=0,raf=0,focusStrength=0;
@@ -174,6 +220,31 @@ export function createNeuralUniverse({canvas,stage,reduce,initialFocus='systemia
   let background=ctx.createRadialGradient(width*.50,height*.45,5,width*.50,height*.52,Math.max(width*.73,height*.8));
   background.addColorStop(0,'#102a44');background.addColorStop(.39,'#091b30');
   background.addColorStop(1,'#050b16');ctx.fillStyle=background;ctx.fillRect(0,0,width,height);
+  // Long atmospheric curtains travel across the empty upper/lower phone
+  // field. Scenic weather only: no connection to activity or model state.
+  ctx.globalCompositeOperation='lighter';
+  for(let i=0;i<(small?8:12);i++){
+   const rgb=PALETTE[REGIONS[i%REGIONS.length]];
+   const phase=i*1.73;
+   const spread=(i+.6)/(small?9:13);
+   const shift=still?0:Math.sin(clock*.00012+phase)*width*.065;
+   const g=ctx.createLinearGradient(0,0,0,height);
+   g.addColorStop(0,rgba(rgb,0));
+   g.addColorStop(.20,rgba(rgb,small?.020:.025));
+   g.addColorStop(.52,rgba(rgb,small?.040:.046));
+   g.addColorStop(.81,rgba(rgb,small?.022:.029));
+   g.addColorStop(1,rgba(rgb,0));
+   ctx.beginPath();
+   for(let j=0;j<=16;j++){
+    const u=j/16;
+    const x=width*spread+shift+Math.sin(u*5.4+phase+clock*(still?0:.00008))*width*.095;
+    const y=height*u;
+    if(j===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
+   }
+   ctx.lineWidth=small?20:34;
+   ctx.strokeStyle=g;ctx.stroke();
+  }
+  ctx.globalCompositeOperation='source-over';
   for(const s of atlas.stars){
    const x=s.x*width+pointerX*s.layer*9,y=s.y*height+pointerY*s.layer*7;
    const alpha=still?.24:.13+.12*(.5+.5*Math.sin(clock*.0007+s.phase));
@@ -224,6 +295,91 @@ export function createNeuralUniverse({canvas,stage,reduce,initialFocus='systemia
    ctx.stroke();
   }
   ctx.restore();
+  // Five translucent wings give the neural landscape a visual body.
+  // This is imaginative light choreography, not a physiological scan.
+  ctx.globalCompositeOperation='lighter';
+  for(let k=0;k<REGIONS.length;k++){
+   const region=REGIONS[k],c=CENTERS[region],rgb=PALETTE[region];
+   const chosen=region===selected;
+   const end=projectAtlasNode({
+    x:c[0]*1.46,y:c[1]*1.44,z:c[2]*1.20
+   },{width,height,yaw,pitch,offsetX:originX,offsetY:originY,zoom:small?.91:1.03});
+   const dx=end.x-cx,dy=end.y-cy,length=Math.max(1,Math.hypot(dx,dy));
+   const nx=-dy/length,ny=dx/length;
+   const phase=k*1.67+(still?0:clock*.00011);
+   const breadth=(small?31:56)*(1+.16*Math.sin(phase));
+   const offset=(small?16:32)*Math.sin(phase*.7);
+   const ex=end.x,ey=end.y;
+   ctx.beginPath();
+   ctx.moveTo(cx,cy);
+   ctx.bezierCurveTo(
+    cx+dx*.18+nx*(breadth*.9+offset),cy+dy*.18+ny*(breadth*.9+offset),
+    cx+dx*.72+nx*breadth*.85,cy+dy*.72+ny*breadth*.85,
+    ex,ey
+   );
+   ctx.bezierCurveTo(
+    cx+dx*.67-nx*breadth*.75,cy+dy*.67-ny*breadth*.75,
+    cx+dx*.16-nx*(breadth*.8-offset*.7),cy+dy*.16-ny*(breadth*.8-offset*.7),
+    cx,cy
+   );
+   ctx.closePath();
+   const light=ctx.createLinearGradient(cx,cy,ex,ey);
+   light.addColorStop(0,rgba(rgb,0));
+   light.addColorStop(.26,rgba(rgb,chosen?.11:.052));
+   light.addColorStop(.65,rgba(rgb,chosen?.095:.047));
+   light.addColorStop(1,rgba(rgb,0));
+   ctx.fillStyle=light;
+   ctx.fill();
+  }
+  ctx.globalCompositeOperation='source-over';
+  // Organic branching canopies extend every architecture neighborhood into
+  // the edge of the portrait scene. Their slow sway is strictly scenic.
+  ctx.globalCompositeOperation='lighter';
+  const canopyMotion=still?0:clock*.00020;
+  for(let i=0;i<canopy.length;i++){
+   const stem=canopy[i];
+   // Keep the phone scene rich but with a strict bound on sampled branches.
+   if(small&&stem.index%3===2)continue;
+   const rgb=PALETTE[stem.region],chosen=stem.region===selected;
+   const opacity=chosen?.74:.41;
+   const shade=still?.83:.74+.26*Math.sin(canopyMotion*stem.drift+stem.phase);
+   for(let branch=0;branch<3;branch++){
+    const steps=small?(branch===0?12:7):(branch===0?17:10);
+    ctx.beginPath();
+    for(let k=0;k<=steps;k++){
+     const u=k/steps;
+     const p=branch===0
+      ?sampleLivingCanopyStem(stem,u,canopyMotion)
+      :sampleLivingCanopyFork(stem,branch-1,u,canopyMotion);
+     const q=projectAtlasNode(p,{
+      width,height,yaw,pitch,offsetX:originX,offsetY:originY,zoom:small?.91:1.03
+     });
+     if(k===0)ctx.moveTo(q.x,q.y);else ctx.lineTo(q.x,q.y);
+    }
+    ctx.lineCap='round';ctx.lineJoin='round';
+    ctx.strokeStyle=rgba(rgb,opacity*shade*.33);
+    ctx.lineWidth=chosen?(small?3.3:5.4):2.15;
+    ctx.stroke();
+    ctx.strokeStyle=rgba(rgb,opacity*shade*(branch===0?1:.73));
+    ctx.lineWidth=branch===0?(small?.9:1.1):.48;
+    ctx.stroke();
+   }
+   // A small migrating firefly on selected stems, never a verified event.
+   if(!still&&chosen&&stem.index%2===0){
+    const u=(clock*.000035*stem.drift+stem.phase/TAU)%1;
+    const p=sampleLivingCanopyStem(stem,u,canopyMotion);
+    const q=projectAtlasNode(p,{
+     width,height,yaw,pitch,offsetX:originX,offsetY:originY,zoom:small?.91:1.03
+    });
+    const glow=ctx.createRadialGradient(q.x,q.y,0,q.x,q.y,small?5:8);
+    glow.addColorStop(0,rgba(rgb,.65));
+    glow.addColorStop(.40,rgba(rgb,.17));
+    glow.addColorStop(1,rgba(rgb,0));
+    ctx.fillStyle=glow;ctx.beginPath();ctx.arc(q.x,q.y,small?5:8,0,TAU);ctx.fill();
+   }
+  }
+  ctx.lineCap='butt';ctx.lineJoin='miter';
+  ctx.globalCompositeOperation='source-over';
   const projected=atlas.nodes.slice(0,budget).map(p=>projectAtlasNode(p,{
    width,height,yaw,pitch,offsetX:originX,offsetY:originY,zoom:small?.91:1.03
   }));
