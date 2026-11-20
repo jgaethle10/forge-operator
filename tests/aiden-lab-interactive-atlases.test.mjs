@@ -174,3 +174,29 @@ test('science museum passport is optional and device-local in both worlds',()=>{
   assert.doesNotMatch(js,/fetch\s*\(|WebSocket|XMLHttpRequest|sendBeacon|navigator\.geolocation/);
  }
 });
+
+
+test('physics scientific method bench records comparable A/B model outputs and checks actual prediction',()=>{
+ const html=source('physics'),js=script(html),css=style(html);
+ assert.doesNotThrow(()=>new vm.Script(js,{filename:'physics-museum-comparison.js'}));
+ for(const id of ['trialA','trialB','clearComparison','compareChart','compareFeedback','predictPrompt'])
+   assert.match(html,new RegExp('id="'+id+'"'));
+ for(const prediction of ['higher','lower','same'])
+   assert.match(html,new RegExp('data-predict="'+prediction+'"'));
+ assert.match(js,/function measurement\(\)/);
+ assert.match(js,/function captureTrialA\(\)/);
+ assert.match(js,/function captureTrialB\(\)/);
+ assert.match(js,/function renderComparison\(\)/);
+ assert.match(js,/const tolerance=Math\.max\(\.05,compareA\.result\*\.01\)/);
+ assert.match(js,/next\.values\.every\(\(n,i\)=>Math\.abs\(n-compareA\.values\[i\]\)<\.000001\)/);
+ assert.match(js,/compareB\.result\/compareA\.result/);
+ assert.match(js,/if\(compareA&&compareA\.mode!==next\)resetComparison\(\)/);
+ const start=js.indexOf('const COMPARE_MODELS='),end=js.indexOf('let compareA=',start);
+ assert.ok(start>0&&end>start);
+ const mapping=vm.runInNewContext(js.slice(start,end)+'\nCOMPARE_MODELS;');
+ assert.equal(mapping.launch.metric({range:42}),42);
+ assert.equal(mapping.pendulum.metric({period:2.5}),2.5);
+ assert.equal(mapping.wave.metric({wavelength:6}),6);
+ assert.match(css,/\.compare-bar/);
+ assert.doesNotMatch(js,/\bfetch\s*\(|WebSocket|XMLHttpRequest|sendBeacon/);
+});
