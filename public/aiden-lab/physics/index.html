@@ -21,9 +21,9 @@ h1{font:500 clamp(46px,7vw,84px)/1.05 Georgia,serif;letter-spacing:-.05em;margin
 h1 em{color:var(--lime)}.intro{max-width:770px;color:var(--mute);font-size:17px;margin:0 0 28px}
 .tabs{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:20px}
 .tab{border:1px solid #557989;border-radius:999px;background:#173342;color:#e2f3f7;padding:11px 17px;font-weight:800;min-height:45px}
-.tab[aria-pressed=true]{color:#092427;background:var(--lime);border-color:var(--lime)}
+.tab[aria-pressed=true]{color:#092427;background:var(--lime);border-color:var(--lime);box-shadow:0 0 20px #c5f4ad3f}
 .lab{display:grid;grid-template-columns:minmax(0,1fr) 295px;gap:19px}
-.stage{background:linear-gradient(#102f44,#071a2b);border:1px solid #3d6b76;border-radius:24px;overflow:hidden;position:relative}
+.stage{background:linear-gradient(#102f44,#071a2b);border:1px solid #3d6b76;border-radius:24px;overflow:hidden;position:relative;box-shadow:0 25px 75px #0007,inset 0 1px 0 #9ce2db24}
 .stage-label{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:17px 20px;border-bottom:1px solid #345263;font-size:12px;color:#cae0e8;flex-wrap:wrap}
 .stage-label b{color:var(--lime);letter-spacing:.08em}
 canvas{display:block;width:100%;height:clamp(280px,38vw,440px);touch-action:pan-y}
@@ -34,8 +34,8 @@ canvas{display:block;width:100%;height:clamp(280px,38vw,440px);touch-action:pan-
 .controls h2{font:500 27px Georgia,serif;margin:0 0 2px}
 .control{display:grid;gap:8px}.control label{display:flex;justify-content:space-between;gap:12px;font-size:13px;color:#deedf3}
 .control output{color:var(--lime);font-weight:900;font-variant-numeric:tabular-nums}
-input[type=range]{width:100%;accent-color:#c5f4ad;cursor:pointer}
-.result{padding:16px;background:#214034;border:1px solid #57816c;border-radius:13px;display:grid;gap:3px}
+input[type=range]{width:100%;accent-color:#c5f4ad;cursor:pointer;min-height:23px}
+.result{padding:18px;background:linear-gradient(120deg,#214d41,#173b42);border:1px solid #649d89;border-radius:15px;display:grid;gap:3px;box-shadow:inset 0 1px 0 #c5f4ad20}
 .result small{color:#b5dbcc}.result strong{font-size:26px;color:#eaffdb;line-height:1.15}
 .result span{color:#c4e3db;font-size:12px}
 .concept{margin-top:22px;background:#0d2431;border:1px solid #35576a;border-radius:18px;padding:24px;display:grid;grid-template-columns:1.25fr .75fr;gap:26px}
@@ -54,7 +54,7 @@ input[type=range]{width:100%;accent-color:#c5f4ad;cursor:pointer}
 <main class="wrap">
 <p class="eyebrow">INTERACTIVE SCIENCE / OWNED MODEL PREVIEW</p>
 <h1>Make a prediction.<br><em>Test the universe.</em></h1>
-<p class="intro">What makes something fly, swing, or ripple? Change the numbers and watch the physics respond. The models are simplified on purpose so you can see the relationships clearly.</p>
+<p class="intro">What makes something fly, swing, or ripple? Change the numbers and watch the physics respond. The models are simplified on purpose, now with luminous motion trails and measured overlays that let you see the relationships clearly.</p>
 <nav class="tabs" aria-label="Choose an experiment">
 <button class="tab" type="button" data-mode="launch" aria-pressed="true">🚀 Launch Lab</button>
 <button class="tab" type="button" data-mode="pendulum" aria-pressed="false">🕰️ Pendulum</button>
@@ -119,45 +119,130 @@ function dot(x,y,r,color){
  ctx.beginPath();ctx.arc(x,y,r,0,TAU);ctx.fillStyle=color;ctx.fill();
 }
 function background(){
- ctx.fillStyle='#081d2d';ctx.fillRect(0,0,w,h);
- ctx.strokeStyle='#214257';ctx.lineWidth=1;
- for(let x=0;x<w;x+=45)line(x,0,x,h,'#17384b');
- for(let y=0;y<h;y+=45)line(0,y,w,y,'#17384b');
+ const sky=ctx.createLinearGradient(0,0,w,h);
+ sky.addColorStop(0,'#0d3449');sky.addColorStop(.48,'#071e30');sky.addColorStop(1,'#061426');
+ ctx.fillStyle=sky;ctx.fillRect(0,0,w,h);
+ const bloom=ctx.createRadialGradient(w*.62,h*.25,0,w*.62,h*.25,h*.9);
+ bloom.addColorStop(0,'rgba(42,154,183,.16)');bloom.addColorStop(1,'rgba(5,16,30,0)');
+ ctx.fillStyle=bloom;ctx.fillRect(0,0,w,h);
+ // Subtle technical grid; strictly decorative, never a live sensor.
+ for(let x=0;x<=w;x+=42)line(x,0,x,h,'#b6e8f00c');
+ for(let y=0;y<=h;y+=42)line(0,y,w,y,'#b6e8f00c');
+ for(let i=0;i<32;i++){
+  const x=((Math.sin(i*37.5)*43758.55)%1+1)%1*w;
+  const y=((Math.sin(i*71.9)*28519.45)%1+1)%1*h;
+  dot(x,y,.5+i%3*.3,'rgba(225,252,255,.27)');
+ }
+}
+function glow(x,y,r,color){
+ const g=ctx.createRadialGradient(x,y,0,x,y,r);
+ g.addColorStop(0,color);g.addColorStop(1,'rgba(0,0,0,0)');
+ ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,r,0,TAU);ctx.fill();
+}
+function labeledTick(x,y,label){
+ line(x,y-10,x,y+10,'#8cc6d3',1);
+ text(x+6,y-13,label,'#9bbfcc',11);
 }
 function paintLaunch(){
- const [angle,speed,g]=values(),rad=angle*Math.PI/180,r=currentResult();
- const x0=34,y0=h-40,xend=w-28,top=26,land=xend-x0;
- line(x0,y0,xend,y0,'#bdeab7',2);
- const ymax=speed*speed*Math.sin(rad)**2/(2*g),span=Math.max(10,ymax*1.2),k=Math.min(land/Math.max(1,r.range), (y0-top)/span);
- const xAt=t=>x0+speed*Math.cos(rad)*t*k,yAt=t=>y0-(speed*Math.sin(rad)*t-.5*g*t*t)*k;
+ const [angle,speed,g]=values(),rad=angle*Math.PI/180,result=currentResult();
+ const x0=44,y0=h-53,land=w-83,top=50;
+ const maxY=speed*speed*Math.sin(rad)**2/(2*g),span=Math.max(9,maxY*1.28);
+ const k=Math.min(land/Math.max(1,result.range), (y0-top)/span);
+ const xAt=t=>x0+speed*Math.cos(rad)*t*k;
+ const yAt=t=>y0-(speed*Math.sin(rad)*t-.5*g*t*t)*k;
+ const time=Math.min(result.duration,clock%(result.duration+.64));
+ const activeFraction=time/result.duration;
+ // Scientific axes and ticks stay constant as the model parameters move.
+ line(x0,y0,w-24,y0,'#acdbe3',1.8);
+ line(x0,35,x0,y0,'#518398',1);
+ for(let i=0;i<=4;i++){
+  const x=x0+Math.min(land,result.range*k)*i/4;
+  labeledTick(x,y0,(result.range*i/4).toFixed(0)+' m');
+ }
+ const xPeak=xAt(result.duration/2),yPeak=yAt(result.duration/2);
+ ctx.setLineDash([3,6]);line(xPeak,yPeak,xPeak,y0,'#a4c9ca78',1);ctx.setLineDash([]);
+ glow(xPeak,yPeak,27,'rgba(166,238,197,.16)');
+ text(Math.min(w-128,xPeak+8),Math.max(28,yPeak-12),'MAX HEIGHT '+fmt(maxY)+' m','#9de4bc',10);
+ // Full predicted arc is a guide; the luminous part is the traveled distance.
  ctx.beginPath();
- for(let i=0;i<=80;i++){const t=r.duration*i/80,x=xAt(t),y=yAt(t);if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y)}
- ctx.strokeStyle='#8de0ef';ctx.lineWidth=3;ctx.stroke();
- const t=playing?clock%(r.duration+.6):Math.min(clock,r.duration);
- dot(xAt(Math.min(r.duration,t)),yAt(Math.min(r.duration,t)),8,'#f6c977');
- dot(x0,y0,5,'#c5f4ad');
- text(15,22,'START  •  0 m');text(w-132,24,'RANGE '+fmt(r.range)+' m','#f6df98');
+ for(let i=0;i<=128;i++){
+  const t=result.duration*i/128;if(i)ctx.lineTo(xAt(t),yAt(t));else ctx.moveTo(xAt(t),yAt(t));
+ }
+ ctx.setLineDash([4,8]);ctx.strokeStyle='rgba(135,222,239,.52)';ctx.lineWidth=2;ctx.stroke();ctx.setLineDash([]);
+ ctx.beginPath();
+ for(let i=0;i<=96;i++){
+  const t=time*i/96;if(i)ctx.lineTo(xAt(t),yAt(t));else ctx.moveTo(xAt(t),yAt(t));
+ }
+ ctx.strokeStyle='#7cece2';ctx.shadowColor='#57cfe5';ctx.shadowBlur=17;ctx.lineWidth=3;ctx.stroke();ctx.shadowBlur=0;
+ for(let i=0;i<8;i++){
+  const t=Math.max(0,time-i*result.duration*.012);
+  dot(xAt(t),yAt(t),1.5+i*.12,'rgba(142,239,212,'+(0.75-i*.09).toFixed(2)+')');
+ }
+ const px=xAt(time),py=yAt(time);
+ glow(px,py,36,'rgba(246,198,114,.35)');
+ dot(px,py,9,'#ffd990');dot(px-2.5,py-2.5,3.2,'#fff7dd');
+ dot(x0,y0,4.5,'#b5f5c4');
+ text(17,23,'IDEAL FLIGHT / MOTION STUDY','#accfdf',11);
+ text(Math.max(16,w-168),22,'FLIGHT  '+fmt(result.duration)+' s','#f7ddaa',11);
 }
 function paintPendulum(){
- const [length,angle,g]=values(),r=currentResult();
- const scale=Math.min((h-100)/3.2,125),pivotX=w/2,pivotY=40;
- const theta=angle*Math.PI/180*Math.cos(TAU*clock/r.period),px=pivotX+length*scale*Math.sin(theta),py=pivotY+length*scale*Math.cos(theta);
- line(pivotX,pivotY,pivotX,pivotY+length*scale,'#42627a',1);
- ctx.beginPath();ctx.arc(pivotX,pivotY,length*scale,-Math.PI/2+Math.PI/2-angle*Math.PI/180,-Math.PI/2+Math.PI/2+angle*Math.PI/180);ctx.strokeStyle='#385b76';ctx.lineWidth=2;ctx.stroke();
- line(pivotX,pivotY,px,py,'#a8def0',3);
- dot(pivotX,pivotY,6,'#c5f4ad');dot(px,py,16,'#f6c977');
- text(16,26,'LENGTH  '+fmt(length)+' m');text(w-170,26,'PERIOD  '+fmt(r.period)+' s','#f6df98');
+ const [length,angle,g]=values(),result=currentResult();
+ const scale=Math.min((h-130)/3.15,(w-70)/2.5,126),pivotX=w/2,pivotY=56;
+ const theta=angle*Math.PI/180*Math.cos(TAU*clock/result.period);
+ const px=pivotX+length*scale*Math.sin(theta),py=pivotY+length*scale*Math.cos(theta);
+ // Arc of the possible motion and straight-down equilibrium guide.
+ ctx.beginPath();
+ ctx.arc(pivotX,pivotY,length*scale,Math.PI/2-angle*Math.PI/180,Math.PI/2+angle*Math.PI/180);
+ ctx.strokeStyle='#71c9d145';ctx.lineWidth=2;ctx.stroke();
+ ctx.setLineDash([5,8]);line(pivotX,pivotY,pivotX,pivotY+length*scale,'#b3e4e561',1);ctx.setLineDash([]);
+ for(let i=7;i>=1;i--){
+  const oldTheta=angle*Math.PI/180*Math.cos(TAU*(clock-i*.045)/result.period);
+  const x=pivotX+length*scale*Math.sin(oldTheta),y=pivotY+length*scale*Math.cos(oldTheta);
+  dot(x,y,3,'rgba(128,235,218,'+(0.39-i*.04).toFixed(2)+')');
+ }
+ ctx.beginPath();ctx.moveTo(pivotX,pivotY);ctx.lineTo(px,py);
+ ctx.strokeStyle='#a4edec';ctx.lineWidth=3;ctx.shadowColor='#7cece1';ctx.shadowBlur=12;ctx.stroke();ctx.shadowBlur=0;
+ dot(pivotX,pivotY,9,'#1c5867');dot(pivotX,pivotY,4,'#c2fbd2');
+ glow(px,py,42,'rgba(254,204,132,.27)');
+ dot(px,py,17,'#efb765');dot(px-5,py-5,6,'#fff0c5');
+ ctx.beginPath();ctx.arc(pivotX,pivotY,38,Math.PI/2-theta,Math.PI/2);
+ ctx.strokeStyle='#ffd88c99';ctx.lineWidth=2;ctx.stroke();
+ text(17,24,'SIMPLE HARMONIC MOTION','#accfdf',11);
+ text(w-158,24,'PERIOD  '+fmt(result.period)+' s','#f7ddaa',11);
+ text(16,h-18,'LENGTH  '+fmt(length)+' m · '+fmt(angle)+'° amplitude','#a9d4e2',11);
 }
 function paintWave(){
  const [freq,speed,amp]=values(),r=currentResult();
- const center=h/2,worldSpan=12,scale=w/worldSpan,amplitude=amp*Math.min(35,h/11);
- line(0,center,w,center,'#476981');
+ const center=h/2,span=12,scale=w/span,amplitude=amp*Math.min(40,h/10);
+ // Baseline, metered x-axis, and faint historical phases.
+ line(0,center,w,center,'#91b9ca8a',1);
+ for(let x=0;x<w;x+=scale){
+  line(x,center-5,x,center+5,'#86b8c2',1);
+  text(x+3,h-17,String(Math.round(x/scale)),'#96bcca',10);
+ }
+ for(const lag of [0.17,.34,.51]){
+  ctx.beginPath();
+  for(let x=0;x<=w;x+=3){
+   const y=center-amplitude*Math.sin(TAU*((x/scale)/r.wavelength-freq*(clock-lag)));
+   if(!x)ctx.moveTo(x,y);else ctx.lineTo(x,y);
+  }
+  ctx.strokeStyle='rgba(94,217,231,'+(0.11+(.51-lag)*.12).toFixed(2)+')';ctx.lineWidth=1.5;ctx.stroke();
+ }
  ctx.beginPath();
- for(let x=0;x<=w;x+=3){const distance=x/scale;const y=center-amplitude*Math.sin(TAU*(distance/r.wavelength-freq*clock));if(x===0)ctx.moveTo(x,y);else ctx.lineTo(x,y)}
- ctx.strokeStyle='#92e7ea';ctx.lineWidth=3;ctx.stroke();
- for(let x=0;x<=w;x+=scale*2)line(x,center-6,x,center+6,'#6c93a2');
- text(16,24,'WAVELENGTH  '+fmt(r.wavelength)+' m','#f6df98');
- text(16,h-18,'Model window: 12 meters');
+ for(let x=0;x<=w;x+=2){
+  const y=center-amplitude*Math.sin(TAU*((x/scale)/r.wavelength-freq*clock));
+  if(!x)ctx.moveTo(x,y);else ctx.lineTo(x,y);
+ }
+ ctx.strokeStyle='#92f6e9';ctx.lineWidth=3.2;
+ ctx.shadowColor='#41cddb';ctx.shadowBlur=17;ctx.stroke();ctx.shadowBlur=0;
+ const xMark=w*.5;
+ const sample=center-amplitude*Math.sin(TAU*((xMark/scale)/r.wavelength-freq*clock));
+ glow(xMark,sample,30,'rgba(255,206,131,.19)');
+ dot(xMark,sample,7.5,'#f9dc9e');
+ line(xMark,center-amplitude-11,xMark,center+amplitude+11,'#bedce555',1);
+ text(17,24,'TRAVELING WAVE / ONE DIMENSION','#accfdf',11);
+ text(Math.max(17,w-189),24,'WAVELENGTH  '+fmt(r.wavelength)+' m','#f7ddaa',11);
+ text(17,h-18,'WINDOW  12 m','#a9d4e2',11);
 }
 function paint(){background();if(mode==='launch')paintLaunch();else if(mode==='pendulum')paintPendulum();else paintWave()}
 function refresh(){
