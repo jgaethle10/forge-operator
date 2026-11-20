@@ -288,6 +288,25 @@ jobs:
           grep -Fq 'data-mobile-tool="charger"' _public_pages/kennedy-space-station/studio/index.html
           grep -Fq 'NOT FOR CONSTRUCTION' _public_pages/kennedy-space-station/studio/index.html
 
+      - name: Assert Leiland's public-only phone experience is included
+        if: steps.page_state.outputs.enabled == 'true'
+        run: |
+          set -euo pipefail
+          for asset in index.html style.css brain.js neural-universe.mjs pulse-bridge.mjs feed.json; do
+            test -s "_public_pages/leiland/$asset"
+          done
+          grep -Fq 'Leiland | The Living Mind' _public_pages/leiland/index.html
+          grep -Fq 'CONCEPTUAL ANIMATION' _public_pages/leiland/index.html
+          grep -Fq 'NOT MODEL ACTIVATIONS' _public_pages/leiland/index.html
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const feed=JSON.parse(fs.readFileSync('_public_pages/leiland/feed.json','utf8'));
+          if(feed.schema!=='evercraft.leiland.public-feed.v1' || feed.status!=='not_connected' ||
+             feed.published_at!==null || feed.events?.length!==0)throw Error('UNVERIFIED_LEILAND_FEED_MUST_REMAIN_DISCONNECTED');
+          if(fs.existsSync('_public_pages/kaidance/pulse.json'))throw Error('UNSIGNED_PUBLIC_KAIDANCE_PULSE_FORBIDDEN');
+          console.log('LEILAND_PHONE_ARTIFACT_AND_PRIVACY_PASS');
+          NODE
+
       - name: Upload Pages artifact
         if: steps.page_state.outputs.enabled == 'true'
         uses: actions/upload-pages-artifact@v3
@@ -309,6 +328,45 @@ jobs:
       - name: Deploy Evercraft public directory
         id: deployment
         uses: actions/deploy-pages@v4
+
+      - name: Verify Leiland's shareable phone URL and assets over public HTTPS
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="${{ steps.deployment.outputs.page_url }}"
+          target="${base%/}/leiland/"
+          dir="$(mktemp -d)"
+          trap 'rm -rf "$dir"' EXIT
+          for asset in index.html style.css brain.js neural-universe.mjs pulse-bridge.mjs feed.json; do
+            url="${target}${asset}"
+            curl --fail --silent --show-error --location --retry 8 --retry-all-errors --retry-delay 2 --max-time 20 "$url" -o "$dir/$asset"
+            test -s "$dir/$asset"
+            cmp -s "public/leiland/$asset" "$dir/$asset" || {
+              echo "::error title=Leiland version drift::Public Leiland asset mismatches the deployed source: $asset"
+              exit 1
+            }
+          done
+          grep -Fq 'Leiland | The Living Mind' "$dir/index.html"
+          grep -Fq 'NOT MODEL ACTIVATIONS' "$dir/index.html"
+          node --input-type=module - "$dir/feed.json" <<'NODE'
+          import fs from 'node:fs';
+          const feed=JSON.parse(fs.readFileSync(process.argv[2],'utf8'));
+          if(feed.schema!=='evercraft.leiland.public-feed.v1' || feed.status!=='not_connected' ||
+             feed.published_at!==null)throw Error('LEILAND_PUBLIC_DEMO_MUST_NOT_CLAIM_LIVE_INFERENCE');
+          NODE
+          pulse_code="$(curl --silent --show-error --location --retry 5 --retry-delay 2 --max-time 20 -o /dev/null -w '%{http_code}' "${base%/}/kaidance/pulse.json")"
+          if [ "$pulse_code" != 404 ]; then
+            echo "::error title=Public pulse boundary::Unsigned static KAIDANCE pulse must remain unavailable: HTTP $pulse_code"
+            exit 1
+          fi
+          {
+            echo '## Leiland phone-facing public Pages proof'
+            echo
+            echo "Verified static observatory: $target"
+            echo "Verified direct portrait mode route: ${target}?view=live"
+            echo 'Six exact source assets matched HTTPS responses; disconnected feed retained; unsigned pulse denied.'
+            echo 'LEILAND_PUBLIC_PHONE_HTTPS_VERIFIED'
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Verify Evercraft Headquarters at the public HTTPS root
         shell: bash
