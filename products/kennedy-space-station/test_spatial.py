@@ -125,6 +125,64 @@ class StudyHTTPTest(KennedyHomeTest):
         status, _, _ = self.api("POST", "/api/kss/sites/SITE-NOTFOUND/studies", model)
         self.assertEqual(status, 404)
 
+    def test_report_provenance_is_server_derived_site_scoped_and_frozen(self):
+        a = json.loads(self.api("POST", "/api/sites",
+                  {"name": "Report site A", "address": "11 Fiction Ave"})[1])["id"]
+        b = json.loads(self.api("POST", "/api/sites",
+                  {"name": "Report site B", "address": "12 Fiction Ave"})[1])["id"]
+        status, payload, _ = self.api("POST", f"/api/sites/{a}/evidence",
+                  {"category": "Aerial", "status": "verified",
+                   "finding": "Operator classification, not independently audited"})
+        self.assertEqual(status, 201, payload)
+        status, payload, _ = self.api("POST", f"/api/sites/{a}/reports", {})
+        self.assertEqual(status, 201, payload)
+        ra = json.loads(payload)["id"]
+        status, payload, _ = self.api("POST", f"/api/sites/{b}/reports", {})
+        self.assertEqual(status, 201, payload)
+        rb = json.loads(payload)["id"]
+        path = f"/api/kss/sites/{a}/reports/{ra}/context"
+        status, payload, _ = self.api("GET", path)
+        self.assertEqual(status, 200, payload)
+        context = json.loads(payload)
+        self.assertEqual(len(context["snapshot_sha256"]), 64)
+        self.assertEqual(context["evidence_counts"]["verified"], 1)
+        self.assertEqual(context["evidence_status_authority"],
+                         "site_planner_operator_recorded_not_independently_verified")
+        self.assertFalse(context["spatial_ground_truth"])
+        status, _, _ = self.api("GET", f"/api/kss/sites/{b}/reports/{ra}/context")
+        self.assertEqual(status, 404)
+        model = ModelValidationTest().model()
+        model["source_report_id"] = rb
+        status, _, _ = self.api("POST", f"/api/kss/sites/{a}/studies", model)
+        self.assertEqual(status, 400)
+        model["source_report_id"] = ra
+        model["source_report_receipt"] = {
+            "snapshot_sha256": "0" * 64,
+            "evidence_counts": {"verified": 1000000}
+        }
+        status, payload, _ = self.api("POST", f"/api/kss/sites/{a}/studies", model)
+        self.assertEqual(status, 201, payload)
+        saved = json.loads(payload)
+        self.assertEqual(saved["source_report_sha256"], context["snapshot_sha256"])
+        status, payload, _ = self.api("GET",
+                   f"/api/kss/sites/{a}/studies/{saved['id']}")
+        self.assertEqual(status, 200, payload)
+        frozen = json.loads(payload)
+        receipt = frozen["model"]["source_report_receipt"]
+        self.assertEqual(receipt["evidence_counts"]["verified"], 1)
+        self.assertEqual(receipt["snapshot_sha256"], context["snapshot_sha256"])
+        self.assertEqual(receipt["report_id"], ra)
+        self.assertNotEqual(receipt["snapshot_sha256"], "0" * 64)
+        status, payload, _ = self.api("POST", f"/api/sites/{a}/evidence",
+                  {"category": "Topo", "status": "unverified",
+                   "finding": "New evidence after snapshot"})
+        self.assertEqual(status, 201, payload)
+        _, payload, _ = self.api("GET", f"/api/kss/sites/{a}/studies/{saved['id']}")
+        self.assertEqual(json.loads(payload)["model"]["source_report_receipt"],
+                         receipt)
+        _, payload, _ = self.api("GET", path)
+        self.assertEqual(json.loads(payload)["evidence_counts"]["unverified"], 0)
+
     def test_wrong_source_report_is_rejected(self):
         status, content, _ = self.api("POST", "/api/sites",
                   {"name": "New Site", "address": "3 Synthetic Road"})

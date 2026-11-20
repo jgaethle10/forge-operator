@@ -71,3 +71,9 @@ The Spatial Studio is a separately owned product layer, not a Site Planner renam
 ## Systemia-ready, not yet Systemia-delivered
 
 Saving a study commits `kss.spatial.study.saved.v1` into Kennedy's append-only SQLite outbox in the **same database transaction** as the immutable revision. The event includes site/study ID, revision, model SHA-256, optional existing report ID, assumption basis, and explicit `engineering_authority=false`. `GET /api/kss/outbox` reports event IDs, digests, and `pending` state to the local operator. No worker, dispatch, retry, signed delivery, Systemia acknowledgment, billing, permit review, or downstream plan production is claimed. Wiring a signed owned Systemia worker is a separate release gate.
+
+## Canonical report snapshot bridge (KSS v0.3 draft)
+
+The optional immutable Site Planner report selector now has a private read-only source-context endpoint: `GET /api/kss/sites/{site_id}/reports/{report_id}/context`. It returns the exact snapshot's SHA-256, Site Planner's recorded verified/unverified/assumption/other evidence *counts*, scenario count, creation date, and explicit non-engineering authority. It does not return private evidence contents, infer mapping accuracy, or treat operator-entered `verified` labels as independently verified. The server checks exact site/report ownership and rejects mismatched IDs.
+
+On save, Kennedy reads the source report from the canonical Site Planner SQLite database and embeds a minimal report receipt in the immutable KSS model. Untrusted browser-supplied `source_report_receipt` objects are ignored and replaced by actual server-derived data. Its digest becomes part of the revision hash and remains frozen even if newer evidence arrives. Without a linked report, Kennedy continues to label every dimension an operator assumption. No external source, licensing, payment, customer tenant isolation or engineering status is automatically inferred.
