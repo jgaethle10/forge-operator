@@ -177,7 +177,7 @@ test('observed historical station evidence is separately available with distance
     '/api/faie/climate/history',
     '2023–2024',
     'No approved historical station within 40 km',
-    'Station observations, 2023',
+    'station observations, 2023',
     'expected_days',
     'threshold_days',
     'observed_days',
