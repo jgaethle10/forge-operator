@@ -205,7 +205,6 @@ test('historical land preservation is a first-class sourced, read-only regional 
     'evidence_state',
     'Original source evidence',
     'evercraft-faie-public-land-history.json',
-    'private',
     'No source-backed historical records have been archived'
   ])assert.ok(html.includes(marker),'missing historical preservation UI marker: '+marker);
   assert.match(html,/Exact public visitor scan locations are not automatically saved/);
