@@ -9,6 +9,7 @@ A simple public window into Evercraft's sovereign AI engineering and its evidenc
 Visitors can:
 - explore Systemia, Raven Nexus, Saban, Evercraft Compute and Passport;
 - follow recent **public GitHub code history** separately from source-reported AI activity;
+- read the **existing KAIDANCE public pulse** from `../kaidance/pulse.json` on the same Evercraft-owned origin. The imported `pulse-bridge.mjs` reuses KAIDANCE's existing public-only validator; no private API or inference endpoint is requested. If a real fresh, source-attested cycle is observed, the brain gives one short acknowledgement flare **only when the cycle number actually advances**. A disconnected, stale, or unverified pulse never triggers the flare;
 - switch to a broadcast-friendly, vertical, fullscreen-capable layout for screen capture / TikTok Live;
 - read dated, public-receipt-backed events if a vetted Systemia publisher supplies a fresh feed.
 
@@ -16,7 +17,7 @@ No login, browser analytics, private endpoint requests, cookies, third-party Jav
 
 ## Honesty gates
 
-1. An empty `feed.json` is intentionally disconnected, even while the illustration animates.
+1. An empty `feed.json` is intentionally disconnected, even while the illustration animates. KAIDANCE's separate public pulse reader may show a real observed coordination cycle on the same origin, but this is **not Raven inference or proof of any brain activation**.
 2. Client labels `publisher_reported` explicitly. A freshness check plus URL is **not independent attestation**. Do not call it independently verified.
 3. Live status requires publisher output younger than 10 minutes. Stale/missing reports become unverified automatically.
 4. The feed does **not** contain customer names, prompts, model responses, machine identifiers, private path names, IP addresses, session IDs, model weights, secrets, private topology, capacity, security findings, or unrestricted mission titles.
@@ -62,10 +63,12 @@ A recommended publisher cadence is the five-minute Systemia cycle, while the bro
 
 ## Release acceptance
 
+- Run `node --test tests/leiland-public.test.mjs` and `node --check public/leiland/brain.js`, with the dedicated `leiland-public.yml` CI check.
 - Run a local static server from the `public/` directory, then open `/leiland/` on desktop and mobile, not `file://`.
 - Verify keyboard navigation, reduced-motion accessibility, all five architecture selectors, and broadcast enter/exit.
 - Confirm a disconnected feed keeps the source status gray, inference and missions unverified, and the network animation visibly labeled conceptual.
 - Disconnect GitHub API: events fail safely without changing model-health readouts.
+- Remove `kaidance/pulse.json`: Leiland must report disconnected, not a running pulse. Supply an approved synthetic `evercraft.kaidance.public-pulse.v1` on a private QA origin, then test fresh attested -> stale, non-attested and increment-only flare behavior. Do not deploy the synthetic payload to production.
 - Add a staged, source-backed sample on a **private QA instance** and check fresh -> stale transition, escaped event text, forbidden URLs, clock skew, and absence of raw private content.
 - Use Yard release receipts, external HTTPS probes, CSP verification, and rollback verification before saying the public production URL is live.
 
