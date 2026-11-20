@@ -10,6 +10,7 @@
 <link rel="icon" href="./mark.svg" type="image/svg+xml">
 <link rel="stylesheet" href="./style.css">
 <link rel="stylesheet" href="./experience.css">
+<link rel="stylesheet" href="./collider-v3.css">
 </head>
 <body>
 <a class="skip" href="#main">Skip to observatory</a>
@@ -36,6 +37,7 @@
     <section class="observatory-layout">
       <article class="stage" id="stage" aria-label="KAIDANCE living network visualization and approved public source states">
         <canvas id="visualField" class="visual-field" aria-hidden="true"></canvas>
+        <canvas id="colliderField" aria-hidden="true"></canvas>
         <div class="scene-light" aria-hidden="true"></div>
         <div class="stage-top">
           <div class="stage-label"><span class="cross">✳</span><span>KAIDANCE <small>THE COLLIDER · EVERCRAFT</small></span></div>
@@ -101,5 +103,6 @@
 </div>
 <script type="module" src="./app.mjs"></script>
 <script type="module" src="./visual.mjs"></script>
+<script type="module" src="./collider-engine.mjs"></script>
 </body>
 </html>
