@@ -7,7 +7,7 @@ import {createHash} from 'node:crypto';
 import {fileURLToPath} from 'node:url';
 
 const FILES=Object.freeze([
- 'index.html','app.mjs','style.css','pulse-source.mjs','work-source.mjs','mark.svg'
+ 'index.html','app.mjs','style.css','experience.css','visual.mjs','pulse-source.mjs','work-source.mjs','mark.svg'
 ]);
 const MAX_BYTES=300_000;
 
@@ -42,13 +42,16 @@ export async function probeKaidanceFallback({root,fetchImpl=fetch,now=new Date()
  const work=results['work-source.mjs'].text;
  if(!/text\/html/i.test(results['index.html'].contentType))throw Error('fallback_not_html');
  for(const expected of [
-    'KAIDANCE | The Evercraft Pulse','9:16 LIVE VIEW',
-    'HEARTBEAT NOT CONNECTED','./app.mjs','./style.css','./mark.svg'
+    'KAIDANCE | Evercraft in Motion','9:16 LIVE VIEW',
+    'HEARTBEAT NOT CONNECTED','./app.mjs','./style.css','./experience.css','./visual.mjs','./mark.svg'
  ])if(!html.includes(expected))throw Error('fallback_missing_'+expected);
  if(!app.includes("from './pulse-source.mjs'")||
     !app.includes("from './work-source.mjs'")||
     !app.includes("fetch('./pulse.json'"))throw Error('fallback_client_provenance_missing');
  if(!source.includes('assessPublicPulse')||!work.includes('normalizePublicActivity'))throw Error('fallback_source_validation_missing');
+ if(!results['visual.mjs'].text.includes('Ambient art only')||
+    !results['experience.css'].text.includes('KAIDANCE V02'))throw Error('fallback_visual_artifact_missing');
+ if(!app.includes("$('heroEventTitle')")||!app.includes("$('heroProgress')"))throw Error('fallback_first_screen_evidence_missing');
  if(!/image\/svg\+xml/i.test(results['mark.svg'].contentType))throw Error('fallback_brand_asset_invalid');
  if(html.includes('localhost:')||html.includes('127.0.0.1:'))throw Error('fallback_contains_local_network_reference');
 
