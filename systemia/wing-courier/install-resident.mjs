@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// NextGen Wing Courier: guarded systemd USER resident bootstrap.
+// Harbor / NextGen Wing Courier: guarded per-wing systemd USER resident bootstrap.
 // Default is evidence-only dry run. Never provisions keys, TLS, network or customer work.
 import fs from 'node:fs';
 import path from 'node:path';
@@ -57,8 +57,10 @@ export function evaluateWingResidentConfig({configPath,wingExpected='fallen'}={}
  requiredTypedKey(cfg.receiverSigningKeyFile,{kind:'signing',type:'ed25519',secret:true});
  requiredDir(cfg.destinationDir);
  const senders=cfg.senderVerifyPublicKeys||{};
- if(!Array.isArray(Object.keys(senders))||Object.keys(senders).length<1)
-  throw Error('wing_resident_trusted_senders_missing');
+ const trustedNames=Object.keys(senders);
+ const expectedSender=cfg.wing==='harbor'?'fallen':'harbor';
+ if(trustedNames.length!==1||trustedNames[0]!==expectedSender)
+  throw Error('wing_resident_trusted_senders_scope_mismatch');
  for(const [wing,file] of Object.entries(senders)){
   if(!/^[a-z][a-z0-9-]{1,47}$/.test(wing)||wing===cfg.wing)
    throw Error('wing_resident_invalid_sender_wing');
@@ -80,10 +82,11 @@ export function evaluateWingResidentConfig({configPath,wingExpected='fallen'}={}
   customerBytesPresent:false,producerAssigned:false,customerReleaseAuthorized:false
  };
 }
-export function renderWingResidentUnit({nodeBin,sourceRoot,configPath}={}){
+export function renderWingResidentUnit({nodeBin,sourceRoot,configPath,wing='fallen'}={}){
+ if(!['fallen','harbor'].includes(wing))throw Error('wing_resident_scope_mismatch');
  for(const v of [nodeBin,sourceRoot,configPath])safeArg(v);
  return [
-  '[Unit]','Description=Evercraft Systemia Wing Courier (private received packages)',
+  '[Unit]','Description=Evercraft Systemia Wing Courier '+wing+' (private received packages)',
   'After=network-online.target','Wants=network-online.target','',
   '[Service]','Type=simple','WorkingDirectory='+sourceRoot,
   'ExecStart='+nodeBin+' '+sourceRoot+'/systemia/wing-courier/resident.mjs '+configPath,
@@ -97,11 +100,11 @@ function ctl(...args){
  if(p.status!==0||p.error)throw Error('wing_resident_systemd_'+args[0]+'_failed');
 }
 export async function installWingResident({
- configPath,activate=false,confirmOwnedHost=false,home=os.homedir()
+ configPath,activate=false,confirmOwnedHost=false,wingExpected='fallen',home=os.homedir()
 }={}){
  if(Number(process.versions.node.split('.')[0])<22)throw Error('wing_resident_node_22_required');
  if(typeof process.getuid==='function'&&process.getuid()===0)throw Error('wing_resident_root_forbidden');
- const pre=evaluateWingResidentConfig({configPath});
+ const pre=evaluateWingResidentConfig({configPath,wingExpected});
  if(!fs.existsSync(path.join(base,'systemia/wing-courier/resident.mjs')))
   throw Error('wing_resident_source_not_installed');
  if(!activate)return {...pre,mode:'DRY_RUN',unitInstalled:false};
@@ -126,23 +129,25 @@ export async function installWingResident({
   if(!st.isDirectory()||st.isSymbolicLink()||(uid!==null&&st.uid!==uid))
    throw Error('wing_resident_untrusted_service_directory');
  }
- const unit=path.join(serviceDirs[2],'evercraft-wing-courier-fallen.service');
+ const serviceName='evercraft-wing-courier-'+wingExpected+'.service';
+ const unit=path.join(serviceDirs[2],serviceName);
  // Never overwrite an existing user service or a dangling symlink.
  try{
   fs.lstatSync(unit);
   throw Error('wing_resident_existing_unit_requires_review');
  }catch(e){if(e?.code!=='ENOENT')throw e}
- const body=renderWingResidentUnit({nodeBin:process.execPath,sourceRoot:base,configPath});
+ const body=renderWingResidentUnit({nodeBin:process.execPath,sourceRoot:base,configPath,wing:wingExpected});
  fs.writeFileSync(unit,body,{flag:'wx',mode:0o600});
- ctl('daemon-reload');ctl('enable','--now','evercraft-wing-courier-fallen.service');
- ctl('is-active','--quiet','evercraft-wing-courier-fallen.service');
+ ctl('daemon-reload');ctl('enable','--now',serviceName);
+ ctl('is-active','--quiet',serviceName);
  return {...pre,mode:'ACTIVATED_LOCAL_USER_SERVICE',unitInstalled:true,
   externalHttpsVerified:false,realHandoffProven:false};
 }
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)){
  const i=process.argv.indexOf('--config');
  const configPath=i>=0?process.argv[i+1]:null;
- installWingResident({configPath,activate:process.argv.includes('--activate'),
+ const w=process.argv.indexOf('--wing'),wingExpected=w>=0?process.argv[w+1]: 'fallen';
+ installWingResident({configPath,wingExpected,activate:process.argv.includes('--activate'),
   confirmOwnedHost:process.argv.includes('--confirm-owned-host')})
   .then(r=>console.log(JSON.stringify(r)))
   .catch(e=>{console.error('HOLD:',e?.message||'resident_install_failed');process.exitCode=2});
