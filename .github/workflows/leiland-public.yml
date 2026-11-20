@@ -6,6 +6,9 @@ on:
       - 'public/leiland/**'
       - 'public/kaidance/pulse-source.mjs'
       - 'tests/leiland-public.test.mjs'
+      - 'tests/leiland-owned-pulse-publisher.test.mjs'
+      - 'systemia/leiland/**'
+      - 'systemia/collider/public-projection.mjs'
       - '.github/workflows/leiland-public.yml'
   push:
     branches: [main]
@@ -13,6 +16,9 @@ on:
       - 'public/leiland/**'
       - 'public/kaidance/pulse-source.mjs'
       - 'tests/leiland-public.test.mjs'
+      - 'tests/leiland-owned-pulse-publisher.test.mjs'
+      - 'systemia/leiland/**'
+      - 'systemia/collider/public-projection.mjs'
       - '.github/workflows/leiland-public.yml'
   workflow_dispatch:
 
@@ -34,5 +40,6 @@ jobs:
           node --check public/leiland/brain.js
           node --check public/leiland/pulse-bridge.mjs
           node --check public/kaidance/pulse-source.mjs
+          node --check systemia/leiland/owned-pulse-publisher.mjs
       - name: Prove public-only activity and privacy contract
-        run: node --test tests/leiland-public.test.mjs
+        run: node --test tests/leiland-public.test.mjs tests/leiland-owned-pulse-publisher.test.mjs
