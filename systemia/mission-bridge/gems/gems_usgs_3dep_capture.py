@@ -144,10 +144,14 @@ def main():
     atlas = json.loads(args.atlas.read_text())
     result = capture(atlas, max_per_group=args.max_per_group,
                      allow_public_query=True)
-    args.receipt.parent.mkdir(parents=True, exist_ok=True)
-    with args.receipt.open('x') as output:
+    args.receipt.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
+    flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL
+    if hasattr(os, 'O_NOFOLLOW'):
+        flags |= os.O_NOFOLLOW
+    fd = os.open(args.receipt, flags, 0o600)
+    with os.fdopen(fd, 'w', encoding='utf-8') as output:
         json.dump(result, output, indent=2, allow_nan=False)
-        output.write('\n')
+        output.write('\\n')
     print(json.dumps({'receipt': str(args.receipt),
                       'public_index_queries': len(result['responses']),
                       'per_group': args.max_per_group,
