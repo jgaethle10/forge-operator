@@ -150,6 +150,19 @@ jobs:
           PY
       - name: Playable Kennedy Discovery World offline interactions
         run: node products/kennedy-space-station/test_explore_ui.mjs
+      - name: Public homepage security and isolation gate
+        run: python3 products/kennedy-space-station/verify_public_home.py
+
+  discovery-world-preview:
+    name: Playable Discovery World and phone visual proof
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify public-only source and actions
+        run: |
+          python3 products/kennedy-space-station/verify_public_home.py
+          node products/kennedy-space-station/test_explore_ui.mjs
       - name: Render actual Kennedy desktop and phone screenshots headlessly
         run: |
           set -euo pipefail
@@ -190,5 +203,3 @@ jobs:
             /tmp/kennedy-discovery-preview/phone-preview.png
           if-no-files-found: error
           retention-days: 14
-      - name: Public homepage security and isolation gate
-        run: python3 products/kennedy-space-station/verify_public_home.py
