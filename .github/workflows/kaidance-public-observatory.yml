@@ -1,0 +1,37 @@
+name: KAIDANCE Public Observatory Proof
+
+on:
+  pull_request:
+    paths:
+      - 'public/kaidance/**'
+      - 'systemia/collider/public-projection.mjs'
+      - 'systemia/collider/pulse.mjs'
+      - 'tests/kaidance-public-observatory.test.mjs'
+      - '.github/workflows/kaidance-public-observatory.yml'
+  push:
+    paths:
+      - 'public/kaidance/**'
+      - 'systemia/collider/public-projection.mjs'
+      - 'systemia/collider/pulse.mjs'
+      - 'tests/kaidance-public-observatory.test.mjs'
+      - '.github/workflows/kaidance-public-observatory.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  kaidance-public-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: KAIDANCE public view and private-safe projection
+        run: node --test tests/kaidance-public-observatory.test.mjs
+      - name: KAIDANCE Collider source contract
+        run: |
+          node systemia/collider/proof.mjs
+          node systemia/collider/pulse-proof.mjs
