@@ -98,9 +98,13 @@ export function projectAtlasNode(point,{width,height,yaw=0,pitch=0,offsetX=0,off
  const zz=point.x*sin+point.z*cos;
  const yy=point.y*cp-zz*sp,depth=point.y*sp+zz*cp;
  const perspective=clamp(1/(1+depth*.37),.71,1.45);
- const radius=Math.min(width*.50,height*.74)*zoom;
- return {x:width*.5+(xx-offsetX)*perspective*radius,
-   y:height*.5+(yy-offsetY)*perspective*radius,
+ const radiusX=Math.min(width*.50,height*.74)*zoom;
+ // Portrait has its own vertical projection instead of borrowing the narrow
+ // phone width. The architecture must inhabit the full 9:16 theater.
+ const radiusY=height>width*1.3
+  ?Math.min(height*.60,width*1.02)*zoom:radiusX;
+ return {x:width*.5+(xx-offsetX)*perspective*radiusX,
+   y:height*.5+(yy-offsetY)*perspective*radiusY,
    depth,scale:perspective};
 }
 // Pure, deterministic cinematic corridors. These shapes describe relationships
@@ -239,6 +243,41 @@ export function createNeuralUniverse({canvas,stage,reduce,initialFocus='systemia
    if(!still&&matched&&i%5===0){
     const p=((clock*.00017*line.speed+line.phase)%1),x=a.x+(b.x-a.x)*p,y=a.y+(b.y-a.y)*p;
     ctx.fillStyle=rgba(color,.72);ctx.beginPath();ctx.arc(x,y,1.2,0,TAU);ctx.fill();
+   }
+  }
+  // Five luminous, helix-like conduits grow from the shared nucleus into
+  // distinct regions. The braids are a scenic sculpture, NOT neural firing,
+  // mission transfer, private inference or a KAIDANCE attestation.
+  for(let k=0;k<REGIONS.length;k++){
+   const region=REGIONS[k],c=CENTERS[region],color=PALETTE[region];
+   const chosen=region===selected,threadCount=small?2:3,steps=small?23:34;
+   for(let thread=0;thread<threadCount;thread++){
+    const pts=[],baseAngle=k*1.11+thread*(TAU/threadCount);
+    for(let j=0;j<=steps;j++){
+     const u=j/steps;
+     const angle=u*TAU*2.15+baseAngle+(still?0:clock*.00017);
+     const envelope=Math.sin(Math.PI*u)*(small?.095:.135);
+     const p={
+      x:c[0]*u+Math.cos(angle)*envelope,
+      y:c[1]*u+Math.sin(angle)*envelope*.80,
+      z:c[2]*u+Math.cos(angle+1.2)*envelope*1.36
+     };
+     pts.push(projectAtlasNode(p,{
+      width,height,yaw,pitch,offsetX:originX,offsetY:originY,zoom:small?.91:1.03
+     }));
+    }
+    const path=()=>{
+     ctx.beginPath();ctx.moveTo(pts[0].x,pts[0].y);
+     for(let j=1;j<pts.length;j++)ctx.lineTo(pts[j].x,pts[j].y);
+    };
+    const shimmer=still?.8:.72+.28*Math.sin(clock*.00053+baseAngle);
+    ctx.lineCap='round';ctx.lineJoin='round';
+    ctx.lineWidth=chosen?(small?4.4:6.7):2.6;
+    ctx.strokeStyle=rgba(color,(chosen?.10:.035)*shimmer);
+    path();ctx.stroke();
+    ctx.lineWidth=chosen?(small?1.05:1.28):.6;
+    ctx.strokeStyle=rgba(color,(chosen?.39:.14)*shimmer);
+    path();ctx.stroke();
    }
   }
   // Cinematic filaments turn a static lattice into a navigable, breathing

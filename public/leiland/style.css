@@ -210,3 +210,24 @@ body.broadcast .note-top{top:18px;left:19px}
  .brain-core,.brain-core:after{animation:none!important}
  .region-pin{transition:none}
 }
+
+
+/* LEILAND CINEMATIC / V3: immersive portrait depth */
+.brain-stage:before{
+ background:
+  radial-gradient(ellipse 43% 46% at 50% 50%,#439bf829,transparent 85%),
+  radial-gradient(ellipse 22% 55% at 24% 50%,#247cf124,transparent 95%),
+  radial-gradient(ellipse 23% 56% at 76% 50%,#aa70f025,transparent 95%),
+  radial-gradient(ellipse 37% 72% at 50% 50%,#19cbe210,transparent 95%),
+  linear-gradient(90deg,#020611a1,transparent 18%,transparent 82%,#020611a1)
+}
+.brain-core{width:177px;height:177px}
+@media(max-width:700px){
+ .brain-core{width:151px;height:151px}
+ .brain-core strong{font-size:22px}
+ .brain-core .core-kicker{font-size:9px}
+ .brain-core:before{inset:-24px}
+ .brain-core:after{inset:-24px}
+ .brain-stage{height:clamp(570px,79svh,840px);min-height:570px}
+ body.broadcast .brain-stage{height:calc(100dvh - 104px);min-height:450px}
+}
