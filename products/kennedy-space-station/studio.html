@@ -22,7 +22,7 @@
 <p class="muted">Edit an object on the right, or drag its rectangle to move it. Dimensions are user-entered, not linked to an actual parcel map.</p>
 <div class="canvas"><svg id="drawing" viewBox="0 0 900 660" aria-label="Editable preliminary site rectangle diagram" role="img"></svg></div>
 <div class="fig"><span><strong id="dim">80 × 65 m</strong> user-entered parcel</span><span><strong id="object-count">3</strong> shapes</span><span><strong id="area">5,200 m²</strong> assumed area</span></div>
-<div class="actions"><button id="save" class="button" type="button">Save revision</button><a id="download" class="button secondary disabled" aria-disabled="true">Export saved SVG ↗</a><button id="reset" class="button secondary" type="button">Reset draft</button></div>
+<div class="actions"><button id="save" class="button" type="button">Save revision</button><a id="download" class="button secondary disabled" aria-disabled="true">Export saved SVG ↗</a><a id="download-pdf" class="button secondary disabled" aria-disabled="true">Download PDF sheet ↗</a><button id="reset" class="button secondary" type="button">Reset draft</button></div>
 <div id="message" class="notice" role="status">Select a site to save an immutable concept revision. This is not a permit-ready site plan.</div>
 </section>
 <aside class="panel history-panel"><div class="over">03 / SCENE OBJECTS</div><h2>Everything in the study</h2>
@@ -46,7 +46,7 @@ function defaultModel(){return {schema:'evercraft.kss.spatial-study.v1',title:'F
 {id:'charger-1',kind:'charging_bay',label:'Proposed EV bay',x:48,z:13,width:7,depth:6}
 ]}}
 function show(text,cls=''){const m=$('message');m.textContent=text;m.className='notice '+cls}
-function changed(){studyId=null;$('download').removeAttribute('href');$('download').classList.add('disabled');$('download').setAttribute('aria-disabled','true');show('Unsaved draft. Save to capture a new immutable revision.')}
+function changed(){studyId=null;for(const id of ['download','download-pdf']){const link=$(id);link.removeAttribute('href');link.classList.add('disabled');link.setAttribute('aria-disabled','true')}show('Unsaved draft. Save to capture a new immutable revision.')}
 function svgNode(name,attrs,txt){const e=document.createElementNS(NS,name);for(const [k,v] of Object.entries(attrs||{}))e.setAttribute(k,String(v));if(txt!==undefined)e.textContent=txt;return e}
 function clamp(n,lo,hi){return Math.min(hi,Math.max(lo,n))}
 function precision(n){return Math.round(n*2)/2}
@@ -86,7 +86,7 @@ $('basis').addEventListener('change',e=>{model.measurement_basis=e.target.value;
 $('report').addEventListener('change',e=>{model.source_report_id=e.target.value;changed();loadReportContext()});
 async function api(url,options={}){const response=await fetch(url,{...options,headers:{...options.headers,Accept:'application/json'},cache:'no-store'});const data=await response.json();if(!response.ok)throw Error(data.error||'Request failed');return data}
 const sid=()=>$('site').value;
-function setDownload(id){if(!id)return;$('download').href='/api/kss/sites/'+encodeURIComponent(sid())+'/studies/'+encodeURIComponent(id)+'/svg';$('download').classList.remove('disabled');$('download').setAttribute('aria-disabled','false')}
+function setDownload(id){if(!id)return;for(const [linkId,extension] of [['download','svg'],['download-pdf','pdf']]){const link=$(linkId);link.href='/api/kss/sites/'+encodeURIComponent(sid())+'/studies/'+encodeURIComponent(id)+'/'+extension;link.classList.remove('disabled');link.setAttribute('aria-disabled','false')}}
 async function loadSites(){try{sites=await api('/api/sites');const pick=$('site');const requested=new URLSearchParams(location.search).get('site')||'';for(const s of sites){const opt=document.createElement('option');opt.value=s.id;opt.textContent=(s.name||s.address||'Untitled')+' · '+s.id;pick.append(opt)}if(sites.length){pick.value=sites.some(s=>s.id===requested)?requested:sites[0].id;await siteChanged()}else show('No sites found. Create a site from Kennedy Home first.','error')}catch(e){show('Site Planner API unavailable: '+e.message,'error')}}
 async function loadReportContext(){
   const siteId=sid(), reportId=$('report').value;
@@ -106,7 +106,7 @@ function fillFields(){$('title').value=model.title;$('width').value=model.parcel
 async function loadHistory(){const area=$('history');area.replaceChildren();const items=await api('/api/kss/sites/'+encodeURIComponent(sid())+'/studies');if(!items.length){const p=document.createElement('p');p.className='muted';p.textContent='No saved study revisions yet.';area.append(p);return}for(const r of items){const line=document.createElement('div');line.className='history-item';const t=document.createElement('span');const bold=document.createElement('b');bold.textContent='Revision '+r.revision;const sm=document.createElement('small');sm.textContent=r.title+' · '+r.model_sha256.slice(0,10)+'…';t.append(bold,sm);const b=document.createElement('button');b.type='button';b.textContent='Load';b.addEventListener('click',()=>loadStudy(r.id));line.append(t,b);area.append(line)}}
 async function loadStudy(id){try{const r=await api('/api/kss/sites/'+encodeURIComponent(sid())+'/studies/'+encodeURIComponent(id));model=r.model;studyId=r.id;selected=model.objects[0]?.id||'';fillFields();paint();setDownload(studyId);await loadReportContext();show('Loaded immutable revision '+r.revision+'. Change anything to create a new draft.','success')}catch(e){show(e.message,'error')}}
 $('save').addEventListener('click',async()=>{if(!sid())return show('Select a site before saving.','error');const b=$('save');b.disabled=true;try{model.title=$('title').value.trim();model.source_note=$('source').value.trim();const saved=await api('/api/kss/sites/'+encodeURIComponent(sid())+'/studies',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(model)});studyId=saved.id;setDownload(studyId);await loadHistory();show('Saved revision '+saved.revision+' · SHA-256 '+saved.model_sha256.slice(0,16)+'… · '+(saved.source_report_sha256?'Linked report fingerprint '+saved.source_report_sha256.slice(0,12)+'… · ':'')+'Export is available.','success')}catch(e){show('Study not saved: '+e.message,'error')}finally{b.disabled=false}});
-$('download').addEventListener('click',e=>{if(!studyId){e.preventDefault();show('Save a revision before downloading the source-bound SVG.','error')}});
+for(const id of ['download','download-pdf'])$(id).addEventListener('click',e=>{if(!studyId){e.preventDefault();show('Save a revision before downloading the source-bound concept sheet.','error')}});
 $('reset').addEventListener('click',()=>{model=defaultModel();selected='building-1';fillFields();changed();paint()});
 paint();loadSites();
 })();

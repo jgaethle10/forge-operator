@@ -278,6 +278,101 @@ class SpatialStore:
         return item
 
 
+def pdf(study):
+    """One-page, source-bound concept PDF using only Python's standard library.
+
+    Not a certified plan or a measured/georeferenced drawing.
+    """
+    import unicodedata
+
+    model = study["model"]
+    parcel = model["parcel"]
+    width, depth = parcel["width"], parcel["depth"]
+    scale = min(650 / width, 355 / depth)
+    left = (792 - width * scale) / 2
+    bottom = 135 + (365 - depth * scale) / 2
+
+    def pdf_text(value, limit=120):
+        # Built-in PDF Helvetica does not embed a Unicode font. Degrade to
+        # printable ASCII rather than emitting malformed non-WinAnsi text.
+        normalized = unicodedata.normalize("NFKD", str(value))
+        ascii_text = normalized.encode("ascii", "replace").decode("ascii")
+        ascii_text = "".join(c if 32 <= ord(c) <= 126 else " " for c in ascii_text)
+        return ascii_text[:limit].replace("\\", "\\\\").replace("(", "\\(").replace(")", "\\)")
+
+    def rgb(hex_value):
+        return " ".join(f"{int(hex_value[i:i+2], 16)/255:.4f}" for i in (1, 3, 5))
+
+    lines = []
+    def shape_rect(x, y, w, h, fill, border=None):
+        lines.append(f"{rgb(fill)} rg")
+        if border:
+            lines.append(f"{rgb(border)} RG")
+            lines.append(f"{x:.3f} {y:.3f} {w:.3f} {h:.3f} re B")
+        else:
+            lines.append(f"{x:.3f} {y:.3f} {w:.3f} {h:.3f} re f")
+
+    def label(x, y, value, size=10, bold=False, color="#272044"):
+        lines.extend([
+            f"{rgb(color)} rg",
+            f"BT /{'F2' if bold else 'F1'} {size:.2f} Tf "
+            f"{x:.3f} {y:.3f} Td ({pdf_text(value)}) Tj ET"
+        ])
+
+    # Header, source-bound central plan, footer banner.
+    shape_rect(0, 0, 792, 612, "#f7f7fc")
+    shape_rect(0, 546, 792, 66, "#251c56")
+    label(35, 574, "KENNEDY SPACE STATION | PRELIMINARY STUDY", 18, True, "#ffffff")
+    label(35, 555, "REAL USER-ENTERED GEOMETRY, NOT A SURVEY OR ENGINEERING DOCUMENT", 9, False, "#e5dcff")
+    shape_rect(30, 122, 732, 402, "#ffffff", "#e3e4f0")
+    shape_rect(left, bottom, width * scale, depth * scale, "#ebf5ec", "#698c77")
+    for obj in model["objects"]:
+        x = left + obj["x"] * scale
+        y = bottom + (depth - obj["z"] - obj["depth"]) * scale
+        w, h = obj["width"] * scale, obj["depth"] * scale
+        fill, stroke = COLORS[obj["kind"]]
+        shape_rect(x, y, w, h, fill, stroke)
+        if w >= 80 and h >= 26:
+            label(x + 4, y + h/2, obj["label"] or obj["kind"].replace("_", " "), 8, True)
+    label(35, 508, f"{model['title']}", 13, True, "#28204f")
+    label(35, 491, f"Parcel: {width:g} x {depth:g} m | Basis: {model['measurement_basis']} | Revision: {study['revision']}", 9, False, "#5e6682")
+    shape_rect(0, 0, 792, 111, "#251c56")
+    label(30, 87, f"Site: {model['site_id']}  |  Model SHA-256: {study['model_sha256']}", 8, True, "#ffffff")
+    report = model.get("source_report_receipt")
+    if report:
+        label(30, 69, f"Origin report: {report['report_id']}  |  Snapshot: {report['snapshot_sha256']}", 8, False, "#d6caff")
+    else:
+        label(30, 69, "Origin report: none; geometry is not source-verified", 8, False, "#d6caff")
+    label(30, 47, "PRELIMINARY CONCEPT ONLY - NOT A SURVEY, PERMIT OR CONSTRUCTION PLAN.", 11, True, "#ffd9a5")
+    label(30, 31, "No ADA, utilities, drainage, traffic, code or property boundaries independently verified.", 8, False, "#dfd8f4")
+
+    content = ("\n".join(lines) + "\n").encode("ascii")
+    # Minimal deterministic PDF 1.4 writer: two built-in fonts + one page.
+    objects = [
+        b"<< /Type /Catalog /Pages 2 0 R >>",
+        b"<< /Type /Pages /Kids [3 0 R] /Count 1 >>",
+        b"<< /Type /Page /Parent 2 0 R /MediaBox [0 0 792 612] "
+        b"/Resources << /Font << /F1 4 0 R /F2 5 0 R >> >> /Contents 6 0 R >>",
+        b"<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>",
+        b"<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>",
+        b"<< /Length " + str(len(content)).encode("ascii") + b" >>\nstream\n" +
+        content + b"endstream",
+    ]
+    output = bytearray(b"%PDF-1.4\n%\xE2\xE3\xCF\xD3\n")
+    offsets = [0]
+    for index, body in enumerate(objects, 1):
+        offsets.append(len(output))
+        output += f"{index} 0 obj\n".encode("ascii") + body + b"\nendobj\n"
+    xref = len(output)
+    output += f"xref\n0 {len(objects)+1}\n".encode("ascii")
+    output += b"0000000000 65535 f \n"
+    for offset in offsets[1:]:
+        output += f"{offset:010d} 00000 n \n".encode("ascii")
+    output += (f"trailer\n<< /Size {len(objects)+1} /Root 1 0 R >>\n"
+               f"startxref\n{xref}\n%%EOF\n").encode("ascii")
+    return bytes(output)
+
+
 def svg(study):
     """Source-bound SVG, with non-engineering and no-georeference stamps."""
     model = study["model"]

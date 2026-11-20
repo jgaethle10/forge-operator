@@ -133,20 +133,24 @@ class KennedyHandler(site_planner.Handler):
                 return self.bad(str(exc), 422)
             except sqlite3.Error:
                 return self.bad("source_report_unavailable", 500)
-        m = re.fullmatch(r"/api/kss/sites/([A-Za-z0-9_-]+)/studies(?:/([A-Za-z0-9_-]+)(/svg)?)?", path)
+        m = re.fullmatch(r"/api/kss/sites/([A-Za-z0-9_-]+)/studies(?:/([A-Za-z0-9_-]+)(?:/(svg|pdf))?)?", path)
         if m:
             if not self.authorized():
                 return
-            site_id, study_id, svg_suffix = m.groups()
+            site_id, study_id, export_format = m.groups()
             try:
                 validate_site_and_report(site_id)
                 if study_id:
                     study = SPATIAL.get(site_id, study_id)
-                    if svg_suffix:
+                    if export_format == "svg":
                         return self.send(200, spatial.svg(study),
                                          "image/svg+xml; charset=utf-8",
                                          {"Content-Disposition":
                                           f'attachment; filename="kennedy-{study_id}.svg"'})
+                    if export_format == "pdf":
+                        return self.send(200, spatial.pdf(study), "application/pdf",
+                                         {"Content-Disposition":
+                                          f'attachment; filename="kennedy-{study_id}.pdf"'})
                     return self.send(200, study)
                 return self.send(200, SPATIAL.list(site_id))
             except LookupError as exc:
