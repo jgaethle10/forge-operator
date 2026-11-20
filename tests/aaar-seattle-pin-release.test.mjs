@@ -19,7 +19,7 @@ test('emergency flight release pins exact reviewed Seattle main and static asset
  assert.ok(script.includes(expected));
  assert.match(html.toString('utf8'),/id="aaar-seattle-geography"/);
  assert.match(html.toString('utf8'),/Space Needle/);
- assert.match(html.toString('utf8'),/flat-lit-glass-water-v10/);
+ assert.match(script,/Reviewed Seattle Graphics 1\.0/);
  assert.ok(script.includes("const ALLOWED_OLD='c57de0eec09b1aadc1124c7464a0e825ce30251fdd05f1f088f4549a7915feed'"));
 });
 test('operator release gates same named Penguin vault and actual local route',()=>{
