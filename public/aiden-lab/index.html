@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#081624">
+  <meta name="description" content="Aiden's Lab is Evercraft's public science atlas. Explore real projects in medical evidence, Earth science, robotics, physics, space, oceans and beyond, with sources and honest research status.">
+  <meta name="robots" content="index,follow">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Aiden's Lab | Curiosity has a home">
+  <meta property="og:description" content="Explore the science Evercraft is investigating, from medical evidence to the deep ocean, with original sources and transparent research status.">
+  <link rel="canonical" href="/aiden-lab/">
+  <link rel="icon" href="./mark.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./styles.css">
+  <script type="module" src="./app.mjs"></script>
+  <title>Aiden's Lab | Curiosity has a home</title>
+</head>
+<body>
+  <a class="skip" href="#explore">Skip to science atlas</a>
+  <header class="topbar">
+    <div class="wrap nav">
+      <a class="identity" href="./" aria-label="Aiden's Lab, home">
+        <span class="logo" aria-hidden="true">✳</span>
+        <span class="identity-type"><small>EVERCRAFT PRESENTS</small><strong>AIDEN'S LAB</strong></span>
+      </a>
+      <nav aria-label="Main navigation">
+        <a href="#explore">Explore</a>
+        <a href="#medical">Medical research</a>
+        <a href="#method">Our method</a>
+        <a class="nav-action" href="#sources">Source desk <span aria-hidden="true">↗</span></a>
+      </nav>
+    </div>
+  </header>
+  <main>
+    <section class="hero wrap" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <div class="eyebrow"><span class="signal-dot" aria-hidden="true"></span> AN OPEN DOOR TO EVERCRAFT SCIENCE</div>
+        <h1 id="hero-title">Curiosity<br>has a <em>home.</em></h1>
+        <p class="lead">What happens when you give big questions their own laboratory? Explore the science Evercraft is studying, building, and questioning, from medical research to the ocean floor.</p>
+        <div class="hero-actions">
+          <a class="primary-button" href="#explore">Explore the lab <span aria-hidden="true">↗</span></a>
+          <button class="ghost-button" id="surprise" type="button">✦ Surprise me</button>
+        </div>
+        <p class="hero-note">Open exploration. Real source trails. No account required.</p>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <div class="art-grid"></div>
+        <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="orbit orbit-three"></div>
+        <div class="core"><div class="core-inner">A<span>✳</span></div></div>
+        <span class="satellite s1">◌ <small>QUESTION</small></span>
+        <span class="satellite s2">⌁ <small>DISCOVER</small></span>
+        <span class="satellite s3">✧ <small>VERIFY</small></span>
+        <div class="art-bottom"><span>THE SCIENCE OF ASKING WHY</span><span>EST. EVERCRAFT</span></div>
+      </div>
+    </section>
+    <section class="promise-strip" aria-label="Our commitments">
+      <div class="wrap promise-list"><span><b>01</b> Explore the big questions</span><span><b>02</b> Follow original sources</span><span><b>03</b> Know what is still unknown</span></div>
+    </section>
+    <section class="explorer wrap" id="explore" aria-labelledby="explore-title">
+      <div class="section-header">
+        <div><p class="kicker">THE SCIENCE ATLAS</p><h2 id="explore-title">Pick a rabbit hole.</h2><p class="sub">Every room has a question, a real evidence trail, and a next thing to investigate.</p></div>
+        <span class="section-symbol" aria-hidden="true">✳</span>
+      </div>
+      <div class="toolbox">
+        <label class="searchbox"><span aria-hidden="true">⌕</span><span class="sr-only">Search scientific topics</span><input id="search" type="search" placeholder="Try medicine, volcanoes, robotics..." autocomplete="off" maxlength="100"></label>
+        <button id="savedFilter" class="saved-filter" type="button" aria-pressed="false">☆ My reading shelf <span id="savedCount">0</span></button>
+      </div>
+      <div id="filters" class="filters" role="group" aria-label="Filter topics by science field"></div>
+      <div class="results-head"><p id="resultsCount" aria-live="polite"></p><p class="results-hint">Select a room to see its sources and open questions.</p></div>
+      <div id="topicGrid" class="topic-grid" aria-live="off"></div>
+      <div id="empty" class="empty" hidden><strong>No discoveries under that name, yet.</strong><p>Try a different subject or clear your filters.</p><button type="button" id="reset">Show all topics</button></div>
+    </section>
+    <section id="medical" class="medical-band">
+      <div class="wrap medical-layout">
+        <div class="medical-copy">
+          <p class="kicker">SPECIAL RESEARCH ROOM / HUMAN HEALTH</p>
+          <h2>Medicine deserves more than a headline.</h2>
+          <p>Evercraft has built source-first workflows to discover PubMed literature, examine clinical-trial links, and prepare research review packets. That work is a research process, not proof that a treatment works.</p>
+          <a class="text-link" href="https://github.com/jgaethle10/forge-operator/tree/main/systemia/organism" target="_blank" rel="noopener noreferrer">Inspect the biomedical research code ↗</a>
+        </div>
+        <div class="medical-steps" aria-label="Biomedical research workflow">
+          <div><span>01 / FIND</span><strong>Original publications</strong><p>Search and preserve the source record, publication date, and identifiers.</p></div>
+          <div><span>02 / CHECK</span><strong>Trials, methods, limits</strong><p>Separate registered-trial metadata and abstracts from independently reviewed outcomes.</p></div>
+          <div><span>03 / REVIEW</span><strong>Publication stays gated</strong><p>Clinical conclusions require qualified independent review and editorial authorization.</p></div>
+          <p class="medical-disclaimer">Educational research catalog only. No diagnosis, treatment guidance, verified cure claims, or patient data are provided here.</p>
+        </div>
+      </div>
+    </section>
+    <section id="method" class="method wrap">
+      <div class="section-header">
+        <div><p class="kicker">HOW THE LAB WORKS</p><h2>Wonder, then verify.</h2><p class="sub">We want science to feel exciting without blurring the line between an idea and a result.</p></div>
+      </div>
+      <div class="method-grid">
+        <article><div class="method-number">01 / QUESTION</div><h3>Start with curiosity.</h3><p>What do we want to understand? What would change our minds?</p></article>
+        <article><div class="method-number">02 / EVIDENCE</div><h3>Open the trail.</h3><p>Source links, research code, experiment records, and named limitations.</p></article>
+        <article><div class="method-number">03 / STATUS</div><h3>Show what's real.</h3><p>Distinguish public explorations, code-stage work, and exploratory branches.</p></article>
+        <article><div class="method-number">04 / NEXT</div><h3>Keep asking.</h3><p>Every topic includes an unresolved question worth investigating next.</p></article>
+      </div>
+    </section>
+    <section id="sources" class="source-band">
+      <div class="wrap source-layout">
+        <div><p class="kicker">THE SOURCE DESK</p><h2>Don't just take our word for it.</h2><p>Explore the original evidence providers and Evercraft's public code. The atlas is a curated directory, not a live scientific results dashboard.</p></div>
+        <div class="source-links">
+          <a href="https://pubmed.ncbi.nlm.nih.gov/" target="_blank" rel="noopener noreferrer">PubMed <span>Biomedical literature ↗</span></a>
+          <a href="https://clinicaltrials.gov/" target="_blank" rel="noopener noreferrer">ClinicalTrials.gov <span>Clinical trial registry ↗</span></a>
+          <a href="https://www.usgs.gov/" target="_blank" rel="noopener noreferrer">U.S. Geological Survey <span>Earth science ↗</span></a>
+          <a href="https://github.com/jgaethle10/forge-operator" target="_blank" rel="noopener noreferrer">Evercraft source repository <span>Code and provenance ↗</span></a>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer><div class="wrap foot"><div><strong>AIDEN'S LAB <span>✳</span></strong><p>Curiosity belongs to everybody. An Evercraft LLC science initiative.</p></div><p>Public research exploration, not medical advice or verified scientific endorsement. © 2026 Evercraft LLC.</p></div></footer>
+  <dialog id="topicDialog" aria-labelledby="dialogTitle">
+    <div class="dialog-shell">
+      <button type="button" id="dialogClose" class="close" aria-label="Close topic details">✕</button>
+      <p id="dialogCategory" class="kicker"></p>
+      <div class="dialog-icon" id="dialogIcon" aria-hidden="true"></div>
+      <h2 id="dialogTitle"></h2>
+      <p class="dialog-lead" id="dialogIntro"></p>
+      <div class="fact"><span>THE BIG QUESTION</span><p id="dialogQuestion"></p></div>
+      <div class="fact"><span>WHAT WE CAN ACTUALLY POINT TO</span><p id="dialogEvidence"></p></div>
+      <div class="fact"><span>WHAT'S STILL OPEN</span><p id="dialogOpen"></p></div>
+      <div class="dialog-sources"><h3>Follow the evidence</h3><div id="dialogLinks"></div></div>
+      <p class="dialog-footer">These links document sources or existing work. They do not by themselves prove a scientific result, commercial readiness, or a live service.</p>
+    </div>
+  </dialog>
+</body>
+</html>
