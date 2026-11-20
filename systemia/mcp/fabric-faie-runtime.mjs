@@ -6,6 +6,7 @@ import { createFaieRuntime } from '../faie/runtime.mjs';
 import { faieCollectorConfigFromEnv } from '../faie/collectors.mjs';
 import { collectUsdaSoilAtPoint } from '../faie/soil-source.mjs';
 import { buildFaieSiteScan } from '../faie/site-scan.mjs';
+import { collectFemaFloodAtPoint } from '../faie/fema-flood-point.mjs';
 import { collectYakimaHistoricalClimate, eligibleYakimaClimatePoint } from '../faie/ncei-climate-history.mjs';
 import {
   executeFaieMcpRpc,
@@ -141,6 +142,9 @@ export function createFabricFaieSurface({
   const climateClientLimit=createFixedWindowLimiter({limit:2,windowMs:60_000});
   const climateGlobalLimit=createFixedWindowLimiter({limit:8,windowMs:60_000});
   let climateInFlight=0;
+  const floodClientLimit=createFixedWindowLimiter({limit:4,windowMs:60_000});
+  const floodGlobalLimit=createFixedWindowLimiter({limit:12,windowMs:60_000});
+  let floodInFlight=0;
 
   function health(){
     const runtimeHealth=faieRuntime.health();
@@ -282,6 +286,47 @@ export function createFabricFaieSurface({
         return true;
       }
       sendJson(res,200,response,{'access-control-allow-origin':'*'});
+      return true;
+    }
+
+    if(req.method==='POST'&&pathname==='/api/faie/flood/preview'){
+      const globalAllowance=floodGlobalLimit({headers:{},socket:{remoteAddress:'all-public-flood-visitors'}});
+      const clientAllowance=floodClientLimit(req);
+      if(!globalAllowance.ok||!clientAllowance.ok){
+        sendJson(res,429,{ok:false,error:'flood_preview_rate_limited'},
+          {'retry-after':String(Math.max(globalAllowance.retry_after,clientAllowance.retry_after))});
+        return true;
+      }
+      if(floodInFlight>=2){
+        sendJson(res,503,{ok:false,error:'flood_preview_busy_try_later'});
+        return true;
+      }
+      let body;
+      try{body=await readJson(req,{maxBytes:1024});}
+      catch{
+        sendJson(res,400,{ok:false,error:'invalid_flood_preview_input'});
+        return true;
+      }
+      const latitudeText=String(body?.latitude??'').trim();
+      const longitudeText=String(body?.longitude??'').trim();
+      const latitude=Number(latitudeText),longitude=Number(longitudeText);
+      if(!latitudeText||!longitudeText||!Number.isFinite(latitude)||!Number.isFinite(longitude)||
+         latitude<24||latitude>50||longitude< -125||longitude> -66){
+        sendJson(res,400,{ok:false,error:'Enter a valid explicit point within the contiguous United States.'});
+        return true;
+      }
+      floodInFlight++;
+      try{
+        const result=await collectFemaFloodAtPoint({
+          latitude,longitude,fetchImpl,retrievedAt:new Date().toISOString()
+        });
+        sendJson(res,200,result);
+      }catch{
+        sendJson(res,502,{
+          ok:false,error:'Official FEMA effective flood zone could not be verified; no safety result was inferred.',
+          request_persisted:false
+        });
+      }finally{floodInFlight--}
       return true;
     }
 

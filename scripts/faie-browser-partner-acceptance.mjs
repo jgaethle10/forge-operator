@@ -80,6 +80,14 @@ try{
     return response.status;
   });
   mark('historical_climate_requires_explicit_point',invalidClimateHttp===400);
+  mark('fema_flood_preview_is_opt_in',await page.locator('#femaFloodRun').isVisible());
+  const invalidFemaHttp=await page.evaluate(async()=>{
+    const response=await fetch('/api/faie/flood/preview',{
+      method:'POST',headers:{'content-type':'application/json'},body:'{}'
+    });
+    return response.status;
+  });
+  mark('fema_flood_requires_explicit_point',invalidFemaHttp===400);
   await page.locator('#siteScanExample').click();
   await page.locator('#siteScanResult .site-scan-scaffold').waitFor({timeout:47000});
   const scanText=await page.locator('#siteScanResult').innerText();

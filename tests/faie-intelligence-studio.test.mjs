@@ -210,3 +210,17 @@ test('historical land preservation is a first-class sourced, read-only regional 
   assert.match(html,/Exact public visitor scan locations are not automatically saved/);
   assert.match(html,/This is an incomplete archive/);
 });
+
+
+test('optional FEMA hazard view explains mapped data, missing coverage, and no insurance decision', () => {
+  for(const marker of [
+    'id="femaFloodPanel"', 'id="femaFloodRun"', 'id="femaFloodResult"',
+    'id="femaFloodDownload"', '/api/faie/flood/preview',
+    'Check official FEMA flood maps', 'FEMA effective flood-map evidence',
+    'FIRM panel', 'Mapped flood-zone polygon intersects this point',
+    'No effective flood-hazard polygon was returned',
+    'Not an insurance quote', 'No returned polygon does not mean',
+    'insurance_eligibility_decision!==null',
+    'evercraft-faie-fema-flood-map.json'
+  ]) assert.ok(html.includes(marker),'FEMA map UX proof missing: '+marker);
+});

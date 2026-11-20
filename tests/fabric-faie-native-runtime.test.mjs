@@ -99,6 +99,12 @@ test('owned Fabric serves FAIE UI, public preview API, and native FAIE MCP witho
     assert.match(page,/id="siteScanExample"/);
     assert.match(page,/id="siteScanResult"/);
     assert.match(page,/id="siteScanDownload"/);
+    assert.match(page,/id="femaFloodRun"/);
+    assert.match(page,/id="femaFloodResult"/);
+    const emptyFlood=await fetch(runtime.url+'/api/faie/flood/preview',{
+      method:'POST',headers:{'content-type':'application/json'},body:'{}'
+    });
+    assert.equal(emptyFlood.status,400,'FEMA flood preview rejects coordinates not explicitly supplied');
     assert.match(page,/id="historicalClimateRun"/);
     assert.match(page,/id="historicalClimateResult"/);
     const absentSite=await fetch(runtime.url+'/api/faie/site/scan',{
