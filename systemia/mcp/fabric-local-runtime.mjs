@@ -3,6 +3,7 @@ import { buyerOrderKey, verifyNativePaymentReturn } from './payment-return.mjs';
 import { publicPaymentOffer } from './public-payment-offers.mjs';
 import {renderForensiScopeBuyerPage} from './forensiscope-sales-page.mjs';
 import { ownedPaymentTransportConfig } from './owned-payment-transport.mjs';
+import {createWingCourierFabricProxy} from '../wing-courier/fabric-proxy.mjs';
 import http from 'node:http';
 import crypto from 'node:crypto';
 import fs from 'node:fs';
@@ -425,7 +426,9 @@ export async function startFabricLocalRuntime({
   closeoutLeadsDir=process.env.EVERCRAFT_CLOSEOUT_LEADS_DIR||'',
   closeoutNotify=null,
   closeoutRecipient=process.env.EVERCRAFT_STUDIO_RELAY_OWNER_PRINCIPAL||'',
+  wingCourierRouteEnabled=process.env.EVERCRAFT_WING_COURIER_ROUTE_ENABLED==='1',
 }={}) {
+  const wingCourierProxy=createWingCourierFabricProxy({enabled:wingCourierRouteEnabled});
   const instanceId='fabric_local_'+crypto.randomBytes(10).toString('hex');
   const resolvedReleaseRefFile=String(
     releaseRefFile||
@@ -815,6 +818,12 @@ export async function startFabricLocalRuntime({
         if(req.method==='HEAD')return res.end();
         return res.end(payload);
       }
+
+      // Private, optional department-to-department envelope relay over the
+      // already-owned Fabric HTTPS frontend. Disabled without an explicit
+      // owner-local flag; exact scoped routes and broker auth are enforced in
+      // Wing Courier. Never turns a package into publish/send authority.
+      if(await wingCourierProxy.handle(req,res))return;
 
       // Public-safe availability signal. Hides unconfigured intake before a
       // buyer tries to submit PII. Never exposes paths, key, identity or volume.

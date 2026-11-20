@@ -34,9 +34,9 @@ export function evaluateWingResidentConfig({configPath,wingExpected='fallen'}={}
  if(cfg?.wing!==wingExpected||!['fallen','harbor'].includes(wingExpected))
   throw Error('wing_resident_scope_mismatch');
  const url=new URL(cfg.baseUrl);
- if(url.protocol!=='https:'||url.username||url.password||
-   url.search||url.hash||url.pathname!=='/'||
-   url.hostname==='localhost'||url.hostname==='127.0.0.1')
+ if(url.protocol!=='https:'||url.origin!=='https://fabric.systemiacommandcenters.com'||
+   url.username||url.password||url.search||url.hash||
+   url.pathname.replace(/\/+$/,'')!=='/api/internal/wing-courier')
    throw Error('wing_resident_requires_owned_https');
  for(const key of ['receiveTokenFile','receiverPrivateKeyFile','receiverSigningKeyFile'])
   requiredFile(cfg[key],{secret:true});
