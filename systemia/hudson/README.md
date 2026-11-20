@@ -75,3 +75,7 @@ HUDSON v2 includes a first-party 2D canvas behind the SVG topology for a low-cos
 ## Exact visual-release admission
 
 Following the mobile v2 merge, the public external canary additionally requires the version marker `hudson-release=v2-mobile-cinematic`, the first-party atmospheric canvas, and the `Next story` control. A healthy **legacy** HUDSON page now fails public v2 verification even if the previous Git-source feed and health endpoints are reachable. This is a deployed-visual-surface proof, not an attestation of the exact running server SHA or private HUDSON memory. The marker is HTML-only and has no operator secrets.
+
+## Owned runtime version diagnosis
+
+The public external canary also captures only the already-public Fabric health `source_release_ref` (validated 40–64-character lowercase hex) and `source_release_ref_bound` flag. A null/unbound value remains UNKNOWN, not a negative proof. This identifies the **running process release marker captured at boot**, making it possible to distinguish an older resident process from an old static HTML artifact. No runtime credentials, instance identity, internal private file paths, or operator data are copied to the public canary receipt. A valid source marker is diagnostic metadata and not an independently signed release attestation.
