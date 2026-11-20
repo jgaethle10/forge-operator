@@ -247,6 +247,29 @@ html.seattle-mode .sky-haze{
  background:linear-gradient(180deg,#c2dce910 5%,transparent 31%,#e8bc8a24 55%,#f1d4ae12 75%,transparent 93%)
 }
 </style>
+<style id="aaar-vista-portrait-hud-v14">
+/* Flight School Vista: do not bury Sky Passport beneath phone instruments.
+ * Keep the challenge visible but compact, and leave the flight scene as the hero.
+ */
+@media (max-width:750px) and (orientation:portrait){
+ .seattle-mode .flight-shell.touch-cockpit #skyQuest{
+  top:calc(124px + env(safe-area-inset-top,0px));
+  bottom:auto;left:50%;right:auto;
+  transform:translateX(-50%);
+  width:min(275px,calc(100vw - 34px));
+  max-width:calc(100vw - 34px);min-width:0;
+  padding:5px 9px;gap:1px;
+  border-radius:9px;
+  background:#051e2edb;
+ }
+ .seattle-mode .flight-shell.touch-cockpit #skyQuest strong{
+  font-size:8px;letter-spacing:.07em;white-space:nowrap;
+ }
+ .seattle-mode .flight-shell.touch-cockpit #skyQuest span{
+  font-size:8px;line-height:1.35;white-space:normal;
+ }
+}
+</style>
 <style id="aaar-sky-passport-style">
 #skyQuest{display:none;position:absolute;bottom:96px;left:50%;transform:translateX(-50%);z-index:2;padding:8px 12px;min-width:245px;max-width:330px;pointer-events:none;background:#061927bf;border:1px solid #c6eac16c;border-radius:10px;box-shadow:0 8px 32px #001b2a78;backdrop-filter:blur(12px);text-align:center;line-height:1.5}
 .seattle-mode #skyQuest{display:flex;flex-direction:column;gap:1px}
