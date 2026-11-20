@@ -1,0 +1,23 @@
+{
+  "schema": "evercraft.site-planner.stripe-catalog-snapshot.v1",
+  "merchant_name": "Evercraft LLC",
+  "stripe_account_id": "acct_1U0wDm5rgRECaZMD",
+  "livemode": true,
+  "product_key": "evercraft-site-planner-concept-pilot-v1",
+  "product_id": "prod_Vf1uyMq3FiZRfB",
+  "price_id": "price_1Udhqa5rgRECaZMDsK7sstdv",
+  "payment_link_id": "plink_1UdhsM5rgRECaZMDczQW5JTr",
+  "price_currency": "usd",
+  "unit_amount_cents": 49900,
+  "price_status": "provisional_founding_pilot",
+  "product_active_at_verification": false,
+  "payment_link_active_at_verification": false,
+  "managed_payments_enabled": false,
+  "automatic_tax_enabled": false,
+  "tax_classification_review_required": true,
+  "supported_scope": "One property, non-stamped EV charger placement/circulation concept, one preliminary PDF and one revision; no survey, stamped engineering or permit approval",
+  "checkout_configured_for_site_planner": false,
+  "payment_verification_connected": false,
+  "fulfillment_release_allowed": false,
+  "notes": "Read-only record of verified live Stripe objects. This JSON is NOT a payment receipt, real-time Stripe status, authorization to publish, or evidence that an order has been paid."
+}
