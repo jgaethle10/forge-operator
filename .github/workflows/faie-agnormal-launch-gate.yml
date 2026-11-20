@@ -12,6 +12,7 @@ on:
       - 'scripts/faie-partner-end-to-end.mjs'
       - 'scripts/faie-soil-live-acceptance.mjs'
       - 'scripts/faie-site-scan-live-acceptance.mjs'
+      - 'scripts/faie-climate-live-acceptance.mjs'
       - '.github/workflows/faie-agnormal-launch-gate.yml'
       - 'tests/faie-agnormal-external-canary-contract.test.mjs'
   workflow_dispatch:
@@ -212,6 +213,33 @@ jobs:
           done
           test "$(jq -r '.state' artifacts/faie-site-scan-live-acceptance.json)" = 'OFFICIAL_TWO_SOURCE_SITE_SCAN_VERIFIED'
 
+      - name: Verify official NOAA historical station observations on the public edge
+        id: climate_history
+        shell: bash
+        run: |
+          set -euo pipefail
+          for attempt in $(seq 1 4); do
+            set +e
+            node scripts/faie-climate-live-acceptance.mjs > artifacts/faie-climate-live-acceptance.json
+            status=$?
+            set -e
+            if [ "$status" -eq 0 ]; then
+              cat artifacts/faie-climate-live-acceptance.json
+              break
+            fi
+            stage="$(jq -r '.stage_failed // ""' artifacts/faie-climate-live-acceptance.json)"
+            error="$(jq -r '.error // ""' artifacts/faie-climate-live-acceptance.json)"
+            if [ "$attempt" -lt 4 ] && [ "$stage" = "official_station_history" ] && \
+              { [[ "$error" == *"_http_404"* || "$error" == *"_http_429"* || "$error" == *"_http_502"* || "$error" == *"_http_503"* || "$error" == *"fetch failed"* || "$error" == *"TimeoutError"* ]]; }; then
+              echo "NOAA archive edge unavailable or not converged: $error ($attempt/4)."
+              sleep 35
+              continue
+            fi
+            cat artifacts/faie-climate-live-acceptance.json >&2
+            exit "$status"
+          done
+          test "$(jq -r '.state' artifacts/faie-climate-live-acceptance.json)" = 'OFFICIAL_NOAA_STATION_HISTORY_VERIFIED'
+
       - name: Publish FAIE launch status
         if: always()
         env:
@@ -221,15 +249,16 @@ jobs:
           BROWSER_OUTCOME: ${{ steps.browser.outcome }}
           SOIL_OUTCOME: ${{ steps.soil.outcome }}
           SITE_SCAN_OUTCOME: ${{ steps.site_scan.outcome }}
+          CLIMATE_OUTCOME: ${{ steps.climate_history.outcome }}
         shell: bash
         run: |
           set -euo pipefail
-          if [ "$VERIFY_OUTCOME" = "success" ] && [ "$PARTNER_OUTCOME" = "success" ] && [ "$BROWSER_OUTCOME" = "success" ] && [ "$SOIL_OUTCOME" = "success" ] && [ "$SITE_SCAN_OUTCOME" = "success" ]; then
+          if [ "$VERIFY_OUTCOME" = "success" ] && [ "$PARTNER_OUTCOME" = "success" ] && [ "$BROWSER_OUTCOME" = "success" ] && [ "$SOIL_OUTCOME" = "success" ] && [ "$SITE_SCAN_OUTCOME" = "success" ] && [ "$CLIMATE_OUTCOME" = "success" ]; then
             state="success"
-            description="FAIE source-linked regional + real NWS/USDA site scan verified"
+            description="FAIE regional, NWS/USDA site and NCEI observed history verified"
           else
             state="failure"
-            stage="verify=$VERIFY_OUTCOME partner=$PARTNER_OUTCOME browser=$BROWSER_OUTCOME soil=$SOIL_OUTCOME site=$SITE_SCAN_OUTCOME"
+            stage="verify=$VERIFY_OUTCOME partner=$PARTNER_OUTCOME browser=$BROWSER_OUTCOME soil=$SOIL_OUTCOME site=$SITE_SCAN_OUTCOME climate=$CLIMATE_OUTCOME"
             error="$(jq -r '.error // "verification_failed"' artifacts/faie-partner-end-to-end.json 2>/dev/null || echo verification_failed)"
             description="FAIE launch failure: ${stage} (${error})"
             description="${description:0:140}"
@@ -248,5 +277,6 @@ jobs:
             artifacts/faie-browser-partner-acceptance.json
             artifacts/faie-soil-live-acceptance.json
             artifacts/faie-site-scan-live-acceptance.json
+            artifacts/faie-climate-live-acceptance.json
           if-no-files-found: error
           retention-days: 90
