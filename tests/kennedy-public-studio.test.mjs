@@ -30,6 +30,14 @@ test('Kennedy studio has responsive drawing tools and reversible placements', ()
   assert.match(studio, /id="evidence"/);
   assert.match(studio, /id="draftSave"/);
   assert.match(studio, /id="draftLoad"/);
+  assert.match(studio, /id="sourceReadiness"/);
+  for(const name of ['site','context']){
+    for(const field of ['Provider','Reference','Captured','Rights'])
+      assert.ok(studio.includes('id="'+name+field+'"'),name+field);
+  }
+  assert.match(studio, /independent_rights_verification:false/);
+  assert.match(studio, /geographic_registration_verified:false/);
+  assert.match(studio, /production_plan_release_allowed:false/);
   assert.match(studio, /href="[.][.]\/"/);
 });
 
