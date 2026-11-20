@@ -89,6 +89,7 @@ test('Fallen preview QC and separate media message release are mandatory',()=>{
  f.fallenGate=fixture().fallenGate;delete f.previewSendRequest;
  assert.equal(stage(f),'AWAITING_RELEASE_REVIEW');
  f.previewSendRequest=fixture().previewSendRequest;
+ delete f.providerPreview; // pre-send guard, no alleged provider success yet
  f.previewSendRequest.review.independentReviewerId=f.assignment.producerId;
  assert.equal(stage(f),'PREVIEW_RELEASE_HELD');
 });
