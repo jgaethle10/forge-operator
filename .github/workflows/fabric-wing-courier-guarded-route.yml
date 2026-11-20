@@ -1,0 +1,38 @@
+name: Fabric Wing Courier guarded owned route
+on:
+  pull_request:
+    paths:
+      - 'systemia/mcp/fabric-wing-courier-route.mjs'
+      - 'systemia/mcp/fabric-wing-courier-route.test.mjs'
+      - 'systemia/mcp/fabric-local-runtime.mjs'
+      - 'systemia/wing-courier/client.mjs'
+      - 'systemia/wing-courier/install-resident.mjs'
+      - 'systemia/wing-courier/install-resident.test.mjs'
+      - '.github/workflows/fabric-wing-courier-guarded-route.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/mcp/fabric-wing-courier-route.mjs'
+      - 'systemia/mcp/fabric-wing-courier-route.test.mjs'
+      - '.github/workflows/fabric-wing-courier-guarded-route.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  gated-courier-path:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prove disabled-by-default Fabric routes and encrypted wing transfer with signed ACK
+        run: |
+          node --test systemia/mcp/fabric-wing-courier-route.test.mjs \
+            systemia/wing-courier/install-resident.test.mjs \
+            systemia/wing-courier/wing-courier.test.mjs
+      - name: Typecheck existing workspace
+        run: |
+          npm install --no-audit --no-fund
+          npm run lint
