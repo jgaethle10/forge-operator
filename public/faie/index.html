@@ -1130,9 +1130,9 @@ function renderFemaFlood(result){
   if(panels.length){
     html+='<p><strong>FIRM panel:</strong> '+esc(panels[0].firm_panel||'Not stated')+' · effective date '+esc(panels[0].effective_date||'unknown')+'</p>';
   }else html+='<p>FIRM panel context was not confirmed. Check FEMA Map Service Center before acting.</p>';
-  html+='<p>**Not an insurance quote:** FEMA's map cannot establish private insurer premiums, coverage, insurability, or parcel safety. Local surface-water flooding may occur outside mapped zones.</p>';
+  html+='<p><strong>Not an insurance quote:</strong> FEMA mapping cannot establish private insurer premiums, coverage, insurability, or parcel safety. Local surface-water flooding may occur outside mapped zones.</p>';
   html+='<p><a href="https://msc.fema.gov/portal/home" target="_blank" rel="noopener noreferrer">Open official FEMA Map Service Center ↗</a></p>';
-  return html.replace('**Not an insurance quote:**','<strong>Not an insurance quote:</strong>');
+  return html;
 }
 async function runFemaFlood(){
   const button=document.getElementById('femaFloodRun');
