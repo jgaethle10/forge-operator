@@ -543,14 +543,14 @@ const shell=$('flightShell'); let canvas=$('flightCanvas');
 const mobileInput=()=>window.matchMedia?.('(pointer:coarse)').matches || window.innerWidth<=750;
 const syncMobileMode=()=>{shell.classList.toggle('touch-cockpit',!!mobileInput());if(shell.classList.contains('touch-cockpit')&&!shell.dataset.hud)shell.dataset.hud='compact';};syncMobileMode();
 window.addEventListener('resize',syncMobileMode);
-const opts={alpha:true,antialias:false,depth:true,powerPreference:'low-power',preserveDrawingBuffer:false};
+const opts={alpha:true,antialias:true,depth:true,powerPreference:'high-performance',preserveDrawingBuffer:false};
 // The phone path deliberately uses Canvas2D, avoiding WebGL driver and iOS preview failures.
 // Desktop WebGL2 remains optional. Flight equations are the same in both renderers.
 const preferSoftware=window.matchMedia?.('(pointer:coarse)').matches || window.innerWidth <= 650;
 let gl=null;
 try{if(!preferSoftware)gl=canvas.getContext('webgl2',opts);}catch{gl=null;}
 
-let program=null,meshes={},uVP,uModel,uFog,aPos,aCol;
+let program=null,meshes={},uVP,uModel,uFog,uTime,aPos,aCol,aSurface;
 const identity=()=>[1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1];
 function mul(a,b){const o=new Float32Array(16);for(let c=0;c<4;c++)for(let r=0;r<4;r++){let v=0;for(let k=0;k<4;k++)v+=a[k*4+r]*b[c*4+k];o[c*4+r]=v;}return o;}
 function perspective(fov,aspect,near,far){const f=1/Math.tan(fov/2),nf=1/(near-far);return [f/aspect,0,0,0, 0,f,0,0, 0,0,(far+near)*nf,-1, 0,0,2*far*near*nf,0];}
@@ -561,19 +561,19 @@ function lookAt(eye,center,up){const z=norm(sub(eye,center)),x=norm(cross(up,z))
 function shader(kind,source){const s=gl.createShader(kind);gl.shaderSource(s,source);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw Error(gl.getShaderInfoLog(s));return s;}
 function initGL(){
  if(!gl)throw Error(THREE_NEEDED);
- const vs=shader(gl.VERTEX_SHADER,`#version 300 es\nin vec3 aPos; in vec3 aColor; uniform mat4 uVP;uniform mat4 uModel;out vec3 vColor;out float vDepth;void main(){vec4 p=uModel*vec4(aPos,1.0);gl_Position=uVP*p;vColor=aColor;vDepth=gl_Position.w;}`);
- const fs=shader(gl.FRAGMENT_SHADER,`#version 300 es\nprecision mediump float;in vec3 vColor;in float vDepth;uniform vec3 uFog;out vec4 frag;void main(){float f=smoothstep(1400.0,7900.0,vDepth);frag=vec4(mix(vColor,uFog,f),1.0);}`);
+ const vs=shader(gl.VERTEX_SHADER,"#version 300 es\nin vec3 aPos;\nin vec3 aColor;\nin float aSurface;\nuniform mat4 uVP;\nuniform mat4 uModel;\nout vec3 vColor;\nout vec3 vWorld;\nout float vDepth;\nflat out float vSurface;\nvoid main(){\n vec4 p=uModel*vec4(aPos,1.0);\n gl_Position=uVP*p;\n vColor=aColor;\n vWorld=p.xyz;\n vDepth=gl_Position.w;\n vSurface=aSurface;\n}");
+ const fs=shader(gl.FRAGMENT_SHADER,"#version 300 es\nprecision highp float;\nin vec3 vColor;\nin vec3 vWorld;\nin float vDepth;\nflat in float vSurface;\nuniform vec3 uFog;\nuniform float uTime;\nout vec4 frag;\nfloat windowsNoise(vec2 p){return fract(sin(dot(p,vec2(12.9898,78.233)))*43758.5453);}\nvoid main(){\n vec3 normal=normalize(cross(dFdx(vWorld),dFdy(vWorld)));\n if(!gl_FrontFacing)normal=-normal;\n vec3 sun=normalize(vec3(-0.49,0.83,0.31));\n float diffuse=max(dot(normal,sun),0.0);\n float light=0.59+0.41*diffuse;\n vec3 color=vColor*light;\n if(vSurface>0.5&&vSurface<1.5){\n  float wall=1.0-step(0.58,abs(normal.y));\n  float horizontal=abs(normal.x)>abs(normal.z)?vWorld.z:vWorld.x;\n  vec2 cell=vec2(horizontal/7.8,vWorld.y/8.4);\n  vec2 uv=fract(cell);\n  float pane=step(0.18,uv.x)*(1.0-step(0.84,uv.x))\n          *step(0.18,uv.y)*(1.0-step(0.87,uv.y));\n  float lighting=windowsNoise(floor(cell));\n  vec3 glass=mix(vec3(0.055,0.16,0.23),vec3(0.31,0.43,0.47),step(0.86,lighting));\n  color=mix(color,glass,pane*wall*0.80);\n  float reflection=pow(max(dot(normal,normalize(vec3(0.20,0.45,0.88))),0.0),3.0);\n  color+=vec3(0.08,0.12,0.14)*wall*reflection;\n } else if(vSurface>1.5&&vSurface<2.5){\n  float wave=sin(vWorld.x*0.035+uTime*0.42)*sin(vWorld.z*0.048-uTime*0.35);\n  float glint=pow(max(0.0,sin(vWorld.x*0.071+uTime*0.27)*sin(vWorld.z*0.037)),8.0);\n  color=mix(color,vec3(0.14,0.42,0.56),0.45+0.12*wave);\n  color+=vec3(0.24,0.26,0.21)*glint*0.25;\n }else if(vSurface>2.5&&vSurface<3.5){\n  color*=0.87;\n }\n float haze=smoothstep(650.0,9200.0,vDepth);\n color=mix(color,uFog,haze*0.90);\n color=pow(max(color,vec3(0.0)),vec3(0.94));\n frag=vec4(clamp(color,0.0,1.0),1.0);\n}");
  program=gl.createProgram();gl.attachShader(program,vs);gl.attachShader(program,fs);gl.linkProgram(program);
  if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw Error(gl.getProgramInfoLog(program));
- gl.useProgram(program);uVP=gl.getUniformLocation(program,'uVP');uModel=gl.getUniformLocation(program,'uModel');uFog=gl.getUniformLocation(program,'uFog');aPos=gl.getAttribLocation(program,'aPos');aCol=gl.getAttribLocation(program,'aColor');
+ gl.useProgram(program);uVP=gl.getUniformLocation(program,'uVP');uModel=gl.getUniformLocation(program,'uModel');uFog=gl.getUniformLocation(program,'uFog');aPos=gl.getAttribLocation(program,'aPos');aCol=gl.getAttribLocation(program,'aColor');aSurface=gl.getAttribLocation(program,'aSurface');uTime=gl.getUniformLocation(program,'uTime');
  gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LEQUAL);gl.disable(gl.CULL_FACE);
  gl.uniform3fv(uFog,new Float32Array([.72,.80,.76]));buildMeshes();
 }
-function builder(){const verts=[];function tri(a,b,c,color){for(const v of [a,b,c])verts.push(v[0],v[1],v[2],...color);}function quad(a,b,c,d,color){tri(a,b,c,color);tri(a,c,d,color);}function box(x,y,z,wx,wy,wz,color){const A=[x-wx/2,y-wy/2,z-wz/2],B=[x+wx/2,y-wy/2,z-wz/2],C=[x+wx/2,y+wy/2,z-wz/2],D=[x-wx/2,y+wy/2,z-wz/2],E=[x-wx/2,y-wy/2,z+wz/2],F=[x+wx/2,y-wy/2,z+wz/2],G=[x+wx/2,y+wy/2,z+wz/2],H=[x-wx/2,y+wy/2,z+wz/2];quad(A,B,C,D,color);quad(E,H,G,F,color);quad(D,C,G,H,color.map(x=>x*.85));quad(A,E,F,B,color.map(x=>x*.7));quad(B,F,G,C,color.map(x=>x*.9));quad(A,D,H,E,color.map(x=>x*.78));}
-function cone(x,y,z,r,h,color){const sides=7;for(let i=0;i<sides;i++){let t=i*2*Math.PI/sides,n=(i+1)*2*Math.PI/sides;tri([x+r*Math.cos(t),y,z+r*Math.sin(t)],[x,y+h,z],[x+r*Math.cos(n),y,z+r*Math.sin(n)],color.map(x=>x*(.83+.17*i/sides)));}}
-function upload(){const v=new Float32Array(verts),b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);gl.bufferData(gl.ARRAY_BUFFER,v,gl.STATIC_DRAW);return{buffer:b,count:v.length/6};}
+function builder(){const verts=[];function tri(a,b,c,color,surface=0){for(const v of [a,b,c])verts.push(v[0],v[1],v[2],...color,surface);}function quad(a,b,c,d,color,surface=0){tri(a,b,c,color,surface);tri(a,c,d,color,surface);}function box(x,y,z,wx,wy,wz,color,surface=0){const A=[x-wx/2,y-wy/2,z-wz/2],B=[x+wx/2,y-wy/2,z-wz/2],C=[x+wx/2,y+wy/2,z-wz/2],D=[x-wx/2,y+wy/2,z-wz/2],E=[x-wx/2,y-wy/2,z+wz/2],F=[x+wx/2,y-wy/2,z+wz/2],G=[x+wx/2,y+wy/2,z+wz/2],H=[x-wx/2,y+wy/2,z+wz/2];quad(A,B,C,D,color,surface);quad(E,H,G,F,color,surface);quad(D,C,G,H,color.map(x=>x*.85),surface);quad(A,E,F,B,color.map(x=>x*.7),surface);quad(B,F,G,C,color.map(x=>x*.9),surface);quad(A,D,H,E,color.map(x=>x*.78),surface);}
+function cone(x,y,z,r,h,color,surface=0){const sides=7;for(let i=0;i<sides;i++){let t=i*2*Math.PI/sides,n=(i+1)*2*Math.PI/sides;tri([x+r*Math.cos(t),y,z+r*Math.sin(t)],[x,y+h,z],[x+r*Math.cos(n),y,z+r*Math.sin(n)],color.map(x=>x*(.83+.17*i/sides)),surface);}}
+function upload(){const v=new Float32Array(verts),b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);gl.bufferData(gl.ARRAY_BUFFER,v,gl.STATIC_DRAW);return{buffer:b,count:v.length/7,triangles:v.length/21};}
 return {tri,quad,box,cone,upload};}
-function drawMesh(mesh,model){gl.bindBuffer(gl.ARRAY_BUFFER,mesh.buffer);gl.enableVertexAttribArray(aPos);gl.vertexAttribPointer(aPos,3,gl.FLOAT,false,24,0);gl.enableVertexAttribArray(aCol);gl.vertexAttribPointer(aCol,3,gl.FLOAT,false,24,12);gl.uniformMatrix4fv(uModel,false,model);gl.drawArrays(gl.TRIANGLES,0,mesh.count);}
+function drawMesh(mesh,model){gl.bindBuffer(gl.ARRAY_BUFFER,mesh.buffer);gl.enableVertexAttribArray(aPos);gl.vertexAttribPointer(aPos,3,gl.FLOAT,false,28,0);gl.enableVertexAttribArray(aCol);gl.vertexAttribPointer(aCol,3,gl.FLOAT,false,28,12);gl.enableVertexAttribArray(aSurface);gl.vertexAttribPointer(aSurface,1,gl.FLOAT,false,28,24);gl.uniformMatrix4fv(uModel,false,model);gl.drawArrays(gl.TRIANGLES,0,mesh.count);}
 function buildMeshes(){
  const w=builder(),rad=core.constants.RAD,terrain=core.groundHeight;
  const cells=125,min=-6500,span=13000;
@@ -582,7 +582,7 @@ function buildMeshes(){
   const a=[x,terrain(x,z),z],b=[x+dx,terrain(x+dx,z),z],c=[x+dx,terrain(x+dx,z+dz),z+dz],d=[x,terrain(x,z+dz),z+dz];
   const avg=(a[1]+b[1]+c[1]+d[1])/4,water=seattle?seattle.water(x,z):Math.hypot((x+1250)/1000,(z-1450)/850)<1;
   const v=(Math.sin(x*.014+z*.009)*.5+.5),color=seattle?(water?[.10,.34,.48]:[.38+.07*v,.50+.05*v,.44]):water?[.15,.43,.50]:avg>270?[.48,.53,.48]:avg>110?[.31+.06*v,.46+.03*v,.37]:[.28+.08*v,.40+.08*v,.31+.025*v];
-  w.quad(a,b,c,d,color);
+  w.quad(a,b,c,d,color,water?2:0);
  }
  if(seattle)addSeattleWebGL(w);
  else{
@@ -658,6 +658,7 @@ function buildCustomMesh(design){
 }
 function planeModel(s){const c=Math.cos,b=Math.sin,cy=c(s.yaw),sy=b(s.yaw),cp=c(-s.pitch),sp=b(-s.pitch),cr=c(-s.bank),sr=b(-s.bank);const RY=[cy,0,-sy,0,0,1,0,0,sy,0,cy,0,0,0,0,1];const RX=[1,0,0,0,0,cp,sp,0,0,-sp,cp,0,0,0,0,1];const RZ=[cr,sr,0,0,-sr,cr,0,0,0,0,1,0,0,0,0,1];const T=identity();T[12]=s.x;T[13]=s.y;T[14]=s.z;return mul(mul(mul(T,RY),RX),RZ);}
 let fallback2D=false;
+window.AAARGraphicsMetrics=()=>({renderer:fallback2D?'canvas2d':gl?'webgl2':'canvas2d',lighting_pipeline:'flat-lit-glass-water-v10',shading_active:!!program&&!fallback2D,world_triangles:meshes.world?.triangles||0,seattle_building_count:seattle?.buildings.length||0,canvas_pixels:canvas.width*canvas.height});
 /* Native Canvas2D perspective fallback for restricted devices. No third-party rendering engine. */
 function drawCustom2D(ctx,w,h,d,bank){
  const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
@@ -911,7 +912,7 @@ function render(){
    eye=[state.x-ahead[0]*48,state.y+15-ahead[1]*12,state.z-ahead[2]*48];focus=[state.x+ahead[0]*45,state.y+ahead[1]*45+2,state.z+ahead[2]*45];up=[-Math.sin(state.bank)*.28,1,0];
  }
  const vp=mul(perspective(view==='cockpit'?78*Math.PI/180:70*Math.PI/180,canvas.width/canvas.height,.5,15000),lookAt(eye,focus,up));
- gl.useProgram(program);gl.uniformMatrix4fv(uVP,false,vp);drawMesh(meshes.world,identity());if(view!=='cockpit')drawMesh(meshes[state.craft],planeModel(state));
+ gl.useProgram(program);gl.uniformMatrix4fv(uVP,false,vp);gl.uniform1f(uTime,state.flightTime);drawMesh(meshes.world,identity());if(view!=='cockpit')drawMesh(meshes[state.craft],planeModel(state));
 }
 function hud(){const round=n=>Math.round(n).toLocaleString('en-US');$('speedOut').textContent=round(state.speed*1.94384);$('altOut').textContent=round(state.y*3.28084);$('headOut').textContent=String(Math.round((state.yaw*180/Math.PI+3600)%360)).padStart(3,'0');$('pitchOut').textContent=(state.pitch*180/Math.PI).toFixed(0);$('bankOut').textContent=(state.bank*180/Math.PI).toFixed(0);$('throttleOut').textContent=round(state.throttle*100);const slider=$('flightThrottleRange');if(slider&&document.activeElement!==slider)slider.value=String(Math.round(state.throttle*100));const lever=$('flightThrottleValue');if(lever)lever.textContent=round(state.throttle*100)+'%';$('pauseToggle').dataset.paused=String(state.paused);const sec=Math.floor(state.flightTime);$('flightTime').textContent='T+ '+String(Math.floor(sec/60)).padStart(2,'0')+':'+String(sec%60).padStart(2,'0');$('gateProgress').querySelectorAll('i').forEach((el,i)=>el.classList.toggle('done',i<state.checkpoints));const next=core.gates[state.checkpoints];$('nextGate').textContent=next?`NEXT: ${next.title} · ${state.checkpoints} / 3`:'MISSION COMPLETE · 3 / 3';$('flightStatus').textContent=state.condition==='BUILDING_CONTACT'?'CITY CONTACT':state.condition==='GROUND_CONTACT'?'GROUND CONTACT':state.paused?'PAUSED':state.craft==='custom'?'FOUNDRY FLIGHT / SCREENING':'SIMULATION ACTIVE';$('pauseToggle').textContent=state.paused?'▶ Resume':'Ⅱ Pause';$('cameraToggle').textContent=view==='chase'?'◉ Chase view':'◉ Cockpit view';}
 function controls(){const has=(...a)=>a.some(k=>held.has(k));const t=k=>touch.has(k);const limit=v=>Math.max(-1,Math.min(1,v));return {pitch:limit(stickInput.pitch+(has('w','arrowup')||t('pitchUp')?1:0)-(has('s','arrowdown')||t('pitchDown')?1:0)),bank:limit(stickInput.bank+(has('d','arrowright')||t('right')?1:0)-(has('a','arrowleft')||t('left')?1:0)),rudder:(has('e')?1:0)-(has('q')?1:0),throttle:(has('shift')||t('throttleUp')?1:0)-(has('control')||t('throttleDown')?1:0)};}
