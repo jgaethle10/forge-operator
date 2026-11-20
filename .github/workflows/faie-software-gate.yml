@@ -78,6 +78,7 @@ jobs:
           node --check scripts/faie-soil-live-acceptance.mjs
           node --check scripts/faie-climate-live-acceptance.mjs
           node --check scripts/faie-fema-flood-live-acceptance.mjs
+          node --check scripts/faie-nfip-wa-live-acceptance.mjs
 
       - name: FAIE USDA mapped soil public preview source, privacy and rate-limit tests
         run: node --test systemia/mcp/fabric-faie-soil-preview.test.mjs
@@ -99,6 +100,9 @@ jobs:
 
       - name: FAIE NFIP v3 state aggregate source, disclosure and completeness tests
         run: node --test systemia/faie/nfip-claims-v3.test.mjs
+
+      - name: FAIE NFIP statewide Fabric route, source bounds and privacy tests
+        run: node --test systemia/mcp/fabric-faie-nfip-history.test.mjs
 
       - name: FAIE Saban swarm proof
         run: npm run proof:saban-faie

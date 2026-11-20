@@ -14,6 +14,7 @@ on:
       - 'scripts/faie-site-scan-live-acceptance.mjs'
       - 'scripts/faie-climate-live-acceptance.mjs'
       - 'scripts/faie-fema-flood-live-acceptance.mjs'
+      - 'scripts/faie-nfip-wa-live-acceptance.mjs'
       - 'scripts/faie-land-history-live-acceptance.mjs'
       - '.github/workflows/faie-agnormal-launch-gate.yml'
       - 'tests/faie-agnormal-external-canary-contract.test.mjs'
@@ -296,6 +297,18 @@ jobs:
           done
           test "$(jq -r '.state' artifacts/faie-fema-flood-live-acceptance.json)" = 'OFFICIAL_FEMA_NFHL_POINT_VERIFIED'
 
+      - name: Verify actual FEMA NFIP Washington statewide historical claim aggregate from owned edge
+        id: nfip_area
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/faie-nfip-wa-live-acceptance.mjs > artifacts/faie-nfip-wa-live-acceptance.json || {
+            cat artifacts/faie-nfip-wa-live-acceptance.json >&2
+            exit 1
+          }
+          cat artifacts/faie-nfip-wa-live-acceptance.json
+          test "$(jq -r '.state' artifacts/faie-nfip-wa-live-acceptance.json)" = 'OFFICIAL_NFIP_WA_AREA_HISTORY_VERIFIED'
+
       - name: Publish FAIE launch status
         if: always()
         env:
@@ -308,15 +321,16 @@ jobs:
           CLIMATE_OUTCOME: ${{ steps.climate_history.outcome }}
           LAND_HISTORY_OUTCOME: ${{ steps.land_history.outcome }}
           FLOOD_OUTCOME: ${{ steps.fema_flood.outcome }}
+          NFIP_OUTCOME: ${{ steps.nfip_area.outcome }}
         shell: bash
         run: |
           set -euo pipefail
-          if [ "$VERIFY_OUTCOME" = "success" ] && [ "$PARTNER_OUTCOME" = "success" ] && [ "$BROWSER_OUTCOME" = "success" ] && [ "$SOIL_OUTCOME" = "success" ] && [ "$SITE_SCAN_OUTCOME" = "success" ] && [ "$CLIMATE_OUTCOME" = "success" ] && [ "$LAND_HISTORY_OUTCOME" = "success" ] && [ "$FLOOD_OUTCOME" = "success" ]; then
+          if [ "$VERIFY_OUTCOME" = "success" ] && [ "$PARTNER_OUTCOME" = "success" ] && [ "$BROWSER_OUTCOME" = "success" ] && [ "$SOIL_OUTCOME" = "success" ] && [ "$SITE_SCAN_OUTCOME" = "success" ] && [ "$CLIMATE_OUTCOME" = "success" ] && [ "$LAND_HISTORY_OUTCOME" = "success" ] && [ "$FLOOD_OUTCOME" = "success" ] && [ "$NFIP_OUTCOME" = "success" ]; then
             state="success"
-            description="FAIE sources, history and official FEMA flood map evidence verified"
+            description="FAIE official sources, archival history, FEMA NFHL and NFIP area data verified"
           else
             state="failure"
-            stage="verify=$VERIFY_OUTCOME partner=$PARTNER_OUTCOME browser=$BROWSER_OUTCOME soil=$SOIL_OUTCOME site=$SITE_SCAN_OUTCOME climate=$CLIMATE_OUTCOME archive=$LAND_HISTORY_OUTCOME flood=$FLOOD_OUTCOME"
+            stage="verify=$VERIFY_OUTCOME partner=$PARTNER_OUTCOME browser=$BROWSER_OUTCOME soil=$SOIL_OUTCOME site=$SITE_SCAN_OUTCOME climate=$CLIMATE_OUTCOME archive=$LAND_HISTORY_OUTCOME flood=$FLOOD_OUTCOME nfip=$NFIP_OUTCOME"
             error="$(jq -r '.error // "verification_failed"' artifacts/faie-partner-end-to-end.json 2>/dev/null || echo verification_failed)"
             description="FAIE launch failure: ${stage} (${error})"
             description="${description:0:140}"
@@ -338,5 +352,6 @@ jobs:
             artifacts/faie-climate-live-acceptance.json
             artifacts/faie-land-history-live-acceptance.json
             artifacts/faie-fema-flood-live-acceptance.json
+            artifacts/faie-nfip-wa-live-acceptance.json
           if-no-files-found: error
           retention-days: 90
