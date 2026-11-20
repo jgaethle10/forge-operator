@@ -15,7 +15,9 @@
 @media(max-width:850px){.foundry-main{grid-template-columns:1fr}.foundry-heading{align-items:flex-start;flex-direction:column}.foundry-flags{text-align:left}.foundry-frame{padding-bottom:90px}.foundry-plot{min-height:260px}.foundry-plot svg{height:270px}.foundry-top button{flex-shrink:0}}
 @media(max-width:450px){.foundry-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.foundry-panel{padding:14px}.foundry-formhead{grid-template-columns:1fr}.foundry-heading h2{font-size:44px}.foundry-actions button{flex:1}.foundry-frame{padding:12px 12px 75px}}
 
-</style></head><body>
+</style><style id="aaar-mobile-flight-fix">html,body{height:100%;height:100dvh;overscroll-behavior:none;-webkit-text-size-adjust:100%}.flight-shell{height:100vh;height:100dvh;min-height:0}#flightCanvas{touch-action:none;-webkit-user-select:none;user-select:none}
+@media(max-width:750px){.flight-shell{min-height:0}.flight-telemetry,.hud-side{top:calc(58px + env(safe-area-inset-top,0px))}.start-card{max-height:calc(100dvh - 44px);overflow-y:auto}.flight-bottom{position:absolute;bottom:calc(6px + env(safe-area-inset-bottom,0px));left:6px;right:6px;width:auto;padding:0!important;background:none;z-index:5}.action-row{width:100%;display:flex;justify-content:space-around;flex-wrap:nowrap;gap:4px}.action-row button{height:42px;min-width:0;flex:1;padding:6px 2px!important;font-size:0!important;line-height:0;white-space:nowrap}.action-row button::after{font:750 10px/1.15 system-ui,sans-serif;white-space:nowrap}#openFoundry::after{content:'✦ Build'}#cameraToggle::after{content:'◉ View'}#pauseToggle::after{content:'Ⅱ Pause'}#pauseToggle[data-paused='true']::after{content:'▶ Fly'}#resetFlight::after{content:'↺ Reset'}#saveFlight::after{content:'↓ Save'}#fullscreenToggle::after{content:'⤢'}.mobile-panel{bottom:calc(63px + env(safe-area-inset-bottom,0px))!important;z-index:4}.license{display:none}.touch-group button,.touch-throttle button{min-height:46px;min-width:46px;-webkit-tap-highlight-color:transparent}}
+@media(max-height:520px) and (orientation:landscape){.hud-side{display:none}.flight-telemetry{top:12px}.mobile-panel{bottom:8px;left:8px;right:8px}.flight-bottom{width:auto;left:auto;right:7px;padding:6px;background:transparent}}</style></head><body>
 <div class="flight-shell" id="flightShell">
  <canvas id="flightCanvas" tabindex="0" aria-label="Playable 3D Anniston flight range. Use W/S for pitch, A/D for bank, Shift/Ctrl for throttle, C to switch camera, R reset."></canvas><div class="sky-sun"></div><div class="sky-haze"></div><div class="scanlines"></div>
  <div class="hud" id="hud">
@@ -237,9 +239,9 @@ const core=window.AAARFlight;
 const THREE_NEEDED='WebGL2 is unavailable in this browser. Open in a WebGL2-capable browser or device.';
 let state=core.start('trainer'),running=false,view='chase',mode='mission',last=0,frames=0,lastHUD=0,lastDraw=0,alertUntil=0;
 const held=new Set(),touch=new Set();
-const shell=$('flightShell'),canvas=$('flightCanvas');
+const shell=$('flightShell');let canvas=$('flightCanvas');
 const opts={alpha:true,antialias:false,depth:true,powerPreference:'low-power',preserveDrawingBuffer:false};
-const gl=canvas.getContext('webgl2',opts);
+const preferSoftware=window.matchMedia?.('(pointer:coarse)').matches||innerWidth<=650;let gl=null;try{if(!preferSoftware)gl=canvas.getContext('webgl2',opts);}catch{gl=null;}
 let program=null,meshes={},uVP,uModel,uFog,aPos,aCol;
 const identity=()=>[1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1];
 function mul(a,b){const o=new Float32Array(16);for(let c=0;c<4;c++)for(let r=0;r<4;r++){let v=0;for(let k=0;k<4;k++)v+=a[k*4+r]*b[c*4+k];o[c*4+r]=v;}return o;}
@@ -430,13 +432,13 @@ function frame(timestamp){if(!running)return;const dt=Math.min(.05,(timestamp-la
  frames++;requestAnimationFrame(frame);
 }
 function reset(kind=state.craft){const design=state.design;state=core.start(kind,kind==='custom'?design:null);view='chase';hud();notify('FLIGHT RESTARTED · SYNTHETIC RANGE',2);}
-function togglePause(){state.paused=!state.paused;hud();notify(state.paused?'SIMULATION PAUSED':'SIMULATION RESUMED',1.2);}
+function togglePause(){state.paused=!state.paused;$('pauseToggle').dataset.paused=String(state.paused);hud();notify(state.paused?'SIMULATION PAUSED':'SIMULATION RESUMED',1.2);}
 function saveFlight(){const receipt=core.flightReceipt(state);try{localStorage.setItem('evercraft-aaar-last-flight',JSON.stringify(receipt));}catch{}
  const sent=window.parent!==window;
  if(sent){window.parent.postMessage({type:'AAAR_FLIGHT_RECEIPT',schema:'evercraft.aaar.worlds-flight.message.v1',receipt},'*');notify('FLIGHT RECORD SENT TO ANNISTON · LOCAL ONLY',4);}
  else {const blob=new Blob([JSON.stringify(receipt,null,2)],{type:'application/json'}),a=document.createElement('a');a.download=`anniston-flight-${receipt.id}.json`;a.href=URL.createObjectURL(blob);document.body.append(a);a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500);a.remove();notify('EXPORTED LOCAL SIMULATION RECORD',3);}
 }
-function begin(){if(running)return;running=true;$('startScreen').style.display='none';canvas.focus({preventScroll:true});last=performance.now();requestAnimationFrame(frame);notify('FLIGHT RANGE ACTIVE · W/S PITCH · A/D BANK',3);}
+function begin(){if(running)return;running=true;$('startScreen').style.display='none';try{canvas.focus({preventScroll:true});}catch{canvas.focus();}last=performance.now();requestAnimationFrame(frame);notify('FLIGHT RANGE ACTIVE · W/S PITCH · A/D BANK',3);}
 function initEvents(){
  window.addEventListener('AAAR_FOUNDRY_OPEN',()=>{if(running)state.paused=true;hud();});
  window.addEventListener('AAAR_LAUNCH_CRAFT',event=>{
@@ -451,14 +453,14 @@ function initEvents(){
  $('pauseToggle').addEventListener('click',togglePause);$('resetFlight').addEventListener('click',()=>reset());$('saveFlight').addEventListener('click',saveFlight);
  $('fullscreenToggle').addEventListener('click',async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else if(shell.requestFullscreen)await shell.requestFullscreen();}catch{notify('FULLSCREEN NOT AVAILABLE ON THIS DEVICE',2);}});
  for(const b of document.querySelectorAll('[data-touch]')){const key=b.dataset.touch;
-  const start=e=>{e.preventDefault();b.setPointerCapture?.(e.pointerId);touch.add(key);};
-  const end=e=>{e.preventDefault();touch.delete(key);};b.addEventListener('pointerdown',start);b.addEventListener('pointerup',end);b.addEventListener('pointercancel',end);b.addEventListener('lostpointercapture',()=>touch.delete(key));
+  const start=e=>{e.preventDefault();try{if(e.pointerId!==undefined)b.setPointerCapture?.(e.pointerId);}catch{}touch.add(key);};
+  const end=e=>{e.preventDefault();touch.delete(key);};b.addEventListener('pointerdown',start);b.addEventListener('pointerup',end);b.addEventListener('pointercancel',end);b.addEventListener('lostpointercapture',()=>touch.delete(key));if(!window.PointerEvent){b.addEventListener('touchstart',e=>{e.preventDefault();touch.add(key);},{passive:false});for(const type of ['touchend','touchcancel'])b.addEventListener(type,e=>{e.preventDefault();touch.delete(key);},{passive:false});}
  }
  document.addEventListener('keydown',e=>{if(document.getElementById('foundryOverlay')?.classList.contains('open'))return;const k=e.key.toLowerCase();if(['w','s','a','d','q','e','shift','control','arrowup','arrowdown','arrowleft','arrowright',' '].includes(k)){if(running&&!e.target.closest('select'))e.preventDefault();held.add(k);}if(e.repeat)return;if(k==='c'){$('cameraToggle').click();}if(k==='r')reset();if(k==='p'||k===' ')togglePause();});
  document.addEventListener('keyup',e=>held.delete(e.key.toLowerCase()));window.addEventListener('blur',()=>{held.clear();touch.clear();if(running&&!state.paused){state.paused=true;hud();}});document.addEventListener('visibilitychange',()=>{if(document.hidden&&running){state.paused=true;}});
  window.addEventListener('message',event=>{if(event.source!==window.parent||event.source===window)return;if(event.data?.type==='AAAR_WORLD_PAUSE'){state.paused=true;hud();}if(event.data?.type==='AAAR_WORLD_RESUME'){state.paused=false;hud();}if(event.data?.type==='AAAR_OPEN_FOUNDRY'){window.AAARFoundryUI?.open();}});
 }
-try{if(gl)initGL();else{fallback2D=true;$('flightStatus').textContent='SOFTWARE 3D VIEW';}initEvents();hud();render();}catch(error){$('beginFlight').disabled=true;$('beginFlight').textContent='GRAPHICS UNAVAILABLE';$('startScreen').querySelector('p').textContent=String(error.message||error)+' This does not affect your saved AAAR registry.';}
+try{if(gl){try{initGL();}catch(error){const fresh=canvas.cloneNode(false);canvas.parentNode.replaceChild(fresh,canvas);canvas=fresh;gl=null;fallback2D=true;}}else fallback2D=true;initEvents();hud();render();}catch(error){$('beginFlight').disabled=true;$('beginFlight').textContent='COCKPIT UNAVAILABLE';$('startScreen').querySelector('p').textContent='Preview initialization failed. Use the direct page on owned HTTPS: '+String(error.message||error);}
 })();
 </script>
 <script>/* Aircraft Foundry screen, local-only design library, scene handoff. */
@@ -528,13 +530,13 @@ try{if(gl)initGL();else{fallback2D=true;$('flightStatus').textContent='SOFTWARE 
     $('fGate').className='foundry-gate'+(pass?'':' hold');$('fGate').textContent=d.type==='wing'?(pass?'SCREENING: thrust covers modeled drag at 1.45 × stall speed. This is not a safe-flight result.':'SCREENING HOLD: modeled thrust does not cover level-flight drag. Still flyable as a glider or failure experiment.'):(pass?'SCREENING: modeled available thrust exceeds weight. Control stability remains unknown.':'SCREENING HOLD: thrust below weight. Expect a descent in the simulator.');
     $('fWarnings').replaceChildren(...a.warnings.map(t=>{const li=document.createElement('li');li.textContent=t;return li;}));$('fBlueprintLabel').textContent=d.name.toUpperCase().slice(0,48)+' / '+(d.type==='wing'?'FIXED WING':'ROTORCRAFT');$('fError').textContent='';
   }catch(err){$('fError').textContent=err.message;}}
- function library(){try{const d=JSON.parse(localStorage.getItem(storageKey)||'[]');return Array.isArray(d)?d.filter(x=>x&&x.schema===F.SCHEMA).slice(-20):[];}catch{return [];}}
+ let sessionBlueprints=[];function library(){try{const d=JSON.parse(localStorage.getItem(storageKey)||'[]');return Array.isArray(d)?d.filter(x=>x&&x.schema===F.SCHEMA).slice(-20):sessionBlueprints;}catch{return sessionBlueprints;}}
  function updateLibrary(){const items=library();const list=$('fSaved');list.replaceChildren();const empty=document.createElement('option');empty.value='';empty.textContent=items.length?'Select a saved blueprint':'No saved designs yet';list.append(empty);items.forEach((d,i)=>{const o=document.createElement('option');o.value=String(i);o.textContent=(d.name||'Design').slice(0,64);list.append(o);});}
  $('fTemplate').addEventListener('change',e=>{if(F.presets[e.target.value])setDesign(F.preset(e.target.value));});
  $('fName').addEventListener('input',e=>{design.name=e.target.value||'Untitled machine';refresh();});
  $('foundryClose').addEventListener('click',close);
  $('fLaunch').addEventListener('click',()=>{try{const d=F.validate({...design,name:$('fName').value});try{localStorage.setItem('evercraft.aaar.foundry.last.v1',JSON.stringify(d));}catch{}window.dispatchEvent(new CustomEvent('AAAR_LAUNCH_CRAFT',{detail:d}));close();}catch(err){$('fError').textContent=err.message;}});
- $('fSave').addEventListener('click',()=>{try{const d=F.validate({...design,name:$('fName').value});const items=library().filter(x=>x.name!==d.name);items.push(d);localStorage.setItem(storageKey,JSON.stringify(items.slice(-20)));updateLibrary();$('fError').textContent='Saved locally. No online synchronization.';}catch(err){$('fError').textContent=err.message;}});
+ $('fSave').addEventListener('click',()=>{try{const d=F.validate({...design,name:$('fName').value});const items=library().filter(x=>x.name!==d.name);items.push(d);sessionBlueprints=items.slice(-20);let persisted=false;try{localStorage.setItem(storageKey,JSON.stringify(sessionBlueprints));persisted=true;}catch{}updateLibrary();$('fError').textContent=persisted?'Saved on this device. No online synchronization.':'Saved in this tab only. Export the blueprint JSON to keep it.';}catch(err){$('fError').textContent=err.message;}});
  $('fExport').addEventListener('click',()=>{try{const d=F.validate({...design,name:$('fName').value});const blob=new Blob([JSON.stringify(d,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='anniston-aircraft-blueprint.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);}catch(err){$('fError').textContent=err.message;}});
  $('fImport').addEventListener('click',()=>$('fImportFile').click());
  $('fImportFile').addEventListener('change',async e=>{try{const file=e.target.files?.[0];if(!file)return;if(file.size>12000)throw Error('Blueprint JSON exceeds 12 KB.');setDesign(F.validate(JSON.parse(await file.text())));}catch(err){$('fError').textContent='Import refused: '+err.message}finally{e.target.value='';}});
@@ -544,4 +546,4 @@ try{if(gl)initGL();else{fallback2D=true;$('flightStatus').textContent='SOFTWARE 
  document.getElementById('openFoundry')?.addEventListener('click',open);
  document.getElementById('designFromStart')?.addEventListener('click',open);
 })();
-</script></body></html>
+</script><div id="scriptBlocked" style="position:fixed;z-index:999;left:10px;right:10px;bottom:10px;padding:10px 12px;background:#0b1f2eec;color:white;border:1px solid #ffb78f;font:600 12px/1.5 system-ui;pointer-events:none">If Start Flying never responds, this HTML viewer may block JavaScript. Use the owned HTTPS flight page in Safari when deployed.</div><script>document.getElementById('scriptBlocked')?.remove();</script></body></html>
