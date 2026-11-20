@@ -1,0 +1,32 @@
+name: YVL v4 Appendix A Evidence Hold
+on:
+  pull_request:
+    paths:
+      - 'docs/procurement/yvl-v4-vendor-response-matrix-20261120.json'
+      - 'scripts/yvl-v4-appendix-a-evidence-gate.mjs'
+      - 'tests/yvl-v4-appendix-a-evidence-gate.test.mjs'
+      - '.github/workflows/yvl-v4-appendix-a-evidence.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'docs/procurement/yvl-v4-vendor-response-matrix-20261120.json'
+      - 'scripts/yvl-v4-appendix-a-evidence-gate.mjs'
+      - 'tests/yvl-v4-appendix-a-evidence-gate.test.mjs'
+      - '.github/workflows/yvl-v4-appendix-a-evidence.yml'
+permissions:
+  contents: read
+jobs:
+  source-evidence-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate matrix and enforce hard holds
+        run: |
+          node --check scripts/yvl-v4-appendix-a-evidence-gate.mjs
+          node scripts/yvl-v4-appendix-a-evidence-gate.mjs
+      - name: Protect against unproven qualification claims
+        run: node --test tests/yvl-v4-appendix-a-evidence-gate.test.mjs
