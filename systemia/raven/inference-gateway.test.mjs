@@ -267,7 +267,7 @@ test("Claude and Grok adapters use vault secrets and metadata-only validation", 
       if(provider==="xai"){
         assert.equal(calls[1].url,"https://api.x.ai/v1/responses");
         assert.equal(calls[1].headers.authorization,"Bearer "+secret);
-        assert.equal(body.store,false);assert.deepEqual(body.tools,[]);
+        assert.equal(body.store,false);assert.deepEqual(body.tools,[]);assert.equal(body.max_output_tokens,1000);
       }else{
         assert.equal(calls[1].url,"https://api.anthropic.com/v1/messages");
         assert.equal(calls[1].headers["x-api-key"],secret);
