@@ -36,7 +36,7 @@ class FullScoreableAreaTests(unittest.TestCase):
         self.assertTrue(np.array_equal(full.prune_small_components(a,1),a))
         b=full.prune_small_components(a,2)
         self.assertEqual(float(b[1,1]),0.)
-        self.assertEqual(float(b[5,6]),.8)
+        self.assertAlmostEqual(float(b[5,6]),.8,places=6)
         with self.assertRaises(ValueError):full.prune_small_components(a,0)
 
     def test_known_predictions_contribute_neither_fp_nor_tp(self):
