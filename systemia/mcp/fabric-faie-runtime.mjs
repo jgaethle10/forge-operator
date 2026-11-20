@@ -193,6 +193,29 @@ export function createFabricFaieSurface({
       return true;
     }
 
+    if(req.method==='GET'&&pathname==='/api/faie/history/region'){
+      // Public documentary history only. This route never accepts a property
+      // address, lat/lon, parcel ID, owner name or hidden private-site key.
+      const region=String(parsed.searchParams.get('key')||'').trim();
+      if(!/^[a-z0-9][a-z0-9._-]{1,80}$/.test(region)||
+         ['global','unknown'].includes(region)){
+        sendJson(res,400,{ok:false,error:'public_named_region_key_required'});
+        return true;
+      }
+      const allowance=limit(req);
+      if(!allowance.ok){
+        sendJson(res,429,{ok:false,error:'rate_limited'},
+          {'retry-after':String(allowance.retry_after)});
+        return true;
+      }
+      try{
+        sendJson(res,200,faieRuntime.historyForRegion(region,{limit:100}));
+      }catch{
+        sendJson(res,503,{ok:false,error:'public_history_archive_unavailable'});
+      }
+      return true;
+    }
+
     if(pathname==='/mcp/faie'){
       if(req.method==='GET'){
         if(parsed.searchParams.get('action')!=='health'){
@@ -425,7 +448,8 @@ export function createFabricFaieSurface({
 
   async function close(){
     if(ownsRuntime){
-      faieRuntime.stop();
+      if(typeof faieRuntime.close==='function')faieRuntime.close();
+      else faieRuntime.stop();
     }
   }
 
