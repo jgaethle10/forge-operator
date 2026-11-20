@@ -642,15 +642,10 @@ if [[ ! "$remote_url" =~ ^(https://github\.com/|git@github\.com:)jgaethle10/forg
   exit 3
 fi
 
-# public/journal is a generated publication mirror. Older checkouts may contain
-# ignored/untracked Journal files from before the mirror became tracked. Those
-# files are intentionally normalized before every verified update so they can
-# never block a fast-forward or resurrect stale canonical metadata.
-if [[ -e "$REPO_ROOT/public/journal" ]]; then
-  echo "Evercraft update: normalizing generated public/journal surface before checkout preflight"
-  as_user git -C "$REPO_ROOT" restore --staged --worktree -- public/journal 2>/dev/null || true
-  as_user git -C "$REPO_ROOT" clean -fdx -- public/journal >/dev/null 2>&1 || true
-fi
+# Journal is a production asset even when mirrored from generated publication
+# output. NEVER normalize its tracked or untracked files on an unattended update.
+# Check source status first, before fetch/merge/restart, and hold until an
+# operator has independently preserved and reconciled intentional local work.
 
 dirty_status="$(as_user git -C "$REPO_ROOT" status --porcelain --untracked-files=all)"
 DIRT_CLASSIFIER="$REPO_ROOT/scripts/classify-fabric-checkout-dirt.mjs"
@@ -669,18 +664,9 @@ if [[ -n "$blocking_dirty" ]]; then
 fi
 
 if [[ "$journal_dirty" == "true" ]]; then
-  echo "Evercraft update: reconciling generated public/journal drift to the tracked publication receipt"
-  as_user git -C "$REPO_ROOT" restore --staged --worktree -- public/journal 2>/dev/null || true
-  as_user git -C "$REPO_ROOT" clean -fdx -- public/journal >/dev/null 2>&1 || true
-
-  dirty_status="$(as_user git -C "$REPO_ROOT" status --porcelain --untracked-files=all)"
-  blocking_dirty="$(printf '%s\n' "$dirty_status" | as_user node "$DIRT_CLASSIFIER" --blocking-lines)"
-  journal_dirty="$(printf '%s\n' "$dirty_status" | as_user node "$DIRT_CLASSIFIER" --journal-dirty)"
-  if [[ -n "$blocking_dirty" || "$journal_dirty" == "true" ]]; then
-    echo "HOLD: generated Journal reconciliation did not produce a safe checkout" >&2
-    [[ -n "$blocking_dirty" ]] && printf '%s\n' "$blocking_dirty" >&2
-    exit 4
-  fi
+  echo "HOLD: local Journal work is present; preserved without automated restore/clean" >&2
+  echo "HOLD: archive and review the original public/journal changes privately before any source update" >&2
+  exit 4
 fi
 
 if [[ -n "$dirty_status" ]]; then
@@ -785,6 +771,17 @@ fi
 
 rollback() {
   local reason="${1:-update_failed}"
+  # Verification/installers can write into the checkout after the initial
+  # source-clean gate. Never let rollback destroy those unexpected edits.
+  local rollback_dirty rollback_blocking rollback_journal
+  rollback_dirty="$(as_user git -C "$REPO_ROOT" status --porcelain --untracked-files=all)"
+  rollback_blocking="$(printf '%s\n' "$rollback_dirty" | as_user node "$DIRT_CLASSIFIER" --blocking-lines)"
+  rollback_journal="$(printf '%s\n' "$rollback_dirty" | as_user node "$DIRT_CLASSIFIER" --journal-dirty)"
+  if [[ -n "$rollback_blocking" || "$rollback_journal" == "true" ]]; then
+    echo "HOLD: checkout changed during update; rollback reset refused to preserve owner files" >&2
+    echo "HOLD: inspect checkout and Fabric state manually; no automatic cleanup performed" >&2
+    return 20
+  fi
   as_user git -C "$REPO_ROOT" reset --hard "$before" >/dev/null
   write_runtime_release_ref "$before" || true
   restore_edge_attestation_env
