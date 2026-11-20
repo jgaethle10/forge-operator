@@ -71,6 +71,11 @@ export function evaluateWingResidentConfig({configPath,wingExpected='fallen'}={}
   throw Error('wing_resident_incomplete_systemia_intake');
  // Existing Intake Fabric/Passport may be prepared separately before activation.
  if(cfg.intakeStateDir){requiredDir(cfg.intakeStateDir);requiredDir(cfg.passportStateDir);}
+ if(cfg.goalStateDir){
+  if(cfg.wing!=='fallen'||!cfg.intakeStateDir||!cfg.passportStateDir)
+   throw Error('wing_resident_goal_checkpoint_requires_fallen_passport_intake');
+  requiredDir(cfg.goalStateDir);
+ }
  for(const k of ['baseUrl','receiveTokenFile','wing','destinationDir','receiverPrivateKeyFile',
   'receiverSigningKeyFile'])safeArg(String(cfg[k]));
  safeArg(configPath);
@@ -79,6 +84,7 @@ export function evaluateWingResidentConfig({configPath,wingExpected='fallen'}={}
   wing:cfg.wing,publicOrigin:url.origin,privateDestination:cfg.destinationDir,
   trustedSenderCount:Object.keys(senders).length,
   systemiaIngressConfigured:Boolean(cfg.intakeStateDir),
+  privateGoalCheckpointConfigured:Boolean(cfg.goalStateDir),
   liveHttpsVerified:false,remoteIdentityCryptographicallyVerified:false,
   customerBytesPresent:false,producerAssigned:false,customerReleaseAuthorized:false
  };
