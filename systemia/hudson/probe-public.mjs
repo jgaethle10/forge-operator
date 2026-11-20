@@ -51,6 +51,16 @@ async function getText(url,fetchImpl,timeoutMs=8000){
  }finally{clearTimeout(timeout)}
 }
 
+export function classifyPublicFetchFailure(error){
+ const kind=String(error?.name||'');
+ const code=String(error?.code||'');
+ const message=String(error?.message||'');
+ if(kind==='AbortError'||kind==='TimeoutError'||code==='ETIMEDOUT')return 'timeout';
+ if(message==='oversized_public_response')return 'oversized_response';
+ if(/^(?:ENOTFOUND|EAI_AGAIN|ECONNREFUSED|ECONNRESET)$/.test(code))return 'network_or_dns';
+ return 'transport_unknown';
+}
+
 export async function probeHudsonPublic({origin=HUDSON_ORIGIN,fetchImpl=fetch,now=Date.now()}={}){
  if(origin!==HUDSON_ORIGIN)throw Error('probe_origin_must_be_canonical_owned_fabric');
  const errors=[],checks={},observedAt=new Date(now).toISOString();
@@ -60,7 +70,7 @@ export async function probeHudsonPublic({origin=HUDSON_ORIGIN,fetchImpl=fetch,no
   page=await getText(url,fetchImpl);
   checks.public_html=page.status===200&&/^text\/html/i.test(page.type)&&page.content.includes('HUDSON | The Living Spine')&&page.content.includes('ANIMATED PATHS ARE NOT VERIFIED EVENTS');
   if(!checks.public_html)errors.push('public_html_not_verified');
- }catch(e){checks.public_html=false;errors.push('public_html_unreachable')}
+ }catch(e){checks.public_html=false;checks.public_html_error_class=classifyPublicFetchFailure(e);errors.push('public_html_unreachable')}
  try{
   feed=await getText(url+'activity.json?proof=1',fetchImpl);
   let body=null;try{body=JSON.parse(feed.content)}catch{}
@@ -69,19 +79,19 @@ export async function probeHudsonPublic({origin=HUDSON_ORIGIN,fetchImpl=fetch,no
   checks.source_age_ms=valid.age_ms;
   checks.source_listed_events=valid.listed_events;
   if(!checks.public_feed)errors.push(...(valid.reasons.length?valid.reasons:['public_feed_not_verified']));
- }catch(e){checks.public_feed=false;errors.push('public_feed_unreachable')}
+ }catch(e){checks.public_feed=false;checks.public_feed_error_class=classifyPublicFetchFailure(e);errors.push('public_feed_unreachable')}
  try{
   health=await getText(origin+'/health',fetchImpl);
   let body=null;try{body=JSON.parse(health.content)}catch{}
   checks.fabric_route_claim=health.status===200&&body?.hudson_public_path==='/hudson/'&&
     body?.hudson_public_source_ready===true&&body?.hudson_public_feed_authority==='public_git_source_history_only';
   if(!checks.fabric_route_claim)errors.push('fabric_runtime_route_claim_absent');
- }catch(e){checks.fabric_route_claim=false;errors.push('fabric_health_unreachable')}
+ }catch(e){checks.fabric_route_claim=false;checks.fabric_health_error_class=classifyPublicFetchFailure(e);errors.push('fabric_health_unreachable')}
  try{
   privateProbe=await getText(url+'private.json',fetchImpl);
   checks.private_route_denied=privateProbe.status===404;
   if(!checks.private_route_denied)errors.push('unlisted_hudson_asset_is_accessible');
- }catch(e){checks.private_route_denied=false;errors.push('route_privacy_probe_unavailable')}
+ }catch(e){checks.private_route_denied=false;checks.private_probe_error_class=classifyPublicFetchFailure(e);errors.push('route_privacy_probe_unavailable')}
  return {
   schema:'evercraft.hudson.external-release-canary.v1',
   observed_at:observedAt,origin,verified:errors.length===0,
