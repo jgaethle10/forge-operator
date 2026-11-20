@@ -70,6 +70,22 @@ canvas:active{cursor:grabbing}
 .museum-passport button{font:700 12px system-ui;padding:9px 11px;background:#143848;color:#dbebf0;border:1px solid #547989;border-radius:10px}
 @media(max-width:520px){.trail-answers{grid-template-columns:1fr}.trail-answers button{min-height:45px}.trail-panel h3{font-size:24px}}
 .watershed-door{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;padding:18px 21px;margin:0 0 22px;border:1px solid #7bbca7;border-radius:16px;background:linear-gradient(125deg,#194a51,#0d3445);box-shadow:0 14px 40px #0004}.watershed-door b{display:block;color:#c8f4d9;font-size:12px;letter-spacing:.08em}.watershed-door span{display:block;color:#d8ebee;font-size:14px}.watershed-door a{display:inline-flex;align-items:center;padding:11px 16px;min-height:44px;border-radius:10px;background:#bff5d4;color:#0a3739;text-decoration:none;font-weight:900;font-size:13px}
+
+.sunlight-theater{padding:17px 19px 18px;border-top:1px solid #426676;background:radial-gradient(ellipse at 90% -20%,#295b625e,transparent 70%),#0b283b}
+.sunlight-heading{display:flex;align-items:center;justify-content:space-between;gap:10px 18px;flex-wrap:wrap}
+.sunlight-heading b{font:900 11px system-ui;letter-spacing:.15em;color:#fee3ab}
+.sunlight-heading span{font-size:11px;color:#c6dbe1}
+.sunlight-seasons{display:flex;flex-wrap:wrap;gap:8px;margin:13px 0}
+.sunlight-seasons button,.sunlight-actions button{min-height:44px;border:1px solid #638c95;background:#183e4d;color:#e1f1f0;border-radius:10px;padding:9px 13px;font:800 12px system-ui}
+.sunlight-seasons button[aria-pressed=true]{background:#fbe1aa;color:#293222;border-color:#fbe1aa}
+.sunlight-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.sunlight-actions label{display:flex;align-items:center;gap:11px;flex:1;min-width:200px;font-size:13px;color:#d8ede9}
+.sunlight-actions input{accent-color:#ffdb91;min-width:90px;flex:1;height:32px}
+.sunlight-actions output{color:#ffe4ad;font:900 12px system-ui;white-space:nowrap;min-width:50px}
+.sunlight-actions button{background:#fbe1aa;border-color:#fbe1aa;color:#192b32}
+.sunlight-description{font-size:12px;color:#bdd6da;line-height:1.6;margin:12px 0 0}
+.sunlight-result{margin-top:10px;font-size:13px;line-height:1.5;color:#fff0c7;min-height:18px}
+@media(max-width:520px){.sunlight-theater{padding:14px 13px 18px}.sunlight-seasons button{flex:1;padding-inline:9px}.sunlight-actions{gap:6px}.sunlight-actions label{flex-basis:100%}}
 </style>
 </head>
 <body>
@@ -84,6 +100,22 @@ canvas:active{cursor:grabbing}
 <div class="globe-top"><b>🌍 EARTH EXPLORER</b><span>Drag to rotate · tap a bright marker</span></div>
 <canvas id="globe" role="img" aria-label="A rotatable globe drawn from public-domain Natural Earth low-resolution land geometry, with source-linked destination markers. You can also select each destination using the buttons below."></canvas>
 <div class="globe-foot"><span id="position">Viewing: 15° N, 30° W</span><button id="reset" type="button">↺ Reset view</button></div>
+<section class="sunlight-theater" aria-labelledby="sunlightHeading">
+ <div class="sunlight-heading"><b id="sunlightHeading">☀ SUNLIGHT THEATER</b><span>Change the season · move the Sun across Earth</span></div>
+ <div class="sunlight-seasons" role="group" aria-label="Season of the sunlight experiment">
+  <button type="button" data-sun-season="june" aria-pressed="false">June solstice</button>
+  <button type="button" data-sun-season="equinox" aria-pressed="true">Equinox</button>
+  <button type="button" data-sun-season="december" aria-pressed="false">December solstice</button>
+ </div>
+ <div class="sunlight-actions">
+  <label for="solarHour">UTC model time <input id="solarHour" type="range" min="0" max="23" step="1" value="12">
+   <output id="solarHourValue" for="solarHour">12:00</output>
+  </label>
+  <button type="button" id="solarPlay" aria-pressed="false">▶ Play one day</button>
+ </div>
+ <p id="sunlightReading" class="sunlight-result" aria-live="polite">At the equinox, the Sun is overhead at the equator at local noon.</p>
+ <p class="sunlight-description">This is a simplified season-and-time lighting model using a fixed 23.44° axial tilt and a 24-hour rotation. The shaded day/night boundary is calculated, not a live satellite image or an exact dated solar ephemeris. UTC here is a classroom time dial.</p>
+</section>
 </section>
 <aside class="fact" aria-live="polite">
 <div class="tag" id="type">GEOGRAPHY / FIELD EXPLORATION</div>
