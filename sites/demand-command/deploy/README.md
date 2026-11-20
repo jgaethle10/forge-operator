@@ -58,6 +58,24 @@ ip -4 route show default
 
 ChromeOS references: https://developers.google.com/chromeos/app-development/develop/port-forwarding and https://www.chromium.org/chromium-os/developer-library/guides/containers/crostini-developer-guide/
 
+## Provisioning the Penguin SSH endpoint, owner-provided key available (November 20, 2026)
+
+The NextGen owner generated a dedicated ED25519 key and shared **only the public half**, reporting fingerprint `SHA256:fyeshErB89g7fvv3d1uT07fvWTsS0IOg7mglIW5BcWE`. This value is an expected identity check, **not an authorized key grant by itself**; the installer reads the locally copied public key on Penguin and refuses any mismatch. Never commit or copy the private half.
+
+The `install-penguin-demand-relay.sh` script installs a **separate systemd service**, `evercraft-demand-relay-sshd.service`, **not** default `ssh.service`. The staged `sshd-demand-relay.conf.example` policy specifies:
+- Dedicated host ED25519 identity, separate from earlier system host key and its unverified comment.
+- `Port 8222` in Crostini; ChromeOS must subsequently forward TCP 8222 **only from owner-approved LAN**.
+- Service user `demandrelay` with `/usr/sbin/nologin`, `MaxSessions 0`, public-key-only authentication, `AllowTcpForwarding remote`, and remote listeners restricted to `127.0.0.1:18897`.
+- `UsePAM yes` retains Linux account checks, but `PasswordAuthentication no`, `KbdInteractiveAuthentication no`, and `AuthenticationMethods publickey` prevent password challenge sign-in.
+- The public key lives in the service user's private home `/var/lib/evercraft/demandrelay/.ssh/authorized_keys` (mode 0600), where sshd can read it as the authorized account; the host private key and server config remain root-owned under `/etc/evercraft/demand-relay`.
+- Authorized-key restrictions `restrict,port-forwarding,permitlisten="127.0.0.1:18897"` supplement the server's global forwarding-only controls. SSH key rotation is a separate reviewed operation, never silently performed by rerunning the installer.
+
+If `$HOME/evercraft-demand-edge-canary` is already a clean clone of the feature branch, a fast-forward pull is sufficient. Otherwise clone separately without changing the canonical Penguin Forge deployment. Create a local public-key file **outside Git** and invoke the installer with `--install --public-key-file FILE --expected-fingerprint SHA256:...`; the command refuses missing/malformed or mismatched keys, a conflicting occupied listener, an unexpected preexisting service identity, or a differing installed SSH policy.
+
+After successful installation, capture only the **new isolated Penguin host-key fingerprint**, active service status, and `ss -ltn '( sport = :8222 )'`. Do **not** report that the NextGen tunnel, ChromeOS forwarding, or public HTTPS route exists. No home-router WAN SSH forwarding is permitted.
+
+**Failure recovery:** `sudo systemctl stop evercraft-demand-relay-sshd.service` stops only the new isolated listener if problems arise. Do not disable Fabric, restart the regular SSH service, or remove `/etc/ssh/sshd_not_to_be_run`.
+
 ## Dedicated SSH configuration staged after safe validation (November 20, 2026)
 
 Penguin's owner-provided inspection reported:
@@ -69,7 +87,7 @@ The separately checked-in `sshd-demand-relay.conf.example` is inert; it document
 
 Security gates before starting the isolated daemon:
 1. NextGen generates a new ED25519 client identity locally (never send the private key to chat or the repo). Copy only its **public** key to Penguin through an owner-approved channel.
-2. Penguin validates the separate `demandrelay` account, its root-owned authorized keys file, a dedicated ED25519 *server host key*, the config `sshd -t -f` output, and systemd unit before enabling **only the new relay service**.
+2. Penguin validates the separate `demandrelay` account, its service-user-owned private authorized_keys file, a dedicated ED25519 *server host key*, the config `sshd -t -f` output, and systemd unit before enabling **only the new relay service**.
 3. NextGen pins Penguin's dedicated server host fingerprint through a trusted out-of-band procedure. Never use `StrictHostKeyChecking=no`.
 4. ChromeOS explicitly forwards Linux TCP **8222** from the Chromebook LAN to Crostini. Verify the Chromebook's **host LAN address**, not Crostini 100.115.x.x. Never forward SSH from the household WAN/router.
 5. Only after the reverse tunnel is present and serves exactly Demand Command's local HTML on Penguin loopback should the protected Caddy hostname and DNS be admitted.
