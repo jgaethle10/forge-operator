@@ -32,9 +32,13 @@ function atomicJson(file,obj){
  try{fs.writeFileSync(temp,JSON.stringify(obj,null,2)+'\n',{flag:'wx',mode:0o600});fs.renameSync(temp,file)}
  finally{try{fs.rmSync(temp,{force:true})}catch{}}
 }
-export async function startWingCourierBroker({stateDir,wingCredentials,host='127.0.0.1',port=0,maxBlobBytes=MAX_BLOB}={}){
+export async function startWingCourierBroker({stateDir,wingCredentials,host='127.0.0.1',port=0,
+ maxBlobBytes=512*1024*1024,maxStoredBytes=1024*1024*1024,maxPackages=256}={}){
  if(!['127.0.0.1','localhost','::1'].includes(host))throw fail('must_bind_loopback');
  if(!Number.isSafeInteger(maxBlobBytes)||maxBlobBytes<100||maxBlobBytes>MAX_BLOB)throw fail('max_blob_invalid');
+ if(!Number.isSafeInteger(maxStoredBytes)||maxStoredBytes<maxBlobBytes||
+    maxStoredBytes>16*1024**3)throw fail('stored_bytes_limit_invalid');
+ if(!Number.isSafeInteger(maxPackages)||maxPackages<1||maxPackages>100000)throw fail('max_packages_invalid');
  if(!Array.isArray(wingCredentials)||!wingCredentials.length)throw fail('wing_auth_required');
  const credentials=new Map();
  for(const row of wingCredentials){
@@ -47,6 +51,19 @@ export async function startWingCourierBroker({stateDir,wingCredentials,host='127
  }
  secureDir(path.resolve(stateDir));const root=path.join(stateDir,'packages');secureDir(path.resolve(root));
  const locks=new Set();
+ // Count reservations, not only uploaded files: a sender cannot exhaust the
+ // relay by reserving unlimited packages and never providing ciphertext.
+ function capacity(){
+   let reserved=0,packages=0;
+   for(const id of fs.readdirSync(root)){
+     if(!ID.test(id))continue;
+     const record=privateState(path.join(root,id,'state.json'));
+     if(!Number.isSafeInteger(record.bytes)||record.bytes<100||
+       record.bytes>maxBlobBytes)throw fail('stored_reservation_invalid',503);
+     reserved+=record.bytes;packages++;
+   }
+   return {reserved,packages};
+ }
  const auth=(req,wing,role)=>{
   const row=credentials.get(wing);
   if(!row||!equals(token(req),role==='send'?row.sendToken:row.receiveToken))throw fail('not_authorized',403);
@@ -80,6 +97,9 @@ export async function startWingCourierBroker({stateDir,wingCredentials,host='127
        old.bytes!==bytes||old.ciphertextSha256!==ciphertextSha256)throw fail('id_conflict',409);
      return reply(res,200,{id,state:old.state,idempotent:true});
     }
+    const quota=capacity();
+    if(quota.packages>=maxPackages||quota.reserved+bytes>maxStoredBytes)
+      throw fail('private_queue_quota_exhausted',507);
     fs.mkdirSync(dir,{mode:0o700});
     const record={schema:'evercraft.wing-broker.queue-item.v1',
       id,fromWing,toWing,bytes,ciphertextSha256,state:'STAGED',
