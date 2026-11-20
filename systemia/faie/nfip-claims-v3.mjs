@@ -29,6 +29,8 @@ export function buildNfipClaimsV3PageUrl({state,firstYear,lastYear,skip=0,pageSi
   const params=new URLSearchParams();
   params.set('$filter',"state eq '"+validState+"' and yearOfLoss ge "+start+' and yearOfLoss le '+end);
   params.set('$select',SELECT_FIELDS);
+  // Stable ordering is required for complete and non-overlapping pagination.
+  params.set('$orderby','id asc');
   params.set('$top',String(pageSize));
   params.set('$skip',String(skip));
   return API+'?'+params.toString();
