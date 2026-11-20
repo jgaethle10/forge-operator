@@ -10,6 +10,8 @@ on:
     branches: [main]
     paths:
       - 'public/aiden-lab/**'
+      - 'systemia/mcp/aiden-lab-public-route.mjs'
+      - 'systemia/mcp/fabric-local-runtime.mjs'
       - 'scripts/probe-aiden-lab-public.mjs'
       - 'tests/aiden-lab-owned-public.test.mjs'
       - '.github/workflows/aiden-lab-owned-public.yml'
