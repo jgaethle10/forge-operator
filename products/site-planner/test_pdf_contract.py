@@ -10,8 +10,8 @@ import unittest
 from pathlib import Path
 
 ROOT=Path(__file__).resolve().parent
-# Small valid white 8x8 JPEG authored for this regression fixture.
-TINY_JPEG="/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eH4eH4eHh4eHh4eHh7/wAARCAAIAAgDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD7LooooA//2Q=="
+# Synthetic JPEG envelope fixture for PDF binary contract tests only; not a renderable photo.
+TINY_JPEG="/9j/2Q=="
 
 
 class PdfContractTests(unittest.TestCase):
@@ -59,28 +59,42 @@ const els=new Map(),events=new Map(),revoke=[],create=[];
 function get(id){if(!els.has(id))els.set(id,{
  hidden:true,disabled:false,textContent:'',href:'',download:'',
  addEventListener(k,fn){events.set(id+':'+k,fn)},
- removeAttribute(k){delete this[k]},click(){throw Error('PDF link must not auto-click')}
+ removeAttribute(k){delete this[k]},
+ cloneNode(){return {querySelector(){return null},setAttribute(){}}},
+ click(){throw Error('PDF link must not auto-click')}
 });return els.get(id)}
 const context={
- TextEncoder,Blob,document:{getElementById:get},$ : get,
+ TextEncoder,Blob,atob,
+ XMLSerializer:class {serializeToString(){return '<svg xmlns="http://www.w3.org/2000/svg"/>'}},
+ Image:class {set src(url){this.onload?.()}},
+ document:{
+  getElementById:get,
+  createElement(tag){
+   if(tag!=='canvas')throw Error('Unknown element: '+tag);
+   return {width:0,height:0,getContext(){return {fillRect(){},drawImage(){},set fillStyle(v){}}},
+    toDataURL(){return 'data:image/jpeg;base64,'+process.argv[1]}};
+  }
+ },$ : get,
  URL:{createObjectURL(b){const url='blob:local-'+create.length;create.push([url,b]);return url},revokeObjectURL(u){revoke.push(u)}},
  window:{},console
 };
 vm.createContext(context);
 vm.runInContext(source,context,{timeout:4000});
-context.TEST_BYTES=Buffer.from(process.argv[1],'base64');
-vm.runInContext('rasterSheet=async()=>new Uint8Array(TEST_BYTES)',context);
 (async()=>{
- await vm.runInContext('getPdf()',context);
+ const click=events.get('print:click');
+ if(typeof click!=='function')throw Error('Main PDF click not wired');
+ await click();
  if(get('pdfReady').hidden||get('pdfDownload').hidden)throw Error('Open and download must be visible');
  if(get('pdfReady').href!==get('pdfDownload').href)throw Error('Open/download must refer to one PDF');
  if(get('pdfDownload').download!=='Evercraft-EV-Site-Concept-S01-A01.pdf')throw Error('Wrong download name');
  if(get('print').disabled||get('print').textContent!=='View / Save PDF')throw Error('Main action did not recover');
- const blob=create[0]?.[1];if(!blob||blob.type!=='application/pdf')throw Error('PDF blob not created');
+ const blob=create.map(x=>x[1]).find(x=>x.type==='application/pdf');
+ if(!blob)throw Error('PDF blob not created');
  const bytes=Buffer.from(await blob.arrayBuffer());
  if(bytes.subarray(0,8).toString()!=='%PDF-1.4')throw Error('PDF payload missing');
+ const prior=revoke.length;
  vm.runInContext('window.__evercraftPdf.invalidate()',context);
- if(!get('pdfReady').hidden||!get('pdfDownload').hidden||revoke.length!==1)throw Error('Stale PDF was not invalidated');
+ if(!get('pdfReady').hidden||!get('pdfDownload').hidden||revoke.length!==prior+1)throw Error('Stale PDF was not invalidated');
  console.log('PHONE PDF FLOW PASS');
 })().catch(e=>{console.error(e);process.exitCode=1});
 """
