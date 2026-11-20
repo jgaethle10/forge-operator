@@ -1,5 +1,6 @@
 import { TOPICS, CATEGORIES, STATE_LABELS } from './catalog.mjs';
 import { LEARNING_WORLDS, WORLD_STATES } from './learning-worlds.mjs';
+import './universe.mjs';
 
 const $ = (id) => document.getElementById(id);
 const grid = $('topicGrid');
