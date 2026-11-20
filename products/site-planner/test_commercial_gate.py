@@ -3,6 +3,7 @@ import unittest
 from test_workflow import WorkflowTest
 from outbox_audit import audit
 from pathlib import Path
+import server
 
 class CommercialGateTests(WorkflowTest):
     def test_commercial_quote_is_not_paid_or_dispatchable(self):
@@ -52,5 +53,11 @@ class CommercialGateTests(WorkflowTest):
         _,detail=self.api('/sites/'+site['id'])
         self.assertFalse(detail['orders'])
         self.assertFalse(detail['reports'])
+
+class LocalBindTests(unittest.TestCase):
+    def test_public_bind_is_rejected_even_with_a_shared_token(self):
+        for host in ('0.0.0.0', '::', '192.0.2.10'):
+            with self.assertRaises(ValueError): server.require_local_bind(host)
+        self.assertEqual(server.require_local_bind('127.0.0.1'),'127.0.0.1')
 
 if __name__ == '__main__':unittest.main()
