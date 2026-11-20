@@ -4,6 +4,7 @@ import fs from 'node:fs';
 
 const installer=fs.readFileSync('scripts/install-fabric-self-update.sh','utf8');
 const updater=fs.readFileSync('scripts/update-fabric-owned-edge.sh','utf8');
+const releaseDoctor=fs.readFileSync('scripts/diagnose-fabric-owned-edge-release.sh','utf8');
 
 test('Fabric self-updater keeps home read-only but explicitly admits its Forge checkout for writes',()=>{
   assert.match(installer,/ProtectHome=read-only/);
@@ -53,6 +54,13 @@ test('rollback rejects changes generated after the initial clean gate',()=>{
   const hold=rollback.indexOf('rollback reset refused to preserve owner files');
   const reset=rollback.indexOf('reset --hard "$before"');
   assert.ok(hold>=0&&reset>hold,'rollback must refuse a destructive reset on unexpected files');
+});
+
+test('release doctor warns operators if on-disk updater still contains destructive Journal cleaning',()=>{
+  assert.match(releaseDoctor,/updater_journal_preservation=UNSAFE_DESTRUCTIVE_LEGACY/);
+  assert.match(releaseDoctor,/restore --staged --worktree -- public\\/journal/);
+  assert.match(releaseDoctor,/clean -fdx -- public\\/journal/);
+  assert.match(releaseDoctor,/updater_journal_preservation=non_destructive_source_guard_present/);
 });
 
 test('Fabric updater still proves runtime before accepting the revision',()=>{
