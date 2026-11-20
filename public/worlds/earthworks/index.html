@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#101719">
+<meta name="description" content="Evercraft Worlds: The Big Dig. Drive an excavator or backhoe, scoop earth, and build your own pile in a mobile-friendly construction sandbox.">
+<title>The Big Dig | EIC × Evercraft Worlds</title>
+<style>
+:root{color-scheme:dark;--bg:#101719;--paper:#f6f1e5;--dim:#b8b6ae;--gold:#f4b64f;--panel:#202a2c;--outline:#52605c}
+*{box-sizing:border-box}html{background:var(--bg)}body{margin:0;color:var(--paper);font:500 15px/1.42 system-ui,-apple-system,Segoe UI,sans-serif;min-height:100dvh;background:radial-gradient(ellipse at 50% -20%,#365159 0,transparent 55%),var(--bg)}
+a{color:inherit}.page{max-width:1280px;margin:auto;padding:18px clamp(14px,3vw,34px) 30px}
+header{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}.brand{display:flex;align-items:center;gap:12px;text-decoration:none;font-size:.82rem;letter-spacing:.2em;font-weight:850}.barlogo{width:37px;height:40px;display:flex;flex-direction:column;justify-content:center;gap:4px;transform:skew(-23deg)}.barlogo span{display:block;width:27px;height:8px;background:linear-gradient(135deg,#fff,#9ba5a7);border-radius:1px}.brand small{display:block;color:#c8a261;letter-spacing:.18em;font-size:.6rem;margin-top:2px}.back{font-size:.8rem;color:#e4cda0;text-decoration:none;border:1px solid #625843;padding:9px 13px;border-radius:100px}
+.hero{margin:20px 0 13px;display:flex;gap:14px;align-items:end;justify-content:space-between;flex-wrap:wrap}.eyebrow{color:var(--gold);text-transform:uppercase;letter-spacing:.21em;font-size:.65rem;font-weight:900}.hero h1{font-size:clamp(2.15rem,7vw,4.2rem);line-height:1;margin:7px 0 5px;letter-spacing:-.055em}.hero h1 span{color:var(--gold)}.hero p{max-width:660px;margin:7px 0 0;color:#d0d0c7;font-size:.93rem}.tag{border:1px solid #a18a61;border-radius:10px;padding:8px 11px;color:#f4dca8;font-weight:800;font-size:.69rem;letter-spacing:.05em}
+.toolbar{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin:15px 0}.pill{background:#202b2e;border:1px solid #4b5959;color:#e8e8e0;min-height:41px;padding:8px 15px;border-radius:100px;font-weight:800;cursor:pointer}.pill[aria-pressed=true]{background:#e9a93c;border-color:#ffcf79;color:#172023}.pill:focus-visible,button:focus-visible,a:focus-visible{outline:3px solid #f9df85;outline-offset:3px}
+.yard{position:relative;overflow:hidden;border:1px solid #53615d;background:#263944;border-radius:20px;box-shadow:0 15px 55px #0009;height:clamp(330px,56vh,640px);touch-action:none}
+canvas{display:block;width:100%;height:100%}.hud{position:absolute;top:12px;left:12px;right:12px;display:flex;justify-content:space-between;align-items:start;gap:8px;pointer-events:none}.hud .label{background:#111d21db;border:1px solid #91a2a066;color:#f7eacb;padding:7px 12px;border-radius:12px;font-size:.75rem;font-weight:800}.hud .label b{color:#ffca6d}.tip{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);max-width:min(94%,600px);background:#0e171ad9;border:1px solid #71817b7a;border-radius:13px;padding:9px 14px;text-align:center;color:#fff4d6;font-size:.84rem;pointer-events:none;min-width:min(85%,300px)}
+.bottom-area{display:grid;grid-template-columns: minmax(0,1fr) minmax(240px,300px);gap:14px;margin-top:14px}
+.control-panel,.mission{background:#1b2527;border:1px solid #51605d;border-radius:18px;padding:15px}.control-panel h2,.mission h2{font-size:.95rem;margin:0 0 10px;letter-spacing:.04em}
+.controls{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.control{border:1px solid #697369;background:linear-gradient(#34413f,#252e30);color:#fff7e3;border-radius:13px;padding:12px 6px;min-height:58px;font:800 .81rem system-ui;cursor:pointer;touch-action:none;user-select:none;-webkit-user-select:none}.control:active,.control.active{background:#eeb84d;color:#17201d;transform:translateY(1px)}.controls .action{background:linear-gradient(140deg,#f8c668,#d48b23);color:#161b18;border-color:#ffcb66;font-size:1rem}.controls .action.secondary{background:#455d54;color:#f7f3e6;border-color:#839385}.control small{font-size:.61rem;display:block;font-weight:600;color:inherit;opacity:.85;margin-top:2px}
+.state{display:grid;grid-template-columns:repeat(3,1fr);text-align:center;gap:4px;margin:7px 0 13px}.state b{display:block;font-size:1.5rem;font-variant-numeric:tabular-nums;color:#ffd077}.state span{font-size:.66rem;color:#c7cfc9;text-transform:uppercase;letter-spacing:.08em}.progress{height:9px;background:#121b1a;border-radius:8px;overflow:hidden;border:1px solid #53615c}.progress div{height:100%;width:0;background:linear-gradient(90deg,#f6b042,#ffe3a2);transition:width .28s}.mission p{font-size:.84rem;color:#d0d8cf;margin:11px 0}.row{display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap}.reset{background:transparent;color:#ead1a9;border:1px solid #7d765e;border-radius:9px;padding:8px 12px;cursor:pointer;font-weight:800}
+footer{display:flex;gap:18px;justify-content:space-between;flex-wrap:wrap;color:#aebbb6;font-size:.76rem;margin:17px 1px}footer a{color:#e8c179}.keyboard{font-size:.73rem;color:#c1c9c1;margin:10px 0 0}
+@media(max-width:800px){.bottom-area{grid-template-columns:1fr}.yard{height:min(53vh,490px);min-height:310px}.controls{grid-template-columns:repeat(4,minmax(0,1fr))}.control{font-size:.72rem;padding:10px 3px;min-height:60px}.page{padding-top:10px}.hero{margin-top:12px}.hero p{font-size:.84rem}.brand{font-size:.7rem}.tag{display:none}}
+@media(max-width:390px){.controls{gap:6px}.control{font-size:.68rem}.barlogo{width:32px}}
+@media(prefers-reduced-motion:reduce){.progress div{transition:none}}
+</style>
+</head>
+<body><main class="page">
+<header><a class="brand" href="../" aria-label="Evercraft Worlds home"><span class="barlogo" aria-hidden="true"><span></span><span></span><span></span></span><span>EVERCRAFT WORLDS<small>EIC · INDUSTRIAL EXPLORER</small></span></a><a class="back" href="../">← Back to Worlds</a></header>
+<section class="hero"><div><div class="eyebrow">Evercraft Industrial Complex · World 001</div><h1>THE <span>BIG DIG.</span></h1><p>Climb aboard. Move the machine. Scoop up some earth. Make the biggest dirt pile in the yard.</p></div><div class="tag">● PLAYABLE SIMULATION · NO REAL MACHINES</div></section>
+<div class="toolbar" role="group" aria-label="Select machinery"><button class="pill" id="excavator" aria-pressed="true">🚜 Excavator</button><button class="pill" id="backhoe" aria-pressed="false">🏗️ Backhoe</button><span id="machineDetail" style="color:#c2cbc5;font-size:.78rem">Tracked machine · long-reach boom</span></div>
+<section class="yard" aria-label="Interactive construction yard">
+<canvas id="scene" aria-label="Side-view interactive construction machine, digging pit, and stockpile"></canvas>
+<div class="hud"><div class="label">EIC <b>EARTHWORKS</b></div><div class="label" id="loadLabel">BUCKET EMPTY</div></div>
+<div class="tip" role="status" aria-live="polite" id="message">Tap DIG to scoop. Then tap DUMP to grow your pile! Hold the controls to move the machine and arm.</div>
+</section>
+<div class="bottom-area">
+<section class="control-panel"><h2>YOUR MACHINE CONTROLS</h2><div class="controls">
+<button class="control" data-hold="left">◀ Drive<small>A / ←</small></button><button class="control" data-hold="right">Drive ▶<small>D / →</small></button><button class="control" data-hold="up">Boom ↑<small>W / ↑</small></button><button class="control" data-hold="down">Boom ↓<small>S / ↓</small></button>
+<button class="control" data-hold="reach">Reach +<small>R</small></button><button class="control" data-hold="retract">Reach −<small>F</small></button><button class="control" data-hold="curl">Curl ↶<small>Q</small></button><button class="control" data-hold="uncurl">Curl ↷<small>E</small></button>
+<button class="control" data-hold="swingLeft">Swing ↶<small>J</small></button><button class="control" data-hold="swingRight">Swing ↷<small>L</small></button><button class="control action" data-action="dig">⛏ DIG<small>Space</small></button><button class="control action secondary" data-action="dump">⬇ DUMP<small>Enter</small></button>
+</div><p class="keyboard">Hold buttons on a phone, or use the keyboard. Dig and dump use a friendly assisted mode so anyone can start playing immediately.</p></section>
+<aside class="mission"><h2>🚧 THE FIRST WORK ORDER</h2><div class="state"><div><b id="dug">0</b><span>Scoops</span></div><div><b id="dumped">0</b><span>Delivered</span></div><div><b id="load">0</b><span>In bucket</span></div></div><div class="progress" role="progressbar" aria-label="Loads delivered toward the first work order" aria-valuemin="0" aria-valuemax="8" aria-valuenow="0" id="progress"><div id="progressFill"></div></div><p id="missionText">Deliver eight scoops to build a mound. Explore the controls and watch the yard change.</p><div class="row"><span style="font-size:.7rem;color:#dac394">LOCAL SANDBOX · NO ACCOUNT</span><button class="reset" id="reset">↺ Reset yard</button></div></aside>
+</div><footer><span>Made in Evercraft Worlds · EIC machinery explorer v0.1</span><a href="../../apps/earthworks-autonomy/">Explore the EarthWorks engineering simulator ↗</a><span>Educational stylized earthmoving, not equipment training or physically validated soil mechanics.</span></footer>
+</main>
+<script>
+'use strict';
+const canvas=document.getElementById('scene'),ctx=canvas.getContext('2d');
+const $=id=>document.getElementById(id), clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const keys=new Set(), buttons=new Map(); let resetVersion=0;
+const S={machine:'excavator',x:395,boom:.55,stick:-.95,curl:-.25,swing:0,load:0,dug:0,dumped:0,holes:[],piles:[],particles:[],camera:0,shake:0,clock:0,done:false};
+const WORLD=1100, GROUND=465, TARGET=8;
+const touchMachine={excavator:'Tracked machine · long-reach boom',backhoe:'Wheeled machine · loader and rear digging arm'};
+function message(s){$('message').textContent=s}
+function readout(){ $('dug').textContent=S.dug;$('dumped').textContent=S.dumped;$('load').textContent=S.load; $('loadLabel').textContent=S.load?'SOIL IN BUCKET · '+S.load+'/3':'BUCKET EMPTY'; $('progress').setAttribute('aria-valuenow',String(Math.min(TARGET,S.dumped)));$('progressFill').style.width=(100*Math.min(1,S.dumped/TARGET))+'%';$('missionText').textContent=S.done?'WORK ORDER COMPLETE! Brilliant digging. Keep building your earthworks masterpiece.':'Deliver '+(TARGET-S.dumped)+' more scoop'+(TARGET-S.dumped===1?'':'s')+' to finish the first work order.'}
+function setMachine(machine){S.machine=machine;S.x=machine==='excavator'?395:420;S.boom=.55;S.stick=-.95;S.curl=-.25;S.swing=0;['excavator','backhoe'].forEach(id=>$(id).setAttribute('aria-pressed',String(machine===id)));$('machineDetail').textContent=touchMachine[machine];message(machine==='excavator'?'Excavator ready! Try DIG, then DUMP.':'Backhoe ready! Use the controls to work the boom, or try assisted DIG.')}
+$('excavator').onclick=()=>setMachine('excavator');$('backhoe').onclick=()=>setMachine('backhoe');
+function reset(){Object.assign(S,{x:S.machine==='excavator'?395:420,boom:.55,stick:-.95,curl:-.25,swing:0,load:0,dug:0,dumped:0,holes:[],piles:[],particles:[],done:false});keys.clear();readout();message('Fresh yard! Tap DIG to scoop and DUMP to build your pile.');resetVersion++}
+$('reset').onclick=reset;
+function burst(x,y,color,n){for(let i=0;i<n;i++)S.particles.push({x,y,vx:(Math.random()-.5)*130,vy:-Math.random()*130-20,life:1,color,r:2+Math.random()*5})}
+function dig(){if(S.load>=3){message('Bucket full! Tap DUMP to unload first.');return;}S.load++;S.dug++;let x=clamp(S.x+165+S.swing*105,535,880);S.holes.push({x,depth:7+S.holes.filter(a=>Math.abs(a.x-x)<65).length*3});burst(x,GROUND,'#d49a4f',17);S.shake=4;message('SCOOP! Your bucket holds '+S.load+' load'+(S.load===1?'':'s')+'. Tap DUMP to deliver it.');readout();}
+function dump(){if(!S.load){message('Your bucket is empty. Tap DIG to scoop some earth!');return}let n=S.load;S.load=0;S.dumped+=n;S.piles.push({n});burst(215,GROUND-30-S.dumped*3,'#d49a4f',22);S.shake=3;if(S.dumped>=TARGET&&!S.done){S.done=true;message('🏆 WORK ORDER COMPLETE! You moved '+S.dumped+' scoops. The yard is yours!')}else{message('DUMPED '+n+' load'+(n===1?'':'s')+'! Watch your stockpile grow.');}readout()}
+document.querySelectorAll('[data-action]').forEach(b=>b.addEventListener('click',()=>b.dataset.action==='dig'?dig():dump()));
+document.querySelectorAll('[data-hold]').forEach(b=>{const k=b.dataset.hold;const release=()=>{keys.delete(k);b.classList.remove('active')};b.addEventListener('pointerdown',e=>{e.preventDefault();b.setPointerCapture(e.pointerId);keys.add(k);b.classList.add('active')});['pointerup','pointercancel','lostpointercapture'].forEach(evt=>b.addEventListener(evt,release));});
+const keyMap={ArrowLeft:'left',a:'left',ArrowRight:'right',d:'right',ArrowUp:'up',w:'up',ArrowDown:'down',s:'down',r:'reach',f:'retract',q:'curl',e:'uncurl',j:'swingLeft',l:'swingRight'};
+window.addEventListener('keydown',e=>{const id=keyMap[e.key.toLowerCase()]||keyMap[e.key];if(id){keys.add(id);e.preventDefault()}else if((e.key===' '||e.key==='Enter')&&!e.repeat){e.preventDefault();e.key===' '?dig():dump()}});
+window.addEventListener('keyup',e=>{const id=keyMap[e.key.toLowerCase()]||keyMap[e.key];if(id)keys.delete(id)});window.addEventListener('blur',()=>keys.clear());
+function line(x1,y1,x2,y2,width,color){ctx.strokeStyle=color;ctx.lineWidth=width;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke()}
+function box(x,y,w,h,r,fill,stroke){ctx.beginPath();ctx.roundRect(x,y,w,h,r);ctx.fillStyle=fill;ctx.fill();if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=2;ctx.stroke()}}
+function polygon(points,fill,stroke,width=1){ctx.beginPath();ctx.moveTo(...points[0]);points.slice(1).forEach(p=>ctx.lineTo(...p));ctx.closePath();ctx.fillStyle=fill;ctx.fill();if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=width;ctx.stroke()}}
+function circle(x,y,r,fill,stroke,width=2){ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fillStyle=fill;ctx.fill();if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=width;ctx.stroke()}}
+function text(str,x,y,size,color,weight='800'){ctx.fillStyle=color;ctx.font=weight+' '+size+'px system-ui,sans-serif';ctx.fillText(str,x,y)}
+function paintSky(w,h){let g=ctx.createLinearGradient(0,0,0,GROUND);g.addColorStop(0,'#172c3d');g.addColorStop(.64,'#47615f');g.addColorStop(1,'#eab76b');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
+circle(760,175,52,'#f9d88e');circle(760,175,85,'#ffd47918');
+polygon([[0,390],[90,315],[190,375],[320,268],[445,362],[605,280],[760,340],[890,274],[1100,374],[1100,470],[0,470]],'#304c4b');
+polygon([[0,422],[115,340],[250,397],[385,330],[580,423],[760,352],[950,382],[1100,327],[1100,485],[0,485]],'#4f5a52');
+for(let i=0;i<12;i++){let x=45+i*105;line(x,430,x,400-(i%4)*12,6,'#34473e');circle(x,399-(i%4)*12,15,'#385744')} }
+function paintGround(){ctx.fillStyle='#806044';ctx.fillRect(0,GROUND,WORLD,160);ctx.fillStyle='#ae8450';ctx.fillRect(0,GROUND,WORLD,7);ctx.fillStyle='#5a473a';ctx.fillRect(0,GROUND+95,WORLD,80);
+for(let i=0;i<63;i++){let x=(i*139+30)%WORLD,y=GROUND+16+(i*53)%130;line(x,y,x+3+(i%7)*3,y+1,2,i%3?'#d49d62':'#59483b')}
+polygon([[100,GROUND],[150,GROUND-28],[210,GROUND-14],[266,GROUND]],'#bd9057','#704d34',3);
+let pileH=Math.min(136,S.dumped*13);polygon([[100,GROUND],[175,GROUND-pileH],[208,GROUND-pileH*.85],[298,GROUND]],'#c08f50','#75502d',3);polygon([[175,GROUND-pileH],[208,GROUND-pileH*.85],[298,GROUND]],'#946c3f');
+for(let i=0;i<S.dumped;i++){let x=165+Math.sin(i*4.8)*Math.min(76,14+i*6),y=GROUND-(Math.min(120,i*12+8));circle(x,y,2.5,'#f3be76')}
+polygon([[535,GROUND],[561,GROUND-20],[655,GROUND-45],[730,GROUND-13],[810,GROUND-33],[882,GROUND]],'#b28a52','#74563b',3);
+for(const a of S.holes){ctx.beginPath();ctx.ellipse(a.x,GROUND+3,18+a.depth,5+a.depth*.35,0,0,7);ctx.fillStyle='#493b32';ctx.fill();ctx.strokeStyle='#dfb47c';ctx.lineWidth=2;ctx.stroke()}
+line(525,GROUND+23,875,GROUND+23,3,'#e9ca85');text('DIG ZONE',629,GROUND+51,19,'#f0d59f');
+line(97,GROUND+22,308,GROUND+22,3,'#e9ca85');text('STOCKPILE',129,GROUND+50,17,'#f0d59f');
+}
+function armCoords(){let pivot={x:S.x+13,y:GROUND-104},a=S.boom+.10,b=S.boom+S.stick;let knee={x:pivot.x+Math.cos(a)*112,y:pivot.y-Math.sin(a)*112},tip={x:knee.x+Math.cos(b)*102+S.swing*30,y:knee.y-Math.sin(b)*102};return{pivot,knee,tip}}
+function drawArm(){let {pivot,knee,tip}=armCoords();line(pivot.x,pivot.y,knee.x,knee.y,28,'#80501a');line(pivot.x,pivot.y,knee.x,knee.y,21,'#eda92f');line(knee.x,knee.y,tip.x,tip.y,23,'#70461a');line(knee.x,knee.y,tip.x,tip.y,17,'#eeb13b');line(pivot.x+15,pivot.y-8,knee.x+8,knee.y+14,7,'#b5b8b5');line(knee.x-7,knee.y+8,tip.x-5,tip.y+9,6,'#adb8bd');circle(pivot.x,pivot.y,12,'#394146','#f7cc6d');circle(knee.x,knee.y,10,'#343e40','#e8d49f');circle(tip.x,tip.y,8,'#283238','#fdc568');ctx.save();ctx.translate(tip.x,tip.y);ctx.rotate(S.curl);polygon([[-4,-2],[32,-10],[36,22],[13,31],[-9,10]],'#a7b0af','#45505a',4);polygon([[16,24],[37,16],[32,34],[19,40]],'#717b79');for(let i=0;i<S.load;i++)circle(8+i*9,8,6,'#9a693a');ctx.restore()}
+function logo(x,y){for(let i=0;i<3;i++)polygon([[x+i*0,y+i*9],[x+19,y+i*9],[x+12,y+6+i*9],[x-7,y+6+i*9]],'#f5f3e9')}
+function machine(){const x=S.x,y=GROUND;
+if(S.machine==='excavator'){box(x-93,y-45,181,43,19,'#262c2c','#545f5b');for(let i=0;i<8;i++)circle(x-71+i*21,y-23,9,'#616964','#a5aaa4',1);box(x-84,y-120,157,77,13,'#dc9528','#422d1a');polygon([[x-77,y-110],[x-18,y-128],[x+34,y-128],[x+27,y-52],[x-72,y-52]],'#f3b439','#643e1b',2);polygon([[x-66,y-102],[x-17,y-119],[x-11,y-64],[x-65,y-64]],'#263b43','#a3b6b2',2);line(x-42,y-106,x-39,y-67,3,'#748b8c');logo(x+40,y-103);drawArm();}
+else{box(x-105,y-90,203,60,12,'#e5a12f','#52391e');polygon([[x-24,y-132],[x+42,y-132],[x+69,y-84],[x-35,y-84]],'#e8aa3f','#66502d',3);polygon([[x-19,y-126],[x+29,y-126],[x+48,y-90],[x-30,y-90]],'#27414a','#afc3c4',2);circle(x-62,y-20,25,'#273038','#6c6f6b',4);circle(x+64,y-20,30,'#273038','#747a76',4);circle(x-62,y-20,10,'#aeb8ad');circle(x+64,y-20,12,'#aeb8ad');polygon([[x-113,y-84],[x-131,y-42],[x-151,y-44],[x-136,y-96]],'#adbac0','#505d60',2);logo(x+64,y-71);drawArm();}}
+function foreground(){ctx.fillStyle='#2d3632';ctx.fillRect(0,GROUND+145,WORLD,100);for(let i=0;i<18;i++)line(i*77,GROUND+138,i*77+25,GROUND+146,3,'#8b6a47')}
+function paint(){const width=canvas.clientWidth,height=canvas.clientHeight,dpr=Math.min(window.devicePixelRatio||1,2),px=Math.round(width*dpr),py=Math.round(height*dpr);if(canvas.width!==px||canvas.height!==py){canvas.width=px;canvas.height=py}
+ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,width,height);
+let zoom=height/640, viewW=width/zoom;let target=clamp(S.x-viewW*.45,0,Math.max(0,WORLD-viewW));S.camera+=(target-S.camera)*.085;
+ctx.save();ctx.scale(zoom,zoom);ctx.translate(-S.camera+(S.shake>0?(Math.random()-.5)*S.shake:0),0);
+paintSky(WORLD,640);paintGround();machine();foreground();
+for(const p of S.particles){circle(p.x,p.y,p.r,p.color)}
+ctx.restore();if(S.shake>0)S.shake*=.77}
+let last=performance.now();
+function frame(now){let dt=Math.min((now-last)/1000,.045);last=now;S.clock+=dt;const speed=S.machine==='backhoe'?87:60;let dir=(keys.has('right')?1:0)-(keys.has('left')?1:0);S.x=clamp(S.x+dir*speed*dt,135,945);
+S.boom=clamp(S.boom+((keys.has('up')?1:0)-(keys.has('down')?1:0))*dt*.85,-.2,1.25);
+S.stick=clamp(S.stick+((keys.has('reach')?1:0)-(keys.has('retract')?1:0))*dt*.95,-2,.15);
+S.curl=clamp(S.curl+((keys.has('curl')?1:0)-(keys.has('uncurl')?1:0))*dt*1.2,-1.4,1.05);
+S.swing=clamp(S.swing+((keys.has('swingRight')?1:0)-(keys.has('swingLeft')?1:0))*dt*.8,-1,1);
+S.particles=S.particles.filter(p=>p.life>0);for(const p of S.particles){p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=250*dt;p.life-=dt*1.7}
+paint();requestAnimationFrame(frame)}readout();requestAnimationFrame(frame);
+</script></body></html>
