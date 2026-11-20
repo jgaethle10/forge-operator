@@ -4,6 +4,22 @@ Aiden's Lab is Evercraft's **public science exploration front door**. It is not 
 
 ## Watershed Laboratory, first original landscape simulation (November 20, 2026)
 
+**Interactive terrain sculpting v2:** Visitors can select one of five zones
+and change its ridge altitude in 100 m keyboard-friendly steps, or turn on
+sculpt mode to drag the ridge with touch/mouse. Elevations remain ordered
+from summit to valley with a 100 m minimum between neighbors; a Restore
+Ridges action returns to source-defined elevations. Each change updates
+the **same** model cell elevation, illustrated mountain height and zone
+air temperature (a fixed, intentionally simplified 6.5°C/km lapse rate).
+The change can alter simulated rain versus snow, thaw and the river
+outflow. Seven-day Trial A captures the original five elevations; Trial B
+may use a newly sculpted mountain, but both begin with the same initial
+water storage profile, preserving a fair modeled comparison. A reset
+restores water stores, not the sculpted mountain. Tests verify mass
+conservation and altered snow phase/outflow after sculpting; no data
+is transmitted. This is not a terrain survey, meteorological lapse
+measurement, or routed hydrodynamic model.
+
 The next connected science-center hall is an actual **playable five-zone
 mountain-to-valley watershed**, not another static Earth article. It lives at
 `public/aiden-lab/watershed/index.html` and has its own tightly allowlisted
