@@ -54,6 +54,7 @@ jobs:
           node --check systemia/mission-bridge/gems/kss-spatial-contract.mjs
           node --test systemia/mission-bridge/gems/kss-spatial-contract.test.mjs
           python3 -m py_compile systemia/mission-bridge/gems/gems_002_negative_ablation.py
+          python3 -m py_compile systemia/mission-bridge/gems/gems_external_layer_gate.py
           python3 -m py_compile systemia/mission-bridge/gems/test_gems_002_negative_ablation.py
           bash -n systemia/mission-bridge/gems/execute_segment_replay.sh
           bash -n systemia/mission-bridge/gems/execute_candidate_qc.sh
@@ -101,6 +102,7 @@ jobs:
           python -m unittest -v test_audit_candidate_comparison.py
           python -m unittest -v test_gems_002_full_area_validation.py
           python -m unittest -v test_gems_004_hard_negative_ablation.py
+          python -m unittest -v test_gems_external_layer_gate.py
           python -m unittest -v test_gems_003_exploratory_overlay.py
           python -m unittest -v test_verify_official_input_hashes.py
       - name: Assert no scored submission or production tasks were invoked
