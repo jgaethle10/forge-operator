@@ -70,6 +70,29 @@ test('every currently shipped public project select value is accepted by real pr
  }finally{await runtime.close();fs.rmSync(dir,{force:true,recursive:true});}
 });
 
+test('read-only live offer contract matches buyer choices without creating leads or payment orders',async()=>{
+ const dir=temporary(),runtime=await startFabricLocalRuntime({
+  host:'127.0.0.1',port:0,catalog:[],studioLeadsDir:dir,faieSurfaceEnabled:false
+ });
+ try{
+  const url=runtime.url+'/api/commercial-studio/offer-contract';
+  const response=await fetch(url,{headers:{origin:ORIGIN}});
+  assert.equal(response.status,200);
+  assert.equal(response.headers.get('access-control-allow-origin'),ORIGIN);
+  const contract=await response.json();
+  assert.equal(contract.schema,'evercraft.studio.public-offer-contract.v1');
+  assert.equal(contract.default_project,STUDIO_INTRO_PROJECT);
+  assert.deepEqual(contract.project_options,STUDIO_PROJECT_OPTIONS);
+  assert.equal(contract.inquiry_route,'/api/commercial-studio/inquiry');
+  assert.equal(contract.intake_acceptance_proved,false);
+  assert.equal(contract.production_authority,false);
+  assert.equal(contract.payment_authority,false);
+  assert.doesNotMatch(JSON.stringify(contract),/casey@example\\.test|customer_name|private_dir|token/);
+  assert.equal((await fetch(url,{method:'POST'})).status,405);
+  assert.equal(fs.existsSync(path.join(dir,'inquiries.ndjson')),false);
+ }finally{await runtime.close();fs.rmSync(dir,{force:true,recursive:true});}
+});
+
 test('cached launch-week project is accepted but normalized to current non-expiring introductory offer',async()=>{
  const dir=temporary(),runtime=await startFabricLocalRuntime({
   host:'127.0.0.1',port:0,catalog:[],studioLeadsDir:dir,faieSurfaceEnabled:false
