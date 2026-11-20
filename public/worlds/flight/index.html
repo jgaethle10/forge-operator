@@ -421,9 +421,9 @@ return Object.freeze({SCHEMA,G,bounds,presets,preset,validate,analyze,startState
 });
 </script>
 <script id="aaar-ground-ops-v13">
-/* Airport runway-centerline endpoints sourced from FAA/AirNav location records.
- * Runways and names are geography-backed, but the scenery, flat pads, physics,
- * aircraft behavior, taxiways, and lighting are game approximations only.
+/* Fictional v1.3 training strip is the sole PLAYABLE location. Potential real-airport
+ * reference records are staged for QA, not geographically validated or renderable here.
+ * No source-located field is flight-authoritative or approved for simulator use.
  */
 (()=>{
 'use strict';
@@ -442,16 +442,18 @@ function make(code,name,designation,north,south,width,level){
 }
 // Boeing Field 14R/32L: surveyed runway-end coordinate values rounded for gameplay.
 // Sea-Tac 16L/34R: source FAA AIP runway threshold lat/lon.
-const fields=Object.freeze([
+const synthetic=Object.freeze({code:'GAME',name:'SEATTLE TRAINING FIELD',designation:'FICTIONAL',x:1810,z:0,width:96,length:2100,level:54,yaw:0,status:'SYNTHETIC_PLAYABLE'});
+const referenceFields=Object.freeze([
  make('KBFI','BOEING FIELD','14R / 32L',
    [47.54054283,-122.31135428],[47.51673663,-122.29122772],61,6.4),
  make('KSEA','SEA-TAC AIRPORT','16L / 34R',
    [47.46379522,-122.30775022],[47.43117228,-122.30803825],45.72,119)
-]);
-let activeCode='KBFI';
+].map(f=>Object.freeze({...f,status:'REFERENCE_ONLY_UNVERIFIED'})));
+const fields=Object.freeze([synthetic,...referenceFields]);
+let activeCode='GAME';
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 function selected(){return fields.find(f=>f.code===activeCode)||fields[0];}
-function choose(code){if(!fields.some(f=>f.code===code))throw Error('Unknown airport');activeCode=code;return selected();}
+function choose(code){if(code!=='GAME')throw Error('airport_reference_not_yet_playable');activeCode=code;return selected();}
 function point(f,u,v){
  return {x:f.x+Math.cos(f.yaw)*u+Math.sin(f.yaw)*v,
          z:f.z-Math.sin(f.yaw)*u+Math.cos(f.yaw)*v};
@@ -464,17 +466,12 @@ function local(f,x,z){
 function insideFor(f,x,z,margin=0){const p=local(f,x,z);
  return Math.abs(p.u)<=f.width/2-margin&&Math.abs(p.v)<=f.length/2-margin;
 }
-function at(x,z){return fields.find(f=>insideFor(f,x,z,6))||null;}
+function at(x,z){const f=selected();return insideFor(f,x,z,6)?f:null;}
 function surface(x,z,base){
- let h=base;
- for(const f of fields){
-  const p=local(f,x,z);
-  const lateral=clamp((f.width/2+230-Math.abs(p.u))/230,0,1);
-  const longitudinal=clamp((f.length/2+280-Math.abs(p.v))/280,0,1);
-  const factor=lateral*longitudinal;
-  h=h+(f.level-h)*factor;
- }
- return h;
+ const f=selected(),p=local(f,x,z);
+ const lateral=clamp((f.width/2+230-Math.abs(p.u))/230,0,1);
+ const longitudinal=clamp((f.length/2+280-Math.abs(p.v))/280,0,1);
+ return base+(f.level-base)*lateral*longitudinal;
 }
 function landing(s,terrain){
  const f=at(s.x,s.z);
@@ -499,7 +496,7 @@ window.AAARGroundOps=Object.freeze({
  fields,source,point,local,at,surface,landing,spawn,approach,select:choose,
  get field(){return selected()},
  inside(x,z,margin=0){return insideFor(selected(),x,z,margin)},
- schema:'evercraft.aaar.flight-ground-ops.v2',world:'SOURCE_LOCATED_VISUAL_GAMEPLAY_AIRFIELDS'
+ schema:'evercraft.aaar.flight-ground-ops.v1',world:'FICTIONAL_GAMEPLAY_AIRFIELD'
 });
 })();
 </script>
