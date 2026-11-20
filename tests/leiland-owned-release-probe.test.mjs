@@ -12,6 +12,7 @@ function setup(){
   'leiland/index.html':'<html><meta http-equiv="Content-Security-Policy"><span>CONCEPTUAL ANIMATION</span></html>',
   'leiland/style.css':'.test{color:white}',
   'leiland/brain.js':'console.log("illustration")',
+  'leiland/neural-universe.mjs':'export const REGIONS=[];',
   'leiland/pulse-bridge.mjs':'export const yes=true;',
   'leiland/feed.json':JSON.stringify({schema:'evercraft.leiland.public-feed.v1',status:'not_connected',published_at:null,
    signals:{inference:{state:'unverified',observed_at:null,receipt_url:null},missions:{state:'unverified',observed_at:null,receipt_url:null}},events:[]}),
@@ -42,7 +43,7 @@ test('readback validates exact deployed bytes and reports observed source attest
  await withFixture(async f=>{
   const result=await probeLeilandPublicOrigin({origin:'https://ai.evercraft.example/',publicRoot:f.root,fetchImpl:f.fetchImpl,now:NOW});
   assert.equal(result.public_https_asset_parity,'matched');
-  assert.equal(result.assets_checked,5);
+  assert.equal(result.assets_checked,6);
   assert.equal(result.heartbeat_source_state,'source_attested');
   assert.equal(result.cycle_number,8);
   assert.equal(result.inference_publisher_state,'not_connected');

@@ -6,7 +6,7 @@ import crypto from 'node:crypto';
 import {fileURLToPath} from 'node:url';
 import {assessPublicPulse} from '../public/kaidance/pulse-source.mjs';
 
-const ASSETS=['leiland/index.html','leiland/style.css','leiland/brain.js','leiland/pulse-bridge.mjs','kaidance/pulse-source.mjs'];
+const ASSETS=['leiland/index.html','leiland/style.css','leiland/brain.js','leiland/neural-universe.mjs','leiland/pulse-bridge.mjs','kaidance/pulse-source.mjs'];
 const PULSE_KEYS=['schema','state','cycle_number','last_completed_cycle','heartbeat_target_seconds','admitted_count','held_count','coverage_receipt_valid','field_attestation_verified','observed_at','published_at'];
 const error=why=>{throw Error(why)};
 const digest=buffer=>crypto.createHash('sha256').update(buffer).digest('hex');

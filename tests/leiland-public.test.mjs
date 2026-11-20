@@ -44,7 +44,7 @@ test('the renderer does not send model commands or display unsafe event markup',
  assert.ok(script.includes("fetch('./feed.json"),'Use same-origin public projection');
  assert.ok(script.includes('github.com/jgaethle10/forge-operator'),'Use only public canonical code history');
  assert.ok(script.includes("fetch('../kaidance/pulse.json"),'Use existing KAIDANCE approved public pulse only');
- assert.ok(script.includes('pulseFlashUntil'),'Real observed cycle changes drive heartbeat flash');
+ assert.ok(script.includes('universe?.acknowledgeCycle();'),'Only source-attested cycle changes drive the acknowledgement ripple');
  assert.ok(!/fetch\([^)]*['"]\/v1\/team-review/.test(script));
  assert.ok(!/innerHTML/.test(script),'No HTML injection path');
 });

@@ -15,6 +15,7 @@ export const STATIC_PATHS=Object.freeze({
  '/leiland/index.html':'leiland/index.html',
  '/leiland/style.css':'leiland/style.css',
  '/leiland/brain.js':'leiland/brain.js',
+ '/leiland/neural-universe.mjs':'leiland/neural-universe.mjs',
  '/leiland/pulse-bridge.mjs':'leiland/pulse-bridge.mjs',
  '/kaidance/index.html':'kaidance/index.html',
  '/kaidance/style.css':'kaidance/style.css',
