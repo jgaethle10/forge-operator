@@ -215,8 +215,29 @@ async function lookupPublicAerial(){
   }catch(e){if(generation===state.lookupGeneration)$('messages').textContent='No aerial loaded: '+e.message+' You can upload your own image instead.'}
   finally{if(generation===state.lookupGeneration){button.disabled=false;button.textContent='Find public aerial'}}
 }
-function readImage(input,key,label){const f=input.files?.[0];if(!f)return;if(!/^image\/(png|jpeg|webp)$/.test(f.type)||f.size>12*1024*1024){alert('Use PNG, JPG or WebP up to 12 MB.');input.value='';return}const generationKey=key==='siteImage'?'siteGeneration':'contextGeneration';const generation=++state[generationKey];const reader=new FileReader();reader.onload=async()=>{if(generation!==state[generationKey])return;if(key==='siteImage'){++state.lookupGeneration;state.aerialProvenance=null;state.contextImage='';state.contextSource='';state.contextHash='';++state.contextGeneration;$('contextImage').value='';if($('siteName').value==='DEMONSTRATION RETAIL SITE')$('siteName').value='SITE CONCEPT · OPERATOR REVIEW';state.marks=[];state.pending=null;state.calibration=null;state.calibrationPending=null;$('messages').textContent='New site aerial: all prior conceptual marks cleared. Place new marks based on this source.';$('sourceText').value='Operator-supplied '+f.name+' / rights and location unverified'}state[key]=String(reader.result);state[label]=f.name;state[key==='siteImage'?'siteHash':'contextHash']='';if(typeof crypto!=='undefined'&&crypto.subtle&&typeof f.arrayBuffer==='function'){try{const hash=await crypto.subtle.digest('SHA-256',await f.arrayBuffer());if(generation===state[generationKey])state[key==='siteImage'?'siteHash':'contextHash']=Array.from(new Uint8Array(hash)).map(n=>n.toString(16).padStart(2,'0')).join('')}catch{}}$('sourceState').textContent='Operator image: '+f.name+' · byte fingerprint only · not verified geography';draw()};reader.readAsDataURL(f)}
-for(const id of ['siteName','address','rev','sourceText'])$(id).addEventListener('input',draw);
+function invalidateAddressBoundAerial(){
+  ++state.lookupGeneration;
+  const lookupButton=$('lookupAerial');
+  lookupButton.disabled=false;
+  lookupButton.textContent='Find public aerial';
+  if(state.aerialProvenance){
+    // Prevent an edited address from silently relabeling a different property's imagery.
+    ++state.siteGeneration;++state.contextGeneration;
+    state.siteImage='';state.contextImage='';
+    state.siteSource='';state.contextSource='';
+    state.siteHash='';state.contextHash='';
+    state.marks=[];state.calibration=null;
+    state.calibrationPending=null;state.pending=null;state.aerialProvenance=null;
+    $('siteImage').value='';$('contextImage').value='';
+    $('sourceState').textContent='Address changed. Find a new aerial or upload an image.';
+    $('sourceText').value='No image currently associated with this address';
+    $('messages').textContent='Previous aerial cleared to avoid mixing two different properties.';
+  }
+  draw();
+}
+function readImage(input,key,label){const f=input.files?.[0];if(!f)return;if(!/^image\/(png|jpeg|webp)$/.test(f.type)||f.size>12*1024*1024){alert('Use PNG, JPG or WebP up to 12 MB.');input.value='';return}const generationKey=key==='siteImage'?'siteGeneration':'contextGeneration';const generation=++state[generationKey];const reader=new FileReader();reader.onload=async()=>{if(generation!==state[generationKey])return;if(key==='siteImage'){++state.lookupGeneration;$('lookupAerial').disabled=false;$('lookupAerial').textContent='Find public aerial';state.aerialProvenance=null;state.contextImage='';state.contextSource='';state.contextHash='';++state.contextGeneration;$('contextImage').value='';if($('siteName').value==='DEMONSTRATION RETAIL SITE')$('siteName').value='SITE CONCEPT · OPERATOR REVIEW';state.marks=[];state.pending=null;state.calibration=null;state.calibrationPending=null;$('messages').textContent='New site aerial: all prior conceptual marks cleared. Place new marks based on this source.';$('sourceText').value='Operator-supplied '+f.name+' / rights and location unverified'}state[key]=String(reader.result);state[label]=f.name;state[key==='siteImage'?'siteHash':'contextHash']='';if(typeof crypto!=='undefined'&&crypto.subtle&&typeof f.arrayBuffer==='function'){try{const hash=await crypto.subtle.digest('SHA-256',await f.arrayBuffer());if(generation===state[generationKey])state[key==='siteImage'?'siteHash':'contextHash']=Array.from(new Uint8Array(hash)).map(n=>n.toString(16).padStart(2,'0')).join('')}catch{}}$('sourceState').textContent='Operator image: '+f.name+' · byte fingerprint only · not verified geography';draw()};reader.readAsDataURL(f)}
+for(const id of ['siteName','rev','sourceText'])$(id).addEventListener('input',draw);
+$('address').addEventListener('input',invalidateAddressBoundAerial);
 $('siteImage').addEventListener('change',e=>readImage(e.target,'siteImage','siteSource'));
 $('lookupAerial').addEventListener('click',lookupPublicAerial);
 $('saveSourcePhotos').addEventListener('click',saveSourcePhotos);
