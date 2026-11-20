@@ -94,8 +94,16 @@ if [ -e "$WORKTREE" ]; then
     { echo "STOP: existing worktree has advanced; refusing to overwrite it"; exit 1; }
   git -C "$WORKTREE" diff --quiet ||
     { echo "STOP: tracked files in worktree were modified"; exit 1; }
-  test -z "$(git -C "$WORKTREE" diff --cached --name-only)" ||
-    { echo "STOP: pre-existing staged changes must be inspected"; exit 1; }
+  # A prior commit can fail after Git has successfully staged these exact
+  # two files (for example, when the local Git author identity is missing).
+  # Allow ONLY those files; reject any unrelated staged changes.
+  EXISTING_STAGED="$(git -C "$WORKTREE" diff --cached --name-only)"
+  if [ -n "$EXISTING_STAGED" ]; then
+    EXPECTED_EXISTING="$(printf '%s\n' "$PAYLOAD" "$RECEIPT" | sort)"
+    test "$(printf '%s\n' "$EXISTING_STAGED" | sort)" = "$EXPECTED_EXISTING" ||
+      { echo "STOP: unexpected previously staged files; no changes made"; exit 1; }
+    echo "Previous commit stopped with the exact two verified files staged; continuing."
+  fi
   for item in "$PAYLOAD" "$RECEIPT"; do
     test -f "$WORKTREE/$item" && test ! -L "$WORKTREE/$item" ||
       { echo "STOP: expected courier file missing or replaced by link: $item"; exit 1; }
@@ -144,7 +152,14 @@ test "$STAGED_DIGEST" = "$ARCHIVE_SHA" ||
 git -C "$WORKTREE" diff --cached --stat
 git -C "$WORKTREE" diff --cached --quiet &&
   { echo "STOP: expected courier files were not staged"; exit 1; }
-git -C "$WORKTREE" -c commit.gpgsign=false commit -m "artifact(aiw): courier immutable verified historical beta snapshot to owned edge"
+# The courier is an automated artifact transfer, not a human-authored change.
+# This one-shot identity is deliberately non-deliverable and does not change
+# ~/.gitconfig, the repository config, or any other Evercraft commits.
+git -C "$WORKTREE" \
+  -c user.name="Evercraft AIW Release Courier" \
+  -c user.email="aiw-release-courier@evercraft.invalid" \
+  -c commit.gpgsign=false \
+  commit -m "artifact(aiw): courier immutable verified historical beta snapshot to owned edge"
 PAYLOAD_COMMIT="$(git -C "$WORKTREE" rev-parse HEAD)"
 echo "=== PUSH ONE NON-PRODUCTION GITHUB COURIER REF ==="
 git -C "$WORKTREE" push origin "HEAD:refs/heads/$BRANCH"
