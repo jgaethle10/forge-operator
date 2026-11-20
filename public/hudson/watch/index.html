@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#040b13">
-<meta name="hudson-watch-release" content="river-current-v2-jointed-explorer"><meta name="description" content="Watch HUDSON's flowing knowledge currents and source-linked replay on Evercraft's owned public observatory.">
+<meta name="hudson-watch-release" content="river-current-v3-anomaly"><meta name="description" content="Watch HUDSON's flowing knowledge currents and source-linked replay on Evercraft's owned public observatory.">
 <title>HUDSON | Enter the Current</title>
 <style>
 :root{color-scheme:dark;--aqua:#9affdc;--chalk:#e2f7f1;--soft:#9ebabb}
@@ -217,69 +217,91 @@ function drawConfluences(){
 }
 // Eight articulated, short limbs replace the old straight filament fan.
 // Pair spacing and joint motion are scenic. No source or mission status is inferred.
-function explorerLegGeometry(size,leg,phase){
- var pair=Math.floor(leg/2),side=leg%2===0?-1:1;
- var shoulderX=[.43,.16,-.17,-.44][pair]*size;
- var kneeX=[1.04,.56,-.48,-.93][pair]*size;
- var footX=[1.12,.32,-.67,-1.00][pair]*size;
- var step=Math.sin(phase+pair*1.64+side*1.15);
- var lift=Math.max(0,Math.cos(phase+pair*1.64+side*1.15));
+// HUDSON's Presence is intentionally unclassifiable: a dark, folding
+// fragment of the current, not a spider, an animal, or a mission indicator.
+// These deterministic forms are scenic only and never represent AI activity.
+function anomalyFilament(time,index){
+ var wave=Math.sin(time*(.22+index*.013)+index*1.67);
+ var unfold=Math.pow(Math.max(0,wave),1.7);
  return {
-  side:side,
-  startX:shoulderX,startY:side*size*.13,
-  kneeX:kneeX+step*size*.09,
-  kneeY:side*size*(.54+pair*.065)-lift*side*size*.075,
-  footX:footX+step*size*.11,
-  footY:side*size*(.84+(pair%2)*.12)-lift*side*size*.15
+  angle:index*2.399963+Math.sin(time*.11+index*.8)*.55,
+  reach:.47+unfold*1.23,
+  curl:Math.sin(time*.33+index*1.03)*.47,
+  opacity:.055+unfold*.46
  };
 }
-function spider(from,to,t){
- var pos=locate(from,to,t),ahead=locate(from,to,Math.min(.999,t+.009));
- var dx=ahead.x-pos.x,dy=ahead.y-pos.y,angle=Math.atan2(dy,dx);
- // In an iPhone river, the explorer is a recognizable little creature,
- // not a 200px comet with straight antennae.
- var size=Math.max(15,Math.min(28,width*.044));
- var gait=clock*3.1;
- ctx.save();ctx.translate(pos.x,pos.y);ctx.rotate(angle);ctx.globalCompositeOperation="source-over";
- var halo=ctx.createRadialGradient(0,0,0,0,0,size*2.4);
- halo.addColorStop(0,"rgba(194,255,230,.13)");
- halo.addColorStop(.38,"rgba(80,237,194,.045)");
- halo.addColorStop(1,"rgba(53,147,221,0)");
- ctx.fillStyle=halo;ctx.beginPath();ctx.arc(0,0,size*2.4,0,Math.PI*2);ctx.fill();
- // Soft compact wake strands curl behind, instead of trailing long whiskers.
- for(var wake=0;wake<3;wake++){
-  var drift=(wake-1)*size*.18;
-  ctx.beginPath();ctx.moveTo(-size*.40,drift);
-  ctx.bezierCurveTo(-size*.8,drift+Math.sin(gait*.48+wake)*size*.18,-size*1.28,drift+Math.sin(gait*.42+wake)*size*.13,-size*1.65,drift*.65);
-  ctx.strokeStyle=wake===1?"rgba(160,255,230,.12)":"rgba(128,197,249,.06)";
-  ctx.lineWidth=.8;ctx.shadowBlur=4;ctx.shadowColor="#8dffdc";ctx.stroke();
+function anomalyForm(time){
+ return {
+  fold:.5+.5*Math.sin(time*.37+.8),
+  rotation:time*.18+Math.sin(time*.23)*.24,
+  aperture:.42+.28*Math.sin(time*.29+1.7)
+ };
+}
+function drawAnomaly(from,to,t){
+ var pos=locate(from,to,t),ahead=locate(from,to,Math.min(.999,t+.012));
+ var angle=Math.atan2(ahead.y-pos.y,ahead.x-pos.x);
+ var size=Math.max(17,Math.min(30,width*.052));
+ var form=anomalyForm(clock),now=clock;
+ ctx.save();ctx.translate(pos.x,pos.y);ctx.rotate(angle+Math.sin(now*.28)*.16);
+ ctx.globalCompositeOperation="source-over";
+ // A nearly invisible distortion makes the presence legible in bright water,
+ // without turning it into a white bug, star or obvious head/body silhouette.
+ var veil=ctx.createRadialGradient(0,0,0,0,0,size*2.25);
+ veil.addColorStop(0,"rgba(1,17,27,.38)");
+ veil.addColorStop(.34,"rgba(15,64,71,.15)");
+ veil.addColorStop(1,"rgba(15,64,71,0)");
+ ctx.fillStyle=veil;ctx.beginPath();ctx.arc(0,0,size*2.25,0,Math.PI*2);ctx.fill();
+ // Sparse irregular feelers emerge, curl, fade and retract. No fixed leg count.
+ for(var thread=0;thread<9;thread++){
+  var p=anomalyFilament(now,thread);
+  if(p.opacity<.075)continue;
+  var a=p.angle,c=p.curl,reach=size*p.reach;
+  var sx=Math.cos(a)*size*.24,sy=Math.sin(a)*size*.20;
+  var ex=Math.cos(a+c)*reach,ey=Math.sin(a+c)*reach*.77;
+  var turn=c*size*.62;
+  ctx.beginPath();ctx.moveTo(sx,sy);
+  ctx.bezierCurveTo(sx+Math.cos(a+.6)*reach*.33,sy+Math.sin(a+.6)*reach*.22,
+                   ex-Math.cos(a)*reach*.22-Math.sin(a)*turn,
+                   ey-Math.sin(a)*reach*.18+Math.cos(a)*turn,ex,ey);
+  ctx.strokeStyle=thread%3===0?"rgba(179,165,247,"+p.opacity.toFixed(3)+")":
+    "rgba(125,247,217,"+p.opacity.toFixed(3)+")";
+  ctx.lineWidth=.55+Math.min(.8,p.opacity*1.15);ctx.stroke();
+  if(p.opacity>.28){
+   ctx.fillStyle="rgba(200,255,239,"+(p.opacity*.82).toFixed(3)+")";
+   ctx.beginPath();ctx.arc(ex,ey,.6+p.opacity,0,Math.PI*2);ctx.fill();
+  }
  }
- // Four mirrored pairs. Each leg has a distinct shoulder, flexing knee and foot.
- for(var leg=0;leg<8;leg++){
-  var g=explorerLegGeometry(size,leg,gait);
-  ctx.beginPath();ctx.moveTo(g.startX,g.startY);
-  ctx.quadraticCurveTo((g.startX+g.kneeX)*.59,g.startY+g.side*size*.38,g.kneeX,g.kneeY);
-  ctx.quadraticCurveTo(g.kneeX+(g.footX-g.kneeX)*.22,g.footY-g.side*size*.09,g.footX,g.footY);
-  // A dark under-stroke separates each articulated leg from brilliant currents.
-  ctx.shadowBlur=0;ctx.lineWidth=4.5;ctx.strokeStyle="rgba(2,23,33,.9)";ctx.stroke();
-  ctx.lineWidth=leg<4?1.95:1.7;
-  ctx.strokeStyle=leg%3===0?"rgba(186,205,255,.88)":"rgba(172,255,223,.9)";
-  ctx.stroke();
-  ctx.beginPath();ctx.arc(g.kneeX,g.kneeY,1.1,0,Math.PI*2);
-  ctx.fillStyle="rgba(229,255,246,.92)";ctx.fill();
-  ctx.beginPath();ctx.arc(g.footX,g.footY,1.35,0,Math.PI*2);
-  ctx.fillStyle=leg%3===0?"#c4bfff":"#9affd7";ctx.fill();
+ // Broken revolving contours: the structure reveals itself for a moment and
+ // almost disappears again. The dark center is deliberate negative space.
+ ctx.save();ctx.rotate(form.rotation);
+ for(var ring=0;ring<3;ring++){
+  var radius=size*(.41+ring*.18),phase=now*(ring%2===0?.12:-.17)+ring*2.08;
+  ctx.beginPath();ctx.ellipse(0,0,radius,radius*(.54+.07*Math.sin(now*.31+ring)),
+    ring*.38+Math.sin(now*.09)*.19,phase,phase+1.8+form.aperture*.95);
+  ctx.strokeStyle=ring===1?"rgba(167,147,255,"+(.23+form.fold*.17).toFixed(3)+")":
+    "rgba(147,251,223,"+(.25+form.fold*.18).toFixed(3)+")";
+  ctx.lineWidth=ring===0?1.25:.8;ctx.stroke();
  }
- // A compact segmented, luminous body points in the direction of travel.
- ctx.shadowBlur=0;ctx.fillStyle="#061a29";ctx.strokeStyle="rgba(183,255,231,.91)";
- ctx.lineWidth=1.7;ctx.beginPath();ctx.ellipse(-size*.13,0,size*.47,size*.35,0,0,Math.PI*2);ctx.fill();ctx.stroke();
- // Two restrained shell markings, not a single overexposed white star.
- ctx.fillStyle="rgba(110,229,193,.6)";ctx.beginPath();ctx.ellipse(-size*.19,0,size*.26,size*.16,0,0,Math.PI*2);ctx.fill();
- ctx.fillStyle="#e6fdf1";ctx.strokeStyle="#062330";ctx.lineWidth=2;
- ctx.beginPath();ctx.ellipse(size*.37,0,size*.24,size*.26,0,0,Math.PI*2);ctx.fill();ctx.stroke();
- ctx.fillStyle="#194253";ctx.beginPath();ctx.arc(size*.53,-size*.09,1.45,0,Math.PI*2);ctx.arc(size*.53,size*.09,1.45,0,Math.PI*2);ctx.fill();
- ctx.strokeStyle="rgba(166,255,225,.25)";ctx.lineWidth=.8;ctx.beginPath();
- ctx.ellipse(0,0,size*.86,size*.72,0,0,Math.PI*2);ctx.stroke();
+ // The nucleus changes from a dark slit to a translucent folded shard.
+ ctx.rotate(-form.rotation*.44);
+ ctx.beginPath();
+ ctx.moveTo(-size*.28,-size*(.09+form.fold*.13));
+ ctx.quadraticCurveTo(-size*.04,-size*(.33+form.aperture*.12),size*.28,-size*.10);
+ ctx.quadraticCurveTo(size*(.35+form.fold*.12),size*.07,size*.12,size*.25);
+ ctx.quadraticCurveTo(-size*.17,size*(.19+form.fold*.08),-size*.28,-size*(.09+form.fold*.13));
+ ctx.closePath();
+ ctx.fillStyle="rgba(4,30,41,.86)";ctx.fill();
+ ctx.strokeStyle="rgba(194,255,235,"+(.48+form.fold*.28).toFixed(3)+")";
+ ctx.lineWidth=1.15;ctx.stroke();
+ ctx.beginPath();ctx.moveTo(-size*.14,size*.03);
+ ctx.quadraticCurveTo(size*.04,-size*.10,size*(.11+form.aperture*.1),size*.04);
+ ctx.strokeStyle="rgba(158,250,230,.54)";ctx.lineWidth=.9;ctx.stroke();
+ ctx.restore();
+ // A faint delayed echo suggests movement, not a rigid body with limbs.
+ var echo=Math.sin(now*.61)*.5+.5;
+ ctx.strokeStyle="rgba(139,218,244,"+(.09+echo*.09).toFixed(3)+")";
+ ctx.lineWidth=.7;ctx.beginPath();ctx.arc(-size*.22,size*.08,size*(.93+echo*.14),
+   now*.11,now*.11+Math.PI*.64);ctx.stroke();
  ctx.restore();
 }
 function routeAt(){
@@ -308,7 +330,7 @@ function paint(dt){
  ctx.translate(width/2,height/2);ctx.scale(camera.zoom,camera.zoom);
  ctx.translate(-width/2+camera.dx,-height/2+camera.dy);
  drawWatershed();drawRivers();drawParticles(dt);drawConfluences();
- var trip=routeAt();spider(trip.from,trip.to,.04+trip.t*.92);
+ var trip=routeAt();drawAnomaly(trip.from,trip.to,.04+trip.t*.92);
  if(clock<flashUntil){
   var p=coordinates(trip.to);ctx.strokeStyle="rgba(182,255,220,"+((flashUntil-clock)/3*.7)+")";ctx.lineWidth=2;ctx.beginPath();ctx.arc(p.x,p.y,40+(3-(flashUntil-clock))*30,0,7);ctx.stroke();
  }
@@ -362,7 +384,7 @@ function presentStory(){
  selectedTopic=null;
  if(!feed.length){
   storyKind.textContent="SCENIC CURRENT · NOT A LIVE MISSION";story.textContent="The river remembers.";
-  storySub.textContent="The explorer moves through conceptual connections; public source history is unavailable.";
+  storySub.textContent="An unfamiliar presence follows the illustrative currents; no live mission is being shown.";
   receipt.hidden=true;receipt.removeAttribute("href");return;
  }
  var e=feed[currentIndex%feed.length],url=safeReceipt(e);
