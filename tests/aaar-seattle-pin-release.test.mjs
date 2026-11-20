@@ -6,21 +6,21 @@ import {spawnSync} from 'node:child_process';
 
 const script=fs.readFileSync('scripts/publish-aaar-seattle-now.mjs','utf8');
 const html=fs.readFileSync('public/worlds/flight/index.html');
-const expected='d34fc1fb244565236880c3922cd2e7b89923768bfe2812f5fed652875ef0b2e0';
+const expected='4914c2eef58750031169469b3884692035b93fb1d2e1ece3a7d6f2802c609134';
 
-test('emergency flight release pins exact reviewed Seattle main and static asset',()=>{
- // The emergency Penguin release is intentionally pinned to the reviewed v1.0 commit.
- // Newer development HTML must NOT silently repoint the owner-only release helper.
- const pin='6dce44dd35aad415354c7d0659850c959f9735a7';
+test('Vista 1.1 owner release pins merged candidate and exact new flight asset',()=>{
+ const pin='bfd483458fb983453c7bee4e7ead607c3a74b297';
  const pinned=spawnSync('git',['show',pin+':public/worlds/flight/index.html'],{encoding:'buffer',maxBuffer:2*1024*1024,timeout:5000});
- if(pinned.status===0)assert.equal(createHash('sha256').update(pinned.stdout).digest('hex'),expected);
- assert.match(html.toString('utf8'),/seattle-vista-v11|flat-lit-glass-water-v10/);
- assert.match(script,/6dce44dd35aad415354c7d0659850c959f9735a7/);
+ assert.equal(pinned.status,0,'pinned Vista 1.1 commit must be locally present');
+ assert.equal(createHash('sha256').update(pinned.stdout).digest('hex'),expected);
+ assert.equal(createHash('sha256').update(html).digest('hex'),expected);
+ assert.match(script,/bfd483458fb983453c7bee4e7ead607c3a74b297/);
  assert.ok(script.includes(expected));
  assert.match(html.toString('utf8'),/id="aaar-seattle-geography"/);
  assert.match(html.toString('utf8'),/Space Needle/);
- assert.match(script,/Reviewed Seattle Graphics 1\.0/);
- assert.ok(script.includes("const ALLOWED_OLD='c57de0eec09b1aadc1124c7464a0e825ce30251fdd05f1f088f4549a7915feed'"));
+ assert.match(html.toString('utf8'),/seattle-vista-v11/);
+ assert.match(html.toString('utf8'),/STYLIZED_GAMEPLAY_HIGHLANDS/);
+ assert.ok(script.includes("const ALLOWED_OLD='d34fc1fb244565236880c3922cd2e7b89923768bfe2812f5fed652875ef0b2e0'"));
 });
 test('operator release gates same named Penguin vault and actual local route',()=>{
  assert.match(script,/os\.hostname\(\)!=='penguin'/);
