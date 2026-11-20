@@ -1,0 +1,62 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import vm from 'node:vm';
+import path from 'node:path';
+import {fileURLToPath} from 'node:url';
+const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../..');
+const watch=fs.readFileSync(path.join(root,'public/hudson/watch/index.html'),'utf8');
+const home=fs.readFileSync(path.join(root,'public/hudson/index.html'),'utf8');
+const code=watch.match(/<script>([\s\S]*?)<\/script>/)?.[1];
+
+test('river Watch is an interactive site and not an image stand-in',()=>{
+ assert.match(home,/href="\.\/watch\/"/);
+ assert.match(home,/Enter the Current/);
+ assert.match(watch,/hudson-watch-release" content="river-current-v1"/);
+ assert.match(watch,/canvas id="current"/);
+ assert.match(watch,/id="explore"/);
+ assert.match(watch,/id="pause"/);
+ assert.match(watch,/id="next"/);
+ assert.match(watch,/role="dialog"/);
+ assert.match(watch,/CURRENT|RIVER|SCENIC CURRENT/);
+ assert.ok(code);
+ assert.doesNotThrow(()=>new vm.Script(code));
+ assert.match(code,/function drawRivers\(/);
+ assert.match(code,/function drawParticles\(/);
+ assert.match(code,/function drawConfluences\(/);
+ assert.match(code,/function spider\(from,to,t\)/);
+ assert.match(code,/function routeAt\(/);
+ assert.match(code,/canvas\.addEventListener\("click"/);
+});
+test('source admission is read-only, exact origin-bound and cannot forge live missions',()=>{
+ assert.match(code,/\.\.\/activity\.json\?watch=/);
+ assert.match(code,/credentials:"omit"/);
+ assert.match(code,/cache:"no-store"/);
+ assert.match(code,/source_verified!==true/);
+ assert.match(code,/kind!=="public_git_source_change"/);
+ assert.match(code,/e\.title!==VALID_TITLES\[e\.system\]/);
+ assert.match(code,/e\.source_url===url/);
+ assert.match(code,/age>=-10000&&age<120000/);
+ assert.match(code,/PUBLIC GIT HISTORY · REPLAY/);
+ assert.match(code,/SCENIC CURRENT · NOT A LIVE MISSION/);
+ assert.match(watch,/Not live mission or AI inference telemetry/);
+ assert.doesNotMatch(watch,/<img\b|<iframe\b|<audio\b|<video\b/i);
+ assert.doesNotMatch(code,/fetch\(["']https?:\/\//);
+});
+test('continuous watch mode has an explicit long-run CPU/visibility budget',()=>{
+ assert.match(code,/elapsed<33/);
+ assert.match(code,/Math\.min\(\.08,elapsed\/1000\)/);
+ assert.match(code,/document\.hidden/);
+ assert.match(code,/prefers-reduced-motion: reduce/);
+ assert.match(code,/cancelAnimationFrame\(frame\)/);
+ assert.match(code,/setPause\(!paused\)/);
+ assert.match(code,/if\(!paused\)frame=requestAnimationFrame\(loop\)/);
+ assert.doesNotMatch(code,/Math\.random\(\)/);
+});
+test('river topology has seven named confluences and multi-channel currents',()=>{
+ const keys=['hudson','systemia','kaidance','discovery','evidence','raven','saban'];
+ for(const key of keys)assert.match(code,new RegExp(key+':\\{name:'));
+ assert.match(code,/var EDGES=/);
+ assert.match(code,/createEdge\(e\[0\],e\[1\],e\[2\]\)/);
+ assert.match(code,/drawRivers\(\);drawParticles\(dt\);drawConfluences\(\)/);
+});
