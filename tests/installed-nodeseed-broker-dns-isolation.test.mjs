@@ -173,11 +173,32 @@ test('installed historical NodeSeed preserves synthetic Edge DNS while shadow br
     assert.equal(before.ra,false);
     assert.equal(before.answers,1);
 
+    let duringObserved=false;
     const transaction=await runRehearsalShadowBrokerTransaction({
       nodeSeedReceipt:seed,
       journalParent,
       allocatorToken:TEST_TOKEN,
+      onBrokerVerified:async observation=>{
+        assert.deepEqual(observation,{
+          broker_zero_authority_verified:true,
+          public_route_created:false,
+        });
+        assert.equal(await countServices(seed.endpoint),2);
+        const middleHealth=await requestJson(
+          seed.endpoint+dnsJob.result.health_path
+        );
+        assert.equal(middleHealth.instance_id,dnsHealth.instance_id);
+        const middle=await probeUdp({
+          server:'127.0.0.1',port:dnsPort,
+          name:'_evercraft.edge.invalid.',timeout:3000,
+        });
+        assert.equal(middle.aa,true);
+        assert.equal(middle.ra,false);
+        assert.equal(middle.answers,1);
+        duringObserved=true;
+      },
     });
+    assert.equal(duringObserved,true);
     assert.equal(transaction.ok,true,JSON.stringify(transaction));
     assert.equal(transaction.release_confirmed,true);
     assert.equal(transaction.authorized_devices,0);
