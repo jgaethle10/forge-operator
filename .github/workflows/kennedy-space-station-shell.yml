@@ -21,7 +21,22 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Check Kennedy shell imports
-        run: python3 -m py_compile products/kennedy-space-station/server.py products/kennedy-space-station/test_shell.py
+      - name: Check Kennedy shell and spatial kernel imports
+        run: python3 -m py_compile products/kennedy-space-station/server.py products/kennedy-space-station/spatial.py products/kennedy-space-station/test_shell.py products/kennedy-space-station/test_spatial.py
       - name: Real loopback HTTP product separation and site handoff
         run: python3 -m unittest discover -s products/kennedy-space-station -p "test_*.py" -v
+      - name: Validate embedded studio JavaScript syntax
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          import subprocess
+          for source in ('index.html','studio.html'):
+              data=Path('products/kennedy-space-station',source).read_text()
+              scripts=re.findall(r'<script>(.*?)</script>',data,flags=re.S)
+              assert scripts, f"Missing JavaScript in {source}"
+              for i, script in enumerate(scripts):
+                  path=Path('/tmp',f'kennedy-{source}-{i}.js')
+                  path.write_text(script)
+                  subprocess.run(['node','--check',str(path)],check=True)
+          PY
