@@ -80,6 +80,13 @@ Also verify separately: company legal identity, current SAM registration status,
 - Example command (no network, no special permissions): `node --test research/aaar/legacy-memory/supplier-preflight.test.mjs` and `node research/aaar/legacy-memory/supplier-preflight.mjs research/aaar/legacy-memory/supplier-candidates-2026-11-19.json`.
 - Public listing prices are benchmarks only. Air Force official PDF independently verified: **NO**. Actual supplier partnership: **NONE**. Commercial order: **NONE**. All current candidates must remain `RESEARCH_HOLD`.
 
+## Supplier document discrepancy independently checked (November 19)
+The [California PC FLASH Tough Metal Series 2 vendor catalog](https://www.californiapc.com/Industrial-Flash-Memory/Industrial-Grade-PCMCIA-Tough-Metal-Series-2/) states **three years** warranty for the series, while the [original vendor Tough Metal Series 2 Specs 1.0 PDF](https://californiapc.com/core/media/media.nl?c=3379633&h=2514f768f155d536786e&id=1047935) expressly states **five years** warranty (first page and second-page reliability table). The PDF has been directly read including page screenshots; this is an unresolved **public-document inconsistency**, not proof either current warranty applies to `FPCI-256MB-2162TM2`.
+
+The catalog also distinguishes `FPCI-256MB-2162TM2` (PIO4 no DMA) from `FPCI-256MB-4162TM2` (UDMA, explicitly EOL). Do **not** treat matching storage capacity as electrical/protocol equivalence. Our dedicated supplier qualification draft now asks the manufacturer to clarify its legally binding current warranty and revision-specific availability; the draft remains unsent.
+
+The added `document-claims-2026-11-19.json`, `source-conflict-review.mjs` and `source-conflict-review.test.mjs` provide a reusable, public-only discrepancy detection gate. A missing conflict is **not** proof of qualification or a product match; the engine never approves procurement, customer quotes or government responses. In-process function checks passed; Node tests have been authored but **not yet independently run** for this addition. The government SAM attachment itself remains **not independently downloaded**.
+
 ## Evidence register
 - [SAM.gov official notice](https://sam.gov/workspace/contract/opp/8948e8601e964c6aba9c801eee16b1be/view) — official notice metadata; public attachment available; official PDF not independently reproduced here.
 - [GovTribe attachment transcription](https://govtribe.com/file/government-file/fa861127rf22-f-22-mdtc-ssn-rm-dot-pdf) — secondary extracted document text, retrieved 2026-11-19.
