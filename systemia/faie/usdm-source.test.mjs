@@ -131,3 +131,33 @@ test('Yakima USDM is independent of USGS water evidence; Tri-Cities cannot inher
   assert.ok(tri.findings.some(x=>x.source_family==='us-drought-monitor-ndmc'));
   assert.ok(!tri.findings.some(x=>x.source_family==='usgs-water-data-api'));
 });
+
+test('statewide NWS feed never labels a Spokane alert as Yakima evidence',async()=>{
+  const config=faieCollectorConfigFromEnv({FAIE_REGION_PROFILE:'yakima-basin-wa'});
+  const nwsRow=(area,identifier)=>({
+    observation_id:'nws-active-alerts:'+identifier, created_at:checkedAt,
+    region_key:area,region_group:'coarse-grid:1deg:47:-118',
+    source_family:'nws-api',independence_group:'noaa-nws',
+    domain:'emergency_report',kind:'nws_alert:heat_warning',
+    anomaly_score:.8,reliability:.9,evidence_state:'reported',
+    provenance_ref:'https://api.weather.gov/alerts/'+identifier,
+    summary:'Heat advisory for '+area,adapter_receipt:{source_id:'nws-active-alerts'}
+  });
+  const collected=await collectFaieOfficialSources({
+    checkedAt,
+    config:{...config,usdm_enabled:false,usdm_county_fips:[]},
+    pollers:{
+      nws:async()=>({observations:[
+        nwsRow('Spokane County, WA','spokane'),
+        nwsRow('Yakima County, WA','yakima')
+      ],receipt:{status:'ok',item_count:2}}),
+      usgsWater:async()=>({observations:[],receipt:{status:'ok',item_count:0}}),
+      nwps:async()=>({observations:[],receipt:{status:'ok',item_count:0}}),
+      usdm:async()=>{throw new Error('disabled drought poller must not run')}
+    }
+  });
+  const spokane=collected.observations.find(x=>x.observation_id.includes('spokane'));
+  const yakima=collected.observations.find(x=>x.observation_id.includes('yakima'));
+  assert.ok(spokane&&!spokane.region_keys.includes('yakima-wa'));
+  assert.ok(yakima&&yakima.region_keys.includes('yakima-wa'));
+});
