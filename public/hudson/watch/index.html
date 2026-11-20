@@ -285,9 +285,9 @@ function travelerState(time,progress){
  var pulse=presencePulse(time);
  var arrival=clamp((progress-.65)/.32,0,1);
  arrival=arrival*arrival*(3-2*arrival);
- var fold=.44+.20*Math.sin(time*.39+.4)+.10*Math.sin(time*.13+2.1);
+ var fold=.32+.20*Math.sin(time*.39+.4)+.10*Math.sin(time*.13+2.1);
  return {
-  opening:clamp(fold+arrival*.39+pulse.energy*.18,.15,1),
+  opening:clamp(fold+arrival*.49+pulse.energy*.18,.15,1),
   arrival:arrival,
   pulse:pulse.energy,
   yaw:Math.sin(time*.19+.8)*.31+Math.sin(time*.53)*.085,
