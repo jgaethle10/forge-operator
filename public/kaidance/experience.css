@@ -133,3 +133,23 @@ body.portrait footer button{padding:7px 11px;font-size:9px}
  body.portrait .portrait-proof{bottom:9%;min-height:110px;padding:11px 13px}
  body.portrait .portrait-footer{bottom:3%}
 }
+
+
+/* Final mobile composition tuned against real 390 × 844 Chrome captures. */
+@media(max-width:760px){
+ .hero{padding:17px 0 16px}
+ .hero h1{font-size:clamp(47px,11.7vw,78px);margin:17px 0 10px}
+ .hero p{line-height:1.5}
+ .hero-pills{margin-top:12px}
+ .stage{min-height:610px}
+ .scene-index,.scene-note{display:none}
+ .collider{width:76%;top:35%}
+ .orbit-label-2{right:2%}
+ .orbit-label-4{left:2%}
+ .stage-bottom{bottom:174px}
+ .stage-headline{min-height:148px}
+}
+body.portrait .orbit-label-2{right:9%}
+body.portrait .orbit-label-4{left:9%}
+body.portrait .live-button:hover,
+body.portrait .live-button:focus-visible{background:#092335;color:#cbf3ff;transform:none}
