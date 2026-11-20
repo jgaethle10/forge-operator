@@ -57,6 +57,7 @@ Environment:
 - FAIE_INTERNAL_TOKEN=...
 - FAIE_OFFICIAL_COLLECTORS_ENABLED=true|false
 - FAIE_NWS_ENABLED=true|false
+- FAIE_USDM_ENABLED=true|false (defaults true only with the verified Yakima Basin profile)
 - FAIE_REGION_PROFILE=yakima-basin-wa (optional verified Sentinel profile)
 - FAIE_NWS_AREA=WA (optional override; empty means the profile area or national active-alert feed)
 - FAIE_USGS_WATER_SITES=USGS-12484500,... (optional)
@@ -183,6 +184,12 @@ The bridge explicitly excludes charger inventory, EV adoption, charging-session 
 The resident runtime can continuously bridge material Systemia Radar signals into FAIE while direct Worldstate dispatches can feed the specialist with the broader domain stream. The Radar bridge is deliberately a fallback/secondary path, not a replacement for the Worldstate subscription contract.
 
 FAIE also reuses existing Sentinel official-source adapters. NWS active alerts are enabled by default. USGS Water Data and NOAA/NWS National Water Prediction Service gauges turn on when monitoring IDs are configured. A verified Sentinel region profile can supply those source IDs as a single bounded configuration; for example, `FAIE_REGION_PROFILE=yakima-basin-wa` inherits the existing Yakima Basin NWS/USGS source set. Their upstream evidence ceilings, reliability, provenance and coarse-location rules are preserved rather than reinterpreted as stronger evidence.
+
+### Independent U.S. Drought Monitor county evidence
+
+The bounded collector in `usdm-source.mjs` reads the official National Drought Mitigation Center/USDA/NOAA U.S. Drought Monitor CountyStatistics percent-area REST service, using **traditional cumulative** D0–D4 percentages and the actual weekly `MapDate`. Its initial whitelist is Yakima County (53077), Benton County (53005), and Franklin County (53021), with region labels `yakima-wa` and `tri-cities-wa`. It is enabled automatically only for the independently configured `yakima-basin-wa` profile; other profiles fail closed until explicitly mapped. County observations remain `REPORTED`, not field measurements. FAIE never infers a parcel's water rights, crop viability, buildability, or irrigation allocation from county statistics. An unavailable, stale, future, wrong-county, malformed, or internally inconsistent result yields an error/partial receipt, not a made-up signal. The source is independent of USGS stream monitoring but still is **not** a site-level decision.
+
+Official API documentation: https://droughtmonitor.unl.edu/DmData/DataDownload/WebServiceInfo.aspx
 
 The first release therefore has an actual closed loop:
 
