@@ -74,7 +74,7 @@ export function reconcileFaieOwnedHistory({
   verifyStateDirectory(stateDir,uid);
   const revised=configured.length
     ? lines.map(line=>line.startsWith(KEY+'=')?KEY+'='+stateDir:line).join('\n')
-    : existing.replace(/\s*$/,'\n')+KEY+'='+stateDir+'\n';
+    : (existing.endsWith('\n')?existing:existing+'\n')+KEY+'='+stateDir+'\n';
   const tmp=path.join(path.dirname(envPath),'.fabric-env-faie-'+crypto.randomUUID());
   const before=fs.statSync(envPath);
   try{
