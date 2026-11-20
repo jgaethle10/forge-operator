@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#040b13">
-<meta name="hudson-watch-release" content="river-current-v3-anomaly"><meta name="description" content="Watch HUDSON's flowing knowledge currents and source-linked replay on Evercraft's owned public observatory.">
+<meta name="hudson-watch-release" content="river-current-v4-living-pulse"><meta name="description" content="Watch HUDSON's flowing knowledge currents and source-linked replay on Evercraft's owned public observatory.">
 <title>HUDSON | Enter the Current</title>
 <style>
 :root{color-scheme:dark;--aqua:#9affdc;--chalk:#e2f7f1;--soft:#9ebabb}
@@ -220,22 +220,73 @@ function drawConfluences(){
 // HUDSON's Presence is intentionally unclassifiable: a dark, folding
 // fragment of the current, not a spider, an animal, or a mission indicator.
 // These deterministic forms are scenic only and never represent AI activity.
+// A quasi-periodic breath with occasional double beats. The pulse is
+// deterministic visual choreography, never a live source/mission heartbeat.
+function presencePulse(time){
+ var theta=time*1.43+Math.sin(time*.19)*.67+Math.sin(time*.47+.4)*.19;
+ var phase=((theta%(Math.PI*2))+(Math.PI*2))%(Math.PI*2);
+ var primary=Math.exp(-Math.pow(phase/.255,2));
+ var doubleStrength=.20+.70*(.5+.5*Math.sin(time*.092+.35));
+ var secondary=doubleStrength*.65*Math.exp(-Math.pow((phase-.78)/.245,2));
+ var energy=Math.min(1,primary+secondary);
+ return {
+  phase:phase,
+  energy:energy,
+  primary:primary,
+  secondary:secondary,
+  pressure:Math.exp(-phase*.73),
+  doubleStrength:doubleStrength
+ };
+}
 function anomalyFilament(time,index){
  var wave=Math.sin(time*(.22+index*.013)+index*1.67);
  var unfold=Math.pow(Math.max(0,wave),1.7);
+ // The pulse propagates into the probes with a small staggered delay.
+ var delayed=presencePulse(time-(index%5)*.12);
  return {
   angle:index*2.399963+Math.sin(time*.11+index*.8)*.55,
-  reach:.47+unfold*1.23,
-  curl:Math.sin(time*.33+index*1.03)*.47,
-  opacity:.055+unfold*.46
+  reach:.47+unfold*(1.04+delayed.energy*.18),
+  curl:Math.sin(time*.33+index*1.03)*(.37+delayed.energy*.13),
+  opacity:.055+unfold*.35+delayed.energy*.09
  };
 }
 function anomalyForm(time){
+ var pulse=presencePulse(time);
  return {
-  fold:.5+.5*Math.sin(time*.37+.8),
+  fold:.5+.5*Math.sin(time*.37+.8)+pulse.energy*.095,
   rotation:time*.18+Math.sin(time*.23)*.24,
-  aperture:.42+.28*Math.sin(time*.29+1.7)
+  aperture:.38+.23*Math.sin(time*.29+1.7)+pulse.energy*.06,
+  pulse:pulse.energy
  };
+}
+// The river answers quietly when the Presence pulses. These rings and
+// displaced motes are entirely scenic, separate from source-backed events.
+function drawPresenceRipple(from,to,t){
+ var pos=locate(from,to,t),pulse=presencePulse(clock);
+ var size=Math.max(17,Math.min(30,width*.052));
+ // A confluence amplifies the same scenic breath, not a claimed mission.
+ var nearness=Math.pow(clamp((t-.76)/.24,0,1),2),boost=1+nearness*.37;
+ if(pulse.phase>3.2&&pulse.energy<.045)return;
+ ctx.save();ctx.translate(pos.x,pos.y);ctx.globalCompositeOperation="lighter";
+ var radius=size*(.79+pulse.phase*.77);
+ var alpha=Math.max(0,(1-pulse.phase/3.2))*.16*boost;
+ if(alpha>.003){
+  ctx.beginPath();ctx.ellipse(0,0,radius,radius*.7,clock*.05,0,Math.PI*2);
+  ctx.lineWidth=.65;ctx.strokeStyle="rgba(125,236,217,"+alpha.toFixed(3)+")";ctx.stroke();
+ }
+ if(pulse.energy>.025){
+  var halo=ctx.createRadialGradient(0,0,size*.22,0,0,size*2.2);
+  halo.addColorStop(0,"rgba(117,248,214,0)");
+  halo.addColorStop(.60,"rgba(78,194,202,"+(pulse.energy*.085*boost).toFixed(3)+")");
+  halo.addColorStop(1,"rgba(62,163,226,0)");
+  ctx.fillStyle=halo;ctx.beginPath();ctx.arc(0,0,size*2.2,0,Math.PI*2);ctx.fill();
+  for(var echo=0;echo<6;echo++){
+   var a=echo*2.399963+clock*.14,dist=size*(1.04+pulse.energy*.50);
+   ctx.fillStyle="rgba(176,245,223,"+(.06+pulse.energy*.20).toFixed(3)+")";
+   ctx.beginPath();ctx.arc(Math.cos(a)*dist,Math.sin(a)*dist*.78,.55,0,Math.PI*2);ctx.fill();
+  }
+ }
+ ctx.restore();
 }
 function drawAnomaly(from,to,t){
  var pos=locate(from,to,t),ahead=locate(from,to,Math.min(.999,t+.012));
@@ -247,7 +298,7 @@ function drawAnomaly(from,to,t){
  // A nearly invisible distortion makes the presence legible in bright water,
  // without turning it into a white bug, star or obvious head/body silhouette.
  var veil=ctx.createRadialGradient(0,0,0,0,0,size*2.25);
- veil.addColorStop(0,"rgba(1,17,27,.38)");
+ veil.addColorStop(0,"rgba(1,17,27,"+(.32+form.pulse*.12).toFixed(3)+")");
  veil.addColorStop(.34,"rgba(15,64,71,.15)");
  veil.addColorStop(1,"rgba(15,64,71,0)");
  ctx.fillStyle=veil;ctx.beginPath();ctx.arc(0,0,size*2.25,0,Math.PI*2);ctx.fill();
@@ -273,7 +324,7 @@ function drawAnomaly(from,to,t){
  }
  // Broken revolving contours: the structure reveals itself for a moment and
  // almost disappears again. The dark center is deliberate negative space.
- ctx.save();ctx.rotate(form.rotation);
+ ctx.save();ctx.rotate(form.rotation);ctx.scale(1+form.pulse*.07,1+form.pulse*.095);
  for(var ring=0;ring<3;ring++){
   var radius=size*(.41+ring*.18),phase=now*(ring%2===0?.12:-.17)+ring*2.08;
   ctx.beginPath();ctx.ellipse(0,0,radius,radius*(.54+.07*Math.sin(now*.31+ring)),
@@ -330,7 +381,7 @@ function paint(dt){
  ctx.translate(width/2,height/2);ctx.scale(camera.zoom,camera.zoom);
  ctx.translate(-width/2+camera.dx,-height/2+camera.dy);
  drawWatershed();drawRivers();drawParticles(dt);drawConfluences();
- var trip=routeAt();drawAnomaly(trip.from,trip.to,.04+trip.t*.92);
+ var trip=routeAt();drawPresenceRipple(trip.from,trip.to,.04+trip.t*.92);drawAnomaly(trip.from,trip.to,.04+trip.t*.92);
  if(clock<flashUntil){
   var p=coordinates(trip.to);ctx.strokeStyle="rgba(182,255,220,"+((flashUntil-clock)/3*.7)+")";ctx.lineWidth=2;ctx.beginPath();ctx.arc(p.x,p.y,40+(3-(flashUntil-clock))*30,0,7);ctx.stroke();
  }
