@@ -234,7 +234,10 @@ class KennedyHandler(site_planner.Handler):
             except (sheet_compiler.SheetError,spatial.StudyError,
                     aerial_vault.SourceError,raster_registration.RegistrationError,
                     ValueError) as exc:
-                return self.bad(str(exc),422)
+                # Missing study under a different project is a 404, not a
+                # validator error; do not disclose its existence across sites.
+                status = 404 if str(exc) == "study_not_found" else 422
+                return self.bad(str(exc),status)
             except sqlite3.Error:
                 return self.bad("private_source_review_unavailable",500)
         m = re.fullmatch(r"/api/kss/sites/([A-Za-z0-9_-]+)/aerial-sources", path)
