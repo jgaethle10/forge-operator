@@ -293,3 +293,15 @@ A changed address now invalidates both previously loaded government aerials and 
 The provider's published imagery metadata describes USGS/NAIP imagery which may date back many years, including NAIP collections from 2017–2021 in the conterminous U.S. Never treat a recent API response as proof of current site conditions.
 
 The local-only app is not public, cannot issue approvals, and keeps the $349/$499 Stripe links inactive. Run `python3 -m unittest discover -v` for the complete safety regression suite.
+
+## v2.5 quick charger adjustment and reliable undo
+
+The **three-step** mobile-first editor remains the default. Inside step 2, a user can:
+- Tap an empty space in the site drawing to add a charger.
+- Tap an existing charger once to select it, then tap the desired new position to move it. No drag, pinch gesture, specialist CAD tool or dialog required.
+- Tap **Undo** to cancel a selection or reverse the last addition, reposition, deletion or reset. Up to 50 past drawing snapshots are retained in browser memory.
+- Continue using the advanced **Remove**, conduit and equipment-pad tools without learning additional entry screens.
+
+The active-step message now appears immediately below the charger controls so the operator can see what the tap did on a phone. A newly uploaded site image, new address or successful federal aerial lookup clears stale placement history. Restoring a locally saved project starts a fresh undo history so old-property drawings cannot be resurrected.
+
+`test_tap_to_edit.py` uses the actual browser JavaScript in an isolated Node VM to verify add/select/reposition/cancel/undo/erase/reset/history clearing. This is an ease-of-use improvement, **not** geospatial validation. The map source, parcel evidence, commercial holds and PDF accuracy limitations are unchanged.
