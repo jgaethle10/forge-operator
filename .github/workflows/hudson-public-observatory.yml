@@ -41,7 +41,7 @@ jobs:
         run: |
           node --check systemia/hudson/publish-public-snapshot.mjs
           node --check systemia/hudson/probe-public.mjs
-          node --test systemia/hudson/publish-public-snapshot.test.mjs systemia/hudson/probe-public.test.mjs
+          node --test systemia/hudson/publish-public-snapshot.test.mjs systemia/hudson/probe-public.test.mjs systemia/hudson/visual-stage.test.mjs
       - name: Prove owned Fabric HTTP routes
         run: node --test tests/hudson-owned-fabric-route.test.mjs
       - name: External HTTPS snapshot and privacy admission
