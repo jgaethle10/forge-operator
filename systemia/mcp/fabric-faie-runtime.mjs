@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url';
 import { createFaieRuntime } from '../faie/runtime.mjs';
 import { faieCollectorConfigFromEnv } from '../faie/collectors.mjs';
 import { collectUsdaSoilAtPoint } from '../faie/soil-source.mjs';
+import { buildFaieSiteScan } from '../faie/site-scan.mjs';
 import {
   executeFaieMcpRpc,
   faieMcpTools,
@@ -239,6 +240,57 @@ export function createFabricFaieSurface({
         return true;
       }
       sendJson(res,200,response,{'access-control-allow-origin':'*'});
+      return true;
+    }
+
+    if(req.method==='POST'&&pathname==='/api/faie/site/scan'){
+      // Same shared limiter protects USDA from public soil-only and combined
+      // scans, preventing route-hopping around the low-volume upstream budget.
+      const globalAllowance=soilGlobalLimit({headers:{},socket:{remoteAddress:'all-public-soil-visitors'}});
+      const clientAllowance=soilClientLimit(req);
+      if(!globalAllowance.ok||!clientAllowance.ok){
+        sendJson(res,429,{ok:false,error:'site_scan_rate_limited'},{
+          'retry-after':String(Math.max(globalAllowance.retry_after,clientAllowance.retry_after))
+        });
+        return true;
+      }
+      if(soilPreviewInFlight>=2){
+        sendJson(res,503,{ok:false,error:'site_scan_busy_try_later'});
+        return true;
+      }
+      let body;
+      try{body=await readJson(req,{maxBytes:2048});}
+      catch{
+        sendJson(res,400,{ok:false,error:'invalid_site_scan_input'});
+        return true;
+      }
+      const latRaw=String(body?.latitude??'').trim();
+      const lonRaw=String(body?.longitude??'').trim();
+      const latitude=Number(latRaw),longitude=Number(lonRaw);
+      if(!latRaw||!lonRaw||!Number.isFinite(latitude)||!Number.isFinite(longitude)||
+         latitude<24||latitude>50||longitude< -125||longitude> -66){
+        sendJson(res,400,{ok:false,error:'Enter valid latitude and longitude inside the contiguous United States.'});
+        return true;
+      }
+      soilPreviewInFlight+=1;
+      try{
+        const scan=await buildFaieSiteScan({
+          latitude,longitude,fetchImpl,retrievedAt:new Date().toISOString()
+        });
+        if(scan.state==='insufficient_evidence'){
+          sendJson(res,502,{
+            ok:false,error:'Neither official point source returned usable evidence. No site report was inferred.',
+            source_receipts:scan.source_receipts,
+            request_persisted:false
+          });
+        }else{
+          sendJson(res,200,scan);
+        }
+      }catch{
+        sendJson(res,502,{ok:false,error:'Site scan did not complete with verifiable source data.'});
+      }finally{
+        soilPreviewInFlight-=1;
+      }
       return true;
     }
 
