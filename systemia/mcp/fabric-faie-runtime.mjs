@@ -6,6 +6,7 @@ import { createFaieRuntime } from '../faie/runtime.mjs';
 import { faieCollectorConfigFromEnv } from '../faie/collectors.mjs';
 import { collectUsdaSoilAtPoint } from '../faie/soil-source.mjs';
 import { buildFaieSiteScan } from '../faie/site-scan.mjs';
+import { collectYakimaHistoricalClimate, eligibleYakimaClimatePoint } from '../faie/ncei-climate-history.mjs';
 import {
   executeFaieMcpRpc,
   faieMcpTools,
@@ -137,6 +138,9 @@ export function createFabricFaieSurface({
   const soilClientLimit=createFixedWindowLimiter({limit:4,windowMs:60_000});
   const soilGlobalLimit=createFixedWindowLimiter({limit:12,windowMs:60_000});
   let soilPreviewInFlight=0;
+  const climateClientLimit=createFixedWindowLimiter({limit:2,windowMs:60_000});
+  const climateGlobalLimit=createFixedWindowLimiter({limit:8,windowMs:60_000});
+  let climateInFlight=0;
 
   function health(){
     const runtimeHealth=faieRuntime.health();
@@ -240,6 +244,57 @@ export function createFabricFaieSurface({
         return true;
       }
       sendJson(res,200,response,{'access-control-allow-origin':'*'});
+      return true;
+    }
+
+    if(req.method==='POST'&&pathname==='/api/faie/climate/history'){
+      const globalAllowance=climateGlobalLimit({headers:{},socket:{remoteAddress:'all-climate-visitors'}});
+      const clientAllowance=climateClientLimit(req);
+      if(!globalAllowance.ok||!clientAllowance.ok){
+        sendJson(res,429,{ok:false,error:'climate_history_rate_limited'},{
+          'retry-after':String(Math.max(globalAllowance.retry_after,clientAllowance.retry_after))
+        });
+        return true;
+      }
+      if(climateInFlight>=1){
+        sendJson(res,503,{ok:false,error:'climate_history_busy_try_later'});
+        return true;
+      }
+      let body;
+      try{body=await readJson(req,{maxBytes:1024});}
+      catch{
+        sendJson(res,400,{ok:false,error:'invalid_climate_history_input'});
+        return true;
+      }
+      const latRaw=String(body?.latitude??'').trim();
+      const lonRaw=String(body?.longitude??'').trim();
+      const latitude=Number(latRaw),longitude=Number(lonRaw);
+      if(!latRaw||!lonRaw||!Number.isFinite(latitude)||!Number.isFinite(longitude)||
+         latitude<24||latitude>50||longitude< -125||longitude> -66){
+        sendJson(res,400,{ok:false,error:'Enter an explicit valid coordinate point in the contiguous United States.'});
+        return true;
+      }
+      if(!eligibleYakimaClimatePoint(latitude,longitude).station_eligible){
+        sendJson(res,422,{
+          ok:false,error:'No approved historical station within 40 km of this point. No site climate is inferred.',
+          request_persisted:false
+        });
+        return true;
+      }
+      climateInFlight++;
+      try{
+        const result=await collectYakimaHistoricalClimate({
+          latitude,longitude,fetchImpl,retrievedAt:new Date().toISOString()
+        });
+        if(result.status!=='historical_station_context_available'){
+          sendJson(res,503,{
+            ok:false,error:'Official daily records did not provide adequate observation coverage.',
+            station:result.station,metrics:result.metrics,request_persisted:false
+          });
+        }else sendJson(res,200,result);
+      }catch{
+        sendJson(res,502,{ok:false,error:'Official historical station records could not be verified. No climate result is inferred.',request_persisted:false});
+      }finally{climateInFlight--}
       return true;
     }
 
