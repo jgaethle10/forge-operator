@@ -1,13 +1,20 @@
 name: KAIDANCE Independent Public HTTPS Readback
 
+# Never expect unpublished branch contents from a public deployment. Observe
+# the completed shared Pages workflow regardless of unrelated product QA
+# outcome, and separately verify the *actual* KAIDANCE public site.
 on:
+  workflow_run:
+    workflows:
+      - Evercraft public web fallback
+    types:
+      - completed
+    branches:
+      - main
   push:
     branches:
       - main
     paths:
-      - 'public/kaidance/**'
-      - 'scripts/probe-kaidance-fallback.mjs'
-      - 'tests/kaidance-public-fallback-readback.test.mjs'
       - '.github/workflows/kaidance-independent-readback.yml'
   workflow_dispatch:
 
@@ -16,7 +23,7 @@ permissions:
 
 concurrency:
   group: kaidance-external-public-https-check
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   external-viewer-proof:
@@ -33,8 +40,21 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          node scripts/probe-kaidance-fallback.mjs \
-            --root https://jgaethle10.github.io/forge-operator/
+          # Pages/CDN propagation is asynchronous; accept only a real HTTPS
+          # readback of the *current* expected files and strict pulse 404.
+          for attempt in $(seq 1 12); do
+            if node scripts/probe-kaidance-fallback.mjs \
+                --root https://jgaethle10.github.io/forge-operator/; then
+              echo "KAIDANCE_DEPLOYED_HTTPS_ACCEPTANCE_PASSED"
+              exit 0
+            fi
+            if [[ "$attempt" == "12" ]]; then
+              echo "::error::KAIDANCE HTTPS V05 readback failed after bounded retries"
+              exit 1
+            fi
+            echo "KAIDANCE_PUBLIC_PROPAGATION_PENDING attempt=$attempt"
+            sleep 10
+          done
       - name: Retain sanitized Kaidance public source and asset readback
         if: always()
         uses: actions/upload-artifact@v4
