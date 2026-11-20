@@ -5,7 +5,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {execFileSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
-import {verifyPrivatePulseForPublication,validatePublicApproval} from '../systemia/collider/public-publisher.mjs';
+import {verifyPrivatePulseForPublication} from '../systemia/collider/public-publisher.mjs';
+import {verifyPublicationApproval} from '../systemia/leiland/owned-pulse-publisher.mjs';
 import {LEILAND_HOST_SCHEMA} from '../systemia/leiland/owned-observatory-host.mjs';
 
 export const FIELD_SCHEMA='evercraft.leiland.field-preflight.v1';
@@ -34,7 +35,7 @@ async function localGet(fetchImpl,url){
  return {body:data,headers:r.headers};
 }
 export async function inspectLeilandField({
- staticRoot,publicationRoot,approvalFile,deploymentId,expectedSha,actualSha,
+ staticRoot,publicationRoot,approvalFile,signatureFile,verifyKeyFile,sourceFile,deploymentId,expectedSha,actualSha,
  loopbackOrigin,loadPulse,fetchImpl=fetch,now=new Date()
 }={}){
  if(!shaOk(expectedSha)||!shaOk(actualSha)||expectedSha!==actualSha)fail('release_sha_not_pinned');
@@ -58,12 +59,32 @@ export async function inspectLeilandField({
   fail('operator_approval_owner_mismatch');
  if(fs.realpathSync(approvalFile).startsWith(published+path.sep)||fs.realpathSync(approvalFile)===published)
   fail('approval_is_public');
- let approval;
- try{approval=JSON.parse(fs.readFileSync(approvalFile,'utf8'))}catch{fail('approval_json_invalid')}
- validatePublicApproval(approval,{approvalFile,publicRoot:published,deploymentId,now});
- // This explicitly reads the existing private Yard source, not the static public feed.
+  // Only the independently signed, path-bound publishing approval is eligible.
+ for(const [file,tag] of [[sourceFile,'source'],[signatureFile,'signature'],[verifyKeyFile,'verify_key']]){
+  if(typeof file!=='string'||!path.isAbsolute(file))fail(tag+'_path_invalid');
+  const st=fs.lstatSync(file);
+  if(!st.isFile()||st.isSymbolicLink())fail(tag+'_not_regular_file');
+  if(fs.realpathSync(file).startsWith(published+path.sep))fail(tag+'_is_public');
+  if(tag==='source'&&(st.mode&0o077)!==0)fail('source_file_permissions_invalid');
+ }
+ verifyPublicationApproval({
+  approvalBytes:fs.readFileSync(approvalFile),
+  signatureBytes:fs.readFileSync(signatureFile),
+  verifyKey:fs.readFileSync(verifyKeyFile,'utf8'),
+  sourcePath:path.resolve(sourceFile),
+  targetPath:path.join(published,'kaidance','pulse.json'),now
+ });
+ // Require the signed source artifact to match a fresh actual private Yard pulse.
+ let sourcePulse;try{sourcePulse=JSON.parse(fs.readFileSync(sourceFile,'utf8'))}
+ catch{fail('captured_source_pulse_invalid')}
  const privatePulse=await loadPulse(deploymentId);
  const projection=verifyPrivatePulseForPublication(privatePulse,{now});
+ const capturedProjection=verifyPrivatePulseForPublication(sourcePulse,{now});
+ if(capturedProjection.cycle_number!==projection.cycle_number||
+    capturedProjection.observed_at!==projection.observed_at||
+    capturedProjection.last_completed_cycle!==projection.last_completed_cycle||
+    sourcePulse.field_attestation?.receipt!==privatePulse.field_attestation?.receipt)
+  fail('signed_source_not_matched_to_live_yard');
  const base=canonicalLoopback(loopbackOrigin);
  let health;try{health=JSON.parse((await localGet(fetchImpl,base+'/healthz')).body)}
  catch{fail('local_owned_host_health_unverified')}
@@ -87,6 +108,7 @@ export async function inspectLeilandField({
   cycle_number:projection.cycle_number,
   source_observed_at:projection.observed_at,
   source_field_attestation_reported:projection.field_attestation_verified,
+  signed_publication_approval_verified:true,
   existing_public_projection_present:pulseAlreadyPublished,
   local_site_verified:true,
   publication_performed:false,
@@ -98,7 +120,8 @@ export async function inspectLeilandField({
 }
 function args(argv){
  const allowed=new Set(['--yard-state-dir','--deployment-id','--static-root',
- '--public-root','--approval-file','--release-sha','--loopback-origin']);
+ '--public-root','--approval-file','--signature-file','--verify-key-file',
+ '--source-file','--release-sha','--loopback-origin']);
  if(argv.length!==allowed.size*2)fail('usage_invalid');
  const bag={};
  for(let i=0;i<argv.length;i+=2){
@@ -117,7 +140,9 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
   const yard=new YardOperator({stateDir:yardState});
   const preflight=await inspectLeilandField({
    staticRoot:a['--static-root'],publicationRoot:a['--public-root'],
-   approvalFile:a['--approval-file'],deploymentId:a['--deployment-id'],
+   approvalFile:a['--approval-file'],signatureFile:a['--signature-file'],
+   verifyKeyFile:a['--verify-key-file'],sourceFile:a['--source-file'],
+   deploymentId:a['--deployment-id'],
    expectedSha:a['--release-sha'],actualSha,
    loopbackOrigin:a['--loopback-origin'],loadPulse:id=>yard.getKaidancePulse(id)
   });
