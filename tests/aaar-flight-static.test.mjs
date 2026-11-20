@@ -37,3 +37,19 @@ test('touch controls, flight controls and evidence safety labels remain wired',(
   assert.match(page,/NOT CFD/);
   assert.match(page,/NOT FLIGHT TRAINING/);
 });
+
+test('AAAR mobile v0.8 interaction: analog inputs and safe cockpit gestures',()=>{
+  for(const id of ['flightStick','flightStickKnob','flightThrottleRange','flightThrottleValue','mobileHudToggle','mobileMoreToggle']){
+    assert.match(page,new RegExp('id="'+id+'"'));
+  }
+  assert.match(page,/function setupThumbCockpit\(/);
+  assert.match(page,/stickInput\.bank/);
+  assert.match(page,/stickInput\.pitch/);
+  assert.match(page,/state\.throttle=Math\.max\(0,Math\.min\(1,Number\(slider\.value\)\/100\)\)/);
+  assert.match(page,/pointercancel/);
+  assert.match(page,/lostpointercapture/);
+  assert.match(page,/-webkit-touch-callout:none/);
+  assert.match(page,/\.foundry-overlay input/);
+  assert.match(page,/data-hud="full"/);
+  assert.match(page,/orientation:landscape/);
+});
