@@ -42,10 +42,28 @@ Official references:
 ## Integration work still required before live operation
 
 - Consume the canonical five-minute KAIDANCE/Saban mission-delta stream, not a second independent timer.
-- Implement a durable transaction-safe attempt ledger and rolling budget across workers, including crash recovery, rate limits and provider 429 backoff.
+- Wire the new private atomic attempt/rolling-budget ledger and heartbeat runner into the resident KAIDANCE-owned mission-delta event stream. It fails closed on stale lock or clock rollback; operational lock recovery and provider 429 backoff still require an authorized runbook.
 - Add authorized live provider metadata/inference canaries on owned runtime and measure actual per-request usage/cost.
 - Add adviser-suggestion triage to Systemia's existing mission queue and public sanitized heartbeat view without revealing private context.
 - Run tests before enabling hosted inference. No third-party application/runtime hosts, no Base44 and no unsanctioned consumer-site automation.
+
+## Private runner prepared (OFF by default)
+
+An owned private operator can generate a mode-0600 mission delta file with schema `evercraft.systemia.private-mission-delta.v1`, `origin: systemia-admitted`, and `missions` containing only pre-authorized cloud-safe entries. Use:
+
+```bash
+export SYSTEMIA_ADVISORY_MISSION_PACKET_FILE=/private/systemia/mission-delta.json
+export SYSTEMIA_ADVISORY_LEDGER_DIR=/private/systemia/advisory-ledger
+export RAVEN_PROVIDER_CREDENTIAL_STATE_DIR=/private/evercraft/provider-credentials
+export SYSTEMIA_ADVISOR_ANTHROPIC_MODEL=<exact-authorized-model-id>
+export SYSTEMIA_ADVISOR_XAI_MODEL=<exact-authorized-model-id>
+export SYSTEMIA_ADVISOR_ANTHROPIC_EST_COST_CENTS=<conservative-quoted-call-ceiling>
+export SYSTEMIA_ADVISOR_XAI_EST_COST_CENTS=<conservative-quoted-call-ceiling>
+export SYSTEMIA_ADVISORY_ROLLING_BUDGET_CENTS=0
+node systemia/mission-bridge/model-council/heartbeat-runner.mjs
+```
+
+No inference occurs until a valid private packet and keys are present, the rolling budget is nonzero, and `SYSTEMIA_ADVISORY_EXECUTE=1` is explicitly set by the authorized owned supervisor. This environment variable is intentionally **not** set by source or tests. The default command is dry-run, not a live mission. The runner prints only a sanitized summary, never private briefs or model advice.
 
 Offline check:
 
