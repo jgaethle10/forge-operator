@@ -103,11 +103,47 @@ export function projectAtlasNode(point,{width,height,yaw=0,pitch=0,offsetX=0,off
    y:height*.5+(yy-offsetY)*perspective*radius,
    depth,scale:perspective};
 }
+// Pure, deterministic cinematic corridors. These shapes describe relationships
+// between five *conceptual* architectural regions, not actual machine traffic.
+const ARTERY_PAIRS=Object.freeze([
+ ['systemia','raven'],['raven','compute'],['compute','passport'],
+ ['passport','saban'],['saban','systemia'],['systemia','compute'],
+ ['raven','passport'],['saban','compute'],['systemia','passport']
+]);
+export function buildCinematicArteries(seed=11202026){
+ const rand=random(seed);
+ return Object.freeze(ARTERY_PAIRS.map(([from,to],index)=>{
+  const a=CENTERS[from],b=CENTERS[to],s=(rand()-.5)*.38;
+  const p0=Object.freeze([...a]),p3=Object.freeze([...b]);
+  const p1=Object.freeze([
+   a[0]*.61+b[0]*.08+s,
+   a[1]*.62+b[1]*.06-s*.54,
+   .18+(rand()-.5)*.95
+  ]);
+  const p2=Object.freeze([
+   b[0]*.59+a[0]*.08-s*.73,
+   b[1]*.60+a[1]*.08+s*.48,
+   -.16+(rand()-.5)*.95
+  ]);
+  return Object.freeze({from,to,index,p0,p1,p2,p3,phase:rand(),speed:.52+rand()*.45});
+ }));
+}
+export function sampleCinematicArtery(artery,t){
+ const u=clamp(Number.isFinite(t)?t:0,0,1),v=1-u;
+ const w=[v*v*v,3*v*v*u,3*v*u*u,u*u*u];
+ return Object.freeze({
+  x:w[0]*artery.p0[0]+w[1]*artery.p1[0]+w[2]*artery.p2[0]+w[3]*artery.p3[0],
+  y:w[0]*artery.p0[1]+w[1]*artery.p1[1]+w[2]*artery.p2[1]+w[3]*artery.p3[1],
+  z:w[0]*artery.p0[2]+w[1]*artery.p1[2]+w[2]*artery.p2[2]+w[3]*artery.p3[2]
+ });
+}
+
 export function createNeuralUniverse({canvas,stage,reduce,initialFocus='systemia'}={}){
  if(!canvas||!stage||!reduce)throw Error('visual_mount_required');
  const ctx=canvas.getContext('2d',{alpha:false});
  if(!ctx)throw Error('canvas_2d_unavailable');
  const atlas=buildNeuralAtlas();
+ const arteries=buildCinematicArteries();
  let width=640,height=550,dpr=1,selected=REGIONS.includes(initialFocus)?initialFocus:'systemia';
  let originX=0,originY=0,pointerX=0,pointerY=0,active=true,onscreen=true,disposed=false;
  let lastDraw=-1000,lastNow=0,cycleAt=-1,eventCount=0,raf=0,focusStrength=0;
@@ -155,6 +191,35 @@ export function createNeuralUniverse({canvas,stage,reduce,initialFocus='systemia
    ctx.beginPath();ctx.ellipse(0,0,span*(.37+k*.25),span*(.18+k*.14),-.19+k*.27,0,TAU);ctx.stroke();
   }
   ctx.restore();ctx.setLineDash([]);
+  // Gossamer auroras follow the architectural regions; color and motion are
+  // artwork only, never a source-dependent signal.
+  for(const region of REGIONS){
+   const c=CENTERS[region];
+   const point=projectAtlasNode({x:c[0],y:c[1],z:c[2]},{
+    width,height,yaw,pitch,offsetX:originX,offsetY:originY,zoom:small?.91:1.03
+   });
+   const rgb=PALETTE[region];
+   const drift=still?0:Math.sin(clock*.00033+REGIONS.indexOf(region)*1.8)*span*.045;
+   const radius=span*(small?.38:.44);
+   const bloom=ctx.createRadialGradient(point.x+drift,point.y,1,point.x+drift,point.y,radius);
+   bloom.addColorStop(0,rgba(rgb,region===selected?.095:.038));
+   bloom.addColorStop(.39,rgba(rgb,region===selected?.044:.017));
+   bloom.addColorStop(1,rgba(rgb,0));
+   ctx.fillStyle=bloom;
+   ctx.fillRect(point.x+drift-radius,point.y-radius,radius*2,radius*2);
+  }
+  // Crossing orbital inclinations create the suggestion of immense depth.
+  // Their slow drift is scenic; it is not the verified KAIDANCE-cycle ripple.
+  ctx.save();ctx.translate(cx,cy);
+  for(let k=0;k<6;k++){
+   const angle=(k*.51)+(still?0:clock*.000024*(k%2?-1:1));
+   ctx.strokeStyle='rgba(130,205,246,'+(small?.10:.14)+')';
+   ctx.lineWidth=k%2?.6:.85;
+   ctx.beginPath();
+   ctx.ellipse(0,0,span*(.39+k*.09),span*(.10+k*.025),angle,0,TAU);
+   ctx.stroke();
+  }
+  ctx.restore();
   const projected=atlas.nodes.slice(0,budget).map(p=>projectAtlasNode(p,{
    width,height,yaw,pitch,offsetX:originX,offsetY:originY,zoom:small?.91:1.03
   }));
@@ -176,6 +241,51 @@ export function createNeuralUniverse({canvas,stage,reduce,initialFocus='systemia
     ctx.fillStyle=rgba(color,.72);ctx.beginPath();ctx.arc(x,y,1.2,0,TAU);ctx.fill();
    }
   }
+  // Cinematic filaments turn a static lattice into a navigable, breathing
+  // architectural landscape. Packets are pure deterministic scenic motion.
+  for(const artery of arteries){
+   const chosen=artery.from===selected||artery.to===selected;
+   const rgb=PALETTE[artery.from];
+   const steps=small?22:34,points=[];
+   for(let j=0;j<=steps;j++){
+    const p=sampleCinematicArtery(artery,j/steps);
+    points.push(projectAtlasNode(p,{
+     width,height,yaw,pitch,offsetX:originX,offsetY:originY,zoom:small?.91:1.03
+    }));
+   }
+   const path=()=>{
+    ctx.beginPath();ctx.moveTo(points[0].x,points[0].y);
+    for(let j=1;j<points.length;j++)ctx.lineTo(points[j].x,points[j].y);
+   };
+   const breath=still?.6:.65+.35*Math.sin(clock*.00072+artery.phase*TAU);
+   // A wide transparent membrane sits behind a bright thread.
+   ctx.lineCap='round';ctx.lineJoin='round';
+   ctx.lineWidth=chosen?(small?5.5:8):3;
+   ctx.strokeStyle=rgba(rgb,(chosen?.092:.026)*breath);
+   path();ctx.stroke();
+   ctx.lineWidth=chosen?(small?1.15:1.65):.66;
+   ctx.strokeStyle=rgba(rgb,(chosen?.39:.10)*breath);
+   path();ctx.stroke();
+   if(!still){
+    const count=chosen?2:1;
+    for(let n=0;n<count;n++){
+     const progress=(clock*.000055*artery.speed+artery.phase+n/count)%1;
+     const p=sampleCinematicArtery(artery,progress);
+     const q=projectAtlasNode(p,{
+      width,height,yaw,pitch,offsetX:originX,offsetY:originY,zoom:small?.91:1.03
+     });
+     const radius=chosen?(small?6.5:9):3.4;
+     const halo=ctx.createRadialGradient(q.x,q.y,.2,q.x,q.y,radius);
+     halo.addColorStop(0,rgba(rgb,chosen?.85:.38));
+     halo.addColorStop(.24,rgba(rgb,chosen?.33:.16));
+     halo.addColorStop(1,rgba(rgb,0));
+     ctx.fillStyle=halo;ctx.beginPath();ctx.arc(q.x,q.y,radius,0,TAU);ctx.fill();
+     ctx.fillStyle=rgba(rgb,chosen?.92:.40);
+     ctx.beginPath();ctx.arc(q.x,q.y,chosen?1.35:.8,0,TAU);ctx.fill();
+    }
+   }
+  }
+  ctx.lineCap='butt';ctx.lineJoin='miter';
   for(let i=0;i<budget;i++){
    const node=atlas.nodes[i],p=projected[i],chosen=node.region===selected;
    const twinkle=still?.5:.60+.40*Math.sin(clock*.00125+node.twinkle);
@@ -231,7 +341,7 @@ export function createNeuralUniverse({canvas,stage,reduce,initialFocus='systemia
  function stop(){if(raf)cancelAnimationFrame(raf);raf=0}
  const onVisibility=()=>{active=!document.hidden;if(active)start();else stop()};
  const onPointer=event=>{
-  if(event.pointerType==='touch')return;
+  // Touch creates gentle parallax without cancelling natural page scrolling.
   const r=stage.getBoundingClientRect();
   pointerX=clamp((event.clientX-r.left)/Math.max(1,r.width)*2-1,-1,1);
   pointerY=clamp((event.clientY-r.top)/Math.max(1,r.height)*2-1,-1,1);
