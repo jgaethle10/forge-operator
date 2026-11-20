@@ -1,0 +1,23 @@
+# Evercraft American Infrastructure Watch public beta.
+# REVIEWED ROUTE FRAGMENT ONLY. Never replace or overwrite the shared Caddyfile.
+# Insert these directives INSIDE the existing fabric.systemiacommandcenters.com
+# site block, with a known-good backup and a passing caddy validate.
+# The shared Fabric reverse_proxy 127.0.0.1:8787 and all other routes stay intact.
+#
+# Requires an independently reviewed /srv/evercraft/infrastructure-watch/current
+# symlink to a verified static release. This route serves NO Python/SQLite API.
+#
+redir /infrastructure-watch /infrastructure-watch/ 308
+handle_path /infrastructure-watch/* {
+  root * /srv/evercraft/infrastructure-watch/current
+  encode zstd gzip
+  header {
+    X-Content-Type-Options "nosniff"
+    X-Frame-Options "DENY"
+    Referrer-Policy "no-referrer"
+    Permissions-Policy "geolocation=(), microphone=(), camera=()"
+    Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; font-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
+    -Server
+  }
+  file_server
+}

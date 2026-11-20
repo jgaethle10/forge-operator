@@ -1,0 +1,101 @@
+name: AIW public beta release bundle gates
+on:
+  pull_request:
+    paths:
+      - "research/infrastructure-watch/release/**"
+      - "research/infrastructure-watch/tests/test_aiw_public_beta_bundle.py"
+      - ".github/workflows/aiw-public-beta-package.yml"
+permissions:
+  contents: read
+jobs:
+  static-preview-export-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Python syntax
+        run: python3 -m py_compile research/infrastructure-watch/release/aiw_public_beta_bundle.py
+      - name: Read-only and staging operator shell syntax
+        run: |
+          bash -n research/infrastructure-watch/release/aiw-beta-build-nextgen.sh
+          bash -n research/infrastructure-watch/release/aiw-beta-courier-nextgen.sh
+          bash -n research/infrastructure-watch/release/aiw-beta-receive-penguin.sh
+          bash -n research/infrastructure-watch/release/aiw-beta-edge-preflight.sh
+          bash -n research/infrastructure-watch/release/aiw-beta-public-edge-audit.sh
+          bash -n research/infrastructure-watch/release/aiw-beta-prepare-public-route.sh
+          bash -n research/infrastructure-watch/release/aiw-beta-cutover-penguin.sh
+          python3 -m py_compile research/infrastructure-watch/release/aiw-beta-brand-hotfix-penguin.py
+          grep -Fq 'services_restarted=false' research/infrastructure-watch/release/aiw-beta-brand-hotfix-penguin.py
+          grep -Fq 'atomic_pointer(BASE)' research/infrastructure-watch/release/aiw-beta-brand-hotfix-penguin.py
+          grep -Fq 'MODE="--check"' research/infrastructure-watch/release/aiw-beta-cutover-penguin.sh
+          grep -Fq 'trap rollback EXIT' research/infrastructure-watch/release/aiw-beta-cutover-penguin.sh
+          grep -Fq 'await_edge_healthy || fail' research/infrastructure-watch/release/aiw-beta-cutover-penguin.sh
+          grep -Fq 'original_public_edge_HTTPS_restored=true' research/infrastructure-watch/release/aiw-beta-cutover-penguin.sh
+          grep -Fq 'original_public_edge_https=PASS' research/infrastructure-watch/release/aiw-beta-cutover-penguin.sh
+          grep -Fq 'PUBLIC_INTERNET_HTTPS=NOT_YET_INDEPENDENTLY_VERIFIED' research/infrastructure-watch/release/aiw-beta-cutover-penguin.sh
+          ! grep -Eq 'systemctl restart (evercraft-fabric|evercraft-worlds)' research/infrastructure-watch/release/aiw-beta-cutover-penguin.sh
+          grep -Fq 'live_caddy_unchanged=true' research/infrastructure-watch/release/aiw-beta-prepare-public-route.sh
+          grep -Fq 'publication_activated=false' research/infrastructure-watch/release/aiw-beta-prepare-public-route.sh
+          grep -Fq 'services_restarted=false' research/infrastructure-watch/release/aiw-beta-public-edge-audit.sh
+          grep -Fq 'public_website_activated=false' research/infrastructure-watch/release/aiw-beta-public-edge-audit.sh
+          grep -Fq 'EXISTING CADDY: valid with installed public-edge environment' research/infrastructure-watch/release/aiw-beta-stage-owned-edge.sh
+          bash -n research/infrastructure-watch/release/aiw-beta-stage-owned-edge.sh
+          grep -Fq 'publication_mutation=NONE' research/infrastructure-watch/release/aiw-beta-edge-preflight.sh
+          grep -Fq 'PUBLIC EDGE: UNCHANGED' research/infrastructure-watch/release/aiw-beta-courier-nextgen.sh
+          # Regression: a failed commit leaves two staged payload files.
+          # Recovery must accept only those exact paths and use a single-command
+          # non-personal identity, never write global Git configuration.
+          grep -Fq 'EXISTING_STAGED="$(git -C "$WORKTREE" diff --cached --name-only)"' research/infrastructure-watch/release/aiw-beta-courier-nextgen.sh
+          grep -Fq 'EXPECTED_EXISTING="$(printf' research/infrastructure-watch/release/aiw-beta-courier-nextgen.sh
+          grep -Fq 'user.name="Evercraft AIW Release Courier"' research/infrastructure-watch/release/aiw-beta-courier-nextgen.sh
+          grep -Fq 'user.email="aiw-release-courier@evercraft.invalid"' research/infrastructure-watch/release/aiw-beta-courier-nextgen.sh
+          ! grep -Fq 'git config --global' research/infrastructure-watch/release/aiw-beta-courier-nextgen.sh
+          grep -Fq 'CADDY / DNS / TLS LEFT UNCHANGED' research/infrastructure-watch/release/aiw-beta-receive-penguin.sh
+          grep -Fq 'LIVE CADDY ROUTE: UNCHANGED' research/infrastructure-watch/release/aiw-beta-stage-owned-edge.sh
+          grep -Fq 'handle_path /infrastructure-watch/*' research/infrastructure-watch/release/AIW-public-beta.Caddyfile.fragment
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify exported JavaScript parse and static route rewrites
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import importlib.util,re
+          p=Path('research/infrastructure-watch/release/aiw_public_beta_bundle.py')
+          spec=importlib.util.spec_from_file_location('beta',p)
+          beta=importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(beta)
+          source=Path('research/infrastructure-watch/operator/aiw-state-first-private.html')
+          output=beta.static_page(source.read_bytes()).decode()
+          scripts=re.findall(r'<script>(.*?)</script>',output,re.S)
+          assert len(scripts)==1
+          Path('/tmp/aiw-public-beta.js').write_text(scripts[0])
+          assert "fetch('./data/states.json'" in output
+          assert "fetch('./data/wa-bridges.json'" in output
+          assert "href='./advanced'" not in output
+          PY
+          node --check /tmp/aiw-public-beta.js
+      - name: Verify no-modification Caddy candidate construction
+        run: |
+          python3 -m py_compile research/infrastructure-watch/release/aiw_caddy_candidate.py
+          python3 -m unittest discover -s research/infrastructure-watch/tests -p 'test_aiw_caddy_candidate.py' -v
+      - name: Evercraft mark and brand-only rollback contract
+        run: python3 -m unittest discover -s research/infrastructure-watch/tests -p 'test_aiw_brand_hotfix.py' -v
+      - name: Verify immutable hover -> static public beta contract
+        run: python3 -m unittest discover -s research/infrastructure-watch/tests -p 'test_aiw_public_beta_bundle.py' -v
+      - name: Verify no third-party executable hosting introduced
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('research/infrastructure-watch/release/aiw_public_beta_bundle.py').read_text()
+          assert 'public_release_ready":False' in p
+          assert 'public_url_verified":False' in p
+          assert 'https://cdn.jsdelivr.net/' not in p
+          assert 'https://base44' not in p
+          assert 'https://render.com' not in p
+          assert 'http://127.0.0.1' in p
+          PY
