@@ -40,7 +40,8 @@ class SimpleStudioTests(unittest.TestCase):
         self.assertIn('source image',page)
         self.assertIn('not a survey',page.lower())
         self.assertNotIn('buy.stripe.com',page)
-        self.assertIn("state.marks=[];state.pending=null;state.calibration=null",page)
+        self.assertIn("state.marks=[];state.history=[];state.selectedMarkIndex=null",page)
+        self.assertIn('state.calibration=null',page)
         self.assertIn('if($(\'siteName\').value===\'DEMONSTRATION RETAIL SITE\')',page)
 
     def test_inline_javascript_compiles_and_keeps_core_actions(self):
