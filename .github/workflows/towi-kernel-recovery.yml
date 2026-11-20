@@ -1,0 +1,31 @@
+name: TOWI recovered investigation kernel
+on:
+  pull_request:
+    paths:
+      - 'systemia/towi/**'
+      - '.github/workflows/towi-kernel-recovery.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/towi/**'
+      - '.github/workflows/towi-kernel-recovery.yml'
+permissions:
+  contents: read
+jobs:
+  recover-towi:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Parse original research kernel and recovered resident
+        run: |
+          node --check systemia/towi/core.mjs
+          node --check systemia/towi/production.mjs
+          node --check systemia/towi/resident.mjs
+      - name: Run original and new research recovery tests
+        run: node --test systemia/towi/*.test.mjs
