@@ -31,6 +31,9 @@ jobs:
       - name: Syntax check
         run: |
           node --check systemia/mission-bridge/model-council/heartbeat-advisory.mjs
+          node --check systemia/mission-bridge/model-council/advisory-ledger.mjs
+          node --check systemia/mission-bridge/model-council/raven-invoker.mjs
+          node --check systemia/mission-bridge/model-council/heartbeat-runner.mjs
           node --check systemia/raven/inference-gateway.mjs
           node --check systemia/boardroom/providers.mjs
       - name: Offline specialist selection and vault provider tests
