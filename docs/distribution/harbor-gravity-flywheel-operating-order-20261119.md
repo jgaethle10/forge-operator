@@ -2,7 +2,7 @@
 **Date:** November 19, 2026 (Pacific)  
 **Owner:** Evercraft LLC / Systemia  
 **Publishing wing:** Harbor (formerly Muse)  
-**Status:** CANONICAL PROPOSED OPERATING PLAN. Source-controlled handoff, not a live Harbor ACK, schedule, post, or proof of transport.  
+**Status:** CANONICAL PROPOSED OPERATING PLAN (amended for live news and entertainment on November 19). Source-controlled handoff, not a live Harbor ACK, schedule, post, or proof of transport.  
 **Related:** [Gravity Flywheel #2271](https://github.com/jgaethle10/forge-operator/issues/2271), [Harbor posting PR #2255](https://github.com/jgaethle10/forge-operator/pull/2255), [brand-identity truth #2263](https://github.com/jgaethle10/forge-operator/issues/2263).
 
 ## 1. Founder objective
@@ -13,6 +13,86 @@ Restore recognizable, regular **original, interesting and useful** content; buil
 **Source-to-audience loop:** discover -> verify -> make original asset -> choose one primary franchise -> adapt separately for each destination -> Harbor preflight -> post/provider receipt/public readback -> reply and qualify -> commercial fulfillment when appropriate -> insights -> next source brief.
 
 **One story, five native forms; never five reposts.** Example: a verified research result can become (a) a linked Journal record, (b) a 20-45s original footage explainer, (c) a substantive vertical franchise angle, (d) a process/behind-the-scenes story, and (e) founder-native commentary *only if the founder supplies/posts it*. Do not force all five forms from weak source material.
+
+## 1A. Founder amendment | 2026-11-19 | Always-on global entertainment and breaking news desk
+**This amendment has priority over any narrower scheduled-cadence wording below.** Evercraft is not only a feed of company updates. It must become a relevant, entertaining, globally attentive news-and-discovery network with a durable Journal at the center.
+
+### Two simultaneous programming lanes
+**Lane A — Planned originals:** Daily Gravity, engineering demonstrations, film/Week in Motion, TOWI investigations, documentaries, explainers, Everyday Heroes, professional studio proof, evergreen learning and existing franchises. Reserve recurring slots but do not post filler.
+
+**Lane B — Global breaking and discovery:** ingest timely primary-source reporting, original creator uploads and public information from anywhere in the world, *24/7 as an operating objective*. Identify a meaningful match to an approved Evercraft property. Prioritize genuine significance, fascination, credible imagery and the ability to add useful facts, context or original commentary. Urgent news preempts a routine slot when verified; the displaced evergreen post remains queued. Do not publish the same viral video across 15 Pages to satisfy volume. One original story may have multiple substantially different angles when justified.
+
+**What changes from the earlier plan:** A goal of 7 primary posts/week is a **minimum planning baseline for regularly produced editorial material, not a ceiling on news or entertainment coverage**. The previous five-secondary-slot cap applies only to planned inventory, not to independently substantiated breaking stories. Protect audience attention through per-Page cooldown and duplicate checks. Do not promise coverage of every global event, and never confuse monitoring goals with verified active 24/7 infrastructure.
+
+### Editorial beat-to-property routing, not random mass distribution
+- **Evercraft Journal:** global verified public affairs, science, technology, human-interest, credible breaking developments and deep-source reference entries; also houses TOWI, Rockies and Week in Motion series under current founder rule. The Journal must be on an Evercraft-approved canonical live origin; *do not link to its retired Base44 website*.
+- **AAAR / flight:** aerospace, airworthiness, aviation technology, drones, launch and space research. Choose an actually authorized existing Page for short form until the product has a verified destination; no invented Page IDs. FAA/NTSB/airline claims require primary-source verification and care with preliminary causes.
+- **ESAN / sports:** important local and worldwide sporting results, moments, records, analysis and legitimate native shares, not pirated highlight clips.
+- **EIC / industrial:** manufacturing, manufacturing breakthroughs, tools, machines, transport infrastructure and projects.
+- **Systemia / Work Saban / Leiland:** AI, autonomy, computing, model research, agents and owner-controlled intelligence; honestly separate general news from actual Evercraft capabilities.
+- **Raven Nexus / Evercraft Network:** home/business infrastructure and resilient telecommunications respectively; *Evercraft Network is NOT a name for our media distribution system*. Do not imply deployed carrier, subscriber or outage-service capabilities.
+- **Yakima Life / Rockies:** community and Pacific Northwest relevance, sourced local alerts, human stories and events; global events only when a clear local angle exists.
+- **Learning Network:** timely developments that warrant a genuinely educational explainer.
+- **ForensiScope / Spider Society / Files Companion:** frame-by-frame evidence literacy, security research and verified public records when relevant; no unverified accusations or private information.
+- **Fallen Studios and company Page:** creative wins, production examples, real milestones and commercial updates, not general disaster/news reposting.
+- **Frozen/held properties:** DO NOT route to Little Red Writing Press or held Transparency Atlas / Black Box. Keep two excluded Pages fully isolated. Consult the 22-Page v2 live identity and permissions register before selecting ANY destination.
+
+### Signal pipeline and significance
+1. **Scout:** consume legitimate public RSS/API/provider feeds and source links, e.g. official FAA/NTSB/USGS/NOAA/NASA releases, original sports leagues/teams where use allowed, primary institutional announcements, field reporters, creator-origin material and reputable global news. Register headline, canonical source URL, source type, event timestamp, first observed timestamp, last update, geography, domain, media candidates, provenance and time sensitivity. Monitoring an organization does not grant content licensing.
+2. **Match:** tag story to Page-specific approved beats; rank by significance, novelty, credibility, media opportunity, audience fit and new information. Low-fit popular stories go to no Page. Preserve a public-interest safety/urgency hold. Distinguish discovery, story confirmation and published coverage.
+3. **Verify:** for material claims prefer a primary authenticated source or independent credible corroboration; cite the underlying source, avoid circular rewrites of one wire story. Use explicit attribution if only a credible single source exists, and mark developing claims as provisional. Verify UGC time/location, original creator, alteration/AI provenance and consent. Unknown provenance -> link with caveat for safe low-stakes context, or HOLD for sensitive breaking claims.
+4. **Prepare rapid story card:** one factual headline, an original 1-3 sentence why-it-matters angle, source link, factual uncertainty and timestamp, related Page ID (verified), media-choice receipt, and suitable platform-specific native copy. Avoid fabricated 'LIVE' status, breaking labels for stale events, sensational language, graphic media, rumor-as-fact or unfounded predictions.
+5. **Journal relationship:** create/reuse exactly one canonical evergreen Journal story ID per news cluster. *Breaking-first exception:* a verified fast source-backed Page update can go out before the Journal's substantial entry, provided it cites the original source and enters a Journal follow-up queue. When the Journal is live and approved, extend a living brief with chronology, original documents, attribution, images with permissions, evolving facts and plainly marked corrections. Journal links must be real, currently reachable, correctly matched to the story, and free of unapproved legacy hosting.
+6. **Publish & follow:** Harbor preflights real authority, sources, rights, exact Page, latest previous posts and text/media hash. Publish through verified existing route, preserve provider post ID/permalink and independently read back. Return to the same story on meaningful changes rather than flooding the feed with near-identical fragments.
+7. **Measure:** inspect genuine click-through, qualified replies, time-on-video where supported, shares, return traffic to Journal, reader questions and inbound opportunities; never invent clicks or treat traffic as earned revenue. Feed the best questions back into Journal updates and original production.
+
+### Journal-first comment policy: the 'deeper dive' signature
+- For **every published Page/social post that has a genuinely relevant live Journal entry**, queue an exact first-comment draft:
+  `For the full story, original sources, context, and updates: {VERIFIED_CANONICAL_JOURNAL_URL}`
+- The first comment must be placed and verified on the *correct provider post* by a **separately authorized, permission-tested comment-capable route**, with returned comment ID, post ID and independent readback. An authorized regular Page-post pipeline does not prove ability to comment. Honor any standing founder approval rule for comments and replies. A bot must not reply to the public or impersonate a human.
+- If Journal page is not yet live, **do not invent a link or imply the article is available**. Publish the original source URL in the post or a permissioned source comment when appropriate, mark `JOURNAL_PENDING` privately, and attach the verified Journal link after publication only when the comment capability, exact target and approvals are confirmed.
+- Distinguish `JOURNAL_NOT_APPLICABLE` for pure promotional/service or lightweight community posts, `JOURNAL_PENDING`, `JOURNAL_LIVE_COMMENT_PENDING`, `JOURNAL_LINKED_VERIFIED`, and `COMMENT_ROUTE_BLOCKED`.
+- Use a related Journal entry, not a generic homepage/link farm; avoid duplicate comment spam. When platform UI supports pinning and current permissions allow it, pin the explanatory comment; otherwise keep a normal first comment. Platform-specific variations may use a citation section, story link, profile link or another verified native mechanism rather than claiming a first comment exists where unsupported.
+
+### Media-first publication standard
+Every story receives a **media-search attempt** and logged decision:
+1. Preferred: Evercraft-owned authentic vertical footage, licensed original production, rights-cleared creator submission, firsthand photography, original diagram, verified on-screen source document, or a meaningful original editorial animation labeled as illustration where needed.
+2. Next: a **native share/quote/embed or direct link to the original creator's live post** if platform features and creator settings permit; give clear attribution and independently verify relevance/location/time. Do not substitute a screen recording for a native share.
+3. Next: properly licensed, permissioned, public-domain or verified compatible Creative Commons image/video, with correct attribution and terms documented. 'Publicly visible' and 'credited' do NOT mean free to reupload. No piracy or unauthorized paid wire/stock footage. For a government media source, verify the specific use rights and any third-party elements.
+4. If no authentic/usable footage: produce *original* map/chart/diagram/typographic graphic only if it accurately shows sourced facts; label reconstructions and avoid AI-generated scenes presented as real-world footage.
+5. In truly urgent or sensitive coverage, **source-backed text/link is better than invented, misattributed or rights-infringing visuals**. A credible video can be linked rather than downloaded. Record `MEDIA_UNAVAILABLE_OR_HELD` and move on.
+
+Aspirational target: relevant, meaningful, rights-cleared media on the overwhelming majority of editorial posts; not a claimed achieved rate and never a reason to delay crucial verified safety information. Report media attach/share/link rate and provenance by week. Original creative work should be a substantial part of the mix to protect audience trust and monetization.
+
+### Time, correction and distribution guardrails
+- **Operational speed objective, not SLA:** five-minute Systemia scouting tick can surface a candidate; aim for quick review of high-priority validated stories, then a fuller Journal entry later. Harbor's **existing morning cron currently does not prove around-the-clock monitoring**; authenticated live Systemia→Harbor transport and operator capacity must be actually proven before claiming always-on publication.
+- Each news item records event time, discovery time, verification time, first public post, Journal update time, comment time and rights status. Never count a draft as published or a proposed reminder as execution.
+- Hard hold: unverified emergencies/accusations, personally identifying or graphic victim footage, rumors about a death, disaster images of unclear origin, sensitive security details, minors without needed consent, stolen/illicit media, and unsupported medical/financial claims.
+- Corrections: update the Journal change log and the affected social post/comment where possible, link correction visibly, don't silently rewrite history, and halt derivatives until fixed.
+- Keep publication neutral and non-sensational on contested political/news topics, with source-based context and relevant perspectives.
+- Track link/thumbnail/card render independently and format for each provider; enforce duplicate suppression for source-article ID + Page + angle + latest verified update.
+- Do not publish third-party copyrighted material simply because it's viral. Meta's March 2026 original-content standards explicitly de-emphasize unattributed/low-value reposts; add meaningful original storytelling, not superficial cosmetic edits. Reference: https://about.fb.com/news/2026/03/rewarding-original-creators-on-facebook/
+- Editorial journalism reference for attribution, fact-checking and visible corrections: https://www.ap.org/about/news-values-and-principles/telling-the-story/
+
+### Minimum Harbor story packet (new story, not a provider post)
+```json
+{
+  "schema": "evercraft.harbor.live-story.v1",
+  "story_id": "assigned-from-source-canonical-hash",
+  "event_time_utc": null,
+  "first_seen_utc": null,
+  "category": "aviation|science|sports|machines|local|ai|history|other",
+  "headline": "source-attributed, verified",
+  "evidence": [{"source_url": "real URL", "source_kind": "primary", "checked_at_utc": null}],
+  "uncertainty_label": "CONFIRMED|ATTRIBUTED_DEVELOPING|HOLD",
+  "targets": [{"page_id": "actual ID", "relevance_reason": "specific audience fit"}],
+  "media": [{"url": "source URL", "origin": "creator|owned|licensed|public-domain|native-share", "usage": "link-only|native-share|rights-cleared-reupload|original"}],
+  "journal": {"story_id": null, "canonical_url": null, "state": "JOURNAL_PENDING"},
+  "post": {"state": "CANDIDATE_NOT_PUBLISHED", "provider_post_id": null},
+  "first_comment": {"state": "WAITING_FOR_VERIFIED_JOURNAL_AND_COMMENT_PERMISSION", "provider_comment_id": null}
+}
+```
+Private media licensing, credentials and customer details must stay out of public GitHub. Public schema is for implementation planning, never a forged live receipt.
 
 ## 2. Editorial franchises, routing and thresholds
 1. **Daily Gravity:** one audience-worthy discovery or original short demonstration per day *network-wide*, not per Page. Wonder, science, useful history, physical machines, sports and inventions belong, even when they do not advertise Evercraft. Verify sources and media rights first.
