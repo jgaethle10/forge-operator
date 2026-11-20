@@ -18,6 +18,15 @@ jobs:
           python-version: '3.11'
       - name: Python syntax
         run: python3 -m py_compile research/infrastructure-watch/release/aiw_public_beta_bundle.py
+      - name: Read-only and staging operator shell syntax
+        run: |
+          bash -n research/infrastructure-watch/release/aiw-beta-build-nextgen.sh
+          bash -n research/infrastructure-watch/release/aiw-beta-edge-preflight.sh
+          bash -n research/infrastructure-watch/release/aiw-beta-stage-owned-edge.sh
+          grep -Fq 'publication_mutation=NONE' research/infrastructure-watch/release/aiw-beta-edge-preflight.sh
+          grep -Fq 'LIVE CADDY ROUTE: UNCHANGED' research/infrastructure-watch/release/aiw-beta-stage-owned-edge.sh
+          grep -Fq 'handle_path /infrastructure-watch/*' research/infrastructure-watch/release/AIW-public-beta.Caddyfile.fragment
+
       - name: Verify immutable hover -> static public beta contract
         run: python3 -m unittest discover -s research/infrastructure-watch/tests -p 'test_aiw_public_beta_bundle.py' -v
       - name: Verify no third-party executable hosting introduced
