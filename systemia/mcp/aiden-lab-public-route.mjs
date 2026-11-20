@@ -50,8 +50,8 @@ export function resolveAidenLabRequest(url) {
 function classroomCsp(body) {
   const html=body.toString('utf8');
   const hash=(value)=>"'sha256-"+createHash('sha256').update(value).digest('base64')+"'";
-  const scripts=[...html.matchAll(/<script(?:\\s[^>]*)?>([\\s\\S]*?)<\\/script>/gi)].map(x=>hash(x[1]));
-  const styles=[...html.matchAll(/<style(?:\\s[^>]*)?>([\\s\\S]*?)<\\/style>/gi)].map(x=>hash(x[1]));
+  const scripts=[...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/gi)].map(x=>hash(x[1]));
+  const styles=[...html.matchAll(/<style(?:\s[^>]*)?>([\s\S]*?)<\/style>/gi)].map(x=>hash(x[1]));
   return [
     "default-src 'none'",
     "script-src "+scripts.join(' '),
