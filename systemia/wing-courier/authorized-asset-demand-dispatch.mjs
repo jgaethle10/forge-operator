@@ -64,6 +64,13 @@ export function prepareAuthorizedHarborPickup({
  if(typeof actorRef!=='string'||!actorRef.startsWith('agent:systemia:')||
     typeof permitId!=='string'||!permitId.startsWith('permit_'))
    fail('systemia_actor_or_permit_required');
+ const passport=new EvercraftPassport({stateDir:passportStateDir});
+ const check=passport.getActionPermitState(permitId,{at:now().toISOString()});
+ if(!check.active||check.actor_ref!==actorRef||
+    check.product!==ASSET_PICKUP_PRODUCT||check.scope!==ASSET_PICKUP_SCOPE||
+    check.resource_ref!=='asset-demand:'+request.caseRef||
+    check.request_fingerprint!==fingerprint)
+    fail('passport_permit_denied_or_scope_mismatch');
  const outbox=safePrivateDir(outboxDir);
  if(path.resolve(outbox)===path.resolve(privateQueueDir))fail('outbox_must_be_separate');
  // The keys must be independently enrolled and pinned by the real operator.
@@ -74,13 +81,6 @@ export function prepareAuthorizedHarborPickup({
   try{fs.lstatSync(name);fail('outbox_already_exists')}
   catch(e){if(e?.code!=='ENOENT')throw e}
  }
- const passport=new EvercraftPassport({stateDir:passportStateDir});
- const check=passport.getActionPermitState(permitId,{at:now().toISOString()});
- if(!check.active||check.actor_ref!==actorRef||
-    check.product!==ASSET_PICKUP_PRODUCT||check.scope!==ASSET_PICKUP_SCOPE||
-    check.resource_ref!=='asset-demand:'+request.caseRef||
-    check.request_fingerprint!==fingerprint)
-    fail('passport_permit_denied_or_scope_mismatch');
  const consumption=passport.consumeActionPermit({
   permit_id:permitId,actor_ref:actorRef,request_fingerprint:fingerprint,
   idempotency_key:'asset-demand:prepare:'+requestId+':'+permitId,
