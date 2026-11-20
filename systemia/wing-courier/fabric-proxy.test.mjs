@@ -71,8 +71,19 @@ test('enabled Fabric path forwards exactly scoped broker API and preserves broke
     ciphertextSha256:'b'.repeat(64),bytes:150})});
   assert.equal(write.status,201);
   assert.equal((await write.json()).state,'STAGED');
-  const wrongHost=await fetch(url+'/v1/inbox?wing=fallen',{
-   headers:{authorization:'Bearer '+frecv,host:'another.example'}});
-  assert.equal(wrongHost.status,404);
+  // undici fetch can normalize/replace Host; use a raw HTTP request for this
+  // exact-name host-spoof regression.
+  const wrongHostCode=await new Promise((resolve,reject)=>{
+   const request=http.request({
+    hostname:'127.0.0.1',port:Number(new URL(fab.url).port),
+    method:'GET',path:WING_COURIER_FABRIC_PREFIX+'/v1/inbox?wing=fallen',
+    headers:{Host:'another.example',Authorization:'Bearer '+frecv},
+   },response=>{
+    const code=response.statusCode;
+    response.resume();response.once('end',()=>resolve(code));
+   });
+   request.once('error',reject);request.end();
+  });
+  assert.equal(wrongHostCode,404);
  }finally{await fab.close();await broker.close();fs.rmSync(root,{recursive:true,force:true})}
 });
