@@ -55,7 +55,7 @@ fi
 command -v systemctl >/dev/null || { echo 'systemctl required' >&2; exit 2; }
 systemctl --user show-environment >/dev/null ||
   { echo 'No user systemd manager. Enable WSL systemd and restart WSL before installing.' >&2; exit 2; }
-if [[ -e "$ENVFILE" && -L "$ENVFILE" ]] || [[ -e "$UNIT" && -L "$UNIT" ]]; then
+if [[ -L "$ENVFILE" || -L "$UNIT" ]]; then
   echo 'Refusing to overwrite a symlinked credential or service file' >&2; exit 2
 fi
 if title_probe && ! systemctl --user is-active --quiet "$SERVICE"; then
