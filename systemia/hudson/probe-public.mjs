@@ -75,22 +75,25 @@ export async function probeHudsonPublic({origin=HUDSON_ORIGIN,fetchImpl=fetch,no
  try{
   watch=await getText(url+'watch/',fetchImpl);
   checks.watch_river=watch.status===200&&/^text\/html/i.test(watch.type)&&
-    watch.content.includes('name="hudson-watch-release" content="river-current-v5-responsive-watershed"')&&
+    watch.content.includes('name="hudson-watch-release" content="river-current-v6-phase-traveler"')&&
     watch.content.includes('function presencePulse(time)')&&
     watch.content.includes('function drawPresenceRipple(from,to,t)')&&
     watch.content.includes('function presenceCurrentField(trip)')&&
     watch.content.includes('function deflectCurrent(x,y,field)')&&
     watch.content.includes('function shapeRiverChannels(field)')&&
-    watch.content.includes('function anomalyFilament(time,index)')&&
-    watch.content.includes('function drawAnomaly(from,to,t)')&&
+    watch.content.includes('function travelerState(time,progress)')&&
+    watch.content.includes('function ribbonForm(time,layer,state)')&&
+    watch.content.includes('function drawTraveler(from,to,t)')&&
+    !watch.content.includes('function anomalyFilament(')&&
+    !watch.content.includes('function drawAnomaly(')&&
     !watch.content.includes('function explorerLegGeometry(')&&
     !watch.content.includes('function spider(')&&
     watch.content.includes('id="current"')&&
     watch.content.includes('PUBLIC GIT HISTORY · REPLAY')&&
     watch.content.includes('SCENIC CURRENT · NOT A LIVE MISSION')&&
-    watch.content.includes('function anomalyForm(time)')&&
+    watch.content.includes('A partially hidden aperture, never a fixed eye')&&
     watch.content.includes('credentials:"omit"');
-  checks.watch_river_version=checks.watch_river?'river-current-v5-responsive-watershed':null;
+  checks.watch_river_version=checks.watch_river?'river-current-v6-phase-traveler':null;
   if(!checks.watch_river)errors.push('public_hudson_river_watch_not_verified');
  }catch(e){checks.watch_river=false;checks.watch_error_class=classifyPublicFetchFailure(e);errors.push('hudson_river_watch_unreachable')}
  try{

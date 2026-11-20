@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#040b13">
-<meta name="hudson-watch-release" content="river-current-v5-responsive-watershed"><meta name="description" content="Watch HUDSON's flowing knowledge currents and source-linked replay on Evercraft's owned public observatory.">
+<meta name="hudson-watch-release" content="river-current-v6-phase-traveler"><meta name="description" content="Watch HUDSON's flowing knowledge currents and source-linked replay on Evercraft's owned public observatory.">
 <title>HUDSON | Enter the Current</title>
 <style>
 :root{color-scheme:dark;--aqua:#9affdc;--chalk:#e2f7f1;--soft:#9ebabb}
@@ -279,25 +279,34 @@ function presencePulse(time){
   doubleStrength:doubleStrength
  };
 }
-function anomalyFilament(time,index){
- var wave=Math.sin(time*(.22+index*.013)+index*1.67);
- var unfold=Math.pow(Math.max(0,wave),1.7);
- // The pulse propagates into the probes with a small staggered delay.
- var delayed=presencePulse(time-(index%5)*.12);
+// A folded, non-animal traveler: broad translucent membranes, a dark aperture,
+// and constantly changing asymmetry. This is visual choreography, not AI life.
+function travelerState(time,progress){
+ var pulse=presencePulse(time);
+ var arrival=clamp((progress-.65)/.32,0,1);
+ arrival=arrival*arrival*(3-2*arrival);
+ var fold=.32+.20*Math.sin(time*.39+.4)+.10*Math.sin(time*.13+2.1);
  return {
-  angle:index*2.399963+Math.sin(time*.11+index*.8)*.55,
-  reach:.47+unfold*(1.04+delayed.energy*.18),
-  curl:Math.sin(time*.33+index*1.03)*(.37+delayed.energy*.13),
-  opacity:.055+unfold*.35+delayed.energy*.09
+  opening:clamp(fold+arrival*.49+pulse.energy*.18,.15,1),
+  arrival:arrival,
+  pulse:pulse.energy,
+  yaw:Math.sin(time*.19+.8)*.31+Math.sin(time*.53)*.085,
+  roll:time*.17+Math.sin(time*.27)*.38,
+  veil:.23+.27*(.5+.5*Math.sin(time*.16+1.8)),
+  integrity: .28+.72*Math.min(clamp(progress/.18,0,1),clamp((1-progress)/.16,0,1)),
+  scan:arrival*(.45+.55*Math.sin(time*.94+.7)**2)
  };
 }
-function anomalyForm(time){
- var pulse=presencePulse(time);
+function ribbonForm(time,layer,state){
+ var offset=layer*1.71;
+ var wave=Math.sin(time*(.22+layer*.023)+offset);
+ var delay=presencePulse(time-(layer%4)*.19);
  return {
-  fold:.5+.5*Math.sin(time*.37+.8)+pulse.energy*.095,
-  rotation:time*.18+Math.sin(time*.23)*.24,
-  aperture:.38+.23*Math.sin(time*.29+1.7)+pulse.energy*.06,
-  pulse:pulse.energy
+  angle:offset+state.roll*(layer%2?-.53:.42)+Math.sin(time*.11+offset)*.23,
+  length:.68+layer*.075+state.opening*.46+wave*.19,
+  width:.17+state.opening*.24+delay.energy*.09,
+  bend:Math.sin(time*.35+offset)*.29+Math.sin(time*.16+layer)*.16,
+  opacity:clamp(.30+.19*Math.sin(time*.17+layer*1.9)+.11*state.arrival,.13,.67)
  };
 }
 // The river answers quietly when the Presence pulses. These rings and
@@ -329,71 +338,91 @@ function drawPresenceRipple(from,to,t){
  }
  ctx.restore();
 }
-function drawAnomaly(from,to,t){
- var pos=locate(from,to,t),ahead=locate(from,to,Math.min(.999,t+.012));
+// The traveler is deliberately not an insect, orb or fixed spinning logo.
+// Each ribbon has volume and changes silhouette as it moves through the river.
+function drawTraveler(from,to,t){
+ var pos=locate(from,to,t),ahead=locate(from,to,Math.min(.999,t+.013));
  var angle=Math.atan2(ahead.y-pos.y,ahead.x-pos.x);
- var size=Math.max(17,Math.min(30,width*.052));
- var form=anomalyForm(clock),now=clock;
- ctx.save();ctx.translate(pos.x,pos.y);ctx.rotate(angle+Math.sin(now*.28)*.16);
+ var size=width<=620?clamp(width*.116,39,57):clamp(width*.068,65,100);
+ var state=travelerState(clock,t);
+ ctx.save();ctx.translate(pos.x,pos.y);ctx.rotate(angle+state.yaw);
  ctx.globalCompositeOperation="source-over";
- // A nearly invisible distortion makes the presence legible in bright water,
- // without turning it into a white bug, star or obvious head/body silhouette.
- var veil=ctx.createRadialGradient(0,0,0,0,0,size*2.25);
- veil.addColorStop(0,"rgba(1,17,27,"+(.32+form.pulse*.12).toFixed(3)+")");
- veil.addColorStop(.34,"rgba(15,64,71,.15)");
- veil.addColorStop(1,"rgba(15,64,71,0)");
- ctx.fillStyle=veil;ctx.beginPath();ctx.arc(0,0,size*2.25,0,Math.PI*2);ctx.fill();
- // Sparse irregular feelers emerge, curl, fade and retract. No fixed leg count.
- for(var thread=0;thread<9;thread++){
-  var p=anomalyFilament(now,thread);
-  if(p.opacity<.075)continue;
-  var a=p.angle,c=p.curl,reach=size*p.reach;
-  var sx=Math.cos(a)*size*.24,sy=Math.sin(a)*size*.20;
-  var ex=Math.cos(a+c)*reach,ey=Math.sin(a+c)*reach*.77;
-  var turn=c*size*.62;
-  ctx.beginPath();ctx.moveTo(sx,sy);
-  ctx.bezierCurveTo(sx+Math.cos(a+.6)*reach*.33,sy+Math.sin(a+.6)*reach*.22,
-                   ex-Math.cos(a)*reach*.22-Math.sin(a)*turn,
-                   ey-Math.sin(a)*reach*.18+Math.cos(a)*turn,ex,ey);
-  ctx.strokeStyle=thread%3===0?"rgba(179,165,247,"+p.opacity.toFixed(3)+")":
-    "rgba(125,247,217,"+p.opacity.toFixed(3)+")";
-  ctx.lineWidth=.55+Math.min(.8,p.opacity*1.15);ctx.stroke();
-  if(p.opacity>.28){
-   ctx.fillStyle="rgba(200,255,239,"+(p.opacity*.82).toFixed(3)+")";
-   ctx.beginPath();ctx.arc(ex,ey,.6+p.opacity,0,Math.PI*2);ctx.fill();
-  }
+ // Briefly assemble from water on departure and unravel on arrival.
+ ctx.globalAlpha=state.integrity;
+ // Its dark, refractive envelope is a distinct focal point in bright currents.
+ var atmosphere=ctx.createRadialGradient(0,0,size*.09,0,0,size*1.85);
+ atmosphere.addColorStop(0,"rgba(1,12,27,.83)");
+ atmosphere.addColorStop(.28,"rgba(11,40,56,.58)");
+ atmosphere.addColorStop(.62,"rgba(32,90,105,.19)");
+ atmosphere.addColorStop(1,"rgba(3,24,43,0)");
+ ctx.fillStyle=atmosphere;ctx.beginPath();ctx.arc(0,0,size*1.85,0,Math.PI*2);ctx.fill();
+ // Three short, fluid echoes keep movement perceptible without a comet tail.
+ for(var echo=0;echo<3;echo++){
+  var lift=(echo-1)*size*.15;
+  ctx.beginPath();ctx.moveTo(-size*.19,lift);
+  ctx.bezierCurveTo(-size*.54,lift+Math.sin(clock*.58+echo)*size*.21,
+   -size*1.05,lift-Math.sin(clock*.31+echo)*size*.18,-size*1.28,lift*.48);
+  ctx.strokeStyle=echo===1?"rgba(122,251,220,.15)":"rgba(158,152,255,.095)";
+  ctx.lineWidth=echo===1?2.1:1;ctx.stroke();
  }
- // Broken revolving contours: the structure reveals itself for a moment and
- // almost disappears again. The dark center is deliberate negative space.
- ctx.save();ctx.rotate(form.rotation);ctx.scale(1+form.pulse*.07,1+form.pulse*.095);
- for(var ring=0;ring<3;ring++){
-  var radius=size*(.41+ring*.18),phase=now*(ring%2===0?.12:-.17)+ring*2.08;
-  ctx.beginPath();ctx.ellipse(0,0,radius,radius*(.54+.07*Math.sin(now*.31+ring)),
-    ring*.38+Math.sin(now*.09)*.19,phase,phase+1.8+form.aperture*.95);
-  ctx.strokeStyle=ring===1?"rgba(167,147,255,"+(.23+form.fold*.17).toFixed(3)+")":
-    "rgba(147,251,223,"+(.25+form.fold*.18).toFixed(3)+")";
-  ctx.lineWidth=ring===0?1.25:.8;ctx.stroke();
+ // Five independent volumetric veils roll and fold around a central void.
+ var shades=[
+  ["rgba(47,181,188,0)","rgba(101,240,216,.27)","rgba(191,251,236,.75)"],
+  ["rgba(68,93,183,0)","rgba(116,139,240,.24)","rgba(205,184,255,.69)"],
+  ["rgba(31,156,154,0)","rgba(109,236,202,.29)","rgba(198,255,229,.67)"],
+  ["rgba(71,111,176,0)","rgba(151,143,248,.22)","rgba(222,207,255,.61)"],
+  ["rgba(40,178,171,0)","rgba(105,219,235,.24)","rgba(178,251,243,.62)"]
+ ];
+ for(var layer=0;layer<5;layer++){
+  var f=ribbonForm(clock,layer,state),span=size*f.length,thick=size*f.width;
+  ctx.save();ctx.rotate(f.angle);
+  var curl=f.bend*size,outer=-size*.21+span;
+  ctx.beginPath();ctx.moveTo(-size*.42,-thick*.20);
+  ctx.bezierCurveTo(span*.18,-thick*1.9+curl,span*.72,-thick*1.47+curl,outer,-thick*.12);
+  ctx.bezierCurveTo(span*.88,thick*.73+curl,span*.50,thick*1.08+curl,-size*.13,thick*.68);
+  ctx.quadraticCurveTo(-size*.42,thick*.38,-size*.42,-thick*.20);
+  ctx.closePath();
+  var colors=shades[layer],grad=ctx.createLinearGradient(-size*.33,-thick*1.6,outer,thick*1.4);
+  grad.addColorStop(0,colors[0]);grad.addColorStop(.49,colors[1]);grad.addColorStop(1,colors[2]);
+  ctx.globalAlpha=f.opacity*state.integrity;ctx.fillStyle=grad;ctx.fill();
+  ctx.strokeStyle=layer%2===0?"rgba(192,255,235,.57)":"rgba(197,191,255,.55)";
+  ctx.lineWidth=1.1;ctx.stroke();
+  ctx.beginPath();ctx.moveTo(-size*.12,-thick*.12);
+  ctx.bezierCurveTo(span*.17,-thick*.56+curl*.4,span*.68,-thick*.58+curl*.3,outer,-thick*.08);
+  ctx.strokeStyle="rgba(223,255,248,.31)";ctx.lineWidth=.65;ctx.stroke();
+  ctx.restore();
  }
- // The nucleus changes from a dark slit to a translucent folded shard.
- ctx.rotate(-form.rotation*.44);
+ // A partially hidden aperture, never a fixed eye, face or mechanical core.
+ ctx.save();ctx.rotate(-state.roll*.22+Math.sin(clock*.31)*.26);
+ var aperture=size*(.16+.085*state.opening);
  ctx.beginPath();
- ctx.moveTo(-size*.28,-size*(.09+form.fold*.13));
- ctx.quadraticCurveTo(-size*.04,-size*(.33+form.aperture*.12),size*.28,-size*.10);
- ctx.quadraticCurveTo(size*(.35+form.fold*.12),size*.07,size*.12,size*.25);
- ctx.quadraticCurveTo(-size*.17,size*(.19+form.fold*.08),-size*.28,-size*(.09+form.fold*.13));
- ctx.closePath();
- ctx.fillStyle="rgba(4,30,41,.86)";ctx.fill();
- ctx.strokeStyle="rgba(194,255,235,"+(.48+form.fold*.28).toFixed(3)+")";
- ctx.lineWidth=1.15;ctx.stroke();
- ctx.beginPath();ctx.moveTo(-size*.14,size*.03);
- ctx.quadraticCurveTo(size*.04,-size*.10,size*(.11+form.aperture*.1),size*.04);
- ctx.strokeStyle="rgba(158,250,230,.54)";ctx.lineWidth=.9;ctx.stroke();
- ctx.restore();
- // A faint delayed echo suggests movement, not a rigid body with limbs.
- var echo=Math.sin(now*.61)*.5+.5;
- ctx.strokeStyle="rgba(139,218,244,"+(.09+echo*.09).toFixed(3)+")";
- ctx.lineWidth=.7;ctx.beginPath();ctx.arc(-size*.22,size*.08,size*(.93+echo*.14),
-   now*.11,now*.11+Math.PI*.64);ctx.stroke();
+ ctx.moveTo(-aperture*.90,-aperture*.26);
+ ctx.lineTo(-aperture*.18,-aperture*.94);
+ ctx.lineTo(aperture*.18,-aperture*.41);
+ ctx.lineTo(aperture*.86,-aperture*.54);
+ ctx.lineTo(aperture*.56,aperture*.08);
+ ctx.lineTo(aperture*.31,aperture*.76);
+ ctx.lineTo(-aperture*.41,aperture*.35);
+ ctx.closePath();ctx.fillStyle="rgba(4,28,41,.75)";ctx.fill();
+ ctx.strokeStyle="rgba(182,253,231,"+(.46+.14*state.pulse).toFixed(3)+")";
+ ctx.lineWidth=1.3;ctx.stroke();ctx.restore();
+ // Thin broken caustics reveal depth only fleetingly.
+ for(var arc=0;arc<3;arc++){
+  var spread=size*(.70+arc*.24),rot=clock*(arc%2?.12:-.075)+arc*1.9;
+  ctx.beginPath();ctx.ellipse(0,0,spread,spread*(.42+.05*Math.sin(clock*.4+arc)),
+    rot*.25,rot,rot+(.65+state.opening*.67));
+  ctx.strokeStyle=arc===1?"rgba(180,173,255,.22)":"rgba(155,255,224,.25)";
+  ctx.lineWidth=.8;ctx.stroke();
+ }
+ // On arrival, the membranes bloom briefly as though examining a junction.
+ // This is scenic behavior, not evidence of real agent deliberation.
+ if(state.scan>.28){
+  var alpha=(state.scan-.28)*.29;
+  ctx.strokeStyle="rgba(181,254,230,"+alpha.toFixed(3)+")";
+  ctx.lineWidth=.75;
+  ctx.beginPath();ctx.ellipse(0,0,size*(1.37+state.opening*.16),
+     size*(.58+state.opening*.11),clock*.12,0,Math.PI*1.32);ctx.stroke();
+ }
  ctx.restore();
 }
 function routeAt(){
@@ -424,7 +453,7 @@ function paint(dt){
  var trip=routeAt(),field=presenceCurrentField(trip);
  shapeRiverChannels(field);
  drawWatershed(field);drawRivers();drawParticles(dt);drawConfluences();
- drawPresenceRipple(trip.from,trip.to,.04+trip.t*.92);drawAnomaly(trip.from,trip.to,.04+trip.t*.92);
+ drawPresenceRipple(trip.from,trip.to,.04+trip.t*.92);drawTraveler(trip.from,trip.to,.04+trip.t*.92);
  if(clock<flashUntil){
   var p=coordinates(trip.to);ctx.strokeStyle="rgba(182,255,220,"+((flashUntil-clock)/3*.7)+")";ctx.lineWidth=2;ctx.beginPath();ctx.arc(p.x,p.y,40+(3-(flashUntil-clock))*30,0,7);ctx.stroke();
  }
