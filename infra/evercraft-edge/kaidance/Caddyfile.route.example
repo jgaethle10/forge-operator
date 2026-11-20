@@ -1,0 +1,29 @@
+# STAGED ONLY: add inside an existing verified and authorized public Caddy site block.
+# No new DNS, listener, port or virtual host. Preserve other Fabric routes.
+#
+# Precondition: operator-reviewed static files staged under
+# /srv/evercraft/public/kaidance, with separately authorized pulse.json.
+# NO Yard state, approval records, secrets, node details or internal endpoints
+# belong under this public root.
+
+redir /kaidance /kaidance/ 308
+
+route /kaidance/* {
+  # Explicit file allowlist. Other /kaidance paths return 404.
+  @kaidanceAllowed path /kaidance/ /kaidance/index.html /kaidance/app.mjs /kaidance/style.css /kaidance/pulse-source.mjs /kaidance/work-source.mjs /kaidance/mark.svg /kaidance/pulse.json
+
+  handle @kaidanceAllowed {
+    root * /srv/evercraft/public
+    header {
+      Cache-Control "no-store, no-cache, must-revalidate"
+      X-Content-Type-Options "nosniff"
+      Referrer-Policy "no-referrer"
+      X-Frame-Options "DENY"
+      X-Robots-Tag "noindex, nofollow, noarchive"
+      -Server
+    }
+    file_server
+  }
+
+  respond 404
+}
