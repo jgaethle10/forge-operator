@@ -41,9 +41,16 @@ jobs:
         run: |
           node --check systemia/hudson/publish-public-snapshot.mjs
           node --check systemia/hudson/probe-public.mjs
-          node --test systemia/hudson/publish-public-snapshot.test.mjs systemia/hudson/probe-public.test.mjs systemia/hudson/visual-stage.test.mjs systemia/hudson/public-feed-cache.test.mjs
+          node --test systemia/hudson/publish-public-snapshot.test.mjs systemia/hudson/probe-public.test.mjs systemia/hudson/visual-stage.test.mjs systemia/hudson/public-feed-cache.test.mjs systemia/hudson/mobile-stage.test.mjs
       - name: Prove owned Fabric HTTP routes
         run: node --test tests/hudson-owned-fabric-route.test.mjs
+      - name: Preserve public HTML for mobile design review
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: hudson-public-mobile-preview
+          path: public/hudson/index.html
+          retention-days: 7
       - name: External HTTPS snapshot and privacy admission
         if: github.event_name != 'pull_request'
         shell: bash

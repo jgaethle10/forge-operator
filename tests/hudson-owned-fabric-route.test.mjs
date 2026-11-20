@@ -15,7 +15,7 @@ test('HUDSON is served read-only by the owned Fabric runtime with a functioning 
   assert.match(page.headers.get('content-security-policy'),/script-src 'unsafe-inline'/);
   assert.match(page.headers.get('content-security-policy'),/connect-src 'self'/);
   const html=await page.text();
-  assert.match(html,/A living/);
+  assert.match(html,/Nothing<br><em>gets lost/);
   assert.match(html,/activity\.json/);
   assert.match(html,/ANIMATED PATHS ARE NOT VERIFIED EVENTS/);
 
