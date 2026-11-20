@@ -20,8 +20,8 @@ function resolveBase(value){
  if(u.search||u.hash)fail('endpoint_query_forbidden');
  if(u.protocol==='http:'&&!['127.0.0.1','localhost','::1'].includes(u.hostname))fail('remote_http_forbidden');
  if(!['http:','https:'].includes(u.protocol))fail('endpoint_scheme');
- if(u.pathname!=='/'&&u.pathname!=='')fail('endpoint_path_invalid');
- return u.origin;
+ if(!['/','/wing-courier'].includes(u.pathname))fail('endpoint_path_invalid');
+ return u.origin+(u.pathname==='/wing-courier'?'/wing-courier':'');
 }
 async function request(base,token,method,route,{json,stream,headers={}}={}){
  const res=await fetch(base+route,{method,redirect:'manual',
