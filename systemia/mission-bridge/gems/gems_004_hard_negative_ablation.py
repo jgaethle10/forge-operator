@@ -144,7 +144,7 @@ def execute(data,evidence):
             components,ids,valid,south,TRAIN_BUFFER,SCORE_CORRIDOR)
         full,truth,known=full_scoreable_masks(components,ids,valid,south)
         train=train_map[valid]
-        if np.any(train&north_flat==False) and np.any(train&~north_flat):
+        if np.any(train & ~north_flat):
             raise AssertionError("training_region_southern_leakage")
         distances=train_only_distances(raw,valid,train)
         pilot_indices,pilot_counts=sample_indices(labels,train,distances,0)
