@@ -5,6 +5,8 @@ Operator-only integration shell. This is neither a paid membership portal nor
 an operational site-plan solver. The Site Planner product owns the site/report API.
 """
 import importlib.util
+import base64
+import binascii
 import hashlib
 import json
 import os
@@ -15,6 +17,9 @@ import sys
 from http.server import ThreadingHTTPServer
 from urllib.parse import urlsplit
 import spatial
+import aerial_vault
+import raster_registration
+import sheet_compiler
 
 ROOT = Path(__file__).resolve().parent
 SITE_PLANNER_ROOT = ROOT.parent / "site-planner"
@@ -30,6 +35,7 @@ spec.loader.exec_module(site_planner)
 
 PORT = int(os.environ.get("KENNEDY_PORT", "8811"))
 SPATIAL = spatial.SpatialStore(Path(os.environ.get("KENNEDY_DATA", str(site_planner.DATA / "kennedy"))))
+AERIAL = aerial_vault.AerialVault(Path(os.environ.get("KENNEDY_DATA", str(site_planner.DATA / "kennedy"))) / "aerial")
 
 
 def validate_site_and_report(site_id, source_report_id=""):
@@ -106,7 +112,9 @@ class KennedyHandler(site_planner.Handler):
                     "synthetic_s0_a0_pdf_compiler": True,
                     "synthetic_raster_pdf_ci_proof": True,
                     "real_raster_pdf_in_studio": False,
-                    "aerial_image_upload_integrated": False,
+                    "aerial_image_upload_integrated": True,
+                    "aerial_upload_mode": "private_operator_json_png_only",
+                    "aerial_sources_export_authorized": False,
                     "aerial_underlay_sheet_export": False,
                     "s0_a0_two_sheet_compiler": False,
                     "historical_site_report_parity": False,
@@ -130,6 +138,22 @@ class KennedyHandler(site_planner.Handler):
                 return self.send(200, SPATIAL.outbox())
             except sqlite3.Error:
                 return self.bad("spatial_store_unavailable", 500)
+        m = re.fullmatch(r"/api/kss/sites/([A-Za-z0-9_-]+)/aerial-sources(?:/([A-Za-z0-9_-]+))?", path)
+        if m:
+            if not self.authorized():
+                return
+            site_id, source_id = m.groups()
+            try:
+                validate_site_and_report(site_id)
+                record = (AERIAL.get(site_id, source_id) if source_id
+                          else AERIAL.list(site_id))
+                return self.send(200, record)
+            except LookupError as exc:
+                return self.bad(str(exc), 404)
+            except (aerial_vault.SourceError, raster_registration.RegistrationError) as exc:
+                return self.bad(str(exc), 422)
+            except sqlite3.Error:
+                return self.bad("aerial_source_store_unavailable", 500)
         m = re.fullmatch(r"/api/kss/sites/([A-Za-z0-9_-]+)/reports/([A-Za-z0-9_-]+)/context", path)
         if m:
             if not self.authorized():
@@ -172,6 +196,30 @@ class KennedyHandler(site_planner.Handler):
 
     def do_POST(self):
         path = urlsplit(self.path).path
+        m = re.fullmatch(r"/api/kss/sites/([A-Za-z0-9_-]+)/aerial-sources", path)
+        if m:
+            if not self.authorized():
+                return
+            try:
+                site_id=m.group(1)
+                validate_site_and_report(site_id)
+                raw=self.body()
+                b64=raw.get("png_base64")
+                if not isinstance(b64,str) or len(b64)>7*1024*1024:
+                    raise aerial_vault.SourceError("image_missing_or_base64_oversized")
+                try:
+                    image=base64.b64decode(b64,validate=True)
+                except (binascii.Error,ValueError) as exc:
+                    raise aerial_vault.SourceError("image_base64_invalid") from exc
+                result=AERIAL.save(site_id,raw.get("role"),raw.get("manifest"),image)
+                return self.send(201,result)
+            except LookupError as exc:
+                return self.bad(str(exc),404)
+            except (aerial_vault.SourceError, raster_registration.RegistrationError,
+                    sheet_compiler.SheetError,ValueError) as exc:
+                return self.bad(str(exc),422)
+            except sqlite3.Error:
+                return self.bad("aerial_source_store_unavailable",500)
         m = re.fullmatch(r"/api/kss/sites/([A-Za-z0-9_-]+)/studies", path)
         if not m:
             return super().do_POST()
@@ -197,6 +245,7 @@ class KennedyHandler(site_planner.Handler):
 def serve():
     site_planner.init()
     SPATIAL.init()
+    AERIAL.init()
     bind = site_planner.BIND
     # The current site-data API is operator-wide, not tenant-scoped. A single
     # shared bearer token does NOT make it safe on the public internet.
