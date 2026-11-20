@@ -22,8 +22,8 @@ const response={
  schema:'evercraft.site-planner.usgs-address-aerial.v1',match_class:'census_address_range_not_parcel',
  census_matched_address:'4600 SILVER HILL RD, WASHINGTON, DC, 20233',
  approximate_address_coordinate:{lon:-76.92,lat:38.84},
- site:{image_base64:'aGVsbG8=',sha256:'a'.repeat(64),bbox_3857:[1,2,3,4]},
- vicinity:{image_base64:'d29ybGQ=',sha256:'b'.repeat(64),bbox_3857:[10,20,30,40]}
+ site:{image_base64:'aGVsbG8=',sha256:'a'.repeat(64),bbox_3857:[0,0,640,470]},
+ vicinity:{image_base64:'d29ybGQ=',sha256:'b'.repeat(64),bbox_3857:[0,0,4800,3525]}
 };
 let status=200,data=response,calls=0;
 const sandbox={document:{getElementById:get,querySelectorAll:()=>[],createElement:()=>({})},
@@ -44,6 +44,10 @@ vm.createContext(sandbox);vm.runInContext(inline,sandbox,{timeout:4000});
  if(!get('sourceState').textContent.includes('Census matched'))throw Error('Source is not labeled');
  if(!run('evidenceRecord().government_source')||run('evidenceRecord().customer_payment_verified')!==false)throw Error('Unverified provenance not retained');
  if(!get('drawing-1').innerHTML.includes('data:image/jpeg;base64,aGVsbG8='))throw Error('Aerial missing from site sheet');
+ if(!run('state.mapScale')||run('state.mapScale.classification')!=='EPSG3857_imagery_screening_estimate_not_survey')throw Error('Projection scale is not explicitly qualified');
+ run("state.marks=[{type:'route',x:100,y:100,x2:200,y2:100}]");
+ const estimated=run('routeEstimate(state.marks[0])');
+ if(!(estimated>100 && estimated<300)||!get('scaleState').textContent.includes('ESTIMATE'))throw Error('Projected image estimate was not shown');
  status=400;data={error:'Address ambiguous'};
  const before=run('state.siteHash');
  await run('lookupPublicAerial()');
@@ -55,6 +59,7 @@ vm.createContext(sandbox);vm.runInContext(inline,sandbox,{timeout:4000});
  if(run('state.siteImage')!==''||run('state.contextImage')!=='')throw Error('Stale imagery survived address edit');
  if(run('state.aerialProvenance')!==null||run('state.siteHash')!==''||run('state.contextHash')!=='')throw Error('Old geolocation provenance survived address edit');
  if(run('state.marks.length')!==0||run('state.calibration')!==null)throw Error('Old-site geometry survived address edit');
+ if(run('state.mapScale')!==null)throw Error('Old geographic estimate survived address edit');
  if(!get('sourceState').textContent.includes('Address changed'))throw Error('User not notified of reset');
 
  class Reader{readAsDataURL(f){this.result='data:image/png;base64,dGVzdA==';this.onload()}}
@@ -62,6 +67,7 @@ vm.createContext(sandbox);vm.runInContext(inline,sandbox,{timeout:4000});
  run("readImage({files:[{name:'new-property.png',type:'image/png',size:4}],value:''},'siteImage','siteSource')");
  if(run('state.contextImage')!==''||run('state.contextHash')!==''||run('state.aerialProvenance')!==null)throw Error('Old vicinity evidence carried onto new site');
  if(run('state.siteSource')!=='new-property.png')throw Error('Manual upload failed');
+ if(run('state.mapScale')!==null)throw Error('Manual image inherited an estimated government scale');
 })().catch(e=>{console.error(e);process.exitCode=1});
 '''
         result=subprocess.run(['node','-e',script],cwd=ROOT,capture_output=True,text=True,timeout=12)
