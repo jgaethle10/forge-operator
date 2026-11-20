@@ -31,7 +31,7 @@ try{
  await page.waitForFunction(()=>!document.querySelector('#scriptBlocked'),null,{timeout:8000});
  await page.locator('#designFromStart').click();
  await page.locator('#foundryOverlay.open').waitFor({state:'visible',timeout:10000});
- const inputSelection=await page.locator('#fi_massKg').evaluate(el=>getComputedStyle(el).userSelect);
+ const inputSelection=await page.locator('#fi_massKg').evaluate(el=>{const css=getComputedStyle(el);return css.userSelect||css.webkitUserSelect||css.getPropertyValue('-webkit-user-select');});
  assert.equal(inputSelection,'text','Foundry form inputs must remain editable/selectable');
  await page.locator('#foundryClose').click();
  await page.locator('#beginFlight').click();
@@ -58,7 +58,7 @@ try{
   assert.ok(dims.stick.left>=-1&&dims.stick.right<=dims.view+1,orientation.name+': stick outside viewport');
   assert.ok(dims.throttle.left>=-1&&dims.throttle.right<=dims.view+1,orientation.name+': throttle outside viewport');
   assert.ok(dims.stick.right<dims.throttle.left,orientation.name+': thumb controls overlap');
-  const selected=await page.locator('#flightStick').evaluate(el=>getComputedStyle(el).userSelect);
+  const selected=await page.locator('#flightStick').evaluate(el=>{const css=getComputedStyle(el);return css.userSelect||css.webkitUserSelect||css.getPropertyValue('-webkit-user-select');});
   assert.equal(selected,'none',orientation.name+': iOS text selection still allowed on joystick');
   const box=await page.locator('#flightStick').boundingBox();
   const x=box.x+box.width/2,y=box.y+box.height/2;
