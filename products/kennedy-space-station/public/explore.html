@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0d1022"><meta name="description" content="Explore an original, interactive, fictional site-planning world by Evercraft Kennedy Space Station.">
+<title>Kennedy | The Discovery World</title>
+<style>
+:root{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#f8faff;background:#0b0e20;font-synthesis:none}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;min-height:100svh;background:radial-gradient(ellipse at 58% 5%,#282557 0%,#10152d 44%,#080d1c 100%);overflow-x:hidden}
+button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+button:focus-visible,a:focus-visible{outline:3px solid #d9aafa;outline-offset:3px}
+a{color:inherit;text-decoration:none}
+.shell{width:min(1550px,100%);margin:auto;position:relative}
+.topbar{padding:21px clamp(16px,3.5vw,48px);display:flex;align-items:center;justify-content:space-between;gap:16px;position:relative;z-index:5}
+.brand{display:flex;align-items:center;gap:13px}
+.brand-symbol{width:47px;height:47px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(145deg,#fbf7ff,#a7cfff);color:#362164;font-size:28px;box-shadow:0 8px 25px #9d86f947,0 0 1px #fff inset}
+.brand-main{font-size:15px;font-weight:950;letter-spacing:1px}
+.brand small{display:block;color:#9ea7d2;font-size:9px;letter-spacing:2.1px;margin-top:4px;font-weight:800}
+.edition{font-size:10px;letter-spacing:1.4px;color:#e3dcff;border:1px solid #655c9a;border-radius:40px;padding:11px 16px;font-weight:850;background:#8172b21a;white-space:nowrap}
+.hero{padding:20px clamp(18px,5vw,72px) 0;text-align:center;position:relative;z-index:4}
+.eyebrow{text-transform:uppercase;font-size:10px;letter-spacing:3px;color:#bba7ff;font-weight:900}
+.hero h1{font-size:clamp(43px,6.4vw,89px);letter-spacing:-4px;line-height:1.02;margin:13px auto 15px;max-width:1050px;font-weight:940}
+.hero h1 em{font-style:normal;color:#c8b4ff;text-shadow:0 0 45px #ae89ff5e}
+.hero p{color:#b2b9d8;font-size:clamp(13px,1.5vw,16px);line-height:1.65;max-width:640px;margin:auto}
+.stage{position:relative;isolation:isolate;margin-top:20px;min-height:580px;height:min(67vw,710px);max-height:750px;overflow:hidden;border-radius:32px;border:1px solid #7a73a12d;background:radial-gradient(ellipse at 50% 8%,#44437a40,transparent 65%);box-shadow:0 27px 110px #0307167d,0 0 0 1px #ffffff0b inset}
+#world{width:100%;height:100%;display:block;touch-action:none;cursor:grab}
+#world:active{cursor:grabbing}
+.glass{background:#10182cbf;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid #a3b3f133;box-shadow:0 8px 30px #03071454}
+.scene-tag{position:absolute;top:23px;left:25px;z-index:2;padding:13px 16px;border-radius:14px;pointer-events:none}
+.scene-tag strong{display:block;font-size:11px;letter-spacing:2.1px}
+.scene-tag small{display:block;font-size:10px;color:#aab9de;margin-top:5px}
+.live{display:inline-block;width:7px;height:7px;border-radius:50%;background:#91ffdf;box-shadow:0 0 0 4px #64ecb322,0 0 16px #96ffb8;margin-right:7px}
+.guide{position:absolute;top:22px;right:22px;padding:13px 17px;border-radius:15px;font-size:11px;color:#d8e0ff;line-height:1.8;z-index:2;pointer-events:none}
+.guide b{display:block;letter-spacing:1px;color:#fff;font-size:10px}
+.scene-foot{position:absolute;bottom:18px;left:19px;right:19px;display:flex;justify-content:space-between;gap:12px;align-items:end;pointer-events:none}
+.scene-foot .stamp{font-size:10px;color:#d7dafa;letter-spacing:1.2px;font-weight:800;background:#0a132cc2;padding:10px 13px;border-radius:10px}
+.scene-foot .mini{font-size:10px;color:#d5e1f3;background:#0a132cc2;padding:10px 13px;border-radius:10px}
+.control-wrap{position:relative;z-index:3;margin:-28px auto 0;width:min(1100px,calc(100% - 48px));padding:17px;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:15px;border-radius:22px}
+.controls{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.ctrl{border:1px solid #9694df48;border-radius:13px;padding:12px 16px;color:#f4f5ff;background:linear-gradient(155deg,#292a51,#171e37);font-size:12px;font-weight:800;transition:transform .12s,background .2s;white-space:nowrap}
+.ctrl:active{transform:scale(.96)}
+.ctrl:hover{background:#45416b}
+.ctrl.active{background:linear-gradient(140deg,#9c82ff,#5b65db);border-color:#cfb9ff;color:#100f38;box-shadow:0 5px 24px #8e72d366}
+.ctrl .ico{margin-right:5px;font-size:16px}
+.tool-label{font-size:9px;font-weight:900;letter-spacing:1.8px;color:#b1b7e1;display:block;margin-bottom:4px}
+.pilot{font-size:11px;color:#d1d3f2;font-weight:750;white-space:nowrap;display:flex;align-items:center;gap:10px}
+.pilot output{color:#d9baff}
+.mission{display:grid;grid-template-columns:1.15fr .85fr;gap:22px;padding:41px 22px 68px}
+.mission .panel{background:linear-gradient(150deg,#1b2240,#131a30);border:1px solid #5a608e54;border-radius:25px;padding:26px;min-width:0}
+.section-tag{font-size:10px;text-transform:uppercase;letter-spacing:2.4px;color:#c0a6fb;font-weight:900}
+.mission h2{font-size:clamp(25px,2.8vw,39px);letter-spacing:-1px;margin:11px 0 13px}
+.mission p{font-size:13px;line-height:1.78;color:#b7bfdc;max-width:590px}
+.build-tools{display:flex;gap:9px;flex-wrap:wrap;margin-top:22px}
+.build-tools button{border:1px solid #857bbe69;background:#302b55;color:#f7f4ff;border-radius:13px;padding:12px 15px;font-size:12px;font-weight:850}
+.build-tools button:hover{background:#534782}
+.story{margin-top:18px;padding:16px 19px;border-radius:14px;background:#a5a2f51a;border:1px solid #9094d63a;min-height:78px;font-size:12px;line-height:1.8;color:#d4ddf8}
+.metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:22px 0}
+.metric{border:1px solid #5f669358;background:#11192ebd;border-radius:15px;padding:15px 10px;text-align:center}
+.metric strong{font-size:26px;display:block;color:#edddff}.metric span{display:block;font-size:9px;color:#abb7d9;text-transform:uppercase;letter-spacing:1px;margin-top:4px}
+.note{margin-top:13px;border:1px solid #937e6e69;background:#4033274a;border-radius:12px;padding:13px;color:#edd2af;font-size:11px;line-height:1.7}
+.footer{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:18px 25px 44px;color:#848eb7;border-top:1px solid #7575af22;font-size:11px}
+.status{min-height:24px;font-size:12px;color:#ffe9ac;margin-top:10px}
+@media(max-width:880px){.stage{height:690px;min-height:0}.control-wrap{grid-template-columns:1fr}.pilot{justify-content:flex-end}.mission{grid-template-columns:1fr}}
+@media(max-width:600px){.topbar{padding:15px 16px}.brand-symbol{width:41px;height:41px;font-size:23px;border-radius:13px}.brand-main{font-size:13px}.brand small{font-size:8px}.edition{font-size:9px;padding:9px 10px;letter-spacing:.5px}.hero{padding:26px 15px 0}.hero h1{font-size:clamp(39px,10.3vw,65px);letter-spacing:-2.7px}.hero p{font-size:12px}.stage{margin-top:22px;border-radius:21px;height:520px}.scene-tag{top:14px;left:12px;padding:10px 12px}.scene-tag strong{font-size:9px}.guide{top:14px;right:10px;padding:9px 10px;font-size:9px}.guide b{font-size:9px}.scene-foot{left:10px;right:10px;bottom:10px}.scene-foot .stamp,.scene-foot .mini{font-size:8px;padding:8px}.control-wrap{margin:-8px auto 0;width:calc(100% - 20px);padding:12px}.controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.ctrl{padding:10px 6px;font-size:10px;border-radius:10px}.ctrl .ico{font-size:14px;margin-right:2px}.mission{padding:25px 10px 40px;gap:12px}.mission .panel{padding:20px}.metric strong{font-size:23px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="shell">
+<header class="topbar"><a class="brand" href="./index.html" aria-label="Kennedy Space Station home"><span class="brand-symbol">✧</span><span><span class="brand-main">KENNEDY</span><small>SPACE STATION · EVERCRAFT</small></span></a><span class="edition">✦ DISCOVERY WORLD / ALPHA 01</span></header>
+<section class="hero"><div class="eyebrow">A world of possibilities</div><h1>Imagine it.<br><em>Then explore it.</em></h1><p>Welcome to Kennedy's Discovery World. Move around a miniature future, change the design, watch the lights come alive, and discover what planning could feel like.</p></section>
+<main>
+<section class="stage" aria-label="Interactive 3D-style fictional site-planning world">
+<canvas id="world" tabindex="0" role="img" aria-label="Interactive isometric miniature with a futuristic site, building, EV charging stations, trees, roads, moving cars and a solar canopy. Drag to rotate."></canvas>
+<div class="scene-tag glass"><strong><span class="live"></span>KENNEDY / DISCOVERY SITE 001</strong><small>Original simulated world · not a real address</small></div>
+<div class="guide glass"><b>YOUR WORLD, YOUR CAMERA</b>↔ Drag to rotate<br>↕ Scroll or pinch to zoom<br>✦ Tap the controls below</div>
+<div class="scene-foot"><span class="stamp">◈ CONCEPT WORLD · FICTIONAL DATA</span><span class="mini" id="scene-mode">DAYLIGHT · DESIGN MODE</span></div>
+</section>
+<div class="control-wrap glass"><div><span class="tool-label">EXPLORE YOUR WORLD</span><div class="controls">
+<button id="orbit" class="ctrl active" aria-pressed="true"><span class="ico">◌</span> Orbit</button>
+<button id="day" class="ctrl active" aria-pressed="true"><span class="ico">☀</span> Day</button>
+<button id="night" class="ctrl" aria-pressed="false"><span class="ico">☾</span> Night</button>
+<button id="plans" class="ctrl" aria-pressed="false"><span class="ico">▦</span> Blueprint</button>
+<button id="reset" class="ctrl"><span class="ico">↻</span> Reset</button>
+<button id="snapshot" class="ctrl"><span class="ico">⇩</span> Snapshot</button>
+</div></div><div class="pilot"><span>ZOOM</span><button id="zoom-out" class="ctrl" aria-label="Zoom out">−</button><output id="zoom-value" aria-live="polite">100%</output><button id="zoom-in" class="ctrl" aria-label="Zoom in">+</button></div></div>
+<div class="mission">
+<div class="panel"><span class="section-tag">01 / Shape the station</span><h2>A future you can play with.</h2><p>Every choice changes this little world. Add more chargers, grow a garden, or expand the solar canopy. The plan is fictional, but the interaction is real. The full site-planning tools are being built separately.</p><div class="build-tools">
+<button id="add-charger">⚡ Add charger</button><button id="add-tree">🌳 Plant a tree</button><button id="add-solar">☀ Add solar panel</button><button id="tour">✧ Surprise me</button></div>
+<div class="story" id="story" role="status" aria-live="polite">Welcome aboard. This world is yours to explore. Drag the scene with your finger to see the station from another angle.</div>
+<div id="status" class="status" role="status"></div></div>
+<div class="panel"><span class="section-tag">02 / Mission journal</span><h2>Every change has a story.</h2><div class="metrics"><div class="metric"><strong id="chargers">4</strong><span>Charging units</span></div><div class="metric"><strong id="trees">17</strong><span>Garden trees</span></div><div class="metric"><strong id="solar">12</strong><span>Solar panels</span></div></div><p>Try the night view to see the building glow. Watch for the little service vehicles, then orbit the scene to see the canopy and parking lanes from different perspectives.</p><div class="note"><strong>CONCEPT DEMONSTRATION</strong><br>This is an original interactive illustration. Objects, dimensions, traffic, energy production, geospatial positions and site conditions are simulated. This does not load real aerial imagery, create professional plans, or access private Site Planner records.</div></div>
+</div>
+</main><footer class="footer"><span>© Evercraft · Kennedy Space Station</span><span>Independent original demonstration · no third-party libraries or network requests</span></footer>
+</div>
+<script>
+(function(){
+'use strict';
+const el=id=>document.getElementById(id);
+const canvas=el('world'),ctx=canvas.getContext('2d',{alpha:false});
+if(!ctx){el('story').textContent='Your browser does not support the 2D drawing surface.';return}
+const reduced=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+const TAU=Math.PI*2;
+let W=0,H=0,dpr=1,angle=-.44,zoom=1,orbit=!reduced,night=false,blueprint=false,last=0,frame=0,drag=null,pinches=new Map(),pinchDist=0;
+let chargers=4,solar=12;
+let seed=991847;
+const rnd=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296};
+const trees=[];
+for(let i=0;i<17;i++){let x,z,tries=0;do{x=-7+rnd()*134;z=-8+rnd()*127;tries++}while(x>17&&x<89&&z>21&&z<91&&tries<100);trees.push({x,z,s:.75+rnd()*.8,c:rnd()})}
+const stars=Array.from({length:120},()=>({x:rnd(),y:rnd()*.74,r:0.4+rnd()*1.7,p:rnd()*TAU}));
+const cloud=Array.from({length:9},()=>({x:rnd()*1.3-.15,y:.16+rnd()*.35,s:35+rnd()*60,p:rnd()*TAU}));
+function palette(){return night?{sky:'#080e27',sky2:'#2d2850',grass:'#203e46',tile:'#294851',edge:'#1c2c41',road:'#273245',lane:'#57657d',building:'#65718d',roof:'#8593b1',trim:'#b6c7e8',glow:'#b1ebff',tree:'#2e715d',top:'#5da8a5',ink:'#eafaff',lot:'#354355'}:{sky:'#768ad3',sky2:'#b8d8e7',grass:'#6ea28e',tile:'#95c8ab',edge:'#487c6f',road:'#636b79',lane:'#f2f0e7',building:'#c0c8d8',roof:'#e6eaf3',trim:'#f7f9fb',glow:'#6dc0dc',tree:'#327960',top:'#74bc86',ink:'#e9f5ff',lot:'#9ca8b9'}}
+function resize(){const b=canvas.getBoundingClientRect();W=Math.max(1,b.width);H=Math.max(1,b.height);dpr=Math.min(2,devicePixelRatio||1);canvas.width=Math.round(W*dpr);canvas.height=Math.round(H*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);draw()}
+const clamp=(x,min,max)=>Math.max(min,Math.min(max,x));
+function iso(x,z,h=0){const ca=Math.cos(angle),sa=Math.sin(angle),dx=x-56,dz=z-55,u=dx*ca-dz*sa,v=dx*sa+dz*ca;const sc=Math.min(W/175,H/108)*zoom;return [W/2+(u-v)*sc*.93,H*.55+(u+v)*sc*.39-h*sc*1.17]}
+function fillPoly(points,fill,stroke,width=1){ctx.beginPath();points.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]));ctx.closePath();if(fill){ctx.fillStyle=fill;ctx.fill()}if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=width;ctx.stroke()}}
+function quad(x,z,w,d,h=0,color='#fff',stroke=null){fillPoly([iso(x,z,h),iso(x+w,z,h),iso(x+w,z+d,h),iso(x,z+d,h)],color,stroke)}
+function path(points,color,width=1,dash=[]){ctx.beginPath();points.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]));ctx.strokeStyle=color;ctx.lineWidth=width;ctx.setLineDash(dash);ctx.stroke();ctx.setLineDash([])}
+function line(x,z,X,Z,h,color,width=1){path([iso(x,z,h),iso(X,Z,h)],color,width)}
+function dot(x,y,r,fill){ctx.beginPath();ctx.arc(x,y,r,0,TAU);ctx.fillStyle=fill;ctx.fill()}
+function glow(x,y,r,color){const g=ctx.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,color);g.addColorStop(1,'transparent');ctx.fillStyle=g;ctx.fillRect(x-r,y-r,2*r,2*r)}
+function block(x,z,w,d,h,colorTop,colorA,colorB){
+ const bottom=[iso(x,z),iso(x+w,z),iso(x+w,z+d),iso(x,z+d)];
+ const top=[iso(x,z,h),iso(x+w,z,h),iso(x+w,z+d,h),iso(x,z+d,h)];
+ let faces=[];
+ for(let i=0;i<4;i++){const j=(i+1)%4;faces.push({pts:[bottom[i],bottom[j],top[j],top[i]],depth:(bottom[i][1]+bottom[j][1])/2,index:i})}
+ faces.sort((a,b)=>a.depth-b.depth);
+ for(const face of faces.slice(2))fillPoly(face.pts,face.index%2===0?colorA:colorB,night?'#7782a950':'#4659781d',.8);
+ fillPoly(top,colorTop,night?'#e1e7ff60':'#ffffff88',1.5);
+ return top
+}
+function terrain(){
+ const p=palette();const g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,p.sky);g.addColorStop(.54,p.sky2);g.addColorStop(1,night?'#141d32':'#789eac');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+ if(night){for(const s of stars){let a=.25+.55*Math.pow(Math.sin(frame*.00065+s.p)*.5+.5,3);ctx.globalAlpha=a;dot(s.x*W,s.y*H,s.r,'#f6f0ff')}ctx.globalAlpha=1;glow(W*.8,H*.18,100,'#d7d7ff35');dot(W*.8,H*.18,22,'#f6f4e8')}
+ else {glow(W*.79,H*.17,145,'#fff5d65a');dot(W*.79,H*.17,31,'#fcf0db');for(const c of cloud){ctx.globalAlpha=.1;dot(c.x*W+c.p*2,c.y*H,c.s,'#ffffff')}ctx.globalAlpha=1}
+ // atmospheric ridge and distant horizon, deliberately illustrative
+ const horizon=H*.54;ctx.fillStyle=night?'#1c2942':'#a4bac2';ctx.beginPath();ctx.moveTo(0,horizon);for(let x=0;x<=W;x+=12)ctx.lineTo(x,horizon-9-Math.sin(x*.013)*8-Math.sin(x*.039)*4);ctx.lineTo(W,H);ctx.lineTo(0,H);ctx.fill();
+}
+function drawBase(){
+ const p=palette();quad(-25,-18,165,155,-4,night?'#213244':'#466f6d');
+ quad(-20,-14,155,144,-2,p.edge);quad(-20,-14,155,144,0,p.tile,'#e1ffe03b');
+ quad(-16,-11,147,136,.06,p.grass);
+ // landscaped transit lane and street edges
+ quad(-15,105,147,20,.18,p.road);quad(-15,105,147,1,.2,p.lane);
+ quad(-15,126,147,1,.2,night?'#8692ae':'#d8dbe2');
+ for(let x=-9;x<130;x+=15)quad(x,114,7,.4,.21,night?'#8a96ad':'#f4f5ee');
+ quad(6,89,115,11,.2,p.road);quad(10,89,1,11,.21,night?'#495e7e':'#e4ebef');
+ quad(103,11,13,88,.22,p.road);quad(103,18,.7,69,.25,night?'#4f647f':'#faf9ed');
+ quad(1,12,100,72,.19,night?'#3e515c':'#e4e4de');
+ quad(1,12,100,3,.2,night?'#778491':'#b0b8b9');
+ quad(1,81,100,3,.2,night?'#667889':'#bec5bf');
+ // parking apron
+ quad(53,20,45,58,.23,p.lot);
+ for(let i=0;i<5;i++){const x=56+i*8.6;line(x,21,x,42,.3,night?'#e1d4a47f':'#f5f4eb',1.25);line(x,51,x,76,.3,night?'#e1d4a47f':'#f5f4eb',1.25)}
+ line(54,44,95,44,.32,night?'#e1d4a45e':'#f1f0e9',1.5,[5,6]);
+ // flower gardens, walking loops
+ quad(3,1,117,8,.2,night?'#467766':'#9aca9e');
+ quad(3,85,98,4,.23,night?'#477668':'#90ba9c');
+ for(let i=0;i<12;i++){let x=8+i*8.8;dot(...iso(x,5,.35),1.6,night?'#8fcaac':'#ffd3a5')}
+}
+function roofFeature(x,z,w,d,h){
+ const p=palette(),top=block(x,z,w,d,h,p.roof,night?'#5d6c88':'#b0bcd0',night?'#485775':'#9aa7bb');
+ const a=iso(x+2,z+2,h+.12),b=iso(x+w-2,z+2,h+.12),c=iso(x+w-2,z+d-2,h+.12),d0=iso(x+2,z+d-2,h+.12);
+ fillPoly([a,b,c,d0],night?'#455878':'#cad5e8','#ffffff33',1.3);
+ // skylights
+ for(let i=0;i<3;i++)quad(x+4+i*6,z+5,4,3,h+.18,night?'#9dc5df':'#a0c9de','#ffffff77');
+ // doors and loading bay
+ for(let i=0;i<4;i++){const ps=[iso(x+5+i*5,z+d,.3),iso(x+9+i*5,z+d,.3),iso(x+9+i*5,z+d,h*.64),iso(x+5+i*5,z+d,h*.64)];fillPoly(ps,night?'#b9e4fa':'#7ba9c1','#e2ffff55');}
+ if(night){const pt=iso(x+w*.7,z+d,h*.46);glow(pt[0],pt[1],37,'#a1e8fd4c')}
+}
+function charger(x,z,active=false){
+ const p=palette();quad(x-.8,z-.6,2,2,.32,night?'#696f91':'#dfe6e7');block(x-.35,z-.2,.8,.9,2.75,night?'#dce5fa':'#e2f6fc',night?'#697f9c':'#98bbcc',night?'#566c8e':'#719cae');
+ const pos=iso(x,z,2.6);dot(pos[0],pos[1],2.7,active?'#8bffdf':'#9dd4fb');
+ if(night){glow(pos[0],pos[1],active?21:12,active?'#83ffc077':'#6bb9ff4d');}
+}
+function vehicle(x,z,tint,scale=1,rot=0){
+ const roof=night?'#b6d1dc':tint;
+ block(x,z,4.8*scale,2.7*scale,1.45*scale,roof,night?'#51617d':tint,night?'#34435e':'#4c6680');
+ quad(x+.8*scale,z+.5*scale,2.7*scale,1.35*scale,1.51*scale,night?'#8bacc8':'#9cd6ed');
+ if(night){const pt=iso(x+3.4*scale,z+1,1);glow(pt[0],pt[1],10,'#fff2a68f')}
+}
+function solarCanopy(){
+ const count=solar;
+ // warm structural columns and coherent solar roof
+ for(let i=0;i<5;i++){const x=11+i*8.3;block(x,51,1.3,1.3,9,night?'#a9b6d1':'#ccd8e1','#5f7392','#7991a7')}
+ const top=block(8,48,42,17,10.3,night?'#365b84':'#2d648a',night?'#536a87':'#5f8ca8',night?'#304967':'#4f7a9a');
+ for(let i=0;i<count;i++){const col=i%6,row=Math.floor(i/6);if(row>2)continue;quad(10+col*6.3,50+row*5.4,5.4,4.3,10.45,night?'#3861a8':'#285d9b','#e3f5ff75')}
+ if(night){const p=iso(26,62,8);glow(p[0],p[1],47,'#a7deff33')}
+}
+function tree(x,z,s,c){
+ const p=palette();const sc=Math.min(W/175,H/108)*zoom;const trunk=iso(x,z,3.4*s),base=iso(x,z,0);path([base,trunk],night?'#476554':'#6a745a',Math.max(1.3,sc*.33*s));
+ const t=iso(x,z,7.5*s),rad=Math.max(4.4,sc*2.95*s);
+ glow(t[0]-rad*.2,t[1]-rad*.1,rad*1.8,night?'#50d4b00c':'#d1f7a524');
+ dot(t[0],t[1],rad,night?(c>.5?'#316f67':'#2b6c60'):(c>.5?'#428d6b':'#4b9d78'));
+ dot(t[0]-rad*.35,t[1]-rad*.32,rad*.52,night?'#65a38b':'#91d6a0');
+ dot(t[0]+rad*.34,t[1]+rad*.15,rad*.36,night?'#32695f':'#347e60');
+}
+function foot(x,z){const [sx,sy]=iso(x,z);const size=Math.max(2,Math.min(W/175,H/108)*zoom*.6);dot(sx,sy-4*size,size*.8,night?'#e4d9cb':'#455477');path([[sx,sy-3*size],[sx,sy]],night?'#ccd8d6':'#42607d',size*.7)}
+function drawStations(){
+ for(let i=0;i<chargers;i++){const row=Math.floor(i/6),col=i%6;charger(57+col*6.7,19+row*5.1,i%3===0);if(i%2===0)vehicle(57+col*6.7,30+row*5.1,i%4?'#d4dcf2':'#e8b26c',.64)}
+}
+function drawBlueprint(){
+ if(!blueprint)return;
+ ctx.save();ctx.globalAlpha=night?.5:.7;
+ for(let i=0;i<=12;i++){const x=i*10;line(x,-9,x,111,0,night?'#62e4dc':'#50bce3',.7);line(-13,x,130,x,0,night?'#62e4dc':'#50bce3',.7)}
+ ctx.restore();
+ for(const [x,z,t] of [[25,22,'BUILDING'],[63,53,'EV CHARGING'],[22,69,'SOLAR CANOPY']]){const pt=iso(x,z,14);ctx.font='700 10px ui-sans-serif,system-ui';ctx.fillStyle=night?'#d5fffe':'#073f72';ctx.fillText(t,pt[0],pt[1])}
+}
+function draw(t=0){
+ if(!W||!H)return;
+ ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,W,H);
+ terrain();
+ ctx.save();ctx.shadowColor='#10142988';ctx.shadowBlur=24;ctx.shadowOffsetY=13;drawBase();ctx.restore();
+ const pieces=[
+ {x:33,z:47,draw:()=>solarCanopy()},
+ {x:24,z:21,draw:()=>roofFeature(13,19,34,27,18.5)},
+ {x:65,z:46,draw:()=>drawStations()},
+ {x:16,z:85,draw:()=>{vehicle(36,94,'#edd6b8',1.1);vehicle(66,96,'#759cbc',.9)}},
+ ...trees.map(q=>({x:q.x,z:q.z,draw:()=>tree(q.x,q.z,q.s,q.c)}))
+ ];
+ pieces.sort((a,b)=>iso(a.x,a.z)[1]-iso(b.x,b.z)[1]);
+ for(const o of pieces)o.draw();
+ const moving=(frame*.014)%153-15;vehicle(moving,118,night?'#e6f2ff':'#f7c88c',.9);
+ foot(24,75);foot(31,76);foot(69,43);
+ drawBlueprint();
+ // bottom glint and grain-free atmosphere
+ const shine=ctx.createLinearGradient(0,0,0,H);shine.addColorStop(0,'#ffffff08');shine.addColorStop(.6,'#ffffff00');shine.addColorStop(1,'#03081b63');ctx.fillStyle=shine;ctx.fillRect(0,0,W,H);
+}
+function metrics(){el('chargers').textContent=chargers;el('trees').textContent=trees.length;el('solar').textContent=solar}
+function tell(t){el('story').textContent=t}
+function mode(){el('scene-mode').textContent=(night?'NIGHT LIGHTS':'DAYLIGHT')+' · '+(blueprint?'BLUEPRINT VIEW':'DISCOVERY MODE');for(const id of ['day','night','plans','orbit']){const active=id==='day'?!night:id==='night'?night:id==='plans'?blueprint:orbit;el(id).classList.toggle('active',active);el(id).setAttribute('aria-pressed',String(active))}}
+function setZoom(v){zoom=clamp(v,.65,1.65);el('zoom-value').textContent=Math.round(zoom*100)+'%';draw()}
+el('orbit').addEventListener('click',()=>{orbit=!orbit;mode();tell(orbit?'Orbit engaged. Kennedy is taking you on a gentle tour.':'You have the camera. Drag the world to explore every side.');draw()});
+el('day').addEventListener('click',()=>{night=false;mode();tell('Daylight reveals the whole layout, from the garden paths to the solar canopy.');draw()});
+el('night').addEventListener('click',()=>{night=true;mode();tell('Night shift! Watch the charger indicators and building lights glow.');draw()});
+el('plans').addEventListener('click',()=>{blueprint=!blueprint;mode();tell(blueprint?'Blueprint overlay on. These are illustrative gridlines, not parcel measurements.':'Back to the cinematic site view.');draw()});
+el('reset').addEventListener('click',()=>{angle=-.44;zoom=1;chargers=4;solar=12;trees.length=0;seed=991847;for(let i=0;i<17;i++){let x,z,n=0;do{x=-7+rnd()*134;z=-8+rnd()*127;n++}while(x>17&&x<89&&z>21&&z<91&&n<100);trees.push({x,z,s:.75+rnd()*.8,c:rnd()})}night=false;blueprint=false;orbit=!reduced;metrics();mode();setZoom(1);tell('Fresh start. Your Discovery World is ready again.')});
+el('zoom-in').addEventListener('click',()=>setZoom(zoom+.12));el('zoom-out').addEventListener('click',()=>setZoom(zoom-.12));
+el('add-charger').addEventListener('click',()=>{if(chargers>=12){tell('The demonstration parking bays are full. Try a garden instead.');return}chargers++;metrics();draw();tell('A new EV charger appears on the demonstration site. '+chargers+' chargers in the concept now.')});
+el('add-tree').addEventListener('click',()=>{if(trees.length>=35){tell('The demonstration garden has reached its planting limit.');return}const i=trees.length;const x=(i%2===0?111:-5)+(rnd()-.5)*13,z=7+rnd()*84;trees.push({x,z,s:.7+rnd()*.8,c:rnd()});metrics();draw();tell('Another tree planted. The future has room for green spaces too.')});
+el('add-solar').addEventListener('click',()=>{if(solar>=18){tell('The demonstration solar canopy is already filled.');return}solar++;metrics();draw();tell('Solar panel added to the canopy. This is a visual change, not an energy-production estimate.')});
+el('tour').addEventListener('click',()=>{night=!night;blueprint=false;angle+=.82;orbit=true;setZoom(.95);mode();tell(night?'Kennedy activated the night tour. Follow the tiny glowing lights.':'A fresh angle reveals a different side of the station.');draw()});
+el('snapshot').addEventListener('click',()=>{try{const a=document.createElement('a');a.download='kennedy-discovery-world-concept.png';a.href=canvas.toDataURL('image/png');document.body.append(a);a.click();a.remove();el('status').textContent='Snapshot generated from the fictional demonstration canvas.'}catch(e){el('status').textContent='Snapshot unavailable in this browser.'}});
+canvas.addEventListener('pointerdown',e=>{canvas.setPointerCapture(e.pointerId);pinches.set(e.pointerId,{x:e.clientX,y:e.clientY});drag={x:e.clientX,y:e.clientY};pinchDist=0;orbit=false;mode()});
+canvas.addEventListener('pointermove',e=>{if(!pinches.has(e.pointerId))return;pinches.set(e.pointerId,{x:e.clientX,y:e.clientY});const ps=[...pinches.values()];if(ps.length>=2){const dist=Math.hypot(ps[0].x-ps[1].x,ps[0].y-ps[1].y);if(pinchDist)setZoom(zoom*dist/pinchDist);pinchDist=dist;drag=null;return}if(drag){const delta=e.clientX-drag.x;angle+=delta*.0085;drag={x:e.clientX,y:e.clientY};draw()}});
+function endPointer(e){pinches.delete(e.pointerId);pinchDist=0;drag=null}
+canvas.addEventListener('pointerup',endPointer);canvas.addEventListener('pointercancel',endPointer);
+canvas.addEventListener('wheel',e=>{e.preventDefault();setZoom(zoom*(e.deltaY>0?.94:1.06))},{passive:false});
+canvas.addEventListener('keydown',e=>{if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefault();orbit=false;angle+=e.key==='ArrowLeft'?-.16:.16;mode();draw()}else if(e.key==='+'||e.key==='='){setZoom(zoom+.1)}else if(e.key==='-'){setZoom(zoom-.1)}});
+let pending=false;function tick(now){if(!pending){pending=true;frame=now;if(orbit)angle+=.00155*(last?Math.min(33,now-last):16);draw();pending=false}last=now;if(!reduced)requestAnimationFrame(tick)}
+window.addEventListener('resize',resize,{passive:true});
+document.addEventListener('visibilitychange',()=>{last=0});
+metrics();mode();resize();if(!reduced)requestAnimationFrame(tick);
+})();
+</script>
+</body></html>
