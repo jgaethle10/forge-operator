@@ -24,6 +24,7 @@ EXPECTED_STATES=52
 EXPECTED_POLYGONS=56
 EXPECTED_WA=8619
 EXPECTED_WA_POOR=403
+EXPECTED_WA_SHA256="c97fb57339f8f7bd9ae82cb807814443fb7cd8bb9fb99c45adc74f2ae3912c79"
 EXPECTED_EXCLUDED_COORDINATES=1
 EXPECTED_WA_PUBLISHED=EXPECTED_WA-EXPECTED_EXCLUDED_COORDINATES
 LEAFLET_SRI={
@@ -163,6 +164,7 @@ def export(args):
         wa.get("records")!=EXPECTED_WA or
         wa.get("conditions",{}).get("P")!=EXPECTED_WA_POOR or
         wa.get("flagged_coordinate_count")!=EXPECTED_EXCLUDED_COORDINATES or
+        wa.get("source_sha256")!=EXPECTED_WA_SHA256 or
         wa.get("historical_condition_not_emergency") is not True or
         wa.get("national_2026_complete") is not False):
         raise ValueError("WA FHWA 2026 source and limitations validation failed")
@@ -200,22 +202,16 @@ def export(args):
         "vendor/leaflet.js":(vendor/"leaflet.js").read_bytes(),
         "vendor/leaflet.css":(vendor/"leaflet.css").read_bytes(),
         "vendor/LEAFLET-LICENSE":(vendor/"LICENSE").read_bytes(),
-        "vendor/US-ATLAS-LICENSE":(vendor/"us-atlas-LICENSE").read_bytes() if (vendor/"us-atlas-LICENSE").exists() else
-            b"""Copyright 2013-2019 Michael Bostock
-Permission to use, copy, modify, and/or distribute this software for any purpose
-with or without fee is hereby granted, provided that the above copyright notice
-and this permission notice appear in all copies.
-THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
-WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
-MERCHANTABILITY AND FITNESS.
-""",
+        "vendor/US-ATLAS-LICENSE":Path(args.us_atlas_license).read_bytes(),
         "robots.txt":b"User-agent: *\nAllow: /\n",
     }
     for asset,b64digest in LEAFLET_SRI.items():
         actual=base64.b64encode(hashlib.sha256(outputs["vendor/"+asset]).digest()).decode()
         if actual!=b64digest:raise ValueError("Local map engine SRI mismatch")
-    if not outputs["vendor/LEAFLET-LICENSE"]:
+    if not outputs["vendor/LEAFLET-LICENSE"] or b"BSD" not in outputs["vendor/LEAFLET-LICENSE"]:
         raise ValueError("Leaflet license missing")
+    if b"Michael Bostock" not in outputs["vendor/US-ATLAS-LICENSE"] or b"SOFTWARE IS PROVIDED" not in outputs["vendor/US-ATLAS-LICENSE"]:
+        raise ValueError("Full US Atlas license required; no invented license text")
     manifest={
         "schema":"evercraft.aiw.public-beta-static.v1",
         "source_commit":args.commit,
@@ -261,6 +257,7 @@ if __name__=="__main__":
     parser.add_argument("--origin",default="http://127.0.0.1:8796")
     parser.add_argument("--source-html",required=True,help="Pinned reviewed GitHub HTML, byte-equal to the running private preview")
     parser.add_argument("--leaflet-dir",required=True)
+    parser.add_argument("--us-atlas-license",required=True,help="Verified us-atlas license from the existing state-first stage")
     parser.add_argument("--output",required=True)
     parser.add_argument("--commit",required=True)
     params=parser.parse_args()
