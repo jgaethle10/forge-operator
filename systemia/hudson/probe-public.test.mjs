@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {validateHudsonSnapshot,probeHudsonPublic,HUDSON_ORIGIN,HUDSON_SCHEMA} from './probe-public.mjs';
+import {validateHudsonSnapshot,probeHudsonPublic,classifyPublicFetchFailure,HUDSON_ORIGIN,HUDSON_SCHEMA} from './probe-public.mjs';
 const now=Date.parse('2026-11-20T03:00:00Z'),sha='a'.repeat(40);
 function specimen({published_at=new Date(now-30000).toISOString(),events}={}){
  return {schema:HUDSON_SCHEMA,status:'connected',published_at,
@@ -57,4 +57,11 @@ test('unreachable owned origin fails closed and no other origin is allowed',asyn
  assert.equal(down.verified,false);
  assert.ok(down.holds.includes('public_html_unreachable'));
  await assert.rejects(probeHudsonPublic({origin:'https://untrusted.example',fetchImpl:fakeFetch(),now}),/canonical_owned_fabric/);
+});
+
+test('external network diagnostics classify failures without leaking host internals',()=>{
+ assert.equal(classifyPublicFetchFailure({name:'AbortError'}),'timeout');
+ assert.equal(classifyPublicFetchFailure({code:'ENOTFOUND'}),'network_or_dns');
+ assert.equal(classifyPublicFetchFailure({message:'oversized_public_response'}),'oversized_response');
+ assert.equal(classifyPublicFetchFailure({message:'sensitive-internal-host.example'}),'transport_unknown');
 });
