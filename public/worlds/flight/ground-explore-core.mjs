@@ -100,13 +100,16 @@ export function stepGroundExplorer(s,input={},dt=.016){
   const brake=input.brake===true||input.brake>0;
   const current=s.cart.speed;
   const drag=current===0?0:Math.sign(current)*(.75+Math.abs(current)*.11);
-  s.cart.speed=clamp(current+(throttle*5.4-drag-(brake?Math.sign(current)*15:0))*dt,-4.5,15);
-  if(Math.abs(s.cart.speed)<.08&&(!throttle||brake))s.cart.speed=0;
+  let nextSpeed=clamp(current+(throttle*5.4-drag-(brake?Math.sign(current)*15:0))*dt,-4.5,15);
+  if(brake&&current!==0&&Math.sign(nextSpeed)!==Math.sign(current))nextSpeed=0;
+  if(brake&&Math.abs(current)<.9)nextSpeed=0;
+  if(Math.abs(nextSpeed)<.08&&(!throttle||brake))nextSpeed=0;
+  s.cart.speed=nextSpeed;
   s.cart.yaw+=steer*clamp(Math.abs(s.cart.speed)/9,0,1)*.85*dt*(s.cart.speed<0?-1:1);
   const next={x:s.cart.x+Math.sin(s.cart.yaw)*s.cart.speed*dt,
               z:s.cart.z+Math.cos(s.cart.yaw)*s.cart.speed*dt};
-  if(cartClear(next,s.field)){s.cart.x=next.x;s.cart.z=next.z;}
-  else{s.cart.speed=0;event(s,'cart_obstacle_stop');}
+  if(cartClear(next,s.field)){s.cart.x=next.x;s.cart.z=next.z;s.cart.blocked=false;}
+  else{s.cart.speed=0;if(!s.cart.blocked)event(s,'cart_obstacle_stop');s.cart.blocked=true;}
  }
  s.elapsed+=dt;
  return s;
