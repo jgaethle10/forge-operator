@@ -59,7 +59,7 @@ test('river topology has seven named confluences and multi-channel currents',()=
  for(const key of keys)assert.match(code,new RegExp(key+':\\{name:'));
  assert.match(code,/var EDGES=/);
  assert.match(code,/createEdge\(e\[0\],e\[1\],e\[2\]\)/);
- assert.match(code,/drawWatershed\(\);drawRivers\(\);drawParticles\(dt\);drawConfluences\(\)/);
+ assert.match(code,/drawWatershed\(field\);drawRivers\(\);drawParticles\(dt\);drawConfluences\(\)/);
 });
 
 test('the watcher becomes an ambiguous changing presence, not a recognizable bug',()=>{
