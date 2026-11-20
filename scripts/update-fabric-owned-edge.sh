@@ -592,6 +592,25 @@ verify_current_runtime() {
         reject('earthworks_simulator_authority',9);
     " || return 9
 
+  # Exact local runtime proof: an env key alone is not durable history.
+  # This read-only health check must observe the archive actually mounted in
+  # the resident service before accepting the new release.
+  local faie_history_health=""
+  faie_history_health="$(curl -fsS --max-time 5 'http://127.0.0.1:8787/api/faie/health' 2>/dev/null || true)"
+  if ! runuser -u "$RUN_USER" -- env FAIE_HISTORY_HEALTH_JSON="$faie_history_health" node -e "
+    try {
+      const h=JSON.parse(process.env.FAIE_HISTORY_HEALTH_JSON||'null');
+      if(h?.ok!==true||h.fabric_native!==true)process.exit(2);
+      if(h.edge_state_persistence!=='configured_persistent_or_operator_managed')process.exit(3);
+      if(h.land_history_archive?.status!=='active')process.exit(4);
+      if(h.land_history_archive?.public_region_history_only!==true)process.exit(5);
+      if(h.land_history_archive?.visitor_point_queries_persisted!==false)process.exit(6);
+    } catch { process.exit(7); }
+  "; then
+    echo "ERROR: FAIE owner-managed history archive is not resident and privacy-verified" >&2
+    return 23
+  fi
+
   local earthworks_page=""
   earthworks_page="$(curl -fsS --max-time 5 "http://127.0.0.1:8787/earthworks" 2>/dev/null || true)"
   [[ -n "$earthworks_page" ]] || return 14
