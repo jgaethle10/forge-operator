@@ -138,3 +138,24 @@ test('tampered local custody cannot become acknowledged on retry',async()=>{
   assert.equal(JSON.parse(fs.readFileSync(path.join(fx.broker,'packages',fx.info.id,'state.json'))).state,'READY');
  }finally{await broker.close();remove(fx)}
 });
+
+test('queue capacity binds reserved bytes and package count before ciphertext uploads',async()=>{
+ const fx=temp();
+ const server=await startWingCourierBroker({stateDir:fx.broker,wingCredentials:fx.auth,
+  maxBlobBytes:fx.info.bytes+1,maxStoredBytes:fx.info.bytes+1,maxPackages:1});
+ fx.url=server.url;
+ try{
+  await pushEncryptedWingBundle(base(fx));
+  const res=await fetch(fx.url+'/v1/envelopes',{
+   method:'POST',
+   headers:{authorization:'Bearer '+fx.auth[0].sendToken,'content-type':'application/json'},
+   body:JSON.stringify({id:crypto.randomBytes(16).toString('hex'),
+    fromWing:'harbor',toWing:'fallen',
+    ciphertextSha256:fx.info.ciphertextSha256,bytes:fx.info.bytes})
+  });
+  assert.equal(res.status,507);
+  const body=await res.json();assert.match(body.error,/private_queue_quota_exhausted/);
+  const existing=await pushEncryptedWingBundle(base(fx));
+  assert.equal(existing.state,'BROKER_CIPHERTEXT_STORED','identical retry should not use new quota');
+ }finally{await server.close();remove(fx)}
+});
