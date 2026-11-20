@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {planHeartbeatAdvisories,executeAdvisory} from './heartbeat-advisory.mjs';
 import {createRavenAdvisoryInvoker} from './raven-invoker.mjs';
 import {reserveAdvisoryAttempt,loadAdvisoryHistory} from './advisory-ledger.mjs';
+import {runAdvisoryHeartbeatOnce} from './heartbeat-runner.mjs';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -87,5 +88,22 @@ test('atomic ledger reserves once and enforces rolling budget with no double-spe
   assert.equal(reserveAdvisoryAttempt({ledgerDir:root,job:jobs[1],rolling_budget_cents:10,now_ms:100000100}).reason,'rolling_budget_limit');
   assert.equal(loadAdvisoryHistory({ledgerDir:root}).length,1);
   assert.throws(()=>reserveAdvisoryAttempt({ledgerDir:root,job:jobs[1],rolling_budget_cents:10,now_ms:100000000-100}),/clock_rollback/);
+ }finally{fs.rmSync(root,{recursive:true,force:true});}
+});
+
+test('private heartbeat runner starts shadow-only and activates both approved advisers once',async()=>{
+ const root=fs.mkdtempSync(path.join(os.tmpdir(),'systemia-runner-'));
+ let calls=0;
+ try{
+  const settings={missions:[mission()],providers,ledgerDir:root,rollingBudgetCents:20,
+    invokeOverride:async x=>{calls++;return {status:'completed',text:'Advisory',provider_receipt:'sha256:ok',model:x.model};}};
+  const preview=await runAdvisoryHeartbeatOnce(settings);
+  assert.equal(preview.state,'dry_run');assert.equal(calls,0);
+  assert.equal(loadAdvisoryHistory({ledgerDir:root}).length,0);
+  const live=await runAdvisoryHeartbeatOnce({...settings,execute:true});
+  assert.equal(live.state,'advisories_received');assert.equal(live.provider_calls_performed,2);
+  assert.equal(calls,2);assert.equal(loadAdvisoryHistory({ledgerDir:root}).length,2);
+  const repeat=await runAdvisoryHeartbeatOnce({...settings,execute:true});
+  assert.equal(repeat.state,'quiet');assert.equal(calls,2);
  }finally{fs.rmSync(root,{recursive:true,force:true});}
 });
