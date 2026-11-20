@@ -11,7 +11,7 @@ import {
 } from "./inference-gateway.mjs";
 
 test("inference gateway provider set is explicit", () => {
-  assert.deepEqual(supportedInferenceProviders(), ["ollama", "gemini", "openai"]);
+  assert.deepEqual(supportedInferenceProviders(), ["ollama", "gemini", "openai", "anthropic", "xai"]);
 });
 
 test("local Ollama adapter stays loopback and returns a receipt", async () => {
@@ -235,4 +235,53 @@ test("gateway exposes authenticated metadata-only validation", async () => {
     assert.ok(body.validation_receipt);
     assert.equal(JSON.stringify(body).includes(token),false);
   }finally{if(runtime) await runtime.close();}
+});
+
+test("Claude and Grok adapters use vault secrets and metadata-only validation", async () => {
+  for(const provider of ["anthropic","xai"]){
+    const root=fs.mkdtempSync(path.join(os.tmpdir(),"raven-"+provider+"-"));
+    const secret="fixture-"+provider+"-key-secret-abcdefghijklmnopqrstuvwxyz";
+    try{
+      new ProviderCredentialVault({stateDir:root}).put({provider,environment:"live",
+        label:"raven-inference",apiKeyId:provider+"-api-key",apiSecret:secret,actorRef:"proof"});
+      const calls=[];
+      const engine=createInferenceEngine({provider,model:provider==="xai"?"grok-proof":"claude-proof",
+        credentialStateDir:root,
+        fetchImpl:async(url,init)=>{
+          calls.push({url,method:init.method,headers:init.headers,body:init.body});
+          if(init.method==="GET")return {ok:true,status:200,headers:{get:()=>null},json:async()=>({id:provider==="xai"?"grok-proof":"claude-proof"})};
+          return {ok:true,status:200,headers:{get:()=>null},json:async()=>provider==="xai"?
+            {id:"resp_xai",status:"completed",model:"grok-proof",output:[{content:[{text:"Grok observation"}]}]}:
+            {id:"msg_claude",model:"claude-proof",content:[{type:"text",text:"Claude observation"}]}};
+        }});
+      const meta=await engine.validate();
+      assert.equal(meta.inference_performed,false);
+      assert.equal(meta.prompt_sent,false);
+      assert.equal(calls[0].method,"GET");
+      assert.equal(calls[0].body,undefined);
+      const answer=await engine.infer({request_id:"mission-proof",role:"qa",input:"review sourced public evidence"});
+      assert.equal(answer.status,"completed");
+      assert.equal(answer.provider,provider);
+      assert.equal(JSON.stringify(answer).includes(secret),false);
+      const body=JSON.parse(calls[1].body);
+      if(provider==="xai"){
+        assert.equal(calls[1].url,"https://api.x.ai/v1/responses");
+        assert.equal(calls[1].headers.authorization,"Bearer "+secret);
+        assert.equal(body.store,false);assert.deepEqual(body.tools,[]);
+      }else{
+        assert.equal(calls[1].url,"https://api.anthropic.com/v1/messages");
+        assert.equal(calls[1].headers["x-api-key"],secret);
+        assert.equal(body.max_tokens,1000);
+      }
+    }finally{fs.rmSync(root,{recursive:true,force:true});}
+  }
+});
+test("unconfigured Claude/Grok never perform inference or metadata calls", async()=>{
+  for(const provider of ["anthropic","xai"]){
+    let called=false;
+    const engine=createInferenceEngine({provider,model:"fictional",fetchImpl:async()=>{called=true;}});
+    await assert.rejects(engine.validate(),/credential_missing/);
+    await assert.rejects(engine.infer({request_id:"a",role:"research",input:"test"}),/credential_missing/);
+    assert.equal(called,false);
+  }
 });
