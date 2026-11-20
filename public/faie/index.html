@@ -1071,13 +1071,13 @@ function renderHistoricalClimate(data){
   ];
   let html='<div class="site-scan-scaffold"><strong>NOAA station observations, 2023–2024</strong>'
     +'<p>Station: '+esc(data.station?.name||'Unknown')
-    +' · '+esc(data.station?.distance_km??'?')+' km from selected point · '+esc(data.received_calendar_dates??'?')+'/731 dates returned.</p>'
+    +' · '+esc(data.station?.distance_km??'?')+' km from selected point · '+esc(data.received_calendar_dates??'?')+'/'+esc(data.expected_days??'?')+' dates returned.</p>'
     +'<p>Measured at the station, not at your property. This is not a 30-year climate normal.</p></div>';
   html+='<div class="climate-metrics">';
   for(const [label,metric] of tiles){
     html+='<div class="climate-metric"><strong>'+esc(metric?.threshold_days??'—')+' days</strong>'
       +'<span>'+esc(label)+'</span><span>'
-      +esc(metric?.observed_days??'?')+'/731 valid days · '
+      +esc(metric?.observed_days??'?')+'/'+esc(data.expected_days??'?')+' valid days · '
       +esc(metric?.missing_days??'?')+' missing</span></div>';
   }
   html+='</div><p>Counts depend on observed days and are not adjusted for missing records. This report does not predict future losses, water rights, soil conditions or crop yields.</p>'
