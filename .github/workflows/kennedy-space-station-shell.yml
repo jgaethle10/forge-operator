@@ -30,6 +30,7 @@ jobs:
             products/kennedy-space-station/aerial_vault.py \
             products/kennedy-space-station/test_aerial_vault.py \
             products/kennedy-space-station/test_aerial_http.py \
+            products/kennedy-space-station/test_private_review_http.py \
             products/kennedy-space-station/sheet_compiler.py \
             products/kennedy-space-station/test_shell.py \
             products/kennedy-space-station/test_spatial.py \
