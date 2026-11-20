@@ -21,108 +21,85 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Check Kennedy shell and spatial kernel imports
-        run: python3 -m py_compile products/kennedy-space-station/server.py products/kennedy-space-station/spatial.py products/kennedy-space-station/test_shell.py products/kennedy-space-station/test_spatial.py
-      - name: Real loopback HTTP product separation and site handoff
+      - name: Check Kennedy kernel imports
+        run: |
+          python3 -m py_compile \
+            products/kennedy-space-station/server.py \
+            products/kennedy-space-station/spatial.py \
+            products/kennedy-space-station/raster_registration.py \
+            products/kennedy-space-station/sheet_compiler.py \
+            products/kennedy-space-station/test_shell.py \
+            products/kennedy-space-station/test_spatial.py \
+            products/kennedy-space-station/test_sheet_compiler.py
+      - name: Real loopback HTTP, provenance and synthetic raster regression tests
         run: python3 -m unittest discover -s products/kennedy-space-station -p "test_*.py" -v
-      - name: Produce real two-sheet synthetic PDF and raster previews
+      - name: Produce and rasterize deterministic two-sheet synthetic PDF
         run: |
           set -euo pipefail
-          OUT="$RUNNER_TEMP/kss-sheet-proof"
+          OUT=/tmp/kss-sheet-proof
           python3 products/kennedy-space-station/generate_synthetic_sheets.py --output-dir "$OUT"
+          command -v pdfinfo
+          command -v pdftoppm
           pdfinfo "$OUT/kennedy-synthetic-s0-a0.pdf" > "$OUT/pdfinfo.txt"
-          grep -Eq '^Pages:[[:space:]]+2
-        run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          import re
-          import subprocess
-          for source in ('index.html','studio.html'):
-              data=Path('products/kennedy-space-station',source).read_text()
-              scripts=re.findall(r'<script>(.*?)</script>',data,flags=re.S)
-              assert scripts, f"Missing JavaScript in {source}"
-              for i, script in enumerate(scripts):
-                  path=Path('/tmp',f'kennedy-{source}-{i}.js')
-                  path.write_text(script)
-                  subprocess.run(['node','--check',str(path)],check=True)
-          PY
-      - name: Validate private-host template safety (offline)
-        run: |
-          python3 - <<'PY'
-          import importlib.util
-          from pathlib import Path
-          f=Path('products/kennedy-space-station/ops/private_gateway_preflight.py')
-          spec=importlib.util.spec_from_file_location("kss_private_gateway_preflight",f)
-          obj=importlib.util.module_from_spec(spec)
-          spec.loader.exec_module(obj)
-          assert obj.CADDY.exists() and obj.SERVICE.exists()
-          # Without confidential operator credentials, preflight must HOLD.
-          import os
-          for name in ('KENNEDY_DOMAIN','KENNEDY_OPERATOR_USER','KENNEDY_PASSWORD_BCRYPT'):
-              os.environ.pop(name,None)
-          assert obj.preflight()==2
-          PY
-      - name: Public homepage security and isolation gate
-        run: python3 products/kennedy-space-station/verify_public_home.py
- "$OUT/pdfinfo.txt"
           pdftoppm -f 1 -l 2 -r 72 -png "$OUT/kennedy-synthetic-s0-a0.pdf" "$OUT/page" >/dev/null 2>&1
           python3 - "$OUT" <<'PY'
           import json,sys,hashlib
           from pathlib import Path
           from struct import unpack
           root=Path(sys.argv[1])
+          info=(root/"pdfinfo.txt").read_text()
+          assert any(line.split(':',1)[-1].strip()=='2' for line in info.splitlines() if line.startswith("Pages:")),info
           pages=sorted(root.glob("page-*.png"))
-          assert len(pages)==2, [p.name for p in pages]
+          assert len(pages)==2,[p.name for p in pages]
           for page in pages:
               b=page.read_bytes()
-              assert b[:8]==bytes.fromhex('89504e470d0a1a0a')
+              assert b[:8]==bytes.fromhex("89504e470d0a1a0a")
               w,h=unpack(">II",b[16:24])
               assert w>=2000 and h>=1000,(page.name,w,h)
               assert len(b)>20000,(page.name,len(b))
           assert hashlib.sha256(pages[0].read_bytes()).digest()!=hashlib.sha256(pages[1].read_bytes()).digest()
-          proof=json.loads((root/"source-qa-receipt.json").read_text())
-          assert proof["pages"]==2 and proof["customer_release_authorized"] is False
-          assert hashlib.sha256((root/"kennedy-synthetic-s0-a0.pdf").read_bytes()).hexdigest()==proof["pdf_sha256"]
-          print("PASS: two distinct rendered 36x24-inch sheets, source-bound PDF, internal QA receipt")
-          print("Visual human QA and real rights/geography remain OPEN")
+          receipt=json.loads((root/"source-qa-receipt.json").read_text())
+          assert receipt["pages"]==2 and not receipt["customer_release_authorized"]
+          assert hashlib.sha256((root/"kennedy-synthetic-s0-a0.pdf").read_bytes()).hexdigest()==receipt["pdf_sha256"]
+          print("PASS: two rendered source-bound synthetic sheets and integrity receipt")
+          print("HOLD: human visual QA, real source rights and georeferencing")
           PY
-      - name: Attach source-bound synthetic PDF and rendered page proofs
+      - name: Upload synthetic PDF, source raster inputs, and page renders
         uses: actions/upload-artifact@v4
         with:
           name: kennedy-synthetic-s0-a0-proof
-          path: ${{ runner.temp }}/kss-sheet-proof/
+          path: /tmp/kss-sheet-proof/
           if-no-files-found: error
           retention-days: 14
-      - name: Validate embedded studio JavaScript syntax
+      - name: Validate embedded private studio JavaScript syntax
         run: |
           python3 - <<'PY'
           from pathlib import Path
           import re
           import subprocess
-          for source in ('index.html','studio.html'):
-              data=Path('products/kennedy-space-station',source).read_text()
-              scripts=re.findall(r'<script>(.*?)</script>',data,flags=re.S)
-              assert scripts, f"Missing JavaScript in {source}"
-              for i, script in enumerate(scripts):
-                  path=Path('/tmp',f'kennedy-{source}-{i}.js')
+          for source in ("index.html","studio.html"):
+              data=Path("products/kennedy-space-station",source).read_text()
+              scripts=re.findall(r"<script>(.*?)</script>",data,flags=re.S)
+              assert scripts,source
+              for i,script in enumerate(scripts):
+                  path=Path("/tmp",f"kennedy-{source}-{i}.js")
                   path.write_text(script)
-                  subprocess.run(['node','--check',str(path)],check=True)
+                  subprocess.run(["node","--check",str(path)],check=True)
           PY
-      - name: Validate private-host template safety (offline)
+      - name: Validate private host template safety (offline)
         run: |
           python3 - <<'PY'
           import importlib.util
           from pathlib import Path
-          f=Path('products/kennedy-space-station/ops/private_gateway_preflight.py')
-          spec=importlib.util.spec_from_file_location("kss_private_gateway_preflight",f)
-          obj=importlib.util.module_from_spec(spec)
-          spec.loader.exec_module(obj)
-          assert obj.CADDY.exists() and obj.SERVICE.exists()
-          # Without confidential operator credentials, preflight must HOLD.
           import os
-          for name in ('KENNEDY_DOMAIN','KENNEDY_OPERATOR_USER','KENNEDY_PASSWORD_BCRYPT'):
+          path=Path("products/kennedy-space-station/ops/private_gateway_preflight.py")
+          spec=importlib.util.spec_from_file_location("kss_private_gateway_preflight",path)
+          module=importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(module)
+          assert module.CADDY.exists() and module.SERVICE.exists()
+          for name in ("KENNEDY_DOMAIN","KENNEDY_OPERATOR_USER","KENNEDY_PASSWORD_BCRYPT"):
               os.environ.pop(name,None)
-          assert obj.preflight()==2
+          assert module.preflight()==2
           PY
       - name: Public homepage security and isolation gate
         run: python3 products/kennedy-space-station/verify_public_home.py
