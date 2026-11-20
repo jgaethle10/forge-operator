@@ -49,6 +49,12 @@ test('untrusted remote HTTP or embedded endpoint credentials are rejected',()=>w
  fx.cfg.baseUrl='https://user:pass@example.com/';fx.write();
  assert.throws(()=>evaluateWingResidentConfig({configPath:fx.file}),/requires_owned_https/);
 }));
+test('private resident supports exact shared Fabric /wing-courier mount but rejects arbitrary API paths',()=>withFixture(async fx=>{
+ fx.cfg.baseUrl='https://fabric.systemiacommandcenters.com/wing-courier';fx.write();
+ assert.equal(evaluateWingResidentConfig({configPath:fx.file}).readyForLocalActivation,true);
+ fx.cfg.baseUrl='https://fabric.systemiacommandcenters.com/api/internal/wing-courier';fx.write();
+ assert.throws(()=>evaluateWingResidentConfig({configPath:fx.file}),/requires_owned_https/);
+}));
 test('receiver signing key is mandatory and must remain private',()=>withFixture(async fx=>{
  delete fx.cfg.receiverSigningKeyFile;fx.write();
  assert.throws(()=>evaluateWingResidentConfig({configPath:fx.file}),/absolute_file_required/);
