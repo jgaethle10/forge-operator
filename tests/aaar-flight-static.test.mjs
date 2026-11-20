@@ -104,3 +104,16 @@ test('Seattle v1.0 laptop renderer uses lit glass, water and grounded city geome
   assert.match(page,/html\.seattle-mode \.flight-shell/);
   assert.doesNotMatch(page,/https?:\/\/(?:unpkg|cdn\.jsdelivr)/);
 });
+
+test('Seattle Vista 1.1 develops real WebGL clouds, distant gameplay relief and aircraft detail',()=>{
+ assert.match(page,/seattle-vista-v11/);
+ assert.match(page,/VISTA 1\.1: deterministic gameplay highlands/);
+ assert.match(page,/STYLIZED_GAMEPLAY_HIGHLANDS/);
+ assert.match(page,/const cmesh=builder\(\)/);
+ assert.match(page,/meshes\.clouds=cmesh\.upload\(\)/);
+ assert.match(page,/gl\.depthMask\(false\);drawMesh\(meshes\.clouds,identity\(\)\)/);
+ assert.match(page,/cloud_triangles:meshes\.clouds\?\.triangles/);
+ assert.match(page,/landing-gear or a verified ground-contact model/);
+ assert.match(page,/Simplified ridge roofs/);
+ assert.match(page,/NOT measured Cascades\/Olympics topography/);
+});
