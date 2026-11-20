@@ -6,21 +6,22 @@ import {fileURLToPath} from 'node:url';
 import {ASSETS, RESIDENT_ORIGIN, classifyResidentAsset,probeAidenLabResident} from '../scripts/probe-aiden-lab-resident.mjs';
 
 const ROOT=fileURLToPath(new URL('../',import.meta.url));
-const bytes=(name)=>fs.readFileSync(path.join(ROOT,'public/aiden-lab',name),'utf8');
+const bytes=(name)=>fs.readFileSync(path.join(ROOT,name==='classroom/index.html'?'public/apps/infinite-classroom/play/index.html':'public/aiden-lab/'+name),'utf8');
+const assetPath=(url)=>new URL(url).pathname.slice('/aiden-lab/'.length);
 const mime=(name)=>name.endsWith('.html')?'text/html; charset=utf-8':
   name.endsWith('.mjs')?'text/javascript; charset=utf-8':
   name.endsWith('.css')?'text/css; charset=utf-8':'image/svg+xml';
 const server=(overrides={})=>async(url)=>{
-  const name=url.split('/').at(-1);
+  const name=assetPath(url);
   const fixture={status:200,url,
-    headers:{get:(key)=>key==='x-evercraft-static-program'?'aidens-lab-v1':
+    headers:{get:(key)=>key==='x-evercraft-static-program'?'aidens-lab-v1':key==='x-evercraft-learning-world'?(name==='classroom/index.html'?'classroom-practice-v1':null):
       key==='content-type'?mime(name):null},
     text:async()=>bytes(name)};
   return {...fixture,...overrides};
 };
 
 test('owned resident release proof matches exactly the five science assets',async()=>{
-  assert.equal(ASSETS.length,6);
+  assert.equal(ASSETS.length,7);
   const receipt=await probeAidenLabResident({sourceRoot:ROOT,fetcher:server(),now:new Date('2026-11-20T00:00:00Z')});
   assert.equal(receipt.verified,true);
   assert.equal(receipt.release_state,'RESIDENT_PARITY_VERIFIED');
@@ -42,9 +43,9 @@ test('resident parity fails closed on stale scripts, spoofed marker and redirect
 
 test('resident checker rejects missing route and partial deployment',async()=>{
   const mock=async(url)=>{
-    const name=url.split('/').at(-1);
+    const name=assetPath(url);
     return {status:name==='app.mjs'?404:200,url,
-      headers:{get:(key)=>key==='x-evercraft-static-program'?'aidens-lab-v1':
+      headers:{get:(key)=>key==='x-evercraft-static-program'?'aidens-lab-v1':key==='x-evercraft-learning-world'?(name==='classroom/index.html'?'classroom-practice-v1':null):
         key==='content-type'?mime(name):null},
       text:async()=>name==='app.mjs'?'Not Found':bytes(name)};
   };
