@@ -422,6 +422,18 @@ function render(){
   }
   ctx.strokeStyle='#d1edf51b';ctx.lineWidth=.7;ctx.stroke();
  }
+ // A luminous marker identifies the modeled subsolar point (noon Sun).
+ const noon=project(SUN_SEASONS[solarSeason],sunLongitude(solarHour));
+ if(noon.visible){
+  const g=ctx.createRadialGradient(noon.x,noon.y,0,noon.x,noon.y,26);
+  g.addColorStop(0,'rgba(255,237,170,.64)');
+  g.addColorStop(.35,'rgba(255,225,140,.22)');
+  g.addColorStop(1,'rgba(255,210,120,0)');
+  ctx.fillStyle=g;ctx.fillRect(noon.x-26,noon.y-26,52,52);
+  dot(noon.x,noon.y,4.4,'#ffe3a2');
+  ctx.beginPath();ctx.arc(noon.x,noon.y,11,0,Math.PI*2);
+  ctx.strokeStyle='#ffe2a49e';ctx.lineWidth=1.5;ctx.stroke();
+ }
  for(const item of DATA){
   const p=project(item.lat,item.lon);if(!p.visible)continue;
   const chosen=selected===item.id;
@@ -439,6 +451,12 @@ function render(){
  ctx.beginPath();ctx.arc(cx,cy,r+8,Math.PI*.2,Math.PI*1.55);
  ctx.strokeStyle='#4ca3d53b';ctx.lineWidth=1.4;ctx.stroke();
  $('position').textContent='Viewing: '+coordinates(centerLat,centerLon);
+ const sunLon=sunLongitude(solarHour),sunLat=SUN_SEASONS[solarSeason];
+ const here=DATA.find(x=>x.id===selected);
+ const chosen=here?solarAltitude(here.lat,here.lon,sunLat,sunLon):null;
+ $('sunlightReading').textContent='Sun overhead: '+coordinates(sunLat,sunLon)
+   +(here?' · '+here.name+': '+Math.abs(chosen).toFixed(1)+'° '+(chosen>=0?'above':'below')+' the horizon':' · Select an expedition to measure its solar altitude.');
+
 }
 // Curated learning pathways: evidence-based explanations, not live scientific measurements.
 const TRAILS={
@@ -514,6 +532,47 @@ function nextTrailStop(){
  passportView();
 }
 
+// A deliberately finite solar experiment: only three schematic seasonal
+// declinations and whole UTC hours, never the observer's live location.
+function setSunSeason(season){
+ if(!Object.hasOwn(SUN_SEASONS,season))return;
+ solarSeason=season;
+ for(const button of document.querySelectorAll('[data-sun-season]'))
+  button.setAttribute('aria-pressed',String(button.dataset.sunSeason===season));
+ render();
+}
+function setSunHour(hour){
+ solarHour=Math.max(0,Math.min(23,Math.round(hour)));
+ $('solarHour').value=String(solarHour);
+ $('solarHourValue').textContent=String(solarHour).padStart(2,'0')+':00';
+ render();
+}
+function pauseSun(){
+ solarRunning=false;solarLast=0;
+ if(solarFrame)cancelAnimationFrame(solarFrame);
+ solarFrame=0;
+ $('solarPlay').textContent='▶ Play one day';
+ $('solarPlay').setAttribute('aria-pressed','false');
+}
+function tickSun(time){
+ if(!solarRunning || document.hidden || solarReduced.matches){pauseSun();return;}
+ if(!solarLast)solarLast=time;
+ if(time-solarLast>=850){
+  solarLast=time;setSunHour((solarHour+1)%24);
+ }
+ solarFrame=requestAnimationFrame(tickSun);
+}
+function toggleSun(){
+ if(solarRunning){pauseSun();return;}
+ if(solarReduced.matches){
+  $('sunlightReading').textContent='Animation is paused by reduced-motion preference. You can still set the hour manually.';
+  return;
+ }
+ solarRunning=true;solarLast=0;
+ $('solarPlay').textContent='Ⅱ Pause daylight';
+ $('solarPlay').setAttribute('aria-pressed','true');
+ solarFrame=requestAnimationFrame(tickSun);
+}
 function select(id){
  const entry=DATA.find(x=>x.id===id);if(!entry)return;
  selected=id;centerLon=entry.lon;centerLat=clamp(entry.lat,-65,65);
@@ -568,6 +627,14 @@ for(const entry of DATA){
  holder.append(name,region);btn.append(icon,holder);btn.addEventListener('click',()=>select(entry.id));places.append(btn);
 }
 $('reset').addEventListener('click',()=>{centerLon=-30;centerLat=15;selected=null;for(const btn of document.querySelectorAll('.place'))btn.setAttribute('aria-pressed','false');render()});
+for(const button of document.querySelectorAll('[data-sun-season]'))
+ button.addEventListener('click',()=>setSunSeason(button.dataset.sunSeason));
+$('solarHour').addEventListener('input',()=>setSunHour(Number($('solarHour').value)));
+$('solarPlay').addEventListener('click',toggleSun);
+document.addEventListener('visibilitychange',()=>{if(document.hidden)pauseSun()});
+if(typeof solarReduced.addEventListener==='function')
+ solarReduced.addEventListener('change',()=>{if(solarReduced.matches)pauseSun()});
+
 window.addEventListener('resize',resize,{passive:true});
 for(const tab of document.querySelectorAll('[data-trail]'))tab.addEventListener('click',()=>beginTrail(tab.dataset.trail));
 $('trailNext').addEventListener('click',nextTrailStop);
