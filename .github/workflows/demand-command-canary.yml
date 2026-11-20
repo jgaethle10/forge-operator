@@ -18,6 +18,7 @@ jobs:
       - name: Verify owner-only deployment scripts (no external runtime)
         run: |
           bash -n sites/demand-command/deploy/install-nextgen-resident.sh
+          bash -n sites/demand-command/deploy/inspect-penguin-public-route.sh
           node --test sites/demand-command/deploy/test-release-contract.mjs
       - name: Verify private API and source adapters on synthetic data
         working-directory: sites/demand-command/backend
