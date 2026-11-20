@@ -20,6 +20,7 @@ jobs:
           bash -n sites/demand-command/deploy/install-nextgen-resident.sh
           bash -n sites/demand-command/deploy/inspect-penguin-public-route.sh
           bash -n sites/demand-command/deploy/inspect-penguin-ssh-readiness.sh
+          bash -n sites/demand-command/deploy/install-penguin-demand-relay.sh
           node --test sites/demand-command/deploy/test-release-contract.mjs
       - name: Verify private API and source adapters on synthetic data
         working-directory: sites/demand-command/backend
