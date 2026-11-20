@@ -1,0 +1,42 @@
+name: Kennedy studio draft safety
+
+on:
+  pull_request:
+    paths:
+      - 'public/kennedy-space-station/**'
+      - 'tests/kennedy-demo-draft.test.mjs'
+      - 'tests/kennedy-public-studio.test.mjs'
+      - '.github/workflows/kennedy-draft-tests.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'public/kennedy-space-station/**'
+      - 'tests/kennedy-demo-draft.test.mjs'
+      - 'tests/kennedy-public-studio.test.mjs'
+      - '.github/workflows/kennedy-draft-tests.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Real and synthetic source-bound project draft tests
+        run: node --test tests/kennedy-demo-draft.test.mjs tests/kennedy-public-studio.test.mjs
+      - name: Assert no hosted checkout or external asset dependencies
+        run: |
+          node - <<'NODE'
+          const fs=require('fs');
+          const src=fs.readFileSync('public/kennedy-space-station/studio/index.html','utf8');
+          if(/<script[^>]+src=|<iframe|\bfetch\(|XMLHttpRequest|sendBeacon|base44[.]app/.test(src))throw Error('UNAPPROVED_EXTERNAL_RUNTIME');
+          if(!src.includes("source_kind:'synthetic_demonstration'") ||
+             !src.includes("original.site_sha256!==binding.site_sha256") ||
+             !src.includes("d.calibration!==null")) throw Error('SOURCE_BOUNDARY_MISSING');
+          console.log('KENNEDY_DRAFT_SAFETY_STATIC_PASS');
+          NODE
