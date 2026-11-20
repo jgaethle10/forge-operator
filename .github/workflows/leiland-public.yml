@@ -9,6 +9,7 @@ on:
       - 'tests/leiland-owned-pulse-publisher.test.mjs'
       - 'tests/leiland-owned-release-probe.test.mjs'
       - 'tests/leiland-owned-observatory-host.test.mjs'
+      - 'tests/leiland-kaidance-field-integration.test.mjs'
       - 'scripts/probe-leiland-owned-release.mjs'
       - 'systemia/leiland/**'
       - 'systemia/collider/public-projection.mjs'
@@ -22,6 +23,7 @@ on:
       - 'tests/leiland-owned-pulse-publisher.test.mjs'
       - 'tests/leiland-owned-release-probe.test.mjs'
       - 'tests/leiland-owned-observatory-host.test.mjs'
+      - 'tests/leiland-kaidance-field-integration.test.mjs'
       - 'scripts/probe-leiland-owned-release.mjs'
       - 'systemia/leiland/**'
       - 'systemia/collider/public-projection.mjs'
@@ -50,4 +52,4 @@ jobs:
           node --check scripts/probe-leiland-owned-release.mjs
           node --check systemia/leiland/owned-observatory-host.mjs
       - name: Prove public-only activity and privacy contract
-        run: node --test tests/leiland-public.test.mjs tests/leiland-owned-pulse-publisher.test.mjs tests/leiland-owned-release-probe.test.mjs tests/leiland-owned-observatory-host.test.mjs
+        run: node --test tests/leiland-public.test.mjs tests/leiland-owned-pulse-publisher.test.mjs tests/leiland-owned-release-probe.test.mjs tests/leiland-owned-observatory-host.test.mjs tests/leiland-kaidance-field-integration.test.mjs
