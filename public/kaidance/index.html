@@ -11,6 +11,7 @@
 <link rel="stylesheet" href="./style.css">
 <link rel="stylesheet" href="./experience.css">
 <link rel="stylesheet" href="./collider-v3.css">
+<link rel="stylesheet" href="./confluence.css">
 </head>
 <body>
 <a class="skip" href="#main">Skip to observatory</a>
@@ -38,12 +39,33 @@
       <article class="stage" id="stage" aria-label="KAIDANCE living network visualization and approved public source states">
         <canvas id="visualField" class="visual-field" aria-hidden="true"></canvas>
         <canvas id="colliderField" aria-hidden="true"></canvas>
+        <canvas id="currentField" role="img" aria-label="Illustrative luminous currents connecting KAIDANCE, SYSTEMIA, HUDSON, DISCOVERY, RAVEN NEXUS, WORK SABAN and EVIDENCE. Tap a confluence to explore. This is not live agent or mission telemetry."></canvas>
         <div class="scene-light" aria-hidden="true"></div>
+        <div class="field-ui">
+          <div class="field-source"><i></i> ANIMATED FIELD IS ILLUSTRATIVE<br>PUBLIC RECORDS LINKED BELOW</div>
+          <div class="field-controls" aria-label="Network visualization controls">
+            <button id="fieldExplore" type="button" aria-haspopup="dialog">EXPLORE</button>
+            <button id="fieldPause" type="button" aria-pressed="false">PAUSE</button>
+            <button id="fieldMode" type="button" aria-pressed="false">REACTOR VIEW</button>
+          </div>
+          <div class="field-story" aria-live="off">
+            <small id="fieldStoryKind">ILLUSTRATED CONFLUENCE</small>
+            <strong id="fieldStoryTitle">KAIDANCE</strong>
+            <p id="fieldStoryMeta">Five-minute Collider and verified cycle boundary. Visual routes are illustrative.</p>
+          </div>
+          <section class="field-drawer" id="fieldDrawer" role="dialog" aria-modal="true" aria-labelledby="fieldDrawerTitle" hidden>
+            <button id="fieldClose" type="button" aria-label="Close explorer">×</button>
+            <small class="eyebrow">THE KAIDANCE FIELD</small>
+            <h3 id="fieldDrawerTitle">Explore the confluences</h3>
+            <p>Follow the conceptual currents linking Evercraft systems. Recorded GitHub work has its own source-linked receipts. These paths are not live missions.</p>
+            <div id="fieldTopics" role="group" aria-label="Explore named systems"></div>
+          </section>
+        </div>
         <div class="stage-top">
           <div class="stage-label"><span class="cross">✳</span><span>KAIDANCE <small>THE COLLIDER · EVERCRAFT</small></span></div>
           <span class="readout" id="streamType">NO APPROVED COLLIDER FEED</span>
         </div>
-        <div class="scene-index" aria-hidden="true"><span>EVERCRAFT NETWORK</span><span>V · 02 / OBSERVATORY</span></div>
+        <div class="scene-index" aria-hidden="true"><span>EVERCRAFT NETWORK</span><span>V · 04 / THE FIELD</span></div>
         <div class="collider" id="collider" aria-hidden="true">
           <div class="orbital orbital-one"><i></i><i></i></div>
           <div class="orbital orbital-two"><i></i></div>
@@ -104,5 +126,6 @@
 <script type="module" src="./app.mjs"></script>
 <script type="module" src="./visual.mjs"></script>
 <script type="module" src="./collider-engine.mjs"></script>
+<script type="module" src="./current-field.mjs"></script>
 </body>
 </html>
