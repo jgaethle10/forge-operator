@@ -312,81 +312,270 @@ function restoreMountains(){
  refresh();
 }
 function dot(x,y,r,color){ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fillStyle=color;ctx.fill()}
-function drawLandscape(){
- const w=width,h=height,p=params();
- const sky=ctx.createLinearGradient(0,0,0,h);sky.addColorStop(0,'#113b56');sky.addColorStop(.66,'#287389');sky.addColorStop(1,'#80a4a1');
- ctx.fillStyle=sky;ctx.fillRect(0,0,w,h);
- const sun=ctx.createRadialGradient(w*.78,h*.14,0,w*.78,h*.14,h*.27);
- sun.addColorStop(0,'#fee5afbb');sun.addColorStop(.25,'#e6e6b966');sun.addColorStop(1,'#fff8db00');ctx.fillStyle=sun;ctx.fillRect(0,0,w,h);
- // Five connected hills, with slope visibly controlled by the terrain slider.
- const pts=Array.from({length:5},(_,i)=>[w*(.065+i*.22),h*terrain(i)]);
- pts.unshift([0,pts[0][1]+h*.09]);pts.push([w,h*.8]);
- ctx.beginPath();ctx.moveTo(0,h);
- for(const pt of pts)ctx.lineTo(pt[0],pt[1]);
- ctx.lineTo(w,h);ctx.closePath();
- const earth=ctx.createLinearGradient(0,h*.23,0,h);earth.addColorStop(0,'#588c67');earth.addColorStop(.42,'#366857');earth.addColorStop(.44,'#234957');earth.addColorStop(1,'#152e44');
- ctx.fillStyle=earth;ctx.fill();
- // Soil / aquifer band is an illustrative diagram. No geologic precision implied.
- ctx.beginPath();for(let i=0;i<pts.length;i++){const pt=pts[i];if(i===0)ctx.moveTo(pt[0],pt[1]+h*.23);else ctx.lineTo(pt[0],pt[1]+h*.23)}
- ctx.strokeStyle='#81c2a370';ctx.lineWidth=3;ctx.stroke();
- for(let i=0;i<5;i++){
-  const x=w*(.065+i*.22),y=h*terrain(i);
-  // Trees are deterministic, with density proportional to the vegetation input.
-  const trees=Math.round(p.forest/17);
-  for(let t=0;t<trees;t++){
-   const tx=x+(t-(trees-1)/2)*w*.022,ty=y+((t%2)*7);
-   const scale=(i===0?.65:1)*(height/430);
-   ctx.fillStyle='#513f33';ctx.fillRect(tx-1.7*scale,ty-15*scale,3.4*scale,16*scale);
-   ctx.beginPath();ctx.moveTo(tx,ty-43*scale);ctx.lineTo(tx-12*scale,ty-8*scale);ctx.lineTo(tx+12*scale,ty-8*scale);ctx.closePath();
-   ctx.fillStyle=i<2?'#337e79':'#3baf8c';ctx.fill();
+// One coherent visual system: measured model stores/fluxes drive the artwork.
+// The sky, cliffs and ripples are authored illustrations, not geospatial data.
+function sceneNodes(w,h){
+ const pts=Array.from({length:5},(_,i)=>({x:w*(.065+i*.22),y:h*terrain(i),zone:i}));
+ return [{x:-w*.08,y:pts[0].y+h*.075},...pts,{x:w*1.1,y:pts[4].y+h*.05}];
+}
+function surfaceY(x,nodes){
+ if(x<=nodes[0].x)return nodes[0].y;
+ for(let i=1;i<nodes.length;i++){
+  if(x<=nodes[i].x){
+   const span=nodes[i].x-nodes[i-1].x;
+   const t=(x-nodes[i-1].x)/span;
+   const smooth=t*t*(3-2*t);
+   return nodes[i-1].y+(nodes[i].y-nodes[i-1].y)*smooth;
   }
-  if(i<3&&state.cells[i].snow>8){
-   const snowAmount=clamp(state.cells[i].snow/170,0,1);
-   ctx.beginPath();ctx.moveTo(x-w*.057,y+h*.022);ctx.lineTo(x,y-h*.027-snowAmount*16);ctx.lineTo(x+w*.053,y+h*.025);ctx.closePath();
-   ctx.fillStyle='rgba(234,252,255,'+(.26+snowAmount*.7)+')';ctx.fill();
-  }
-  // Altitude readouts are model parameters, not decorative measurements.
-  ctx.font='700 11px system-ui';ctx.textAlign='center';
-  const label=Math.round(elevations[i])+' m',labelWidth=ctx.measureText(label).width;
-  ctx.fillStyle='rgba(3,30,48,.75)';
-  ctx.fillRect(x-labelWidth/2-6,y-63,labelWidth+12,20);
-  ctx.fillStyle='#eaf9ed';ctx.fillText(label,x,y-47);ctx.textAlign='start';
-  const c=state.cells[i],groundY=Math.min(h*.91,y+h*.22);
-  const moisture=clamp(c.soil/200,0,1);
-  ctx.fillStyle='rgba(111,196,217,'+(.12+moisture*.36)+')';
-  ctx.beginPath();ctx.ellipse(x,groundY,w*.065,12+moisture*14,0,0,Math.PI*2);ctx.fill();
-  ctx.beginPath();ctx.arc(x,y-24,selectedZone===i?13:6,0,Math.PI*2);
-  ctx.fillStyle=selectedZone===i?'#ffe3a1':'#b4f6d3';ctx.fill();
-  if(selectedZone===i){ctx.beginPath();ctx.arc(x,y-24,20,0,Math.PI*2);ctx.strokeStyle='#ffe4a7aa';ctx.lineWidth=2;ctx.stroke()}
  }
- const flow=state.history.at(-1)?.outflow||0;
- // River connects the high watershed with the valley, widening under stronger outflow.
- const riverWidth=clamp(4+flow*.24,5,30);
- ctx.beginPath();ctx.moveTo(w*.27,h*terrain(1)+6);
- ctx.bezierCurveTo(w*.43,h*.61,w*.59,h*.63,w*.72,h*.78);
- ctx.bezierCurveTo(w*.84,h*.87,w*.92,h*.78,w*1.04,h*.86);
- ctx.strokeStyle='#23536c';ctx.lineWidth=riverWidth+8;ctx.lineCap='round';ctx.stroke();
- ctx.strokeStyle='#5bcbe3';ctx.lineWidth=riverWidth;ctx.stroke();
- ctx.strokeStyle='#d1f9f7a1';ctx.lineWidth=Math.max(1,riverWidth*.17);ctx.stroke();
- // Clouds, snow and rain are weather indicators, not precipitation particle counts.
- if(p.rain>0){
-  const cloudCount=Math.round(p.rain/20)+1;
-  for(let c=0;c<cloudCount;c++){
-   const x=w*(.19+c*.18),y=h*(.14+(c%2)*.043);
-   ctx.fillStyle='#d8edf0d2';
-   for(let j=-1;j<=1;j++){ctx.beginPath();ctx.ellipse(x+j*15,y+(j===0?-8:0),23,13,0,0,Math.PI*2);ctx.fill()}
-   const cold=p.temp-.0065*(elevations[Math.min(c,4)]-250)<0;
-   for(let j=0;j<10;j++){
-    const phase=(state.day*.16+j*.23+accumulator*.001)%1;
-    const dx=x+((j*17)%50)-24,dy=y+27+phase*h*.18;
-    if(cold){dot(dx,dy,2.1,'#f2ffff')}else{
-     ctx.strokeStyle='#b8eeff91';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(dx,dy);ctx.lineTo(dx-4,dy+11);ctx.stroke()
+ return nodes[nodes.length-1].y;
+}
+function drawLandOutline(nodes,w,h){
+ ctx.beginPath();ctx.moveTo(0,h);ctx.lineTo(0,surfaceY(0,nodes));
+ // A smooth profile generated directly from the five sculpted model altitudes.
+ for(let x=3;x<=w;x+=3)ctx.lineTo(x,surfaceY(x,nodes));
+ ctx.lineTo(w,h);ctx.closePath();
+}
+function roundedLabel(text,x,y,ink='#e8fff2'){
+ ctx.font='800 10px system-ui';const tw=ctx.measureText(text).width;
+ ctx.fillStyle='rgba(5,26,43,.78)';ctx.fillRect(x-tw/2-7,y-15,tw+14,23);
+ ctx.strokeStyle='#8cc6cc40';ctx.lineWidth=1;ctx.strokeRect(x-tw/2-7,y-15,tw+14,23);
+ ctx.textAlign='center';ctx.fillStyle=ink;ctx.fillText(text,x,y);ctx.textAlign='start';
+}
+function drawConifer(x,y,size,index){
+ ctx.save();ctx.translate(x,y);
+ // A trunk and layered branches: size is reduced on high ridges.
+ ctx.fillStyle='#233d3a';ctx.fillRect(-size*.1,-size*.21,size*.2,size*.26);
+ const grad=ctx.createLinearGradient(0,-size,0,size*.1);
+ grad.addColorStop(0,index%2?'#7fd3ac':'#86dec3');
+ grad.addColorStop(.42,index%2?'#3d9b7e':'#2b937f');
+ grad.addColorStop(1,'#185b57');
+ ctx.fillStyle=grad;
+ for(let n=0;n<3;n++){
+  const top=-size*(.95-n*.24),bottom=-size*(.23-n*.11);
+  const half=size*(.30+n*.055);
+  ctx.beginPath();ctx.moveTo(0,top);ctx.lineTo(-half,bottom);ctx.lineTo(half,bottom);ctx.closePath();ctx.fill();
+ }
+ ctx.strokeStyle='#c2ffe234';ctx.lineWidth=.8;
+ ctx.beginPath();ctx.moveTo(0,-size*.9);ctx.lineTo(-size*.19,-size*.3);ctx.stroke();
+ ctx.restore();
+}
+function drawCloud(cx,cy,size,thickness){
+ ctx.save();
+ const shade=ctx.createLinearGradient(0,cy-size*.7,0,cy+size*.65);
+ shade.addColorStop(0,'rgba(246,253,255,.96)');
+ shade.addColorStop(.7,'rgba(163,208,225,.94)');
+ shade.addColorStop(1,'rgba(91,145,167,.95)');
+ ctx.fillStyle=shade;ctx.shadowBlur=16;ctx.shadowColor='rgba(147,231,248,.21)';
+ for(const [dx,dy,rx,ry] of [[-.49,.15,.44,.42],[-.13,-.14,.48,.58],[.31,-.03,.44,.48],[.58,.22,.35,.33],[0,.24,.74,.34]]){
+  ctx.beginPath();ctx.ellipse(cx+dx*size,cy+dy*size,size*rx,size*ry,0,0,Math.PI*2);ctx.fill();
+ }
+ ctx.shadowBlur=0;
+ if(thickness>.5){ctx.fillStyle='#32677855';ctx.beginPath();ctx.ellipse(cx,cy+size*.33,size*.65,size*.08,0,0,Math.PI*2);ctx.fill()}
+ ctx.restore();
+}
+function drawRiver(nodes,w,h,riverValue,active){
+ const startX=w*.26,endX=w*1.04;
+ const startY=surfaceY(startX,nodes)+h*.026;
+ const endY=surfaceY(w*.98,nodes)+h*.035;
+ // An illustrative continuous watercourse across the five elevation bands.
+ // Width and streaming intensity respond to daily modeled total outflow.
+ const path=()=>{
+  ctx.beginPath();ctx.moveTo(startX,startY);
+  ctx.bezierCurveTo(w*.41,surfaceY(w*.41,nodes)+h*.16,
+    w*.55,surfaceY(w*.55,nodes)-h*.04,w*.67,surfaceY(w*.67,nodes)+h*.015);
+  ctx.bezierCurveTo(w*.83,surfaceY(w*.83,nodes)+h*.09,
+    w*.91,endY-h*.025,endX,endY);
+ };
+ const lineWidth=clamp(4+riverValue*.23,4,28);
+ ctx.lineCap='round';
+ path();ctx.strokeStyle='#103950';ctx.lineWidth=lineWidth+11;ctx.stroke();
+ path();ctx.strokeStyle=active?'#4cc5e4':'#2b829b';ctx.lineWidth=lineWidth+4;ctx.stroke();
+ path();
+ const water=ctx.createLinearGradient(0,startY,0,h);
+ water.addColorStop(0,'#a5f4f6');water.addColorStop(.55,'#5cdded');water.addColorStop(1,'#247bb9');
+ ctx.strokeStyle=water;ctx.lineWidth=lineWidth;ctx.stroke();
+ path();ctx.strokeStyle='rgba(234,255,249,.49)';ctx.lineWidth=1.9;ctx.stroke();
+ if(active&&riverValue>.5){
+  ctx.setLineDash([Math.max(5,riverValue*.26),16]);
+  ctx.lineDashOffset=-visualTime*(10+riverValue*.22);
+  path();ctx.strokeStyle='rgba(239,255,252,.9)';ctx.lineWidth=2.1;ctx.stroke();
+  ctx.setLineDash([]);ctx.lineDashOffset=0;
+ }
+ ctx.lineCap='butt';
+}
+function drawLandscape(){
+ const w=width,h=height,p=params(),nodes=sceneNodes(w,h);
+ const over=visualLayer!=='ground',under=visualLayer!=='surface';
+ const last=state.history.at(-1),riverValue=last?.outflow||0;
+ const currentTemperature=p.temp;
+ ctx.save();ctx.textAlign='start';ctx.textBaseline='alphabetic';ctx.lineWidth=1;
+ const sky=ctx.createLinearGradient(0,0,0,h);
+ sky.addColorStop(0,currentTemperature<0?'#071b3c':'#062a43');
+ sky.addColorStop(.49,currentTemperature<0?'#326680':'#31899b');
+ sky.addColorStop(1,currentTemperature<0?'#80c3c9':'#b8dac9');
+ ctx.fillStyle=sky;ctx.fillRect(0,0,w,h);
+ // Decorative sunlight and distant mountain silhouettes are clearly schematic.
+ const sunX=w*.78,sunY=h*.13;
+ const light=ctx.createRadialGradient(sunX,sunY,0,sunX,sunY,h*.55);
+ light.addColorStop(0,'rgba(255,234,169,.61)');
+ light.addColorStop(.23,'rgba(235,218,154,.17)');
+ light.addColorStop(1,'rgba(215,228,219,0)');
+ ctx.fillStyle=light;ctx.fillRect(0,0,w,h);
+ const horizon=h*.59;
+ for(let layer=0;layer<2;layer++){
+  ctx.beginPath();ctx.moveTo(0,horizon+55+layer*19);
+  for(let x=0;x<=w;x+=8){
+   const ridge=surfaceY(x,nodes);
+   const distant=(ridge-h*.43)*(.32-layer*.06);
+   ctx.lineTo(x,horizon+23+distant+Math.sin(x*.016+layer)*7+layer*21);
+  }
+  ctx.lineTo(w,h);ctx.lineTo(0,h);ctx.closePath();
+  ctx.fillStyle=layer===0?'#38677a99':'#244f6499';ctx.fill();
+ }
+ drawLandOutline(nodes,w,h);
+ const soil=ctx.createLinearGradient(0,h*.23,0,h);
+ soil.addColorStop(0,'#567e69');soil.addColorStop(.15,'#427c65');
+ soil.addColorStop(.41,'#365968');soil.addColorStop(.44,'#29485b');
+ soil.addColorStop(1,'#102b47');
+ ctx.fillStyle=soil;ctx.fill();
+ // An interior clip means water lenses/soil strata never paint into the sky.
+ ctx.save();drawLandOutline(nodes,w,h);ctx.clip();
+ for(let band=0;band<5;band++){
+  ctx.beginPath();
+  for(let x=0;x<=w;x+=5){
+   const terrainY=surfaceY(x,nodes),y=terrainY+(h-terrainY)*(.18+band*.135);
+   if(!x)ctx.moveTo(x,y);else ctx.lineTo(x,y+Math.sin(x*.019+band)*2.3);
+  }
+  ctx.strokeStyle=band%2?'#7dc2bf24':'#b5df9b25';ctx.lineWidth=1.5;ctx.stroke();
+ }
+ if(under){
+  for(let i=0;i<5;i++){
+   const zone=state.cells[i],x=nodes[i+1].x,y=nodes[i+1].y;
+   const groundY=y+(h-y)*.67,soilY=y+(h-y)*.24;
+   const wet=clamp(zone.groundwater/80,0,1),soilWet=clamp(zone.soil/180,0,1);
+   const lens=ctx.createRadialGradient(x,groundY,1,x,groundY,w*.105);
+   lens.addColorStop(0,'rgba(110,233,255,'+(.16+.6*wet)+')');
+   lens.addColorStop(.62,'rgba(43,178,220,'+(.1+.34*wet)+')');
+   lens.addColorStop(1,'rgba(34,111,166,0)');
+   ctx.fillStyle=lens;ctx.beginPath();
+   ctx.ellipse(x,groundY,w*.106,10+wet*Math.max(9,(h-y)*.14),0,0,Math.PI*2);ctx.fill();
+   ctx.fillStyle='rgba(100,201,195,'+(.12+soilWet*.33)+')';
+   ctx.beginPath();ctx.ellipse(x,soilY,w*.085,7+soilWet*8,0,0,Math.PI*2);ctx.fill();
+   const flux=zone.visualFlux;
+   const infiltration=flux?.infiltration||0,percolation=flux?.percolation||0;
+   const volume=clamp((infiltration+percolation)/35,0,1);
+   if(volume>.02){
+    for(let j=0;j<4;j++){
+     const tx=x+(j-1.5)*w*.022,phase=(j*.23+visualTime*.42)%1;
+     const ty=soilY+(groundY-soilY)*phase;
+     ctx.fillStyle='rgba(121,244,239,'+(.22+volume*.67)+')';
+     ctx.beginPath();ctx.ellipse(tx,ty,2.1,4.3,0,0,Math.PI*2);ctx.fill();
+    }
+   }
+   if(w>480){
+    ctx.font='700 10px system-ui';ctx.textAlign='center';
+    ctx.fillStyle='#aaf1ef';
+    ctx.fillText(Math.round(zone.groundwater)+' mm',x,groundY+5);
+    ctx.textAlign='start';
+   }
+  }
+  // Groundwater-to-river release is illustrated by slow luminous streamlines.
+  if(last&&last.outflow>0){
+   for(let t=0;t<3;t++){
+    const py=h*(.81+t*.048);
+    ctx.beginPath();ctx.moveTo(-10,py);
+    ctx.bezierCurveTo(w*.39,py+11,w*.66,py-9,w+20,py);
+    ctx.strokeStyle='rgba(125,215,241,'+(0.15+t*.05)+')';
+    ctx.lineWidth=1.7;ctx.stroke();
+    ctx.fillStyle='#bdfaf2';
+    for(let k=0;k<4;k++){
+     const phase=(visualTime*.12+k*.27+t*.12)%1;
+     const x=phase*w,y=py+Math.sin(phase*Math.PI*2)*4;
+     ctx.beginPath();ctx.arc(x,y,1.5,0,Math.PI*2);ctx.fill();
     }
    }
   }
  }
- ctx.textBaseline='middle';ctx.font='800 '+Math.max(10,w*.018)+'px system-ui';
- ctx.fillStyle='#eafef8';ctx.fillText('RIDGE',w*.055,h*.06);ctx.fillText('RIVER',w*.83,h*.89);
+ ctx.restore();
+ // Ground silhouette highlight is true to the editable profile.
+ ctx.beginPath();
+ for(let x=0;x<=w;x+=3){
+  if(!x)ctx.moveTo(x,surfaceY(x,nodes));else ctx.lineTo(x,surfaceY(x,nodes));
+ }
+ ctx.strokeStyle='#c4eea264';ctx.lineWidth=2.4;ctx.stroke();
+ // The river and its moving ripples reflect the model's last output.
+ drawRiver(nodes,w,h,riverValue,over);
+ for(let i=0;i<5;i++){
+  const x=nodes[i+1].x,y=nodes[i+1].y,zone=state.cells[i];
+  const treeCount=Math.round(p.forest/18);
+  if(over){
+   for(let t=0;t<treeCount;t++){
+    const tx=x+(t-(treeCount-1)/2)*w*.019;
+    const yy=surfaceY(tx,nodes);
+    drawConifer(tx,yy,Math.max(16,Math.min(34,w*.034))*(i===0?.77:1)*(t%2===0?.88:1),i+t);
+   }
+  }
+  const snow=clamp(zone.snow/180,0,1);
+  if(over&&snow>.025){
+   const size=w*(.036+snow*.032);
+   const g=ctx.createLinearGradient(0,y-size,0,y+size*.23);
+   g.addColorStop(0,'#f8ffff');g.addColorStop(.7,'#c7f0f2');g.addColorStop(1,'#69bdcb');
+   ctx.fillStyle=g;ctx.beginPath();
+   ctx.moveTo(x-size,y+size*.17);ctx.lineTo(x,y-size*.38-snow*10);
+   ctx.lineTo(x+size,y+size*.2);ctx.lineTo(x+size*.29,y-size*.13);
+   ctx.lineTo(x,y-size*.23);ctx.lineTo(x-size*.25,y-size*.1);ctx.closePath();ctx.fill();
+  }
+  // The accessible readout remains the canonical precise explanation.
+  const label=Math.round(elevations[i])+' m';
+  roundedLabel(label,x,Math.max(22,y-46),selectedZone===i?'#ffe4ac':'#d7f4e9');
+  ctx.beginPath();ctx.arc(x,y-20,selectedZone===i?8:5,0,Math.PI*2);
+  ctx.fillStyle=selectedZone===i?'#ffdc97':'#b4f8d9';ctx.fill();
+  if(selectedZone===i){
+   ctx.beginPath();ctx.arc(x,y-20,16+Math.sin(visualTime*3)*1.6,0,Math.PI*2);
+   ctx.strokeStyle='#ffdda9ae';ctx.lineWidth=2;ctx.stroke();
+  }
+ }
+ if(over&&p.rain>0){
+  const cloudCount=Math.min(4,Math.ceil(p.rain/21)+1),intensity=p.rain/80;
+  for(let c=0;c<cloudCount;c++){
+   const zoneIndex=Math.min(4,Math.floor(c*5/cloudCount));
+   const x=w*(.16+c*.205),y=h*(.145+c%2*.035);
+   const cloudSize=Math.min(50,w*.09)*(0.82+intensity*.26);
+   drawCloud(x,y,cloudSize,intensity);
+   const zoneTemp=p.temp-.0065*(elevations[zoneIndex]-250);
+   const cold=zoneTemp<0;
+   const drops=Math.round(6+intensity*11);
+   ctx.lineWidth=1.6;
+   for(let d=0;d<drops;d++){
+    const xDrop=x+(d%8-3.5)*cloudSize*.23;
+    const phase=((d*.113+visualTime*(cold?.33:.88))%1+1)%1;
+    const yDrop=y+cloudSize*.6+phase*h*.17;
+    if(cold){
+     ctx.fillStyle='#f0ffff';ctx.beginPath();ctx.arc(xDrop,yDrop,1.7,0,Math.PI*2);ctx.fill();
+    }else{
+     ctx.strokeStyle='rgba(197,243,254,'+(.35+intensity*.56)+')';
+     ctx.beginPath();ctx.moveTo(xDrop,yDrop);
+     ctx.lineTo(xDrop-2.7,yDrop+7);ctx.stroke();
+    }
+   }
+  }
+ }
+ if(over&&last?.evaporation>0){
+  const breath=clamp(last.evaporation/6,0,1);
+  for(let i=0;i<3;i++){
+   const x=w*(.52+i*.105),y=surfaceY(x,nodes)-h*.036;
+   ctx.save();ctx.strokeStyle='rgba(189,247,215,'+(.22+breath*.55)+')';
+   ctx.lineWidth=1.7;ctx.setLineDash([4,9]);
+   ctx.lineDashOffset=-visualTime*7;ctx.beginPath();ctx.moveTo(x,y);
+   ctx.bezierCurveTo(x+11,y-22,x-13,y-42,x+2,y-65);ctx.stroke();
+   ctx.setLineDash([]);ctx.restore();
+  }
+ }
+ ctx.textAlign='start';ctx.font='800 '+Math.max(10,Math.min(13,w*.019))+'px system-ui';
+ ctx.fillStyle='#d4f1f0';ctx.fillText('SIMULATED / FIVE ZONES',14,21);
+ ctx.fillStyle='#f0ebcc';ctx.fillText(over?'RAIN • SNOW • RIVER':'GROUNDWATER • SOIL',14,39);
+ ctx.restore();
 }
 function drawHydrograph(){
  const rect=chart.getBoundingClientRect(),w=Math.max(290,rect.width),h=Math.max(140,rect.height);
