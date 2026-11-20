@@ -48,11 +48,14 @@ export async function runRehearsalShadowBrokerTransaction({
   journalParent,
   allocatorToken,
   request=fetch,
+  onBrokerVerified=null,
 }={}){
   requireOk(nodeSeedReceipt?.root,'node_seed_receipt_required');
   requireOk(typeof journalParent==='string','journal_parent_required');
   requireOk(typeof allocatorToken==='string'&&allocatorToken.length>0,
     'allocator_token_required');
+  requireOk(onBrokerVerified===null||typeof onBrokerVerified==='function',
+    'observation_hook_invalid');
 
   const nodeRoot=fs.realpathSync(nodeSeedReceipt.root);
   const parent=fs.realpathSync(journalParent);
@@ -140,6 +143,15 @@ export async function runRehearsalShadowBrokerTransaction({
       health.deployment_receipt_bound===false,
       'zero_authority_or_broker_identity_invalid'
     );
+    // Disposable-only observation point: broker exists, NodeSeed still owns
+    // its lease, and the finally block MUST run even if observation fails.
+    // No lease token, allocator secret or broker instance ID is exposed here.
+    if(onBrokerVerified){
+      await onBrokerVerified(Object.freeze({
+        broker_zero_authority_verified:true,
+        public_route_created:false,
+      }));
+    }
     // This transaction deliberately does NOT bind a Yard deployment receipt.
     // It is a disposable start/stop rehearsal, not a production deployment.
     verified=true;
