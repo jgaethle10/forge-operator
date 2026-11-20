@@ -7,7 +7,7 @@ import {createHash} from 'node:crypto';
 import {fileURLToPath} from 'node:url';
 
 const FILES=Object.freeze([
- 'index.html','app.mjs','style.css','experience.css','collider-v3.css','confluence.css','visual.mjs','collider-engine.mjs','current-field.mjs','pulse-source.mjs','work-source.mjs','mark.svg'
+ 'index.html','app.mjs','style.css','experience.css','collider-v3.css','confluence.css','visual.mjs','collider-engine.mjs','current-field.mjs','field-chapters.mjs','pulse-source.mjs','work-source.mjs','mark.svg'
 ]);
 const MAX_BYTES=300_000;
 
