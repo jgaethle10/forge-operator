@@ -31,6 +31,7 @@ jobs:
             products/kennedy-space-station/test_aerial_vault.py \
             products/kennedy-space-station/test_aerial_http.py \
             products/kennedy-space-station/test_private_review_http.py \
+            products/kennedy-space-station/generate_private_review_proof.py \
             products/kennedy-space-station/sheet_compiler.py \
             products/kennedy-space-station/test_shell.py \
             products/kennedy-space-station/test_spatial.py \
@@ -79,6 +80,35 @@ jobs:
           pdftoppm -f 1 -l 2 -r 72 "$OUT/kennedy-synthetic-s0-a0.pdf" "$OUT/qa" >/dev/null 2>&1
           python3 products/kennedy-space-station/verify_rendered_sheets.py "$OUT"
           rm "$OUT/qa-1.ppm" "$OUT/qa-2.ppm"
+      - name: Generate and inspect private source-vault review PDF proof
+        run: |
+          set -euo pipefail
+          OUT=/tmp/kss-sheet-proof
+          python3 products/kennedy-space-station/generate_private_review_proof.py --output-dir "$OUT"
+          pdfinfo "$OUT/kennedy-private-review-synthetic.pdf" > "$OUT/private-review-pdfinfo.txt"
+          pdftoppm -f 1 -l 2 -r 72 -png "$OUT/kennedy-private-review-synthetic.pdf" "$OUT/private-review-page" >/dev/null 2>&1
+          mkdir -p "$OUT/private-review-pixel-check"
+          pdftoppm -f 1 -l 2 -r 72 "$OUT/kennedy-private-review-synthetic.pdf" "$OUT/private-review-pixel-check/qa" >/dev/null 2>&1
+          python3 products/kennedy-space-station/verify_rendered_sheets.py "$OUT/private-review-pixel-check"
+          cp "$OUT/private-review-pixel-check/render-qa-receipt.json" "$OUT/private-review-render-qa-receipt.json"
+          rm -rf "$OUT/private-review-pixel-check"
+          python3 - "$OUT" <<'PY'
+          from pathlib import Path
+          import json,hashlib,sys
+          out=Path(sys.argv[1])
+          meta=json.loads((out/"private-source-review-qa-receipt.json").read_text())
+          pdf=(out/"kennedy-private-review-synthetic.pdf").read_bytes()
+          info=(out/"private-review-pdfinfo.txt").read_text()
+          pages=sorted(out.glob("private-review-page-*.png"))
+          assert len(pages)==2
+          assert any(s.startswith("Pages:") and s.split(":")[1].strip()=="2" for s in info.splitlines())
+          assert hashlib.sha256(pdf).hexdigest()==meta["pdf_sha256"]
+          assert b"PRIVATE SOURCE REVIEW" in pdf and b"NOT FOR EXTERNAL DELIVERY" in pdf
+          assert meta["pages"]==2 and meta["external_release_authorized"] is False
+          assert hashlib.sha256(pages[0].read_bytes()).hexdigest()!=hashlib.sha256(pages[1].read_bytes()).hexdigest()
+          print("PASS: private source-vault two-page PDF independently raster-QA verified")
+          print("HOLD: customer delivery, source rights, north/CRS and survey accuracy")
+          PY
       - name: Upload synthetic PDF, source raster inputs, and page renders
         uses: actions/upload-artifact@v4
         with:

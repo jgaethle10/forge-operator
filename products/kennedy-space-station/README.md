@@ -149,3 +149,9 @@ The private studio can now choose a saved same-site `site` and `context` aerial 
 - HTTP regressions construct a synthetic site, save a study, stage both original source image bytes in the private vault, and generate a binary two-page PDF through the actual endpoint. Cross-site references, swapped roles, missing saved study and suspicious IDs must fail closed.
 
 **Not yet proved:** independent legal use rights, exact georeferencing or CRS, real baseline imagery from trusted providers, an owner-hosted HTTPS operator site, or manual visual quality on an actual phone. This draft stays in the owner-only workspace; do not share private review PDFs as externally approved deliverables. No legacy Base44 or partner-specific imagery was used.
+
+## v1.3 additional private review PDF proof artifact
+
+GitHub Actions now independently generates a **second** two-page synthetic proof through the real private aerial vault, `generate_private_review_proof.py`. Both images are staged, read back with byte-integrity checks, and compiled via `compile_two_sheet_private_review`. Poppler rasterizes the resulting PDF; the same pixel-region QA checks its actual plan source textures, dark header/title panels, visible warning banners, nonblank notes and different S-0/A-0 page content. The CI artifact includes `kennedy-private-review-synthetic.pdf`, its two page-render PNGs, and source/review SHA receipts alongside the existing baseline synthetic PDF. This proves the **separate private review path** produces a real visual output from vault bytes, not just a valid HTTP PDF response.
+
+All fixtures remain synthetic and nongeographic. No user source files, third-party imagery, actual customer deliverables or public deployment are included.
