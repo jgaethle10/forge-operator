@@ -6,18 +6,22 @@ on:
       - 'public/kaidance/**'
       - 'systemia/collider/public-projection.mjs'
       - 'systemia/yard/kaidance-public-publisher.mjs'
+      - 'scripts/kaidance-public-readback.mjs'
       - 'systemia/collider/pulse.mjs'
       - 'tests/kaidance-public-observatory.test.mjs'
       - 'tests/kaidance-public-publisher.test.mjs'
+      - 'tests/kaidance-public-readback.test.mjs'
       - '.github/workflows/kaidance-public-observatory.yml'
   push:
     paths:
       - 'public/kaidance/**'
       - 'systemia/collider/public-projection.mjs'
       - 'systemia/yard/kaidance-public-publisher.mjs'
+      - 'scripts/kaidance-public-readback.mjs'
       - 'systemia/collider/pulse.mjs'
       - 'tests/kaidance-public-observatory.test.mjs'
       - 'tests/kaidance-public-publisher.test.mjs'
+      - 'tests/kaidance-public-readback.test.mjs'
       - '.github/workflows/kaidance-public-observatory.yml'
   workflow_dispatch:
 
@@ -34,7 +38,7 @@ jobs:
         with:
           node-version: '22'
       - name: KAIDANCE public view and private-safe projection
-        run: node --test tests/kaidance-public-observatory.test.mjs tests/kaidance-public-publisher.test.mjs
+        run: node --test tests/kaidance-public-observatory.test.mjs tests/kaidance-public-publisher.test.mjs tests/kaidance-public-readback.test.mjs
       - name: KAIDANCE Collider source contract
         run: |
           node systemia/collider/proof.mjs
