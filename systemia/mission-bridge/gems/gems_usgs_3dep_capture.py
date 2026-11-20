@@ -18,7 +18,8 @@ from urllib.parse import urlsplit
 from urllib.request import (HTTPRedirectHandler, HTTPSHandler, ProxyHandler,
                             Request, build_opener)
 
-from gems_usgs_3dep_index import (GROUPS, SERVICE, RESULTS_SCHEMA,
+from gems_dem_metadata_recon import GROUPS
+from gems_usgs_3dep_index import (SERVICE, RESULTS_SCHEMA,
                                   build_queries, ingest)
 
 MAX_RESPONSE_BYTES = 1024 * 1024
