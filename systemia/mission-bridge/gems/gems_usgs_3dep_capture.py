@@ -11,6 +11,7 @@ storage and must never be committed to a public GitHub repository.
 import argparse
 import datetime
 import json
+import os
 import ssl
 import time
 from pathlib import Path
