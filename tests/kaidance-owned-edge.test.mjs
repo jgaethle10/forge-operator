@@ -7,6 +7,8 @@ test('Kaidance standalone owned assets are complete, public-only and mirrored fr
  const js=read('../public/kaidance/app.mjs');
  assert.match(html,/href="\.\/mark\.svg"/);
  assert.match(js,/from '\.\/work-source\.mjs'/);
+ assert.match(html,/href="\.\/experience\.css"/);
+ assert.match(html,/src="\.\/visual\.mjs"/);
  assert.doesNotMatch(html,/\.\.\/headquarters\//);
  assert.doesNotMatch(js,/\.\.\/live\//);
  assert.equal(read('../public/kaidance/work-source.mjs'),read('../public/live/work-source.mjs'),'Source copies must be reconciled at each LIVE change');
@@ -17,7 +19,7 @@ test('owned Caddy route is staged, narrowly allowlisted, and never exposes priva
  const route=read('../infra/evercraft-edge/kaidance/Caddyfile.route.example');
  assert.match(route,/STAGED ONLY/);
  assert.match(route,/route \/kaidance\/\*/);
- for(const suffix of ['index.html','app.mjs','style.css','pulse-source.mjs','work-source.mjs','mark.svg','pulse.json'])
+ for(const suffix of ['index.html','app.mjs','style.css','experience.css','visual.mjs','pulse-source.mjs','work-source.mjs','mark.svg','pulse.json'])
    assert.ok(route.includes('/kaidance/'+suffix),suffix);
  assert.match(route,/Cache-Control "no-store/);
  assert.match(route,/respond 404/);
