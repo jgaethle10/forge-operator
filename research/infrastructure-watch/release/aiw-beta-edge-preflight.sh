@@ -36,13 +36,13 @@ if [[ -r "$CONFIG" ]]; then
   fi
   if command -v caddy >/dev/null 2>&1; then
     # Caddy variables resolve with the existing public-edge env on an approved node.
+    # Parse only the two public non-secret edge fields. Never evaluate a
+    # machine configuration file as a shell script in a read-only audit.
+    acme_email=""
     if [[ -r "$HOST_ENV" ]]; then
-      set -a
-      # Root-owned Evercraft environment file, local audit process only.
-      source "$HOST_ENV"
-      set +a
+      acme_email="$(awk -F= '$1=="EVERCRAFT_ACME_EMAIL"{print substr($0,index($0,"=")+1)}' "$HOST_ENV" | tail -1)"
     fi
-    if caddy validate --config "$CONFIG" --adapter caddyfile >/dev/null 2>&1; then
+    if env EVERCRAFT_PUBLIC_HOST="${domain:-}" EVERCRAFT_ACME_EMAIL="$acme_email" caddy validate --config "$CONFIG" --adapter caddyfile >/dev/null 2>&1; then
       echo 'caddy_config_validation=PASS'
     else
       echo 'caddy_config_validation=BLOCKED'
