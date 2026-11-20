@@ -71,6 +71,7 @@ test('phase traveler is an unmistakable moving form, not a tiny bug or orbiting 
  assert.match(code,/var shades=\[/);
  assert.match(code,/ctx\.bezierCurveTo\(span\*\.18/);
  assert.match(code,/A partially hidden aperture, never a fixed eye/);
+ assert.match(code,/Briefly assemble from water on departure and unravel on arrival/);
  assert.doesNotMatch(code,/function anomalyFilament/);
  assert.doesNotMatch(code,/function anomalyForm/);
  assert.doesNotMatch(code,/function drawAnomaly/);
@@ -88,6 +89,10 @@ test('traveler ribbons evolve in length, twist, transparency and confluence beha
  assert.ok(arrival.opening>quiet.opening+.32,'arrival unfolds rather than circling mindlessly');
  assert.ok(arrival.scan>.25,'arrival briefly examines a confluence');
  assert.ok(quiet.scan===0,'no scanning at the start of every current');
+ assert.ok(forms.travelerState(12,.09).integrity<forms.travelerState(12,.52).integrity,
+  'traveler assembles from the water after departure');
+ assert.ok(forms.travelerState(12,.98).integrity<forms.travelerState(12,.52).integrity,
+  'traveler unravels near a confluence rather than freezing as a logo');
  const early=Array.from({length:5},(_,i)=>forms.ribbonForm(2,i,quiet));
  const late=Array.from({length:5},(_,i)=>forms.ribbonForm(14,i,arrival));
  assert.ok(early.some((f,i)=>Math.abs(f.length-late[i].length)>.18),'ribbons actually morph');
