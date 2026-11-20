@@ -65,13 +65,30 @@ export async function probeHudsonPublic({origin=HUDSON_ORIGIN,fetchImpl=fetch,no
  if(origin!==HUDSON_ORIGIN)throw Error('probe_origin_must_be_canonical_owned_fabric');
  const errors=[],checks={},observedAt=new Date(now).toISOString();
  const url=origin+'/hudson/';
- let page,feed,health,privateProbe;
+ let page,feed,health,privateProbe,watch,watchPrivate;
  try{
   page=await getText(url,fetchImpl);
   checks.public_html=page.status===200&&/^text\/html/i.test(page.type)&&page.content.includes('HUDSON | The Living Spine')&&page.content.includes('ANIMATED PATHS ARE NOT VERIFIED EVENTS')&&page.content.includes('name="hudson-release" content="v2-mobile-cinematic"')&&page.content.includes('id="ambient-field"')&&page.content.includes('id="next-signal"');
   checks.visual_release_version=checks.public_html?'v2-mobile-cinematic':null;
   if(!checks.public_html)errors.push('public_v2_html_not_verified');
  }catch(e){checks.public_html=false;checks.public_html_error_class=classifyPublicFetchFailure(e);errors.push('public_html_unreachable')}
+ try{
+  watch=await getText(url+'watch/',fetchImpl);
+  checks.watch_river=watch.status===200&&/^text\/html/i.test(watch.type)&&
+    watch.content.includes('name="hudson-watch-release" content="river-current-v1"')&&
+    watch.content.includes('id="current"')&&
+    watch.content.includes('PUBLIC GIT HISTORY · REPLAY')&&
+    watch.content.includes('SCENIC CURRENT · NOT A LIVE MISSION')&&
+    watch.content.includes('function spider(from,to,t)')&&
+    watch.content.includes('credentials:"omit"');
+  checks.watch_river_version=checks.watch_river?'river-current-v1':null;
+  if(!checks.watch_river)errors.push('public_hudson_river_watch_not_verified');
+ }catch(e){checks.watch_river=false;checks.watch_error_class=classifyPublicFetchFailure(e);errors.push('hudson_river_watch_unreachable')}
+ try{
+  watchPrivate=await getText(url+'watch/private.json',fetchImpl);
+  checks.watch_private_route_denied=watchPrivate.status===404;
+  if(!checks.watch_private_route_denied)errors.push('hudson_watch_private_route_exposed');
+ }catch(e){checks.watch_private_route_denied=false;checks.watch_private_error_class=classifyPublicFetchFailure(e);errors.push('hudson_watch_private_probe_unavailable')}
  try{
   feed=await getText(url+'activity.json?proof=1',fetchImpl);
   let body=null;try{body=JSON.parse(feed.content)}catch{}
@@ -87,6 +104,8 @@ export async function probeHudsonPublic({origin=HUDSON_ORIGIN,fetchImpl=fetch,no
   const sourceRef=String(body?.source_release_ref||'');
   checks.fabric_source_release_ref=/^[a-f0-9]{40,64}$/.test(sourceRef)?sourceRef:null;
   checks.fabric_source_release_ref_bound=body?.source_release_ref_bound===true&&Boolean(checks.fabric_source_release_ref);
+  checks.watch_fabric_route_claim=health.status===200&&body?.hudson_watch_path==='/hudson/watch/'&&body?.hudson_watch_source_ready===true;
+  if(!checks.watch_fabric_route_claim)errors.push('hudson_watch_fabric_route_not_ready');
   checks.fabric_route_claim=health.status===200&&body?.hudson_public_path==='/hudson/'&&
     body?.hudson_public_source_ready===true&&body?.hudson_public_feed_authority==='public_git_source_history_only';
   if(!checks.fabric_route_claim)errors.push('fabric_runtime_route_claim_absent');

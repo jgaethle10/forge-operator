@@ -237,7 +237,8 @@ function resolveDemoAsset(demoDir, requestUrl) {
 function resolveHudsonAsset(hudsonDir,requestUrl) {
   const pathname=new URL(String(requestUrl||''),'http://fabric.local').pathname;
   const name=pathname==='/hudson/'||pathname==='/hudson/index.html'?'index.html':
-    pathname==='/hudson/activity.json'?'activity.json':null;
+    pathname==='/hudson/activity.json'?'activity.json':
+    pathname==='/hudson/watch/'||pathname==='/hudson/watch/index.html'?'watch/index.html':null;
   if(!name)return null;
   const file=path.join(hudsonDir,name);
   try {
@@ -785,6 +786,8 @@ export async function startFabricLocalRuntime({
     roman_domain_dns_cutover_verified:false,
     hudson_public_path:'/hudson/',
     hudson_public_source_ready:fs.existsSync(path.join(hudsonDir,'index.html')),
+    hudson_watch_path:'/hudson/watch/',
+    hudson_watch_source_ready:fs.existsSync(path.join(hudsonDir,'watch','index.html')),
     hudson_public_feed_authority:'public_git_source_history_only',
     journal_mirror_path:'/journal/',
     journal_mirror_ready:fs.existsSync(path.join(journalDir,'index.html')),
@@ -1715,6 +1718,11 @@ export async function startFabricLocalRuntime({
         }
       }
 
+      if((req.method==='GET'||req.method==='HEAD') &&
+         new URL(String(req.url||''),'http://fabric.local').pathname==='/hudson/watch'){
+        res.writeHead(308,{'location':'/hudson/watch/','cache-control':'no-store'});
+        return res.end();
+      }
       if((req.method==='GET'||req.method==='HEAD') &&
          new URL(String(req.url||''),'http://fabric.local').pathname==='/hudson'){
         res.writeHead(308,{'location':'/hudson/','cache-control':'no-store'});

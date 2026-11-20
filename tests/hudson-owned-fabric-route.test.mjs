@@ -19,6 +19,26 @@ test('HUDSON is served read-only by the owned Fabric runtime with a functioning 
   assert.match(html,/activity\.json/);
   assert.match(html,/ANIMATED PATHS ARE NOT VERIFIED EVENTS/);
 
+  const watchRedirect=await fetch(runtime.url+'/hudson/watch',{redirect:'manual'});
+  assert.equal(watchRedirect.status,308);
+  assert.equal(watchRedirect.headers.get('location'),'/hudson/watch/');
+  const watch=await fetch(runtime.url+'/hudson/watch/');
+  assert.equal(watch.status,200);
+  assert.match(watch.headers.get('content-type'),/^text\/html/);
+  assert.match(watch.headers.get('content-security-policy'),/connect-src 'self'/);
+  const river=await watch.text();
+  assert.match(river,/HUDSON \| Enter the Current/);
+  assert.match(river,/hudson-watch-release" content="river-current-v1"/);
+  assert.match(river,/id="current"/);
+  assert.match(river,/spider\(from,to,t\)/);
+  assert.match(river,/PUBLIC GIT HISTORY · REPLAY/);
+  assert.match(river,/SCENIC CURRENT · NOT A LIVE MISSION/);
+  assert.match(river,/\.\.\/activity\.json/);
+  const watchHead=await fetch(runtime.url+'/hudson/watch/index.html',{method:'HEAD'});
+  assert.equal(watchHead.status,200);
+  assert.equal((await watchHead.text()).length,0);
+  assert.equal((await fetch(runtime.url+'/hudson/watch/private.json')).status,404);
+
   const feed=await fetch(runtime.url+'/hudson/activity.json?t=probe');
   assert.equal(feed.status,200);
   assert.match(feed.headers.get('content-type'),/^application\/json/);
@@ -42,6 +62,8 @@ test('HUDSON is served read-only by the owned Fabric runtime with a functioning 
 
   const health=await fetch(runtime.url+'/health').then(r=>r.json());
   assert.equal(health.hudson_public_path,'/hudson/');
+  assert.equal(health.hudson_watch_path,'/hudson/watch/');
+  assert.equal(health.hudson_watch_source_ready,true);
   assert.equal(health.hudson_public_source_ready,true);
   assert.equal(health.hudson_public_feed_authority,'public_git_source_history_only');
  }finally{await runtime.close()}

@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#040b13">
+<meta name="hudson-watch-release" content="river-current-v1"><meta name="description" content="Watch HUDSON's flowing knowledge currents and source-linked replay on Evercraft's owned public observatory.">
+<title>HUDSON | Enter the Current</title>
+<style>
+:root{color-scheme:dark;--aqua:#9affdc;--chalk:#e2f7f1;--soft:#9ebabb}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden}
+body{font:12px "Segoe UI",Arial,sans-serif;background:#03080f;color:var(--chalk);-webkit-tap-highlight-color:transparent}
+button,a{font:inherit}button{cursor:pointer}button:focus-visible,a:focus-visible{outline:2px solid var(--aqua);outline-offset:4px}
+#current{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:manipulation}
+.glass{background:linear-gradient(115deg,#071c27cb,#0a1822ad);border:1px solid #8cb8b435;backdrop-filter:blur(15px);-webkit-backdrop-filter:blur(15px);box-shadow:0 10px 45px #0004}
+.top{position:fixed;z-index:5;top:0;left:0;right:0;padding:calc(14px + env(safe-area-inset-top)) clamp(15px,4vw,45px) 23px;display:flex;justify-content:space-between;align-items:flex-start;gap:10px;background:linear-gradient(#040b13f0 0%,#040b1382 60%,transparent)}
+.brand small{display:block;color:#8bd8ca;font-size:9px;letter-spacing:.25em;margin-top:7px}
+.brand strong{display:block;font:normal clamp(22px,3.5vw,35px) Georgia,serif;letter-spacing:.42em;padding-left:3px;color:#ddfff5;text-shadow:0 0 20px #92ffe547}
+.controls{display:flex;gap:8px;align-items:center}.top button,.bottom button{border:1px solid #b3d8d057;border-radius:999px;background:#0b2630bf;color:#e7fdf8;padding:10px 14px;white-space:nowrap}
+.top button:hover,.bottom button:hover{background:#194150}
+.state{position:fixed;z-index:4;top:calc(91px + env(safe-area-inset-top));left:clamp(18px,4vw,46px);display:flex;align-items:center;gap:8px;color:#abd1c9;font-size:10px;letter-spacing:.1em;text-shadow:0 2px 8px #000}
+.state .dot{width:7px;height:7px;background:#8fb3b8;border-radius:50%;box-shadow:0 0 11px #9bdccb77}
+.state.fresh .dot{background:#96fbd2;box-shadow:0 0 13px #57ffb6}
+.state.delayed .dot{background:#ecb778;box-shadow:0 0 13px #e5a366}
+.readout{position:fixed;z-index:5;bottom:calc(18px + env(safe-area-inset-bottom));left:clamp(14px,3vw,36px);right:clamp(14px,3vw,36px);min-height:110px;border-radius:20px;padding:17px 19px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:5px 12px;align-items:center}
+.eyebrow{display:block;font-size:9px;font-weight:800;color:#a1e5cf;letter-spacing:.17em;text-transform:uppercase}
+#story{font:normal clamp(18px,2.4vw,28px)/1.18 Georgia,serif;margin:6px 0;white-space:normal}
+#story-sub{font-size:10px;color:#a5c6cb;line-height:1.4}
+.readout a{color:#a6ffe1;text-decoration:none;font-size:11px;white-space:nowrap}
+.readout a[hidden]{display:none}
+.bottom{display:flex;align-items:center;gap:10px;grid-column:2;grid-row:2 / span 2;justify-self:end}
+.bottom button{font-size:11px;padding:8px 11px}
+.facts{grid-column:1 / -1;margin-top:6px;padding-top:8px;border-top:1px solid #9ccac523;color:#9bb4b8;font-size:9px;line-height:1.5}
+#topic-drawer{position:fixed;z-index:8;left:50%;top:50%;transform:translate(-50%,-50%);width:min(92vw,430px);max-height:80vh;overflow:auto;border-radius:21px;padding:20px}
+#topic-drawer[hidden]{display:none}
+#topic-drawer h2{font:normal 28px Georgia,serif;margin:6px 0 8px}
+#topic-drawer p{font-size:12px;color:#b5cfd1;line-height:1.6}
+.topic-buttons{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:17px}
+.topic-buttons button{background:#112d34;color:#d8fff3;border:1px solid #629a8e80;border-radius:12px;padding:13px 10px;text-align:left;letter-spacing:.08em}
+#topic-close{position:absolute;top:10px;right:11px;background:transparent;border:0;color:#d6eee9;font-size:20px;padding:8px}
+body.drawer-open:after{content:"";position:fixed;z-index:7;inset:0;background:#03080cb6}
+#help{position:fixed;z-index:4;top:calc(90px + env(safe-area-inset-top));right:clamp(18px,4vw,46px);font-size:9px;color:#86acae;letter-spacing:.06em;text-align:right}
+#help b{display:block;color:#c0e2d9;font-weight:500;font-size:10px;margin-top:5px}
+@media(max-width:620px){
+ .top{padding:calc(14px + env(safe-area-inset-top)) 15px 25px}
+ .brand strong{font-size:22px;letter-spacing:.31em}.brand small{font-size:7px;letter-spacing:.13em}
+ .top button{padding:8px 10px;font-size:10px}
+ .state{top:calc(90px + env(safe-area-inset-top));font-size:8px}
+ #help{top:calc(110px + env(safe-area-inset-top));right:17px;font-size:8px}#help b{font-size:9px}
+ .readout{min-height:124px;display:block;bottom:calc(12px + env(safe-area-inset-bottom));padding:12px 14px;border-radius:16px}
+ #story{font-size:20px;margin:5px 0}#story-sub{font-size:10px;padding-right:70px}
+ .bottom{position:absolute;right:11px;top:38px;gap:6px}
+ .bottom button{padding:7px 9px;font-size:10px}
+ .readout a{display:inline-block;margin-top:8px;font-size:10px}
+ .facts{margin-top:7px;padding-top:5px;font-size:8px}
+}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+</style></head>
+<body><canvas id="current" aria-label="Animated river currents connecting HUDSON, SYSTEMIA, KAIDANCE, DISCOVERY, EVIDENCE, RAVEN and SABAN. Decorative water motion is not live mission telemetry." role="img"></canvas>
+<header class="top"><div class="brand"><strong>HUDSON</strong><small>THE LIVING KNOWLEDGE CURRENT</small></div><div class="controls"><button type="button" id="explore" aria-haspopup="dialog">Explore</button><button type="button" id="pause" aria-pressed="false">Pause</button><a href="../" style="color:#d9f5ef;text-decoration:none;border:1px solid #b3d8d057;padding:10px 13px;border-radius:999px;background:#0b2630bf">Exit</a></div></header>
+<div class="state" id="source-state" aria-live="polite"><span class="dot"></span><span id="source-label">CHECKING PUBLIC SOURCE</span></div>
+<div id="help">RIVER MOTION IS ILLUSTRATIVE<b>Tap a confluence to explore</b></div>
+<aside class="readout glass" aria-live="polite">
+ <div><span class="eyebrow" id="story-kind">SCENIC CURRENT</span><div id="story">The river remembers.</div><div id="story-sub">Tracing the architecture of Evercraft knowledge.</div><a href="#" id="receipt" target="_blank" rel="noopener noreferrer" hidden>Read verified source receipt ↗</a></div>
+ <div class="bottom"><button id="next" type="button">Next current ↗</button></div>
+ <div class="facts">Public Git history when available · Not live mission or AI inference telemetry · No private knowledge exposed</div>
+</aside>
+<section id="topic-drawer" class="glass" role="dialog" aria-modal="true" aria-labelledby="drawer-title" hidden>
+ <button id="topic-close" type="button" aria-label="Close topics">×</button>
+ <span class="eyebrow">THE HUDSON RIVER SYSTEM</span><h2 id="drawer-title">Explore the currents</h2>
+ <p id="drawer-description">Every confluence connects a part of Evercraft. Select one to follow its current through HUDSON.</p>
+ <div class="topic-buttons" id="topic-buttons"></div>
+</section>
+<script>
+(function(){
+"use strict";
+var canvas=document.getElementById("current"),ctx=canvas.getContext("2d",{alpha:false});
+if(!ctx){document.getElementById("story").textContent="This browser cannot render the river.";return;}
+var TOPICS={
+ hudson:{name:"HUDSON",x:.50,y:.49,r:60,color:[102,250,206],detail:"Knowledge and provenance converge here."},
+ systemia:{name:"SYSTEMIA",x:.22,y:.20,r:36,color:[70,236,216],detail:"Orchestration gives the current direction."},
+ kaidance:{name:"KAIDANCE",x:.78,y:.21,r:37,color:[187,146,255],detail:"Continuity carries lessons downstream."},
+ discovery:{name:"DISCOVERY",x:.12,y:.47,r:34,color:[252,210,112],detail:"New observations enter the watershed."},
+ evidence:{name:"EVIDENCE",x:.24,y:.78,r:36,color:[104,248,184],detail:"Source receipts anchor the current."},
+ raven:{name:"RAVEN",x:.88,y:.52,r:34,color:[95,177,252],detail:"Communications carry governed context."},
+ saban:{name:"SABAN",x:.76,y:.78,r:37,color:[187,137,255],detail:"Execution returns outcomes and evidence."}
+};
+var EDGES=[
+ ["discovery","hudson",-.19],["systemia","hudson",.13],["kaidance","hudson",-.16],
+ ["raven","hudson",.13],["saban","hudson",-.19],["evidence","hudson",.13],
+ ["discovery","evidence",-.09],["systemia","kaidance",.08],
+ ["kaidance","raven",-.1],["raven","saban",.08],
+ ["evidence","saban",-.09],["systemia","discovery",.08]
+];
+var VALID_TITLES={hudson:"HUDSON source lineage updated",systemia:"Evercraft orchestration source updated",kaidance:"Continuity source updated",raven:"Communications source updated",saban:"Execution coordination source updated",evidence:"Evidence and provenance source updated",discovery:"Public discovery source updated"};
+var SEQUENCE=["discovery","evidence","hudson","kaidance","raven","saban","hudson","systemia"];
+var width=1,height=1,dpr=1,scene={edges:[],stars:[],lights:[]},clock=0,last=0,frame=0,paused=matchMedia("(prefers-reduced-motion: reduce)").matches;
+var currentIndex=0,segmentStart=0,feed=[],feedFresh=false,seen=new Set(),selectedTopic=null,flashUntil=0;
+var story=document.getElementById("story"),storyKind=document.getElementById("story-kind"),storySub=document.getElementById("story-sub"),receipt=document.getElementById("receipt"),sourceState=document.getElementById("source-state"),sourceLabel=document.getElementById("source-label");
+function seeded(n){var x=Math.sin(n*127.1+9.41)*43758.5453;return x-Math.floor(x)}
+function rgba(rgb,alpha){return "rgba("+rgb[0]+","+rgb[1]+","+rgb[2]+","+alpha+")"}
+function coordinates(key){var p=TOPICS[key];return {x:p.x*width,y:110+p.y*Math.max(180,height-240)}}
+function clamp(x,a,b){return Math.max(a,Math.min(b,x))}
+function bezier(v,a,b,c,d){var m=1-v;return m*m*m*a+3*m*m*v*b+3*m*v*v*c+v*v*v*d}
+function createEdge(from,to,bend){
+ var a=coordinates(from),d=coordinates(to),dx=d.x-a.x,dy=d.y-a.y,l=Math.hypot(dx,dy)||1;
+ var nx=-dy/l,ny=dx/l,dist=Math.min(width,height)*bend;
+ var b={x:a.x+dx*.32+nx*dist,y:a.y+dy*.32+ny*dist};
+ var c={x:a.x+dx*.68+nx*dist,y:a.y+dy*.68+ny*dist};
+ var samples=[];
+ for(var i=0;i<=90;i++){var t=i/90;samples.push({x:bezier(t,a.x,b.x,c.x,d.x),y:bezier(t,a.y,b.y,c.y,d.y)})}
+ return {from:from,to:to,points:samples,color:TOPICS[from].color};
+}
+function findEdge(from,to){return scene.edges.find(function(e){return e.from===from&&e.to===to})||scene.edges.find(function(e){return e.from===to&&e.to===from})}
+function locate(from,to,t){
+ var e=findEdge(from,to),a=coordinates(from),b=coordinates(to);
+ if(!e){var v=clamp(t,0,1);return{x:a.x+(b.x-a.x)*v,y:a.y+(b.y-a.y)*v,dx:b.x-a.x,dy:b.y-a.y}}
+ var reverse=e.from!==from,index=clamp(reverse?1-t:t,0,1)*90,k=Math.min(89,Math.floor(index)),f=index-k;
+ var p=e.points[k],q=e.points[k+1];
+ return{x:p.x+(q.x-p.x)*f,y:p.y+(q.y-p.y)*f,dx:(q.x-p.x)*(reverse?-1:1),dy:(q.y-p.y)*(reverse?-1:1)};
+}
+function sceneSize(){
+ var rect=canvas.getBoundingClientRect();width=Math.max(100,rect.width);height=Math.max(100,rect.height);
+ dpr=Math.min(window.devicePixelRatio||1,1.6);canvas.width=Math.ceil(width*dpr);canvas.height=Math.ceil(height*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);
+ scene.edges=EDGES.map(function(e){return createEdge(e[0],e[1],e[2])});
+ var count=width<=620?290:500;
+ scene.lights=Array.from({length:count},function(_,i){return {edge:i%EDGES.length,t:seeded(i*11+3),lane:(seeded(i*9+5)-.5)*37,speed:.018+seeded(i*6+2)*.05,r:.38+seeded(i*2+33)*1.1}});
+ scene.stars=Array.from({length:width<=620?210:310},function(_,i){return{x:seeded(i*29+3)*width,y:seeded(i*67+2)*height,r:.3+seeded(i*31+2)*1.05,a:.13+seeded(i*9)*.34}});
+}
+function strokeSamples(points,offset){
+ ctx.beginPath();for(var j=0;j<points.length;j++){var p=points[j],a=points[Math.max(0,j-1)],b=points[Math.min(points.length-1,j+1)],dx=b.x-a.x,dy=b.y-a.y,m=Math.hypot(dx,dy)||1;var x=p.x-dy/m*offset,y=p.y+dx/m*offset;if(j===0)ctx.moveTo(x,y);else ctx.lineTo(x,y)}ctx.stroke();
+}
+function drawBackdrop(){
+ var bg=ctx.createLinearGradient(0,0,width,height);bg.addColorStop(0,"#030b13");bg.addColorStop(.48,"#071825");bg.addColorStop(1,"#050b18");
+ ctx.fillStyle=bg;ctx.fillRect(0,0,width,height);
+ var f=ctx.createRadialGradient(width*.5,height*.52,6,width*.5,height*.52,Math.max(width,height)*.60);f.addColorStop(0,"rgba(14,90,89,.23)");f.addColorStop(.35,"rgba(16,64,88,.11)");f.addColorStop(1,"rgba(0,0,0,0)");ctx.fillStyle=f;ctx.fillRect(0,0,width,height);
+ for(var i=0;i<scene.stars.length;i++){var p=scene.stars[i],w=.55+.45*Math.sin(clock*.4+i*3.1);ctx.fillStyle="rgba(160,232,238,"+(p.a*w).toFixed(3)+")";ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,7);ctx.fill()}
+}
+function drawWatershed(){
+ // Long translucent streamlines form a river-shaped atmospheric current.
+ // These are generated geometry, never live mission activity.
+ var number=width<=620?43:78,segments=44;
+ ctx.save();ctx.globalCompositeOperation="lighter";ctx.lineWidth=.68;
+ for(var k=0;k<number;k++){
+  var seed=k/Math.max(1,number-1),base=height*(.085+seed*.79);
+  var group=k%4,tide=clock*.09*(group%2?1:-1),color=
+    group===0?"rgba(88,242,218,":"rgba(127,179,242,";
+  ctx.strokeStyle=color+(k%7===0?".095)":".04)");
+  ctx.beginPath();
+  for(var j=0;j<=segments;j++){
+   var x=-50+j/segments*(width+100),nx=x/width;
+   var y=base+
+      Math.sin(nx*6.0+seed*8+tide)*16+
+      Math.sin(nx*12.7-seed*11-clock*.055)*8+
+      (Math.sin(nx*Math.PI)*Math.cos(seed*11+clock*.12))*21;
+   // The strongest inflections occur around the knowledge confluences.
+   for(var topic of ["hudson","systemia","kaidance","discovery","raven","saban","evidence"]){
+    var b=coordinates(topic),dx=x-b.x,dy=y-b.y,range=Math.max(80,Math.min(width,height)*.26);
+    var strength=Math.exp(-(dx*dx+dy*dy)/(range*range));
+    y+=Math.sin((dx+dy)/range*3+clock*.12+k*.16)*strength*7;
+   }
+   if(j===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
+  }
+  ctx.stroke();
+ }
+ ctx.restore();
+}
+function drawRivers(){
+ for(var i=0;i<scene.edges.length;i++){
+  var e=scene.edges[i],rgb=e.color,major=i<6;
+  ctx.save();ctx.globalCompositeOperation="lighter";
+  ctx.strokeStyle=rgba(rgb,major?.055:.03);ctx.lineWidth=major?56:30;ctx.shadowBlur=major?28:12;ctx.shadowColor=rgba(rgb,.22);strokeSamples(e.points,0);
+  ctx.shadowBlur=0;
+  for(var lane=-3;lane<=3;lane++){
+   var shift=lane*(major?7:5)+Math.sin(clock*.12+i*.9+lane)*1.4;
+   ctx.lineWidth=lane===0?1.65:.55;ctx.strokeStyle=rgba(rgb,lane===0?.46:major?.13:.09);strokeSamples(e.points,shift);
+  }
+  ctx.restore();
+ }
+}
+function drawParticles(dt){
+ ctx.save();ctx.globalCompositeOperation="lighter";
+ for(var i=0;i<scene.lights.length;i++){
+  var p=scene.lights[i],e=scene.edges[p.edge];if(!e)continue;
+  if(!paused)p.t=(p.t+dt*p.speed)%1;
+  var j=Math.min(89,Math.floor(p.t*90)),u=p.t*90-j,a=e.points[j],b=e.points[j+1],dx=b.x-a.x,dy=b.y-a.y,m=Math.hypot(dx,dy)||1;
+  var x=a.x+(b.x-a.x)*u-dy/m*p.lane,y=a.y+(b.y-a.y)*u+dx/m*p.lane;
+  var pulse=.35+.65*Math.pow(Math.sin(p.t*Math.PI),.4),radius=p.r*pulse;
+  ctx.fillStyle=rgba(e.color,clamp(.2+pulse*.55,0,.8));ctx.beginPath();ctx.arc(x,y,radius,0,7);ctx.fill();
+  if(i%18===0){ctx.strokeStyle=rgba(e.color,.17*pulse);ctx.lineWidth=.8;ctx.beginPath();ctx.moveTo(x-dx/m*7,y-dy/m*7);ctx.lineTo(x,y);ctx.stroke()}
+ }
+ ctx.restore();
+}
+function drawConfluences(){
+ Object.keys(TOPICS).forEach(function(key,i){
+  var p=TOPICS[key],o=coordinates(key),r=key==="hudson"?Math.min(width*.13,76):Math.min(width*.09,45);
+  if(width>700)r=Math.min(width*.09,p.r*1.35);
+  var halo=ctx.createRadialGradient(o.x,o.y,1,o.x,o.y,r*3.6);
+  halo.addColorStop(0,rgba(p.color,key==="hudson"?.28:.18));halo.addColorStop(.5,rgba(p.color,.075));halo.addColorStop(1,rgba(p.color,0));
+  ctx.fillStyle=halo;ctx.fillRect(o.x-r*3.6,o.y-r*3.6,r*7.2,r*7.2);
+  ctx.save();ctx.translate(o.x,o.y);ctx.globalCompositeOperation="lighter";
+  for(var ring=0;ring<7;ring++){
+   var scale=.40+ring*.19,twist=clock*(ring%2===0?.12:-.09)+i+ring*.45;
+   ctx.beginPath();ctx.ellipse(0,0,r*scale,r*scale*.49,twist,0,Math.PI*2);
+   ctx.strokeStyle=rgba(p.color,.15+(ring%3)*.05);ctx.lineWidth=ring===0?1.5:.65;ctx.stroke();
+  }
+  for(var dot=0;dot<25;dot++){
+   var a=dot*2.39996+clock*(dot%2===0?.05:-.035),d=r*(.45+seeded(dot*17+i)*1.65);
+   ctx.fillStyle=rgba(p.color,.08+seeded(dot*14+i)*.35);ctx.beginPath();ctx.arc(Math.cos(a)*d,Math.sin(a)*d*.69,.5+seeded(dot+i)*1.1,0,7);ctx.fill();
+  }
+  ctx.fillStyle=rgba(p.color,.85);ctx.beginPath();ctx.arc(0,0,key==="hudson"?5:3,0,7);ctx.fill();
+  ctx.restore();
+  // Distinct animated basins give each topic spatial identity without a dashboard grid.
+  var focus=selectedTopic===key;
+  ctx.save();ctx.textAlign="center";ctx.shadowColor=rgba(p.color,.65);ctx.shadowBlur=focus?18:8;ctx.fillStyle=focus?"#ffffff":"#e3f6f1";
+  ctx.font=(key==="hudson"?"22px":"12px")+" Georgia,serif";
+  ctx.fillText(p.name,o.x,o.y-r-10);
+  if(focus){ctx.strokeStyle=rgba(p.color,.85);ctx.lineWidth=1.2;ctx.beginPath();ctx.arc(o.x,o.y,r*1.45,0,7);ctx.stroke()}
+  ctx.restore();
+ });
+}
+function spider(from,to,t){
+ var pos=locate(from,to,t),ahead=locate(from,to,Math.min(.999,t+.009));
+ var dx=ahead.x-pos.x,dy=ahead.y-pos.y,angle=Math.atan2(dy,dx);
+ var size=Math.max(25,Math.min(47,width*.083));
+ ctx.save();ctx.translate(pos.x,pos.y);ctx.rotate(angle);ctx.globalCompositeOperation="lighter";
+ var wake=ctx.createRadialGradient(0,0,0,0,0,size*2.9);wake.addColorStop(0,"rgba(248,255,237,.52)");wake.addColorStop(.24,"rgba(105,255,213,.26)");wake.addColorStop(1,"rgba(69,160,253,0)");
+ ctx.fillStyle=wake;ctx.beginPath();ctx.arc(0,0,size*2.9,0,7);ctx.fill();
+ for(var ray=0;ray<26;ray++){
+  var spread=(ray-12.5)/13.0,osc=Math.sin(clock*.85+ray*.23)*size*.08;
+  ctx.beginPath();ctx.moveTo(-size*.18,spread*size*.25);
+  ctx.quadraticCurveTo(-size*1.2,spread*size*.76+osc,-size*(2.9+ray%4*.20),spread*size*2.1+osc);
+  ctx.strokeStyle=ray%4===0?"rgba(191,173,255,.25)":"rgba(155,255,231,.11)";
+  ctx.lineWidth=.55;ctx.stroke();
+ }
+ // A trailing filament fan gives the explorer its spider-like silhouette.
+ for(var leg=0;leg<12;leg++){
+  var side=leg%2===0?1:-1,depth=Math.floor(leg/2);
+  var sway=Math.sin(clock*1.7+depth*.9)*5;
+  var length=size*(2+depth*.41),spread=side*size*(.65+depth*.22);
+  ctx.beginPath();ctx.moveTo(-4,side*3);
+  ctx.bezierCurveTo(-size*.65,spread*.4,-length*.75,spread*.95+sway,-length,spread*1.3+sway);
+  ctx.strokeStyle="rgba(169,255,231,"+(.45-depth*.06)+")";ctx.shadowBlur=7;ctx.shadowColor="#a9ffdc";ctx.lineWidth=depth===0?1.8:1.1;ctx.stroke();
+  ctx.fillStyle=depth%2===0?"#adffeb":"#b7afff";ctx.beginPath();ctx.arc(-length,spread*1.3+sway,1.2,0,7);ctx.fill();
+ }
+ ctx.shadowBlur=14;ctx.shadowColor="#e8ffeb";ctx.fillStyle="#eaffef";ctx.beginPath();ctx.arc(0,0,4.4,0,7);ctx.fill();
+ ctx.strokeStyle="#c7ffec";ctx.lineWidth=1;ctx.beginPath();ctx.arc(0,0,10+Math.sin(clock*2.6)*1.5,0,7);ctx.stroke();
+ ctx.restore();
+}
+function routeAt(){
+ // A public Git commit may drive historical replay; visual paths never claim a live mission.
+ if(feed.length){
+  var e=feed[currentIndex%feed.length],next=feed[(currentIndex+1)%feed.length];
+  var a=e.system==="hudson"?"discovery":e.system,b=next.system==="hudson"?"saban":next.system;
+  return {from:clock%18<9?a:"hudson",to:clock%18<9?"hudson":b,t:(clock%9)/9,event:e};
+ }
+ var k=Math.floor(clock/9)%SEQUENCE.length;
+ return {from:SEQUENCE[k],to:SEQUENCE[(k+1)%SEQUENCE.length],t:(clock%9)/9,event:null};
+}
+function paint(dt){
+ drawBackdrop();drawWatershed();drawRivers();drawParticles(dt);drawConfluences();
+ var trip=routeAt();spider(trip.from,trip.to,.04+trip.t*.92);
+ if(clock<flashUntil){
+  var p=coordinates(trip.to);ctx.strokeStyle="rgba(182,255,220,"+((flashUntil-clock)/3*.7)+")";ctx.lineWidth=2;ctx.beginPath();ctx.arc(p.x,p.y,40+(3-(flashUntil-clock))*30,0,7);ctx.stroke();
+ }
+}
+function loop(ts){
+ frame=0;if(document.hidden)return;
+ if(!last)last=ts-34;
+ var elapsed=ts-last;
+ // Cap rendering at about 30fps, even on 120Hz phones, for long watching sessions.
+ if(!paused&&elapsed<33){frame=requestAnimationFrame(loop);return}
+ var dt=Math.min(.08,elapsed/1000);last=ts;
+ if(!paused)clock+=dt;
+ paint(paused?0:dt);
+ if(!paused)frame=requestAnimationFrame(loop);
+}
+function wake(){if(!frame&&!document.hidden){last=0;frame=requestAnimationFrame(loop)}}
+function setPause(next){paused=Boolean(next);document.getElementById("pause").textContent=paused?"Resume":"Pause";document.getElementById("pause").setAttribute("aria-pressed",String(paused));if(frame){cancelAnimationFrame(frame);frame=0}wake()}
+document.getElementById("pause").addEventListener("click",function(){setPause(!paused)});
+document.addEventListener("visibilitychange",function(){if(document.hidden&&frame){cancelAnimationFrame(frame);frame=0}else if(!document.hidden)wake()});
+window.addEventListener("resize",function(){sceneSize();wake()},{passive:true});
+canvas.addEventListener("click",function(ev){
+ var rect=canvas.getBoundingClientRect(),x=ev.clientX-rect.left,y=ev.clientY-rect.top,best=null,dist=1e9;
+ Object.keys(TOPICS).forEach(function(k){var p=coordinates(k),d=Math.hypot(p.x-x,p.y-y);if(d<dist){dist=d;best=k}});
+ if(dist<Math.max(45,Math.min(width*.13,70))&&best)chooseTopic(best);
+});
+function chooseTopic(key){
+ if(!TOPICS[key])return;selectedTopic=key;
+ storyKind.textContent="KNOWLEDGE CONFLUENCE";story.textContent=TOPICS[key].name;
+ storySub.textContent=TOPICS[key].detail+" · Illustrated architecture";
+ receipt.hidden=true;receipt.removeAttribute("href");wake();
+}
+function openDrawer(){
+ var drawer=document.getElementById("topic-drawer");drawer.hidden=false;document.body.classList.add("drawer-open");
+ document.getElementById("topic-close").focus();
+}
+function closeDrawer(){document.getElementById("topic-drawer").hidden=true;document.body.classList.remove("drawer-open");document.getElementById("explore").focus()}
+document.getElementById("explore").addEventListener("click",openDrawer);
+document.getElementById("topic-close").addEventListener("click",closeDrawer);
+document.addEventListener("keydown",function(ev){if(ev.key==="Escape"&&!document.getElementById("topic-drawer").hidden)closeDrawer()});
+var buttons=document.getElementById("topic-buttons");
+Object.keys(TOPICS).forEach(function(key){var b=document.createElement("button");b.type="button";b.textContent=TOPICS[key].name;b.addEventListener("click",function(){chooseTopic(key);closeDrawer()});buttons.appendChild(b)});
+function safeReceipt(e){
+ if(!e||e.public!==true||e.source_verified!==true||e.kind!=="public_git_source_change"||!Object.prototype.hasOwnProperty.call(TOPICS,e.system)||e.title!==VALID_TITLES[e.system])return null;
+ if(typeof e.id!=="string"||!/^[a-f0-9]{40}$/.test(e.id))return null;
+ if(!Number.isFinite(Date.parse(e.at))||Date.parse(e.at)>Date.now()+120000)return null;
+ var url="https://github.com/jgaethle10/forge-operator/commit/"+e.id;
+ return e.source_url===url?url:null;
+}
+function presentStory(){
+ selectedTopic=null;
+ if(!feed.length){
+  storyKind.textContent="SCENIC CURRENT · NOT A LIVE MISSION";story.textContent="The river remembers.";
+  storySub.textContent="The explorer moves through conceptual connections; public source history is unavailable.";
+  receipt.hidden=true;receipt.removeAttribute("href");return;
+ }
+ var e=feed[currentIndex%feed.length],url=safeReceipt(e);
+ if(!url){storyKind.textContent="SOURCE UNVERIFIED";receipt.hidden=true;return}
+ storyKind.textContent="PUBLIC GIT HISTORY · REPLAY";
+ story.textContent=e.title;
+ storySub.textContent=TOPICS[e.system].name+" · recorded "+new Date(e.at).toLocaleString()+" · source change, not mission telemetry";
+ receipt.href=url;receipt.hidden=false;
+ flashUntil=clock+3;
+}
+document.getElementById("next").addEventListener("click",function(){
+ if(feed.length)currentIndex=(currentIndex+1)%feed.length;
+ else clock+=9;
+ presentStory();wake();
+});
+function feedState(kind,label){sourceState.className="state "+kind;sourceLabel.textContent=label}
+async function updateFeed(){
+ var controller=new AbortController(),timeout=setTimeout(function(){controller.abort()},6500);
+ try{
+  var res=await fetch("../activity.json?watch="+Date.now(),{cache:"no-store",credentials:"omit",signal:controller.signal});
+  if(!res.ok)throw Error("public_source_unavailable");
+  var d=await res.json();
+  if(!d||d.schema!=="evercraft.hudson.public-activity.v1"||d.coverage!=="public_git_history_only_not_total_hudson_activity"||d.status!=="connected"||!Array.isArray(d.events)||d.events.length>200||!Array.isArray(d.sources)||d.sources.length!==1||d.sources[0]?.id!=="evercraft-git"||d.events.some(function(e){return !safeReceipt(e)}))throw Error("public_source_unverified");
+  var age=Date.now()-Date.parse(d.published_at),fresh=Number.isFinite(age)&&age>=-10000&&age<120000;
+  var next=d.events.slice(0,80);var old=feed.map(function(e){return e.id});
+  feed=next;feedFresh=fresh;feedState(fresh?"fresh":"delayed",fresh?"PUBLIC GIT SOURCE CURRENT":"PUBLIC GIT SOURCE DELAYED");
+  if(!old.length)presentStory();
+  else if(fresh&&next.some(function(e){return old.indexOf(e.id)<0})){currentIndex=0;presentStory()}
+ }catch(error){feedFresh=false;feedState("delayed","PUBLIC SOURCE UNAVAILABLE");feed=[];presentStory()}
+ finally{clearTimeout(timeout)}
+}
+sceneSize();setPause(paused);presentStory();updateFeed();
+setInterval(function(){if(!document.hidden)updateFeed()},25000);
+setInterval(function(){if(!paused&&!selectedTopic){if(feed.length)currentIndex=(currentIndex+1)%feed.length;presentStory()}},18000);
+})();
+</script></body></html>

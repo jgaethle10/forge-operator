@@ -7,7 +7,7 @@
 .shell{max-width:1520px;padding:0 24px 44px;margin:auto}
 header{height:74px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #41616c44;gap:10px}
 .brand{display:flex;align-items:center;gap:12px;letter-spacing:.24em;font-size:11px;font-weight:800}.symbol{display:grid;place-items:center;width:37px;height:37px;border:1px solid #81cbbd78;color:#9dffea;border-radius:11px;font:24px Georgia,serif;box-shadow:0 0 23px #47c7af25}
-.actions{display:flex;align-items:center;gap:11px}.pill{border:1px solid #48646b;padding:9px 12px;border-radius:99px;font-size:10px;letter-spacing:.12em;font-weight:800;color:#a4b7c0;display:flex;align-items:center;gap:9px}.pill::before{content:"";width:7px;height:7px;border-radius:50%;background:#8fa0a8}.pill.live{border-color:#3e927d;color:#9bf0d8}.pill.live::before{background:#7fefc8;box-shadow:0 0 12px #64e6b7}.pill.stale{border-color:#a0835f;color:#efc898}.pill.stale::before{background:#efc898}
+.actions{display:flex;align-items:center;gap:11px}.watch-entry{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(115deg,#174e47,#0b303b);border:1px solid #91e6cb8a;color:#dffef3;text-decoration:none;padding:11px 15px;border-radius:999px;font-size:11px;font-weight:700;white-space:nowrap;box-shadow:0 0 28px #54d6c622}.watch-entry:hover,.watch-entry:focus-visible{background:#1a6156;outline-offset:3px}.pill{border:1px solid #48646b;padding:9px 12px;border-radius:99px;font-size:10px;letter-spacing:.12em;font-weight:800;color:#a4b7c0;display:flex;align-items:center;gap:9px}.pill::before{content:"";width:7px;height:7px;border-radius:50%;background:#8fa0a8}.pill.live{border-color:#3e927d;color:#9bf0d8}.pill.live::before{background:#7fefc8;box-shadow:0 0 12px #64e6b7}.pill.stale{border-color:#a0835f;color:#efc898}.pill.stale::before{background:#efc898}
 .btn{background:#142733;color:#bbd8de;border:1px solid #385160;border-radius:9px;padding:10px 13px;font-size:11px}
 .eyebrow{font-size:10px;font-weight:800;letter-spacing:.18em;color:#8cb4be;text-transform:uppercase}.intro{padding:38px 0 24px;display:flex;justify-content:space-between;align-items:end;gap:22px}h1{font:normal clamp(41px,5.5vw,77px)/1 Georgia,"Times New Roman",serif;letter-spacing:-.065em;margin:10px 0 10px}h1 em{color:#a9f7df}.intro p{margin:0;color:#aac1c8;line-height:1.55;max-width:650px}.intro-note{text-align:right;color:#9eb9bd;font-size:11px;line-height:1.8}.intro-note b{font-size:10px;letter-spacing:.16em}
 .panels{display:grid;grid-template-columns:minmax(0,1.86fr) minmax(300px,.8fr);gap:15px}.panel{border:1px solid #42606d60;border-radius:19px;background:linear-gradient(150deg,#142734d9,#0c1925ed);overflow:hidden;box-shadow:0 14px 64px #00000026}
@@ -96,7 +96,7 @@ body.film-mode .visual-bottom .hint{display:none}
 @media(max-width:660px){
  .shell{padding:0 14px 35px}
  header{height:64px;padding:0 1px}.brand{font-size:9px;letter-spacing:.12em;gap:7px}.brand .symbol{width:34px;height:34px;font-size:21px}
- .actions{gap:5px}.actions #pause{display:none}.actions #focus{display:inline-block;background:#142c32;border-color:#547970;color:#d4fbe9;font-size:10px;padding:9px 10px;white-space:nowrap;flex-shrink:0}
+ .actions{gap:5px}.actions #pause{display:none}.actions #focus{display:inline-block;background:#142c32;border-color:#547970;color:#d4fbe9;font-size:10px;padding:9px 10px;white-space:nowrap;flex-shrink:0}.watch-entry{font-size:10px;padding:8px 10px;border-radius:12px;gap:4px}
  .pill{max-width:148px;min-width:0;white-space:nowrap;overflow:hidden;font-size:8px;letter-spacing:0;padding:8px 9px;gap:5px}.pill:before{flex-shrink:0}
  .intro{display:block;padding:29px 4px 22px}
  .intro .eyebrow{font-size:9px;letter-spacing:.15em}
@@ -123,7 +123,7 @@ body.film-mode .visual-bottom .hint{display:none}
  body.film-mode .intro{padding:13px 4px 10px}body.film-mode h1{font-size:clamp(44px,11vw,58px)}body.film-mode .visual{height:calc(100svh - 166px);min-height:480px}
  body.film-mode .graph{top:auto;height:auto;transform:none}
 }
-@media(max-width:380px){.visual{height:635px}.brand{font-size:8px}.signal-title{font-size:16px}.visual-bottom .legend span+span{display:none}}
+@media(max-width:380px){.visual{height:635px}.brand{font-size:8px}.watch-entry{font-size:9px;padding:7px 8px}.signal-title{font-size:16px}.visual-bottom .legend span+span{display:none}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
 
 /* Foreground depth, visual selection, and subtle non-data atmospheric texture */
@@ -139,10 +139,10 @@ body.film-mode .visual-bottom .hint{display:none}
 /* An original, lightweight atmospheric field. Decorative, not live telemetry. */
 .ambient-field{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:.88}
 .graph{z-index:1}.visual-top,.signal-card,.visual-bottom{z-index:2}
-</style></head>
+.watch-hero{display:inline-flex;align-items:center;gap:14px;margin-top:20px;border:1px solid #77e9cc9c;border-radius:999px;padding:14px 20px;background:linear-gradient(105deg,#13584c,#092f39);color:#edfff8;text-decoration:none;font-size:13px;font-weight:700;box-shadow:0 0 34px #3edcb51a}.watch-hero:hover{background:#1b6357}.watch-hero span{font-size:19px;line-height:0}.watch-hero:focus-visible{outline:2px solid #a3ffe7;outline-offset:4px}@media(max-width:660px){.actions .watch-entry{display:none}.watch-hero{margin-top:16px;padding:12px 17px;font-size:12px}}</style></head>
 <body><div class="shell">
-<header><div class="brand"><span class="symbol">H</span>EVERCRAFT <span style="color:#5f8893">/</span> HUDSON</div><div class="actions"><div class="pill" id="status">AWAITING PUBLIC FEED</div><button type="button" class="btn" id="focus" aria-pressed="false">Film view</button><button type="button" class="btn" id="pause">Pause motion</button></div></header>
-<div class="intro"><div><span class="eyebrow">HUDSON / THE EVERCRAFT KNOWLEDGE SPINE</span><h1>Nothing<br><em>gets lost.</em></h1><p>Evercraft’s shared memory, made visible. Explore how our systems connect and follow real public evidence as it arrives.</p></div><div class="intro-note"><b>THE LIVING ARCHIVE</b><br>Evidence first. Private by design.</div></div>
+<header><div class="brand"><span class="symbol">H</span>EVERCRAFT <span style="color:#5f8893">/</span> HUDSON</div><div class="actions"><a class="watch-entry" href="./watch/" aria-label="Enter the full-screen HUDSON knowledge river">Enter the Current <span aria-hidden="true">↗</span></a><div class="pill" id="status">AWAITING PUBLIC FEED</div><button type="button" class="btn" id="focus" aria-pressed="false">Film view</button><button type="button" class="btn" id="pause">Pause motion</button></div></header>
+<div class="intro"><div><span class="eyebrow">HUDSON / THE EVERCRAFT KNOWLEDGE SPINE</span><h1>Nothing<br><em>gets lost.</em></h1><p>Evercraft’s shared memory, made visible. Explore how our systems connect and follow real public evidence as it arrives.</p><a class="watch-hero" href="./watch/">Watch the Current <span aria-hidden="true">↗</span></a></div><div class="intro-note"><b>THE LIVING ARCHIVE</b><br>Evidence first. Private by design.</div></div>
 <main><div class="panels">
 <section class="panel visual" aria-label="Interactive HUDSON topology">
 <div class="visual-top"><div><strong>THE CONNECTION FIELD <span class="field-orbit">◌</span></strong><p id="graph-caption">HUDSON · Select a system to explore</p></div><div class="right">PUBLIC GIT SOURCE<br><span id="published">Awaiting source check</span></div></div>
