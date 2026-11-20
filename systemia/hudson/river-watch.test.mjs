@@ -98,7 +98,7 @@ test('phase traveler is an unmistakable moving form, not a tiny bug or orbiting 
  assert.match(code,/function ribbonForm\(time,layer,state\)/);
  assert.match(code,/function drawTraveler\(from,to,t\)/);
  assert.match(code,/for\(var layer=0;layer<5;layer\+\+\)/);
- assert.match(code,/var size=width<=620\?clamp\(width\*\.116,39,57\):clamp\(width\*\.068,65,100\)/);
+ assert.match(code,/var size=width<=620\?clamp\(width\*\.155,54,76\):clamp\(width\*\.092,84,124\)/);
  assert.match(code,/var shades=\[/);
  assert.match(code,/ctx\.bezierCurveTo\(span\*\.18/);
  assert.match(code,/A partially hidden aperture, never a fixed eye/);
@@ -130,12 +130,12 @@ test('traveler ribbons evolve in length, twist, transparency and confluence beha
  assert.ok(early.some((f,i)=>Math.abs(f.angle-late[i].angle)>.20),'ribbons rotate unevenly');
  for(const f of [...early,...late]){
   assert.ok(f.length>.4&&f.length<2);
-  assert.ok(f.width>.13&&f.width<.55);
-  assert.ok(f.opacity>=.13&&f.opacity<=.67);
+  assert.ok(f.width>.18&&f.width<.62);
+  assert.ok(f.opacity>=.20&&f.opacity<=.78);
   assert.ok(Number.isFinite(f.bend)&&Number.isFinite(f.angle));
  }
- const atPhone=390*.116;
- assert.ok(atPhone>=39&&atPhone<=57,'phone-size traveler must be visible');
+ const atPhone=390*.155;
+ assert.ok(atPhone>=54&&atPhone<=76,'phone-size traveler must be visible');
 });
 test('slow river camera moves the whole field and tap positions use its inverse',()=>{
  const start=code.indexOf('function riverCamera(){');
@@ -177,7 +177,7 @@ test('Presence has an irregular multi-stage pulse rather than a blinking light',
 test('pulse spreads through prismatic ribbons and the river, without a fake live-heartbeat claim',()=>{
  assert.match(code,/function drawPresenceRipple\(from,to,t\)/);
  assert.match(code,/presencePulse\(time-\(layer%4\)\*\.19\)/);
- assert.match(code,/width:\.17\+state\.opening\*\.24\+delay\.energy\*\.09/);
+ assert.match(code,/width:\.19\+state\.opening\*\.27\+delay\.energy\*\.11/);
  assert.match(code,/var nearness=Math\.pow\(clamp\(\(t-\.76\)\/\.24,0,1\),2\)/);
  assert.match(code,/drawPresenceRipple\(trip\.from,trip\.to,\.04\+trip\.t\*\.92\);drawTraveler\(trip\.from,trip\.to,\.04\+trip\.t\*\.92\)/);
  assert.match(code,/This is visual choreography, not AI life/);
