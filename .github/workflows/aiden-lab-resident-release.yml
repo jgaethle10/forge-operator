@@ -3,6 +3,8 @@ name: Aiden's Lab resident release acceptance
 on:
   pull_request:
     paths:
+      - 'public/aiden-lab/**'
+      - 'public/apps/infinite-classroom/play/index.html'
       - 'scripts/probe-aiden-lab-resident.mjs'
       - 'scripts/update-fabric-owned-edge.sh'
       - 'scripts/diagnose-fabric-owned-edge-release.sh'
@@ -12,6 +14,8 @@ on:
   push:
     branches: [main]
     paths:
+      - 'public/aiden-lab/**'
+      - 'public/apps/infinite-classroom/play/index.html'
       - 'scripts/probe-aiden-lab-resident.mjs'
       - 'scripts/update-fabric-owned-edge.sh'
       - 'scripts/diagnose-fabric-owned-edge-release.sh'
