@@ -112,3 +112,17 @@ test('mobile cinematic effects remain explicitly synthetic, bounded and accessib
  assert.ok(css.includes('@media(prefers-reduced-motion:reduce)'));
  assert.ok(css.includes('.intro p{display:none}'),'put the immersive artwork above the fold on iPhone');
 });
+
+
+test('watchable tour remains conceptual, touch-selectable and quiet for accessibility',()=>{
+ const html=read('index.html'),brain=read('brain.js');
+ assert.ok(html.includes('SCENIC ARCHITECTURE TOUR · TAP TO EXPLORE'));
+ assert.ok(html.includes('id="system-detail" aria-live="off"'));
+ assert.ok(brain.includes("const scenicSequence=Object.freeze("));
+ assert.ok(brain.includes("manualHoldUntil=Date.now()+90000"));
+ assert.ok(brain.includes("document.hidden||reduce.matches||Date.now()<manualHoldUntil"));
+ assert.ok(brain.includes("},18000)"));
+ assert.ok(brain.includes("$('system-detail').setAttribute('aria-live',manual?'polite':'off')"));
+ assert.ok(brain.includes("chooseRegion(button.dataset.system||button.dataset.region,true)"));
+ assert.ok(!brain.includes('requestAnimationFrame(advanceScenicTour)'));
+});
