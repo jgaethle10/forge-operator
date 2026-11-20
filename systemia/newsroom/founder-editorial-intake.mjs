@@ -99,7 +99,7 @@ export function stageFounderEditorialIntake({
   idempotency_key:key,external_event_id:key,
   adapter_actor_ref:c.adapterActorRef,
   source_type:'agent',source_ref:'systemia:harbor:founder-editorial',
-  source_trust_state:'trusted_internal',
+  source_trust_state:'untrusted_external',
   // The Intake ledger holds only opaque references, not creator prose or URLs.
   content_ref:'private:founder-editorial-review:'+binding.digest.slice(7),
   content_fingerprint:binding.digest,
