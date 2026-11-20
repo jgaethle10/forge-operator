@@ -8,6 +8,7 @@ import {assessHarborCommercialPreviewSend,HARBOR_PREVIEW_SEND_SCHEMA}
 export const COMMERCIAL_LOOP_ORDER_SCHEMA='evercraft.commercial-loop.order.v1';
 export const COMMERCIAL_LOOP_READ_MODEL_SCHEMA='evercraft.commercial-loop.read-model.v1';
 const HEX64=/^[a-f0-9]{64}$/i,HEX32=/^[a-f0-9]{32}$/i;
+const INTAKE_RECEIPT_HASH=/^sha256:[a-f0-9]{64}$/i;
 const nonempty=x=>typeof x==='string'&&x.trim().length>0;
 const sha=x=>crypto.createHash('sha256').update(JSON.stringify(x)).digest('hex');
 const fail=c=>{throw Error('commercial_loop_'+c);};
@@ -56,7 +57,7 @@ export function projectCommercialLoop({
   if(intake.schema!=='evercraft.wing-courier.intake-handoff.v1'||
     intake.packageId!==order.packageId||
     !['candidate_only','duplicate'].includes(intake.intakeState)||
-    !nonempty(intake.candidateId)||!HEX64.test(intake.intakeReceiptHash||'')||
+    !nonempty(intake.candidateId)||!INTAKE_RECEIPT_HASH.test(intake.intakeReceiptHash||'')||
     intake.admissionGranted!==false||intake.executionGranted!==false)
     return hold('INTAKE_CONFLICT','RECONCILE_PRIVATE_PASSPORT_RECEIPT',['intake_receipt_not_admissible']);
   // Separate bounded job/capacity admission, NEVER implied by raw storage.
