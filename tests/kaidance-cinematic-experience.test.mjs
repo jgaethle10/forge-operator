@@ -127,3 +127,26 @@ test('V05 story follows the traveler and reserves true heartbeat celebration for
  assert.doesNotMatch(field,/fetch\(|WebSocket|EventSource|localStorage|sessionStorage/);
  assert.equal(fs.existsSync(new URL('../public/kaidance/pulse.json',import.meta.url)),false);
 });
+
+
+test('V08 puts only compact route instruments over scenery and narrative below the field',()=>{
+ const css=read('../public/kaidance/confluence.css');
+ const compact=html.indexOf('class="field-story"');
+ const below=html.indexOf('class="journey-details"');
+ const telemetry=html.indexOf('class="telemetry"');
+ const stageEnd=html.indexOf('</article>',compact);
+ assert.ok(compact>0 && stageEnd>compact && below>stageEnd && telemetry>below);
+ const field=html.slice(compact,html.indexOf('class="field-drawer"',compact));
+ assert.ok(!field.includes('id="fieldStoryMeta"'),'Long narration must not overlay the network');
+ assert.ok(!field.includes('id="fieldRecordTopic"'),'Public topic belongs outside the visual path');
+ assert.ok(field.includes('id="fieldRouteProgress"'));
+ assert.ok(field.includes('id="fieldStoryKind"'));
+ assert.ok(field.includes('id="fieldStoryTitle"'));
+ assert.ok(html.slice(below,telemetry).includes('id="fieldStoryMeta"'));
+ assert.ok(html.slice(below,telemetry).includes('id="fieldRecordTopic"'));
+ assert.match(css,/KAIDANCE V08 \/ Clear the scenery/);
+ assert.match(css,/\.field-story\s*\{[\s\S]*?grid-template-columns/);
+ assert.match(css,/\.field-story\s*\{[\s\S]*?pointer-events:none/);
+ assert.match(css,/body\.portrait \.journey-details\{display:none!important\}/);
+ assert.match(css,/body\.portrait \.field-story/);
+});

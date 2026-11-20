@@ -128,3 +128,12 @@ The browser-only `current-field.mjs` now gives the active narrated route a lumin
 Rendering stays first-party and capped by the existing mobile/desktop frame pacing, hidden-tab and offscreen pausing, and reduced-motion controls. No new services, secrets, external hosts, event feeds, microphone permissions or browser storage were added. Static Pages must still provide HTTP 404 for `/kaidance/pulse.json`.
 
 Release requires topology tests, owned public Caddy/Leiland exact-asset allowlists, source and privacy tests, iPhone/desktop Chromium screenshots, and **external HTTPS readback after Pages deployment**. A passing build is not evidence that real private Systemia heartbeat publication is connected.
+
+
+## V08 · Unobstructed moving field
+
+The founder's iPhone capture showed the illustrated journey card covering Kaidance's actual moving corridors and destination light. V08 is a targeted layout correction, **not a rebuild**. The cinematic `field-story` overlay is now a compact, non-interactive route instrument: chapter number, from/to, destination and a thin progress line only, positioned just above the public GitHub receipt. The longer `fieldStoryMeta` explanation and optional public-record topic remain source-honestly updated through the existing renderer but live in an accessible `journey-details` document section **below the animation and above the real telemetry**.
+
+The 9:16 view also uses the slim instrument, positioned above the broadcast proof card; it hides the below-stage explanation. All existing source IDs and renderer listeners are retained. Nothing changed in the verified pulse path, static Pages no-pulse rule, asset host allowlists, API or performance budgets. The compact strip has `pointer-events:none`, so it does not intercept canvas taps.
+
+The Chrome acceptance gate measures overlay height, verifies it is below the primary field and above source receipts, checks broadcast proof separation, and confirms the expanded description is outside the stage. No claim of a live signed heartbeat is implied.

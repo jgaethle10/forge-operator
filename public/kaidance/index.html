@@ -49,15 +49,13 @@
             <button id="fieldPause" type="button" aria-pressed="false">PAUSE</button>
             <button id="fieldMode" type="button" aria-pressed="false">REACTOR VIEW</button>
           </div>
-          <div class="field-story" aria-live="off">
+          <div class="field-story" aria-label="Compact illustrated journey instrumentation" aria-live="off">
             <small id="fieldStoryKind">ILLUSTRATED JOURNEY · CHAPTER 1 / 8</small>
             <div class="field-route" aria-label="Illustrated route">
               <span id="fieldRouteFrom">SYSTEMIA</span><span class="field-route-symbol">✦</span><span id="fieldRouteTo">KAIDANCE</span>
             </div>
             <strong id="fieldStoryTitle">KAIDANCE</strong>
-            <p id="fieldStoryMeta">SYSTEMIA → KAIDANCE · Five-minute Collider and verified cycle boundary · Not a live mission</p>
             <div class="field-route-track" aria-hidden="true"><i id="fieldRouteProgress"></i></div>
-            <span class="field-record-topic" id="fieldRecordTopic" hidden></span>
           </div>
           <section class="field-drawer" id="fieldDrawer" role="dialog" aria-modal="true" aria-labelledby="fieldDrawerTitle" hidden>
             <button id="fieldClose" type="button" aria-label="Close explorer">×</button>
@@ -105,6 +103,17 @@
         </div>
         <div class="portrait-footer"><span>EVERCRAFT · SYSTEMIA</span><span id="portraitSource">PUBLIC TELEMETRY PENDING</span></div>
       </article>
+      <section class="journey-details" aria-label="Illustrated journey details">
+        <div class="journey-details-intro">
+          <span class="tiny">THE JOURNEY / FIELD NOTES</span>
+          <strong>The field stays in view.</strong>
+          <span>Scenic movement is illustrative. Public records have separate source receipts.</span>
+        </div>
+        <div class="journey-details-explanation">
+          <p id="fieldStoryMeta">SYSTEMIA → KAIDANCE · Five-minute Collider and verified cycle boundary · Not a live mission</p>
+          <span class="field-record-topic" id="fieldRecordTopic" hidden></span>
+        </div>
+      </section>
       <aside class="telemetry" aria-label="Source-backed Collider telemetry">
         <div class="panel-heading"><span class="tiny">01 / ACTUAL COLLIDER</span><h2>Five-minute<br><em>heartbeat.</em></h2><p>The real counter and cycle state only update from an approved, fresh source. No pretend agents or fabricated activity.</p></div>
         <div class="timebox"><span class="tiny">TARGET CYCLE LENGTH</span><strong>05<span>:</span>00</strong><div><span id="heartbeatTiming">Not connected</span><span id="lastBeat">Last observation unknown</span></div></div>
@@ -129,7 +138,7 @@
     </section>
     <section class="about"><div class="about-brand"><img src="./mark.svg" width="76" height="76" alt=""><div><span class="tiny">THE OPERATING SYSTEM OF EVERCRAFT</span><h2>KAIDANCE is the rhythm.<br>HUDSON is the spine.</h2></div></div><p>Systemia orchestrates work across Evercraft. This public window shows only approved evidence. A verified heartbeat indicates a cycle was observed, not that every service is healthy or a payment was received.</p><a href="../systemia/">EXPLORE SYSTEMIA ↗</a></section>
   </main>
-  <footer><span>© EVERCRAFT · KAIDANCE V07</span><span id="sourceFoot">COLLIDER: NOT CONNECTED · PUBLIC GITHUB: CHECKING</span><div><button id="filmBtn" type="button" aria-pressed="false">FULL SCREEN ⛶</button><button id="reloadBtn" type="button">REFRESH</button></div></footer>
+  <footer><span>© EVERCRAFT · KAIDANCE V08</span><span id="sourceFoot">COLLIDER: NOT CONNECTED · PUBLIC GITHUB: CHECKING</span><div><button id="filmBtn" type="button" aria-pressed="false">FULL SCREEN ⛶</button><button id="reloadBtn" type="button">REFRESH</button></div></footer>
 </div>
 <script type="module" src="./app.mjs"></script>
 <script type="module" src="./visual.mjs"></script>
