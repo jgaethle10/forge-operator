@@ -1,0 +1,27 @@
+name: Kennedy Space Station private shell checks
+on:
+  push:
+    paths:
+      - "products/kennedy-space-station/**"
+      - "products/site-planner/**"
+      - ".github/workflows/kennedy-space-station-shell.yml"
+  pull_request:
+    paths:
+      - "products/kennedy-space-station/**"
+      - "products/site-planner/**"
+      - ".github/workflows/kennedy-space-station-shell.yml"
+permissions:
+  contents: read
+jobs:
+  private-shell-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Check Kennedy shell imports
+        run: python3 -m py_compile products/kennedy-space-station/server.py products/kennedy-space-station/test_shell.py
+      - name: Real loopback HTTP product separation and site handoff
+        run: python3 -m unittest discover -s products/kennedy-space-station -p "test_*.py" -v
