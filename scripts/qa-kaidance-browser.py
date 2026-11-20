@@ -51,6 +51,17 @@ try:
    assert page.locator("#signalIndex").count()==1
    assert page.locator("#fieldSource").count()==0  # Real public source remains in the separate receipt panel.
    assert page.locator("#fieldStoryTitle").is_visible()
+   assert page.locator("#fieldStoryMeta").locator("xpath=..").get_attribute("class")=="journey-details-explanation"
+   assert page.locator(".journey-details").is_visible(),"Full journey details must be in the document below the animation"
+   story_box=page.locator(".field-story").bounding_box()
+   headline_box=page.locator(".stage-headline").bounding_box()
+   stage_box=page.locator("#stage").bounding_box()
+   assert story_box and headline_box and stage_box
+   assert story_box["height"]<=80,f"Journey strip is too tall to keep the field visible: {story_box}"
+   assert story_box["y"]+story_box["height"]<=headline_box["y"]-5,f"Journey strip covers the public receipt: {story_box} {headline_box}"
+   assert story_box["y"]>=stage_box["y"]+stage_box["height"]*.62,f"Journey strip climbs into the active network: {story_box} {stage_box}"
+   assert page.locator(".field-story").evaluate("el=>getComputedStyle(el).pointerEvents")=="none","Journey overlay intercepts confluence taps"
+
    assert page.locator("#fieldRouteFrom").inner_text().strip()
    assert page.locator("#fieldRouteTo").inner_text().strip()
    assert "ILLUSTRATED JOURNEY" in page.locator("#fieldStoryKind").inner_text()
@@ -149,10 +160,16 @@ try:
     assert page.locator("#currentField").is_visible()
     assert page.locator("#fieldStoryTitle").is_visible()
     assert page.locator("#fieldRouteProgress").is_visible()
+    assert not page.locator(".journey-details").is_visible(),"Broadcast must not display full narrative under the field"
+    compact_box=page.locator(".field-story").bounding_box()
+    proof_box=page.locator(".portrait-proof").bounding_box()
+    assert compact_box and proof_box
+    assert compact_box["height"]<=74,f"Broadcast strip too tall: {compact_box}"
+    assert compact_box["y"]+compact_box["height"]<=proof_box["y"]-5, f"Broadcast strip covers receipts: {compact_box} {proof_box}"
     page.screenshot(path=str(OUTPUT/"iphone-direct-live.png"),full_page=False)
    page.close()
   browser.close()
- print("KAIDANCE_BROWSER_QA_PASS: branded V06, cinematic signal river, source safety, desktop+iPhone, explore/reactor/broadcast, no JS errors or horizontal overflow")
+ print("KAIDANCE_BROWSER_QA_PASS: clear-field V08, cinematic signal river, source safety, desktop+iPhone, explore/reactor/broadcast, no JS errors or horizontal overflow")
 finally:
  SERVER.terminate()
  try:SERVER.wait(timeout=3)
