@@ -236,6 +236,17 @@ html:not(.seattle-mode) #basinStart{display:none}
 .seattle-mode .flight-logo{color:#c0f0fb}
 @media(pointer:coarse){.start-foot a{min-height:48px}}
 </style>
+
+<style id="aaar-v10-seattle-light">
+html.seattle-mode .flight-shell{
+ background:linear-gradient(180deg,#315879 0%,#6998b5 32%,#c4d9ce 57%,#e6c69b 70%,#688783 100%)
+}
+html.seattle-mode .sky-sun{right:18%;top:9%;width:215px;height:215px;
+ background:radial-gradient(circle,#fff8d1ed 0%,#f8dfa76d 20%,#f5c18c27 38%,transparent 73%)}
+html.seattle-mode .sky-haze{
+ background:linear-gradient(180deg,#c2dce910 5%,transparent 31%,#e8bc8a24 55%,#f1d4ae12 75%,transparent 93%)
+}
+</style>
 </head><body>
 <div class="flight-shell" id="flightShell">
  <canvas id="flightCanvas" tabindex="0" aria-label="Playable 3D Anniston flight range. Use W/S for pitch, A/D for bank, Shift/Ctrl for throttle, C to switch camera, R reset."></canvas><div class="sky-sun"></div><div class="sky-haze"></div><div class="scanlines"></div>
@@ -543,14 +554,14 @@ const shell=$('flightShell'); let canvas=$('flightCanvas');
 const mobileInput=()=>window.matchMedia?.('(pointer:coarse)').matches || window.innerWidth<=750;
 const syncMobileMode=()=>{shell.classList.toggle('touch-cockpit',!!mobileInput());if(shell.classList.contains('touch-cockpit')&&!shell.dataset.hud)shell.dataset.hud='compact';};syncMobileMode();
 window.addEventListener('resize',syncMobileMode);
-const opts={alpha:true,antialias:false,depth:true,powerPreference:'low-power',preserveDrawingBuffer:false};
+const opts={alpha:true,antialias:true,depth:true,powerPreference:'high-performance',preserveDrawingBuffer:false};
 // The phone path deliberately uses Canvas2D, avoiding WebGL driver and iOS preview failures.
 // Desktop WebGL2 remains optional. Flight equations are the same in both renderers.
 const preferSoftware=window.matchMedia?.('(pointer:coarse)').matches || window.innerWidth <= 650;
 let gl=null;
 try{if(!preferSoftware)gl=canvas.getContext('webgl2',opts);}catch{gl=null;}
 
-let program=null,meshes={},uVP,uModel,uFog,aPos,aCol;
+let program=null,meshes={},uVP,uModel,uFog,uTime,aPos,aCol,aSurface;
 const identity=()=>[1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1];
 function mul(a,b){const o=new Float32Array(16);for(let c=0;c<4;c++)for(let r=0;r<4;r++){let v=0;for(let k=0;k<4;k++)v+=a[k*4+r]*b[c*4+k];o[c*4+r]=v;}return o;}
 function perspective(fov,aspect,near,far){const f=1/Math.tan(fov/2),nf=1/(near-far);return [f/aspect,0,0,0, 0,f,0,0, 0,0,(far+near)*nf,-1, 0,0,2*far*near*nf,0];}
@@ -561,19 +572,19 @@ function lookAt(eye,center,up){const z=norm(sub(eye,center)),x=norm(cross(up,z))
 function shader(kind,source){const s=gl.createShader(kind);gl.shaderSource(s,source);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw Error(gl.getShaderInfoLog(s));return s;}
 function initGL(){
  if(!gl)throw Error(THREE_NEEDED);
- const vs=shader(gl.VERTEX_SHADER,`#version 300 es\nin vec3 aPos; in vec3 aColor; uniform mat4 uVP;uniform mat4 uModel;out vec3 vColor;out float vDepth;void main(){vec4 p=uModel*vec4(aPos,1.0);gl_Position=uVP*p;vColor=aColor;vDepth=gl_Position.w;}`);
- const fs=shader(gl.FRAGMENT_SHADER,`#version 300 es\nprecision mediump float;in vec3 vColor;in float vDepth;uniform vec3 uFog;out vec4 frag;void main(){float f=smoothstep(1400.0,7900.0,vDepth);frag=vec4(mix(vColor,uFog,f),1.0);}`);
+ const vs=shader(gl.VERTEX_SHADER,"#version 300 es\nin vec3 aPos;\nin vec3 aColor;\nin float aSurface;\nuniform mat4 uVP;\nuniform mat4 uModel;\nout vec3 vColor;\nout vec3 vWorld;\nout float vDepth;\nflat out float vSurface;\nvoid main(){\n vec4 p=uModel*vec4(aPos,1.0);\n gl_Position=uVP*p;\n vColor=aColor;\n vWorld=p.xyz;\n vDepth=gl_Position.w;\n vSurface=aSurface;\n}");
+ const fs=shader(gl.FRAGMENT_SHADER,"#version 300 es\nprecision highp float;\nin vec3 vColor;\nin vec3 vWorld;\nin float vDepth;\nflat in float vSurface;\nuniform vec3 uFog;\nuniform float uTime;\nout vec4 frag;\nfloat windowsNoise(vec2 p){return fract(sin(dot(p,vec2(12.9898,78.233)))*43758.5453);}\nvoid main(){\n vec3 normal=normalize(cross(dFdx(vWorld),dFdy(vWorld)));\n if(!gl_FrontFacing)normal=-normal;\n vec3 sun=normalize(vec3(-0.49,0.83,0.31));\n float diffuse=max(dot(normal,sun),0.0);\n float light=0.59+0.41*diffuse;\n vec3 color=vColor*light;\n if(vSurface>0.5&&vSurface<1.5){\n  float wall=1.0-step(0.58,abs(normal.y));\n  float horizontal=abs(normal.x)>abs(normal.z)?vWorld.z:vWorld.x;\n  vec2 cell=vec2(horizontal/7.8,vWorld.y/8.4);\n  vec2 uv=fract(cell);\n  float pane=step(0.18,uv.x)*(1.0-step(0.84,uv.x))\n          *step(0.18,uv.y)*(1.0-step(0.87,uv.y));\n  float lighting=windowsNoise(floor(cell));\n  vec3 glass=mix(vec3(0.055,0.16,0.23),vec3(0.31,0.43,0.47),step(0.86,lighting));\n  color=mix(color,glass,pane*wall*0.80);\n  float reflection=pow(max(dot(normal,normalize(vec3(0.20,0.45,0.88))),0.0),3.0);\n  color+=vec3(0.08,0.12,0.14)*wall*reflection;\n } else if(vSurface>1.5&&vSurface<2.5){\n  float wave=sin(vWorld.x*0.035+uTime*0.42)*sin(vWorld.z*0.048-uTime*0.35);\n  float glint=pow(max(0.0,sin(vWorld.x*0.071+uTime*0.27)*sin(vWorld.z*0.037)),8.0);\n  color=mix(color,vec3(0.14,0.42,0.56),0.45+0.12*wave);\n  color+=vec3(0.24,0.26,0.21)*glint*0.25;\n }else if(vSurface>2.5&&vSurface<3.5){\n  color*=0.87;\n }\n float haze=smoothstep(650.0,9200.0,vDepth);\n color=mix(color,uFog,haze*0.90);\n color=pow(max(color,vec3(0.0)),vec3(0.94));\n frag=vec4(clamp(color,0.0,1.0),1.0);\n}");
  program=gl.createProgram();gl.attachShader(program,vs);gl.attachShader(program,fs);gl.linkProgram(program);
  if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw Error(gl.getProgramInfoLog(program));
- gl.useProgram(program);uVP=gl.getUniformLocation(program,'uVP');uModel=gl.getUniformLocation(program,'uModel');uFog=gl.getUniformLocation(program,'uFog');aPos=gl.getAttribLocation(program,'aPos');aCol=gl.getAttribLocation(program,'aColor');
+ gl.useProgram(program);uVP=gl.getUniformLocation(program,'uVP');uModel=gl.getUniformLocation(program,'uModel');uFog=gl.getUniformLocation(program,'uFog');aPos=gl.getAttribLocation(program,'aPos');aCol=gl.getAttribLocation(program,'aColor');aSurface=gl.getAttribLocation(program,'aSurface');uTime=gl.getUniformLocation(program,'uTime');
  gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LEQUAL);gl.disable(gl.CULL_FACE);
  gl.uniform3fv(uFog,new Float32Array([.72,.80,.76]));buildMeshes();
 }
-function builder(){const verts=[];function tri(a,b,c,color){for(const v of [a,b,c])verts.push(v[0],v[1],v[2],...color);}function quad(a,b,c,d,color){tri(a,b,c,color);tri(a,c,d,color);}function box(x,y,z,wx,wy,wz,color){const A=[x-wx/2,y-wy/2,z-wz/2],B=[x+wx/2,y-wy/2,z-wz/2],C=[x+wx/2,y+wy/2,z-wz/2],D=[x-wx/2,y+wy/2,z-wz/2],E=[x-wx/2,y-wy/2,z+wz/2],F=[x+wx/2,y-wy/2,z+wz/2],G=[x+wx/2,y+wy/2,z+wz/2],H=[x-wx/2,y+wy/2,z+wz/2];quad(A,B,C,D,color);quad(E,H,G,F,color);quad(D,C,G,H,color.map(x=>x*.85));quad(A,E,F,B,color.map(x=>x*.7));quad(B,F,G,C,color.map(x=>x*.9));quad(A,D,H,E,color.map(x=>x*.78));}
-function cone(x,y,z,r,h,color){const sides=7;for(let i=0;i<sides;i++){let t=i*2*Math.PI/sides,n=(i+1)*2*Math.PI/sides;tri([x+r*Math.cos(t),y,z+r*Math.sin(t)],[x,y+h,z],[x+r*Math.cos(n),y,z+r*Math.sin(n)],color.map(x=>x*(.83+.17*i/sides)));}}
-function upload(){const v=new Float32Array(verts),b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);gl.bufferData(gl.ARRAY_BUFFER,v,gl.STATIC_DRAW);return{buffer:b,count:v.length/6};}
+function builder(){const verts=[];function tri(a,b,c,color,surface=0){for(const v of [a,b,c])verts.push(v[0],v[1],v[2],...color,surface);}function quad(a,b,c,d,color,surface=0){tri(a,b,c,color,surface);tri(a,c,d,color,surface);}function box(x,y,z,wx,wy,wz,color,surface=0){const A=[x-wx/2,y-wy/2,z-wz/2],B=[x+wx/2,y-wy/2,z-wz/2],C=[x+wx/2,y+wy/2,z-wz/2],D=[x-wx/2,y+wy/2,z-wz/2],E=[x-wx/2,y-wy/2,z+wz/2],F=[x+wx/2,y-wy/2,z+wz/2],G=[x+wx/2,y+wy/2,z+wz/2],H=[x-wx/2,y+wy/2,z+wz/2];quad(A,B,C,D,color,surface);quad(E,H,G,F,color,surface);quad(D,C,G,H,color.map(x=>x*.85),surface);quad(A,E,F,B,color.map(x=>x*.7),surface);quad(B,F,G,C,color.map(x=>x*.9),surface);quad(A,D,H,E,color.map(x=>x*.78),surface);}
+function cone(x,y,z,r,h,color,surface=0){const sides=7;for(let i=0;i<sides;i++){let t=i*2*Math.PI/sides,n=(i+1)*2*Math.PI/sides;tri([x+r*Math.cos(t),y,z+r*Math.sin(t)],[x,y+h,z],[x+r*Math.cos(n),y,z+r*Math.sin(n)],color.map(x=>x*(.83+.17*i/sides)),surface);}}
+function upload(){const v=new Float32Array(verts),b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);gl.bufferData(gl.ARRAY_BUFFER,v,gl.STATIC_DRAW);return{buffer:b,count:v.length/7,triangles:v.length/21};}
 return {tri,quad,box,cone,upload};}
-function drawMesh(mesh,model){gl.bindBuffer(gl.ARRAY_BUFFER,mesh.buffer);gl.enableVertexAttribArray(aPos);gl.vertexAttribPointer(aPos,3,gl.FLOAT,false,24,0);gl.enableVertexAttribArray(aCol);gl.vertexAttribPointer(aCol,3,gl.FLOAT,false,24,12);gl.uniformMatrix4fv(uModel,false,model);gl.drawArrays(gl.TRIANGLES,0,mesh.count);}
+function drawMesh(mesh,model){gl.bindBuffer(gl.ARRAY_BUFFER,mesh.buffer);gl.enableVertexAttribArray(aPos);gl.vertexAttribPointer(aPos,3,gl.FLOAT,false,28,0);gl.enableVertexAttribArray(aCol);gl.vertexAttribPointer(aCol,3,gl.FLOAT,false,28,12);gl.enableVertexAttribArray(aSurface);gl.vertexAttribPointer(aSurface,1,gl.FLOAT,false,28,24);gl.uniformMatrix4fv(uModel,false,model);gl.drawArrays(gl.TRIANGLES,0,mesh.count);}
 function buildMeshes(){
  const w=builder(),rad=core.constants.RAD,terrain=core.groundHeight;
  const cells=125,min=-6500,span=13000;
@@ -582,7 +593,7 @@ function buildMeshes(){
   const a=[x,terrain(x,z),z],b=[x+dx,terrain(x+dx,z),z],c=[x+dx,terrain(x+dx,z+dz),z+dz],d=[x,terrain(x,z+dz),z+dz];
   const avg=(a[1]+b[1]+c[1]+d[1])/4,water=seattle?seattle.water(x,z):Math.hypot((x+1250)/1000,(z-1450)/850)<1;
   const v=(Math.sin(x*.014+z*.009)*.5+.5),color=seattle?(water?[.10,.34,.48]:[.38+.07*v,.50+.05*v,.44]):water?[.15,.43,.50]:avg>270?[.48,.53,.48]:avg>110?[.31+.06*v,.46+.03*v,.37]:[.28+.08*v,.40+.08*v,.31+.025*v];
-  w.quad(a,b,c,d,color);
+  w.quad(a,b,c,d,color,water?2:0);
  }
  if(seattle)addSeattleWebGL(w);
  else{
@@ -611,18 +622,58 @@ function buildMeshes(){
  }
  meshes.world=w.upload();
  for(const craft of Object.values(core.aircraft)){
-  const p=builder(),isJet=craft.id==='jet',isGlider=craft.id==='glider',wing=isGlider?18:isJet?11:13;
-  const body=isJet?[.72,.73,.73]:isGlider?[.78,.91,.95]:[.92,.92,.86],accent=isJet?[.95,.60,.29]:[.95,.55,.32];
-  p.box(0,0,0,1.9,1.85,isGlider?18:17,body);
-  p.tri([0,.2,11],[-.9,-.7,7],[.9,-.7,7],body);
-  p.box(0,.16,1.3,wing*2,.35,isJet?3.7:3.1,body);
-  p.box(0,.3,-7,wing*.9,.25,2.3,body);
-  p.tri([0,4.6,-8],[0,0,-9],[0,.35,-4],[.71,.78,.81]);
-  p.box(0,1.23,2,1.25,.75,3.7,[.19,.42,.57]);
-  p.box(-wing+1,.2,1.3,2.2,.31,3.2,accent);
-  p.box(wing-1,.2,1.3,2.2,.31,3.2,accent);
-  if(isJet){p.box(-.95,-.5,-8,.5,.7,3,[.26,.34,.36]);p.box(.95,-.5,-8,.5,.7,3,[.26,.34,.36]);}
-  else p.box(0,0,10,.35,4,.35,[.27,.35,.38]);
+  const p=builder(),isJet=craft.id==='jet',isGlider=craft.id==='glider',wing=isGlider?19:isJet?12:14;
+  const fuselage=isJet?[.70,.74,.75]:isGlider?[.83,.91,.92]:[.92,.91,.87];
+  const trim=isJet?[.97,.61,.32]:isGlider?[.48,.69,.79]:[.96,.55,.32];
+  // Original all-geometry 3D aircraft: tapered polygonal fuselage, swept airfoil wings,
+  // tailplanes, fin, canopy, engine details. No external model or texture dependency.
+  const rings=isGlider?[[-10.2,.22,.23],[-7.1,.59,.50],[-2.2,.67,.61],[2.8,.75,.65],[7.8,.35,.38],[11.5,.04,.05]]:
+    [[-10.1,.27,.27],[-7.5,.65,.61],[-2.6,.89,.80],[3.3,.94,.84],[8.7,.48,.49],[12,.03,.03]];
+  const faces=12;
+  for(let r=0;r<rings.length-1;r++){
+   const [z1,xr1,yr1]=rings[r],[z2,xr2,yr2]=rings[r+1];
+   for(let j=0;j<faces;j++){
+    const a=j*2*Math.PI/faces,b=(j+1)*2*Math.PI/faces;
+    p.quad([xr1*Math.cos(a),yr1*Math.sin(a),z1],
+      [xr1*Math.cos(b),yr1*Math.sin(b),z1],
+      [xr2*Math.cos(b),yr2*Math.sin(b),z2],
+      [xr2*Math.cos(a),yr2*Math.sin(a),z2],fuselage.map(v=>v*(.92+.07*j/faces)));
+   }
+  }
+  for(const sign of [-1,1]){
+   const root=sign*.75,tip=sign*wing;
+   const rootFront=isJet?4.5:3.3,tipFront=isJet?-1.4:isGlider?.9:0.2;
+   const rootBack=isJet?-1.5:-1.8,tipBack=isJet?-3.8:isGlider?-1.5:-2.1;
+   const wingA=[root,.05,rootFront],wingB=[tip,.18,tipFront],
+     wingC=[tip,.18,tipBack],wingD=[root,.05,rootBack];
+   p.quad(wingA,wingB,wingC,wingD,fuselage);
+   p.quad([wingA[0],-.23,wingA[2]],[wingD[0],-.23,wingD[2]],
+       [wingC[0],-.09,wingC[2]],[wingB[0],-.09,wingB[2]],fuselage.map(v=>v*.85));
+   p.quad([sign*wing*.77,.2,tipFront*.88],[tip,.2,tipFront],
+      [tip,.2,tipBack],[sign*wing*.77,.2,tipBack*.7],trim);
+   const tailTip=sign*(isGlider?7:6.5),tailZ=-7.5;
+   p.quad([root,.35,tailZ+1.4],[tailTip,.45,tailZ+.55],
+      [tailTip,.45,tailZ-1],[root,.35,tailZ-1.7],fuselage.map(v=>v*.90));
+   if(!isGlider){
+    p.tri([tip,.18,tipBack],[tip,.18,tipFront],[tip,.18+(isJet?1.4:.8),tipBack-.15],trim);
+   }
+   if(isJet)p.box(sign*.94,-.35,-8.1,.68,.85,3.4,[.31,.36,.40]);
+  }
+  // Characterful tail silhouette and glass canopy.
+  p.tri([0,3.35,-8.65],[0,.34,-9.45],[0,.40,-4.9],fuselage.map(v=>v*.81));
+  p.tri([0,3.35,-8.65],[0,.40,-4.9],[.12,.34,-9.45],trim);
+  p.box(0,1.02,3.8,1.40,.47,4.5,[.16,.39,.54]);
+  p.box(0,1.34,3.5,1.05,.19,2.7,[.28,.54,.66]);
+  p.box(0,-.22,11.5,.29,.35,.78,[.33,.36,.37]);
+  if(!isJet&&!isGlider){
+   // Visible prop disk and two blades, purely illustrative; not a blade simulation.
+   p.box(0,0,12.14,3.8,.15,.12,[.25,.30,.33]);
+   p.box(0,0,12.2,.15,3.8,.12,[.25,.30,.33]);
+  }
+  if(isJet){
+   p.box(-.94,-.35,-10.2,.50,.40,.44,[.17,.25,.32]);
+   p.box(.94,-.35,-10.2,.50,.40,.44,[.17,.25,.32]);
+  }
   meshes[craft.id]=p.upload();
  }
 }
@@ -658,6 +709,7 @@ function buildCustomMesh(design){
 }
 function planeModel(s){const c=Math.cos,b=Math.sin,cy=c(s.yaw),sy=b(s.yaw),cp=c(-s.pitch),sp=b(-s.pitch),cr=c(-s.bank),sr=b(-s.bank);const RY=[cy,0,-sy,0,0,1,0,0,sy,0,cy,0,0,0,0,1];const RX=[1,0,0,0,0,cp,sp,0,0,-sp,cp,0,0,0,0,1];const RZ=[cr,sr,0,0,-sr,cr,0,0,0,0,1,0,0,0,0,1];const T=identity();T[12]=s.x;T[13]=s.y;T[14]=s.z;return mul(mul(mul(T,RY),RX),RZ);}
 let fallback2D=false;
+window.AAARGraphicsMetrics=()=>({renderer:fallback2D?'canvas2d':gl?'webgl2':'canvas2d',lighting_pipeline:'flat-lit-glass-water-v10',shading_active:!!program&&!fallback2D,world_triangles:meshes.world?.triangles||0,seattle_building_count:seattle?.buildings.length||0,canvas_pixels:canvas.width*canvas.height});
 /* Native Canvas2D perspective fallback for restricted devices. No third-party rendering engine. */
 function drawCustom2D(ctx,w,h,d,bank){
  const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
@@ -808,26 +860,104 @@ function labelSeattleLandmarks(ctx,project,w,h){
  }return count;
 }
 function addSeattleWebGL(b){
- for(const t of seattle.buildings){
-  const y=seattle.ground(t.x,t.z),c=t.shade>.55?[.35,.52,.60]:[.63,.62,.58];
-  b.box(t.x,y+t.h/2,t.z,t.w,t.h,t.d,c);
+ const height=seattle.ground,water=seattle.water,seed=seattle.seed;
+ // Schematic Seattle street pattern: simplified artistic placement, NOT road GIS.
+ for(let x=-1150;x<1450;x+=155){
+  for(let z=-1750;z<1750;z+=145){
+   if(water(x,z)||water(x,z+110))continue;
+   const y=height(x,z)+1.5;
+   b.quad([x-10,y,z],[x+10,y,z],[x+10,y,z+112],[x-10,y,z+112],[.25,.30,.32],3);
+  }
  }
+ for(let z=-1750;z<1750;z+=145){
+  for(let x=-1160;x<1400;x+=150){
+   if(water(x,z)||water(x+118,z))continue;
+   const y=height(x,z)+1.6;
+   b.quad([x,y,z-10],[x+119,y,z-10],[x+119,y,z+10],[x,y,z+10],[.29,.33,.34],3);
+  }
+ }
+ // Approximate waterfront piers and a ferry, placed as recognizable storytelling scenery.
+ for(let i=0;i<7;i++){
+  const z=-1110+i*310,x=-1010;
+  b.box(x-72,3,z,210,5,24,[.50,.46,.40],3);
+  b.box(x-130,6,z,48,7,17,[.66,.63,.58]);
+ }
+ b.box(-1460,4,-300,96,9,185,[.86,.86,.80]);
+ b.box(-1460,13,-315,74,13,71,[.88,.91,.91]);
+ b.box(-1460,23,-334,60,10,47,[.33,.52,.62]);
+ for(let z=-1670;z<1600;z+=380){
+  const x=500,y=height(x,z);
+  b.box(x,y+3,z,35,5,200,[.29,.34,.38],3);
+ }
+ // Direct from City of Seattle GIS: low-poly bounding footprints, synthetic heights.
+ for(const t of seattle.buildings){
+  const y=height(t.x,t.z),glass=t.shade>.63,brick=t.shade<.24;
+  const c=glass?[.38,.56,.64]:brick?[.59,.40,.36]:t.shade>.40?[.59,.62,.63]:[.47,.56,.61];
+  b.box(t.x,y+t.h/2,t.z,t.w,t.h,t.d,c,1);
+  if(t.h>110&&t.w>13&&t.d>13){
+   const setback=.74+seed(t.x,t.z)*.11;
+   b.box(t.x,y+t.h-4,t.z,t.w*setback,9,t.d*setback,c.map(n=>n*1.05),1);
+  }
+  if(t.h>35&&seed(t.x+11,t.z)<.30){
+   const rx=Math.min(12,t.w*.34),rz=Math.min(14,t.d*.37);
+   b.box(t.x,y+t.h+2.4,t.z,Math.max(3,rx),4.8,Math.max(3,rz),[.50,.58,.61]);
+  }
+  if(t.h>175&&seed(t.x,t.z+7)>.71)b.box(t.x,y+t.h+11,t.z,3,22,3,[.72,.77,.75]);
+ }
+ // Distinctive landmark silhouettes anchored to landmark lat/lon, not accurate meshes.
  for(const l of seattle.landmarks){
-  const y=seattle.ground(l.x,l.z);
+  const y=height(l.x,l.z);
   if(l.type==='needle'){
-   b.box(l.x,y+84,l.z,8,168,8,[.80,.88,.88]);
-   b.box(l.x,y+173,l.z,58,11,58,[.85,.72,.51]);
-   b.box(l.x,y+181,l.z,42,9,42,[.32,.56,.65]);
-   b.cone(l.x,y+197,l.z,2,24,[.86,.89,.90]);
+   // Three angled supports and the distinctive round observation deck.
+   for(let k=0;k<3;k++){
+    const a=(k+.18)*Math.PI*2/3,dx=Math.cos(a),dz=Math.sin(a);
+    const width=3.4;
+    const foot=[l.x+dx*21,y,l.z+dz*21],neck=[l.x+dx*6,y+152,l.z+dz*6];
+    const tx=-dz*width,tz=dx*width;
+    b.quad([foot[0]+tx,foot[1],foot[2]+tz],[neck[0]+tx*.45,neck[1],neck[2]+tz*.45],
+           [neck[0]-tx*.45,neck[1],neck[2]-tz*.45],[foot[0]-tx,foot[1],foot[2]-tz],[.76,.83,.82]);
+   }
+   for(let ring=0;ring<3;ring++){
+    const radius=[25,34,24][ring],deckY=y+[158,169,180][ring];
+    for(let k=0;k<32;k++){
+     const a=k*Math.PI/16,q=(k+1)*Math.PI/16;
+     const A=[l.x+radius*Math.cos(a),deckY,l.z+radius*Math.sin(a)];
+     const B=[l.x+radius*Math.cos(q),deckY,l.z+radius*Math.sin(q)];
+     const inner=ring===1?20:4;
+     b.quad([l.x+inner*Math.cos(a),deckY,l.z+inner*Math.sin(a)],
+        [l.x+inner*Math.cos(q),deckY,l.z+inner*Math.sin(q)],B,A,
+        ring===1?[.84,.72,.54]:[.66,.78,.78]);
+     if(ring===1)b.quad(A,B,[B[0],deckY+9,B[2]],[A[0],deckY+9,A[2]],[.28,.49,.57],1);
+    }
+   }
+   b.cone(l.x,y+183,l.z,5,32,[.82,.87,.88]);
   }else if(l.type==='wheel'){
-   for(let j=0;j<40;j++){const a=j*Math.PI/20,q=(j+1)*Math.PI/20,r=27;
-    b.quad([l.x+r*Math.cos(a),y+32+r*Math.sin(a),l.z],
-      [l.x+r*Math.cos(q),y+32+r*Math.sin(q),l.z],
-      [l.x+(r-3)*Math.cos(q),y+32+(r-3)*Math.sin(q),l.z],
-      [l.x+(r-3)*Math.cos(a),y+32+(r-3)*Math.sin(a),l.z],[.94,.81,.60]);}
-  }else b.box(l.x,y+l.h/2,l.z,l.w,l.h,l.d,l.type==='tower'?[.26,.42,.53]:[.65,.62,.57]);
+   for(let k=0;k<40;k++){
+    const a=k*Math.PI/20,q=(k+1)*Math.PI/20,rr=27;
+    b.quad([l.x+rr*Math.cos(a),y+32+rr*Math.sin(a),l.z],
+       [l.x+rr*Math.cos(q),y+32+rr*Math.sin(q),l.z],
+       [l.x+(rr-3)*Math.cos(q),y+32+(rr-3)*Math.sin(q),l.z],
+       [l.x+(rr-3)*Math.cos(a),y+32+(rr-3)*Math.sin(a),l.z],[.94,.84,.67]);
+   }
+   b.box(l.x,y+17,l.z,3,35,3,[.80,.82,.79]);
+  }else{
+   const color=l.type==='tower'?[.31,.45,.56]:l.type==='stadium'?[.44,.56,.58]:[.72,.53,.44];
+   b.box(l.x,y+l.h/2,l.z,l.w,l.h,l.d,color,1);
+   if(l.type==='tower')b.box(l.x,y+l.h+5,l.z,l.w*.64,10,l.d*.64,[.47,.62,.68],1);
+   if(l.type==='stadium')b.box(l.x,y+l.h+3,l.z,l.w*1.05,6,l.d*1.05,[.81,.84,.81]);
+  }
+ }
+ // Seattle Center grove: visually useful near the Space Needle, not surveyed trees.
+ const needle=seattle.landmarks.find(l=>l.type==='needle');
+ if(needle)for(let i=0;i<115;i++){
+  const x=needle.x+(seed(i+170,22)-.5)*630,z=needle.z+(seed(i,51)-.5)*620;
+  if(Math.hypot(x-needle.x,z-needle.z)<65||water(x,z))continue;
+  const y=height(x,z),h=8+seed(i,86)*16;
+  b.box(x,y+h*.12,z,1.5,h*.24,1.5,[.37,.35,.28]);
+  b.cone(x,y+h*.18,z,3.8+seed(i,81)*3.1,h,[.17,.35,.26]);
  }
 }
+
 function render2D(){
  const dpi=Math.min(window.devicePixelRatio||1,1.25),w=Math.round(canvas.clientWidth*dpi),h=Math.round(canvas.clientHeight*dpi);
  if(!w||!h)return;if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;}
@@ -911,7 +1041,7 @@ function render(){
    eye=[state.x-ahead[0]*48,state.y+15-ahead[1]*12,state.z-ahead[2]*48];focus=[state.x+ahead[0]*45,state.y+ahead[1]*45+2,state.z+ahead[2]*45];up=[-Math.sin(state.bank)*.28,1,0];
  }
  const vp=mul(perspective(view==='cockpit'?78*Math.PI/180:70*Math.PI/180,canvas.width/canvas.height,.5,15000),lookAt(eye,focus,up));
- gl.useProgram(program);gl.uniformMatrix4fv(uVP,false,vp);drawMesh(meshes.world,identity());if(view!=='cockpit')drawMesh(meshes[state.craft],planeModel(state));
+ gl.useProgram(program);gl.uniformMatrix4fv(uVP,false,vp);gl.uniform1f(uTime,state.flightTime);drawMesh(meshes.world,identity());if(view!=='cockpit')drawMesh(meshes[state.craft],planeModel(state));
 }
 function hud(){const round=n=>Math.round(n).toLocaleString('en-US');$('speedOut').textContent=round(state.speed*1.94384);$('altOut').textContent=round(state.y*3.28084);$('headOut').textContent=String(Math.round((state.yaw*180/Math.PI+3600)%360)).padStart(3,'0');$('pitchOut').textContent=(state.pitch*180/Math.PI).toFixed(0);$('bankOut').textContent=(state.bank*180/Math.PI).toFixed(0);$('throttleOut').textContent=round(state.throttle*100);const slider=$('flightThrottleRange');if(slider&&document.activeElement!==slider)slider.value=String(Math.round(state.throttle*100));const lever=$('flightThrottleValue');if(lever)lever.textContent=round(state.throttle*100)+'%';$('pauseToggle').dataset.paused=String(state.paused);const sec=Math.floor(state.flightTime);$('flightTime').textContent='T+ '+String(Math.floor(sec/60)).padStart(2,'0')+':'+String(sec%60).padStart(2,'0');$('gateProgress').querySelectorAll('i').forEach((el,i)=>el.classList.toggle('done',i<state.checkpoints));const next=core.gates[state.checkpoints];$('nextGate').textContent=next?`NEXT: ${next.title} · ${state.checkpoints} / 3`:'MISSION COMPLETE · 3 / 3';$('flightStatus').textContent=state.condition==='BUILDING_CONTACT'?'CITY CONTACT':state.condition==='GROUND_CONTACT'?'GROUND CONTACT':state.paused?'PAUSED':state.craft==='custom'?'FOUNDRY FLIGHT / SCREENING':'SIMULATION ACTIVE';$('pauseToggle').textContent=state.paused?'▶ Resume':'Ⅱ Pause';$('cameraToggle').textContent=view==='chase'?'◉ Chase view':'◉ Cockpit view';}
 function controls(){const has=(...a)=>a.some(k=>held.has(k));const t=k=>touch.has(k);const limit=v=>Math.max(-1,Math.min(1,v));return {pitch:limit(stickInput.pitch+(has('w','arrowup')||t('pitchUp')?1:0)-(has('s','arrowdown')||t('pitchDown')?1:0)),bank:limit(stickInput.bank+(has('d','arrowright')||t('right')?1:0)-(has('a','arrowleft')||t('left')?1:0)),rudder:(has('e')?1:0)-(has('q')?1:0),throttle:(has('shift')||t('throttleUp')?1:0)-(has('control')||t('throttleDown')?1:0)};}

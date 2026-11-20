@@ -164,7 +164,26 @@ try{
  await laptopPage.locator('#beginFlight').click();
  await laptopPage.waitForFunction(()=>document.querySelector('#startScreen')?.style.display==='none',null,{timeout:15000});
  assert.equal(await laptopPage.locator('#speedOut').innerText()==='—',false,'desktop Seattle telemetry missing');
- receipts.push({city:'Seattle laptop',viewport:'1366x768',flight_started:true,init_errors:0});
+ const graphics=await laptopPage.evaluate(()=>{
+  const g=window.AAARGraphicsMetrics?.();
+  const canvas=document.getElementById('flightCanvas');
+  const gl=g?.renderer==='webgl2'?canvas.getContext('webgl2'):null;
+  return {...g,gl_program_linked:gl?!!gl.getParameter(gl.CURRENT_PROGRAM):false,
+    webgl_error:gl?gl.getError():null};
+ });
+ assert.equal(graphics.lighting_pipeline,'flat-lit-glass-water-v10','new desktop graphics pipeline missing');
+ assert.ok(graphics.seattle_building_count>500,'Seattle GIS geometry missing');
+ if(graphics.renderer==='webgl2'){
+  assert.equal(graphics.shading_active,true,'3D shader not linked');
+  assert.ok(graphics.world_triangles>25000,'city world geometry unexpectedly empty');
+  assert.equal(graphics.gl_program_linked,true,'WebGL program inactive');
+  assert.equal(graphics.webgl_error,0,'WebGL renderer reports a GPU error');
+ }
+ if(process.env.AAAR_REQUIRE_WEBGL==='1')assert.equal(graphics.renderer,'webgl2','WebGL2 was unexpectedly replaced by fallback');
+ receipts.push({city:'Seattle laptop',viewport:'1366x768',flight_started:true,init_errors:0,
+  rendering_engine:graphics.renderer,shading_active:graphics.shading_active,
+  triangles:graphics.world_triangles,webgl_program_linked:graphics.gl_program_linked});
+
  await desktopContext.close();
  assert.equal(errors.length,0,'browser JavaScript errors: '+errors.join(' | '));
  console.log(JSON.stringify({schema:'evercraft.aaar.mobile-cockpit-source-e2e.v1',tested_source:'pull_request_branch_local_http',browser:engine,device:'mobile-emulation-not-physical-Safari',passed:true,receipts,physical_iphone_safari_verified:false,hosted_release_verified:false},null,2));

@@ -87,3 +87,20 @@ test('Seattle city tour has grounded 2023 footprints, georeferenced landmarks an
  assert.match(page,/acceleratedStallMps/);
  assert.match(page,/LOW_ORDER_GAMEPLAY/);
 });
+
+test('Seattle v1.0 laptop renderer uses lit glass, water and grounded city geometry',()=>{
+  assert.match(page,/AAARGraphicsMetrics/);
+  assert.match(page,/aSurface/);
+  assert.match(page,/uTime/);
+  assert.match(page,/dFdx\(vWorld\)/);
+  assert.match(page,/dFdy\(vWorld\)/);
+  assert.match(page,/windowsNoise/);
+  assert.match(page,/vSurface>0\.5&&vSurface<1\.5/);
+  assert.match(page,/vSurface>1\.5&&vSurface<2\.5/);
+  assert.match(page,/function addSeattleWebGL/);
+  assert.match(page,/const needle=seattle\.landmarks\.find\(l=>l\.type==='needle'\)/);
+  assert.match(page,/Schematic Seattle street pattern/);
+  assert.match(page,/Approximate waterfront piers/);
+  assert.match(page,/html\.seattle-mode \.flight-shell/);
+  assert.doesNotMatch(page,/https?:\/\/(?:unpkg|cdn\.jsdelivr)/);
+});
