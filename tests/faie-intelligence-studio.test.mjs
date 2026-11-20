@@ -188,3 +188,26 @@ test('observed historical station evidence is separately available with distance
   assert.match(html,/This is not a 30-year climate normal/);
   assert.match(html,/data\.request_persisted!==false/);
 });
+
+
+test('historical land preservation is a first-class sourced, read-only regional timeline',()=>{
+  for(const marker of [
+    'id="landHistoryPanel"',
+    'id="landHistoryRegion"',
+    'id="landHistoryRun"',
+    'id="landHistoryResult"',
+    'id="landHistoryDownload"',
+    '/api/faie/history/region?key=',
+    'Explore land history preserved by Evercraft',
+    'data.exhaustive_history!==false',
+    'region:',
+    'time_precision',
+    'evidence_state',
+    'Original source evidence',
+    'evercraft-faie-public-land-history.json',
+    'private',
+    'No source-backed historical records have been archived'
+  ])assert.ok(html.includes(marker),'missing historical preservation UI marker: '+marker);
+  assert.match(html,/Exact public visitor scan locations are not automatically saved/);
+  assert.match(html,/This is an incomplete archive/);
+});
