@@ -28,11 +28,29 @@ net.Server.prototype.close = function(...args) {
 };
 function syntheticListenerSources() {
   return (process._getActiveHandles?.() || [])
-    .filter(handle => handle instanceof net.Server && handle.listening === true)
+    .filter(handle => handle instanceof net.Server)
     .map(handle => ({
       origin: listenerOrigins.get(handle) || 'unattributed',
-      close_called: listenerCloseCalled.has(handle)
+      close_called: listenerCloseCalled.has(handle),
+      listening: handle.listening === true
     })).sort((a,b)=>a.origin.localeCompare(b.origin));
+}
+
+async function readAdmittedCoreRoute(organism) {
+  const attempts=12;
+  let route=null;
+  for(let i=0;i<attempts;i++){
+    route=await organism.yard.verifyRoute('systemia-core-local-resident');
+    if(route?.health?.schema==='evercraft.systemia.resident-supervisor-health.v1'&&
+       route.health.running===true) return route;
+    if(i!==attempts-1) await new Promise(resolve=>setTimeout(resolve,200));
+  }
+  console.error('LOCAL_ORGANISM_PROOF_CORE_ROUTE_HOLD',JSON.stringify({
+    state: String(route?.state || 'missing').slice(0,60),
+    has_health: Boolean(route?.health),
+    core_running:route?.health?.running===true,
+  }));
+  assert.fail('Core supervisor unavailable after bounded local verification');
 }
 
 function verifyCoreProofRoute(route, root) {
@@ -104,7 +122,7 @@ try {
   const firstHealth = await first.health();
   assert.equal(firstHealth.kaidance.ok, true);
   assert.equal(firstHealth.fabric.ok, true);
-  verifyCoreProofRoute(await first.yard.verifyRoute('systemia-core-local-resident'),root);
+  verifyCoreProofRoute(await readAdmittedCoreRoute(first),root);
   assert.equal(first.core.result.raven_private_runtime_configured, true);
   assert.equal(first.core.result.raven_inference_gateway_configured, true);
   assert.equal(first.core.result.raven_inference_provider, 'ollama');
@@ -166,7 +184,7 @@ try {
   const secondHealth = await second.health();
   assert.equal(secondHealth.kaidance.ok, true);
   assert.equal(secondHealth.fabric.ok, true);
-  verifyCoreProofRoute(await second.yard.verifyRoute('systemia-core-local-resident'),root);
+  verifyCoreProofRoute(await readAdmittedCoreRoute(second),root);
 
   const allocatorSecret = fs.readFileSync(
     path.join(root, '.secrets', 'allocator-token'),
