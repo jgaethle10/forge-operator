@@ -161,11 +161,22 @@ try {
     named_cloud_required: false,
   }, null, 2));
 } finally {
+  // Diagnose harness teardown separately from the successful proof body.
+  // Do not print runtime roots, ports, authority refs or private health data.
   if (first) {
-    try { await first.close(); } catch {}
+    console.error('LOCAL_ORGANISM_PROOF_TEARDOWN', 'first_closing');
+    try { await first.close(); } catch { console.error('LOCAL_ORGANISM_PROOF_TEARDOWN', 'first_close_failed'); }
+    console.error('LOCAL_ORGANISM_PROOF_TEARDOWN', 'first_closed');
   }
   if (second) {
-    try { await second.close(); } catch {}
+    console.error('LOCAL_ORGANISM_PROOF_TEARDOWN', 'second_closing');
+    try { await second.close(); } catch { console.error('LOCAL_ORGANISM_PROOF_TEARDOWN', 'second_close_failed'); }
+    console.error('LOCAL_ORGANISM_PROOF_TEARDOWN', 'second_closed');
   }
   fs.rmSync(root, { recursive: true, force: true });
+  const types = (process.getActiveResourcesInfo?.() || []).reduce((acc, name) => {
+    if (/^[A-Za-z][A-Za-z0-9]{0,50}$/.test(name))acc[name]=(acc[name]||0)+1;
+    return acc;
+  }, {});
+  console.error('LOCAL_ORGANISM_PROOF_TEARDOWN_DONE', JSON.stringify({resource_types:types}));
 }
