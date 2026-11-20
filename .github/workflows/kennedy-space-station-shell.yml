@@ -150,11 +150,44 @@ jobs:
           PY
       - name: Playable Kennedy Discovery World offline interactions
         run: node products/kennedy-space-station/test_explore_ui.mjs
-      - name: Package standalone Kennedy interactive phone preview
+      - name: Render actual Kennedy desktop and phone screenshots headlessly
+        run: |
+          set -euo pipefail
+          PREVIEW=/tmp/kennedy-discovery-preview
+          mkdir -p "$PREVIEW"
+          cp products/kennedy-space-station/public/explore.html "$PREVIEW/explore.html"
+          cp products/kennedy-space-station/public/index.html "$PREVIEW/index.html"
+          cp products/kennedy-space-station/public/favicon.svg "$PREVIEW/favicon.svg"
+          BROWSER="$(command -v google-chrome || command -v chromium || command -v chromium-browser || true)"
+          if [ -z "$BROWSER" ]; then
+            echo "HOLD: no headless Chrome available for actual viewport QA"
+            exit 1
+          fi
+          URL="file://$PWD/products/kennedy-space-station/public/explore.html"
+          "$BROWSER" --headless --no-sandbox --disable-dev-shm-usage --disable-gpu --hide-scrollbars --window-size=1400,1100 --virtual-time-budget=1800 --screenshot="$PREVIEW/desktop-preview.png" "$URL" 2>"$PREVIEW/chrome-desktop.log"
+          "$BROWSER" --headless --no-sandbox --disable-dev-shm-usage --disable-gpu --hide-scrollbars --window-size=390,900 --virtual-time-budget=1800 --screenshot="$PREVIEW/phone-preview.png" "$URL" 2>"$PREVIEW/chrome-phone.log"
+          python3 - "$PREVIEW" <<'PY'
+          import struct,sys
+          from pathlib import Path
+          out=Path(sys.argv[1])
+          for name,minwidth in (("desktop-preview.png",1000),("phone-preview.png",350)):
+              payload=(out/name).read_bytes()
+              assert payload.startswith(b"\x89PNG\r\n\x1a\n"),name
+              w,h=struct.unpack(">II",payload[16:24])
+              assert w>=minwidth and h>=750 and len(payload)>35000,(name,w,h,len(payload))
+              print(name,w,h,len(payload),"bytes: headless browser rendered")
+          print("NOTE: screenshots show visual browser rendering; manual iPhone QA remains required")
+          PY
+      - name: Package Kennedy interactive HTML and rendered screenshots
         uses: actions/upload-artifact@v4
         with:
           name: kennedy-discovery-world-standalone-html
-          path: products/kennedy-space-station/public/explore.html
+          path: |
+            /tmp/kennedy-discovery-preview/explore.html
+            /tmp/kennedy-discovery-preview/index.html
+            /tmp/kennedy-discovery-preview/favicon.svg
+            /tmp/kennedy-discovery-preview/desktop-preview.png
+            /tmp/kennedy-discovery-preview/phone-preview.png
           if-no-files-found: error
           retention-days: 14
       - name: Public homepage security and isolation gate
