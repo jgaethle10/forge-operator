@@ -158,7 +158,8 @@ if (stage && canvas && verifiedMarker) {
      const a=TAU*j/155;
      pts.push(torus(a,lane===0?-.78:2.18,t,1.001,lane===0?.047:.038));
     }
-    line(pts,{color,alpha:.22,weight:1.7,glow:5});
+    line(pts,{color,alpha:.115,weight:8});
+    line(pts,{color,alpha:.5,weight:1.55});
     for(let i=0;i<n;i++){
      const p=sparks[i],a=p.angle+(lane===0?1:-1)*speed*(.67+p.drift*.5);
      const b=lane===0?-.75:2.16;
@@ -191,11 +192,44 @@ if (stage && canvas && verifiedMarker) {
   }
   function bConst(lane){return lane===0?-.75:2.16}
   function posScale(p){return Math.max(.5,p.scale)}
+  // A deliberately continuous plasma sculpture, not a timed heartbeat:
+  // refracted field ribbons lean into the central interaction chamber.
+  function plasmaStorm(t){
+   const cx=centerX,cy=centerY,R=radius;
+   ctx.save();ctx.globalCompositeOperation='lighter';
+   for(let i=0;i<22;i++){
+    const a=i*TAU/22,other=a+Math.PI*.78;
+    const drift=Math.sin(t*.34+i*1.71)*.045;
+    const outer=R*(.57+.12*seed(i+930));
+    const start={x:cx+Math.cos(a+drift)*outer,y:cy+Math.sin(a+drift)*outer*.70};
+    const endR=R*(.13+.08*seed(i+741));
+    const finish={x:cx+Math.cos(other)*endR,y:cy+Math.sin(other)*endR*.9};
+    const cp1={x:cx+Math.cos(a+.42)*outer*.56,y:cy+Math.sin(a-.25)*outer*.53};
+    const cp2={x:cx+Math.cos(other-.61)*R*.27,y:cy+Math.sin(other+.22)*R*.20};
+    const cyan=i%5!==0;
+    const col=cyan?'rgba(115,226,255,':'rgba(255,169,111,';
+    ctx.beginPath();ctx.moveTo(start.x,start.y);
+    ctx.bezierCurveTo(cp1.x,cp1.y,cp2.x,cp2.y,finish.x,finish.y);
+    ctx.lineWidth=i%6===0?2.1:.65;
+    ctx.strokeStyle=col+(.12+.1*seed(i+40))+')';ctx.stroke();
+   }
+   // Chromatic caustics: concentric shards of refracted light, not event rings.
+   for(let i=0;i<30;i++){
+    const a=(i/30)*TAU+t*.028*(i%2?1:-1);
+    const near=R*(.19+.025*(i%3)),far=R*(.27+.025*(i%4));
+    ctx.beginPath();
+    ctx.moveTo(cx+Math.cos(a)*near,cy+Math.sin(a)*near*.88);
+    ctx.lineTo(cx+Math.cos(a+.08)*far,cy+Math.sin(a+.08)*far*.88);
+    ctx.strokeStyle=i%7===0?'rgba(255,210,166,.35)':'rgba(151,224,255,.2)';
+    ctx.lineWidth=i%7===0?1.4:.7;ctx.stroke();
+   }
+   ctx.restore();
+  }
   function interactionChamber(t,flash){
    const R=radius,cx=centerX,cy=centerY;
    glow(cx,cy,R*.78,[
-    [0,'rgba(148,246,255,.56)'],[.13,'rgba(62,190,248,.32)'],
-    [.4,'rgba(18,75,148,.13)'],[1,'rgba(0,0,0,0)']],.48+flash*.42);
+    [0,'rgba(197,251,255,.78)'],[.13,'rgba(69,196,255,.48)'],
+    [.4,'rgba(38,101,188,.19)'],[1,'rgba(0,0,0,0)']],.69+flash*.27);
    // Two opposing energy streams meet in a central, steady symbolic lens.
    // Their continuous shimmer is ambient artwork; NOT a heartbeat event.
    for(let side=0;side<2;side++){
@@ -220,15 +254,15 @@ if (stage && canvas && verifiedMarker) {
    }
    ctx.setLineDash([]);
    ctx.restore();
-   glow(cx,cy,R*.19,[
+   glow(cx,cy,R*.29,[
      [0,'rgba(250,255,255,.92)'],[.08,'rgba(170,239,255,.69)'],
      [.27,'rgba(33,158,255,.26)'],[.67,'rgba(41,98,185,.08)'],[1,'rgba(0,0,0,0)']],.87);
    // The dark iris makes the luminous chamber feel deep rather than washed out.
-   ctx.save();ctx.globalAlpha=.93;const g=ctx.createRadialGradient(cx-R*.015,cy-R*.022,0,cx,cy,R*.098);
+   ctx.save();ctx.globalAlpha=.93;const g=ctx.createRadialGradient(cx-R*.025,cy-R*.035,0,cx,cy,R*.16);
    g.addColorStop(0,'#fffdf8');g.addColorStop(.13,'#d6f9ff');
    g.addColorStop(.27,'#76dfff');g.addColorStop(.47,'#13517c');
    g.addColorStop(.75,'#041c31');g.addColorStop(1,'rgba(1,12,25,0)');
-   ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,R*.098,0,TAU);ctx.fill();ctx.restore();
+   ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,R*.16,0,TAU);ctx.fill();ctx.restore();
    // Decorative particle spray, steady and bounded, no 5-minute timer.
    for(let i=0;i<(mobile()?50:78);i++){
      const p=sparks[i],a=p.angle+t*(.018+.021*p.drift);
@@ -279,7 +313,7 @@ if (stage && canvas && verifiedMarker) {
     hoverX+=(targetX-hoverX)*.055;hoverY+=(targetY-hoverY)*.055;
     ctx.clearRect(0,0,width,height);
     background(t);magneticRing(t);particleBeams(t);
-    interactionChamber(t,flash);structuralAccents(t);
+    plasmaStorm(t);interactionChamber(t,flash);structuralAccents(t);
     // Software-rendered phone browsers must retain idle time for scroll,
     // screen recording and other apps. Never chase full FPS at 100% CPU.
     const renderCost=Math.max(1,performance.now()-now);
