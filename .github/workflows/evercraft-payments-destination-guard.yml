@@ -1,0 +1,29 @@
+name: Evercraft Payments Retired Destination Guard
+on:
+  pull_request:
+    paths:
+      - 'systemia/payments/payment-link-destination-gate*.mjs'
+      - '.github/workflows/evercraft-payments-destination-guard.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/payments/payment-link-destination-gate*.mjs'
+      - '.github/workflows/evercraft-payments-destination-guard.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  provider-destination-offline-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Syntax
+        run: |
+          node --check systemia/payments/payment-link-destination-gate.mjs
+          node --check systemia/payments/payment-link-destination-gate.test.mjs
+      - name: Stripe destination guards are fail-closed
+        run: node --test systemia/payments/payment-link-destination-gate.test.mjs
