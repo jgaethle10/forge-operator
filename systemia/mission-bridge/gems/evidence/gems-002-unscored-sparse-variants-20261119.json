@@ -1,0 +1,34 @@
+{
+  "schema": "evercraft.gems.unsubmitted-sparsity-experiments.v1",
+  "date": "2026-11-19",
+  "data_source": "user-provided verified full-grid GEMS-002 GeoTIFF",
+  "source_candidate_sha256": "7d2b4cf8bc16421e36b196b2b6b349b65e0b6732560a392b98ac699ff3c6be80",
+  "valid_cells": 5167373,
+  "original_positive_cells": 444269,
+  "original_component_count_8_connected": 117461,
+  "original_singleton_components": 62862,
+  "original_singleton_confidence_mass_fraction": 0.1099498712178761,
+  "experimental_variants": [
+    {
+      "name": "gems_002_experimental_pruned_UNSUBMITTED.tif",
+      "operation": "Remove eight-connected one-pixel positive components",
+      "sha256": "1961d977a6cfa26fb9873260acb23e7663b18d87f3f352a8e56ecf161ee0aef5",
+      "positive_pixels": 381407,
+      "positive_valid_fraction": 0.0738106190514987
+    },
+    {
+      "name": "gems_002_experimental_threshold035_UNSUBMITTED.tif",
+      "operation": "Preserve ridge output but require probability >=0.35",
+      "sha256": "0e7e827e81bcc9473c5cc77aa694272f5ba5c93b3c571d2343308915b9e92f5",
+      "positive_pixels": 256619,
+      "positive_valid_fraction": 0.0496614043538177
+    }
+  ],
+  "independent_raster_roundtrip_verified": true,
+  "original_gems_002_untouched": true,
+  "gems_001_untouched": true,
+  "new_fault_dti_unknown": true,
+  "not_officially_scored": true,
+  "no_submission_made": true,
+  "decision": "Compare existing original vs sparse postprocessing on same broader mapped-fault holdout evaluation; no automatic winner."
+}
