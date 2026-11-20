@@ -166,4 +166,5 @@ body.portrait .top .live-button:focus-visible{
  border-color:#6aa6c3!important;
  box-shadow:0 10px 25px #000b!important;
  transform:none!important;
+ transition:none!important;
 }
