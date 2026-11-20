@@ -247,3 +247,25 @@ The tool exports `Evercraft-Site-Concept-Evidence.json` with source filenames an
 Replacing the site aerial clears all overlays and measurements to prevent cross-property carryover; switching tools cancels an unfinished calibration. The editor remains **private and local**; no customer-facing claims of engineering validity, sales, paid orders or Systemia dispatch. See `CALIBRATION.md` for limitations and tests.
 
 `test_calibration.py` adds a Node VM regression test. The complete local v2.0 suite contains 22 tests.
+
+## v2.1: offline, source-bound project save and restore
+
+The Kennedy editor has **Save editable project** and **Restore project JSON** controls. The saved JSON contains project labels, conceptual placements and optional operator reference calibration. It intentionally excludes aerial image pixels, payment data and customer entitlements.
+
+To reopen a draft, first upload **the same original site image and vicinity image**. The editor requires SHA-256 fingerprints of those files and validates them against the draft; file names alone are not proof. Restoration is refused when the source bytes, context imagery, reference baseline, placement geometry or status flags are incompatible. Rejected files cannot change the active drawing.
+
+Drafts are plain, human-inspectable JSON with a fixed schema and limits on marks and file size. They are **not** encrypted, electronically signed, cloud-synchronized, georeferenced, verified surveying documents or guaranteed recoverable backups. Keep source imagery and saved JSON privately, and do not include confidential site data in public issue attachments. No remote tracking, Base44 runtime, or automatic field approvals are used.
+
+The standalone editor loads `plan-drafts.js` relative to `plan-studio.html`; the private loopback server serves the script from `/plan-drafts.js` behind the same operator authorization check. The `test_plan_drafts.py` regression tests verify the private route, successful round-trip, source mismatch, malformed placement, tampered certification, reference recalibration and no partial writes.
+
+The local v2.1 suite has **24 passing tests**. Site Planner commercial orders remain held, and neither Stripe checkout link is enabled.
+
+## v2.2 simple-first Kennedy workflow
+
+**The default UI is deliberately three actions:** (1) upload an authorized overhead site photo and optionally enter its address, (2) tap the site sheet to place conceptual chargers, and (3) use **View / Save PDF**. This is a manual drawing experience; entering an address alone does **not** fetch imagery or generate a verified plan.
+
+Technical controls are still preserved in a **collapsed More tools & project details** section. These include the separate vicinity image, project metadata, equipment pads, conduit routes, access notes, erase, image reference calibration, advanced exports and source-fingerprint-bound save/restore. A simple customer should not be required to learn any of these before seeing a usable concept.
+
+On phones, the diagram remains large enough for tapping and can be swiped horizontally rather than becoming an unreadable thumbnail. The PDF/print path still contains both engineering-style sheets. Real photo upload clears all fictional demo placements and resets calibration; if the site name is the unchanged demonstration placeholder it becomes an explicit operator-review concept. All outputs remain **not for construction**.
+
+`test_simple_ui.py` locks the three visible steps, verifies expert controls stay collapsed but available, and compiles the inline browser code. Run `python3 -m unittest discover -v`. This is a **UX simplification**, not an automated aerial fetch, engineering review, customer login or production deployment. The commercial order hold remains in place.
