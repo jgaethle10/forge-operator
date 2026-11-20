@@ -131,3 +131,20 @@ This reference implementation is **not yet a hardened internet-facing service**:
 
 Related existing contracts: `systemia/intake-fabric/README.md`, `systemia/passport/README.md`, `systemia/shipping/README.md`, `systemia/media-studio/client-commercial-preflight.md`, issues #2280 (real customer handoff) and #2284 (customer incident).
 
+
+## Owned NextGen resident bootstrap, no founder media copying
+
+`install-resident.mjs` provides a **dry-run-first local host activation gate**. It does not connect to Meta, create keys, publish routes or move customer files. It refuses to install unless a real local operator supplies a 0600 private config with pinned Harbor public signing key, private Fallen recipient decrypt+ACK signing keys, private received-assets directory and a real HTTPS origin. It does not log secret contents.
+
+On the **authorized NextGen user account**, when its secrets and genuine owned TLS broker route have been provisioned:
+
+```bash
+node systemia/wing-courier/install-resident.mjs --config /path/to/private/fallen.json
+# Dry-run report: local files valid, NOT proof the remote route exists.
+node systemia/wing-courier/install-resident.mjs --config /path/to/private/fallen.json --activate
+# Explicit opt-in creates and starts a user-scoped systemd service.
+```
+
+The second command is **not authorized by publication of this README or by a GitHub CI pass**. Actual deployment requires the named owner-controlled operator, private credentials and a verified broker endpoint; the publisher must never auto-run activation from a PR. No root, no public incoming NextGen port, no Tailscale requirement. Whether the service remains connected requires an independent private-machine + external TLS receipt.
+
+No customer contact, payment, release or rendering is enabled by starting this resident. For the first recovery, Ricky remains `CUSTOMER_REJECTED_PREVIEW / RECOVERY_REQUIRED` until producer assignment, independent Studio review, founder exact-file approval and governed native Meta send.
