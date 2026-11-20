@@ -52,6 +52,47 @@ test('original Earth Atlas is a schematic coordinate-grounded globe with accessi
   assert.doesNotMatch(html,/<script[^>]+src=|<iframe\b|base44|firebase/i);
 });
 
+
+test('Earth graphics use real public-domain Natural Earth geometry, not invented continent outlines',()=>{
+  const html=source('world'),js=script(html);
+  const match=js.match(/const LAND_RINGS=(\[[\s\S]*?\]);/);
+  assert.ok(match,'embedded 110m land geometry must be in the audited HTML');
+  const rings=JSON.parse(match[1]);
+  assert.ok(rings.length>100,'real land polygons, not five approximated silhouettes');
+  assert.ok(rings.reduce((sum,r)=>sum+r.length,0)>4000,'coastline sample density');
+  assert.ok(rings.every(r=>r.length>=4),'nontrivial polygon rings');
+  for(const ring of rings){
+    for(const point of ring){
+      assert.equal(point.length,2);
+      assert.ok(point[0]>=-180&&point[0]<=180,'longitude within earth');
+      assert.ok(point[1]>=-90&&point[1]<=90,'latitude within earth');
+    }
+  }
+  assert.match(html,/Natural Earth 1:110m/);
+  assert.match(html,/www\.naturalearthdata\.com\/about\/terms-of-use/);
+  assert.match(html,/generalized for globe-scale learning/i);
+  assert.match(js,/function createLandMask\(\)/);
+  assert.match(js,/function paintEarth\(cx,cy,r\)/);
+  assert.match(js,/Math\.atan2\(x,z\*lc-y\*ls\)/);
+  assert.match(js,/const land=landMask\[mi\]>127/);
+  assert.match(js,/createImageData/);
+  assert.ok(html.length<300000,'fixed Fabric source size gate');
+  assert.doesNotMatch(js,/\bfetch\s*\(|WebSocket|XMLHttpRequest|sendBeacon|navigator\.geolocation/);
+});
+
+test('Physics visuals add measurable model-specific overlays without changing equations',()=>{
+  const html=source('physics'),js=script(html);
+  for(const feature of ['glow(', 'setLineDash', 'MAX HEIGHT', 'SIMPLE HARMONIC MOTION',
+    'TRAVELING WAVE', 'createRadialGradient', 'activeFraction']){
+    assert.ok(js.includes(feature),feature);
+  }
+  assert.match(js,/Math\.sin\(2\*rad\)\/c/);
+  assert.match(js,/TAU\*Math\.sqrt\(a\/c\)/);
+  assert.match(js,/const wavelength=b\/a/);
+  assert.match(html,/measured overlays/i);
+  assert.doesNotMatch(js,/\bfetch\s*\(|WebSocket|XMLHttpRequest|sendBeacon/);
+});
+
 test('both previews keep human-readable model boundaries and explicit source links',()=>{
   for(const name of ['physics','world']){
     const html=source(name);

@@ -44,6 +44,47 @@ a sign-in, network model, or learner analytics. It is not allowed to acquire
 new inference authority, save children’s identifiable answers, or claim
 personalized AI tutoring merely by appearing in Aiden's Lab.
 
+## Visual fidelity v2: honest cartography and legible physical motion
+
+This graphics pass replaces the `world/index.html` invented continent
+silhouette with **Natural Earth 1:110m land geometry**, drawn completely
+on the client from a first-party embedded, rounded coordinate subset. The
+canonical upstream file is
+[ne_110m_land.geojson](https://github.com/nvkelso/natural-earth-vector/blob/master/geojson/ne_110m_land.geojson),
+published as **public-domain** by
+[Natural Earth](https://www.naturalearthdata.com/about/terms-of-use/).
+The source dataset comprises 127 outer polygon rings, with quantized
+two-decimal-degree coordinates embedded in the reviewed HTML. Coastlines are
+generalized at globe scale and **must not** be represented as accurate navigation,
+current ice cover, borders, imagery, ocean depth or emergency hazards.
+
+The JavaScript builds a device-local equirectangular land mask once and
+shades an orthographic Earth into a capped 420 px CPU raster on view change;
+stars, sunlight and polar highlights are *decorative*. No network tiles,
+third-party map runtime, browser geopositioning or external requests are used.
+Pointer rotations are coalesced into animation frames to avoid flood rendering
+on phones. The shape and eight destination markers are georeferenced, not
+live telemetry. The previous source-bound learning descriptions remain intact.
+
+The `physics/index.html` scenes now add separate **model-derived visual
+layers**, not changed equations: predicted full ballistic arc versus traveled
+arc, height/flight/range guides, past pendulum positions and equilibrium,
+and traveling-wave phase ghosts. All remain idealized, educational
+approximations, and a screenshot is not a field measurement.
+
+Quality checks for this increment: parse the embedded coastline rings and
+verify coordinate bounds and sufficient detail, parse both inline scripts,
+ensure source-only imports and no new network APIs, pass exact Fabric route
+and resident/public SHA256 guards. Conduct manual phone acceptance for
+touch responsiveness, globe horizon/antimeridian, marker visibility,
+screen-reader alternative controls, reduced motion, and frame rate.
+
+This is a **first visual-fidelity upgrade**, not final world-class art
+direction. Real elevation/bathymetry, verified satellite layers, authored
+science explanations, better terrain material/shaders, and cross-atlas
+navigation still require explicit rights review and separate source-grounded
+implementation.
+
 ## Physics and Earth/World interactive explorers (November 19, 2026)
 
 Two **new, original, owned-browser previews** now exist beneath the Aiden
