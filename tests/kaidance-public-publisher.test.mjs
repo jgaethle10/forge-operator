@@ -3,7 +3,9 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import {publishApprovedKaidancePulse,verifyPrivatePulseForPublication} from '../systemia/collider/public-publisher.mjs';
+import {spawnSync} from 'node:child_process';
+import {publishApprovedKaidancePulse,validatePublicApproval,verifyPrivatePulseForPublication} from '../systemia/collider/public-publisher.mjs';
+import {projectPublicKaidancePulse} from '../systemia/collider/public-projection.mjs';
 
 const now=new Date('2026-11-19T20:06:00Z');
 function healthyPulse(){
@@ -17,81 +19,49 @@ function healthyPulse(){
   deployment_receipt:'private:deployment',safe_holds:[{category:'remote_device_trust',count:4}]
  };
 }
-function sandbox(t,{mode=0o600}={}){
- const root=fs.mkdtempSync(path.join(os.tmpdir(),'kaidance-publisher-test-'));
- t.after(()=>fs.rmSync(root,{recursive:true,force:true}));
- const web=path.join(root,'web');fs.mkdirSync(path.join(web,'kaidance'),{recursive:true});
- const approval=path.join(root,'approval.json');
- fs.writeFileSync(approval,JSON.stringify({
-  schema:'evercraft.kaidance.public-publication-approval.v1',
-  allow_publish:true,approved_by:'owner-review',
-  deployment_id:'kaidance-live',
-  public_root:web,approved_at:'2026-11-19T20:00:00Z',expires_at:'2026-11-22T20:00:00Z'
- }),{mode});
- return {root,web,approval,output:path.join(web,'kaidance','pulse.json')};
-}
-function publish(s,getPulse=async()=>healthyPulse()){
- return publishApprovedKaidancePulse({
-  approvalFile:s.approval,publicRoot:s.web,deploymentId:'kaidance-live',getPulse,now
- });
-}
-test('owner-authorized publisher writes minimal public pulse, never a private record',async t=>{
- const s=sandbox(t);
- const receipt=await publish(s);
- assert.equal(receipt.status,'published');
- assert.equal(receipt.cycle_number,17);
- assert.equal(receipt.projection_sha256.length,64);
- const output=JSON.parse(fs.readFileSync(s.output,'utf8'));
- assert.equal(output.schema,'evercraft.kaidance.public-pulse.v1');
- assert.equal(output.field_attestation_verified,true);
- const raw=fs.readFileSync(s.output,'utf8');
- for(const secret of ['private:field:receipt','private:cycle','private-node','private:coverage',
- 'deployment_receipt','safe_holds','continuity','lease_id','token']){
-  assert.equal(raw.includes(secret),false,secret);
- }
- assert.deepEqual(Object.keys(output),[
-  'schema','state','cycle_number','last_completed_cycle','heartbeat_target_seconds','admitted_count',
-  'held_count','coverage_receipt_valid','field_attestation_verified','observed_at','published_at'
- ]);
-});
-test('a missing owner approval or publicly readable approval cannot produce a feed',async t=>{
- const s=sandbox(t);
- fs.chmodSync(s.approval,0o644);
- await assert.rejects(()=>publish(s),/approval_permissions_too_broad/);
- assert.equal(fs.existsSync(s.output),false);
- fs.chmodSync(s.approval,0o600);
- const a=JSON.parse(fs.readFileSync(s.approval,'utf8'));a.allow_publish=false;
- fs.writeFileSync(s.approval,JSON.stringify(a));
- await assert.rejects(()=>publish(s),/explicit_publication_approval_missing/);
- assert.equal(fs.existsSync(s.output),false);
-});
-test('approval scope, expiry, and symlinked public path hold',async t=>{
- const s=sandbox(t);const a=JSON.parse(fs.readFileSync(s.approval,'utf8'));
- a.deployment_id='other';fs.writeFileSync(s.approval,JSON.stringify(a));
- await assert.rejects(()=>publish(s),/approval_deployment_mismatch/);
- a.deployment_id='kaidance-live';a.expires_at='2026-11-19T20:05:00Z';
- fs.writeFileSync(s.approval,JSON.stringify(a));
- await assert.rejects(()=>publish(s),/approval_outside_valid_window/);
- a.expires_at='2026-11-22T20:00:00Z';fs.writeFileSync(s.approval,JSON.stringify(a));
- fs.rmSync(path.join(s.web,'kaidance'),{recursive:true});
- fs.symlinkSync(s.root,path.join(s.web,'kaidance'),'dir');
- await assert.rejects(()=>publish(s),/public_subdirectory_not_real_directory/);
-});
-test('healthy resident state, authentic field status, receipt and fresh heartbeat required',()=>{
+test('private pulse verifier preserves full field authority and safe projection',()=>{
  const good=healthyPulse();
- assert.equal(verifyPrivatePulseForPublication(good,{now}).cycle_number,17);
- for(const variant of [
-  {...good,resident:false},
-  {...good,state:'degraded'},
-  {...good,coverage_receipt_valid:false},
+ const p=verifyPrivatePulseForPublication(good,{now});
+ assert.equal(p.schema,'evercraft.kaidance.public-pulse.v1');
+ assert.equal(p.cycle_number,17);assert.equal(p.field_attestation_verified,true);
+ const raw=JSON.stringify(p);
+ for(const secret of ['private:field:receipt','private:cycle','private-node','private:coverage','deployment_receipt','safe_holds'])
+  assert.equal(raw.includes(secret),false,secret);
+ for(const bad of [
+  {...good,resident:false},{...good,state:'degraded'},{...good,coverage_receipt_valid:false},
   {...good,field_attestation:{state:'not_verified'}},
   {...good,last_completed_cycle:'2026-11-19T19:40:00Z'},
   {...good,observed_at:'2026-11-19T19:40:00Z'},
   {...good,heartbeat_target_seconds:60}
- ])assert.throws(()=>verifyPrivatePulseForPublication(variant,{now}));
+ ])assert.throws(()=>verifyPrivatePulseForPublication(bad,{now}));
 });
-test('failed private Yard read cannot create a public record',async t=>{
- const s=sandbox(t);
- await assert.rejects(()=>publish(s,async()=>{throw Error('yard_route_unavailable')}),/yard_route_unavailable/);
- assert.equal(fs.existsSync(s.output),false);
+test('obsolete unverified approval cannot publish anything even with a private directory',async t=>{
+ const root=fs.mkdtempSync(path.join(os.tmpdir(),'kaidance-unsigned-refusal-'));
+ t.after(()=>fs.rmSync(root,{recursive:true,force:true}));
+ const publicRoot=path.join(root,'public');fs.mkdirSync(path.join(publicRoot,'kaidance'),{recursive:true});
+ const approval=path.join(root,'unsigned.json');
+ fs.writeFileSync(approval,JSON.stringify({schema:'evercraft.kaidance.public-publication-approval.v1',allow_publish:true,approved_by:'test-owner'}),{mode:0o600});
+ const target=path.join(publicRoot,'kaidance','pulse.json');
+ await assert.rejects(()=>publishApprovedKaidancePulse({
+  approvalFile:approval,publicRoot,deploymentId:'kaidance-live',getPulse:async()=>healthyPulse(),now
+ }),/legacy_unsigned_publication_disabled_use_signed_owned_pulse_publisher/);
+ assert.throws(()=>validatePublicApproval({allow_publish:true}),/legacy_unsigned_publication_disabled/);
+ assert.equal(fs.existsSync(target),false);
 });
+test('legacy unsigned publisher CLI refuses even with a real-looking approval reference',()=>{
+ const entry=filePath('../systemia/collider/public-publisher.mjs');
+ const result=spawnSync(process.execPath,[entry,'--approval-ref','approved:fake-operator'],{encoding:'utf8'});
+ assert.equal(result.status,2);
+ assert.match(result.stderr,/legacy unsigned publisher disabled/i);
+});
+test('public projection module has no command-line file writer',t=>{
+ const root=fs.mkdtempSync(path.join(os.tmpdir(),'kaidance-projection-refusal-'));
+ t.after(()=>fs.rmSync(root,{recursive:true,force:true}));
+ const out=path.join(root,'pulse.json');
+ const result=spawnSync(process.execPath,[filePath('../systemia/collider/public-projection.mjs'),
+  '--input',path.join(root,'private.json'),'--output',out,'--approval-ref','approved:fake-operator'],{encoding:'utf8'});
+ assert.equal(result.status,0);
+ assert.equal(fs.existsSync(out),false);
+ assert.equal(typeof projectPublicKaidancePulse,'function');
+});
+function filePath(relative){return path.resolve(path.dirname(new URL(import.meta.url).pathname),relative)}
