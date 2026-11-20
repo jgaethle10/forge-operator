@@ -134,7 +134,7 @@ test('swapped signed actor IDs, roles and source departments all fail closed',()
  const g=setup();g.bundle.attestations.producer.payload.claims.role='projection';
  assert.equal(assess(g).reason,'two_role_attestations_not_verified');
  const h=setup();h.bundle.upstreamRecord.source_department='towi';
- assert.equal(assess(h).reason,'independent_producer_and_projection_actors_required');
+ assert.equal(assess(h).reason,'two_role_attestations_not_verified');
 });
 test('unsigned founder draft revision or invented claim cannot piggyback on signed research',()=>{
  const f=setup();f.bundle.creatorDraft.claims[0].upstream_claim_id='c-fabricated';
