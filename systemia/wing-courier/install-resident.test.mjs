@@ -3,6 +3,7 @@ import test from 'node:test';
 import fs from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
+import crypto from 'node:crypto';
 import {evaluateWingResidentConfig,renderWingResidentUnit,installWingResident} from './install-resident.mjs';
 
 function setup(){
@@ -10,8 +11,18 @@ function setup(){
  const dir=n=>{const p=path.join(root,n);fs.mkdirSync(p,{mode:0o700});return p};
  const conf=dir('config'),keys=dir('keys'),media=dir('media'),intake=dir('intake'),passport=dir('passport');
  const secret=n=>{const f=path.join(keys,n);fs.writeFileSync(f,'TEST_DO_NOT_USE',{mode:0o600});return f};
- const token=secret('receive.token'),decrypt=secret('decrypt.key'),sign=secret('sign.key');
- const sender=path.join(keys,'harbor.sign.pub');fs.writeFileSync(sender,'NOT_A_REAL_PUBLIC_KEY',{mode:0o644});
+ const token=secret('receive.token');
+ const writeKey=(name,key,kind,privateFile)=>{
+  const file=path.join(keys,name);
+  fs.writeFileSync(file,key.export({type:kind,format:'pem'}),{mode:privateFile?0o600:0o644});
+  return file;
+ };
+ const receiver=crypto.generateKeyPairSync('x25519');
+ const ack=crypto.generateKeyPairSync('ed25519');
+ const harbor=crypto.generateKeyPairSync('ed25519');
+ const decrypt=writeKey('decrypt.key',receiver.privateKey,'pkcs8',true);
+ const sign=writeKey('sign.key',ack.privateKey,'pkcs8',true);
+ const sender=writeKey('harbor.sign.pub',harbor.publicKey,'spki',false);
  const file=path.join(conf,'fallen.json');
  const cfg={wing:'fallen',baseUrl:'https://fabric.systemiacommandcenters.com/api/internal/wing-courier',
   receiveTokenFile:token,receiverPrivateKeyFile:decrypt,receiverSigningKeyFile:sign,
@@ -104,4 +115,32 @@ test('symlinked systemd directory and dangling unit symlink fail closed',()=>wit
   configPath:fx.file,home,activate:true,confirmOwnedHost:true,
  }),/existing_unit_requires_review/);
  assert.equal(fs.lstatSync(unit).isSymbolicLink(),true);
+}));
+
+test('cryptographic preflight rejects wrong key types even when permissions are correct',()=>withFixture(async fx=>{
+ const pathToKey=fx.cfg.receiverPrivateKeyFile;
+ const fake=crypto.generateKeyPairSync('ed25519');
+ fs.writeFileSync(pathToKey,fake.privateKey.export({type:'pkcs8',format:'pem'}),{mode:0o600});
+ assert.throws(()=>evaluateWingResidentConfig({configPath:fx.file}),/decrypt_key_invalid/);
+ const receiver=crypto.generateKeyPairSync('x25519');
+ fs.writeFileSync(pathToKey,receiver.privateKey.export({type:'pkcs8',format:'pem'}),{mode:0o600});
+ fs.writeFileSync(fx.cfg.receiverSigningKeyFile,receiver.privateKey.export({type:'pkcs8',format:'pem'}),{mode:0o600});
+ assert.throws(()=>evaluateWingResidentConfig({configPath:fx.file}),/signing_key_invalid/);
+ const ack=crypto.generateKeyPairSync('ed25519');
+ fs.writeFileSync(fx.cfg.receiverSigningKeyFile,ack.privateKey.export({type:'pkcs8',format:'pem'}),{mode:0o600});
+ fs.writeFileSync(fx.cfg.senderVerifyPublicKeys.harbor,receiver.publicKey.export({type:'spki',format:'pem'}));
+ assert.throws(()=>evaluateWingResidentConfig({configPath:fx.file}),/trusted_sender_key_invalid/);
+}));
+test('cryptographic preflight refuses mangled key contents without leaking key data',()=>withFixture(async fx=>{
+ fs.writeFileSync(fx.cfg.receiverPrivateKeyFile,'PRIVATE_KEY_SYNTAX_SECRET',{mode:0o600});
+ assert.throws(()=>evaluateWingResidentConfig({configPath:fx.file}),err=>{
+  assert.match(err.message,/wing_resident_decrypt_key_invalid/);
+  assert.doesNotMatch(err.message,/PRIVATE_KEY_SYNTAX_SECRET/);
+  return true;
+ });
+}));
+test('linked private receiver keys are rejected before service activation',()=>withFixture(async fx=>{
+ const link=path.join(fx.keys,'receiver-key-second-name');
+ fs.linkSync(fx.cfg.receiverSigningKeyFile,link);
+ assert.throws(()=>evaluateWingResidentConfig({configPath:fx.file}),/untrusted_private_file/);
 }));

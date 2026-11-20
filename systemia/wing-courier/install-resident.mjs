@@ -4,6 +4,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
+import crypto from 'node:crypto';
 import {spawnSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
 
@@ -16,10 +17,23 @@ const safeArg=s=>{
 function requiredFile(file,{secret=false}={}){
  if(typeof file!=='string'||!path.isAbsolute(file))throw Error('wing_resident_absolute_file_required');
  const st=fs.lstatSync(file);
- if(!st.isFile()||st.isSymbolicLink()||(secret&&(st.mode&0o077)!==0)||
+ if(!st.isFile()||st.isSymbolicLink()||st.nlink!==1||(secret&&(st.mode&0o077)!==0)||
    (secret&&typeof process.getuid==='function'&&st.uid!==process.getuid()))
   throw Error('wing_resident_untrusted_private_file');
  return st;
+}
+function requiredTypedKey(file,{kind,type,secret=false}={}){
+ requiredFile(file,{secret});
+ let key;
+ try{
+  const bytes=fs.readFileSync(file);
+  key=secret?crypto.createPrivateKey(bytes):crypto.createPublicKey(bytes);
+ }catch{
+  // Do not return parser exceptions, key contents, or private paths to callers.
+  throw Error('wing_resident_'+kind+'_key_invalid');
+ }
+ if(key.asymmetricKeyType!==type)
+  throw Error('wing_resident_'+kind+'_key_invalid');
 }
 function requiredDir(dir){
  if(typeof dir!=='string'||!path.isAbsolute(dir))throw Error('wing_resident_absolute_dir_required');
@@ -38,8 +52,9 @@ export function evaluateWingResidentConfig({configPath,wingExpected='fallen'}={}
    url.username||url.password||url.search||url.hash||
    url.pathname.replace(/\/+$/,'')!=='/api/internal/wing-courier')
    throw Error('wing_resident_requires_owned_https');
- for(const key of ['receiveTokenFile','receiverPrivateKeyFile','receiverSigningKeyFile'])
-  requiredFile(cfg[key],{secret:true});
+ requiredFile(cfg.receiveTokenFile,{secret:true});
+ requiredTypedKey(cfg.receiverPrivateKeyFile,{kind:'decrypt',type:'x25519',secret:true});
+ requiredTypedKey(cfg.receiverSigningKeyFile,{kind:'signing',type:'ed25519',secret:true});
  requiredDir(cfg.destinationDir);
  const senders=cfg.senderVerifyPublicKeys||{};
  if(!Array.isArray(Object.keys(senders))||Object.keys(senders).length<1)
@@ -47,7 +62,7 @@ export function evaluateWingResidentConfig({configPath,wingExpected='fallen'}={}
  for(const [wing,file] of Object.entries(senders)){
   if(!/^[a-z][a-z0-9-]{1,47}$/.test(wing)||wing===cfg.wing)
    throw Error('wing_resident_invalid_sender_wing');
-  requiredFile(file);
+  requiredTypedKey(file,{kind:'trusted_sender',type:'ed25519'});
  }
  if(Boolean(cfg.intakeStateDir)!==Boolean(cfg.passportStateDir))
   throw Error('wing_resident_incomplete_systemia_intake');
