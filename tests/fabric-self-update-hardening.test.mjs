@@ -28,6 +28,33 @@ test('Fabric updater fails closed on source changes while ignoring generated art
   assert.match(updater,/merge --ff-only/);
 });
 
+test('unattended Fabric update preserves all tracked and untracked Journal changes before fetch',()=>{
+  const status=updater.indexOf('dirty_status="$(as_user git -C "$REPO_ROOT" status --porcelain --untracked-files=all)"');
+  const guard=updater.indexOf('HOLD: local Journal work is present; preserved without automated restore/clean');
+  const fetch=updater.indexOf('fetch --prune "$REMOTE" "$BRANCH"');
+  assert.ok(status>=0&&guard>status&&fetch>guard,
+    'source status and Journal hold must precede any Git fetch/merge');
+  assert.match(updater,/if \[\[ "\$journal_dirty" == "true" \]\]; then/);
+  assert.match(updater,/exit 4/);
+  assert.equal(updater.includes('restore --staged --worktree -- public/journal'),false,
+    'never discard locally modified tracked Journal files');
+  assert.equal(updater.includes('clean -fdx -- public/journal'),false,
+    'never delete ignored or untracked Journal files');
+});
+
+test('rollback rejects changes generated after the initial clean gate',()=>{
+  const start=updater.indexOf('rollback() {');
+  const end=updater.indexOf('as_user git -C "$REPO_ROOT" merge --ff-only',start);
+  assert.ok(start>=0&&end>start);
+  const rollback=updater.slice(start,end);
+  assert.match(rollback,/rollback_dirty=.*status --porcelain --untracked-files=all/);
+  assert.match(rollback,/--blocking-lines/);
+  assert.match(rollback,/--journal-dirty/);
+  const hold=rollback.indexOf('rollback reset refused to preserve owner files');
+  const reset=rollback.indexOf('reset --hard "$before"');
+  assert.ok(hold>=0&&reset>hold,'rollback must refuse a destructive reset on unexpected files');
+});
+
 test('Fabric updater still proves runtime before accepting the revision',()=>{
   assert.match(updater,/npm run test:fabric-directory/);
   assert.match(updater,/npm run test:fabric-local/);
