@@ -176,9 +176,9 @@ jobs:
             echo "HOLD: no headless Chrome available for actual viewport QA"
             exit 1
           fi
-          URL="file://$PWD/products/kennedy-space-station/public/explore.html"
-          "$BROWSER" --headless --no-sandbox --disable-dev-shm-usage --disable-gpu --hide-scrollbars --window-size=1400,1100 --virtual-time-budget=1800 --screenshot="$PREVIEW/desktop-preview.png" "$URL" 2>"$PREVIEW/chrome-desktop.log"
-          "$BROWSER" --headless --no-sandbox --disable-dev-shm-usage --disable-gpu --hide-scrollbars --window-size=390,900 --virtual-time-budget=1800 --screenshot="$PREVIEW/phone-preview.png" "$URL" 2>"$PREVIEW/chrome-phone.log"
+          URL="file://$PWD/products/kennedy-space-station/public/explore.html?still=1"
+          timeout 40s "$BROWSER" --headless --no-sandbox --disable-dev-shm-usage --disable-gpu --hide-scrollbars --window-size=1400,1100 --virtual-time-budget=1800 --screenshot="$PREVIEW/desktop-preview.png" "$URL" 2>"$PREVIEW/chrome-desktop.log"
+          timeout 40s "$BROWSER" --headless --no-sandbox --disable-dev-shm-usage --disable-gpu --hide-scrollbars --window-size=390,900 --virtual-time-budget=1800 --screenshot="$PREVIEW/phone-preview.png" "$URL" 2>"$PREVIEW/chrome-phone.log"
           python3 - "$PREVIEW" <<'PY'
           import struct,sys
           from pathlib import Path
