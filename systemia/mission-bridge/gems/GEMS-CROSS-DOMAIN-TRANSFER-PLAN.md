@@ -47,3 +47,27 @@ python3 gems_external_layer_gate.py \
 ```
 
 The initial registry contains **methods-only** records for existing Washington/Alaska/Historical sources. It contains a **proposed but not acquired** official 1m Nevada DEM source; no training-ready new raster is claimed. `source_kind=external_raster` with `file_path`, `expected_sha256`, rights flags and source references can later be added by an independent evidence review. Even for a matching raster, the gate only says **candidate for independent review**, never approved to train. No downloads, paid compute, deployment, or DrivenData submission.
+
+## 2026-11-20: Real prediction disagreement atlas from preserved scored-entry GeoTIFFs
+
+The offline `gems_nevada_disagreement_atlas.py` compares the **existing** preserved GEMS-001 raster and verified GEMS-002 raster with exact pinned SHA-256s. It is independent of the missing 419 MB training feature raster. It does not use actual fault labels, external DEMs, hidden competition targets or any portal.
+
+Verified actual whole-grid outputs:
+- **5,167,373 valid source pixels**, matching both original NaN masks.
+- At ≥0.20: GEMS-001 has **384,797** predictions; GEMS-002 has **444,269**; intersection **185,133**; incumbent-only **199,664**; challenger-only **259,136**. XOR=**458,800** valid pixels.
+- At ≥0.50: incumbent **34,010**; challenger **142,571**.
+- **583 nonempty 10-km study tiles**, **541** with at least 3,000 valid pixels, and **45 diagnostic study tiles**: 15 high-disagreement review, 15 median controls, 15 low-disagreement controls. No selection is a label, error or independent validation.
+- Highest eligible disagreement tile: `r29c12`, about **41.0%** of 6,805 valid tile cells where the old/new ≥0.20 states disagree. This is a **model divergence**, not a fault location.
+- Tile polygons converted from actual EPSG:32611 affine to **WGS84 lon/lat GeoJSON**. Source hashes and full-grid counts fail closed on mismatch. Output is write-once.
+
+The user-owned **private output ZIP** `GEMS_Nevada_Research_Atlas_20261120.zip` (created in the ChatGPT research workspace, **not committed** to GitHub) contains `gems_model_disagreement_tiles.geojson`, `disagreement_atlas_receipt.json`, reproduction instructions, the tested local implementation and tests. ZIP SHA-256 `bcf00fc7cf8224a735d785f1dcb7e3cff150e400135fd72a52d9020946286694`. A canonical code implementation and synthetic checks are committed in this PR at `gems/gems_nevada_disagreement_atlas.py` and `gems/test_gems_nevada_disagreement_atlas.py`. GitHub scientific job **#136111284443** (run **#44683210015**) passed all four new tests plus existing tests. Never treat atlas selection as evidence of 1-m DEM availability.
+
+**Next geospatial science gate:** On the official 1-m DEM source index, query/check *metadata only* for available tiles covering a predeclared small set of high, median and low-disagreement study squares, with real WGS84 bounding geometries; verify that same-source DEM coverage, measurement date, vertical datum, interpolation method and license are recorded for controls, not just review hotspots. Only with actual authorized bytes should the team derive native-resolution scarp/curvature features using proper edge halos and compare against baseline on the same geographic folds. Avoid selecting map areas by the hidden leaderboard score, which the atlas does not have.
+
+**Reproduction (private owner-supplied scored rasters, no external download or submission):**
+```bash
+python systemia/mission-bridge/gems/gems_nevada_disagreement_atlas.py \
+  --gems-001-archive /private/gems_001_verified_submission.zip \
+  --gems-002-tif /private/gems_002_candidate_UNSUBMITTED.tif \
+  --output-dir /private/NEW/nevada-disagreement-atlas
+```
