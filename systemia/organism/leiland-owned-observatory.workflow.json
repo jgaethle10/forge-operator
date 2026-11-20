@@ -1,0 +1,30 @@
+{
+  "schema": "evercraft.systemia.workflow-manifest.v1",
+  "workflow_key": "leiland-owned-observatory-resident",
+  "mission_key": "leiland-sovereign-ai-public-observability",
+  "runtime": "systemia-core-resident",
+  "collider_compatible": false,
+  "cadence_seconds": 300,
+  "entrypoint": "systemia/leiland/resident-host-runner.mjs",
+  "authority": {
+    "serve_canonical_static_assets": "local_read_only",
+    "read_approved_public_projection": "local_read_only",
+    "observe_private_inference": false,
+    "publish_kaidance_cycles": false,
+    "schedule_missions": false,
+    "create_public_route": false,
+    "change_dns_or_tls": false,
+    "create_payment_obligation": false
+  },
+  "truth_gates": [
+    "explicit_required_environment_binding",
+    "pinned_checkout_sha_equals_actual_repo_head",
+    "separate_owned_public_projection_directory",
+    "loopback_only_listener",
+    "no_public_route_or_live_inference_claim"
+  ],
+  "role": "optional_local_spectator",
+  "activation_owner": "existing_systemia_resident_supervisor",
+  "hold_state": "disabled_until_explicit_field_configuration",
+  "proof": "tests/leiland-systemia-resident.test.mjs"
+}

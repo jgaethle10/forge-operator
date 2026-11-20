@@ -11,6 +11,10 @@ on:
       - 'tests/leiland-owned-observatory-host.test.mjs'
       - 'tests/leiland-kaidance-field-integration.test.mjs'
       - 'tests/leiland-field-preflight.test.mjs'
+      - 'tests/leiland-systemia-resident.test.mjs'
+      - 'systemia/organism/leiland-owned-observatory.workflow.json'
+      - 'systemia/core/resident-services.json'
+      - 'systemia/core/supervisor.evercraft.compute.json'
       - 'scripts/leiland-field-preflight.mjs'
       - 'scripts/probe-leiland-owned-release.mjs'
       - 'systemia/leiland/**'
@@ -27,6 +31,10 @@ on:
       - 'tests/leiland-owned-observatory-host.test.mjs'
       - 'tests/leiland-kaidance-field-integration.test.mjs'
       - 'tests/leiland-field-preflight.test.mjs'
+      - 'tests/leiland-systemia-resident.test.mjs'
+      - 'systemia/organism/leiland-owned-observatory.workflow.json'
+      - 'systemia/core/resident-services.json'
+      - 'systemia/core/supervisor.evercraft.compute.json'
       - 'scripts/leiland-field-preflight.mjs'
       - 'scripts/probe-leiland-owned-release.mjs'
       - 'systemia/leiland/**'
@@ -56,5 +64,6 @@ jobs:
           node --check scripts/probe-leiland-owned-release.mjs
           node --check systemia/leiland/owned-observatory-host.mjs
           node --check scripts/leiland-field-preflight.mjs
+          node --check systemia/leiland/resident-host-runner.mjs
       - name: Prove public-only activity and privacy contract
-        run: node --test tests/leiland-public.test.mjs tests/leiland-owned-pulse-publisher.test.mjs tests/leiland-owned-release-probe.test.mjs tests/leiland-owned-observatory-host.test.mjs tests/leiland-kaidance-field-integration.test.mjs tests/leiland-field-preflight.test.mjs
+        run: node --test tests/leiland-public.test.mjs tests/leiland-owned-pulse-publisher.test.mjs tests/leiland-owned-release-probe.test.mjs tests/leiland-owned-observatory-host.test.mjs tests/leiland-kaidance-field-integration.test.mjs tests/leiland-field-preflight.test.mjs tests/leiland-systemia-resident.test.mjs
