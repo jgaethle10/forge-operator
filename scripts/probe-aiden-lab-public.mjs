@@ -13,6 +13,7 @@ export const ASSETS = Object.freeze([
   { path: 'index.html', type: /text\/html/i, identity: "AIDEN'S LAB" },
   { path: 'app.mjs', type: /javascript|text\/plain/i, identity: 'openTopic' },
   { path: 'learning-worlds.mjs', type: /javascript|text\/plain/i, identity: 'LEARNING_WORLDS' },
+  { path: 'universe.mjs', type: /javascript|text\/plain/i, identity: 'startUniverse' },
   { path: 'catalog.mjs', type: /javascript|text\/plain/i, identity: 'medical-evidence' },
   { path: 'styles.css', type: /text\/css/i, identity: 'topic-grid' },
   { path: 'mark.svg', type: /image\/svg\+xml/i, identity: '<svg' },
