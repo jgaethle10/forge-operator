@@ -6,6 +6,7 @@ import {fileURLToPath} from 'node:url';
 import {pollWingInbox} from './client.mjs';
 import {hashFileSync} from './envelope.mjs';
 import {offerVerifiedWingReceiptToSystemia} from './intake-bridge.mjs';
+import {stageOneCompanyGoalCandidate} from '../one-company/goal-checkpoint.mjs';
 const ID=/^[a-f0-9]{32}$/;
 const HEX=/^[a-f0-9]{64}$/;
 function fail(s){throw Error('wing_resident_'+s)}
@@ -15,6 +16,14 @@ function readConfig(file){
  for(const x of ['baseUrl','receiveTokenFile','wing','destinationDir','receiverPrivateKeyFile','receiverSigningKeyFile'])
   if(!cfg[x])fail('config_'+x+'_missing');
  if(!cfg.senderVerifyPublicKeys||typeof cfg.senderVerifyPublicKeys!=='object')fail('trusted_senders_missing');
+ if(cfg.goalStateDir){
+  if(cfg.wing!=='fallen'||!cfg.passportStateDir||!cfg.intakeStateDir)
+   fail('goal_checkpoint_requires_fallen_passport_intake');
+  const g=fs.lstatSync(cfg.goalStateDir);
+  if(!g.isDirectory()||g.isSymbolicLink()||(g.mode&0o077)!==0||
+    (typeof process.getuid==='function'&&g.uid!==process.getuid()))
+   fail('goal_checkpoint_private_directory_required');
+ }
  return cfg;
 }
 function receiptFiles(root){
@@ -84,6 +93,15 @@ export async function cycle({config,admit=true}={}){
     const result=offerVerifiedWingReceiptToSystemia({
      receipt:record,intakeStateDir:config.intakeStateDir,
      passportStateDir:config.passportStateDir,adapterActorRef:config.adapterActorRef});
+    // An owner must explicitly configure a private goal directory. This
+    // creates a durable HELD mission plan, not a Saban lease or job.
+    if(config.goalStateDir && result.oneCompanyPlan){
+     if(config.wing!=='fallen')
+      fail('goal_checkpoint_requires_verified_fallen_media');
+     result.goalCheckpoint=stageOneCompanyGoalCandidate({
+      handoff:result,privateGoalDir:config.goalStateDir
+     });
+    }
     fs.writeFileSync(ack,JSON.stringify(result,null,2)+'\n',{flag:'wx',mode:0o600});
     admission.offered++;
    }catch(e){
