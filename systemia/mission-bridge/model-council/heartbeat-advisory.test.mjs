@@ -2,6 +2,10 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {planHeartbeatAdvisories,executeAdvisory} from './heartbeat-advisory.mjs';
 import {createRavenAdvisoryInvoker} from './raven-invoker.mjs';
+import {reserveAdvisoryAttempt,loadAdvisoryHistory} from './advisory-ledger.mjs';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
 
 const providers=[
  {id:'anthropic',model:'claude-test',ready:true,estimated_cost_cents:5},
@@ -71,4 +75,18 @@ test('owned Raven invoker routes a reserved heartbeat job to its explicitly conf
  assert.equal(seen[0].credentialStateDir,'/private/fixture-vault');
  assert.equal(result.external_actions_authorized,false);
  await assert.rejects(invoke({provider:'untrusted',model:'model',request_id:'one',role:'qa',input:'test'}),/not_allowed/);
+});
+
+test('atomic ledger reserves once and enforces rolling budget with no double-spend',()=>{
+ const root=fs.mkdtempSync(path.join(os.tmpdir(),'systemia-advice-'));
+ try{
+  const jobs=planHeartbeatAdvisories({missions:[mission()],providers,budget_cents_remaining:30}).queue;
+  const first=reserveAdvisoryAttempt({ledgerDir:root,job:jobs[0],rolling_budget_cents:10,now_ms:100000000});
+  assert.equal(first.reserved,true);
+  assert.equal(reserveAdvisoryAttempt({ledgerDir:root,job:jobs[0],rolling_budget_cents:10,now_ms:100000100}).reason,'already_attempted');
+  assert.equal(reserveAdvisoryAttempt({ledgerDir:root,job:jobs[1],rolling_budget_cents:10,now_ms:100000100}).reason,'rolling_budget_limit');
+  assert.equal(loadAdvisoryHistory({ledgerDir:root}).length,1);
+  assert.equal(reserveAdvisoryAttempt({ledgerDir:root,job:jobs[1],rolling_budget_cents:10,now_ms:100000000-100}).reserved,undefined);
+ }catch(e){if(!/clock_rollback/.test(e.message))throw e;}
+ finally{fs.rmSync(root,{recursive:true,force:true});}
 });
