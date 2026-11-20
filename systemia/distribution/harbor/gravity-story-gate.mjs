@@ -114,17 +114,39 @@ export function assessHarborGravityStory(story, context = {}) {
   const journal = story.journal || {};
   const journalLive = journal.state === 'JOURNAL_LIVE' && safePublicUrl(journal.canonical_url, {ownedJournal: true}) && context.journal?.urlReadback === journal.canonical_url && context.journal?.editorialAccepted === true;
   const comment = story.first_comment || {};
+  const providerPostId = context.providerPostId;
+  const published = context.publishedPostReceipt || {};
+  const publishedKeys = Array.isArray(context.publishedKeys) ? context.publishedKeys : [];
+  const postSha256 = isId(id) && isText(text)
+    ? hash(JSON.stringify([id, text, link ?? ''])) : null;
+  const verifiedOriginalPost = isText(providerPostId) &&
+    published.status === 'PUBLISHED' && published.independently_read_back === true &&
+    published.provider_post_id === providerPostId && published.page_id === id &&
+    published.dedup_key === dedupKey && published.post_sha256 === postSha256 &&
+    publishedKeys.includes(dedupKey);
   addComment(journalLive, 'verified_live_owned_journal_missing');
-  addComment(comment.state === 'REQUESTED' && comment.target_post_id === context?.providerPostId && isText(context?.providerPostId), 'exact_provider_post_target_missing');
+  addComment(comment.state === 'REQUESTED' && comment.target_post_id === providerPostId &&
+    isText(providerPostId), 'exact_provider_post_target_missing');
+  addComment(verifiedOriginalPost, 'verified_original_post_receipt_missing');
   addComment(context.commentAuthority?.permitted === true, 'separate_comment_authority_missing');
   const approvedComment = `For the full story, original sources, context, and updates: ${journal.canonical_url || ''}`;
   addComment(context.commentAuthority?.approvedTextHash === hash(approvedComment), 'exact_comment_text_approval_missing');
+  const commentKey = isText(providerPostId) && journalLive
+    ? hash(JSON.stringify([providerPostId, journal.canonical_url])) : null;
+  addComment(Boolean(commentKey) &&
+    !((Array.isArray(context.sentCommentKeys) ? context.sentCommentKeys : []).includes(commentKey)),
+    'duplicate_journal_comment');
   const postReady = blockers.length === 0;
-  const commentReady = postReady && commentBlockers.length === 0;
+  // A verified original post is intentionally a duplicate for a second Page
+  // POST. It may still receive one separately authorized Journal comment.
+  // Every other Page/story/review failure must continue to block comments.
+  const commentReady = commentBlockers.length === 0 &&
+    blockers.every(code => code === 'duplicate_story_page_angle_update');
   return Object.freeze({
     schema: 'evercraft.harbor.gravity-story-assessment.v1',
     status: postReady ? 'READY_FOR_AUTHORIZED_OPERATOR_REVIEW' : 'HOLD',
     blockers, dedup_key: dedupKey,
+    post_sha256: postSha256, comment_dedup_key: commentKey,
     page_id: isId(id) ? id : null,
     journal_state: journalLive ? 'VERIFIED_LIVE' : 'PENDING_OR_UNVERIFIED',
     comment_status: commentReady ? 'READY_FOR_SEPARATE_COMMENT_OPERATOR_REVIEW' : 'COMMENT_HELD',
