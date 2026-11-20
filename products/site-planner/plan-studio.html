@@ -71,7 +71,7 @@
 const $=id=>document.getElementById(id);
 const ns='http://www.w3.org/2000/svg';
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const state={tool:'charger',angle:0,siteImage:'',contextImage:'',siteSource:'',contextSource:'',siteHash:'',contextHash:'',pending:null,marks:[],history:[],calibration:null,calibrationPending:null,siteGeneration:0,contextGeneration:0,lookupGeneration:0,aerialProvenance:null};
+const state={tool:'charger',angle:0,siteImage:'',contextImage:'',siteSource:'',contextSource:'',siteHash:'',contextHash:'',pending:null,marks:[],history:[],calibration:null,calibrationPending:null,siteGeneration:0,contextGeneration:0,lookupGeneration:0,aerialProvenance:null,mapScale:null};
 function safeFeet(value){const n=Number(value);return Number.isFinite(n)&&n>=1&&n<=10000?n:null}
 function distance(a,b){return Math.hypot(b.x-a.x,b.y-a.y)}
 function calibrateFromPoints(a,b,known,sourceName){
@@ -79,7 +79,24 @@ function calibrateFromPoints(a,b,known,sourceName){
   if(!feet||!Number.isFinite(svgUnits)||svgUnits<20)return null;
   return {a:{x:a.x,y:a.y},b:{x:b.x,y:b.y},knownFeet:feet,svgUnits,feetPerUnit:feet/svgUnits,sourceName};
 }
-function routeEstimate(m){return state.calibration&&m.type==='route'?Math.round(distance(m,{x:m.x2,y:m.y2})*state.calibration.feetPerUnit*10)/10:null}
+function projectedScreeningScale(bbox,latitude){
+  if(!Array.isArray(bbox)||bbox.length!==4||!bbox.every(Number.isFinite))return null;
+  const [west,south,east,north]=bbox;
+  if(!Number.isFinite(latitude)||latitude<24||latitude>50)return null;
+  const dx=east-west,dy=north-south;
+  if(dx<20||dx>20000||dy<10||dy>20000||Math.abs(dx/dy-805/590)>0.05)return null;
+  // Web Mercator horizontal distances are inflated by sec(latitude).
+  // This is an approximate image-plane screening conversion, never a survey scale.
+  const feetPerUnit=(dx*Math.cos(latitude*Math.PI/180)*3.280839895)/805;
+  if(!Number.isFinite(feetPerUnit)||feetPerUnit<=0)return null;
+  return {feetPerUnit,approximate_width_feet:Math.round(feetPerUnit*805),
+    latitude,classification:'EPSG3857_imagery_screening_estimate_not_survey'};
+}
+function routeEstimate(m){
+  if(m.type!=='route')return null;
+  const factor=state.calibration?.feetPerUnit??state.mapScale?.feetPerUnit;
+  return factor?Math.round(distance(m,{x:m.x2,y:m.y2})*factor*10)/10:null;
+}
 function evidenceRecord(){return {
  schema:'evercraft.site-planner.operator-drawing-evidence.v1',
  generated_at:new Date().toISOString(),evidence_type:'operator_entered_unverified_concept',
@@ -87,6 +104,7 @@ function evidenceRecord(){return {
  imagery:{site:{name:state.siteSource||null,sha256:state.siteHash||null},context:{name:state.contextSource||null,sha256:state.contextHash||null},source_note:($('sourceText').value||'').trim(),verified_geolocation:false,rights_verified:false},
  government_source:state.aerialProvenance?{...state.aerialProvenance,classification:'public_aerial_screening_not_a_parcel_survey'}:null,
  reference_calibration:state.calibration?{...state.calibration,classification:'operator_reference_estimate_not_survey'}:null,
+ projected_image_scale:state.mapScale?{...state.mapScale,classification:'EPSG3857_imagery_screening_estimate_not_survey'}:null,
  marks:state.marks.map(m=>({...m,route_length_feet_estimate:routeEstimate(m)})),
  limitations:['Not a survey or georeferenced drawing','Known reference distance supplied by operator','Aerial imagery and use rights not independently verified','Roads, utility capacity, property lines and code compliance unknown','No engineering seal or permit approval'],
  customer_payment_verified:false,engineering_approved:false
@@ -134,8 +152,8 @@ if(state.calibration){const c=state.calibration;
 h+=`<rect id="hit-target" x="40" y="75" width="805" height="590" fill="transparent" class="overlay-tool"/>`;
 h+=`<rect x="862" y="75" width="235" height="145" fill="#f8fafb" stroke="#6d7b81"/>${text(875,95,'GENERAL SHEET NOTES',10,'#183044',900)}`;
 const notes=['CONCEPT DRAWING ONLY','No verified parcel or utility capacity','Stall and aisle geometry are assumed','ADA / fire access require review','Trench and transformer not surveyed'];notes.forEach((x,i)=>h+=text(875,119+i*19,'• '+x,10,'#4e6371',600));
-h+=`<rect x="862" y="234" width="235" height="125" fill="#fafbfb" stroke="#6d7b81"/>${text(875,255,'EV INFRASTRUCTURE CONCEPT',10,'#183044',900)}${text(875,282,n+' CHARGER STALLS (DRAFT)',15,'#0d7183',850)}${text(875,305,'Equipment pad: tentative',11,'#3a5c6b')}${text(875,329,state.calibration?'Route estimate (not surveyed): '+state.marks.filter(m=>m.type==='route').reduce((n,m)=>n+routeEstimate(m),0).toFixed(1)+' ft':'Dashed cyan: possible conduit',10,'#3a5c6b')}`;
-h+=`<rect x="862" y="374" width="235" height="182" fill="#fafbfb" stroke="#6d7b81"/>${text(875,394,'SOURCE / EVIDENCE CONTROL',10,'#183044',900)}${text(875,419,state.siteImage?'SOURCE: UPLOADED BY OPERATOR':'SOURCE: SYNTHETIC DIAGRAM',10,'#ab6d27',700)}${text(875,438,state.calibration?'Ref '+state.calibration.knownFeet+' ft / '+Math.round(state.calibration.svgUnits)+' units':'Parcel / scale: UNKNOWN',10,'#3a5c6b')}${text(875,457,'Utility / ownership: UNKNOWN',10,'#3a5c6b')}${text(875,476,'Permits / ADA: UNKNOWN',10,'#3a5c6b')}${text(875,505,($('sourceText').value||'No source noted').slice(0,32),10,'#3a5c6b')}${text(875,524,($('sourceText').value||'').slice(32,64),10,'#3a5c6b')}${text(875,544,state.siteHash?'IMAGE SHA256 (BYTES): '+state.siteHash.slice(0,12):'IMAGE BYTE HASH: NOT CAPTURED',9,'#7b8b91',650)}`;
+h+=`<rect x="862" y="234" width="235" height="125" fill="#fafbfb" stroke="#6d7b81"/>${text(875,255,'EV INFRASTRUCTURE CONCEPT',10,'#183044',900)}${text(875,282,n+' CHARGER STALLS (DRAFT)',15,'#0d7183',850)}${text(875,305,'Equipment pad: tentative',11,'#3a5c6b')}${text(875,329,(state.calibration||state.mapScale)?'Route ~'+state.marks.filter(m=>m.type==='route').reduce((n,m)=>n+routeEstimate(m),0).toFixed(1)+' ft (est.)':'Dashed cyan: possible conduit',10,'#3a5c6b')}`;
+h+=`<rect x="862" y="374" width="235" height="182" fill="#fafbfb" stroke="#6d7b81"/>${text(875,394,'SOURCE / EVIDENCE CONTROL',10,'#183044',900)}${text(875,419,state.siteImage?'SOURCE: UPLOADED BY OPERATOR':'SOURCE: SYNTHETIC DIAGRAM',10,'#ab6d27',700)}${text(875,438,state.calibration?'Operator ref '+state.calibration.knownFeet+' ft (approx.)':state.mapScale?'USGS image scale: ESTIMATE':'Parcel / scale: UNKNOWN',10,'#3a5c6b')}${text(875,457,'Utility / ownership: UNKNOWN',10,'#3a5c6b')}${text(875,476,'Permits / ADA: UNKNOWN',10,'#3a5c6b')}${text(875,505,($('sourceText').value||'No source noted').slice(0,32),10,'#3a5c6b')}${text(875,524,($('sourceText').value||'').slice(32,64),10,'#3a5c6b')}${text(875,544,state.siteHash?'IMAGE SHA256 (BYTES): '+state.siteHash.slice(0,12):'IMAGE BYTE HASH: NOT CAPTURED',9,'#7b8b91',650)}`;
 h+=`<rect x="862" y="571" width="235" height="94" fill="#fff4df" stroke="#d0a36a"/>${text(875,591,'REVIEW GATE',10,'#865521',900)}${text(875,614,'NOT ENGINEERED / NOT STAMPED',10,'#865521',700)}${text(875,634,'No dimension or clearance certified',10,'#865521')}`;
 h+=`<rect x="40" y="681" width="1057" height="139" fill="#fff" stroke="#5d6f79"/>${text(56,704,'FIELD VERIFICATION REQUIRED BEFORE CONSTRUCTION',12,'#173a51',850)}`;
 let bottom=['1. Verify property rights, jurisdiction, setbacks, easements and permitted use.','2. Confirm parking geometry, accessible routes, stall counts and fire access.','3. Obtain utility service study, electrical load, transformer and feeder data.','4. Conduct surveys, grading/drainage and licensed engineering as applicable.'];bottom.forEach((t,i)=>h+=text(56,730+22*i,t,12,'#3d5564',600));h+=titleBlock('S-01','EV SITE PLAN');$('drawing-1').innerHTML=h;let t=$('hit-target');t.addEventListener('click',onCanvasTap);$('chargerCount').textContent=n+' CONCEPT CHARGERS'}
@@ -153,8 +171,8 @@ h+=`<rect x="40" y="681" width="1057" height="139" fill="#fff" stroke="#5d6f79"/
 ['Road centerline, driveway permits and traffic-control jurisdiction require authoritative sources.','Utility service area and substation/transformer location must be independently verified.','Traffic counts, nearby chargers and demand are outside this source image and cannot be inferred.','No real site is represented until approved source imagery and project evidence are entered.'].forEach((t,i)=>h+=text(56,730+22*i,(i+1)+'. '+t,11,'#3d5564',600));h+=titleBlock('A-01','VICINITY / ACCESS');$('drawing-2').innerHTML=h}
 function draw(){siteSheet();contextSheet();
  $('activeTool').textContent=({'charger':'Adding chargers','pad':'Adding equipment pads','route':'Drawing conduit','access':'Marking access','note':'Adding notes','erase':'Removing marks','calibrate':'Measuring reference'})[state.tool]||'Tap the site sheet';
- $('scaleState').textContent=state.calibration?'OPERATOR REFERENCE · NOT SURVEYED':'SCALE UNVERIFIED · NTS';
- $('calibrationState').textContent=state.calibration?'Reference: '+state.calibration.knownFeet+' ft across '+Math.round(state.calibration.svgUnits)+' drawing units. Estimated distances only.':state.calibrationPending?'Tap the second reference endpoint.':'NO REFERENCE CALIBRATION · DRAWING NTS';
+ $('scaleState').textContent=state.calibration?'OPERATOR REFERENCE · NOT SURVEYED':state.mapScale?'USGS IMAGE SCALE · ESTIMATE':'SCALE UNVERIFIED · NTS';
+ $('calibrationState').textContent=state.calibration?'Reference: '+state.calibration.knownFeet+' ft across '+Math.round(state.calibration.svgUnits)+' drawing units. Estimated distances only.':state.calibrationPending?'Tap the second reference endpoint.':state.mapScale?'Approx. USGS imagery scale, not surveyed. Manual reference can override.':'NO REFERENCE CALIBRATION · DRAWING NTS';
 }
 function onCanvasTap(ev){const svg=$('drawing-1');let p=svg.createSVGPoint();p.x=ev.clientX;p.y=ev.clientY;const mat=svg.getScreenCTM();if(!mat)return;p=p.matrixTransform(mat.inverse());const x=Math.round(p.x),y=Math.round(p.y);if(x<40||x>845||y<75||y>665)return;if(state.tool==='calibrate'){
  if(!state.siteImage){$('messages').textContent='A real source image is required before calibration.';return}
@@ -200,6 +218,7 @@ async function lookupPublicAerial(){
     state.siteHash=result.site.sha256;
     state.contextHash=result.vicinity.sha256;
     state.calibration=null;state.calibrationPending=null;state.marks=[];state.pending=null;
+    state.mapScale=projectedScreeningScale(result.site.bbox_3857,result.approximate_address_coordinate?.lat);
     state.aerialProvenance={
       provider:'USGS The National Map',census_geocoder:'Public_AR_Current',
       census_matched_address:result.census_matched_address,
@@ -226,7 +245,7 @@ function invalidateAddressBoundAerial(){
     state.siteImage='';state.contextImage='';
     state.siteSource='';state.contextSource='';
     state.siteHash='';state.contextHash='';
-    state.marks=[];state.calibration=null;
+    state.marks=[];state.calibration=null;state.mapScale=null;
     state.calibrationPending=null;state.pending=null;state.aerialProvenance=null;
     $('siteImage').value='';$('contextImage').value='';
     $('sourceState').textContent='Address changed. Find a new aerial or upload an image.';
@@ -235,7 +254,7 @@ function invalidateAddressBoundAerial(){
   }
   draw();
 }
-function readImage(input,key,label){const f=input.files?.[0];if(!f)return;if(!/^image\/(png|jpeg|webp)$/.test(f.type)||f.size>12*1024*1024){alert('Use PNG, JPG or WebP up to 12 MB.');input.value='';return}const generationKey=key==='siteImage'?'siteGeneration':'contextGeneration';const generation=++state[generationKey];const reader=new FileReader();reader.onload=async()=>{if(generation!==state[generationKey])return;if(key==='siteImage'){++state.lookupGeneration;$('lookupAerial').disabled=false;$('lookupAerial').textContent='Find public aerial';state.aerialProvenance=null;state.contextImage='';state.contextSource='';state.contextHash='';++state.contextGeneration;$('contextImage').value='';if($('siteName').value==='DEMONSTRATION RETAIL SITE')$('siteName').value='SITE CONCEPT · OPERATOR REVIEW';state.marks=[];state.pending=null;state.calibration=null;state.calibrationPending=null;$('messages').textContent='New site aerial: all prior conceptual marks cleared. Place new marks based on this source.';$('sourceText').value='Operator-supplied '+f.name+' / rights and location unverified'}state[key]=String(reader.result);state[label]=f.name;state[key==='siteImage'?'siteHash':'contextHash']='';if(typeof crypto!=='undefined'&&crypto.subtle&&typeof f.arrayBuffer==='function'){try{const hash=await crypto.subtle.digest('SHA-256',await f.arrayBuffer());if(generation===state[generationKey])state[key==='siteImage'?'siteHash':'contextHash']=Array.from(new Uint8Array(hash)).map(n=>n.toString(16).padStart(2,'0')).join('')}catch{}}$('sourceState').textContent='Operator image: '+f.name+' · byte fingerprint only · not verified geography';draw()};reader.readAsDataURL(f)}
+function readImage(input,key,label){const f=input.files?.[0];if(!f)return;if(!/^image\/(png|jpeg|webp)$/.test(f.type)||f.size>12*1024*1024){alert('Use PNG, JPG or WebP up to 12 MB.');input.value='';return}const generationKey=key==='siteImage'?'siteGeneration':'contextGeneration';const generation=++state[generationKey];const reader=new FileReader();reader.onload=async()=>{if(generation!==state[generationKey])return;if(key==='siteImage'){++state.lookupGeneration;$('lookupAerial').disabled=false;$('lookupAerial').textContent='Find public aerial';state.aerialProvenance=null;state.mapScale=null;state.contextImage='';state.contextSource='';state.contextHash='';++state.contextGeneration;$('contextImage').value='';if($('siteName').value==='DEMONSTRATION RETAIL SITE')$('siteName').value='SITE CONCEPT · OPERATOR REVIEW';state.marks=[];state.pending=null;state.calibration=null;state.calibrationPending=null;$('messages').textContent='New site aerial: all prior conceptual marks cleared. Place new marks based on this source.';$('sourceText').value='Operator-supplied '+f.name+' / rights and location unverified'}state[key]=String(reader.result);state[label]=f.name;state[key==='siteImage'?'siteHash':'contextHash']='';if(typeof crypto!=='undefined'&&crypto.subtle&&typeof f.arrayBuffer==='function'){try{const hash=await crypto.subtle.digest('SHA-256',await f.arrayBuffer());if(generation===state[generationKey])state[key==='siteImage'?'siteHash':'contextHash']=Array.from(new Uint8Array(hash)).map(n=>n.toString(16).padStart(2,'0')).join('')}catch{}}$('sourceState').textContent='Operator image: '+f.name+' · byte fingerprint only · not verified geography';draw()};reader.readAsDataURL(f)}
 for(const id of ['siteName','rev','sourceText'])$(id).addEventListener('input',draw);
 $('address').addEventListener('input',invalidateAddressBoundAerial);
 $('siteImage').addEventListener('change',e=>readImage(e.target,'siteImage','siteSource'));
