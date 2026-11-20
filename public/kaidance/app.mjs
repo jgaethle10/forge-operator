@@ -78,6 +78,7 @@ async function refreshPulse(){
    const raw=await res.json();
    const assessed=assessPublicPulse(raw,Date.now());
    if(!assessed.ok)throw Error('Pulse rejected');
+   if(state.cycleSeen!==null&&assessed.cycle_number<state.cycleSeen)throw Error('Collider cycle rolled back');
    if(state.cycleSeen!==null&&assessed.cycle_number>state.cycleSeen&&assessed.verified)triggerBeat();
    if(state.cycleSeen===null||assessed.cycle_number>=state.cycleSeen){
      state.cycleSeen=assessed.cycle_number;
