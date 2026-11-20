@@ -102,3 +102,38 @@ Expected outputs: `run-a/directional-full-area-ablation.json`, `directional-deci
 - **Watershed, Subsea Watch, Worlds:** terrain/lineament inspiration, uncertainty classification and optional visualization. No Yakima, Alaska, or fictional site geometry is incorporated into the model.
 
 A new external DEM trial remains **separate** from this source-only GEMS-005 ablation, requiring tile overlap, use/share rights, nodata/datum/CRS verification and explicit model evidence. Preserve original GEMS-001, previously scored GEMS-002, and the public leaderboard distinctions.
+
+
+## GEMS-006 preparation: balanced DEM metadata reconnaissance (Nov 20)
+
+New zero-network, no-raster preflight: `gems_dem_metadata_recon.py`. It reads the
+existing **owner-private** `gems_model_disagreement_tiles.geojson`, validates
+its WGS84 CRS and provenance disclaimer, and generates bounding-box lookup
+windows for all three equally sized diagnostic groups (15 high-disagreement,
+15 median control, 15 low-disagreement in the archived atlas). The output
+never asserts DEM coverage or geologic ground truth.
+
+```bash
+cd systemia/mission-bridge/gems
+python3 -m unittest -v test_gems_dem_metadata_recon.py
+python3 gems_dem_metadata_recon.py \
+  --atlas /PRIVATE/nevada-disagreement-atlas/gems_model_disagreement_tiles.geojson \
+  --receipt /PRIVATE/NEW/gems-dem-metadata-recon.json
+```
+
+Optional `--index /PRIVATE/verified-dem-source-footprints.json` accepts a
+*manually checked, local* JSON document with
+`schema="evercraft.gems.dem-metadata-index.v1"` and
+`sources=[{"id":"...","metadata_reference":"...","bbox_wgs84":[west,south,east,north],
+"acquisition_date":null,"vertical_datum":null,"rights_reference":null}]`.
+These values are **example schema placeholders**, not discovered DEM tiles.
+The tool never retrieves `metadata_reference` or other URLs. A coarse bbox
+intersection is a candidate for **manual metadata review**, not proof that a
+pixel is present, that the tile covers the polygon, or that use/share rights
+permit competition features. No index = unknown coverage, not missing coverage.
+
+Next scientific gate: source-specific metadata collection for the three groups
+under comparable acquisition vintage, vertical datum, nominal 1m resolution,
+resampling and rights; spatial footprint validation and actual valid raster
+pixel coverage only **after** permitted bytes are available. Keep GEMS-001
+selected and do not submit, promote, deploy or spend paid compute here.
