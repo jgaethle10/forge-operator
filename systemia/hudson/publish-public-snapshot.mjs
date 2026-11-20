@@ -6,7 +6,7 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
-import { execFileSync } from 'node:child_process';
+import { execFileSync,execFile } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
 export const SCHEMA = 'evercraft.hudson.public-activity.v1';
@@ -79,6 +79,22 @@ export function parsePublicGitLog(raw) {
     }
   }
   return result;
+}
+function runGitAsync(root,args){
+  return new Promise((resolve,reject)=>{
+    execFile('git',['-C',root,...args],{
+      encoding:'utf8',timeout:12_000,maxBuffer:3_000_000,
+    },(error,stdout)=>error?reject(error):resolve(String(stdout||'').trim()));
+  });
+}
+export async function gatherGitEntriesAsync(root,max=80){
+  const origin=await runGitAsync(root,['remote','get-url','origin']);
+  if(!approvedRemote.test(origin))throw Error('wrong_canonical_public_repository');
+  const records=await runGitAsync(root,[
+    'log','--no-merges','-n',String(Math.max(1,Math.min(200,max))),
+    '--format=%H%x1f%cI','--name-only'
+  ]);
+  return parsePublicGitLog(records);
 }
 export function gatherGitEntries(root,max=80) {
   const origin=runGit(root,['remote','get-url','origin']);

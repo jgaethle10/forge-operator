@@ -42,7 +42,8 @@ import {
 import { renderEarthWorksSimulator } from './earthworks-simulator-page.mjs';
 import { serveAidenLab } from './aiden-lab-public-route.mjs';
 import { createFabricFaieSurface } from './fabric-faie-runtime.mjs';
-import {gatherGitEntries,makePublicSnapshot} from '../hudson/publish-public-snapshot.mjs';
+import {gatherGitEntriesAsync,makePublicSnapshot} from '../hudson/publish-public-snapshot.mjs';
+import {createHudsonFeedCache} from '../hudson/public-feed-cache.mjs';
 import { resolveRomanContinuity } from '../domain-shield/roman-funnel.mjs';
 import { createStudioInquiryHandler } from './commercial-studio-inquiry.mjs';
 import {createWebsiteAuditInquiryHandler,websiteAuditInquiryReadiness,createWebsiteAuditAlertDispatcher} from './website-audit-inquiry.mjs';
@@ -654,24 +655,17 @@ export async function startFabricLocalRuntime({
     ['www.sunshineandspotless.com','/sunshine-spotless/'],
   ]);
   const ownedPublicRoot=path.resolve(moduleDir,'../../');
-  // Read-only, low-frequency public Git source view. Absence of a canonical
-  // checkout fails closed to the on-disk (eventually delayed) snapshot.
-  const hudsonCache={checked:0,snapshot:null};
-  const hudsonCurrentPublicSnapshot=()=>{
-    const now=Date.now();
-    if(now-hudsonCache.checked<60_000)return hudsonCache.snapshot;
-    hudsonCache.checked=now;
-    try{
-      hudsonCache.snapshot=makePublicSnapshot({
-        entries:gatherGitEntries(ownedPublicRoot,80),
-        publishedAt:new Date(now).toISOString(),
-        limit:80,lookbackHours:72,
+  // No synchronous Git calls in HTTP handlers: preserve health and privacy
+  // responses even if an owned node is busy reading public source history.
+  const hudsonSourceCache=createHudsonFeedCache({
+    loadSnapshot:async()=>{
+      const entries=await gatherGitEntriesAsync(ownedPublicRoot,80);
+      return makePublicSnapshot({
+        entries,publishedAt:new Date().toISOString(),limit:80,lookbackHours:72
       });
-    }catch{
-      hudsonCache.snapshot=null;
-    }
-    return hudsonCache.snapshot;
-  };
+    },
+    intervalMs:60_000,waitMs:1500,
+  });
   const resolveOwnedServicePage=(pathname)=>{
     const key=String(pathname||'').replace(/\/+$/,'');
     const relative=ownedServicePages.get(key);
@@ -1731,7 +1725,7 @@ export async function startFabricLocalRuntime({
         const asset=resolveHudsonAsset(hudsonDir,String(req.url||''));
         if(!asset)return sendJson(res,404,{error:'hudson_public_asset_not_found'});
         const isHtml=path.basename(asset)==='index.html';
-        const fresh=!isHtml?hudsonCurrentPublicSnapshot():null;
+        const fresh=!isHtml?await hudsonSourceCache.read():null;
         const body=fresh?Buffer.from(JSON.stringify(fresh)):fs.readFileSync(asset);
         res.writeHead(200,{
           'content-type':isHtml?'text/html; charset=utf-8':'application/json; charset=utf-8',
