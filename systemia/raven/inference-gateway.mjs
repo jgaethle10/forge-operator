@@ -4,7 +4,7 @@ import path from "node:path";
 import { createHash, timingSafeEqual } from "node:crypto";
 import { ProviderCredentialVault } from "../evercraft-home/credential-vault.mjs";
 
-const PROVIDERS = Object.freeze(["ollama", "gemini", "openai"]);
+const PROVIDERS = Object.freeze(["ollama", "gemini", "openai", "anthropic", "xai"]);
 
 function clean(value, max = 50000) {
   return String(value ?? "").replace(/[\u0000-\u001f]+/g, " ").trim().slice(0, max);
@@ -109,6 +109,8 @@ export function createInferenceEngine({
   ollamaOrigin = "http://127.0.0.1:11434",
   openaiOrigin = "https://api.openai.com",
   geminiOrigin = "https://generativelanguage.googleapis.com",
+  anthropicOrigin = "https://api.anthropic.com",
+  xaiOrigin = "https://api.x.ai",
   fetchImpl = globalThis.fetch,
   timeoutMs = 120000,
   now = () => new Date(),
@@ -207,6 +209,104 @@ export function createInferenceEngine({
       model: clean(body?.model || modelKey, 300),
       provider_request_id: clean(body?.id || response.headers?.get?.("x-request-id"), 300) || null,
       credential_ref: secret.credential_ref,
+    };
+  }
+
+
+  // Official provider APIs only. No tools, external effects or hosted runtimes.
+  async function inferAnthropic(input) {
+    const secret = latestVaultSecret(credentialStateDir, "anthropic");
+    if (!secret?.api_secret) throw new Error("anthropic_credential_missing");
+    const base = clean(anthropicOrigin, 2000).replace(/\/$/, "");
+    const url = new URL(base);
+    if (url.protocol !== "https:" || url.hostname !== "api.anthropic.com" || url.pathname !== "/") {
+      throw new Error("anthropic_origin_invalid");
+    }
+    const { response, body } = await fetchJson(base + "/v1/messages", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        "x-api-key": secret.api_secret,
+        "anthropic-version": "2023-06-01",
+      },
+      body: JSON.stringify({
+        model: modelKey,
+        max_tokens: 1000,
+        messages: [{ role: "user", content: input }],
+      }),
+    }, { fetchImpl, timeoutMs });
+    const text = (Array.isArray(body?.content) ? body.content : [])
+      .filter((part) => part?.type === "text").map((part) => clean(part.text)).filter(Boolean).join("\n");
+    if (!response.ok || !text) throw new Error("anthropic_provider_unavailable");
+    return {
+      text, provider: "anthropic", model: clean(body?.model || modelKey, 300),
+      provider_request_id: clean(body?.id || response.headers?.get?.("request-id"), 300) || null,
+      credential_ref: secret.credential_ref,
+    };
+  }
+
+  async function inferXai(input) {
+    const secret = latestVaultSecret(credentialStateDir, "xai");
+    if (!secret?.api_secret) throw new Error("xai_credential_missing");
+    const base = clean(xaiOrigin, 2000).replace(/\/$/, "");
+    const url = new URL(base);
+    if (url.protocol !== "https:" || url.hostname !== "api.x.ai" || url.pathname !== "/") {
+      throw new Error("xai_origin_invalid");
+    }
+    const { response, body } = await fetchJson(base + "/v1/responses", {
+      method: "POST",
+      headers: { "content-type": "application/json", authorization: "Bearer " + secret.api_secret },
+      body: JSON.stringify({
+        model: modelKey, input: [{ role: "user", content: input }],
+        store: false, tools: [], parallel_tool_calls: false, max_output_tokens: 1000,
+      }),
+    }, { fetchImpl, timeoutMs });
+    const text = openAIText(body);
+    if (!response.ok || !text || (body?.status && body.status !== "completed")) throw new Error("xai_provider_unavailable");
+    return {
+      text, provider: "xai", model: clean(body?.model || modelKey, 300),
+      provider_request_id: clean(body?.id || response.headers?.get?.("x-request-id"), 300) || null,
+      credential_ref: secret.credential_ref,
+    };
+  }
+
+  async function validateAnthropic() {
+    const secret = latestVaultSecret(credentialStateDir, "anthropic");
+    if (!secret?.api_secret) throw new Error("anthropic_credential_missing");
+    const base = clean(anthropicOrigin, 2000).replace(/\/$/, "");
+    const url = new URL(base);
+    if (url.protocol !== "https:" || url.hostname !== "api.anthropic.com" || url.pathname !== "/")
+      throw new Error("anthropic_origin_invalid");
+    const { response, body } = await fetchJson(base + "/v1/models/" + encodeURIComponent(modelKey), {
+      method: "GET",
+      headers: { accept: "application/json", "x-api-key": secret.api_secret, "anthropic-version": "2023-06-01" },
+    }, { fetchImpl, timeoutMs });
+    if (!response.ok || !clean(body?.id)) throw new Error("anthropic_model_unavailable");
+    return {
+      provider: "anthropic", model: clean(body.id, 300),
+      provider_request_id: clean(response.headers?.get?.("request-id"), 300) || null,
+      credential_ref: secret.credential_ref, metadata_endpoint: "/v1/models/" + modelKey,
+    };
+  }
+
+  async function validateXai() {
+    const secret = latestVaultSecret(credentialStateDir, "xai");
+    if (!secret?.api_secret) throw new Error("xai_credential_missing");
+    const base = clean(xaiOrigin, 2000).replace(/\/$/, "");
+    const url = new URL(base);
+    if (url.protocol !== "https:" || url.hostname !== "api.x.ai" || url.pathname !== "/")
+      throw new Error("xai_origin_invalid");
+    const { response, body } = await fetchJson(base + "/v1/models/" + encodeURIComponent(modelKey), {
+      method: "GET",
+      headers: { accept: "application/json", authorization: "Bearer " + secret.api_secret },
+    }, { fetchImpl, timeoutMs });
+    const aliases = Array.isArray(body?.aliases) ? body.aliases : [];
+    if (!response.ok || !clean(body?.id) || (body.id !== modelKey && !aliases.includes(modelKey)))
+      throw new Error("xai_model_unavailable");
+    return {
+      provider: "xai", model: clean(body.id, 300),
+      provider_request_id: clean(response.headers?.get?.("x-request-id"), 300) || null,
+      credential_ref: secret.credential_ref, metadata_endpoint: "/v1/models/" + modelKey,
     };
   }
 
@@ -313,7 +413,11 @@ export function createInferenceEngine({
         ? await validateOllama()
         : providerKey === "gemini"
           ? await validateGemini()
-          : await validateOpenAI();
+          : providerKey === "openai"
+            ? await validateOpenAI()
+            : providerKey === "anthropic"
+              ? await validateAnthropic()
+              : await validateXai();
       const completedAt = now().toISOString();
       const receiptCore = {
         schema: "evercraft.raven.provider-validation-receipt.v1",
@@ -353,7 +457,11 @@ export function createInferenceEngine({
         ? await inferOllama(prompt)
         : providerKey === "gemini"
           ? await inferGemini(prompt)
-          : await inferOpenAI(prompt);
+          : providerKey === "openai"
+            ? await inferOpenAI(prompt)
+            : providerKey === "anthropic"
+              ? await inferAnthropic(prompt)
+              : await inferXai(prompt);
       const completedAt = now().toISOString();
       const receiptCore = {
         schema: "evercraft.raven.provider-inference-receipt.v1",
@@ -395,6 +503,8 @@ export async function startRavenInferenceGateway({
   ollamaOrigin,
   openaiOrigin,
   geminiOrigin,
+  anthropicOrigin,
+  xaiOrigin,
   fetchImpl = globalThis.fetch,
 } = {}) {
   if (!["127.0.0.1", "localhost", "::1"].includes(host)) {
@@ -409,6 +519,8 @@ export async function startRavenInferenceGateway({
     ollamaOrigin,
     openaiOrigin,
     geminiOrigin,
+    anthropicOrigin,
+    xaiOrigin,
     fetchImpl,
   });
   let closed = false;

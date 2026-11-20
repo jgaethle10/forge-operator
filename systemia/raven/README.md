@@ -67,18 +67,20 @@ Supported v1 adapters:
 - `ollama` — local Ollama at `http://127.0.0.1:11434` by default. No provider credential is required.
 - `gemini` — Google Gemini `models.generateContent`; the API key is read from the Evercraft provider credential vault.
 - `openai` — OpenAI Responses API; the API key is read from the Evercraft provider credential vault.
+- `anthropic` — Claude Messages API, with metadata-only model validation and an encrypted provider key.
+- `xai` — Grok Responses API, with metadata-only model validation and `store: false` for non-persistent response storage.
 
-No provider or model is selected by default. No hosted provider is activated merely by source deployment.
+No provider or model is selected by default. No hosted provider is activated merely by source deployment. API calls may transmit approved prompt data to external model providers, so mission classification and explicitly bounded budget/approval are required before heartbeat-triggered use.
 
 Required runtime bindings:
 
 ```bash
 RAVEN_INFERENCE_GATEWAY_TOKEN_FILE=/var/lib/evercraft/raven/inference-gateway-token
-RAVEN_INFERENCE_PROVIDER=ollama|gemini|openai
+RAVEN_INFERENCE_PROVIDER=ollama|gemini|openai|anthropic|xai
 RAVEN_INFERENCE_MODEL=<explicit model id>
 ```
 
-For Gemini/OpenAI:
+For Gemini/OpenAI/Anthropic/xAI:
 
 ```bash
 RAVEN_PROVIDER_CREDENTIAL_STATE_DIR=/var/lib/evercraft/identity/provider-credentials
@@ -115,8 +117,8 @@ bash systemia/raven/bootstrap-local-inference.sh openai <model-id>
 bash systemia/raven/bootstrap-local-inference.sh ollama <local-model-id>
 ```
 
-For Gemini/OpenAI, the script first checks the Evercraft encrypted provider vault. If no credential is present, it prompts in an interactive terminal with echo disabled and pipes the key over stdin directly into `seal-inference-key.mjs`. The key is never accepted as a command-line argument or environment variable and is never returned by the helper.
+For hosted providers, the script first checks the Evercraft encrypted provider vault. If no credential is present, it prompts in an interactive terminal with echo disabled and pipes the key over stdin directly into `seal-inference-key.mjs`. The key is never accepted as a command-line argument or environment variable and is never returned by the helper.
 
-The bootstrap then persists only provider/model/vault-path configuration through the user-mode local-organism installer, restarts the owned organism, verifies loopback health for private Raven and the inference gateway, and performs a metadata-only provider/model validation. Gemini uses `models.get`, OpenAI uses the retrieve-model endpoint, and Ollama checks the local model inventory. No prompt is sent during validation.
+The bootstrap then persists only provider/model/vault-path configuration through the user-mode local-organism installer, restarts the owned organism, verifies loopback health for private Raven and the inference gateway, and performs a metadata-only provider/model validation. Gemini and Anthropic use `models.get`, OpenAI and xAI use the retrieve-model endpoint, and Ollama checks the local model inventory. Models and API credentials must be selected by the operator; no provider is automatically activated. No prompt is sent during validation.
 
 It deliberately does **not** make a model inference call after setup, so activation cannot silently create an inference charge merely to print a green status. A successful bootstrap proves wiring plus provider-key/model visibility. The canonical Tieton acceptance remains the first bounded model-inference proof.

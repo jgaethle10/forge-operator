@@ -297,7 +297,7 @@ function normalizeRavenInferenceConfig(input = {}) {
   const model = String(input.raven_inference_model || '').trim();
   const configured = Boolean(provider || model);
   if (!configured) return { configured: false, provider: '', model: '', ollama_origin: '' };
-  if (!['ollama', 'gemini', 'openai'].includes(provider)) {
+  if (!['ollama', 'gemini', 'openai', 'anthropic', 'xai'].includes(provider)) {
     throw new Error('raven_inference_provider_invalid');
   }
   if (!/^[a-zA-Z0-9._:-]{1,160}$/.test(model)) {

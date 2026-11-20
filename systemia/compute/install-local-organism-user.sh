@@ -77,8 +77,8 @@ fi
 
 if [[ -n "${RAVEN_INFERENCE_PROVIDER:-}" ]]; then
   case "${RAVEN_INFERENCE_PROVIDER,,}" in
-    ollama|gemini|openai) set_env_value "RAVEN_INFERENCE_PROVIDER" "${RAVEN_INFERENCE_PROVIDER,,}" ;;
-    *) echo "RAVEN_INFERENCE_PROVIDER must be ollama, gemini, or openai." >&2; exit 2 ;;
+    ollama|gemini|openai|anthropic|xai) set_env_value "RAVEN_INFERENCE_PROVIDER" "${RAVEN_INFERENCE_PROVIDER,,}" ;;
+    *) echo "RAVEN_INFERENCE_PROVIDER must be ollama, gemini, openai, anthropic, or xai." >&2; exit 2 ;;
   esac
 fi
 if [[ -n "${RAVEN_INFERENCE_MODEL:-}" ]]; then

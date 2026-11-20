@@ -45,3 +45,16 @@ test("local inference credential helper refuses unsupported provider", () => {
     stateDir:"/tmp/unused",
   }),/hosted_raven_provider/);
 });
+
+test("Claude and Grok credentials can be sealed without echoing key material",()=>{
+ for(const provider of ['anthropic','xai']){
+   const root=fs.mkdtempSync(path.join(os.tmpdir(),'raven-'+provider+'-seal-'));
+   const secret='fixture-secret-'+provider+'-abcdefghijklmnop';
+   try{
+     const r=sealRavenInferenceCredential({provider,stateDir:root,apiKey:secret});
+     assert.equal(r.ok,true);assert.equal(r.secret_material_returned,false);
+     assert.equal(JSON.stringify(r).includes(secret),false);
+     assert.equal(ravenInferenceCredentialStatus({provider,stateDir:root}).configured,true);
+   }finally{fs.rmSync(root,{recursive:true,force:true});}
+ }
+});

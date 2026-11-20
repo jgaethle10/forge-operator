@@ -36,3 +36,19 @@ test('calls official OpenAI, Anthropic and Gemini API endpoints with server-side
  assert.equal(seen[2].opts.headers['x-goog-api-key'],'g');
  assert.ok(!seen.some(x=>x.url.includes('key=')));
 });
+
+test('Grok Boardroom vendor only registers explicitly; no server-side tools or response storage',async()=>{
+ const seen=[];
+ const fake=async(url,opts)=>{
+   seen.push({url,opts});
+   return {ok:true,json:async()=>({id:'xai-proof',status:'completed',output:[{content:[{text:'Independent Grok review'}]}]})};
+ };
+ const got=configuredProviders({XAI_API_KEY:'test-grok-secret',BOARDROOM_XAI_MODEL:'grok-proof'},fake);
+ assert.deepEqual(got.map(x=>x.id),['xai']);
+ const result=await got[0].respond({system:'source-based',user:'test',maxTokens:350});
+ assert.match(result.text,/Independent Grok/);
+ assert.equal(seen[0].url,'https://api.x.ai/v1/responses');
+ const body=JSON.parse(seen[0].opts.body);
+ assert.equal(body.store,false);
+ assert.deepEqual(body.tools,[]);
+});

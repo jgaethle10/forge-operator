@@ -59,6 +59,8 @@ const SPECS = Object.freeze({
     label: 'raven-inference',
     environment: 'live',
   }),
+  anthropic: Object.freeze({ provider: 'anthropic', label: 'raven-inference', environment: 'live' }),
+  xai: Object.freeze({ provider: 'xai', label: 'raven-inference', environment: 'live' }),
 });
 
 function clean(value) {
@@ -154,6 +156,16 @@ export function normalizeProviderCredentialRequest(provider, body = {}) {
       environment: clean(body.environment) || spec.environment,
       label: clean(body.label) || spec.label,
       apiKeyId: 'gemini-api-key',
+      apiSecret: clean(body.api_key),
+    };
+  }
+
+  if (spec.provider === 'anthropic' || spec.provider === 'xai') {
+    return {
+      provider: spec.provider,
+      environment: clean(body.environment) || spec.environment,
+      label: clean(body.label) || spec.label,
+      apiKeyId: spec.provider + '-api-key',
       apiSecret: clean(body.api_key),
     };
   }

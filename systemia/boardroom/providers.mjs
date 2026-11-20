@@ -21,6 +21,13 @@ export function configuredProviders(env=process.env,transport=fetch){
       {model:env.BOARDROOM_ANTHROPIC_MODEL,max_tokens:maxTokens||1000,system,messages:[{role:'user',content:user}]},
       j=>(j.content||[]).filter(x=>x.type==='text').map(x=>x.text).join('\n'),transport)});
   }
+  if(env.XAI_API_KEY&&env.BOARDROOM_XAI_MODEL){
+    providers.push({id:'xai',model:env.BOARDROOM_XAI_MODEL,respond:({system,user,maxTokens})=>
+      invoke('https://api.x.ai/v1/responses',{authorization:'Bearer '+env.XAI_API_KEY},
+      {model:env.BOARDROOM_XAI_MODEL,input:[{role:'system',content:system},{role:'user',content:user}],
+       max_output_tokens:maxTokens||1000,store:false,tools:[],parallel_tool_calls:false},
+      j=>j.output_text||(j.output||[]).flatMap(x=>(x.content||[]).map(p=>p.text||'')).join('\\n'),transport)});
+  }
   if(env.GOOGLE_API_KEY&&env.BOARDROOM_GOOGLE_MODEL){
     const model=encodeURIComponent(env.BOARDROOM_GOOGLE_MODEL);
     providers.push({id:'google',model:env.BOARDROOM_GOOGLE_MODEL,respond:({system,user,maxTokens})=>

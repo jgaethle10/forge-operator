@@ -1,0 +1,38 @@
+{
+  "schema": "evercraft.systemia.workflow-manifest.v1",
+  "workflow_key": "systemia-claude-grok-heartbeat-advisory",
+  "mission_key": "systemia-multimodel-advisory-owned-2026-11-19",
+  "runtime": "systemia-core-resident-supervisor+evercraft-owned-compute",
+  "collider_compatible": true,
+  "cadence_seconds": 300,
+  "material_change_only": true,
+  "entrypoint": "systemia/mission-bridge/model-council/heartbeat-runner.mjs",
+  "authority": {
+    "mission_packet": "private_verified_systemia_admission_only",
+    "read_local_evidence": "bounded",
+    "external_provider_inference": "disabled_by_default_requires_signed_packet_and_budget",
+    "external_tool_calls": "forbidden",
+    "customer_outreach": "held",
+    "money_movement": "held",
+    "publishing": "held",
+    "production_mutation": "held"
+  },
+  "secrets": {
+    "provider_api_keys": "evercraft_encrypted_provider_vault",
+    "admission_signing_key": "private_mode_0600_file",
+    "in_source": false
+  },
+  "outputs": {
+    "cycle_summary": "stdout_sanitized_receipt",
+    "customer_evidence": "private_only"
+  },
+  "safety": {
+    "unconfigured": "disabled",
+    "default_execute": false,
+    "default_rolling_spend_cents": 0,
+    "provider_completion": "unverified_opinion",
+    "retry_unknown_outcome": false,
+    "third_party_runtime": false,
+    "base44": false
+  }
+}

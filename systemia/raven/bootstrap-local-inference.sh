@@ -16,6 +16,8 @@ Usage:
 Providers:
   gemini  - hosted Gemini through Evercraft encrypted provider vault
   openai  - hosted OpenAI Responses through Evercraft encrypted provider vault
+  anthropic - hosted Claude Messages API through Evercraft encrypted provider vault
+  xai    - hosted Grok Responses API through Evercraft encrypted provider vault
   ollama  - local Ollama, no provider credential
 
 Example:
@@ -29,7 +31,7 @@ EOF
 
 [[ -n "${PROVIDER}" && -n "${MODEL}" ]] || usage
 case "${PROVIDER,,}" in
-  gemini|openai|ollama) PROVIDER="${PROVIDER,,}" ;;
+  gemini|openai|anthropic|xai|ollama) PROVIDER="${PROVIDER,,}" ;;
   *) usage ;;
 esac
 [[ "${MODEL}" =~ ^[a-zA-Z0-9._:-]{1,160}$ ]] || {

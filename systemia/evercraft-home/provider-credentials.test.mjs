@@ -7,7 +7,7 @@ import {
 } from './provider-credentials.mjs';
 
 test('provider credential intake is an explicit allowlist', () => {
-  assert.deepEqual(supportedCredentialProviders(), ['alpaca', 'google-places', 'kroger', 'kaggle', 'numerai', 'qloo', 'nebius', 'paypal', 'facebook-pages', 'linkedin-organization', 'gemini', 'openai']);
+  assert.deepEqual(supportedCredentialProviders(), ['alpaca', 'google-places', 'kroger', 'kaggle', 'numerai', 'qloo', 'nebius', 'paypal', 'facebook-pages', 'linkedin-organization', 'gemini', 'openai', 'anthropic', 'xai']);
   assert.equal(credentialProviderSpec('unknown'), null);
   assert.throws(
     () => normalizeProviderCredentialRequest('unknown', {}),
@@ -147,4 +147,12 @@ test('LinkedIn organization OAuth token seals under an organization identity, ne
   assert.throws(()=>normalizeProviderCredentialRequest('linkedin-organization',{
     organization_id:'urn:li:person:55',access_token:'secret'
   }),/linkedin_organization_id_invalid/);
+});
+
+test('Claude and Grok API credentials are mapped to provider-scoped Raven vault records',()=>{
+ for(const provider of ['anthropic','xai']){
+   const r=normalizeProviderCredentialRequest(provider,{api_key:'fixture-key-for-owned-vault-123456789'});
+   assert.equal(r.provider,provider);assert.equal(r.label,'raven-inference');
+   assert.equal(r.apiKeyId,provider+'-api-key');
+ }
 });
