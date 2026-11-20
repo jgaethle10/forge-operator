@@ -18,12 +18,12 @@ if (stage && canvas && verifiedMarker) {
   let hoverX=0,hoverY=0,targetX=0,targetY=0;
   const mobile=()=>width<680;
   const powerSave=()=>reduce.matches;
-  const sparks=Array.from({length:210},(_,i)=>({
+  const sparks=Array.from({length:118},(_,i)=>({
    angle:TAU*seed(i+2),lane:seed(i+381),
    size:.45+seed(i+998)*1.3,depth:seed(i+643),
    drift:.08+seed(i+69)*.35,twinkle:seed(i+442)*TAU
   }));
-  const dust=Array.from({length:115},(_,i)=>({
+  const dust=Array.from({length:70},(_,i)=>({
    x:seed(i+525),y:seed(i+738),size:.3+seed(i+208)*1.2,
    phase:TAU*seed(i+811),depth:seed(i+322)
   }));
@@ -69,7 +69,7 @@ if (stage && canvas && verifiedMarker) {
    const box=stage.getBoundingClientRect();
    width=Math.max(1,box.width);height=Math.max(1,box.height);
    // Avoid massive offscreen buffers on phones while preserving sharpness.
-   dpr=Math.min(mobile()?1.45:1.7,window.devicePixelRatio||1);
+   dpr=Math.min(mobile()?1.25:1.45,window.devicePixelRatio||1);
    canvas.width=Math.round(width*dpr);canvas.height=Math.round(height*dpr);
    canvas.style.width=width+'px';canvas.style.height=height+'px';
    ctx.setTransform(dpr,0,0,dpr,0,0);
@@ -89,7 +89,7 @@ if (stage && canvas && verifiedMarker) {
     ctx.strokeStyle=i%2===0?'rgba(86,183,242,.125)':'rgba(91,101,167,.085)';
     ctx.beginPath();ctx.ellipse(centerX,centerY,r,r*.77,-.11,0,TAU);ctx.stroke();
    }
-   const count=mobile()?56:dust.length;
+   const count=mobile()?36:dust.length;
    for(let i=0;i<count;i++){
     const p=dust[i],x=p.x*width,y=p.y*height;
     const a=(.17+p.depth*.33)*(.76+.24*Math.sin(t*.8+p.phase));
@@ -98,7 +98,7 @@ if (stage && canvas && verifiedMarker) {
    ctx.restore();
   }
   function magneticRing(t){
-   const N=mobile()?64:92;
+   const N=mobile()?46:70;
    // Dark metal extrusion: tube outline and rear/fore geometry sorted by
    // the camera's view depth for dimensionality.
    const rails=[-.32,0,.32];
@@ -115,7 +115,7 @@ if (stage && canvas && verifiedMarker) {
    }
    // Copper and cyan sectional magnetic ribs. Their depth-sorted caps
    // create a tunnel / real machine silhouette rather than a flat diagram.
-   const n=mobile()?31:39;
+   const n=mobile()?21:28;
    const sections=Array.from({length:n},(_,i)=>{
     const a=(i+1/3)*TAU/n;
     const c=torus(a,0,t);
@@ -134,11 +134,11 @@ if (stage && canvas && verifiedMarker) {
     }
    }
    // Flux lines wind around the torus, visually connecting the coils.
-   for(let strand=0;strand<7;strand++){
+   for(let strand=0;strand<5;strand++){
     const points=[];
-    const segments=mobile()?135:200;
+    const segments=mobile()?92:125;
     for(let j=0;j<=segments;j++){
-     const a=j/segments*TAU,b=10*a+strand/7*TAU+t*(strand%2===0?.13:-.12);
+     const a=j/segments*TAU,b=10*a+strand/5*TAU+t*(strand%2===0?.13:-.12);
      points.push(torus(a,b,t,1,.155));
     }
     line(points,{color:strand%3===0?'#eb9cfc':'#4cbcf5',
@@ -148,7 +148,7 @@ if (stage && canvas && verifiedMarker) {
   function particleBeams(t){
    // Two counter-rotating packs. They are *visual metaphor* for a Collider:
    // their position and speed do not correspond to an observed job.
-   const n=mobile()?105:190;
+   const n=mobile()?56:105;
    const speed=t*.26;
    for(let lane=0;lane<2;lane++){
     const color=lane===0?'#71edff':'#ffc289';
@@ -165,7 +165,7 @@ if (stage && canvas && verifiedMarker) {
      const pos=torus(a,b,t,1.002,lane===0?.05:.038);
      const life=.32+.68*(1-p.depth);
      dot(pos.x,pos.y,p.size*(.8+pos.depth)*pos.scale,color,
-       alpha*life*(.48+.52*pos.depth),p.depth>.91?9:2);
+       alpha*life*(.48+.52*pos.depth),p.depth>.91?7:0);
      // Short bright directional filaments at varied lengths.
      if(i%7===0){
       const q=torus(a-(lane===0?1:-1)*(.018+.014*p.lane),b,t,1.002,lane===0?.05:.038);
@@ -268,7 +268,7 @@ if (stage && canvas && verifiedMarker) {
     if(disposed)return;
     frame=requestAnimationFrame(draw);
     if(!visible||document.hidden)return;
-    const maxFps=powerSave()?2:mobile()?24:30;
+    const maxFps=powerSave()?2:mobile()?18:24;
     if(now-previous<1000/maxFps)return;
     previous=now;
     if(!epoch)epoch=now;
