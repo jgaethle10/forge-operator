@@ -55,7 +55,7 @@ class KennedyHomeTest(unittest.TestCase):
         self.assertEqual(status, 200)
         self.assertIn("Kennedy Space Station | Your place to plan", home)
         self.assertIn("CONCEPT ONLY", home)
-        self.assertIn("proposed membership", home.lower())
+        self.assertIn("Concept · not available", home)
         status, workspace = self.get("/workspace")
         self.assertEqual(status, 200)
         self.assertIn("Evercraft | Site Planner", workspace)
