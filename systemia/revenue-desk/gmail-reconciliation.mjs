@@ -126,7 +126,7 @@ export function reconcileGmailOutreach({
   if(p.passport_exact_message_permit_verified!==true)reasons.push('passport_permit_missing');
   // A permit record in source data is NOT a live Passport execution permit.
   keyedProspects.push({
-    prospect_key:prospectKey,contact_ref:emailKey,source_ref_hash:clean(p.source_ref)?digest(hmacKey,clean(p.source_ref)):null,
+    prospect_ref:digest(hmacKey,prospectKey),contact_ref:emailKey,source_ref_hash:clean(p.source_ref)?digest(hmacKey,clean(p.source_ref)):null,
     stage:latestBuyerReply?'replied':priorContact?'sent':stage,
     last_contact_ref:latest?'gmail:'+latest.id:null,
     last_contact_at:latest?new Date(latest.time).toISOString():null,
