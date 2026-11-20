@@ -6,6 +6,7 @@ import path from 'node:path';
 import {execFileSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
 import {FIELD_CANARY_SCHEMA,runLeilandFieldCanary} from '../scripts/leiland-owned-field-canary.mjs';
+import {STATIC_PATHS} from '../systemia/leiland/owned-observatory-host.mjs';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const pinned=execFileSync('git',['-C',root,'rev-parse','HEAD'],{encoding:'utf8'}).trim();
@@ -19,7 +20,7 @@ test('field canary verifies actual checked-out static bytes and never claims pub
   assert.equal(receipt.schema,FIELD_CANARY_SCHEMA);
   assert.equal(receipt.status,'local_loopback_verified_only');
   assert.equal(receipt.release_sha,pinned);
-  assert.equal(receipt.static_assets_verified,14);
+  assert.equal(receipt.static_assets_verified,Object.keys(STATIC_PATHS).length+1); // Root /leiland/ readback is counted separately
   assert.equal(receipt.public_pulse_state,'not_connected');
   assert.equal(receipt.public_cycle_number,null);
   assert.equal(receipt.public_inference_feed_state,'not_connected');
