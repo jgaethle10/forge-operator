@@ -48,8 +48,19 @@ try{
   must(result.loss_year_range?.first===2023&&result.loss_year_range?.last===2024,'nfip_wrong_loss_years');
   must(Number.isInteger(result.claim_transactions)&&result.claim_transactions>=11,
     'no_publishable_official_claim_records');
-  must(Number.isFinite(result.total_paid_usd)&&result.total_paid_usd>=0,
-    'nfip_paid_total_invalid');
+  must(Number.isFinite(result.known_payment_components_usd)&&result.known_payment_components_usd>=0,
+    'nfip_known_recorded_payment_subtotal_invalid');
+  must(result.payment_coverage&&Number.isInteger(result.payment_coverage.records_with_missing_components),
+    'nfip_missing_payment_coverage');
+  if(result.payment_completeness==='complete'){
+    must(result.payment_coverage.records_with_missing_components===0&&
+      Number.isFinite(result.total_paid_usd)&&
+      result.total_paid_usd===result.known_payment_components_usd,
+      'nfip_complete_payment_total_unverified');
+  }else if(result.payment_completeness==='partial'){
+    must(result.payment_coverage.records_with_missing_components>0&&result.total_paid_usd===null,
+      'nfip_partial_payments_marked_as_complete');
+  }else throw Error('nfip_payment_completeness_unknown');
   must(result.source_urls?.includes('https://www.fema.gov/api/open/v3/NfipClaims'),
     'nfip_source_not_official');
   must(result.request_persisted===false&&result.decision_authority===false&&result.publication_authority===false,
@@ -69,6 +80,9 @@ try{
   must(after.comparison_count===before.comparison_count,'nfip_public_lookup_persisted_comparison');
   receipt.claim_transactions=result.claim_transactions;
   receipt.total_paid_usd=result.total_paid_usd;
+  receipt.known_payment_components_usd=result.known_payment_components_usd;
+  receipt.payment_completeness=result.payment_completeness;
+  receipt.records_with_missing_components=result.payment_coverage.records_with_missing_components;
   receipt.state='OFFICIAL_NFIP_WA_AREA_HISTORY_VERIFIED';
   receipt.stage='passed';receipt.passed=true;
 }catch(error){
