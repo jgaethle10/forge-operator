@@ -5,13 +5,13 @@ import {probeKaidanceFallback} from '../scripts/probe-kaidance-fallback.mjs';
 const root='https://jgaethle10.github.io/forge-operator/';
 function mock({pulseStatus=404,broken=null,wrongMime=null}={}) {
  const paths={
-  'index.html':'<html><head><title>KAIDANCE | Evercraft in Motion</title><link rel="stylesheet" href="./style.css"><link rel="stylesheet" href="./experience.css"><link rel="stylesheet" href="./collider-v3.css"><link rel="stylesheet" href="./confluence.css"><link rel="icon" href="./mark.svg"></head><body>9:16 LIVE VIEW HEARTBEAT NOT CONNECTED <script src="./app.mjs"></script><script src="./visual.mjs"></script><script src="./collider-engine.mjs"></script><script src="./current-field.mjs"></script><script src="./field-chapters.mjs"></script><div id="fieldRouteProgress"></div><div id="fieldRecordTopic"></div></body></html>',
+  'index.html':'<html><head><title>KAIDANCE | Evercraft in Motion</title><link rel="stylesheet" href="./style.css"><link rel="stylesheet" href="./experience.css"><link rel="stylesheet" href="./collider-v3.css"><link rel="stylesheet" href="./confluence.css"><link rel="icon" href="./mark.svg"></head><body>9:16 LIVE VIEW HEARTBEAT NOT CONNECTED <script src="./app.mjs"></script><script src="./visual.mjs"></script><script src="./collider-engine.mjs"></script><script src="./current-field.mjs"></script><div id="fieldRouteProgress"></div><div id="fieldRecordTopic"></div></body></html>',
   'app.mjs':"import {assessPublicPulse} from './pulse-source.mjs';import {normalizePublicActivity} from './work-source.mjs';fetch('./pulse.json');$('heroEventTitle');$('heroProgress')",
   'style.css':'body{background:#000; color:#fff; } /* viewport safe renderer */',
   'experience.css':'/* KAIDANCE V02 */ body{color:#fff;}',
   'collider-v3.css':'/* KAIDANCE COLLIDER V03 */ #colliderField{opacity:1;}',
   'confluence.css':'/* KAIDANCE V04 */ #currentField{display:block;}',
-  'current-field.mjs':'// KAIDANCE CONFLUENCE FIELD V05 const canvas = document.getElementById(\"currentField\");',
+  'current-field.mjs':"// KAIDANCE CONFLUENCE FIELD V05 import {scenicChapter} from './field-chapters.mjs'; const canvas = document.getElementById('currentField');",
   'field-chapters.mjs':'// KAIDANCE V05 export const SCENIC_LEG_SECONDS=10.5; narrated routes are illustrative',
   'collider-engine.mjs':'// KAIDANCE V03 AMBIENT ART particle beam renderer, no telemetry simulation',
   'visual.mjs':'// Ambient art only: a source-honest decorative canvas. No telemetry changes.',
