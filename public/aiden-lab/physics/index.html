@@ -47,6 +47,26 @@ input[type=range]{width:100%;accent-color:#c5f4ad;cursor:pointer;min-height:23px
 @media(max-width:800px){.lab,.concept{grid-template-columns:1fr}.controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}.controls h2{grid-column:1/-1}.concept aside{border-left:0;border-top:2px solid var(--gold);padding:14px 0 0}}
 @media(max-width:460px){.controls{display:flex}.stage-label{padding:13px 14px}.stage-footer{padding:12px 14px}main{padding-top:30px}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+
+.exhibit-quests{margin-top:24px;border:1px solid #477e86;border-radius:23px;padding:clamp(18px,3vw,29px);background:radial-gradient(ellipse at 90% 0,#1d525a5f,transparent 52%),linear-gradient(130deg,#122d3f,#0a2032)}
+.quest-intro{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.quest-intro h2{font:500 clamp(28px,4vw,40px)/1.05 Georgia,serif;letter-spacing:-.035em;margin:7px 0}
+.quest-intro p,.quest-copy{color:#c8dbe3;margin:0;font-size:14px;line-height:1.55}
+.quest-count{border:1px solid #7db4ac75;color:#bcf5d2;background:#173e41;padding:8px 12px;border-radius:999px;font-size:12px;font-weight:800}
+.quest-panel{border:1px solid #4f7c85;background:#082131d9;border-radius:17px;margin-top:20px;padding:clamp(17px,3vw,25px)}
+.quest-tag{color:#c5f4ad;letter-spacing:.12em;font-size:11px;font-weight:900}
+.quest-panel h3{font:500 28px/1.15 Georgia,serif;margin:8px 0}
+.quest-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;align-items:center}
+.quest-actions button,.quest-actions a{border:1px solid #b2e5d0;color:#052d32;background:#bdf6d5;padding:11px 17px;border-radius:11px;font:800 14px system-ui;text-decoration:none;min-height:44px}
+.quest-actions a{border-color:#537884;background:#193848;color:#e8f7fa}
+.quest-actions button:hover{background:#e0ffe9}
+.quest-feedback{min-height:23px;margin:11px 0 0;color:#e3edb1;font-size:14px}
+.museum-passport{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:18px;color:#c8dce1;font-size:12px}
+.museum-passport label{display:flex;gap:9px;align-items:center;cursor:pointer}
+.museum-passport input{width:18px;height:18px;accent-color:#bdf6d5}
+.museum-passport button{color:#b5dfe3;background:transparent;border:1px solid #4e7481;border-radius:9px;padding:8px 10px;font-size:12px}
+.pass-state{font-variant-numeric:tabular-nums;color:#bbefcb}
+@media(max-width:460px){.quest-panel h3{font-size:25px}.quest-intro{align-items:start}.museum-passport{align-items:start;flex-direction:column}}
 </style>
 </head>
 <body>
@@ -74,6 +94,29 @@ input[type=range]{width:100%;accent-color:#c5f4ad;cursor:pointer;min-height:23px
 <div class="result" aria-live="polite"><small id="resultLabel">Predicted range</small><strong id="resultValue">40.8 m</strong><span id="resultDetail">Flight: 2.9 s</span></div>
 </div>
 </section>
+<section class="exhibit-quests" aria-labelledby="questHeading">
+  <div class="quest-intro">
+    <div><p class="eyebrow">SCIENCE MUSEUM · HANDS-ON EXHIBIT</p><h2 id="questHeading">The experiment challenge deck</h2>
+    <p>Three challenges in every station. Change the real model, test an idea, and collect a discovery.</p></div>
+    <span class="quest-count" id="questCount">0 of 9 discoveries</span>
+  </div>
+  <div class="quest-panel" aria-live="polite">
+    <span class="quest-tag" id="questNumber">CHALLENGE 01 / 03</span>
+    <h3 id="questTitle">Make your prediction.</h3>
+    <p class="quest-copy" id="questPrompt">Adjust the experiment controls, then test your solution.</p>
+    <div class="quest-actions">
+      <button type="button" id="tryQuest">Test my setup</button>
+      <button type="button" id="nextQuest" hidden>Next challenge</button>
+      <a href="../world/">Visit the Earth exhibit ↗</a>
+    </div>
+    <p class="quest-feedback" id="questFeedback" role="status"></p>
+  </div>
+  <div class="museum-passport">
+    <span class="pass-state" id="passportStatus">Your discoveries stay in this tab unless you choose otherwise.</span>
+    <label><input type="checkbox" id="rememberPass">Remember discoveries on this device</label>
+    <button type="button" id="clearPass">Clear museum passport</button>
+  </div>
+</section>
 <section class="concept" aria-labelledby="conceptTitle">
 <div><p class="eyebrow">UNDERSTAND THE MODEL</p><h2 id="conceptTitle">The arc is not magic.</h2><p id="conceptText">Without air resistance, horizontal speed stays constant while gravity changes vertical speed. Try keeping your speed fixed and changing only the launch angle.</p></div>
 <aside><strong>SCIENCE INTEGRITY</strong><span id="formula">Range = v² × sin(2θ) ÷ g</span><p id="limits">This is an ideal projectile model. Real launches also involve drag, wind, terrain and safety constraints.</p></aside>
@@ -83,6 +126,46 @@ input[type=range]{width:100%;accent-color:#c5f4ad;cursor:pointer;min-height:23px
 <script>
 (()=>{
 'use strict';
+// A completely local, opt-in museum passport. No names, student accounts, or network calls.
+const PASS_KEY='evercraft.aidens-lab.museum-pass.v1';
+const PASS_SCHEMA='evercraft.aidens-lab.museum-pass.v1';
+const validPhysics=new Set(['launch-1','launch-2','launch-3','pendulum-1','pendulum-2','pendulum-3','wave-1','wave-2','wave-3']);
+const validWorld=new Set(['water','tectonics','extremes']);
+let passport={physics:[],world:[]},remember=false;
+try{
+ const saved=JSON.parse(localStorage.getItem(PASS_KEY)||'null');
+ if(saved?.schema===PASS_SCHEMA&&Array.isArray(saved.physics)&&Array.isArray(saved.world)){
+  passport={physics:[...new Set(saved.physics.filter(x=>validPhysics.has(x)))],
+   world:[...new Set(saved.world.filter(x=>validWorld.has(x)))]};remember=true;
+ }
+}catch{/* Browser storage can be unavailable. Museum works in this tab. */}
+function writePassport(){
+ if(!remember)return;
+ try{localStorage.setItem(PASS_KEY,JSON.stringify({schema:PASS_SCHEMA,...passport}))}
+ catch{remember=false;$('rememberPass').checked=false;$('passportStatus').textContent='Storage unavailable. Your discoveries still work in this tab.'}
+}
+function passportView(){
+ $('questCount').textContent=passport.physics.length+' of 9 physics discoveries';
+ $('passportStatus').textContent=remember
+  ?'Saved on this device only · '+passport.world.length+' Earth expeditions completed'
+  :'This tab only · '+passport.world.length+' Earth expeditions completed';
+}
+function passportInit(){
+ $('rememberPass').checked=remember;
+ $('rememberPass').addEventListener('change',e=>{
+  remember=e.target.checked;
+  if(remember)writePassport();else try{localStorage.removeItem(PASS_KEY)}catch{}
+  passportView();
+ });
+ $('clearPass').addEventListener('click',()=>{
+  passport={physics:[],world:[]};
+  if(remember)writePassport();
+  questAdvancePending=false;
+  refreshQuest();passportView();
+ });
+ passportView();
+}
+
 const $=id=>document.getElementById(id);
 const TAU=Math.PI*2;
 const MODES={
@@ -245,6 +328,46 @@ function paintWave(){
  text(17,h-18,'WINDOW  12 m','#a9d4e2',11);
 }
 function paint(){background();if(mode==='launch')paintLaunch();else if(mode==='pendulum')paintPendulum();else paintWave()}
+const CHALLENGES={
+ launch:[
+  {id:'launch-1',title:'Find the farthest angle',prompt:'Keep speed at 20 m/s and gravity at 9.8 m/s². What angle sends the ideal projectile farthest across level ground?',hint:'Try an angle halfway between horizontal and vertical. Keep the other two controls at their starting values.',pass:(v,r)=>Math.abs(v[0]-45)<=2&&v[1]===20&&Math.abs(v[2]-9.8)<.051&&r.range>40,success:'You found the 45° optimum for equal launch and landing elevation, with no drag.'},
+  {id:'launch-2',title:'Explore a weaker pull',prompt:'Keep angle at 45° and speed at 20 m/s. Lower gravity to 4 m/s² or less, then test the predicted range.',hint:'Only gravity should change. The arc reaches farther because it falls more slowly.',pass:(v,r)=>Math.abs(v[0]-45)<=2&&v[1]===20&&v[2]<=4&&r.range>=95,success:'Less gravity means more time aloft, so the ideal level-ground range increases.'},
+  {id:'launch-3',title:'Stretch the range',prompt:'With gravity near 9.8 m/s², find a speed and angle that produce a modeled range above 90 meters.',hint:'Speed matters a lot: range scales with the square of launch speed in this simplified model.',pass:(v,r)=>v[1]>=30&&Math.abs(v[2]-9.8)<.2&&r.range>90,success:'Doubling speed would quadruple ideal range if launch angle and gravity stayed fixed.'}
+ ],
+ pendulum:[
+  {id:'pendulum-1',title:'Make a gentle swing',prompt:'Set a length of at least 1.5 m and a small starting angle of 10° or less. Keep Earth-like gravity near 9.8 m/s².',hint:'The approximation is best for gentle angles. Try 1.5 m and 10°.',pass:(v,r)=>v[0]>=1.5&&v[1]<=10&&Math.abs(v[2]-9.8)<.2&&r.period>2.3,success:'Gentle swings help the small-angle formula match an ideal pendulum.'},
+  {id:'pendulum-2',title:'Slow the clock',prompt:'With Earth-like gravity, increase the length until your approximate period exceeds 3 seconds. Keep the angle small.',hint:'A length close to 2.5 m is a good starting point.',pass:(v,r)=>v[0]>=2.3&&v[1]<=10&&Math.abs(v[2]-9.8)<.2&&r.period>3,success:'A longer pendulum takes longer to complete a cycle.'},
+  {id:'pendulum-3',title:'A different gravity world',prompt:'Set gravity to 4 m/s² or less with a length of at least 2 m. What happens to the period?',hint:'Use the same length and a gentle angle. Decreasing gravity slows the swing.',pass:(v,r)=>v[0]>=2&&v[1]<=10&&v[2]<=4&&r.period>4.4,success:'With the same length, weaker gravity means a longer approximate period.'}
+ ],
+ wave:[
+  {id:'wave-1',title:'Make long waves',prompt:'Create a wavelength of at least 6 m by adjusting frequency and speed.',hint:'Wavelength equals speed divided by frequency. Try low frequency and higher speed.',pass:(v,r)=>r.wavelength>=6&&v[0]<=1&&v[1]>=4,success:'At fixed speed, lower frequency spreads wave crests farther apart.'},
+  {id:'wave-2',title:'Pack the ripples closer',prompt:'Create a wavelength of at most 2 m while keeping frequency at 2 Hz or higher.',hint:'Increase frequency or decrease speed. Watch the number of crests in the window.',pass:(v,r)=>r.wavelength<=2&&v[0]>=2,success:'Higher frequency places crests closer together when wave speed is fixed.'},
+  {id:'wave-3',title:'Build a big gentle wave',prompt:'Raise amplitude to at least 1.7 m while making wavelength 4 m or longer.',hint:'Amplitude controls crest height. Speed and frequency still set wavelength separately.',pass:(v,r)=>v[2]>=1.7&&r.wavelength>=4,success:'Amplitude and wavelength describe different features of the same sinusoidal model.'}
+ ]
+};
+let questAdvancePending=false;
+function refreshQuest(){
+ const lessons=CHALLENGES[mode],index=lessons.findIndex(x=>!passport.physics.includes(x.id));
+ const q=index<0?null:lessons[index];
+ questAdvancePending=false;
+ $('nextQuest').hidden=true;
+ $('tryQuest').hidden=!q;
+ $('questNumber').textContent=q?'CHALLENGE '+String(index+1).padStart(2,'0')+' / 03':'STATION COMPLETED';
+ $('questTitle').textContent=q?q.title:'All three discoveries collected!';
+ $('questPrompt').textContent=q?q.prompt:'Try a different experiment station, or take what you learned to Earth & World Atlas.';
+ $('questFeedback').textContent=q?'Change the sliders above. You decide when to test.':'This station is complete. Revisit and experiment as much as you like.';
+ passportView();
+}
+function checkQuest(){
+ const q=CHALLENGES[mode].find(x=>!passport.physics.includes(x.id));
+ if(!q||questAdvancePending)return;
+ if(q.pass(values(),currentResult())){
+  passport.physics.push(q.id);writePassport();passportView();questAdvancePending=true;
+  $('questFeedback').textContent='✓ Discovery collected. '+q.success;
+  $('tryQuest').hidden=true;$('nextQuest').hidden=false;
+ }else $('questFeedback').textContent='Not quite yet. '+q.hint;
+}
+
 function refresh(){
  const x=currentResult();$('resultLabel').textContent=x.label;$('resultValue').textContent=x.value;$('resultDetail').textContent=x.detail;
  for(let i=0;i<3;i++)$('value'+['A','B','C'][i]).textContent=formatValue(i,values()[i]);
@@ -258,7 +381,7 @@ function select(next){
  $('conceptTitle').textContent=m.concept;$('conceptText').textContent=m.explain;$('formula').textContent=m.formula;$('limits').textContent=m.limits;
  for(let i=0;i<3;i++){const key=['a','b','c'][i],letter=['A','B','C'][i],input=$(key);input.min=m.min[i];input.max=m.max[i];input.step=m.step[i];input.value=m.defaults[i];$('label'+letter).textContent=m.labels[i]}
  for(const tab of document.querySelectorAll('.tab'))tab.setAttribute('aria-pressed',String(tab.dataset.mode===next));
- refresh();
+ refresh();refreshQuest();
 }
 function resize(){
  const rect=cvs.getBoundingClientRect();w=Math.max(280,rect.width);h=Math.max(240,rect.height);ratio=Math.min(2,window.devicePixelRatio||1);
@@ -276,6 +399,9 @@ for(const tab of document.querySelectorAll('.tab'))tab.addEventListener('click',
 for(const key of ['a','b','c'])$(key).addEventListener('input',()=>{clock=0;refresh()});
 $('toggle').addEventListener('click',()=>{playing=!playing;$('toggle').setAttribute('aria-pressed',String(!playing));$('toggle').textContent=playing?'Pause animation':'Resume animation'});
 window.addEventListener('resize',resize,{passive:true});
+$('tryQuest').addEventListener('click',checkQuest);
+$('nextQuest').addEventListener('click',refreshQuest);
+passportInit();
 select('launch');resize();requestAnimationFrame(step);
 })();
 </script>
