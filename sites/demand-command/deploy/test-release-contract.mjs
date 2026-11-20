@@ -65,3 +65,19 @@ test('Penguin relay installer is key-fingerprint-gated and does not alter normal
   assert.doesNotMatch(script,/systemctl (?:stop|restart|enable|disable)\s+(?:ssh|sshd|evercraft-public-edge|evercraft-fabric)(?:[.\s]|$)/);
   assert.doesNotMatch(script,/sshd_not_to_be_run/);
 });
+
+test('NextGen tunnel refuses unpinned SSH and only forwards private Demand port',()=>{
+  const tunnel=read('./install-nextgen-demand-tunnel.sh');
+  assert.match(tunnel,/EXPECTED_FINGERPRINT='SHA256:NVPAF3rqN9wjkR10o0EvB7aI\/PBFaYj17dfDYvI\+\+Ck'/);
+  assert.match(tunnel,/--verify/);
+  assert.match(tunnel,/--install/);
+  assert.match(tunnel,/StrictHostKeyChecking=yes/);
+  assert.match(tunnel,/UserKnownHostsFile=\$KNOWN/);
+  assert.match(tunnel,/ExitOnForwardFailure=yes/);
+  assert.match(tunnel,/BatchMode=yes/);
+  assert.match(tunnel,/-R 127\.0\.0\.1:18897:127\.0\.0\.1:18896/);
+  assert.match(tunnel,/systemctl --user enable/);
+  assert.match(tunnel,/cmp -s "\$TEMP" "\$KNOWN"/);
+  assert.doesNotMatch(tunnel,/StrictHostKeyChecking=no/);
+  assert.doesNotMatch(tunnel,/sshpass|base44|cloudflared|ngrok/i);
+});
