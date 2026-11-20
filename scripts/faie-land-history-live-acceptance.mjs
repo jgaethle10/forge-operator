@@ -30,6 +30,7 @@ try{
   const h=before.land_history_archive;
   check(before.ok===true&&before.fabric_native===true,'owned_faie_runtime_not_ready');
   check(before.public_preview_persists_queries===false,'public_preview_privacy_failure');
+  check(before.edge_state_persistence==='configured_persistent_or_operator_managed','history_owner_managed_state_root_not_configured');
   check(h?.status==='active','owned_history_archive_not_active');
   check(h.public_region_history_only===true&&h.visitor_point_queries_persisted===false,'history_privacy_boundary');
   check(Number(h.archived_records)>0,'no_official_historical_evidence_archived');
