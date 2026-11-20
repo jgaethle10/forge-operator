@@ -14,7 +14,7 @@ const safeArg=s=>{
  return s;
 };
 function requiredFile(file,{secret=false}={}){
- if(!path.isAbsolute(file))throw Error('wing_resident_absolute_file_required');
+ if(typeof file!=='string'||!path.isAbsolute(file))throw Error('wing_resident_absolute_file_required');
  const st=fs.lstatSync(file);
  if(!st.isFile()||st.isSymbolicLink()||(secret&&(st.mode&0o077)!==0)||
    (secret&&typeof process.getuid==='function'&&st.uid!==process.getuid()))
@@ -22,7 +22,7 @@ function requiredFile(file,{secret=false}={}){
  return st;
 }
 function requiredDir(dir){
- if(!path.isAbsolute(dir))throw Error('wing_resident_absolute_dir_required');
+ if(typeof dir!=='string'||!path.isAbsolute(dir))throw Error('wing_resident_absolute_dir_required');
  const st=fs.lstatSync(dir);
  if(!st.isDirectory()||st.isSymbolicLink()||(st.mode&0o077)!==0||
    (typeof process.getuid==='function'&&st.uid!==process.getuid()))
