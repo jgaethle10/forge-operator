@@ -221,7 +221,7 @@ function explorerLegGeometry(size,leg,phase){
  var pair=Math.floor(leg/2),side=leg%2===0?-1:1;
  var shoulderX=[.43,.16,-.17,-.44][pair]*size;
  var kneeX=[1.04,.56,-.48,-.93][pair]*size;
- var footX=[1.22,.37,-.72,-1.10][pair]*size;
+ var footX=[1.12,.32,-.67,-1.00][pair]*size;
  var step=Math.sin(phase+pair*1.64+side*1.15);
  var lift=Math.max(0,Math.cos(phase+pair*1.64+side*1.15));
  return {
@@ -229,7 +229,7 @@ function explorerLegGeometry(size,leg,phase){
   startX:shoulderX,startY:side*size*.13,
   kneeX:kneeX+step*size*.09,
   kneeY:side*size*(.54+pair*.065)-lift*side*size*.075,
-  footX:footX+step*size*.16,
+  footX:footX+step*size*.11,
   footY:side*size*(.84+(pair%2)*.12)-lift*side*size*.15
  };
 }
