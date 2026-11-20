@@ -33,6 +33,11 @@ class CommercialGateTests(WorkflowTest):
         self.assertEqual(freeze['site']['id'],s['id'])
         _,readiness=self.api('/commercial/readiness')
         self.assertFalse(readiness['checkout_configured'])
+        self.assertTrue(readiness['stripe_pilot']['catalog_recorded'])
+        self.assertEqual(readiness['stripe_pilot']['unit_amount_cents'],49900)
+        self.assertEqual(readiness['stripe_pilot']['currency'],'usd')
+        self.assertEqual(readiness['stripe_pilot']['link_status_at_last_verification'],'inactive')
+        self.assertFalse(readiness['stripe_pilot']['live_stripe_status_checked_by_server'])
         self.assertFalse(readiness['commercial_release_allowed'])
         _,events=self.api('/outbox')
         held=[e for e in events if e['aggregate_id']==order['id'] and e['event_type']=='site.plan.commercial_hold.v1']
