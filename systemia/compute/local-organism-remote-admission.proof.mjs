@@ -119,6 +119,16 @@ try {
   await sleep(500);
 
   const duringOutage = await organism.health();
+  if (duringOutage.ok !== true) {
+    // Boolean-only diagnosis, never emit service endpoints, credentials,
+    // deployment IDs or private workload response bodies to CI logs.
+    console.error('LOCAL_ORGANISM_OUTAGE_HEALTH_DIAGNOSTIC', JSON.stringify({
+      kaidance_ok: duringOutage.kaidance?.ok === true,
+      systemia_core_ok: duringOutage.systemia_core?.ok === true,
+      fabric_ok: duringOutage.fabric?.ok === true,
+      broker_connected: duringOutage.remote_admission?.connected === true,
+    }));
+  }
   assert.equal(duringOutage.ok, true);
   assert.equal(duringOutage.kaidance.ok, true);
   assert.equal(duringOutage.systemia_core.ok, true);
