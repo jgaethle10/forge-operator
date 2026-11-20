@@ -1,0 +1,29 @@
+name: Harbor Gravity Story Gate | offline admission checks
+on:
+  pull_request:
+    paths:
+      - 'systemia/distribution/harbor/gravity-story-gate.mjs'
+      - 'systemia/distribution/harbor/gravity-story-gate.test.mjs'
+      - '.github/workflows/harbor-gravity-story-gate.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/distribution/harbor/gravity-story-gate.mjs'
+      - 'systemia/distribution/harbor/gravity-story-gate.test.mjs'
+      - '.github/workflows/harbor-gravity-story-gate.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  admission:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify offline story gate syntax
+        run: node --check systemia/distribution/harbor/gravity-story-gate.mjs
+      - name: Test claims, Page routing, media rights, dedupe, Journal comments
+        run: node --test systemia/distribution/harbor/gravity-story-gate.test.mjs
