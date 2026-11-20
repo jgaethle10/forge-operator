@@ -5,6 +5,8 @@ import os from 'node:os';
 import path from 'node:path';
 import {startFabricLocalRuntime} from '../systemia/mcp/fabric-local-runtime.mjs';
 import {validateStudioInquiry} from '../systemia/mcp/commercial-studio-inquiry.mjs';
+import {STUDIO_INTRO_PROJECT,STUDIO_LEGACY_INTRO_PROJECT,STUDIO_PROJECT_OPTIONS}
+  from '../systemia/mcp/studio-offer-contract.mjs';
 const ORIGIN='https://jgaethle10.github.io';
 const LEAD={
  name:'Casey Test',email:'casey@example.test',company:'Example Bakery',
@@ -37,6 +39,53 @@ test('public first-party inquiry stores consented record with no payment or agen
   assert.equal(await fetch(runtime.url+'/api/commercial-studio/inquiry').then(r=>r.status),403);
  }finally{await runtime.close();fs.rmSync(dir,{recursive:true,force:true});}
 });
+
+test('every currently shipped public project select value is accepted by real private Fabric intake',async()=>{
+ const html=fs.readFileSync(new URL('../public/commercial-studio/index.html',import.meta.url),'utf8');
+ const select=html.match(/<select\\s+id="project"\\s+name="project"[^>]*>([\\s\\S]*?)<\\/select>/);
+ assert.ok(select,'the public buyer project selector must be present');
+ const pageProjects=[...select[1].matchAll(/<option(?:\\s+[^>]*)?>([^<]+)<\\/option>/g)].map(x=>x[1].trim());
+ assert.deepEqual(pageProjects,STUDIO_PROJECT_OPTIONS,
+  'the current public form must match canonical server options in the same order');
+ assert.equal(pageProjects[0],STUDIO_INTRO_PROJECT,'default pilot is the live introductory offer');
+ const dir=temporary(),runtime=await startFabricLocalRuntime({
+  host:'127.0.0.1',port:0,catalog:[],studioLeadsDir:dir,faieSurfaceEnabled:false
+ });
+ try {
+  for(const [i,project] of pageProjects.entries()){
+   const synthetic={...LEAD,email:'person'+i+'@example.test',project};
+   const response=await post(runtime.url,synthetic);
+   assert.equal(response.status,201,'public option rejected: '+project);
+   const receipt=await response.json();
+   assert.equal(receipt.received,true);
+   const alertFile=path.join(dir,'alert-outbox',receipt.reference+'.json');
+   const alert=JSON.parse(fs.readFileSync(alertFile,'utf8'));
+   assert.equal(alert.project,project);
+   assert.equal(alert.pii_stored,false);
+   assert.doesNotMatch(JSON.stringify(alert),/person\\d+@example\\.test/);
+  }
+  const records=fs.readFileSync(path.join(dir,'inquiries.ndjson'),'utf8').trim().split('\\n').map(JSON.parse);
+  assert.deepEqual(records.map(x=>x.project),pageProjects);
+  assert.equal(records.every(x=>x.agent_execution_authorized===false&&x.automated_payment===false),true);
+ }finally{await runtime.close();fs.rmSync(dir,{force:true,recursive:true});}
+});
+
+test('cached launch-week project is accepted but normalized to current non-expiring introductory offer',async()=>{
+ const dir=temporary(),runtime=await startFabricLocalRuntime({
+  host:'127.0.0.1',port:0,catalog:[],studioLeadsDir:dir,faieSurfaceEnabled:false
+ });
+ try{
+  const response=await post(runtime.url,{...LEAD,project:STUDIO_LEGACY_INTRO_PROJECT});
+  assert.equal(response.status,201);
+  const receipt=await response.json();
+  const lead=JSON.parse(fs.readFileSync(path.join(dir,'inquiries.ndjson'),'utf8').trim());
+  const alert=JSON.parse(fs.readFileSync(path.join(dir,'alert-outbox',receipt.reference+'.json'),'utf8'));
+  assert.equal(lead.project,STUDIO_INTRO_PROJECT);
+  assert.equal(alert.project,STUDIO_INTRO_PROJECT);
+  assert.doesNotMatch(JSON.stringify(alert),/launch-week/i);
+ }finally{await runtime.close();fs.rmSync(dir,{force:true,recursive:true});}
+});
+
 test('rejects off-origin, invalid, non-consenting and automated bot intake',async()=>{
  const dir=temporary(),runtime=await startFabricLocalRuntime({host:'127.0.0.1',port:0,catalog:[],studioLeadsDir:dir,faieSurfaceEnabled:false});
  try{
