@@ -295,6 +295,43 @@ export function createNeuralUniverse({canvas,stage,reduce,initialFocus='systemia
    ctx.stroke();
   }
   ctx.restore();
+  // Five translucent wings give the neural landscape a visual body.
+  // This is imaginative light choreography, not a physiological scan.
+  ctx.globalCompositeOperation='lighter';
+  for(let k=0;k<REGIONS.length;k++){
+   const region=REGIONS[k],c=CENTERS[region],rgb=PALETTE[region];
+   const chosen=region===selected;
+   const end=projectAtlasNode({
+    x:c[0]*1.46,y:c[1]*1.44,z:c[2]*1.20
+   },{width,height,yaw,pitch,offsetX:originX,offsetY:originY,zoom:small?.91:1.03});
+   const dx=end.x-cx,dy=end.y-cy,length=Math.max(1,Math.hypot(dx,dy));
+   const nx=-dy/length,ny=dx/length;
+   const phase=k*1.67+(still?0:clock*.00011);
+   const breadth=(small?31:56)*(1+.16*Math.sin(phase));
+   const offset=(small?16:32)*Math.sin(phase*.7);
+   const ex=end.x,ey=end.y;
+   ctx.beginPath();
+   ctx.moveTo(cx,cy);
+   ctx.bezierCurveTo(
+    cx+dx*.18+nx*(breadth*.9+offset),cy+dy*.18+ny*(breadth*.9+offset),
+    cx+dx*.72+nx*breadth*.85,cy+dy*.72+ny*breadth*.85,
+    ex,ey
+   );
+   ctx.bezierCurveTo(
+    cx+dx*.67-nx*breadth*.75,cy+dy*.67-ny*breadth*.75,
+    cx+dx*.16-nx*(breadth*.8-offset*.7),cy+dy*.16-ny*(breadth*.8-offset*.7),
+    cx,cy
+   );
+   ctx.closePath();
+   const light=ctx.createLinearGradient(cx,cy,ex,ey);
+   light.addColorStop(0,rgba(rgb,0));
+   light.addColorStop(.26,rgba(rgb,chosen?.11:.052));
+   light.addColorStop(.65,rgba(rgb,chosen?.095:.047));
+   light.addColorStop(1,rgba(rgb,0));
+   ctx.fillStyle=light;
+   ctx.fill();
+  }
+  ctx.globalCompositeOperation='source-over';
   // Organic branching canopies extend every architecture neighborhood into
   // the edge of the portrait scene. Their slow sway is strictly scenic.
   ctx.globalCompositeOperation='lighter';
@@ -304,7 +341,7 @@ export function createNeuralUniverse({canvas,stage,reduce,initialFocus='systemia
    // Keep the phone scene rich but with a strict bound on sampled branches.
    if(small&&stem.index%3===2)continue;
    const rgb=PALETTE[stem.region],chosen=stem.region===selected;
-   const opacity=chosen?.57:.23;
+   const opacity=chosen?.74:.41;
    const shade=still?.83:.74+.26*Math.sin(canopyMotion*stem.drift+stem.phase);
    for(let branch=0;branch<3;branch++){
     const steps=small?(branch===0?12:7):(branch===0?17:10);
@@ -320,10 +357,10 @@ export function createNeuralUniverse({canvas,stage,reduce,initialFocus='systemia
      if(k===0)ctx.moveTo(q.x,q.y);else ctx.lineTo(q.x,q.y);
     }
     ctx.lineCap='round';ctx.lineJoin='round';
-    ctx.strokeStyle=rgba(rgb,opacity*shade*.21);
+    ctx.strokeStyle=rgba(rgb,opacity*shade*.33);
     ctx.lineWidth=chosen?(small?3.3:5.4):2.15;
     ctx.stroke();
-    ctx.strokeStyle=rgba(rgb,opacity*shade*(branch===0?.84:.50));
+    ctx.strokeStyle=rgba(rgb,opacity*shade*(branch===0?1:.73));
     ctx.lineWidth=branch===0?(small?.9:1.1):.48;
     ctx.stroke();
    }
