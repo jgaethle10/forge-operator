@@ -49,6 +49,20 @@ try{
   const sourceLedgerText=await page.locator('#sources').innerText();
   mark('last_cycle_receipts_rendered',sourceLedgerText.includes('Last cycle:')&&sourceLedgerText.includes('National Weather Service'));
   mark('source_counts_cannot_claim_all_live',sourceLedgerText.includes('Returned')||sourceLedgerText.includes('Checked; no observations returned')||sourceLedgerText.includes('Not configured'));
+  mark('land_history_is_optional',await page.locator('#landHistoryPanel > summary').isVisible());
+  await page.locator('#landHistoryPanel > summary').click();
+  await page.locator('#landHistoryRun').click();
+  await page.waitForFunction(()=>{
+    const txt=document.querySelector('#landHistoryResult')?.textContent||'';
+    return txt.includes('No source-backed historical records') ||
+      txt.includes('Source family:') ||
+      txt.includes('historical archive is unavailable');
+  },{timeout:16000});
+  const historyText=await page.locator('#landHistoryResult').innerText();
+  mark('land_history_public_source_boundary',
+    historyText.includes('No source-backed historical records')||
+    historyText.includes('Source family:'));
+  mark('historical_archive_has_download_control',await page.locator('#landHistoryDownload').count()===1);
   await page.locator('#soilPreviewPanel > summary').click();
   mark('soil_lookup_is_explicitly_opt_in',await page.locator('#soilPreviewForm').isVisible());
   const invalidSoilHttp=await page.evaluate(async()=>{
