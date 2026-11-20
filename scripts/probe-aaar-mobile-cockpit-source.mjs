@@ -108,6 +108,64 @@ try{
   assert.equal(await page.locator('#pauseToggle').getAttribute('data-paused'),'false');
   receipts.push({orientation:orientation.name,viewport:orientation.width+'x'+orientation.height,stick_drag:true,aircraft_bank_changes:true,auto_center:true,throttle_to_100:true,hud_toggle:true,more_toggle:true,pause_resume:true,no_overflow:true,scenery_trees_total:scenery.treesTotal,scenery_visible_pines:scenery.treesVisible,scenery_ground_polygons:scenery.terrainPolygons,scenery_clouds:scenery.cloudsVisible,world_color_bins:colors,render_cost_ms:+scenery.renderCostMs.toFixed(1)});
  }
+
+ // Seattle loads in a fresh page: changing only the URL fragment cannot reinitialize
+ // the current game world, because the flight engine is intentionally page-local.
+ const cityPage=await context.newPage();
+ cityPage.on('pageerror',e=>errors.push('seattle:'+String(e.message||e)));
+ const cityResponse=await cityPage.goto(base+'#seattle',{waitUntil:'domcontentloaded',timeout:25000});
+ assert.equal(cityResponse?.status(),200,'Seattle direct fragment URL missing');
+ await cityPage.waitForFunction(()=>document.documentElement.classList.contains('seattle-mode')&&!!window.AAARSeattle?.enabled,null,{timeout:10000});
+ const geo=await cityPage.evaluate(()=>({
+  source:window.AAARSeattle.source.name,footprints:window.AAARSeattle.buildings.length,
+  landmarks:window.AAARSeattle.landmarks.map(l=>l.name),
+  firstGate:window.AAARFlight.gates[0].title,spawn:window.AAARFlight.start('trainer'),
+  cityIsActive:window.AAARSeattle.enabled
+ }));
+ assert.equal(geo.cityIsActive,true);
+ assert.ok(geo.footprints>500,'City GIS footprints did not load into flight');
+ assert.ok(geo.landmarks.includes('Space Needle')&&geo.landmarks.includes('Columbia Center'),'grounded landmarks missing');
+ assert.match(geo.firstGate,/PIKE PLACE/,'Seattle landmarks were not initialized before flight core');
+ assert.ok(geo.spawn.x< -1200&&geo.spawn.y>200,'Seattle waterfront starting position missing');
+ assert.ok(await cityPage.locator('#basinStart').isVisible(),'Return to Cedar Basin missing');
+ await cityPage.locator('#beginFlight').click();
+ await cityPage.waitForFunction(()=>document.querySelector('#startScreen')?.style.display==='none',null,{timeout:10000});
+ await cityPage.waitForFunction(()=>{
+  const m=window.AAARSceneMetrics?.();return m&&m.frames>2&&m.city?.source>500;
+ },null,{timeout:12000});
+ const cityMetrics=await cityPage.evaluate(()=>window.AAARSceneMetrics());
+ assert.ok(cityMetrics.terrainPolygons>300,'Seattle synthetic terrain not painted');
+ assert.ok(cityMetrics.city.visible>=3,'city buildings not visible in flight camera');
+ assert.ok(cityMetrics.renderCostMs<550,'Seattle Canvas2D was too expensive even in browser emulation');
+ const physics=await cityPage.evaluate(()=>{
+  const core=window.AAARFlight,s=core.start('trainer');
+  for(let i=0;i<20;i++)core.step(s,{bank:1,pitch:0,throttle:0,rudder:0},.05);
+  return {g:s.aeroFlight?.gLoad,density:s.aeroFlight?.densityRatio,
+   stallMps:s.aeroFlight?.acceleratedStallMps,
+   basicStall:core.aircraft.trainer.stall,model:s.aeroFlight?.model};
+ });
+ assert.equal(physics.model,'LOW_ORDER_GAMEPLAY');
+ assert.ok(physics.g>1.1&&physics.g<=3,'bank-derived load factor not used');
+ assert.ok(physics.density<1&&physics.density>0,'air-density approximation invalid');
+ assert.ok(physics.stallMps>physics.basicStall,'bank-dependent stall speed not applied');
+ receipts.push({city:'Seattle stylized GIS scene',official_footprints:geo.footprints,
+  landmarks:geo.landmarks.length,canvas_buildings_visible:cityMetrics.city.visible,
+  city_terrain_polygons:cityMetrics.terrainPolygons,city_render_ms:+cityMetrics.renderCostMs.toFixed(1),
+  city_opened_direct_url:true,flight_started:true,bank_load_factor:physics.g,city_is_not_validated:true});
+ await cityPage.close();
+ // Laptop flight must initialize Seattle without silently disabling Start.
+ const desktopContext=await browser.newContext({viewport:{width:1366,height:768},isMobile:false,hasTouch:false});
+ const laptopPage=await desktopContext.newPage();
+ laptopPage.on('pageerror',e=>errors.push('seattle-desktop:'+String(e.message||e)));
+ const laptopResponse=await laptopPage.goto(base+'#seattle',{waitUntil:'domcontentloaded',timeout:25000});
+ assert.equal(laptopResponse?.status(),200);
+ await laptopPage.locator('#beginFlight').waitFor({state:'visible',timeout:15000});
+ assert.equal(await laptopPage.locator('#beginFlight').isEnabled(),true,'Seattle desktop WebGL engine failed initialization');
+ await laptopPage.locator('#beginFlight').click();
+ await laptopPage.waitForFunction(()=>document.querySelector('#startScreen')?.style.display==='none',null,{timeout:15000});
+ assert.equal(await laptopPage.locator('#speedOut').innerText()==='—',false,'desktop Seattle telemetry missing');
+ receipts.push({city:'Seattle laptop',viewport:'1366x768',flight_started:true,init_errors:0});
+ await desktopContext.close();
  assert.equal(errors.length,0,'browser JavaScript errors: '+errors.join(' | '));
  console.log(JSON.stringify({schema:'evercraft.aaar.mobile-cockpit-source-e2e.v1',tested_source:'pull_request_branch_local_http',browser:engine,device:'mobile-emulation-not-physical-Safari',passed:true,receipts,physical_iphone_safari_verified:false,hosted_release_verified:false},null,2));
  await context.close();

@@ -1,0 +1,27 @@
+name: Seattle GIS snapshot research (no writes)
+on:
+  pull_request:
+    paths:
+      - "scripts/fetch-seattle-buildings-2023.mjs"
+      - ".github/workflows/seattle-gis-snapshot.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  official-data-source:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Query City of Seattle GIS and print bounded snapshot for source review
+        run: node scripts/fetch-seattle-buildings-2023.mjs
+      - name: Preserve raw converted geometry candidate
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: seattle-city-building-outline-snapshot-candidate
+          path: public/worlds/flight/data/seattle-buildings-2023.json
+          if-no-files-found: warn

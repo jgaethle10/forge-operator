@@ -67,3 +67,23 @@ test('Cedar Basin v0.9 shares deterministic world-space scenery between renderer
   assert.match(page,/renderCostMs\*2\.2/);
   assert.doesNotMatch(page,/cdn\.jsdelivr|unpkg\.com|threejs\.org/);
 });
+
+test('Seattle city tour has grounded 2023 footprints, georeferenced landmarks and honest estimates',()=>{
+ const geo=JSON.parse(fs.readFileSync('public/worlds/flight/data/seattle-buildings-2023.json','utf8'));
+ assert.equal(geo.schema,'evercraft.worlds.seattle.city-outlines-2023.v1');
+ assert.equal(geo.heights,'UNVERIFIED_SYNTHETIC');
+ assert.equal(geo.retained,1200);
+ assert.equal(geo.rects.length,1200);
+ assert.equal(geo.origin.lat,47.61);
+ assert.equal(geo.origin.lon,-122.34);
+ assert.match(page,/id="aaar-seattle-geography"/);
+ assert.match(page,/2023 city footprint locations/);
+ assert.match(page,/location.hash.toLowerCase\(\)==='#seattle'/);
+ assert.match(page,/Fly over Seattle/);
+ assert.match(home,/href="\.\/flight\/#seattle"/);
+ assert.match(page,/function addSeattleShapes/);
+ assert.match(page,/function addSeattleWebGL/);
+ assert.match(page,/BUILDING_CONTACT/);
+ assert.match(page,/acceleratedStallMps/);
+ assert.match(page,/LOW_ORDER_GAMEPLAY/);
+});
