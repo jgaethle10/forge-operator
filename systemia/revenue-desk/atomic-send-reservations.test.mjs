@@ -149,3 +149,12 @@ test('missing legal footer, disabled opt-out and stale lock hold without new per
   assert.equal(inspectReservations({stateDir:c.stateDir}).count,0);
  }finally{dispose(c);}
 });
+
+test('email addresses cannot be persisted as Passport contact references',()=>{
+ const c=setup();
+ try{
+  assert.throws(()=>reserveColdOutreach({...c.kwargs,subjectRef:'buyer@firm.example'}),/opaque_contact_resource_required/);
+  assert.throws(()=>reserveColdOutreach({...c.kwargs,actorRef:'ops@evercraft.example'}),/opaque_contact_resource_required/);
+  assert.equal(inspectReservations({stateDir:c.stateDir}).count,0);
+ }finally{dispose(c);}
+});
