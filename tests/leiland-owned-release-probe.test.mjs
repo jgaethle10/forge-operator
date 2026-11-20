@@ -13,7 +13,8 @@ function setup(){
   'leiland/style.css':'.test{color:white}',
   'leiland/brain.js':'console.log("illustration")',
   'leiland/pulse-bridge.mjs':'export const yes=true;',
-  'leiland/feed.json':JSON.stringify({schema:'evercraft.leiland.public-feed.v1',status:'not_connected',published_at:null}),
+  'leiland/feed.json':JSON.stringify({schema:'evercraft.leiland.public-feed.v1',status:'not_connected',published_at:null,
+   signals:{inference:{state:'unverified',observed_at:null,receipt_url:null},missions:{state:'unverified',observed_at:null,receipt_url:null}},events:[]}),
   'kaidance/pulse-source.mjs':'export const PUBLIC_PULSE_SCHEMA="evercraft.kaidance.public-pulse.v1"'
  };
  for(const [file,body] of Object.entries(assets)){
