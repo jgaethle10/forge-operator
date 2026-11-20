@@ -2,6 +2,8 @@
 
 **Engineering state:** transport source and synthetic test contract committed November 19, 2026. **NOT deployed.** No live Harbor→Fallen transfer, authenticated production relay, decrypted Ricky files on NextGen, or authorized customer preview has been verified.
 
+**Port allocation:** Wing Courier's owned loopback broker is pinned to `127.0.0.1:8851` so it does not collide with the existing Saban Microseed Gateway on `127.0.0.1:8791`. **Verify port 8851 is free on the actual owner host before activation**, and verify that the Fabric process can reach that same loopback listener. Do not interrupt or reassign Saban's port.
+
 **Mission:** a wing submits one private, verifiable work package and receives a durable receiver acknowledgment without asking the founder to transfer files manually. GitHub is canonical *code and engineering receipts*, never a customer-media store. This is a new **payload carrier** for the existing Systemia and Passport architecture, **not a competing mission orchestrator, customer messenger or release system**.
 
 ## Wing-to-wing path
@@ -63,7 +65,7 @@ Create a chmod 0600 JSON file **on the owned broker**, using private files holdi
 ```json
 {
  "stateDir":"/private/evercraft/wing-courier",
- "port":8791,
+ "port":8851,
  "wings":[
   {"wing":"harbor","sendTokenFile":"/private/secrets/harbor.send",
    "receiveTokenFile":"/private/secrets/harbor.receive","ackVerifyPublicKeyFile":"/private/trusted/harbor.sign.pub","allowedDestinations":["fallen"]},
@@ -72,7 +74,7 @@ Create a chmod 0600 JSON file **on the owned broker**, using private files holdi
  ]
 }
 ```
-Run `node systemia/wing-courier/broker.mjs /private/config.json` only after verifying local service ownership and confidentiality. It binds `127.0.0.1:8791`, **not** an accessible internet endpoint. Gateway/TLS configuration is separate and not currently deployed.
+Run `node systemia/wing-courier/broker.mjs /private/config.json` only after verifying local service ownership and confidentiality. It binds `127.0.0.1:8851`, **not** an accessible internet endpoint. Gateway/TLS configuration is separate and not currently deployed.
 
 ## Private wing keys
 To generate on the wing's **actual owner-approved machine**:
@@ -158,7 +160,7 @@ The source now offers an **explicitly disabled-by-default** route at:
 
 `https://fabric.systemiacommandcenters.com/api/internal/wing-courier`
 
-The Fabric runtime imports `systemia/wing-courier/fabric-proxy.mjs`, but returns 404 for the entire prefix unless the **actual owner-controlled Fabric environment** sets `EVERCRAFT_WING_COURIER_ROUTE_ENABLED=1`. This owner-local flag must not be set from GitHub CI, an untrusted chat, or a client-claimed identity. A verified, already-running loopback broker at `127.0.0.1:8791` with genuine wing-scoped credentials must exist first. The proxy forwards only the declared Courier API methods, exactly to that loopback socket. It does not accept arbitrary upstream URLs, cross-origin browser requests, hostnames, or broad remote controls. If the broker is absent, authenticated requests return an unavailable response.
+The Fabric runtime imports `systemia/wing-courier/fabric-proxy.mjs`, but returns 404 for the entire prefix unless the **actual owner-controlled Fabric environment** sets `EVERCRAFT_WING_COURIER_ROUTE_ENABLED=1`. This owner-local flag must not be set from GitHub CI, an untrusted chat, or a client-claimed identity. A verified, already-running loopback broker at `127.0.0.1:8851` with genuine wing-scoped credentials must exist first. The proxy forwards only the declared Courier API methods, exactly to that loopback socket. It does not accept arbitrary upstream URLs, cross-origin browser requests, hostnames, or broad remote controls. If the broker is absent, authenticated requests return an unavailable response.
 
 Client-side `baseUrl` is pinned to this exact **owned HTTPS origin + path** for remote traffic. Only local loopback HTTP is permitted for isolated tests. This allows both Harbor (outbound push) and NextGen (outbound poll) to reuse the already-owned Fabric domain with **no new DNS name, broad tailnet access, Caddy edits, or incoming NextGen port**.
 
