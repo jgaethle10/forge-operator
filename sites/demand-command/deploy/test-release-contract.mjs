@@ -42,11 +42,11 @@ test('Demand SSH listener is isolated, key-only, and remote-forwards to one loop
   assert.match(sshd,/^KbdInteractiveAuthentication no$/m);
   assert.match(sshd,/^PermitRootLogin no$/m);
   assert.match(sshd,/^AllowTcpForwarding remote$/m);
-  assert.match(sshd,/^PermitListen 127\\.0\\.0\\.1:18897$/m);
+  assert.ok(sshd.split('\n').includes('PermitListen 127.0.0.1:18897'));
   assert.match(sshd,/^GatewayPorts no$/m);
   assert.match(sshd,/^MaxSessions 0$/m);
   assert.doesNotMatch(sshd,/^Port 22$/m);
   assert.doesNotMatch(sshd,/^PasswordAuthentication yes$/m);
   assert.doesNotMatch(sshd,/^AllowTcpForwarding yes$/m);
-  assert.doesNotMatch(sshd,/^HostKey \\/etc\\/ssh\\/ssh_host_/m);
+  assert.ok(!sshd.split('\n').some(line=>line.startsWith('HostKey /etc/ssh/ssh_host_')));
 });
