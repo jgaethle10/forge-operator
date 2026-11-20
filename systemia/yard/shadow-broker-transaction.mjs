@@ -8,6 +8,7 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
+import os from 'node:os';
 import {
   createShadowLeaseJournal,
   recordShadowLease,
@@ -61,6 +62,12 @@ export async function runRehearsalShadowBrokerTransaction({
   const parent=fs.realpathSync(journalParent);
   requireOk(!livePhysicalPath(nodeRoot) && !livePhysicalPath(parent),
     'physical_nodeseed_activation_hard_disabled');
+  // A rehearsal root must be an actual temporary fixture, not a copied
+  // receipt placed under another real service root.
+  const tmp=fs.realpathSync(os.tmpdir());
+  requireOk(contained(tmp,nodeRoot) &&
+    /^(shadow-|installed-old-compute-)/.test(String(nodeSeedReceipt.node_id||'')),
+    'rehearsal_fixture_identity_required');
   requireOk(contained(nodeRoot,parent),'journal_not_inside_node_root');
   requireOk(fs.lstatSync(parent).isDirectory() &&
     (fs.lstatSync(parent).mode&0o077)===0,'journal_root_not_private');
@@ -78,6 +85,10 @@ export async function runRehearsalShadowBrokerTransaction({
     'on_disk_nodeseed_receipt_mismatch'
   );
   const origin=loopbackFromReceipt(nodeSeedReceipt);
+  // Never let a fabricated disposable receipt target Penguin's actual
+  // production NodeSeed endpoint, even if all copied receipt fields agree.
+  requireOk(new URL(origin).port!=='42420',
+    'live_node_endpoint_not_disposable');
   const capacity=await jsonRequest(request,origin+'/v1/capacity');
   verifyCapacity(nodeSeedReceipt,capacity);
 
