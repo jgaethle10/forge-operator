@@ -17,6 +17,10 @@ This release moves the **existing self-contained, 79 KB flight page** into `publ
 7. Open exactly that HTTPS URL in the physical iPhone's **Safari app**, not a ChatGPT file attachment. Tap **Design your own machine**, modify a parameter, Close, **Enter Flight Range**, then test throttle, bank, Pause/Resume, Save Flight, and a page reload. Validate download and restore behavior under denied browser storage and Low Power Mode.
 8. Retain acceptance receipt: deployed commit and SHA256, client Safari and iOS versions, date/time, button results, console or on-screen failures, privacy status, and rollback command tied to the prior release. Only then close issue #2363 or advertise a playable iPhone URL.
 
+## Owned-route byte identity check
+
+From the pinned GitHub checkout on the already-owned Worlds node, run `node scripts/probe-aaar-owned-flight-route.mjs`. It requests the exact local vault route and independently resolved HTTPS route and compares both against SHA-256 of the local `public/worlds/flight/index.html`. The output is an inspection receipt only, **never a user-facing claim of full functionality**. It intentionally reports `physical_iphone_safari_verified:false` and `release_authorized:false` even when both byte checks pass. Run `--local-only` only to diagnose the loopback service; that mode cannot return verified.
+
 ## Release checks
 - `node --test tests/aaar-flight-static.test.mjs` runs without third-party packages and catches broken scripts, missing controls, iframes, remote assets, route or disclaimers.
 - `node scripts/probe-aaar-mobile-browser.mjs <exact-owned-https-url>` requires Playwright dev tooling and does not publish anything.
