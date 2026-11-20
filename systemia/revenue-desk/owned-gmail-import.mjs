@@ -68,7 +68,7 @@ export async function fetchOwnedGmailMetadata({
    throw Error('gmail_pagination_limits_invalid');
  if(lookbackHours!==null&&(!Number.isInteger(lookbackHours)||lookbackHours<25||lookbackHours>24*365))
    throw Error('gmail_lookback_window_invalid');
- let q='in:anywhere';
+ let q='in:anywhere -in:drafts';
  if(lookbackHours!==null)q+=' after:'+Math.floor((at-lookbackHours*3600000)/1000);
  let nextPage=null,page=0;
  const ids=new Set();
