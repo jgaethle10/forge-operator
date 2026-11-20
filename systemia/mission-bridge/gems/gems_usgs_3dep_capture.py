@@ -151,7 +151,7 @@ def main():
     fd = os.open(args.receipt, flags, 0o600)
     with os.fdopen(fd, 'w', encoding='utf-8') as output:
         json.dump(result, output, indent=2, allow_nan=False)
-        output.write('\\n')
+        output.write('\n')
     print(json.dumps({'receipt': str(args.receipt),
                       'public_index_queries': len(result['responses']),
                       'per_group': args.max_per_group,
