@@ -8,6 +8,7 @@ on:
       - 'tests/kaidance-owned-edge.test.mjs'
       - 'tests/kaidance-cinematic-experience.test.mjs'
       - 'tests/kaidance-signal-wall.test.mjs'
+      - 'tests/kaidance-field-topology.test.mjs'
       - 'scripts/qa-kaidance-browser.py'
       - 'tests/kaidance-public-fallback-readback.test.mjs'
       - 'scripts/probe-kaidance-fallback.mjs'
@@ -19,6 +20,7 @@ on:
       - 'tests/kaidance-owned-edge.test.mjs'
       - 'tests/kaidance-cinematic-experience.test.mjs'
       - 'tests/kaidance-signal-wall.test.mjs'
+      - 'tests/kaidance-field-topology.test.mjs'
       - 'scripts/qa-kaidance-browser.py'
       - 'tests/kaidance-public-fallback-readback.test.mjs'
       - 'scripts/probe-kaidance-fallback.mjs'
@@ -47,12 +49,14 @@ jobs:
           node --test tests/kaidance-public-fallback-readback.test.mjs
           node --test tests/kaidance-cinematic-experience.test.mjs
           node --test tests/kaidance-signal-wall.test.mjs
+          node --test tests/kaidance-field-topology.test.mjs
           node --test tests/kaidance-field-chapters.test.mjs
           node --check public/kaidance/app.mjs
           node --check public/kaidance/visual.mjs
           node --check public/kaidance/collider-engine.mjs
           node --check public/kaidance/current-field.mjs
           node --check public/kaidance/field-chapters.mjs
+          node --check public/kaidance/field-topology.mjs
           node --check public/kaidance/signal-river.mjs
       - name: Validate example Caddy route without networking or deployment
         run: |
@@ -75,7 +79,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: kaidance-v06-browser-frames
+          name: kaidance-v07-browser-frames
           path: artifacts/kaidance-browser/*.png
           retention-days: 30
           if-no-files-found: warn
