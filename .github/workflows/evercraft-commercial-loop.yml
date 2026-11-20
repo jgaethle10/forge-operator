@@ -1,0 +1,31 @@
+name: Evercraft commercial loop receipt gates
+on:
+  pull_request:
+    paths:
+      - 'systemia/commercial-loop/**'
+      - 'systemia/distribution/harbor/commercial-preview-send-guard.mjs'
+      - 'systemia/wing-courier/intake-bridge.mjs'
+      - '.github/workflows/evercraft-commercial-loop.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/commercial-loop/**'
+      - 'systemia/distribution/harbor/commercial-preview-send-guard.mjs'
+      - 'systemia/wing-courier/intake-bridge.mjs'
+      - '.github/workflows/evercraft-commercial-loop.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  proof-first-loop:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test cross-wing commercial receipt gate, actual source adapters and adverse cases
+        run: node --test systemia/commercial-loop/*.test.mjs systemia/distribution/harbor/commercial-preview-send-guard.test.mjs systemia/wing-courier/intake-bridge.test.mjs
