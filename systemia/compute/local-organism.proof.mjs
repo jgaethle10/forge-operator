@@ -9,19 +9,30 @@ import { startLocalOrganism } from './local-organism.mjs';
 // source module of any net.Server still LISTENING after the organism closes.
 // Never report bound ports, external IPs, credentials or host filesystem paths.
 const listenerOrigins = new WeakMap();
+const listenerCloseCalled = new WeakSet();
 const nativeListen = net.Server.prototype.listen;
+const nativeClose = net.Server.prototype.close;
 net.Server.prototype.listen = function(...args) {
-  const caller = String(new Error().stack || '').split('\n').find(
-    line => /\/systemia\/[A-Za-z0-9./_-]+\.mjs:\d+:\d+/.test(line)
+  const frames = String(new Error().stack || '').split('\n');
+  const caller = frames.find(line =>
+    /\/systemia\/[A-Za-z0-9./_-]+\.mjs:\d+:\d+/.test(line) &&
+    !line.includes('local-organism.proof.mjs')
   ) || '';
   const match = caller.match(/\/(systemia\/[A-Za-z0-9./_-]+\.mjs):\d+:\d+/);
   listenerOrigins.set(this, match?.[1] || 'unattributed');
   return Reflect.apply(nativeListen, this, args);
 };
+net.Server.prototype.close = function(...args) {
+  listenerCloseCalled.add(this);
+  return Reflect.apply(nativeClose, this, args);
+};
 function syntheticListenerSources() {
   return (process._getActiveHandles?.() || [])
     .filter(handle => handle instanceof net.Server && handle.listening === true)
-    .map(handle => listenerOrigins.get(handle) || 'unattributed').sort();
+    .map(handle => ({
+      origin: listenerOrigins.get(handle) || 'unattributed',
+      close_called: listenerCloseCalled.has(handle)
+    })).sort((a,b)=>a.origin.localeCompare(b.origin));
 }
 
 function verifyCoreProofRoute(route, root) {
