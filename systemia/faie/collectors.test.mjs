@@ -124,7 +124,8 @@ test('FAIE official collector run reuses owned pollers and preserves receipts', 
   });
 
   assert.equal(result.observations.length, 3);
-  assert.equal(result.receipts.length, 3);
+  assert.equal(result.receipts.length, 4);
+  assert.equal(result.receipts.find((row) => row.source_id === 'usdm-county-weekly')?.status, 'disabled');
   assert.equal(result.observations.find((row) => row.kind === 'river_forecast').evidence_state, 'modeled');
   assert.ok(result.observations.find((row) => row.kind === 'stream_discharge').domains.includes('water'));
 });
