@@ -101,6 +101,12 @@ var VALID_TITLES={hudson:"HUDSON source lineage updated",systemia:"Evercraft orc
 var SEQUENCE=["discovery","evidence","hudson","kaidance","raven","saban","hudson","systemia"];
 var width=1,height=1,dpr=1,scene={edges:[],stars:[],lights:[]},clock=0,last=0,frame=0,paused=matchMedia("(prefers-reduced-motion: reduce)").matches;
 var currentIndex=0,segmentStart=0,feed=[],feedFresh=false,seen=new Set(),selectedTopic=null,flashUntil=0;
+// Reuse 126 wake point objects indefinitely; long-running displays do not
+// generate a fresh temporary geometry graph at every animation frame.
+var wakeBands=Array.from({length:3},function(){
+ function points(){return Array.from({length:21},function(){return{x:0,y:0}})}
+ return {left:points(),right:points()};
+});
 var story=document.getElementById("story"),storyKind=document.getElementById("story-kind"),storySub=document.getElementById("story-sub"),receipt=document.getElementById("receipt"),sourceState=document.getElementById("source-state"),sourceLabel=document.getElementById("source-label");
 function seeded(n){var x=Math.sin(n*127.1+9.41)*43758.5453;return x-Math.floor(x)}
 function rgba(rgb,alpha){return "rgba("+rgb[0]+","+rgb[1]+","+rgb[2]+","+alpha+")"}
@@ -268,14 +274,14 @@ function drawFoldingWake(trip){
  var size=width<=620?clamp(width*.116,39,57):clamp(width*.068,65,100);
  ctx.save();ctx.globalCompositeOperation="source-over";
  for(var band=0;band<3;band++){
-  var left=[],right=[];
+  var left=wakeBands[band].left,right=wakeBands[band].right;
   for(var j=0;j<=20;j++){
    var u=j/20,s=clamp(end-u*span,.01,.999),q=locate(trip.from,trip.to,s);
    var m=Math.hypot(q.dx,q.dy)||1,nx=-q.dy/m,ny=q.dx/m;
    var wave=Math.sin(clock*.68+u*8.5+band*2.2)*(1-u)*size*(.06+band*.017);
    var center=(band-1)*size*.16*(1-u)+wave,half=size*(.10+band*.016)*(1-u)*(.6+.4*Math.sin(u*Math.PI));
-   left.push({x:q.x+nx*(center+half),y:q.y+ny*(center+half)});
-   right.push({x:q.x+nx*(center-half),y:q.y+ny*(center-half)});
+   left[j].x=q.x+nx*(center+half);left[j].y=q.y+ny*(center+half);
+   right[j].x=q.x+nx*(center-half);right[j].y=q.y+ny*(center-half);
   }
   ctx.beginPath();
   left.forEach(function(q,i){if(i===0)ctx.moveTo(q.x,q.y);else ctx.lineTo(q.x,q.y)});
