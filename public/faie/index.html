@@ -189,6 +189,25 @@
     .scope-hint strong{color:#e0e8d7}
     .compare-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
     .compare-actions button{margin-top:18px}
+    .site-scan-header{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:10px 0}
+    .site-scan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(235px,1fr));gap:12px;margin:14px 0}
+    .site-scan-card{border:1px solid #4a6451;background:#0d2218;border-radius:14px;padding:16px;min-width:0}
+    .site-scan-card h3{font-size:1.04rem;margin:4px 0 10px}
+    .site-scan-card p,.site-scan-card li{color:#bdcbbc;font-size:.81rem;line-height:1.55}
+    .site-scan-card ul{padding-left:18px;margin:10px 0}
+    .site-scan-receipt{color:#d0decf;font-size:.76rem}
+    .site-scan-alerts{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+    .site-scan-alert{border:1px solid #76663d;border-radius:10px;background:#302a18;color:#efdbb1;padding:9px 11px;font-size:.76rem}
+    .site-scan-periods{display:grid;grid-template-columns:repeat(auto-fit,minmax(126px,1fr));gap:8px}
+    .site-scan-period{border:1px solid #344e3a;border-radius:10px;padding:10px;font-size:.77rem;background:#0a1910}
+    .site-scan-period strong{display:block;color:#edf4e6;margin-bottom:5px}
+    .site-scan-period span{color:#afc7b5}
+    .site-scan-scaffold{border:1px solid #59705c;border-radius:12px;padding:13px;background:#12291b;margin:12px 0}
+    .site-scan-scaffold strong{font-size:.86rem;color:#e2efda}
+    .site-scan-actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+    .site-scan-actions button{margin:12px 0}
+    .site-scan-main{background:#cfecb5!important;color:#102116!important;font-weight:800!important}
+    .site-scan-warning{font-size:.78rem;line-height:1.55;color:#dbc69e;padding:11px 0}
     .soil-preview{margin:16px 0 0;padding:15px;border:1px solid #3d5844;background:rgba(4,24,13,.4);border-radius:14px}
     .soil-preview summary{cursor:pointer;font-size:.86rem;font-weight:730;color:#e2eddc}
     .soil-preview-form{margin:15px 0 12px}
@@ -406,6 +425,7 @@
         <div class="hero-actions">
           <button class="hero-primary" id="heroTryExample" type="button">See a real example ↗</button>
           <a class="hero-secondary" href="#investigation">Ask my own question</a>
+          <a class="hero-secondary" href="#sources" id="heroSiteScanJump">Scan a specific location</a>
         </div>
         <div class="promise-grid">
           <div class="promise"><b>1. Ask</b><span>Pick a real question, or try the Yakima Valley example.</span></div>
@@ -567,8 +587,8 @@
     <div class="source-ledger-guidance" id="sourceExtraConnections">Systemia Radar: checking connection. Worldstate: authenticated intake route, not proof of a live delivery. USDA soil: only acquired on authorized coordinates, not a continuous feed.</div>
     <div class="source-ledger-guidance">A successful check may return zero observations. A missing or failed feed never becomes a verified finding. Region-level evidence does not establish conditions at a particular property or water right.</div>
     <details class="soil-preview" id="soilPreviewPanel">
-      <summary>Have a specific location? Look up its USDA mapped soils</summary>
-      <p class="source-ledger-guidance">Enter coordinates you are authorized to use (contiguous United States only). This queries USDA Soil Data Access on demand. Coordinates are sent to USDA, but FAIE does not save this public lookup to the shared investigation archive. Soil maps are not field tests.</p>
+      <summary>Scan a real location: soil + weather + operational questions</summary>
+      <p class="source-ledger-guidance">Enter a point you are authorized to investigate (contiguous United States only). FAIE asks USDA for mapped soil units and NOAA/NWS for a local grid forecast, then returns traceable evidence and unresolved operating questions. Coordinates go to both official services. Public scan requests are not added to FAIE's shared investigation archive.</p>
       <form id="soilPreviewForm" class="soil-preview-form">
         <div class="two">
           <div>
@@ -580,9 +600,18 @@
             <input type="number" id="soilLongitude" min="-125" max="-66" step="any" required placeholder="-120.5059">
           </div>
         </div>
-        <button id="soilPreviewRun" type="submit">Check official soil maps ↗</button>
+        <div class="site-scan-actions">
+          <button id="siteScanRun" class="site-scan-main" type="button">Run two-source site scan ↗</button>
+          <button id="siteScanExample" type="button">Try public Yakima sample</button>
+          <button id="soilPreviewRun" type="submit">Soil only</button>
+        </div>
       </form>
-      <div class="soil-preview-result" id="soilPreviewResult" role="status" aria-live="polite">No location checked yet.</div>
+      <div class="soil-preview-result" id="siteScanResult" role="status" aria-live="polite">No site scan run yet. Pick a location or use the public Yakima sample above.</div>
+      <button id="siteScanDownload" type="button" hidden>Download scan evidence (JSON)</button>
+      <details class="soil-preview" style="margin-top:16px">
+        <summary>Show soil-only lookup result</summary>
+        <div class="soil-preview-result" id="soilPreviewResult" role="status" aria-live="polite">No soil-only lookup yet.</div>
+      </details>
     </details>
   </section>
 
@@ -1015,6 +1044,119 @@ function renderFaieSourceLedger(health) {
       +'<p>'+esc(status.detail+time)+'</p></article>';
   }).join('');
 }
+
+let latestSiteScan=null;
+function safeNwsSource(value) {
+  if(typeof value!=='string')return null;
+  try{
+    const u=new URL(value);
+    return u.protocol==='https:'&&u.hostname==='api.weather.gov'&&!u.username&&!u.password?u.href:null;
+  } catch{return null;}
+}
+function siteScanEvidenceHtml(scan){
+  const usable=Number(scan.sources_with_usable_evidence||0);
+  const label=usable===2?'Two independent sources returned usable evidence':usable===1?'Partial scan: one usable source':'No usable evidence confirmed';
+  let html='<div class="site-scan-scaffold"><strong>'+esc(label)+'</strong>'
+    +'<p class="site-scan-receipt">Point scan · '+esc(fmt(scan.scanned_at))+' · '
+    +esc(usable)+'/2 usable official source responses. This is not a site verdict.</p></div>';
+  html+='<div class="site-scan-grid"><div class="site-scan-card"><div class="section-kicker">01 / Mapped soil</div><h3>USDA NRCS · Reported</h3>';
+  if(scan.soil?.status==='mapped_soil_available'&&Array.isArray(scan.soil.mapunits)&&scan.soil.mapunits.length){
+    for(const unit of scan.soil.mapunits.slice(0,5)){
+      html+='<strong>'+esc(unit.name||'Unnamed map unit')+'</strong>';
+      html+='<p>Survey: '+esc(unit.survey_area_name||'Not supplied')
+        +' · updated '+esc(unit.survey_updated_at||'unknown')+'</p>';
+      html+='<p>Farmland classification: '+esc(unit.farmland_classification||'unknown')+'</p>';
+    }
+  } else html+='<p>Official soil map coverage could not be confirmed for this point. No soil properties were invented.</p>';
+  html+='<p>Survey mapping is not an on-site soil test.</p>'
+    +'<a href="https://sdmdataaccess.nrcs.usda.gov/WebServiceHelp.aspx" target="_blank" rel="noopener noreferrer">USDA source ↗</a></div>';
+  html+='<div class="site-scan-card"><div class="section-kicker">02 / Forecast</div><h3>NOAA NWS · Modeled</h3>';
+  const wx=scan.weather||{};
+  if(wx.status==='forecast_available' && Array.isArray(wx.periods)){
+    html+='<p>Issued: '+esc(wx.forecast_issued_at?fmt(wx.forecast_issued_at):'unknown')
+      +' · '+esc(wx.forecast_freshness||'unknown')+' freshness</p>';
+    html+='<div class="site-scan-periods">';
+    for(const period of wx.periods.slice(0,4)){
+      html+='<div class="site-scan-period"><strong>'+esc(period.name||'Forecast period')+'</strong>'
+        +'<span>'+esc(period.temperature_f===null?'Temp unavailable':period.temperature_f+'°F')+'</span>'
+        +'<p>'+esc(period.summary||'No text summary')+'</p></div>';
+    }
+    html+='</div>';
+    if(Array.isArray(wx.screening_flags)&&wx.screening_flags.length){
+      html+='<div class="site-scan-alerts">';
+      for(const flag of wx.screening_flags.slice(0,6)){
+        html+='<span class="site-scan-alert">'+esc(flag.period||'Forecast')+': '+esc(flag.threshold)+'</span>';
+      }
+      html+='</div>';
+    } else html+='<p>No operating-screening thresholds were triggered in the available forecast. That is not proof the location is low-risk.</p>';
+  } else html+='<p>Current point forecast unavailable or not fresh enough to verify. No weather conditions are inferred.</p>';
+  const forecastUrl=safeNwsSource(wx.provenance_urls?.[1]);
+  if(forecastUrl) html+='<a href="'+esc(forecastUrl)+'" target="_blank" rel="noopener noreferrer">Original NWS forecast ↗</a>';
+  html+='<p>Forecasts are projected conditions, not actual site weather observations.</p></div></div>';
+  html+='<div class="site-scan-card"><div class="section-kicker">03 / Next proof</div><h3>Questions worth checking before you act</h3><ul>';
+  for(const need of (scan.next_checks||[]).slice(0,9))html+='<li>'+esc(need)+'</li>';
+  html+='</ul><p class="site-scan-warning">Still unknown: water rights, parcel boundaries, zoning, field soil tests, long-term climate and utility costs. No automatic build, farm or investment recommendation.</p></div>';
+  return html;
+}
+async function runSiteScan() {
+  const button=document.getElementById('siteScanRun');
+  const result=document.getElementById('siteScanResult');
+  const download=document.getElementById('siteScanDownload');
+  const latitude=Number(document.getElementById('soilLatitude').value);
+  const longitude=Number(document.getElementById('soilLongitude').value);
+  if(!Number.isFinite(latitude)||!Number.isFinite(longitude)||
+    latitude<24||latitude>50||longitude< -125||longitude> -66) {
+    result.textContent='Enter valid latitude and longitude inside the contiguous United States.';
+    return;
+  }
+  latestSiteScan=null;
+  download.hidden=true;
+  button.disabled=true;
+  button.textContent='Checking official sources…';
+  result.textContent='Requesting USDA soil and NWS weather evidence. Neither source is assumed successful until verified.';
+  try {
+    const response=await fetchWithTimeout('/api/faie/site/scan',{
+      method:'POST',
+      headers:{'content-type':'application/json','accept':'application/json'},
+      body:JSON.stringify({latitude,longitude})
+    },35000);
+    if(!response.ok)throw new Error(response.status===429
+      ? 'The source budget is temporarily exhausted. Try again later.'
+      : 'Official site scan unavailable. No report or site verdict was inferred.');
+    const data=await response.json();
+    if(data?.schema!=='evercraft.faie.site-scan.v1'||
+      data.privacy?.public_lookup_persisted!==false ||
+      data.site_suitability_verdict!==null||
+      !Array.isArray(data.source_receipts)||!Array.isArray(data.next_checks)) {
+      throw new Error('Site scan failed source, authority or privacy verification.');
+    }
+    latestSiteScan=data;
+    result.innerHTML=siteScanEvidenceHtml(data);
+    download.hidden=false;
+  }catch(error) {
+    result.textContent=error?.message||'Official site scan failed to return trustworthy data.';
+  }finally{
+    button.disabled=false;
+    button.textContent='Run two-source site scan ↗';
+  }
+}
+document.getElementById('siteScanRun').addEventListener('click',runSiteScan);
+document.getElementById('siteScanExample').addEventListener('click',()=>{
+  document.getElementById('soilLatitude').value='46.6021';
+  document.getElementById('soilLongitude').value='-120.5059';
+  runSiteScan();
+});
+document.getElementById('heroSiteScanJump').addEventListener('click',()=>{
+  document.getElementById('soilPreviewPanel').open=true;
+});
+document.getElementById('siteScanDownload').addEventListener('click',()=>{
+  if(!latestSiteScan)return;
+  const blob=new Blob([JSON.stringify(latestSiteScan,null,2)+'\n'],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download='evercraft-faie-site-scan.json';document.body.append(a);a.click();a.remove();
+  URL.revokeObjectURL(url);
+});
 
 async function runSoilPreview(event) {
   event.preventDefault();
