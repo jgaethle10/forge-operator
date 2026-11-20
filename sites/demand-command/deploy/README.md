@@ -37,6 +37,27 @@ curl --noproxy '*' -fsS --max-time 3 http://127.0.0.1:18896/ | grep -F '<title>E
 
 User service survival across logout depends on `loginctl show-user "$USER" -p Linger`. An administrator may allow `sudo loginctl enable-linger "$USER"` after reviewing local policy. **WSL2 does not guarantee it will start at Windows boot unless WSL itself starts.**
 
+## Penguin field inspection: Crostini SSH boundary (2026-11-20)
+
+Observed on Penguin:
+- `evercraft-public-edge.service` active, Caddy installed, HTTPS listener on `:8443`. Existing Fabric must remain untouched.
+- `/usr/sbin/sshd` installed; `ssh.socket` inactive. The earlier report `ssh.service enabled` does **not** establish that the service is listening.
+- Linux `eth0=100.115.92.205/28` is a **Crostini private/virtual interface**, not a verified Chromebook LAN address. Do not use it as NextGen's SSH destination.
+- The existing ED25519 public host key has SHA256 fingerprint `mQe0aOyNruEDV527WUh1fbxktl1A4xdxryGgMaZ7pzw`. Its comment says `root@kokoro-gcp-ubuntu-prod-97659191`. Comments alone do not authenticate a key's origin, so treat this as **identity-unverified** until a separately verified host-key record exists. Do not blindly accept a prompt from NextGen.
+- ChromeOS Linux port forwarding supports **unprivileged ports**, ordinarily 1024–65535. Chromium's Crostini SSH developer guide recommends a non-22 port (example 8222). **Use an isolated restricted SSH endpoint on 8222**, not ChromeOS port 22, after access policy and key custody have been reviewed. Do not enable generic password SSH or route SSH from the internet.
+
+Read-only diagnostics:
+```bash
+systemctl is-active ssh.service || true
+sudo /usr/sbin/sshd -T | grep -E '^(port|listenaddress|allowtcpforwarding|gatewayports|passwordauthentication|permitrootlogin|pubkeyauthentication) ' || true
+ss -ltn '( sport = :8222 or sport = :22 or sport = :18897 )'
+ip -4 route show default
+```
+
+**Need owner-controlled Chromebook host LAN IP** from ChromeOS network settings, not Crostini `ip addr`. Before any NextGen SSH probe, set up a dedicated restricted high-port endpoint, then explicitly enable ChromeOS Linux port-forward TCP 8222 to that exact endpoint. This is LAN availability only and may need to be reenabled after Chromebook restart. The household router must **not** forward WAN SSH.
+
+ChromeOS references: https://developers.google.com/chromeos/app-development/develop/port-forwarding and https://www.chromium.org/chromium-os/developer-library/guides/containers/crostini-developer-guide/
+
 ## Step 2: Private NextGen-to-Penguin transport (held pending evidence)
 
 The public edge runs on Penguin and its proxy cannot see NextGen's `127.0.0.1`: that loopback address means **Penguin itself**. We must establish an Evercraft-operated tunnel instead of pointing a Caddy proxy at the wrong machine.
