@@ -1,0 +1,52 @@
+name: Pacific V26 Private Bella Opening Auditions
+on:
+  push:
+    branches:
+      - studio/pacific-v26-opening-20261120
+    paths:
+      - systemia/media-studio/pacific-v26-bella-opening-auditions.py
+      - .github/workflows/pacific-v26-bella-opening-auditions.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  voice:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install approved native Bella runtime
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq espeak-ng libsndfile1
+          python -m pip install --disable-pip-version-check 'kokoro==0.9.4' 'soundfile>=0.12,<1.0'
+      - name: Generate four connected opening takes
+        env:
+          HF_HUB_DISABLE_TELEMETRY: "1"
+        run: python systemia/media-studio/pacific-v26-bella-opening-auditions.py
+      - name: Confirm valid WAVs and receipts
+        run: |
+          python - <<'PY'
+          import hashlib,json,wave
+          from pathlib import Path
+          r=Path('pacific-v26-opening-private')
+          data=json.loads((r/'receipt.json').read_text())
+          assert data['voice']=='af_bella' and data['spokenWordsMatchCanonical']
+          assert len(data['takes'])==4
+          for row in data['takes']:
+              p=r/row['file']
+              with wave.open(str(p),'rb') as a:
+                  assert a.getnchannels()==1 and a.getframerate()==24000
+                  assert 5 < a.getnframes()/a.getframerate() < 20
+              assert hashlib.sha256(p.read_bytes()).hexdigest()==row['sha256']
+          print('Four native Bella WAVs verified, founder private review only.')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pacific-v26-bella-opening-private
+          path: pacific-v26-opening-private/
+          retention-days: 7
+          if-no-files-found: error
