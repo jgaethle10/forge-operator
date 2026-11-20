@@ -16,7 +16,9 @@ const receipt = {
   origin,
   require_ui_parity: requireUiParity,
   stage: 'start',
+  technical_e2e_passed: false,
   ready_for_outreach: false,
+  partner_evidence_scope: 'not_yet_assessed',
   public_requests_are_ephemeral: true,
   checks: {}
 };
@@ -121,6 +123,8 @@ try {
     water_findings: water.length,
     water_source_linked: waterWithLinks.length,
     source_families: [...new Set(water.map((row) => row.source_family).filter(Boolean))],
+    all_source_families: [...new Set(inv.findings.map((row) => row.source_family).filter(Boolean))],
+    covered_dimensions: inv.coverage?.covered_dimensions ?? [],
     unknowns: inv.unknowns.length,
     next_proof: inv.evidence_acquisition_queue.length,
     decision_readiness: inv.coverage?.decision_readiness ?? null
@@ -144,6 +148,7 @@ try {
   receipt.comparison = {
     candidate_labels: comp.candidates.map((row) => row.label),
     evidence_order: comp.evidence_readiness_order,
+    candidate_source_coverage: comp.candidates.map((row) => ({label:row.label, independent_source_family_count:row.independent_source_family_count, evidence_readiness_score:row.evidence_readiness_score})),
     decision_authority: false
   };
 
@@ -158,8 +163,28 @@ try {
   }
 
   receipt.stage = 'passed';
-  receipt.ready_for_outreach = requireUiParity;
-  receipt.state = requireUiParity ? 'PARTNER_GATE_PASSED' : 'ENGINE_VALIDATED_UI_DEPLOY_PENDING';
+  receipt.technical_e2e_passed = true;
+  const families = receipt.investigation.all_source_families;
+  const dimensions = receipt.investigation.covered_dimensions;
+  const enoughSourceFamilies = families.length >= 2;
+  const enoughDimensions = dimensions.length >= 2;
+  // This threshold describes a multi-domain evidence pilot, not a site-quality verdict.
+  // A working button and one USGS feed must NEVER be conflated with broad partnership fitness.
+  receipt.partner_evidence_scope = {
+    scope: 'regional_food_infrastructure',
+    source_families_observed: families,
+    dimensions_observed: dimensions,
+    independent_family_requirement_met: enoughSourceFamilies,
+    cross_dimension_requirement_met: enoughDimensions,
+    comparison_has_two_evidenced_regions: receipt.comparison.candidate_source_coverage.every((row) => Number(row.independent_source_family_count) > 0),
+    limitations: [
+      ...(!enoughSourceFamilies ? ['Fewer than two independent evidence source families in the real pilot report.'] : []),
+      ...(!enoughDimensions ? ['The real pilot report has not shown evidence across at least two different physical/operating dimensions.'] : []),
+      ...(!receipt.comparison.candidate_source_coverage.every((row) => Number(row.independent_source_family_count) > 0) ? ['The sample comparison includes a region without matching admitted evidence.'] : [])
+    ]
+  };
+  receipt.ready_for_outreach = requireUiParity && enoughSourceFamilies && enoughDimensions;
+  receipt.state = requireUiParity ? 'PARTNER_TECHNICAL_GATE_PASSED' : 'ENGINE_VALIDATED_UI_DEPLOY_PENDING';
 } catch (error) {
   receipt.stage_failed = receipt.stage;
   receipt.stage = 'failed';
