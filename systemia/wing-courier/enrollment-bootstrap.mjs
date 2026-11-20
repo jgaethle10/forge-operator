@@ -1,19 +1,21 @@
-// Owner-controlled, disabled-by-default bootstrap for one encrypted Fallen credential.
+// Owner-controlled, disabled-by-default bootstrap for one pinned encrypted wing credential.
 // No bearer token or plaintext credential is exposed by this module.
 // A signed challenge proves possession of NextGen's enrolled Ed25519 identity.
 import fs from 'node:fs';
 import crypto from 'node:crypto';
 import path from 'node:path';
 export const BOOTSTRAP_PATH='/api/internal/wing-enrollment/v1/fallen';
+export const HARBOR_BOOTSTRAP_PATH='/api/internal/wing-enrollment/v1/harbor';
+const ALLOWED_WINGS=new Set(['fallen','harbor']);
 const EXPECTED_HOST='fabric.systemiacommandcenters.com';
 const HEX=/^[a-f0-9]{64}$/;
 const LIMIT=65536;
 const deny=(res,status)=>{const body=Buffer.from(JSON.stringify({error:'enrollment_unavailable'}));res.writeHead(status,{'content-type':'application/json','content-length':body.length,'cache-control':'no-store','x-content-type-options':'nosniff'});res.end(body);};
-function claimMarkerPath(stateDir,sha256){
+function claimMarkerPath(stateDir,sha256,wing){
  if(typeof stateDir!=='string'||!path.isAbsolute(stateDir))throw Error('absolute_claim_state_required');
  const dir=fs.lstatSync(stateDir);
  if(!dir.isDirectory()||dir.isSymbolicLink()||(dir.mode&0o077))throw Error('claim_state_dir_not_private');
- return path.join(stateDir,'fallen-bootstrap-'+sha256+'.claimed');
+ return path.join(stateDir,wing+'-bootstrap-'+sha256+'.claimed');
 }
 function alreadyClaimed(marker){
  try{
@@ -39,26 +41,40 @@ function checkedFile(file,max,privateRequired=false){
  if(!s.isFile()||s.isSymbolicLink()||s.size>max||(privateRequired&&(s.mode&0o077)))throw Error('unsafe_file');
  return fs.readFileSync(file);
 }
-export function createFallenBootstrap({enabled=false,packageFile='',signerPublicKeyFile='',expectedSha256='',recipientFingerprint='',ttlMs=60000,maxClaims=1,claimStateDir='',now=()=>Date.now()}={}){
+export function createWingBootstrap({wing,enabled=false,packageFile='',signerPublicKeyFile='',expectedSha256='',recipientFingerprint='',ttlMs=60000,maxClaims=1,claimStateDir='',now=()=>Date.now()}={}){
+ if(!ALLOWED_WINGS.has(wing))throw Error('unsupported_wing');
+ const routePath=wing==='fallen'?BOOTSTRAP_PATH:HARBOR_BOOTSTRAP_PATH;
  if(!Number.isInteger(ttlMs)||ttlMs<1000||ttlMs>120000)throw Error('invalid_ttl');
  if(!Number.isInteger(maxClaims)||maxClaims!==1)throw Error('one_claim_only');
  const nonces=new Map();let claims=0;
  let marker=null;
  if(enabled){
   if(!HEX.test(expectedSha256)||!HEX.test(recipientFingerprint))throw Error('expected_pins_required');
-  marker=claimMarkerPath(claimStateDir,expectedSha256);
+  marker=claimMarkerPath(claimStateDir,expectedSha256,wing);
   const publicKey=crypto.createPublicKey(checkedFile(signerPublicKeyFile,8192));
   if(publicKey.asymmetricKeyType!=='ed25519')throw Error('wrong_signer_key');
   const payload=checkedFile(packageFile,LIMIT,true);
   const digest=crypto.createHash('sha256').update(payload).digest('hex');
   if(digest!==expectedSha256)throw Error('enrollment_package_hash_mismatch');
   const parsed=JSON.parse(payload.toString('utf8'));
-  if(parsed.schema!=='evercraft.fallen.receiver-enrollment.v1'||parsed.recipientFingerprint!==recipientFingerprint)
+  if(parsed.schema!=='evercraft.'+wing+'.receiver-enrollment.v1'||parsed.recipientFingerprint!==recipientFingerprint)
    throw Error('recipient_binding_invalid');
+  // Harbor must not be allowed to serve a JSON object with a plaintext
+  // credential under an otherwise valid recipient fingerprint.
+  if(wing==='harbor'&&(
+    parsed.format!=='x25519-hkdf-sha256-aes256gcm-v1'||
+    !['ephemeralPublicKeySpkiBase64','saltBase64','nonceBase64',
+      'ciphertextBase64','tagBase64'].every(k=>typeof parsed[k]==='string'&&
+      parsed[k].length>0)||
+    Object.keys(parsed).sort().join(',')!==[
+      'schema','format','recipientFingerprint','ephemeralPublicKeySpkiBase64',
+      'saltBase64','nonceBase64','ciphertextBase64','tagBase64'
+    ].sort().join(',')
+   ))throw Error('harbor_ciphertext_envelope_required');
  }
  async function handle(req,res){
   const route=new URL(String(req.url||'/'),'http://fabric.local');
-  if(route.pathname!==BOOTSTRAP_PATH)return false;
+  if(route.pathname!==routePath)return false;
   if(!enabled)return deny(res,404),true;
   if(String(req.headers.host||'').toLowerCase().replace(/:\d+$/,'')!==EXPECTED_HOST||route.search)
    return deny(res,404),true;
@@ -94,5 +110,11 @@ export function createFallenBootstrap({enabled=false,packageFile='',signerPublic
   }catch{return deny(res,403),true;}
  }
  return {handle};
+}
+export function createFallenBootstrap(options={}){
+ return createWingBootstrap({...options,wing:'fallen'});
+}
+export function createHarborBootstrap(options={}){
+ return createWingBootstrap({...options,wing:'harbor'});
 }
 function nonceSafe(n){return /^[0-9a-f]{48}$/.test(n);}
