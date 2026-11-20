@@ -580,6 +580,15 @@ verify_current_runtime() {
     return 17
   fi
 
+  # A source ref and healthy Fabric API do not prove Aiden's Lab assets are
+  # resident. Five read-only loopback GETs must match approved GitHub bytes,
+  # MIME types and the owned Fabric route marker before accepting this release.
+  # No public DNS dependency or checkout mutation inside this local gate.
+  if ! as_user node "$REPO_ROOT/scripts/probe-aiden-lab-resident.mjs" --gate >/dev/null; then
+    echo "ERROR: Aiden's Lab resident static route or exact-source parity not ready" >&2
+    return 20
+  fi
+
   # A healthy API process is not proof that Signal can securely capture leads.
   # Read-only local GET; no real customer record or payment is created.
   local signal_readiness=""
