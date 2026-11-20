@@ -59,7 +59,7 @@ export function planHeartbeatAdvisories({
           estimated_cost_cents:estimate,authority:'internal_analysis_only',state:'planned'};
         break;
       }
-      if(selected){queue.push(selected);reserved+=selected.estimated_cost_cents;}
+      if(selected){queue.push(selected);prior.add(selected.key);reserved+=selected.estimated_cost_cents;}
       else if(!matching.length){held.push({mission_id:m.mission_id,role,reason:'unsupported_specialist_role'});}
       else if(!matching.some(id=>registry.get(id)?.ready===true)){held.push({mission_id:m.mission_id,role,reason:'provider_unavailable'});}
     }
