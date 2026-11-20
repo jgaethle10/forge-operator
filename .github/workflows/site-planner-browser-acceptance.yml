@@ -1,0 +1,45 @@
+name: Site Planner real browser acceptance
+
+on:
+  push:
+    branches:
+      - feature/evercraft-site-planner-intake-v1
+    paths:
+      - 'products/site-planner/browser_acceptance.py'
+      - 'products/site-planner/plan-studio.html'
+      - 'products/site-planner/plan-pdf.js'
+      - 'products/site-planner/plan-drafts.js'
+      - '.github/workflows/site-planner-browser-acceptance.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: site-planner-browser-acceptance-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  chromium-and-webkit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install browser QA tooling (test only)
+        run: |
+          python3 -m pip install --user 'playwright==1.56.0'
+          python3 -m playwright install --with-deps chromium webkit
+      - name: Exercise desktop Chromium and phone-emulated WebKit
+        working-directory: products/site-planner
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+          SITE_PLANNER_BROWSER_QA_OUTPUT: ${{ runner.temp }}/site-planner-browser-qa
+        run: python3 browser_acceptance.py
+      - name: Upload synthetic QA screenshots, receipts and PDFs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: kennedy-site-planner-browser-qa
+          path: ${{ runner.temp }}/site-planner-browser-qa
+          if-no-files-found: warn
+          retention-days: 7
