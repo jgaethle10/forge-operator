@@ -219,3 +219,29 @@ bash systemia/mission-bridge/gems/execute_full_area_replay.sh \
 ```
 
 The runner executes regression tests and **one full-area model/scoring run by default** to conserve Work quota. Set `GEMS_REPEAT=1` before invocation only when a second independent replay is justified; then its JSON fold ledgers must agree apart from elapsed time. Either mode writes `full-area-replay-summary.json` with the explicit repeat status. If original organizer files aren't accessible, stop. It does not upload data or contact DrivenData. Preserve original GEMS-001 and verified GEMS-002 candidate unchanged. Keep the one-per-UTC-day scored submission slot untouched unless the founder explicitly decides what exact file to submit.
+
+## GEMS-004 training research: hard negatives with strict geographic isolation
+
+The single actual-GeoDAWN full-area replay (archive SHA `68e1eea1bf6d4c565bee61e161f23dcd902e9711dee4a0e64322095b3ef04bc9`) found the prior 1000m-only exclusion method to be worse on the **full northern mapped-fault DTI proxy**, despite its corridor-only gain. Exact pooled north proxy: 0m baseline 0.071047 vs 1000m 0.066535. The 1000m gain in TP (+21%) cost ~46% additional FP. Retain GEMS-001's recorded public DTI 0.0552 as the scored incumbent; the GEMS-002 official public score of 0.0461 is participant-reported and not inferred from proxy scores. No further scored entry is authorized by this research note.
+
+**New experiment `gems/gems_004_hard_negative_ablation.py`:** Keep the same pinned 34-feature archived `run.py`, HGB settings, three held-out 8-connected mapped-fault groups, 3 km training buffer, full northern known-fault-pixel-masked region, 0.20 threshold, ridge rendering, **and 5 unlabeled negatives per positive**. Within each fold:
+1. Fit the unchanged baseline on all train-known positives and five random eligible negatives per positive, using seed 306.
+2. Compute baseline probabilities ONLY for *additional unlabeled candidates within this fold's training mask*. Exclude all pilot-used pixels; restrict mined negatives to pixels more than 10 grid cells (1 km) away from *training-known* faults.
+3. Rank these previously unseen-by-pilot negatives by predicted probability with deterministic pixel-index tie-breaking. Keep exactly two hard negatives per mapped positive.
+4. Retrain with the **same** positive training cells, the first three random pilot negatives per positive, and the two mined hard negatives per positive (3:2 split, still 5:1 negatives overall).
+5. Score the baseline and hard-mined models on identical **entire northern scoreable regions** plus the old 1.5 km corridors only as a secondary diagnostic. Preserve weighted TP/FP/FN, per-fold scores, sampling and isolation receipts.
+
+This is a *hypothesis test*, not an improved candidate. Hidden newly mapped faults are not labelled. Unlabelled **hard negatives could be real faults**, so improved known-fault proxy is insufficient alone. The 8-neighbor components can be fragments of physical faults; the folds are not wholly independent geologic traces. All three folds are re-used for the earlier science; any positive result needs additional confirmation, not direct leaderboard promotion.
+
+`gems/test_gems_004_hard_negative_ablation.py` covers exact 5:1 sample counts, deterministic highest-scoring fresh selection, prohibition of test/south/pilot overlap, fail-closed invalid input, real HGB fitting and a double synthetic replay with pooled full-area scoring. GitHub run `44673528846`, job `136079938507` passed these four tests and the existing scientific suite. The offline shell entrypoint is `gems/execute_hard_negative_ablation.sh` (syntax checked by CI). No production runtime, network fetch, DrivenData submission, or new candidate GeoTIFF.
+
+To run one bounded **real-data scientific execution** when the original authorized three TIFFs are accessible in isolated Work or owned compute:
+
+```bash
+bash systemia/mission-bridge/gems/execute_hard_negative_ablation.sh \
+  /PATH/TO/AUTHORIZED/GeoDAWN \
+  /PATH/TO/PRESERVED/gems_001_verified_submission.zip \
+  /NEW/PRIVATE/GEMS-004-EVIDENCE-DIR
+```
+
+The runner extracts only the hash-pinned original model from the preserved ZIP if absent, runs the four scientific tests, checks all organizer raster SHA-256 hashes, trains/scorers both fixed schemes on identical folds, and writes `run-a/hard-negative-full-area.json` and `hard-negative-decision-gate.json`. It performs **one run** unless `GEMS_REPEAT=1` is explicitly set. It never submits or promotes a model. Stop if the original authorized TIFFs are unavailable. Do not spend Work on rebuilding infra or re-downloading files for this test. Review the full-area DTI and per-fold FP/TP/FN before deciding whether stronger evidence exists; do not use the corridor score to justify a candidate.
