@@ -27,6 +27,14 @@ jobs:
           bash -n research/infrastructure-watch/release/aiw-beta-stage-owned-edge.sh
           grep -Fq 'publication_mutation=NONE' research/infrastructure-watch/release/aiw-beta-edge-preflight.sh
           grep -Fq 'PUBLIC EDGE: UNCHANGED' research/infrastructure-watch/release/aiw-beta-courier-nextgen.sh
+          # Regression: a failed commit leaves two staged payload files.
+          # Recovery must accept only those exact paths and use a single-command
+          # non-personal identity, never write global Git configuration.
+          grep -Fq 'EXISTING_STAGED="$(git -C "$WORKTREE" diff --cached --name-only)"' research/infrastructure-watch/release/aiw-beta-courier-nextgen.sh
+          grep -Fq 'EXPECTED_EXISTING="$(printf' research/infrastructure-watch/release/aiw-beta-courier-nextgen.sh
+          grep -Fq 'user.name="Evercraft AIW Release Courier"' research/infrastructure-watch/release/aiw-beta-courier-nextgen.sh
+          grep -Fq 'user.email="aiw-release-courier@evercraft.invalid"' research/infrastructure-watch/release/aiw-beta-courier-nextgen.sh
+          ! grep -Fq 'git config --global' research/infrastructure-watch/release/aiw-beta-courier-nextgen.sh
           grep -Fq 'CADDY / DNS / TLS LEFT UNCHANGED' research/infrastructure-watch/release/aiw-beta-receive-penguin.sh
           grep -Fq 'LIVE CADDY ROUTE: UNCHANGED' research/infrastructure-watch/release/aiw-beta-stage-owned-edge.sh
           grep -Fq 'handle_path /infrastructure-watch/*' research/infrastructure-watch/release/AIW-public-beta.Caddyfile.fragment
