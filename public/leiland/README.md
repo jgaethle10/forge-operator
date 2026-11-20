@@ -2,6 +2,8 @@
 
 Evercraft Sovereign AI's public observatory. Source: `public/leiland/`.
 
+[Owned read-only web host](../../systemia/leiland/OWNED-STATIC-HOST.md) is staged for an Evercraft Yard/Compute release. It is loopback-only, not an independently verified public deployment.
+
 Owned release implementation and operator gates: [Signed KAIDANCE pulse publication](../../systemia/leiland/OWNED-PULSE-RELEASE.md) and [independent external readback](../../scripts/probe-leiland-owned-release.mjs). These are **source-level engineering**, not a live public deployment or live Raven inference feed.
 
 ## Purpose
