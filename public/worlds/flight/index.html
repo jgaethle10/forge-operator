@@ -501,8 +501,12 @@ function buildMeshes(){
  for(let j=0;j<6;j++){w.box(140+j*55,28,-620+j*84,34,42,54,[.55,.64,.64]);w.box(140+j*55,52,-620+j*84,37,5,57,[.27,.35,.39]);}
  // Small observation buildings and hangars.
  for(let j=0;j<4;j++){w.box(-225-j*75,24,-360+j*175,60,34,50,[.72,.69,.58]);w.box(-225-j*75,43,-360+j*175,67,8,60,[.36,.39,.37]);}
- let seed=501;const rnd=()=>((seed=(1664525*seed+1013904223)>>>0)/4294967296);
- for(let i=0;i<360;i++){const x=(rnd()-.5)*12000,z=(rnd()-.5)*12000;if(Math.abs(x)<360&&Math.abs(z)<1200)continue;if(terrain(x,z)>260)continue;const h=12+rnd()*30,y=terrain(x,z);w.box(x,y+h*.12,z,2.1,h*.24,2.1,[.35,.34,.25]);w.cone(x,y+h*.23,z,7+rnd()*6,h,[.13+rnd()*.07,.31+rnd()*.12,.24]);}
+ // Share the same deterministic cedar anchors with the software renderer.
+ for(const tree of forest){
+  const {x,y,z,h,r,t}=tree;
+  w.box(x,y+h*.12,z,2.1,h*.24,2.1,[.35,.34,.25]);
+  w.cone(x,y+h*.23,z,r,h,[.12+t*.04,.27+t*.09,.21+t*.06]);
+ }
  // Flight gate rings: original synthetic geometry rather than flight-path authority.
  for(let i=0;i<core.gates.length;i++){
   const g=core.gates[i],r=52,inner=r-4,col=i===0?[1,.64,.37]:[.60,.97,.80];
@@ -581,22 +585,115 @@ function drawCustom2D(ctx,w,h,d,bank){
  }
  ctx.shadowBlur=0;ctx.shadowOffsetY=0;ctx.restore();
 }
+/* Cedar Basin v0.9: deterministic, world-space scenic anchors shared by WebGL and mobile canvas.
+ * Atmospheric shapes are artistic, not meteorological measurements or actual terrain. */
+function cedarHash(i,j){let n=(Math.imul(i+5039,374761393)^Math.imul(j-211,668265263))|0;n=Math.imul(n^(n>>>13),1274126177);return ((n^(n>>>16))>>>0)/4294967295;}
+function cedarForest(){
+ const out=[];
+ for(let ix=-32;ix<=32;ix++)for(let iz=-32;iz<=32;iz++){
+  const chance=cedarHash(ix,iz);if(chance>.30)continue;
+  const x=ix*166+(cedarHash(ix+19,iz)-.5)*130;
+  const z=iz*166+(cedarHash(ix,iz+37)-.5)*130;
+  if(Math.abs(x)<330&&z>-1390&&z<1330)continue;
+  if(Math.hypot((x+1250)/1000,(z-1450)/850)<1.04)continue;
+  const y=core.groundHeight(x,z);if(y>275)continue;
+  const h=13+cedarHash(ix+31,iz-11)*25;
+  out.push({x,y,z,h,r:5.5+cedarHash(ix-9,iz+91)*6.5,t:cedarHash(ix+72,iz-13)});
+ }
+ return out;
+}
+const forest=cedarForest();
+const cloudFields=Array.from({length:28},(_,i)=>{
+ const x=(cedarHash(i+3,17)-.5)*15500,z=(cedarHash(i,43)-.5)*15500;
+ return {x,y:830+cedarHash(i,61)*720,z,w:190+cedarHash(i,82)*270};
+});
+const scenePerf={renderCostMs:18,frames:0,terrainPolygons:0,treesVisible:0,cloudsVisible:0,waterGlints:0,treesTotal:forest.length,renderMode:'canvas2d'};
+window.AAARSceneMetrics=()=>({...scenePerf});
+function drawCedarPines(ctx,project,eye,focal,w,h){
+ const pines=[];
+ for(const t of forest){
+  const dx=t.x-eye[0],dz=t.z-eye[2],dd=dx*dx+dz*dz;
+  if(dd>3300*3300||dd<18*18)continue;
+  const a=project([t.x,t.y,t.z]),b=project([t.x,t.y+t.h,t.z]);
+  if(!a||!b||a.d>3300||a.u< -70||a.u>w+70)continue;
+  const height=a.v-b.v;if(height<1.7||height>h*1.2||b.v>h+80||a.v< -80)continue;
+  pines.push({a,b,height,r:Math.min(42,t.r*focal/a.d),t:t.t,d:a.d});
+ }
+ pines.sort((a,b)=>b.d-a.d);
+ // Stable near-first screen density limit protects slower mobile CPUs.
+ const limit=Math.min(pines.length,scenePerf.renderCostMs>27?125:210);
+ for(let i=0;i<limit;i++){
+  const p=pines[i],a=p.a,b=p.b,fade=Math.max(.3,1-p.d/4200);
+  ctx.globalAlpha=fade;
+  ctx.strokeStyle='#354c3c';ctx.lineWidth=Math.max(1,Math.min(3,p.height*.12));
+  ctx.beginPath();ctx.moveTo(a.u,a.v);ctx.lineTo(a.u,b.v+p.height*.3);ctx.stroke();
+  const fill=p.t>.52?'#2e5a4a':'#235044';
+  ctx.fillStyle=fill;
+  const layers=p.height>8?3:2;
+  for(let level=0;level<layers;level++){
+   const top=b.v+level*p.height*.22,base=b.v+(level+1)*p.height*.38;
+   const half=Math.max(1,p.r*(.65+level*.28));
+   ctx.beginPath();ctx.moveTo(a.u,top);ctx.lineTo(a.u-half,base);ctx.lineTo(a.u+half,base);ctx.closePath();ctx.fill();
+  }
+ }
+ ctx.globalAlpha=1;
+ return limit;
+}
+function drawCedarClouds(ctx,project,focal,w,h){
+ let visible=0;
+ for(const c of cloudFields){
+  const p=project([c.x,c.y,c.z]);if(!p||p.d>9000||p.d<220)continue;
+  const rx=Math.min(w*.55,c.w*focal/p.d),ry=Math.min(h*.16,rx*.25);
+  if(rx<4||p.u<-rx||p.u>w+rx||p.v<-ry||p.v>h*.75)continue;
+  ctx.save();ctx.globalAlpha=Math.max(.035,Math.min(.18,(8500-p.d)/40000));
+  ctx.fillStyle='#fff9e9';
+  for(let j=-1;j<=1;j++){ctx.beginPath();ctx.ellipse(p.u+j*rx*.48,p.v+j*ry*.13,rx*(.62-Math.abs(j)*.12),ry*(.9-Math.abs(j)*.15),0,0,Math.PI*2);ctx.fill();}
+  ctx.restore();visible++;
+ }
+ return visible;
+}
+function drawCedarLake(ctx,project){
+ let count=0;
+ for(let i=0;i<62;i++){
+  const x=-1250+(cedarHash(i,109)-.5)*1740;
+  const z=1450+(cedarHash(i,199)-.5)*1420;
+  if(Math.hypot((x+1250)/1000,(z-1450)/850)>.9)continue;
+  const y=core.groundHeight(x,z)+2;
+  const a=project([x-15,y,z]),b=project([x+14+cedarHash(i,311)*36,y,z]);
+  if(!a||!b||a.d>3200||a.d<30)continue;
+  ctx.save();ctx.globalAlpha=.1+.2*(1-a.d/3200);ctx.strokeStyle='#def9dd';
+  ctx.lineWidth=Math.max(.6,2.5-a.d/1300);ctx.beginPath();ctx.moveTo(a.u,a.v);ctx.lineTo(b.u,b.v);ctx.stroke();ctx.restore();count++;
+ }
+ return count;
+}
 function render2D(){
  const dpi=Math.min(window.devicePixelRatio||1,1.25),w=Math.round(canvas.clientWidth*dpi),h=Math.round(canvas.clientHeight*dpi);
  if(!w||!h)return;if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;}
  const ctx=canvas.getContext('2d');if(!ctx)return;
- const sky=ctx.createLinearGradient(0,0,0,h);sky.addColorStop(0,'#2e7295');sky.addColorStop(.46,'#90c4d0');sky.addColorStop(.65,'#d6dbb2');sky.addColorStop(1,'#738e82');ctx.fillStyle=sky;ctx.fillRect(0,0,w,h);
- const fwd=[Math.sin(state.yaw)*Math.cos(state.path),Math.sin(state.path),Math.cos(state.yaw)*Math.cos(state.path)],up=[-Math.sin(state.bank)*.18,1,0];
+ const startTime=performance.now();
+ const horizon=Math.max(.28,Math.min(.73,.57-state.path*.65));
+ const sky=ctx.createLinearGradient(0,0,0,h);sky.addColorStop(0,'#1a4d70');sky.addColorStop(horizon*.58,'#438aa8');sky.addColorStop(horizon,'#acc6bc');sky.addColorStop(Math.min(.94,horizon+.18),'#e2d2aa');sky.addColorStop(1,'#6f9185');ctx.fillStyle=sky;ctx.fillRect(0,0,w,h);
+ const fwd=[Math.sin(state.yaw)*Math.cos(state.path),Math.sin(state.path),Math.cos(state.yaw)*Math.cos(state.path)],up=[-Math.sin(state.bank)*.40,1,0];
  const eye=view==='cockpit'?[state.x+fwd[0]*4,state.y+2,state.z+fwd[2]*4]:[state.x-fwd[0]*48,state.y+15-fwd[1]*12,state.z-fwd[2]*48];
  const target=[state.x+fwd[0]*55,state.y+fwd[1]*55+2,state.z+fwd[2]*55];
  const z=norm(sub(eye,target)),x=norm(cross(up,z)),y=cross(z,x),focal=(h/2)/Math.tan((view==='cockpit'?78:70)*Math.PI/360);
  function project(v){const rel=sub(v,eye),d=-dot(z,rel);if(d<1.5||d>16000)return null;return{u:w/2+dot(x,rel)*focal/d,v:h/2-dot(y,rel)*focal/d,d};}
+ const sun=project([eye[0]+7000,eye[1]+3600,eye[2]+8800]);
+ if(sun&&sun.u>-200&&sun.u<w+200&&sun.v>-200&&sun.v<h*.7){
+  const glow=ctx.createRadialGradient(sun.u,sun.v,5,sun.u,sun.v,Math.max(150,h*.4));
+  glow.addColorStop(0,'#fff8dba6');glow.addColorStop(.12,'#ffe3a84c');glow.addColorStop(1,'#ffe2b000');
+  ctx.fillStyle=glow;ctx.fillRect(0,0,w,h);
+ }
+ scenePerf.cloudsVisible=drawCedarClouds(ctx,project,focal,w,h);
  function quad(a,b,c,d,color){const ps=[a,b,c,d].map(project);if(ps.some(q=>!q))return;const avg=ps.reduce((t,q)=>t+q.d,0)/4;if(avg>8500)return;shapes.push({avg,pts:ps,color});}
  const shapes=[];
  const ground=core.groundHeight,step=260,rx=Math.floor(state.x/step)*step,rz=Math.floor(state.z/step)*step;
  for(let a=-15;a<=15;a++)for(let b=-16;b<=20;b++){
   const X=rx+a*step,Z=rz+b*step,t=[X,ground(X,Z),Z],u=[X+step,ground(X+step,Z),Z],v=[X+step,ground(X+step,Z+step),Z+step],q=[X,ground(X,Z+step),Z+step];
-  const avg=(t[1]+u[1]+v[1]+q[1])/4,water=Math.hypot((X+1250)/1000,(Z-1450)/850)<1,col=water?'#397a89':avg>280?'#87928b':avg>90?'#688b75':(a+b)%3===0?'#527966':'#618977';quad(t,u,v,q,col);
+  const avg=(t[1]+u[1]+v[1]+q[1])/4,water=Math.hypot((X+1250)/1000,(Z-1450)/850)<1;
+  const slope=Math.abs(t[1]-v[1])/step,variation=cedarHash(a+Math.floor(rx/step),b+Math.floor(rz/step));
+  const col=water?(variation>.5?'#3b7c87':'#417f87'):avg>275?'#89948a':avg>115?(slope>.12?'#708477':variation>.45?'#577b6c':'#658779'):slope>.12?'#6b8475':variation>.66?'#497868':variation>.32?'#628c77':'#588171';
+  quad(t,u,v,q,col);
  }
  // Airport and strips, laid out as in the WebGL valley.
  quad([-46,8,-940],[46,8,-940],[46,8,980],[-46,8,980],'#2b3c47');
@@ -604,6 +701,9 @@ function render2D(){
  for(let j=0;j<6;j++){const X=140+j*55,Z=-620+j*84;quad([X-17,49,Z-27],[X+17,49,Z-27],[X+17,49,Z+27],[X-17,49,Z+27],'#d5e2d7');}
  shapes.sort((a,b)=>b.avg-a.avg);
  for(const shape of shapes){const q=shape.pts;ctx.beginPath();ctx.moveTo(q[0].u,q[0].v);q.slice(1).forEach(p=>ctx.lineTo(p.u,p.v));ctx.closePath();ctx.fillStyle=shape.color;ctx.fill();}
+ scenePerf.terrainPolygons=shapes.length;
+ scenePerf.waterGlints=drawCedarLake(ctx,project);
+ scenePerf.treesVisible=drawCedarPines(ctx,project,eye,focal,w,h);
  // Rounded mountain skyline and a thin light haze layer in the far distance.
  ctx.save();ctx.globalAlpha=.18;const haz=ctx.createLinearGradient(0,h*.48,0,h*.84);haz.addColorStop(0,'#e4ddaf');haz.addColorStop(1,'#daeac500');ctx.fillStyle=haz;ctx.fillRect(0,h*.42,w,h*.4);ctx.restore();
  // World training gates are projected in 3D; draw ring paths with depth-sensitive line weight.
@@ -617,8 +717,20 @@ function render2D(){
   ctx.shadowBlur=0;ctx.shadowOffsetY=0;ctx.fillStyle='#d8ecec';ctx.beginPath();ctx.moveTo(0,-91);ctx.lineTo(9,-31);ctx.lineTo(100,4);ctx.lineTo(91,15);ctx.lineTo(13,-5);ctx.lineTo(15,54);ctx.lineTo(36,68);ctx.lineTo(33,73);ctx.lineTo(0,66);ctx.lineTo(-33,73);ctx.lineTo(-36,68);ctx.lineTo(-15,54);ctx.lineTo(-13,-5);ctx.lineTo(-91,15);ctx.lineTo(-100,4);ctx.lineTo(-9,-31);ctx.closePath();ctx.fill();
   ctx.fillStyle=state.craft==='custom'?'#f2aa7c':core.aircraft[state.craft].skin;ctx.fillRect(-100,4,24,8);ctx.fillRect(76,4,24,8);ctx.fillStyle='#286077';ctx.beginPath();ctx.ellipse(0,-20,6,22,0,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#93cbd9';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(0,-86);ctx.lineTo(0,65);ctx.stroke();ctx.restore();
  }
- // Low-opacity directional wind lines and cinematic shadows, still decorative.
- ctx.save();ctx.strokeStyle='#d8f5e640';ctx.lineWidth=1;for(let i=0;i<7;i++){const ux=(w*.12+i*w*.14+state.flightTime*7)%w,vy=h*.55+(i%3)*20;ctx.beginPath();ctx.moveTo(ux,vy);ctx.lineTo(ux+25,vy);ctx.stroke();}ctx.restore();
+ // Peripheral speed streaks are gameplay effects, not measured wind.
+ const speed=Math.min(1,Math.max(0,(state.speed-45)/115));
+ if(speed>.12&&view!=='cockpit'){
+  ctx.save();ctx.strokeStyle='#e1f8e8';ctx.lineWidth=1.15;ctx.globalAlpha=speed*.2;
+  for(let i=0;i<18;i++){
+   const phase=(state.flightTime*state.speed*.014+i*37)%250;
+   const left=i%2===0,x=left?w*(.01+phase/1500):w*(.99-phase/1500);
+   const y=h*(.16+((i*47)%100)/115);
+   ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+(left?-1:1)*(10+phase*.21),y+phase*.10);ctx.stroke();
+  }
+  ctx.restore();
+ }
+ scenePerf.frames++;const elapsed=Math.max(.1,performance.now()-startTime);
+ scenePerf.renderCostMs=scenePerf.renderCostMs*.83+elapsed*.17;
 }
 
 function resize(){const dpr=Math.min(window.devicePixelRatio||1,1.25);const w=Math.max(320,Math.round(canvas.clientWidth*dpr)),h=Math.max(250,Math.round(canvas.clientHeight*dpr));if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;}gl.viewport(0,0,w,h);}
@@ -644,7 +756,7 @@ function frame(timestamp){if(!running)return;const dt=Math.min(.05,(timestamp-la
  if(was!==state.checkpoints)notify(state.checkpoints>=3?'MISSION COMPLETE · SAVE YOUR FLIGHT':`GATE ${state.checkpoints} CLEARED`,4);
  if(prior!==state.condition&&state.condition==='GROUND_CONTACT'){state.paused=true;notify('GROUND CONTACT · RESTART OR SAVE FLIGHT',5);}
  if((state.craft==='custom'?state.aero?.stall:state.speed<core.aircraft[state.craft].stall)&&!state.paused&&Math.floor(timestamp/800)!==Math.floor((timestamp-16)/800))notify('LOW AIRSPEED · SIMULATED STALL',1.0);
- if(!fallback2D||timestamp-lastDraw>65){render();lastDraw=timestamp;}if(timestamp-lastHUD>100){hud();lastHUD=timestamp;}if(alertUntil&&timestamp>alertUntil){$('flightAlert').classList.remove('active');alertUntil=0;}
+ if(!fallback2D||timestamp-lastDraw>Math.max(39,Math.min(90,scenePerf.renderCostMs*2.2))){render();lastDraw=timestamp;}if(timestamp-lastHUD>100){hud();lastHUD=timestamp;}if(alertUntil&&timestamp>alertUntil){$('flightAlert').classList.remove('active');alertUntil=0;}
  frames++;requestAnimationFrame(frame);
 }
 function reset(kind=state.craft){const design=state.design;state=core.start(kind,kind==='custom'?design:null);view='chase';hud();notify('FLIGHT RESTARTED · SYNTHETIC RANGE',2);}
