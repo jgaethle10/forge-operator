@@ -144,3 +144,73 @@ test('linked private receiver keys are rejected before service activation',()=>w
  fs.linkSync(fx.cfg.receiverSigningKeyFile,link);
  assert.throws(()=>evaluateWingResidentConfig({configPath:fx.file}),/untrusted_private_file/);
 }));
+test('Harbor receiver preflight uses its own wing and preserves the Fallen default',()=>withFixture(async fx=>{
+ fx.cfg.wing='harbor';
+ fx.cfg.senderVerifyPublicKeys={fallen:fx.cfg.senderVerifyPublicKeys.harbor};
+ fx.write();
+ assert.throws(()=>evaluateWingResidentConfig({configPath:fx.file}),/scope_mismatch/);
+ const pre=evaluateWingResidentConfig({configPath:fx.file,wingExpected:'harbor'});
+ assert.equal(pre.wing,'harbor');
+ assert.equal(pre.readyForLocalActivation,true);
+ assert.equal(pre.customerReleaseAuthorized,false);
+ assert.equal(pre.liveHttpsVerified,false);
+ const dry=await installWingResident({configPath:fx.file,wingExpected:'harbor'});
+ assert.equal(dry.mode,'DRY_RUN');
+ assert.equal(dry.unitInstalled,false);
+ assert.doesNotMatch(JSON.stringify(dry),/TEST_DO_NOT_USE/);
+}));
+test('Harbor existing unit cannot be overwritten even with activation flags',()=>withFixture(async fx=>{
+ fx.cfg.wing='harbor';
+ fx.cfg.senderVerifyPublicKeys={fallen:fx.cfg.senderVerifyPublicKeys.harbor};
+ fx.write();
+ const home=path.join(fx.root,'home');
+ const units=path.join(home,'.config/systemd/user');
+ fs.mkdirSync(units,{recursive:true,mode:0o700});
+ const unit=path.join(units,'evercraft-wing-courier-harbor.service');
+ const source=Buffer.from('EXISTING_HARBOR_SERVICE_BYTE_FOR_BYTE');
+ fs.writeFileSync(unit,source,{mode:0o600});
+ await assert.rejects(()=>installWingResident({
+  configPath:fx.file,home,wingExpected:'harbor',activate:true,confirmOwnedHost:true
+ }),/existing_unit_requires_review/);
+ assert.deepEqual(fs.readFileSync(unit),source);
+ assert.equal(fs.existsSync(path.join(units,'evercraft-wing-courier-fallen.service')),false);
+}));
+test('Harbor cannot activate with Fallen config or unconfirmed owned host',()=>withFixture(async fx=>{
+ const home=path.join(fx.root,'home');fs.mkdirSync(home,{mode:0o700});
+ await assert.rejects(()=>installWingResident({
+  configPath:fx.file,home,wingExpected:'harbor',activate:true,confirmOwnedHost:true
+ }),/scope_mismatch/);
+ fx.cfg.wing='harbor';
+ fx.cfg.senderVerifyPublicKeys={fallen:fx.cfg.senderVerifyPublicKeys.harbor};
+ fx.write();
+ await assert.rejects(()=>installWingResident({
+  configPath:fx.file,home,wingExpected:'harbor',activate:true
+ }),/confirm_owned_host_required/);
+ assert.equal(fs.existsSync(path.join(home,'.config')),false);
+}));
+test('Harbor config refuses overbroad/cross-wing trusted signers',()=>withFixture(async fx=>{
+ fx.cfg.wing='harbor';
+ fx.cfg.senderVerifyPublicKeys={harbor:fx.cfg.senderVerifyPublicKeys.harbor};
+ fx.write();
+ assert.throws(()=>evaluateWingResidentConfig({configPath:fx.file,wingExpected:'harbor'}),
+  /trusted_senders_scope_mismatch/);
+ fx.cfg.senderVerifyPublicKeys={
+  fallen:fx.cfg.senderVerifyPublicKeys.harbor,
+  unknown:fx.cfg.senderVerifyPublicKeys.harbor
+ };
+ fx.write();
+ assert.throws(()=>evaluateWingResidentConfig({configPath:fx.file,wingExpected:'harbor'}),
+  /trusted_senders_scope_mismatch/);
+ const invalid=renderWingResidentUnit.bind(null,{
+  nodeBin:'/usr/bin/node',sourceRoot:'/home/coach/forge-operator',
+  configPath:'/home/coach/private.json',wing:'arbitrary'
+ });
+ assert.throws(invalid,/scope_mismatch/);
+ const unit=renderWingResidentUnit({
+  nodeBin:'/usr/bin/node',sourceRoot:'/home/coach/forge-operator',
+  configPath:'/home/coach/private.json',wing:'harbor'
+ });
+ assert.match(unit,/Wing Courier harbor/);
+ assert.match(unit,/NoNewPrivileges=true/);
+ assert.doesNotMatch(unit,/curl|wget|sudo|bash -c/);
+}));

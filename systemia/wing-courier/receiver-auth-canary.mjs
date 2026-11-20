@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Owner-local, read-only authenticated Wing Courier route test from NextGen.
+// Owner-local, read-only authenticated Wing Courier route test from Harbor or NextGen.
 // Never transmits files, logs secrets, or grants production/customer authority.
 import fs from 'node:fs';
 import path from 'node:path';
@@ -7,6 +7,10 @@ import {fileURLToPath} from 'node:url';
 import {evaluateWingResidentConfig} from './install-resident.mjs';
 
 export const RECEIVER_AUTH_URL='https://fabric.systemiacommandcenters.com/api/internal/wing-courier/v1/inbox?wing=fallen';
+export function receiverAuthUrlForWing(wing='fallen'){
+ if(!['fallen','harbor'].includes(wing))fail('unsupported_wing');
+ return 'https://fabric.systemiacommandcenters.com/api/internal/wing-courier/v1/inbox?wing='+wing;
+}
 const LIMIT=65536;
 const fail=code=>{throw Error('wing_auth_canary_'+code);};
 
@@ -31,14 +35,15 @@ async function boundedJson(response) {
 }
 
 export async function observeReceiverAuthBoundary({
- configPath,authorizeNetworkCheck=false,fetchImpl=fetch,now=()=>new Date().toISOString()
+ configPath,wingExpected='fallen',authorizeNetworkCheck=false,
+ fetchImpl=fetch,now=()=>new Date().toISOString()
 }={}) {
  // This private local gate validates an owned HTTPS origin, private receiver
  // token and key paths without reading them into output or creating a service.
- const pre=evaluateWingResidentConfig({configPath,wingExpected:'fallen'});
+ const pre=evaluateWingResidentConfig({configPath,wingExpected});
  const report={
   schema:'evercraft.wing-courier.receiver-auth-boundary.v1',
-  checkedAt:now(),wing:'fallen',mode:'DRY_RUN',
+  checkedAt:now(),wing:wingExpected,mode:'DRY_RUN',
   target:'owned_fabric_courier_inbox',
   anonymousStatus:null,authenticatedStatus:null,
   anonymousAccessDenied:false,receiverTokenAccepted:false,
@@ -56,7 +61,7 @@ export async function observeReceiverAuthBoundary({
  const token=fs.readFileSync(cfg.receiveTokenFile,'utf8').trim();
  if(token.length<32||token.length>512||!/^[\x21-\x7e]+$/.test(token))
   fail('private_token_invalid');
- const request=async headers=>fetchImpl(RECEIVER_AUTH_URL,{
+ const request=async headers=>fetchImpl(receiverAuthUrlForWing(wingExpected),{
   method:'GET',redirect:'manual',cache:'no-store',credentials:'omit',
   headers,signal:AbortSignal.timeout(8000)
  });
@@ -81,7 +86,7 @@ export async function observeReceiverAuthBoundary({
    return report;
   }
   const body=await boundedJson(authorized);
-  if(body?.schema!=='evercraft.wing-broker.inbox.v1'||body.wing!=='fallen'||
+  if(body?.schema!=='evercraft.wing-broker.inbox.v1'||body.wing!==wingExpected||
      !Array.isArray(body.items)||typeof body.more!=='boolean'){
    report.reason='broker_inbox_contract_mismatch';
    return report;
@@ -99,8 +104,9 @@ export async function observeReceiverAuthBoundary({
 
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)){
  const i=process.argv.indexOf('--config'),configPath=i>=0?process.argv[i+1]:null;
+ const w=process.argv.indexOf('--wing'),wingExpected=w>=0?process.argv[w+1]:'fallen';
  observeReceiverAuthBoundary({
-  configPath,authorizeNetworkCheck:process.argv.includes('--authorize-owned-network-check')
+  configPath,wingExpected,authorizeNetworkCheck:process.argv.includes('--authorize-owned-network-check')
  }).then(r=>console.log(JSON.stringify(r)))
    .catch(()=>{console.error('HOLD: wing_auth_canary_private_preflight_failed');process.exitCode=2;});
 }

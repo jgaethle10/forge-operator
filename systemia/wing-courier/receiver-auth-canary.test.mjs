@@ -4,9 +4,9 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import crypto from 'node:crypto';
-import {observeReceiverAuthBoundary,RECEIVER_AUTH_URL} from './receiver-auth-canary.mjs';
+import {observeReceiverAuthBoundary,RECEIVER_AUTH_URL,receiverAuthUrlForWing} from './receiver-auth-canary.mjs';
 
-function fixture(t){
+function fixture(t,wing='fallen'){
  const root=fs.mkdtempSync(path.join(os.tmpdir(),'wing-courier-auth-canary-'));
  fs.chmodSync(root,0o700);
  t.after(()=>fs.rmSync(root,{force:true,recursive:true}));
@@ -23,13 +23,13 @@ function fixture(t){
  const privatePem=k=>k.export({type:'pkcs8',format:'pem'});
  const publicPem=k=>k.export({type:'spki',format:'pem'});
  const cfg={
-  wing:'fallen',
+  wing,
   baseUrl:'https://fabric.systemiacommandcenters.com/api/internal/wing-courier',
   receiveTokenFile:secret('fallen.receive',token),
   receiverPrivateKeyFile:secret('fallen.decrypt.key',privatePem(receiver.privateKey)),
   receiverSigningKeyFile:secret('fallen.sign.key',privatePem(ack.privateKey)),
   destinationDir:dest,
-  senderVerifyPublicKeys:{harbor:secret('harbor.sign.pub',publicPem(sender.publicKey))}
+  senderVerifyPublicKeys:{[wing==='harbor'?'fallen':'harbor']:secret('trusted-signer.pub',publicPem(sender.publicKey))}
  };
  const configPath=secret('config.json',JSON.stringify(cfg));
  return {configPath,token};
@@ -38,8 +38,8 @@ const denied=status=>new Response('',{status});
 const inbox=(data={})=>new Response(JSON.stringify({
  schema:'evercraft.wing-broker.inbox.v1',wing:'fallen',items:[],more:false,...data
 }),{status:200,headers:{'content-type':'application/json'}});
-const probe=(configPath,fetchImpl,authorizeNetworkCheck=true)=>observeReceiverAuthBoundary({
- configPath,fetchImpl,authorizeNetworkCheck,now:()=> '2026-11-20T00:00:00.000Z'
+const probe=(configPath,fetchImpl,authorizeNetworkCheck=true,wingExpected='fallen')=>observeReceiverAuthBoundary({
+ configPath,wingExpected,fetchImpl,authorizeNetworkCheck,now:()=> '2026-11-20T00:00:00.000Z'
 });
 
 test('dry run never sends a request or exposes private token',async t=>{
@@ -126,4 +126,51 @@ test('oversized response and network error are safely held without exposing deta
  const error=await probe(f.configPath,async()=>{throw Error(sensitive);});
  assert.equal(error.reason,'network_or_response_unavailable');
  assert.doesNotMatch(JSON.stringify(error),new RegExp(sensitive));
+});
+
+test('Harbor uses exact own inbox route, anonymous denial first and no payload transfer',async t=>{
+ const f=fixture(t,'harbor'),calls=[];
+ const report=await probe(f.configPath,async(url,opts)=>{
+  calls.push({url,opts});
+  return calls.length===1?denied(401):inbox({wing:'harbor'});
+ },true,'harbor');
+ assert.equal(calls.length,2);
+ assert.ok(calls.every(x=>x.url===receiverAuthUrlForWing('harbor')));
+ assert.equal(calls[0].opts.headers.authorization,undefined);
+ assert.equal(calls[1].opts.headers.authorization,'Bearer '+f.token);
+ assert.equal(report.wing,'harbor');
+ assert.equal(report.authenticatedRouteReady,true);
+ assert.equal(report.receiverTokenAccepted,true);
+ assert.equal(report.brokerInboxContractVerified,true);
+ assert.equal(report.customerBytesMoved,false);
+ assert.equal(report.systemiaAdmissionGranted,false);
+ assert.equal(report.relayProcessIdentityAttested,false);
+ assert.doesNotMatch(JSON.stringify(report),new RegExp(f.token));
+});
+test('Harbor cannot use wrong-wing config or accept Fallen-shaped reply',async t=>{
+ const f=fixture(t,'harbor');
+ await assert.rejects(()=>probe(f.configPath,async()=>{throw Error('no fetch');},
+  false,'fallen'),/wing_resident_scope_mismatch/);
+ let called=0;
+ const report=await probe(f.configPath,async()=>{
+  called++;
+  return called===1?denied(401):inbox({wing:'fallen'});
+ },true,'harbor');
+ assert.equal(report.authenticatedRouteReady,false);
+ assert.equal(report.reason,'broker_inbox_contract_mismatch');
+ assert.equal(called,2);
+});
+test('Harbor never sends receiver token to disabled route or unsafe anonymous success',async t=>{
+ const f=fixture(t,'harbor'),calls=[];
+ const fail=await probe(f.configPath,async(url,opts)=>{
+  calls.push({url,opts});return denied(404);
+ },true,'harbor');
+ assert.equal(fail.reason,'private_route_disabled_or_stale');
+ assert.equal(calls.length,1);
+ assert.equal(calls[0].opts.headers.authorization,undefined);
+ let count=0;
+ const unsafe=await probe(f.configPath,async()=>{count++;return inbox({wing:'harbor'});},true,'harbor');
+ assert.equal(unsafe.reason,'unexpected_anonymous_access');
+ assert.equal(count,1);
+ assert.throws(()=>receiverAuthUrlForWing('saban'),/unsupported_wing/);
 });
