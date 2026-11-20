@@ -6,7 +6,8 @@ import { fileURLToPath } from 'node:url';
 import { ASSETS, DEFAULT_ORIGIN, validOwnedOrigin, assessAsset, runPublicCanary } from '../scripts/probe-aiden-lab-public.mjs';
 
 const ROOT = fileURLToPath(new URL('../', import.meta.url));
-const source = (path) => readFileSync(join(ROOT, 'public/aiden-lab', path), 'utf8');
+const source = (p) => readFileSync(join(ROOT, p==='classroom/index.html' ? 'public/apps/infinite-classroom/play/index.html' : 'public/aiden-lab/'+p), 'utf8');
+const assetPath = (url) => new URL(url).pathname.slice('/aiden-lab/'.length);
 
 test('rejects arbitrary, private or third-party website origins', () => {
   assert.equal(validOwnedOrigin(DEFAULT_ORIGIN), DEFAULT_ORIGIN);
@@ -36,22 +37,33 @@ test('accepts exact sourced assets but rejects rewritten homepages and stale fil
 
 test('five source-verified assets give a bounded proof, not a medical outcome', async () => {
   const mock = async (url) => {
-    const path = url.split('/').at(-1);
-    return {status:200,url,headers:{get:(name)=>name==='x-evercraft-static-program'?'aidens-lab-v1':path.endsWith('.html')?'text/html':path.endsWith('.css')?'text/css':path.endsWith('.svg')?'image/svg+xml':'text/javascript'},text:async()=>source(path)};
+    const path = assetPath(url);
+    return {status:200,url,headers:{get:(name)=>name==='x-evercraft-static-program'?'aidens-lab-v1':name==='x-evercraft-learning-world'?(path==='classroom/index.html'?'classroom-practice-v1':null):path.endsWith('.html')?'text/html':path.endsWith('.css')?'text/css':path.endsWith('.svg')?'image/svg+xml':'text/javascript'},text:async()=>source(path)};
   };
   const result = await runPublicCanary({fetcher:mock,now:new Date('2026-11-20T00:00:00Z')});
   assert.equal(result.public_https_verified,true);
   assert.equal(result.publication_state,'EXACT_SOURCE_PUBLIC_VERIFIED');
-  assert.equal(result.assets.length,6);
+  assert.equal(result.assets.length,7);
   assert.equal(result.medical_outcome_validated,false);
   assert.equal(result.external_action_taken,false);
   assert.equal(result.patient_data_accessed,false);
 });
 
+test('Classroom requires a first-party learning-world marker as well as exact source bytes',()=>{
+  const asset=ASSETS.find(x=>x.path==='classroom/index.html');
+  assert.ok(asset);
+  const body=source(asset.path);
+  const observed={status:200,finalUrl:DEFAULT_ORIGIN+'/aiden-lab/classroom/index.html',
+    contentType:'text/html',programMarker:'aidens-lab-v1',learningMarker:'classroom-practice-v1',body};
+  assert.equal(assessAsset(observed,asset,body,DEFAULT_ORIGIN).state,'EXACT_SOURCE_VERIFIED');
+  assert.ok(assessAsset({...observed,learningMarker:null},asset,body,DEFAULT_ORIGIN)
+    .findings.includes('LEARNING_WORLD_IDENTITY_MISSING'));
+});
+
 test('partial or stale publication fails closed', async () => {
   const mock = async (url) => ({
-    status:200,url,headers:{get:(name)=>name==='x-evercraft-static-program'?'aidens-lab-v1':url.endsWith('.html')?'text/html':'text/javascript'},
-    text:async()=>url.endsWith('catalog.mjs')?'stale code':source(url.split('/').at(-1))
+    status:200,url,headers:{get:(name)=>name==='x-evercraft-static-program'?'aidens-lab-v1':name==='x-evercraft-learning-world'?(assetPath(url)==='classroom/index.html'?'classroom-practice-v1':null):url.endsWith('.html')?'text/html':'text/javascript'},
+    text:async()=>url.endsWith('catalog.mjs')?'stale code':source(assetPath(url))
   });
   const result = await runPublicCanary({fetcher:mock});
   assert.equal(result.public_https_verified,false);
