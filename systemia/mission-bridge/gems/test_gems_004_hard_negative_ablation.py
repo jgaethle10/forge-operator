@@ -43,6 +43,37 @@ class HardNegativeTests(unittest.TestCase):
             hard.select_hard_training_indices(labels,train,distances,pilot,
                 np.ones(5),np.array([11,22,23,24,26]))
 
+    def test_distance_matched_control_same_population_and_reproducible(self):
+        labels=np.zeros(65,bool);labels[[1,7]]=True
+        train=np.ones(65,bool)
+        train[55:]=False
+        distances=np.full(65,15.,dtype=float)
+        distances[40]=7.
+        pilot=np.array([1,7,*range(10,20)],dtype=np.int64)
+        mine=hard.mining_indices(labels,train,distances,pilot)
+        a,receipt=hard.select_distance_matched_random_indices(
+            labels,train,distances,pilot,mine,fold=1)
+        b,_=hard.select_distance_matched_random_indices(
+            labels,train,distances,pilot,mine,fold=1)
+        self.assertTrue(np.array_equal(a,b))
+        self.assertEqual(a[:8].tolist(),[1,7,10,11,12,13,14,15])
+        self.assertEqual(len(a),12)
+        self.assertEqual(receipt["final_fresh_distance_matched_random_negatives"],4)
+        self.assertFalse(any(index>=55 for index in a))
+        self.assertFalse(any(index==40 for index in a))
+        self.assertEqual(len(np.unique(a)),12)
+        self.assertEqual(len(receipt["fresh_flat_indices_sha256"]),64)
+
+    def test_distance_matched_control_rejects_validation_leakage(self):
+        labels=np.zeros(40,bool);labels[[1,7]]=True
+        train=np.ones(40,bool);train[28:]=False
+        distances=np.full(40,15.)
+        pilot=np.array([1,7,*range(10,20)])
+        for forbidden in (np.array([20,21,22,30]),np.array([11,21,22,23])):
+            with self.assertRaisesRegex(ValueError,"distance_control_training_leakage"):
+                hard.select_distance_matched_random_indices(
+                    labels,train,distances,pilot,forbidden,fold=0)
+
     def test_fails_closed_when_mining_insufficient_or_probabilities_invalid(self):
         labels=np.zeros(40,bool);labels[[1,7]]=True
         train=np.ones(40,bool);distances=np.full(40,15.)
@@ -109,6 +140,16 @@ class HardNegativeTests(unittest.TestCase):
                 b=hard.execute(base,base/"second")
                 self.assertEqual(len(a["fold_ledger"]),3)
                 self.assertTrue(all(r["hard_negative_training"]["final_mined_negatives"]>0
+                    for r in a["fold_ledger"]))
+                self.assertTrue(all(r["distance_matched_control_training"][
+                    "final_fresh_distance_matched_random_negatives"]>0
+                    for r in a["fold_ledger"]))
+                self.assertIn("full_area_distance_matched_random_control",a)
+                self.assertIn("hard_mining_gain_over_distance_control",a)
+                self.assertTrue(all("distance_matched_random" in r for r in a["fold_ledger"]))
+                self.assertTrue(all(
+                    r["distance_matched_control_training"]["positives"]==
+                    r["hard_negative_training"]["positives"]
                     for r in a["fold_ledger"]))
                 self.assertTrue(all(r["full_scoreable_pixels"]>r["corridor_scoreable_pixels"]
                     for r in a["fold_ledger"]))
