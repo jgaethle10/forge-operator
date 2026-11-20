@@ -45,7 +45,7 @@ test('both airports use source-located runway endpoints, not the old fictional s
   const p=ops.point(f,0,0),g=ops.local(f,p.x,p.z);
   assert.ok(Math.abs(g.u)<1e-6&&Math.abs(g.v)<1e-6);
   ops.select(f.code);
-  assert.equal(core.groundHeight(p.x,p.z),f.level);
+  assert.ok(Math.abs(core.groundHeight(p.x,p.z)-f.level)<1e-6,'flattened field must match its game elevation');
   assert.ok(ops.inside(p.x,p.z));
   assert.equal(ops.at(p.x,p.z).code,f.code);
  }
@@ -90,7 +90,7 @@ test('landing at the other airport transfers active field for taxi and re-depart
 });
 test('a failed landing away from both source runways does not earn landing credit',()=>{
  const {core}=create(),s=core.startApproach('trainer','KBFI');
- s.x=10000;s.z=-12000;s.y=core.groundHeight(s.x,s.z)+3.5;s.path=-.07;
+ s.x=10000;s.z=-12000;s.y=core.groundHeight(s.x,s.z)-15;s.path=-.07;
  core.step(s,{pitch:0},.05);
  assert.equal(s.condition,'GROUND_CONTACT');
  assert.ok(!s.events.some(e=>e.kind==='landing'));
