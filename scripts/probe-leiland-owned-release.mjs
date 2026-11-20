@@ -6,7 +6,7 @@ import crypto from 'node:crypto';
 import {fileURLToPath} from 'node:url';
 import {assessPublicPulse} from '../public/kaidance/pulse-source.mjs';
 
-const ASSETS=['leiland/index.html','leiland/style.css','leiland/brain.js','leiland/pulse-bridge.mjs','leiland/feed.json','kaidance/pulse-source.mjs'];
+const ASSETS=['leiland/index.html','leiland/style.css','leiland/brain.js','leiland/pulse-bridge.mjs','kaidance/pulse-source.mjs'];
 const PULSE_KEYS=['schema','state','cycle_number','last_completed_cycle','heartbeat_target_seconds','admitted_count','held_count','coverage_receipt_valid','field_attestation_verified','observed_at','published_at'];
 const error=why=>{throw Error(why)};
 const digest=buffer=>crypto.createHash('sha256').update(buffer).digest('hex');
@@ -28,6 +28,60 @@ async function getBytes(fetchImpl,url,maxBytes=300000){
  if(!bytes.length||bytes.length>maxBytes)error('public_payload_size_invalid');
  return bytes;
 }
+const FEED_FIELDS=['schema','published_at','status','signals','events'];
+const SIGNAL_FIELDS=['state','observed_at','receipt_url'];
+const SIGNAL_TYPES=['inference','missions'];
+const EVENT_FIELDS=['at','title','receipt_url'];
+const iso=value=>typeof value==='string'&&Number.isFinite(Date.parse(value))?Date.parse(value):null;
+function exactShape(value,fields,label){
+ if(!value||typeof value!=='object'||Array.isArray(value)||
+ Object.keys(value).length!==fields.length||Object.keys(value).some(x=>!fields.includes(x)))error(label+'_fields_invalid');
+}
+function permittedReceipt(url){
+ if(typeof url!=='string'||url.length>500)return false;
+ try{
+  const u=new URL(url);
+  if(u.protocol!=='https:'||u.username||u.password||u.port||u.hash||u.search)return false;
+  return u.hostname==='github.com' && u.pathname.startsWith('/jgaethle10/forge-operator/') ||
+   u.hostname==='jgaethle10.github.io' && u.pathname.startsWith('/forge-operator/');
+ }catch{return false}
+}
+export function assessLeilandFeed(feed,now=Date.now()){
+ exactShape(feed,FEED_FIELDS,'leiland_feed');
+ if(feed.schema!=='evercraft.leiland.public-feed.v1')error('leiland_feed_schema_invalid');
+ if(!['not_connected','publisher_reported'].includes(feed.status))error('leiland_feed_state_invalid');
+ exactShape(feed.signals,SIGNAL_TYPES,'leiland_feed_signals');
+ if(!Array.isArray(feed.events)||feed.events.length>12)error('leiland_feed_events_invalid');
+ if(feed.status==='not_connected' && (feed.published_at!==null||feed.events.length!==0))error('leiland_disconnected_feed_must_be_empty');
+ const published=feed.published_at===null?null:iso(feed.published_at);
+ if(feed.status==='publisher_reported'&&published===null)error('leiland_feed_publication_time_invalid');
+ if(published!==null&&(published>now+120000||published<now-365*86400000))error('leiland_feed_publication_time_invalid');
+ let observedSignals=0;
+ for(const key of SIGNAL_TYPES){
+  const signal=feed.signals[key];exactShape(signal,SIGNAL_FIELDS,'leiland_feed_signal');
+  if(!['unverified','observed'].includes(signal.state))error('leiland_signal_state_invalid');
+  if(signal.state==='unverified'){
+   if(signal.observed_at!==null||signal.receipt_url!==null)error('leiland_unverified_signal_must_be_empty');
+  }else{
+   const observed=iso(signal.observed_at);
+   if(feed.status!=='publisher_reported'||observed===null||observed>published+120000||
+     observed>now+120000||!permittedReceipt(signal.receipt_url))error('leiland_signal_receipt_invalid');
+   observedSignals++;
+  }
+ }
+ for(const event of feed.events){
+  exactShape(event,EVENT_FIELDS,'leiland_feed_event');
+  const at=iso(event.at);
+  if(feed.status!=='publisher_reported'||at===null||at>published+120000||at>now+120000||
+    typeof event.title!=='string'||event.title.trim().length<6||event.title.length>105||
+    /[\u0000-\u001f<>]/.test(event.title)||!permittedReceipt(event.receipt_url))error('leiland_feed_event_invalid');
+ }
+ // A source-published feed can legitimately age out. Freshness is reported rather than fabricated.
+ const fresh=published!==null&&now-published<=600000;
+ return Object.freeze({state:feed.status==='not_connected'?'not_connected':fresh?'publisher_reported':'stale',
+  public_event_count:feed.events.length,observed_signal_count:observedSignals});
+}
+
 export async function probeLeilandPublicOrigin({origin,publicRoot,fetchImpl=globalThis.fetch,now=Date.now()}={}){
  const url=validateOwnedOrigin(origin);
  if(typeof publicRoot!=='string'||!path.isAbsolute(publicRoot))error('canonical_public_root_required');
@@ -55,13 +109,13 @@ export async function probeLeilandPublicOrigin({origin,publicRoot,fetchImpl=glob
   // Missing feed or network error is not healthy. Invalid public data is a hard failure, not silent approval.
   if(e.message!=='owned_public_https_read_failed_404')throw e;
  }
- let feedState='unavailable';
+ let feedState='unavailable', publicEventCount=0;
  try{
   const raw=await getBytes(fetchImpl,url+'/leiland/feed.json',20000);
-  const feed=JSON.parse(raw.toString('utf8'));
-  if(feed?.schema!=='evercraft.leiland.public-feed.v1'||
-     !['not_connected','publisher_reported'].includes(feed.status))error('leiland_public_feed_schema_invalid');
-  feedState=feed.status;
+  let feed;try{feed=JSON.parse(raw.toString('utf8'))}catch{error('leiland_public_feed_json_invalid')}
+  const assessed=assessLeilandFeed(feed,now);
+  feedState=assessed.state;
+  publicEventCount=assessed.public_event_count;
  }catch(e){throw Error('leiland_public_feed_readback_invalid: '+e.message)}
  return Object.freeze({
   schema:'evercraft.leiland.external-readback.v1',
@@ -70,6 +124,7 @@ export async function probeLeilandPublicOrigin({origin,publicRoot,fetchImpl=glob
   heartbeat_source_state:pulseState,
   cycle_number:cycleNumber,
   inference_publisher_state:feedState,
+  reviewed_public_event_count:publicEventCount,
   release_authentication:'not_established_by_this_probe',
   owned_runtime_identity:'not_established_by_this_probe',
   final_public_launch_authorized:false
