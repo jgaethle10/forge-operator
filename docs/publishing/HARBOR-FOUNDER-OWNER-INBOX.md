@@ -99,3 +99,39 @@ To prove real Harbor adoption later, the authorized Systemia/Harbor resident mus
 The **existing** `.github/workflows/systemia-harbor-upstream.yml` now runs the complete privacy/security suite with synthetic generated Lineage keys. The tests cover unsigned/mismatched/altered source, revoked and duplicate actor keys, fake approvals, old revisions, the invented 100-word rule, missing canonical policies, private 0600/0700 storage and idempotent redacted receipts.
 
 **Existing source hierarchy preserved:** Systemia evidence → source-only Harbor handoff → founder canonical editorial preflight → independent human editorial review → founder personal account approval/manual post → actual Facebook provider receipt and independent readback. This implementation stops at the review stage. It never uses corporate Page access to post on a personal profile.
+
+## Next stage: signed inbox → existing Systemia Intake Fabric, no second queue
+
+The source adapter at \`systemia/newsroom/founder-editorial-intake.mjs\` now takes the **actual owner-private 0600 packet and separately provisioned trust file**, calls this owner's existing two-actor signed inbox preflight, and then submits an **inert, redacted** candidate to \`EvercraftIntakeFabric\`. There is no new reviewer queue, outbound publisher or direct third-party host. It requires an independently existing Passport \`intake.write.agent\` grant for the named owner adapter, **including on duplicate retries**. It never grants the Passport scope for itself. A distinct Harbor reader must hold \`intake.read\` for the exact candidate. The reader returns local review readiness only; no live Harbor network pickup ACK is inferred.
+
+The Intake content reference and fingerprint bind the original signed packet digest, verified source revision, founder exact copy hash, five canonical policy file hashes and the actual reviewed founder example digest. No original creator prose, NASA source URL, signer's keys, partner/customer data or post text is added to the Intake ledger. The stored source trust state remains \`untrusted_external\` because signed source provenance does not make a draft safe instructions. Model-supplied trusted callbacks cannot enter the adapter; it reads the original owner-installed trust material through \`inspectOwnedHarborFounderPacket()\`.
+
+The resident/operator API is:
+
+\`\`\`js
+import {stageOwnedFounderEditorialIntake,inspectFounderEditorialPickup}
+  from './systemia/newsroom/founder-editorial-intake.mjs';
+
+// From the ACTUAL authorized owner host only. Private paths are illustrative.
+const stage=stageOwnedFounderEditorialIntake({
+  packetFile:'/owner/private/editorial/source-packet.json',
+  trustFile:'/owner/private/systemia/trust-anchor.json',
+  intakeStateDir:'/owner/private/systemia/intake',
+  passportStateDir:'/owner/private/systemia/passport',
+  adapterActorRef:'adapter:approved-systemia-editorial'
+});
+// A separate Passport-authorized reader may inspect the exact candidate:
+const read=inspectFounderEditorialPickup({
+  candidateId:stage.candidateId,
+  expectedContentFingerprint:stage.contentFingerprint,
+  intakeStateDir:'/owner/private/systemia/intake',
+  passportStateDir:'/owner/private/systemia/passport',
+  readerActorRef:'adapter:approved-harbor-editorial'
+});
+\`\`\`
+
+Do not execute this as a production workflow until those owner paths and real grants actually exist and are verified. The functions do not issue or bypass grants. The API does not send a packet to Harbor's remote account or make Meta calls. A private local read is not a remote authenticated Harbor pickup or final editorial review.
+
+Run \`node --test systemia/newsroom/founder-editorial-intake.test.mjs systemia/newsroom/harbor-founder-owner-inbox.test.mjs\` on the owned source checkout. The shared \`.github/workflows/systemia-harbor-upstream.yml\` includes the full source, signed-owner, Intake/Passport and canonical founder regression suites. CI uses **generated synthetic keys only**, never owner real credentials or media.
+
+**Remaining production handoff:** install the new adapter in the authenticated local Systemia resident, prove an actual signed owner packet from an approved department, provision independent key trust and Passport grants, read the intake candidate from real authorized Harbor and write a genuine signed pickup/ACK to the existing audit system. These have not been proven by a GitHub merge.
