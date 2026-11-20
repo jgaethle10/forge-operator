@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
-import {REGIONS,buildNeuralAtlas,adaptiveNodeBudget,projectAtlasNode,buildCinematicArteries,sampleCinematicArtery} from '../public/leiland/neural-universe.mjs';
+import {REGIONS,buildNeuralAtlas,adaptiveNodeBudget,projectAtlasNode,buildCinematicArteries,sampleCinematicArtery,buildLivingCanopy,sampleLivingCanopyStem,sampleLivingCanopyFork} from '../public/leiland/neural-universe.mjs';
 
 const sourceRoot=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..','public','leiland');
 const read=name=>fs.readFileSync(path.join(sourceRoot,name),'utf8');
@@ -143,4 +143,51 @@ test('portrait lens fills a tall phone with architecture rather than a central t
  assert.ok(visual.includes('threadCount=small?2:3'),'phone helix count must remain bounded');
  assert.ok(visual.includes('steps=small?23:34'),'phone curve tessellation must remain bounded');
  assert.ok(visual.includes('NOT neural firing'),'braid motion must be clearly described as scenic');
+});
+
+
+test('living canopy remains pure, reproducible, multi-region and geometrically bounded',()=>{
+ const a=buildLivingCanopy(),b=buildLivingCanopy();
+ assert.deepEqual(a,b);
+ assert.equal(a.length,50);
+ assert.ok(Object.isFrozen(a));
+ assert.deepEqual([...new Set(a.map(s=>s.region))].sort(),[...REGIONS].sort());
+ assert.notDeepEqual(buildLivingCanopy({seed:123}),a);
+ assert.throws(()=>buildLivingCanopy({armsPerRegion:20}),/canopy_arm_budget_invalid/);
+ assert.throws(()=>buildLivingCanopy({armsPerRegion:1}),/canopy_arm_budget_invalid/);
+ for(const s of a){
+  const start=sampleLivingCanopyStem(s,0);
+  assert.deepEqual([start.x,start.y,start.z],[s.center[0],s.center[1],s.center[2]]);
+  for(const motion of [0,1.7,35]){
+   for(const u of [0,.25,.55,.85,1]){
+    const v=sampleLivingCanopyStem(s,u,motion);
+    assert.ok(Object.values(v).every(Number.isFinite));
+    assert.ok(Math.abs(v.x)<1.4&&Math.abs(v.y)<1.4&&Math.abs(v.z)<1.4);
+   }
+   for(const side of [0,1]){
+    for(const u of [0,.25,.7,1]){
+     const v=sampleLivingCanopyFork(s,side,u,motion);
+     assert.ok(Object.values(v).every(Number.isFinite));
+     assert.ok(Math.abs(v.x)<1.4&&Math.abs(v.y)<1.4&&Math.abs(v.z)<1.4);
+    }
+   }
+  }
+  assert.deepEqual(sampleLivingCanopyStem(s,Infinity),sampleLivingCanopyStem(s,0));
+  assert.deepEqual(sampleLivingCanopyStem(s,-1),sampleLivingCanopyStem(s,0));
+ }
+});
+
+test('full-stage living canopies are scenic, not artificial source activity',()=>{
+ const visual=read('neural-universe.mjs');
+ assert.ok(visual.includes('Living canopy V4'));
+ assert.ok(visual.includes('NOT model neurons, inference events'));
+ assert.ok(visual.includes('Long atmospheric curtains'));
+ assert.ok(visual.includes('small?8:12'),'atmospheric curtain budget');
+ assert.ok(visual.includes('if(small&&stem.index%3===2)continue'),'phone stem budget');
+ assert.ok(visual.includes('small?(branch===0?12:7)'),'phone stroke tessellation budget');
+ assert.ok(visual.includes("if(!still&&chosen&&stem.index%2===0)"),'reduced motion disables moving fireflies');
+ assert.ok(visual.includes('acknowledgeCycle()'),'live source-verified effect remains segregated');
+ assert.ok(!visual.includes('fetch('));
+ assert.ok(!visual.includes('localStorage'));
+ assert.ok(!visual.includes('WebGLRenderingContext'));
 });
