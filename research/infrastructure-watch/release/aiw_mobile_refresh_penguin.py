@@ -175,7 +175,9 @@ def link_to(path):
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("mode",choices=["--prepare","--activate"])
+    options=parser.add_mutually_exclusive_group(required=True)
+    options.add_argument("--prepare",action="store_true")
+    options.add_argument("--activate",action="store_true")
     parser.add_argument("--ref",required=True)
     args=parser.parse_args()
     ref=args.ref
@@ -191,13 +193,13 @@ def main():
     orig_manifest=validate_files(old_files,ORIGINAL_COMMIT)
     new_index=compile_revision(ref,old_files)
     path=directory_for(ref,new_index)
-    print("=== AIW MOBILE UX REVISION |",args.mode,"===")
+    print("=== AIW MOBILE UX REVISION |","PREPARE" if args.prepare else "ACTIVATE","===")
     print("source_commit="+ref)
     print("original_release="+str(OLD))
     print("new_revision="+str(path))
     print("old_index_sha256="+checksum(old_files["index.html"]))
     print("new_index_sha256="+checksum(new_index))
-    if args.mode=="--prepare":
+    if args.prepare:
         files=candidate(ref,old_files,orig_manifest,new_index)
         if path.exists():
             ensure(read_files(path)==files or (
