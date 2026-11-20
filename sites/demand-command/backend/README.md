@@ -94,18 +94,18 @@ If `$HOME/evercraft-demand-canary` already exists, don't reclone over it; inspec
 
 ## Live source review panel (v8, private / read-only)
 
-The existing authenticated console now includes **Revenue Desk · Live Source Review**. This reads current source records directly from loopback \`127.0.0.1:8795\` on each request instead of copying buyer data into the Demand SQLite database. It displays a prioritized review tier, business/buyer, recorded pain, source reference, exact source signal when available, prior outbound recipient/subject/body/channel, and evidence checks. The UI escapes source fields and holds the token only in memory.
+The existing authenticated console now includes **Revenue Desk · Live Source Review**. This reads current source records directly from loopback `127.0.0.1:8795` on each request instead of copying buyer data into the Demand SQLite database. It displays a prioritized review tier, business/buyer, recorded pain, source reference, exact source signal when available, prior outbound recipient/subject/body/channel, and evidence checks. The UI escapes source fields and holds the token only in memory.
 
 Observed local aggregate receipt as of 2026-11-19:
 
-- 16 source rows, all marked \`sent\`; 16 entries include recipient, subject, body and channel structure.
+- 16 source rows, all marked `sent`; 16 entries include recipient, subject, body and channel structure.
 - Priority review tiers: 6 due with named buyers, 2 due needing buyer identification, 8 source-evidence review.
 - No detected provider message ID, timestamp or delivery status **inside those stored sent entries**.
 - No source-reported buyer replies, no original signal text, and no verified deliveries/payments in the observed Revenue Desk export. This does not prove no Gmail replies or deliveries occurred.
 
 Run a local **engineering canary** only, in the existing NextGen checkout (no change to Revenue Desk):
 
-\`\`\`bash
+```bash
 cd "$HOME/evercraft-demand-canary/sites/demand-command/backend"
 git -C "$HOME/evercraft-demand-canary" pull --ff-only
 python3 -m unittest -v
@@ -114,9 +114,9 @@ export EVERCRAFT_DEMAND_TOKEN="$(python3 -c 'import secrets; print(secrets.token
 export EVERCRAFT_DEMAND_DB="$HOME/.local/state/evercraft/demand-command.sqlite"
 printf 'Copy into the browser only (never into chat): %s\n' "$EVERCRAFT_DEMAND_TOKEN"
 python3 server.py
-\`\`\`
+```
 
-Then visit **http://127.0.0.1:8796/** on that same machine, connect with the token, and select **Load private source records**. Only the authenticated loopback API will return identifiable source data. The source endpoint \`GET /api/revenue-desk-review\` is read-only and does not send, update, import or approve outreach. **Never expose port 8796 to the public internet or copy the private console payload to GitHub/chat.**
+Then visit **http://127.0.0.1:8796/** on that same machine, connect with the token, and select **Load private source records**. Only the authenticated loopback API will return identifiable source data. The source endpoint `GET /api/revenue-desk-review` is read-only and does not send, update, import or approve outreach. **Never expose port 8796 to the public internet or copy the private console payload to GitHub/chat.**
 
 Caution: the Demand API creates a local plaintext SQLite file even if no opportunities are imported. Do not use it for sensitive production data without an encrypted owned volume and access hardening. The source review endpoint does **not** populate that database.
 
