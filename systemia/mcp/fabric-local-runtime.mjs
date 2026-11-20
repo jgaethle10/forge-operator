@@ -42,6 +42,7 @@ import { renderEarthWorksSimulator } from './earthworks-simulator-page.mjs';
 import { createFabricFaieSurface } from './fabric-faie-runtime.mjs';
 import { resolveRomanContinuity } from '../domain-shield/roman-funnel.mjs';
 import { createStudioInquiryHandler } from './commercial-studio-inquiry.mjs';
+import {createFabricWingCourierRoute} from './fabric-wing-courier-route.mjs';
 import {createWebsiteAuditInquiryHandler,websiteAuditInquiryReadiness,createWebsiteAuditAlertDispatcher} from './website-audit-inquiry.mjs';
 import { createSignalBuyerInquiryHandler,signalBuyerIntakeReadiness,createSignalInquiryAlertDispatcher } from './signal-public-inquiry.mjs';
 import { createFindMyPartInquiryHandler, createFindMyPartInquiryAlertDispatcher, findMyPartInquiryReadiness } from './findmypart-public-inquiry.mjs';
@@ -411,6 +412,7 @@ export async function startFabricLocalRuntime({
   visualIngestToken='',
   sabanCapacityHealthFile='',
   releaseRefFile='',
+  wingCourierRouteConfigFile='',
   purchaseIntentFetch=fetch,
   purchaseIntentUrl=process.env.EVERCRAFT_PURCHASE_INTENT_OWNED_URL||'',
   paymentOpsUrl=process.env.EVERCRAFT_PAYMENT_OPS_OWNED_URL||'',
@@ -784,6 +786,10 @@ export async function startFabricLocalRuntime({
   });
   };
 
+  // No config means this endpoint is indistinguishable from an absent route.
+  // A private operator config must be explicitly passed at startup; no public
+  // request can enable the bridge or choose its local broker port.
+  const wingCourierRoute=createFabricWingCourierRoute({configFile:wingCourierRouteConfigFile});
   const server=http.createServer(async(req,res)=>{
     try {
       // Exact custom domains are standalone public frontages, not aliases
@@ -815,6 +821,10 @@ export async function startFabricLocalRuntime({
         if(req.method==='HEAD')return res.end();
         return res.end(payload);
       }
+
+      // Exact, private-config-gated Wing Courier routes precede general Fabric
+      // discovery, but only after custom-domain frontages are isolated.
+      if(await wingCourierRoute.handle(req,res))return;
 
       // Public-safe availability signal. Hides unconfigured intake before a
       // buyer tries to submit PII. Never exposes paths, key, identity or volume.
@@ -1881,7 +1891,8 @@ if (direct) {
   }
   const runtime=await startFabricLocalRuntime({
     host,port,challengeToken,nodeReceiptPath,allocatorTokenFile,
-    visualStateDir,visualOrigin,visualIngestToken,sabanCapacityHealthFile,releaseRefFile
+    visualStateDir,visualOrigin,visualIngestToken,sabanCapacityHealthFile,releaseRefFile,
+    wingCourierRouteConfigFile:String(process.env.EVERCRAFT_WING_COURIER_ROUTE_CONFIG||'')
   });
   process.stdout.write(JSON.stringify({
     ok:true,
