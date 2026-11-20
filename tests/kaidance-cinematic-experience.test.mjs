@@ -71,3 +71,34 @@ test('the Collider is a dimensional accelerator rather than a flat brand orbit',
  assert.doesNotMatch(engine,/fetch\(|XMLHttpRequest|WebSocket|EventSource|localStorage|sessionStorage|\.setInterval\(/);
  assert.equal(fs.existsSync(new URL('../public/kaidance/pulse.json',import.meta.url)),false);
 });
+
+
+test('V04 centers a flowing, explorable field rather than a lone glowing ring',()=>{
+ const field=read('../public/kaidance/current-field.mjs');
+ const css=read('../public/kaidance/confluence.css');
+ assert.match(html,/id="currentField"/);
+ assert.match(html,/id="fieldExplore"/);
+ assert.match(html,/id="fieldPause"/);
+ assert.match(html,/id="fieldMode"/);
+ assert.match(html,/id="fieldDrawer"/);
+ assert.match(html,/src="\.\/current-field\.mjs"/);
+ assert.match(html,/href="\.\/confluence\.css"/);
+ for(const word of ['KAIDANCE','HUDSON','SYSTEMIA','DISCOVERY','RAVEN NEXUS','WORK SABAN','EVIDENCE'])
+  assert.ok(field.includes(word),word+' confluence missing');
+ assert.match(field,/function currents\(/);
+ assert.match(field,/function voyager\(/);
+ assert.match(field,/function selection\(/);
+ assert.match(field,/function mode\(/);
+ assert.match(field,/function collisions\(/);
+ assert.match(field,/verifiedMarker|marker\.classList\.contains\('beat'\)/);
+ assert.match(field,/marker\.classList\.contains\('beat'\)/);
+ assert.match(field,/kaidance:public-record/);
+ assert.match(field,/prefers-reduced-motion/);
+ assert.doesNotMatch(field,/fetch\(|XMLHttpRequest|WebSocket|EventSource|localStorage|sessionStorage|\.setInterval\(/);
+ assert.match(css,/height:calc\(100dvh - 76px\)/);
+ assert.match(css,/#currentField/);
+ assert.match(css,/body\.reactor #colliderField/);
+ assert.match(css,/body\.portrait \.field-story/);
+ assert.match(app,/new CustomEvent\('kaidance:public-record'/);
+ assert.equal(fs.existsSync(new URL('../public/kaidance/pulse.json',import.meta.url)),false);
+});
