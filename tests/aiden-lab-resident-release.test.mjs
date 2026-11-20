@@ -20,12 +20,12 @@ const server=(overrides={})=>async(url)=>{
   return {...fixture,...overrides};
 };
 
-test('owned resident release proof matches exactly the five science assets',async()=>{
+test('owned resident release proof matches all seven public campus assets',async()=>{
   assert.equal(ASSETS.length,7);
   const receipt=await probeAidenLabResident({sourceRoot:ROOT,fetcher:server(),now:new Date('2026-11-20T00:00:00Z')});
   assert.equal(receipt.verified,true);
   assert.equal(receipt.release_state,'RESIDENT_PARITY_VERIFIED');
-  assert.equal(receipt.assets.length,5);
+  assert.equal(receipt.assets.length,7);
   assert.equal(receipt.no_external_action_taken,true);
   assert.equal(receipt.no_private_data_accessed,true);
 });
