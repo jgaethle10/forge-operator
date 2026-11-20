@@ -32,7 +32,7 @@ test('signed claim delivers exact bytes once; anonymous and replay denied',async
  const f=await fixture(),server=await serve(createFallenBootstrap(f.opts));
  try{
   const challenge=await (await request(server.url)).json();
-  assert.equal(challenge.sha256,f.sha);
+  assert.equal(challenge.sha256,f.sha,JSON.stringify(challenge));
   const statement=Buffer.from(JSON.stringify({schema:'evercraft.wing-courier.enrollment-claim.v1',nonce:challenge.nonce,sha256:f.sha,recipientFingerprint:f.opts.recipientFingerprint}));
   const signature=crypto.sign(null,statement,f.privateKey).toString('base64');
   let r=await request(server.url,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({nonce:challenge.nonce,signature:'wrong'})});
