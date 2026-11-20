@@ -30,6 +30,11 @@ MAX_BODY = 16 * 1024 * 1024
 FIELDS = ['name','address','city','region','postal','country','owner','site_type','goal','status','decision_reason']
 ALLOWED = {'.pdf','.png','.jpg','.jpeg','.webp','.txt','.csv','.dxf','.dwg'}
 
+def require_local_bind(host):
+    if host not in ('127.0.0.1','localhost','::1'):
+        raise ValueError('External binding is disabled: customer authentication and per-site authorization are not ready')
+    return host
+
 def now(): return dt.datetime.now(dt.timezone.utc).isoformat(timespec='seconds')
 def uid(prefix): return prefix + '-' + secrets.token_hex(6).upper()
 @contextmanager
@@ -361,7 +366,6 @@ class Handler(BaseHTTPRequestHandler):
 
 if __name__=='__main__':
     init()
-    if BIND not in ('127.0.0.1','localhost','::1') and not TOKEN:
-        raise SystemExit('Set EVERCRAFT_SITE_TOKEN before binding to non-loopback interfaces')
+    require_local_bind(BIND)
     print(f'Evercraft Site Planner at http://{BIND}:{PORT} (data: {DATA})')
     ThreadingHTTPServer((BIND,PORT),Handler).serve_forever()
