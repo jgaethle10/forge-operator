@@ -1,0 +1,8 @@
+{
+  "schema": "evercraft.systemia.chat-mission-request.v1",
+  "mission_id": "wing-courier-fabric-health-20261119-001",
+  "objective": "Observe the existing owned Fabric public health from a separate network as evidence for Wing Courier deployment prerequisites; no server changes.",
+  "route": "signal-public-ingress",
+  "mode": "observe",
+  "requested_at": "2026-11-20T01:31:00.000Z"
+}
