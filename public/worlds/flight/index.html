@@ -1546,6 +1546,85 @@ function addSeattleWebGL(b){
  }
 }
 
+/* Vista aircraft: hand-authored Canvas2D vectors, no remote textures or models.
+ * Distinct silhouettes and materials for trainer, glider and fast jet.
+ * Uses the same bank and speed state as the 3D version; stylistic game shading only.
+ */
+function drawVistaAircraft2D(ctx,w,h,s){
+ const type=s.craft,jet=type==='jet',glider=type==='glider';
+ const sc=Math.max(.51,Math.min(1.62,h/650)),span=glider?148:jet?105:99;
+ const cy=h*.69;
+ ctx.save();ctx.translate(w/2,cy);ctx.scale(sc,sc);ctx.rotate(-s.bank*.80);
+ const poly=(pts,fill,stroke=null,thick=1.25)=>{
+  ctx.beginPath();ctx.moveTo(pts[0][0],pts[0][1]);
+  for(const p of pts.slice(1))ctx.lineTo(p[0],p[1]);
+  ctx.closePath();ctx.fillStyle=fill;ctx.fill();
+  if(stroke){ctx.lineWidth=thick;ctx.strokeStyle=stroke;ctx.stroke();}
+ };
+ const col=jet?'#efebe0':glider?'#eaf5f3':'#f7f4e8',shade=jet?'#aeb7b6':glider?'#9ac5ce':'#c1cbd0';
+ const bright=ctx.createLinearGradient(-span,0,span,20);
+ bright.addColorStop(0,jet?'#829da8':'#a3c4d0');
+ bright.addColorStop(.22,col);bright.addColorStop(.65,'#f8fbf5');bright.addColorStop(1,shade);
+ const body=ctx.createLinearGradient(-13,0,17,0);
+ body.addColorStop(0,'#879ca7');body.addColorStop(.25,col);body.addColorStop(.64,'#fffdf5');body.addColorStop(1,'#8da6aa');
+ const nose=jet?-94:glider?-86:-82,tail=jet?67:glider?75:73;
+ const wingBack=jet?37:glider?14:21,wingFront=jet?2:glider?-21:-5;
+ // Soft shadow gives depth without relying on an external bitmap.
+ ctx.save();ctx.translate(3,10);ctx.shadowColor='#001724b0';ctx.shadowBlur=22;
+ poly([[-span+4,wingBack+5],[-9,wingBack+19],[-8,tail],[8,tail],[9,wingBack+19],[span-4,wingBack+5],
+       [span,wingFront+3],[11,-16],[0,nose+3],[-11,-16],[-span,wingFront+3]],'#07202e88');ctx.restore();
+ // Tailplanes and metallic trailing edges.
+ const tailSpan=glider?63:jet?47:43,tailLeading=jet?45:49;
+ poly([[-9,44],[-tailSpan,tailLeading+3],[-tailSpan+5,tailLeading+16],[-8,58]],shade,'#577989',1);
+ poly([[9,44],[tailSpan,tailLeading+3],[tailSpan-5,tailLeading+16],[8,58]],col,'#577989',1);
+ // Wings are split into left and right panels with independent specular fades.
+ const sweep=jet?26:glider?0:11,tipBack=jet?28:glider?7:18;
+ for(const side of [-1,1]){
+  poly([[side*9,-13],[side*span,wingFront+sweep],[side*span,wingFront+sweep+tipBack],[side*11,wingBack]],
+   bright,'#5a7e8b',1.6);
+  poly([[side*12,4],[side*(span-8),wingFront+sweep+tipBack-4],
+        [side*(span-9),wingFront+sweep+tipBack-1],[side*11,wingBack-2]],
+        jet?'#7f98a6':'#aec8ca');
+  poly([[side*(span-18),wingFront+sweep+3],[side*span,wingFront+sweep],
+        [side*span,wingFront+sweep+tipBack*.7],[side*(span-18),wingFront+sweep+tipBack*.9]],
+        type==='trainer'?'#f6a36a':jet?'#eb9e58':'#4b93b1');
+  // Flight control surfaces.
+  ctx.beginPath();ctx.moveTo(side*21,wingBack-3);
+  ctx.lineTo(side*(span*.70),wingFront+sweep+tipBack-2);
+  ctx.strokeStyle='#6d8f98';ctx.lineWidth=1.6;ctx.stroke();
+  if(jet){
+   poly([[side*25,33],[side*41,51],[side*46,62],[side*31,55]],'#da9b66','#6a7478');
+  }
+ }
+ // Raised fuselage, canopy framing and nose highlight.
+ poly([[0,nose],[-7.5,nose+24],[-13,-27],[-12,38],[-7,tail-9],
+       [0,tail],[7,tail-9],[12,38],[13,-27],[7.5,nose+24]],body,'#5c7f8a',1.5);
+ poly([[-7,nose+30],[0,nose+5],[7,nose+30],[3.4,-47],[-3.4,-47]],'#ffffff97');
+ const glass=ctx.createLinearGradient(-8,-49,8,-20);
+ glass.addColorStop(0,'#163e58');glass.addColorStop(.5,'#4586a0');glass.addColorStop(1,'#102c44');
+ poly([[-6,-43],[0,-52],[6,-43],[8,-17],[0,-11],[-8,-17]],glass,'#e4ffff',1.1);
+ poly([[-2,-44],[1,-47],[5,-30],[0,-36]],'#9de9ed76');
+ // Narrow fuselage rivet line and dorsal tail.
+ ctx.strokeStyle='#effdf8c4';ctx.lineWidth=1.4;ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(0,tail-7);ctx.stroke();
+ if(jet){
+  poly([[-8,43],[-3,43],[0,64],[-4,62]],'#cf874d');
+  poly([[8,43],[3,43],[0,64],[4,62]],'#cf874d');
+ }else if(!glider){
+  // The trainer's prop is a translucent animated disc, not a vehicle collision part.
+  const turn=s.flightTime*Math.max(.6,8*s.throttle);
+  ctx.save();ctx.translate(0,nose+3);ctx.rotate(turn);ctx.fillStyle='#bedade4c';
+  ctx.beginPath();ctx.ellipse(0,0,5,15,0,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#526d78';ctx.fillRect(-1.2,-18,2.4,36);ctx.restore();
+ }
+ if(glider){ctx.fillStyle='#d8ffff';ctx.beginPath();ctx.arc(0,tail-5,2.8,0,Math.PI*2);ctx.fill();}
+ // Wingtip and navigation-light glints are anchored to the aircraft.
+ for(const side of [-1,1]){
+  ctx.fillStyle=side<0?'#fb776b':'#76e9b1';
+  ctx.shadowBlur=8;ctx.shadowColor=ctx.fillStyle;ctx.beginPath();
+  ctx.arc(side*(span-2),wingFront+sweep+tipBack*.5,2.5,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
+ }
+ ctx.restore();
+}
 function render2D(){
  const dpi=Math.min(window.devicePixelRatio||1,1.25),w=Math.round(canvas.clientWidth*dpi),h=Math.round(canvas.clientHeight*dpi);
  if(!w||!h)return;if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;}
@@ -1602,13 +1681,8 @@ function render2D(){
  }
  // Aircraft follows the 3D flight state; cockpit view hides the chase airplane.
  if(view!=='cockpit'&&state.craft==='custom'){drawCustom2D(ctx,w,h,state.design,state.bank);}
- else if(view!=='cockpit'){
-  const cx=w/2,cy=h*.69,sc=Math.max(.52,Math.min(1.6,h/650));
-  ctx.save();ctx.translate(cx,cy);ctx.scale(sc,sc);ctx.rotate(-state.bank*.80);ctx.shadowColor='#041522b7';ctx.shadowBlur=26;ctx.shadowOffsetY=8;
-  ctx.fillStyle='#142d3b';ctx.beginPath();ctx.moveTo(-93,13);ctx.lineTo(-10,-8);ctx.lineTo(-15,52);ctx.lineTo(-36,64);ctx.lineTo(-35,73);ctx.lineTo(0,67);ctx.lineTo(35,73);ctx.lineTo(36,64);ctx.lineTo(15,52);ctx.lineTo(10,-8);ctx.lineTo(93,13);ctx.lineTo(102,2);ctx.lineTo(10,-32);ctx.lineTo(0,-91);ctx.lineTo(-10,-32);ctx.lineTo(-102,2);ctx.closePath();ctx.fill();
-  ctx.shadowBlur=0;ctx.shadowOffsetY=0;ctx.fillStyle='#d8ecec';ctx.beginPath();ctx.moveTo(0,-91);ctx.lineTo(9,-31);ctx.lineTo(100,4);ctx.lineTo(91,15);ctx.lineTo(13,-5);ctx.lineTo(15,54);ctx.lineTo(36,68);ctx.lineTo(33,73);ctx.lineTo(0,66);ctx.lineTo(-33,73);ctx.lineTo(-36,68);ctx.lineTo(-15,54);ctx.lineTo(-13,-5);ctx.lineTo(-91,15);ctx.lineTo(-100,4);ctx.lineTo(-9,-31);ctx.closePath();ctx.fill();
-  ctx.fillStyle=state.craft==='custom'?'#f2aa7c':core.aircraft[state.craft].skin;ctx.fillRect(-100,4,24,8);ctx.fillRect(76,4,24,8);ctx.fillStyle='#286077';ctx.beginPath();ctx.ellipse(0,-20,6,22,0,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#93cbd9';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(0,-86);ctx.lineTo(0,65);ctx.stroke();ctx.restore();
- }
+ else if(view!=='cockpit'){drawVistaAircraft2D(ctx,w,h,state);}
+
  // Peripheral speed streaks are gameplay effects, not measured wind.
  const speed=Math.min(1,Math.max(0,(state.speed-45)/115));
  if(speed>.12&&view!=='cockpit'){
