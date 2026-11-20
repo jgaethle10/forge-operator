@@ -54,6 +54,27 @@ def replace_once(source,needle,new):
     return source.replace(needle,new,1)
 
 
+# Approved Evercraft AIW visual identity. This applies to the exported static
+# public page and to brand-only updates; private NextGen preview stays source-locked.
+AIW_BRAND_REVISION = "evercraft-bridge-compass-20261120"
+AIW_BRAND_MARK = "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 64 64\" fill=\"none\" aria-hidden=\"true\" focusable=\"false\"><circle cx=\"32\" cy=\"32\" r=\"25\" stroke=\"white\" stroke-width=\"2.8\" opacity=\".94\"/><path d=\"m32 2 4.5 10h-9L32 2Zm0 60-4.5-10h9L32 62ZM2 32l10-4.5v9L2 32Zm60 0-10 4.5v-9L62 32Z\" fill=\"white\"/><path d=\"M32 11c-4.2 0-7 3.1-7 7.1 0 4.8 7 11.1 7 11.1s7-6.3 7-11.1c0-4-2.8-7.1-7-7.1Z\" fill=\"white\"/><circle cx=\"32\" cy=\"18\" r=\"2.7\" fill=\"#0c426f\"/><path d=\"M15 31v12m34-12v12M15 32c5 0 5 9 17 9s12-9 17-9M12 43h40\" stroke=\"white\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"m26 45-9 13m21-13 9 13M32 48v3m0 3v3\" stroke=\"white\" stroke-width=\"3\" stroke-linecap=\"round\"/></svg>"
+
+
+def apply_brand_to_public(text):
+    """Replace only the two previous crosshair glyphs and their exact CSS."""
+    replacements = (
+        (".symbol{height:34px;width:34px;border-radius:11px;background:#0c426f;color:#fff;display:grid;place-items:center;font-size:19px}", ".symbol{height:42px;width:42px;flex:0 0 42px;border-radius:13px;background:linear-gradient(150deg,#124b78,#072a50);display:grid;place-items:center;box-shadow:0 4px 13px #092b5030}\n.symbol svg{width:36px;height:36px;display:block}"),
+        (".empty .icon{height:54px;width:54px;border-radius:18px;background:#e6f3fc;color:#146da4;display:grid;place-items:center;font-size:30px;margin-bottom:20px}", ".empty .icon{height:54px;width:54px;border-radius:17px;background:linear-gradient(150deg,#124b78,#072a50);display:grid;place-items:center;margin-bottom:20px;box-shadow:0 5px 18px #092b5026}\n.empty .icon svg{height:46px;width:46px;display:block}"),
+        ("<div class=\"symbol\" aria-hidden=\"true\">⌖</div>", '<div class="symbol" aria-hidden="true">' + AIW_BRAND_MARK + '</div>'),
+        ("<div class=\"icon\" aria-hidden=\"true\">⌖</div>", '<div class="icon" aria-hidden="true">' + AIW_BRAND_MARK + '</div>'),
+    )
+    for before, after in replacements:
+        text = replace_once(text, before, after)
+    if '⌖' in text:
+        raise ValueError("Legacy crosshair found after branding update")
+    return text
+
+
 def static_page(private_html):
     text=private_html.decode("utf8")
     if ("function hoverPreview(name)" not in text or
@@ -85,7 +106,7 @@ def static_page(private_html):
     banner='<meta name="description" content="Explore dated federal bridge inventory data state by state. An independent Evercraft public beta, not real-time safety advice.">'
     text=replace_once(text,"<title>American Infrastructure Watch | Explore America</title>",
         "<title>American Infrastructure Watch | Public Beta</title>\n"+banner)
-    return text.encode("utf8")
+    return apply_brand_to_public(text).encode("utf8")
 
 
 StringLiteralLoadRecords="""  let staticBridgeRows=null;
