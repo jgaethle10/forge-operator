@@ -24,6 +24,10 @@ jobs:
           bash -n research/infrastructure-watch/release/aiw-beta-courier-nextgen.sh
           bash -n research/infrastructure-watch/release/aiw-beta-receive-penguin.sh
           bash -n research/infrastructure-watch/release/aiw-beta-edge-preflight.sh
+          bash -n research/infrastructure-watch/release/aiw-beta-public-edge-audit.sh
+          grep -Fq 'services_restarted=false' research/infrastructure-watch/release/aiw-beta-public-edge-audit.sh
+          grep -Fq 'public_website_activated=false' research/infrastructure-watch/release/aiw-beta-public-edge-audit.sh
+          grep -Fq 'EXISTING CADDY: valid with installed public-edge environment' research/infrastructure-watch/release/aiw-beta-stage-owned-edge.sh
           bash -n research/infrastructure-watch/release/aiw-beta-stage-owned-edge.sh
           grep -Fq 'publication_mutation=NONE' research/infrastructure-watch/release/aiw-beta-edge-preflight.sh
           grep -Fq 'PUBLIC EDGE: UNCHANGED' research/infrastructure-watch/release/aiw-beta-courier-nextgen.sh
