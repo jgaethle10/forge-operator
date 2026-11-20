@@ -78,6 +78,7 @@ jobs:
           node --check scripts/faie-soil-live-acceptance.mjs
           node --check scripts/faie-climate-live-acceptance.mjs
           node --check scripts/faie-fema-flood-live-acceptance.mjs
+          node --check scripts/faie-nfip-wa-live-acceptance.mjs
 
       - name: FAIE USDA mapped soil public preview source, privacy and rate-limit tests
         run: node --test systemia/mcp/fabric-faie-soil-preview.test.mjs
