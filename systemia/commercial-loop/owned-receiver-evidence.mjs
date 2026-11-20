@@ -143,12 +143,11 @@ export function inspectOwnedCommercialLoop({
  const root=privateDir(custodyRoot);
  let custody;
  try{custody=verifyPrivatePackage({root,order,hostname})}
- catch(e){
-  if(String(e?.message).startsWith('commercial_owned_receipt_')){
-   const conflict=projectCommercialLoop({order,custody:{observedBy:'invalid',receipt:null}});
-   return result(conflict);
-  }
-  throw e;
+ catch{
+  // ENOENT, ELOOP, EACCES, races and malformed files all mean custody cannot
+  // be trusted. Do not leak private paths or turn them into false success.
+  const conflict=projectCommercialLoop({order,custody:{observedBy:'invalid',receipt:null}});
+  return result(conflict);
  }
  if(!custody)return result(pre);
  const trusted={observedBy:'trusted-owned-receiver',receipt:custody.receipt};
