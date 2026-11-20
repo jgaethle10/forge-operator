@@ -271,15 +271,32 @@ function drawParticles(dt){
 // Public illustrative optics only, not live cognition or mission telemetry.
 // Drift layers are drawn behind the existing river and require no new assets.
 function drawDepthVeils(){
+ // Translucent celestial weather: the water has depth outside the nodes.
  ctx.save();ctx.globalCompositeOperation="screen";
- for(var layer=0;layer<4;layer++){
-  var sway=Math.sin(clock*(.07+layer*.012)+layer*1.9),y=height*(.16+layer*.21)+sway*height*.055;
-  ctx.beginPath();ctx.moveTo(-width*.20,y+height*.08);
-  ctx.bezierCurveTo(width*.20,y-height*.16,width*.69,y+height*.15,width*1.2,y-height*.07);
-  ctx.strokeStyle=layer%2===0?"rgba(33,148,164,.055)":"rgba(107,98,176,.045)";
-  ctx.lineWidth=Math.min(height*.17,140);ctx.stroke();
-  ctx.strokeStyle=layer%2===0?"rgba(112,251,223,.075)":"rgba(168,162,255,.065)";
-  ctx.lineWidth=1.2;ctx.stroke();
+ for(var layer=0;layer<5;layer++){
+  var sway=Math.sin(clock*(.055+layer*.013)+layer*1.9);
+  var y=height*(.13+layer*.18)+sway*height*.045;
+  var g=ctx.createLinearGradient(0,y-height*.08,width,y+height*.09);
+  g.addColorStop(0,"rgba(36,112,161,0)");
+  g.addColorStop(.29,layer%2?"rgba(106,132,219,.065)":"rgba(67,227,198,.073)");
+  g.addColorStop(.65,layer%2?"rgba(181,131,236,.09)":"rgba(94,245,211,.086)");
+  g.addColorStop(1,"rgba(21,116,164,0)");
+  ctx.beginPath();ctx.moveTo(-width*.22,y+height*.06);
+  ctx.bezierCurveTo(width*.22,y-height*.17,width*.65,y+height*.12,width*1.21,y-height*.06);
+  ctx.strokeStyle=g;ctx.lineWidth=Math.min(height*.16,145);ctx.stroke();
+  ctx.strokeStyle=layer%2?"rgba(198,154,255,.10)":"rgba(126,255,221,.12)";
+  ctx.lineWidth=1.15;ctx.stroke();
+ }
+ // Sparse distant, breathing starlets make the entire frame slowly alive.
+ for(var dust=0;dust<38;dust++){
+  var seed=seeded(dust*31+17),phase=clock*(.12+.13*seed)+dust*2.21;
+  var x=width*seeded(dust*53+3)+Math.sin(phase)*width*.007;
+  var y=height*seeded(dust*17+9)+Math.cos(phase*.74)*height*.007;
+  var glow=Math.pow(.5+.5*Math.sin(clock*(.38+seed*.27)+dust*1.61),6);
+  var radius=.30+glow*.85;
+  ctx.fillStyle=dust%5===0?"rgba(255,235,199,"+(.13+glow*.43).toFixed(3)+")":
+                      "rgba(184,246,241,"+(.10+glow*.35).toFixed(3)+")";
+  ctx.beginPath();ctx.arc(x,y,radius,0,7);ctx.fill();
  }
  ctx.restore();
 }
@@ -512,18 +529,18 @@ function drawMistySail(x,span,wind,tint){
  var tip=-span*(1+.045*Math.sin(clock*.43+x*2));
  ctx.save();ctx.globalCompositeOperation="screen";
  ctx.beginPath();ctx.moveTo(x+.06,.02);
- ctx.bezierCurveTo(x-.48,-span*.22,x-.60+billow*.3,-span*.77,x-.07,tip);
- ctx.bezierCurveTo(x+.33+billow*.4,tip+.11,x+.61+billow,-span*.51,x+.48,-span*.12);
- ctx.quadraticCurveTo(x+.31,-.05,x+.06,.02);ctx.closePath();
+ ctx.bezierCurveTo(x-.29,-span*.25,x-.36+billow*.20,-span*.79,x-.07,tip);
+ ctx.bezierCurveTo(x+.21+billow*.20,tip+.11,x+.43+billow*.38,-span*.64,x+.58+billow*.31,-span*.18);
+ ctx.quadraticCurveTo(x+.34,-.07,x+.06,.02);ctx.closePath();
  var silk=ctx.createLinearGradient(x-.52,tip,x+.62,.10);
  silk.addColorStop(0,"rgba(6,40,91,.09)");
  silk.addColorStop(.22,tint%2?"rgba(158,125,239,.36)":"rgba(62,181,218,.37)");
- silk.addColorStop(.49,"rgba(213,255,242,.87)");
+ silk.addColorStop(.49,"rgba(198,255,243,.60)");
  silk.addColorStop(.75,tint%2?"rgba(185,161,252,.55)":"rgba(117,248,223,.61)");
  silk.addColorStop(1,"rgba(29,69,121,.06)");
  ctx.fillStyle=silk;ctx.shadowBlur=.21;ctx.shadowColor="rgba(124,255,231,.78)";
  ctx.fill();ctx.shadowBlur=0;ctx.lineWidth=.032;
- ctx.strokeStyle="rgba(227,255,247,.92)";ctx.stroke();
+ ctx.strokeStyle="rgba(227,255,247,.97)";ctx.stroke();
  // Cloud embroidery and moving silk folds make a sculptural, not flat, sail.
  for(var rib=1;rib<=4;rib++){
   var u=rib/5,y=tip*u;
@@ -610,12 +627,12 @@ function drawTraveler(from,to,t){
  ctx.quadraticCurveTo(-1.49,.10,-1.59,-.09);ctx.closePath();
  var hull=ctx.createLinearGradient(0,-.28,0,.48);
  hull.addColorStop(0,"rgba(123,225,212,.57)");
- hull.addColorStop(.26,"rgba(8,40,72,.93)");
- hull.addColorStop(.67,"rgba(2,14,40,.96)");
+ hull.addColorStop(.26,"rgba(4,24,50,.97)");
+ hull.addColorStop(.67,"rgba(1,8,26,.99)");
  hull.addColorStop(1,"rgba(90,204,221,.55)");
  ctx.fillStyle=hull;ctx.shadowColor="rgba(135,255,241,.60)";
  ctx.shadowBlur=.13;ctx.fill();ctx.shadowBlur=0;
- ctx.strokeStyle="rgba(225,255,243,.91)";ctx.lineWidth=.046;ctx.stroke();
+ ctx.strokeStyle="rgba(225,255,243,.99)";ctx.lineWidth=.053;ctx.stroke();
  for(var rail=0;rail<3;rail++){
   ctx.beginPath();ctx.moveTo(-1.29,-.10+rail*.11);
   ctx.bezierCurveTo(-.61,.01+rail*.08,.47,.03+rail*.08,1.40,-.18+rail*.14);
@@ -637,12 +654,29 @@ function drawTraveler(from,to,t){
  drawMistySail(-.84,.92,.4,0);
  drawMistySail(.70,1.03,-.2,1);
  drawMistySail(-.07,1.64,.8,2);
+ // Rigging lines connect the upper cloud spires to the keel and gilded bow.
+ ctx.save();ctx.strokeStyle="rgba(207,243,237,.53)";ctx.lineWidth=.015;
+ for(var shroud of [[-.84,-.92,-1.39,-.12],[-.07,-1.64,-1.24,-.16],[-.07,-1.64,1.49,-.19],[.70,-1.03,1.34,-.14]]){
+  ctx.beginPath();ctx.moveTo(shroud[0],shroud[1]);
+  ctx.quadraticCurveTo((shroud[0]+shroud[2])*.5,-.41,shroud[2],shroud[3]);ctx.stroke();
+ }ctx.restore();
  var flutter=Math.sin(clock*.75)*.12;
  ctx.beginPath();ctx.moveTo(-.05,-1.63);
  ctx.bezierCurveTo(-.40,-1.79,-.84,-1.67+flutter,-1.15,-1.87+flutter);
  ctx.quadraticCurveTo(-.62,-1.63,-.05,-1.54);ctx.closePath();
  ctx.fillStyle="rgba(174,249,235,.28)";ctx.fill();
  ctx.strokeStyle="rgba(231,255,245,.56)";ctx.lineWidth=.018;ctx.stroke();
+ // A carved aftcastle and starlit deck make the translucent outline a ship.
+ ctx.beginPath();ctx.moveTo(-1.35,-.21);ctx.lineTo(-1.10,-.53);
+ ctx.quadraticCurveTo(-.79,-.55,-.52,-.38);ctx.lineTo(-.48,-.13);
+ ctx.closePath();ctx.fillStyle="rgba(2,19,41,.89)";ctx.fill();
+ ctx.strokeStyle="rgba(255,241,201,.87)";ctx.lineWidth=.035;ctx.stroke();
+ ctx.beginPath();ctx.moveTo(-1.12,-.31);ctx.lineTo(-.68,-.31);
+ ctx.strokeStyle="rgba(215,251,233,.91)";ctx.lineWidth=.023;ctx.stroke();
+ for(var prong=0;prong<9;prong++){
+  var xx=-1.10+prong*.29;ctx.beginPath();ctx.moveTo(xx,-.15);ctx.lineTo(xx,-.25);
+  ctx.strokeStyle="rgba(255,236,194,.55)";ctx.lineWidth=.012;ctx.stroke();
+ }
  // Bridge lights reveal architecture through the glowing cloud.
  for(var lamp=0;lamp<7;lamp++){
   var x=-1.03+lamp*.31,y=.057+Math.sin(lamp*.8)*.015;
