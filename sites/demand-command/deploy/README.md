@@ -58,6 +58,32 @@ ip -4 route show default
 
 ChromeOS references: https://developers.google.com/chromeos/app-development/develop/port-forwarding and https://www.chromium.org/chromium-os/developer-library/guides/containers/crostini-developer-guide/
 
+## Dedicated SSH configuration staged after safe validation (November 20, 2026)
+
+Penguin's owner-provided inspection reported:
+- `sudo /usr/sbin/sshd -t` **PASS** after repairing `/run/sshd`.
+- The normal `ssh.service` is **inactive** and `ConditionResult=no`. Its unit contains `ConditionPathExists=!/etc/ssh/sshd_not_to_be_run`; check whether the opt-out marker currently exists, rather than interpreting the condition as a damaged OpenSSH installation.
+- The default service would listen on **port 22 on all interfaces**, with `passwordauthentication yes` and `allowtcpforwarding yes`. **Do not start the generic service or delete its opt-out marker just to make Demand Command reachable.**
+
+The separately checked-in `sshd-demand-relay.conf.example` is inert; it documents a distinct SSH daemon on **Crostini port 8222**. That service allows only `demandrelay`, public-key authentication, **remote forwarding to Penguin loopback 127.0.0.1:18897**, and no shells/subsystems (OpenSSH `MaxSessions 0`). The config uses a **new, dedicated host key**, avoiding the unknown provenance of the current system SSH key comment.
+
+Security gates before starting the isolated daemon:
+1. NextGen generates a new ED25519 client identity locally (never send the private key to chat or the repo). Copy only its **public** key to Penguin through an owner-approved channel.
+2. Penguin validates the separate `demandrelay` account, its root-owned authorized keys file, a dedicated ED25519 *server host key*, the config `sshd -t -f` output, and systemd unit before enabling **only the new relay service**.
+3. NextGen pins Penguin's dedicated server host fingerprint through a trusted out-of-band procedure. Never use `StrictHostKeyChecking=no`.
+4. ChromeOS explicitly forwards Linux TCP **8222** from the Chromebook LAN to Crostini. Verify the Chromebook's **host LAN address**, not Crostini 100.115.x.x. Never forward SSH from the household WAN/router.
+5. Only after the reverse tunnel is present and serves exactly Demand Command's local HTML on Penguin loopback should the protected Caddy hostname and DNS be admitted.
+
+Read-only check of the default SSH opt-out (safe on Penguin):
+```bash
+if test -e /etc/ssh/sshd_not_to_be_run; then
+  echo "Normal SSH service intentionally held by opt-out marker"
+else
+  echo "Opt-out marker absent; inspect current conditions before any start"
+fi
+systemctl is-active ssh.service || true
+```
+
 ## Step 2: Private NextGen-to-Penguin transport (held pending evidence)
 
 The public edge runs on Penguin and its proxy cannot see NextGen's `127.0.0.1`: that loopback address means **Penguin itself**. We must establish an Evercraft-operated tunnel instead of pointing a Caddy proxy at the wrong machine.
