@@ -12,7 +12,13 @@ test('Kaidance standalone owned assets are complete, public-only and mirrored fr
  assert.doesNotMatch(html,/\.\.\/headquarters\//);
  assert.doesNotMatch(js,/\.\.\/live\//);
  assert.equal(read('../public/kaidance/work-source.mjs'),read('../public/live/work-source.mjs'),'Source copies must be reconciled at each LIVE change');
- assert.equal(read('../public/kaidance/mark.svg'),read('../public/headquarters/mark.svg'),'Use the same Evercraft official public mark');
+ const mark=read('../public/kaidance/mark.svg');
+ assert.notEqual(mark,read('../public/headquarters/mark.svg'),'KAIDANCE requires its own product identity');
+ assert.match(mark,/<title id="title">Kaidance<\/title>/);
+ assert.match(mark,/accelerator rails/);
+ assert.doesNotMatch(mark,/<script|<foreignObject|https?:\/\//i);
+ assert.match(html,/class="brand-symbol" src="\.\/mark\.svg"/);
+ assert.match(html,/class="stage-brand" src="\.\/mark\.svg"/);
  assert.doesNotMatch(read('../public/kaidance/work-source.mjs'),/Authorization:\s*Bearer|PRIVATE_KEY|process\.env/);
 });
 test('owned Caddy route is staged, narrowly allowlisted, and never exposes private mission paths',()=>{
