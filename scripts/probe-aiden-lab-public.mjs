@@ -16,6 +16,7 @@ export const ASSETS = Object.freeze([
   { path: 'catalog.mjs', type: /javascript|text\/plain/i, identity: 'medical-evidence' },
   { path: 'styles.css', type: /text\/css/i, identity: 'topic-grid' },
   { path: 'mark.svg', type: /image\/svg\+xml/i, identity: '<svg' },
+  { path: 'classroom/index.html', source: 'public/apps/infinite-classroom/play/index.html', type: /text\/html/i, identity: 'INFINITE CLASSROOM', learningMarker: 'classroom-practice-v1' },
 ]);
 const ROOT = fileURLToPath(new URL('../', import.meta.url));
 const sha256 = (s) => createHash('sha256').update(s).digest('hex');
@@ -28,7 +29,7 @@ export function validOwnedOrigin(raw) {
   return u.origin;
 }
 
-export function assessAsset({status, finalUrl, contentType, programMarker, body}, asset, expectedBody, origin) {
+export function assessAsset({status, finalUrl, contentType, programMarker, learningMarker, body}, asset, expectedBody, origin) {
   const findings = [];
   let u = null;
   try { u = new URL(finalUrl); } catch { findings.push('INVALID_FINAL_URL'); }
@@ -37,6 +38,7 @@ export function assessAsset({status, finalUrl, contentType, programMarker, body}
   if (status !== 200) findings.push('HTTP_NOT_200');
   if (!asset.type.test(String(contentType || ''))) findings.push('UNEXPECTED_CONTENT_TYPE');
   if (programMarker !== 'aidens-lab-v1') findings.push('OWNED_FABRIC_ROUTE_IDENTITY_MISSING');
+  if (asset.learningMarker && learningMarker !== asset.learningMarker) findings.push('LEARNING_WORLD_IDENTITY_MISSING');
   if (typeof body !== 'string' || body.length > 300000) findings.push('INVALID_OR_OVERSIZED_BODY');
   if (!String(body).includes(asset.identity)) findings.push('MISSING_PAGE_OR_ASSET_IDENTITY');
   if (sha256(String(body)) !== sha256(expectedBody)) findings.push('SOURCE_LIVE_SHA256_MISMATCH');
@@ -66,7 +68,7 @@ export async function runPublicCanary({origin = DEFAULT_ORIGIN, fetcher = fetch,
     assets: []
   };
   for (const asset of ASSETS) {
-    const expectedBody = readFileSync(join(pathRoot, 'public/aiden-lab', asset.path), 'utf8');
+    const expectedBody = readFileSync(join(pathRoot, asset.source || 'public/aiden-lab/' + asset.path), 'utf8');
     const url = verifiedOrigin + '/aiden-lab/' + asset.path;
     try {
       const r = await fetcher(url, {
@@ -79,7 +81,8 @@ export async function runPublicCanary({origin = DEFAULT_ORIGIN, fetcher = fetch,
       receipt.assets.push(assessAsset({
         status: r.status, finalUrl: r.url,
         contentType: r.headers.get('content-type'),
-        programMarker: r.headers.get('x-evercraft-static-program'), body
+        programMarker: r.headers.get('x-evercraft-static-program'),
+        learningMarker: r.headers.get('x-evercraft-learning-world'), body
       }, asset, expectedBody, verifiedOrigin));
     } catch (error) {
       receipt.assets.push({
