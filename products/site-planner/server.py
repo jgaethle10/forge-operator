@@ -175,7 +175,7 @@ class Handler(BaseHTTPRequestHandler):
         self.send_header('Referrer-Policy','no-referrer')
         self.send_header('X-Frame-Options','DENY')
         self.send_header('Cache-Control','no-store')
-        self.send_header('Content-Security-Policy',"default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'")
+        self.send_header('Content-Security-Policy',"default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; object-src 'none'; base-uri 'none'; frame-ancestors 'none'")
         for k,v in (extra or {}).items():self.send_header(k,v)
         self.end_headers()
         self.wfile.write(body)
