@@ -4,23 +4,21 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import {createNotificationClient} from '../notification-fabric/client.mjs';
+import {normalizeStudioProject} from './studio-offer-contract.mjs';
 
 const REF=/^EC-STUDIO-[A-F0-9]{20}$/;
-const PROJECTS=new Set([
-  '$50 launch-week 30-second social commercial pilot',
-  'Product launch commercial','Brand story / ad campaign','Social video creative','Something else'
-]);
 const baseDir=()=>process.env.EVERCRAFT_STUDIO_LEADS_DIR||path.join(os.homedir(),'.local','state','evercraft','studio-leads');
 function privateDir(dir){
   fs.mkdirSync(dir,{recursive:true,mode:0o700});
   if(fs.lstatSync(dir).isSymbolicLink())throw Error('studio_notification_symlink');
 }
 export function enqueueStudioAlert({folder=baseDir(),reference,project,received_at}){
-  if(!REF.test(String(reference||''))||!PROJECTS.has(project)||!Number.isFinite(Date.parse(received_at)))throw Error('invalid_studio_notification_source');
+  if(!REF.test(String(reference||''))||!normalizeStudioProject(project)||!Number.isFinite(Date.parse(received_at)))throw Error('invalid_studio_notification_source');
   const alerts=path.join(folder,'alert-outbox');
   privateDir(folder);privateDir(alerts);
   const queued=path.join(alerts,reference+'.json');
-  const payload={schema:'evercraft.studio.operator-alert.v1',reference,project,received_at,
+  const payload={schema:'evercraft.studio.operator-alert.v1',reference,
+    project:normalizeStudioProject(project),received_at,
     status:'PENDING_RELAY_DISPATCH',pii_stored:false};
   // One private entry per accepted lead, no raw name/email/brief text/IP.
   try{fs.writeFileSync(queued,JSON.stringify(payload)+'\n',{flag:'wx',mode:0o600});}
@@ -28,7 +26,7 @@ export function enqueueStudioAlert({folder=baseDir(),reference,project,received_
   return {queued:true,reference};
 }
 export function alertIntent(entry,recipient){
-  if(entry?.schema!=='evercraft.studio.operator-alert.v1'||!REF.test(entry.reference)||!PROJECTS.has(entry.project))throw Error('invalid_studio_notification_record');
+  if(entry?.schema!=='evercraft.studio.operator-alert.v1'||!REF.test(entry.reference)||!normalizeStudioProject(entry.project))throw Error('invalid_studio_notification_record');
   if(!/^[A-Za-z0-9][A-Za-z0-9_.:-]{1,127}$/.test(String(recipient||'')))throw Error('studio_owner_principal_invalid');
   return {
     schema:'systemia.notification.intent.v2',
@@ -36,7 +34,7 @@ export function alertIntent(entry,recipient){
     purpose:'operational',
     priority:'high',
     title:'New commercial production inquiry',
-    body:`A commercial brief for ${entry.project} was received. Reference: ${entry.reference}. Review it in the private Studio intake ledger before replying or quoting.`,
+    body:`A commercial brief for ${normalizeStudioProject(entry.project)} was received. Reference: ${entry.reference}. Review it in the private Studio intake ledger before replying or quoting.`,
     recipient_ids:[recipient],
     evidence_state:'recorded_in_private_studio_intake',
     dedupe_key:'studio:'+entry.reference,
