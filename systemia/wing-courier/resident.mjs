@@ -10,7 +10,7 @@ function fail(s){throw Error('wing_resident_'+s)}
 function readConfig(file){
  const st=fs.lstatSync(file);if(!st.isFile()||st.isSymbolicLink()||(st.mode&0o077))fail('config_not_private');
  const cfg=JSON.parse(fs.readFileSync(file,'utf8'));
- for(const x of ['baseUrl','receiveTokenFile','wing','destinationDir','receiverPrivateKeyFile'])
+ for(const x of ['baseUrl','receiveTokenFile','wing','destinationDir','receiverPrivateKeyFile','receiverSigningKeyFile'])
   if(!cfg[x])fail('config_'+x+'_missing');
  if(!cfg.senderVerifyPublicKeys||typeof cfg.senderVerifyPublicKeys!=='object')fail('trusted_senders_missing');
  return cfg;
@@ -34,6 +34,7 @@ export async function cycle({config,admit=true}={}){
  const pull=await pollWingInbox({baseUrl:config.baseUrl,tokenFile:config.receiveTokenFile,
   wing:config.wing,destinationDir:config.destinationDir,
   receiverPrivateKeyFile:config.receiverPrivateKeyFile,
+  receiverSigningKeyFile:config.receiverSigningKeyFile,
   senderVerifyPublicKeys:config.senderVerifyPublicKeys});
  const admission={attempted:0,offered:0,pending:0,errors:[]};
  if(admit && config.intakeStateDir && config.passportStateDir){
