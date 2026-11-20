@@ -182,6 +182,8 @@ test('full-stage living canopies are scenic, not artificial source activity',()=
  assert.ok(visual.includes('Living canopy V4'));
  assert.ok(visual.includes('NOT model neurons, inference events'));
  assert.ok(visual.includes('Long atmospheric curtains'));
+ assert.ok(visual.includes('Five translucent wings give the neural landscape a visual body'));
+ assert.ok(visual.includes('const opacity=chosen?.74:.41'));
  assert.ok(visual.includes('small?8:12'),'atmospheric curtain budget');
  assert.ok(visual.includes('if(small&&stem.index%3===2)continue'),'phone stem budget');
  assert.ok(visual.includes('small?(branch===0?12:7)'),'phone stroke tessellation budget');
