@@ -104,3 +104,24 @@ test('candidate check holds if compliance or fulfillment is missing, never sends
  assert.equal(good.ready_to_send,false);
  assert.equal(good.must_recheck_passport_ledger_and_gmail_before_send,true);
 });
+
+test('two agents cannot treat an unsent shared buyer as two independent cold prospects',()=>{
+ const r=reconcileGmailOutreach(args({prospects:[
+  prospect({prospect_key:'agent-grok-target',business_email:'buyer@shared.example'}),
+  prospect({prospect_key:'agent-harbor-target',business_email:'BUYER@SHARED.EXAMPLE'})
+ ]}));
+ assert.equal(r.prospects.length,2);
+ assert.equal(r.prospects.filter(p=>p.actionable_as_new_cold_target).length,1);
+ assert.ok(r.prospects[1].reasons.includes('duplicate_contact_across_agents'));
+});
+test('same opportunity with a second verified company mailbox cannot evade existing Gmail contact history',()=>{
+ const sent=email('existing','owner@company.example');
+ const r=reconcileGmailOutreach(args({messages:[sent],prospects:[
+  prospect({prospect_key:'one-project',business_email:'new@company.example'}),
+  prospect({prospect_key:'one-project',business_email:'owner@company.example'})
+ ]}));
+ assert.equal(r.prospects.filter(p=>p.actionable_as_new_cold_target).length,0);
+ assert.equal(r.prospects[0].last_contact_ref,'gmail:mail-existing');
+ assert.ok(r.prospects[0].reasons.includes('prior_contact_reconcile_before_new_outreach'));
+ assert.ok(r.prospects[1].reasons.includes('duplicate_opportunity_across_agents'));
+});
