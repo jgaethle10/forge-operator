@@ -115,6 +115,9 @@ class KennedyHandler(site_planner.Handler):
                     "aerial_image_upload_integrated": True,
                     "aerial_upload_mode": "private_operator_json_png_only",
                     "aerial_sources_export_authorized": False,
+                    "private_two_sheet_operator_review": True,
+                    "private_review_human_qa_completed": False,
+                    "real_aerial_customer_export": False,
                     "aerial_underlay_sheet_export": False,
                     "s0_a0_two_sheet_compiler": False,
                     "historical_site_report_parity": False,
@@ -199,6 +202,41 @@ class KennedyHandler(site_planner.Handler):
 
     def do_POST(self):
         path = urlsplit(self.path).path
+        m = re.fullmatch(r"/api/kss/sites/([A-Za-z0-9_-]+)/studies/([A-Za-z0-9_-]+)/private-review", path)
+        if m:
+            if not self.authorized():
+                return
+            try:
+                site_id,study_id=m.groups()
+                validate_site_and_report(site_id)
+                raw=self.body()
+                site_source_id=raw.get("site_source_id")
+                context_source_id=raw.get("context_source_id")
+                if not all(isinstance(x,str) and re.fullmatch(r"AIR-[A-F0-9]{20}",x)
+                           for x in (site_source_id,context_source_id)):
+                    raise sheet_compiler.SheetError("two_saved_aerial_source_ids_required")
+                if site_source_id==context_source_id:
+                    raise sheet_compiler.SheetError("distinct_site_and_context_sources_required")
+                study=SPATIAL.get(site_id,study_id)
+                site_receipt,site_png=AERIAL.get(site_id,site_source_id,include_bytes=True)
+                context_receipt,context_png=AERIAL.get(site_id,context_source_id,include_bytes=True)
+                with site_planner.connect() as db:
+                    row=db.execute("SELECT address FROM sites WHERE id=?",(site_id,)).fetchone()
+                if row is None:
+                    raise LookupError("site_not_found")
+                doc=sheet_compiler.compile_two_sheet_private_review(
+                    study,site_png,site_receipt,context_png,context_receipt,row["address"])
+                return self.send(200,doc,"application/pdf",
+                    {"Content-Disposition":
+                     f'attachment; filename="kennedy-private-review-{study_id}.pdf"'})
+            except LookupError as exc:
+                return self.bad(str(exc),404)
+            except (sheet_compiler.SheetError,spatial.StudyError,
+                    aerial_vault.SourceError,raster_registration.RegistrationError,
+                    ValueError) as exc:
+                return self.bad(str(exc),422)
+            except sqlite3.Error:
+                return self.bad("private_source_review_unavailable",500)
         m = re.fullmatch(r"/api/kss/sites/([A-Za-z0-9_-]+)/aerial-sources", path)
         if m:
             if not self.authorized():
