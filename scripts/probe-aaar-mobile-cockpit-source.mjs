@@ -137,6 +137,45 @@ try{
  assert.ok(cityMetrics.terrainPolygons>300,'Seattle synthetic terrain not painted');
  assert.ok(cityMetrics.city.visible>=3,'city buildings not visible in flight camera');
  assert.ok(cityMetrics.renderCostMs<550,'Seattle Canvas2D was too expensive even in browser emulation');
+ // Compare every sampled indexed contact with the former full-city scan.
+ // This checks both missed buildings and accidental hits, including cell edges.
+ const collisionQA=await cityPage.evaluate(()=>{
+  const city=window.AAARSeattle;
+  const targets=city.buildings.concat(city.landmarks.filter(l=>l.type!=='wheel'));
+  const reference=(x,y,z)=>targets.find(b=>{
+   const g=city.ground(b.x,b.z);
+   return Math.abs(x-b.x)<b.w/2+3&&Math.abs(z-b.z)<b.d/2+3&&
+     y<g+b.h+2&&y>g-10;
+  })||null;
+  let checks=0,maxCandidates=0,totalCandidates=0;
+  const sample=(x,y,z)=>{
+   const got=city.collisionAt(x,y,z);
+   const expected=reference(x,y,z);
+   const candidates=city.collisionCandidates(x,z);
+   maxCandidates=Math.max(maxCandidates,candidates.length);
+   totalCandidates+=candidates.length;
+   checks++;
+   if(got!==expected)throw Error('indexed_collision_mismatch_'+checks);
+  };
+  for(let i=0;i<targets.length;i+=3){
+   const b=targets[i],g=city.ground(b.x,b.z);
+   sample(b.x,g+b.h*.50,b.z);
+   sample(b.x+b.w/2+2.9,g+b.h*.5,b.z);
+   sample(b.x+b.w/2+3.1,g+b.h*.5,b.z);
+   sample(b.x,g+b.h+2.1,b.z);
+  }
+  for(let i=0;i<500;i++){
+   const x=Math.sin(i*82.3)*1900,z=Math.cos(i*51.7)*2000;
+   sample(x,Math.abs(i*53)%390,z);
+  }
+  return {checked:checks,total:targets.length,maxCandidates,
+   avgCandidates:totalCandidates/checks,gridMeters:city.collisionCellSize,
+   distantCandidates:city.collisionCandidates(9000,9000).length};
+ });
+ assert.ok(collisionQA.checked>1000,'insufficient collision parity samples');
+ assert.ok(collisionQA.avgCandidates<collisionQA.total*.20,'grid index failed to reduce candidate scans');
+ assert.ok(collisionQA.maxCandidates<collisionQA.total*.45,'hotspot cell still scans most city buildings');
+ assert.equal(collisionQA.distantCandidates,0,'empty map regions should not scan city obstacles');
  const physics=await cityPage.evaluate(()=>{
   const core=window.AAARFlight,s=core.start('trainer');
   for(let i=0;i<20;i++)core.step(s,{bank:1,pitch:0,throttle:0,rudder:0},.05);
@@ -151,7 +190,7 @@ try{
  receipts.push({city:'Seattle stylized GIS scene',official_footprints:geo.footprints,
   landmarks:geo.landmarks.length,canvas_buildings_visible:cityMetrics.city.visible,
   city_terrain_polygons:cityMetrics.terrainPolygons,city_render_ms:+cityMetrics.renderCostMs.toFixed(1),
-  city_opened_direct_url:true,flight_started:true,bank_load_factor:physics.g,city_is_not_validated:true});
+  city_opened_direct_url:true,flight_started:true,bank_load_factor:physics.g,collision_parity_checks:collisionQA.checked,collision_average_candidates:+collisionQA.avgCandidates.toFixed(1),collision_total_targets:collisionQA.total,collision_grid_meters:collisionQA.gridMeters,city_is_not_validated:true});
  await cityPage.close();
  // Laptop flight must initialize Seattle without silently disabling Start.
  const desktopContext=await browser.newContext({viewport:{width:1366,height:768},isMobile:false,hasTouch:false});
