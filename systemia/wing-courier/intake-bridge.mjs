@@ -2,6 +2,7 @@
 // The verified files themselves stay private at the destination; this emits inert metadata only.
 import path from 'node:path';
 import crypto from 'node:crypto';
+import {projectOneCompanyCourierHandoff} from '../one-company/courier-handoff.mjs';
 import {EvercraftIntakeFabric} from '../intake-fabric/intake.mjs';
 const ID=/^[a-f0-9]{32}$/,HEX=/^[a-f0-9]{64}$/i,WING=/^[a-z][a-z0-9-]{1,47}$/;
 function fail(s){throw Error('wing_intake_'+s)}
@@ -47,7 +48,7 @@ export function offerVerifiedWingReceiptToSystemia({receipt,intakeStateDir,passp
  const candidate=candidateForVerifiedWingReceipt({receipt,adapterActorRef});
  const intake=new EvercraftIntakeFabric({stateDir:intakeStateDir,passportStateDir});
  const result=intake.ingest(candidate); // Passport must authorize intake.write.agent for adapterActorRef
- return {
+ const handoff={
   schema:'evercraft.wing-courier.intake-handoff.v1',
   packageId:receipt.id,
   intakeState:result.state,
@@ -55,4 +56,11 @@ export function offerVerifiedWingReceiptToSystemia({receipt,intakeStateDir,passp
   intakeReceiptHash:result.receipt?.receipt_hash||null,
   admissionGranted:false,executionGranted:false,customerDeliveryGranted:false
  };
+ // The real receiver rehashes exact custody before calling this gateway.
+ // Multi-specialist output is PRIVATE, READ-ONLY PLANNING, never execution.
+ if(receipt.privateCustodyVerified===true &&
+    receipt.fromWing==='harbor'&&receipt.toWing==='fallen'&&receipt.kind==='media'){
+  handoff.oneCompanyPlan=projectOneCompanyCourierHandoff({receipt,intake:handoff});
+ }
+ return handoff;
 }
