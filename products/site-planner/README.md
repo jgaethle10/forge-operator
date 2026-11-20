@@ -137,7 +137,7 @@ python3 -m unittest discover -v
 
 ## v1.5 commercial quote safety gate
 
-**Site Planner does not have an approved Stripe/Payments checkout offer.** The
+**Site Planner has a dedicated provisional Stripe product and inactive payment link, but still does not have an approved/active checkout or verified payment-to-fulfillment bridge.** The
 canonical `public/mesh/checkout-ready/verified-links.json` lists seven other
 products; none is a Site Planner preliminary plan. Do not reuse those products'
 checkout receipts to claim this product is paid.
@@ -186,3 +186,18 @@ is configured. The authentication model is not customer-ready. This is not a
 substitute for real tenancy, permissions, CSRF controls, secure upload
 processing or signed customer shares. Do not place it behind a public reverse
 proxy or port-forward its loopback listener.
+
+## v1.6: Separate live Stripe catalog entries, checkout held
+
+On Evercraft LLC's **live** Stripe account, the dedicated founding-pilot objects were created and independently read back:
+
+- Product: `prod_Vf1uyMq3FiZRfB` (inactive).
+- One-time price: `price_1Udhqa5rgRECaZMDsK7sstdv` ($499 USD, provisional).
+- Payment link: `plink_1UdhsM5rgRECaZMDczQW5JTr` (inactive).
+- Product key: `evercraft-site-planner-concept-pilot-v1`.
+- Product scope: one property, evidence-labeled non-stamped EV charger site concept and PDF, one revision after scope acceptance; no certified engineering or permits.
+- Managed Payments explicitly disabled for this bespoke service link; automatic tax was also disabled. **Obtain the correct tax classification/collection setup before activation.**
+
+The ID-only `stripe_pilot.json` is a **read-only recorded snapshot** of Stripe objects. It carries no credentials and does not prove current link state, a customer payment, a webhook event, or a released job. The local readiness API displays this as a prepared catalog with an INACTIVE checkout and keeps `checkout_configured=false`, `payment_verification_connected=false`, and `commercial_release_allowed=false`.
+
+Do not enable the link or share it for paid intake until the pilot price/scope, tax, identity, authorized customer data, private Stripe provider-receipt verification, refunds, scope/capacity approvals, and signed Systemia dispatch are implemented and tested. The link was created separately, not by editing seven other offers.
