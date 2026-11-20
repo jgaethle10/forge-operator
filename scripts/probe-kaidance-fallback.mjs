@@ -54,8 +54,11 @@ export async function probeKaidanceFallback({root,fetchImpl=fetch,now=new Date()
     !html.includes('id="signalRiver"') || !html.includes('id="signalSpotlight"') ||
     !html.includes('class="brand-symbol" src="./mark.svg"'))throw Error('fallback_signal_wall_missing');
  if(!results['mark.svg'].text.includes('<title id="title">Kaidance</title>'))throw Error('fallback_kaidance_brand_missing');
- if(!results['current-field.mjs'].text.includes("from './field-chapters.mjs'"))throw Error('fallback_chapter_import_missing');
- if(!results['current-field.mjs'].text.includes('CONFLUENCE FIELD V05')||
+ if(!results['current-field.mjs'].text.includes("from './field-chapters.mjs'")||
+    !results['current-field.mjs'].text.includes("from './field-topology.mjs'"))throw Error('fallback_chapter_import_missing');
+ if(!results['field-topology.mjs'].text.includes('CONFLUENCE_CONNECTIONS')||
+    !results['field-topology.mjs'].text.includes('SCENIC_ROUTES'))throw Error('fallback_field_topology_missing');
+ if(!results['current-field.mjs'].text.includes('CONFLUENCE FIELD V07')||
     !results['confluence.css'].text.includes('KAIDANCE V04')||
     !results['field-chapters.mjs'].text.includes('SCENIC_LEG_SECONDS'))throw Error('fallback_current_field_assets_missing');
  if(!html.includes('id="fieldRouteProgress"')||!html.includes('id="fieldRecordTopic"'))throw Error('fallback_story_choreography_missing');
