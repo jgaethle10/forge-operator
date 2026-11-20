@@ -78,7 +78,7 @@ def static_page(private_html):
     end=text.index(old_end,start)
     replace=StringLiteralLoadRecords
     text=text[:start]+replace+text[end:]
-    if re.search(r'''(?:fetch\\(['"]/(?:api|data)/|(?:href|src)=["']/(?:vendor|advanced))''',text):
+    if re.search(r'''(?:fetch\(['"]/(?:api|data)/|(?:href|src)=["']/(?:vendor|advanced))''',text):
         raise ValueError("Old root-absolute preview path remains after static export")
     if "<script src=\"./vendor/leaflet.js\"></script>" not in text:
         raise ValueError("Self-hosted map engine was not retained")
