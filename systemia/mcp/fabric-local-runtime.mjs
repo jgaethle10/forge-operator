@@ -231,6 +231,19 @@ function resolveDemoAsset(demoDir, requestUrl) {
   return target;
 }
 
+function resolveHudsonAsset(hudsonDir,requestUrl) {
+  const pathname=new URL(String(requestUrl||''),'http://fabric.local').pathname;
+  const name=pathname==='/hudson/'||pathname==='/hudson/index.html'?'index.html':
+    pathname==='/hudson/activity.json'?'activity.json':null;
+  if(!name)return null;
+  const file=path.join(hudsonDir,name);
+  try {
+    const stat=fs.lstatSync(file);
+    if(stat.isSymbolicLink()||!stat.isFile()||stat.size>350000)return null;
+    return file;
+  }catch{return null}
+}
+
 function buildVisualDeskMirror({moduleDir,outputDir,origin}) {
   const storiesDir=path.resolve(moduleDir,'../visual-desk/stories');
   const campaignsDir=path.resolve(moduleDir,'../graphics-command/campaigns');
@@ -617,6 +630,7 @@ export async function startFabricLocalRuntime({
   const moduleDir=path.dirname(fileURLToPath(import.meta.url));
   const pluginDir=path.resolve(moduleDir,'../../plugins/evercraft-fabric');
   const journalDir=path.resolve(moduleDir,'../../public/journal');
+  const hudsonDir=path.resolve(moduleDir,'../../public/hudson');
   const romanCampaignFile=path.resolve(moduleDir,'../../public/campaigns/roman/index.html');
   const romanPointerFile=path.resolve(moduleDir,'../../public/campaigns/roman/continuity.json');
   const romanCampaignPresent=()=>fs.existsSync(romanCampaignFile);
@@ -755,6 +769,9 @@ export async function startFabricLocalRuntime({
     roman_emergency_mirror_ready:romanCampaignPresent(),
     roman_emergency_mirror_owner_review_required:true,
     roman_domain_dns_cutover_verified:false,
+    hudson_public_path:'/hudson/',
+    hudson_public_source_ready:fs.existsSync(path.join(hudsonDir,'index.html')),
+    hudson_public_feed_authority:'public_git_source_history_only',
     journal_mirror_path:'/journal/',
     journal_mirror_ready:fs.existsSync(path.join(journalDir,'index.html')),
     journal_mirror_indexing:'index_follow_canonical_public_origin',
@@ -1678,6 +1695,33 @@ export async function startFabricLocalRuntime({
           if(req.method==='HEAD')return res.end();
           return res.end(payload);
         }
+      }
+
+      if((req.method==='GET'||req.method==='HEAD') &&
+         new URL(String(req.url||''),'http://fabric.local').pathname==='/hudson'){
+        res.writeHead(308,{'location':'/hudson/','cache-control':'no-store'});
+        return res.end();
+      }
+      if((req.method==='GET'||req.method==='HEAD') &&
+         new URL(String(req.url||''),'http://fabric.local').pathname.startsWith('/hudson/')){
+        const asset=resolveHudsonAsset(hudsonDir,String(req.url||''));
+        if(!asset)return sendJson(res,404,{error:'hudson_public_asset_not_found'});
+        const body=fs.readFileSync(asset);
+        const isHtml=path.basename(asset)==='index.html';
+        res.writeHead(200,{
+          'content-type':isHtml?'text/html; charset=utf-8':'application/json; charset=utf-8',
+          'content-length':body.length,
+          'cache-control':isHtml?'public, max-age=60, must-revalidate':'no-store',
+          'x-content-type-options':'nosniff',
+          'x-frame-options':'DENY',
+          'referrer-policy':'no-referrer',
+          'permissions-policy':'camera=(), microphone=(), geolocation=()',
+          'content-security-policy':isHtml
+            ?"default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src 'self'; img-src 'self' data:; base-uri 'none'; frame-ancestors 'none'; form-action 'none'"
+            :"default-src 'none'; frame-ancestors 'none'",
+        });
+        if(req.method==='HEAD')return res.end();
+        return res.end(body);
       }
 
       if ((req.method==='GET'||req.method==='HEAD') && String(req.url||'').startsWith('/journal')) {

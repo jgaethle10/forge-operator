@@ -20,7 +20,7 @@ On an Evercraft-owned Linux node, from the canonical clone, run:
     node --test systemia/hudson/publish-public-snapshot.test.mjs
     node systemia/hudson/publish-public-snapshot.mjs --repo /path/to/forge-operator --out /owned/public/root/hudson/activity.json
 
-Serve the HTML and generated JSON together at /hudson/ on the same owned HTTPS origin. Run the publisher from a Systemia-approved owned node timer every 30 to 60 seconds. If it is not configured the last snapshot will become delayed. Neither a GitHub commit nor a pull request proves a deployed live public feed.
+The owned Fabric runtime now has an explicit, strictly allowlisted /hudson/ and /hudson/activity.json route. Serve the HTML and generated JSON together at /hudson/ on the same owned HTTPS origin; run this command before a release: node --test tests/hudson-owned-fabric-route.test.mjs. Run the publisher from a Systemia-approved owned node timer every 30 to 60 seconds. If it is not configured the last snapshot will become delayed. Neither a GitHub commit nor a pull request proves a deployed live public feed.
 
 No Base44, DigitalOcean, TinyFish, or other third-party app runtime is necessary.
 
