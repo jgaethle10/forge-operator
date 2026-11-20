@@ -48,7 +48,7 @@ export async function buildFaieSiteScan({
   const nextChecks=[
     'Confirm exact property boundary, ownership, zoning, and permitted use with the appropriate authority.',
     'Verify legal water rights, irrigation district allocations and actual seasonal supply for this parcel.',
-    'Obtain an on-site soil assessment for the intended crops, drainage and construction requirements.',
+    'Obtain an on-site field soil assessment for the intended crops, drainage and construction requirements.',
     'Confirm utility service capacity, connection costs, energy tariffs and outage resilience with providers.',
     'Validate truck access, road restrictions, labor availability and actual local operating costs.',
     'Check long-term climate normals and historical extremes. A short forecast is not climate history.'
