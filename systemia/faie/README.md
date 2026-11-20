@@ -158,6 +158,21 @@ Pilot acceptance gate:
 - one-click Yakima Valley food-infrastructure scope is available on the real UI
 - human review remains required before consequential action
 
+### FAIE V12 point-operating site scan
+
+The public, owned-Evercraft `POST /api/faie/site/scan` is a **user-initiated, point-scoped** scan. It combines **two distinct official products** without treating them as one fake confidence score:
+
+1. **USDA NRCS Soil Data Access / SSURGO**: mapped survey map units, source update date, farmland classification, major components and slope. `REPORTED` mapped survey evidence, never current site soil sampling.
+2. **NOAA National Weather Service**: `/points/{latitude},{longitude}` discovery followed by an **allowlisted** `api.weather.gov/gridpoints/{office}/{x},{y}/forecast` URL. Includes issued-at timestamp, up to 14 future forecast periods and short operating-window screening cues for temperature >=95°F, temperature <=32°F, rain probability >=60%, and wind max >=25 mph. `MODELED` forecasts, not observed site weather or crop-specific models.
+
+The website offers a **Run two-source site scan** button alongside the existing soil-only lookup, plus a public sample point (46.6021, -120.5059). It renders evidence, source provenance and dates, transparent heuristic flags, missing inputs, next checks and a downloadable **JSON receipt**. Public point scans cannot infer parcel bounds, ownership, legal water rights, irrigation allocations, zoning, actual field soils, energy tariffs, logistics or profitability, and they do not issue a suitability/investment verdict.
+
+**Authority and safety**: coordinates are explicitly supplied by the visitor and sent to NOAA and USDA; public scan requests are not written to shared FAIE history. All output remains read-only, no automatic publication or decision authority. The shared per-client/global request budget and concurrent upstream call limit apply to soil-only and combined scans. Forecast URLs coming from the official discovery response must pass a strict HTTPS host/path allowlist to prevent remote redirects or SSRF. Missing, stale or failed official feeds remain `unavailable` or `partial_evidence`; two unavailable feeds fail closed. Do not call a partial scan complete.
+
+**Acceptance**: source-specific parser/SSRF/uncertainty tests in `systemia/faie/nws-site-forecast.test.mjs`, source merging in `systemia/faie/site-scan.test.mjs`, actual owned-edge route tests in `systemia/mcp/fabric-faie-site-scan.test.mjs`, and public release proof `scripts/faie-site-scan-live-acceptance.mjs`. The acceptance script uses only a fixed public sample point; it requires genuine NOAA and USDA responses on the live owned edge.
+
+Official API: https://www.weather.gov/documentation/services-web-api and https://sdmdataaccess.nrcs.usda.gov/WebServiceHelp.aspx.
+
 ### Public mapped-soil point preview
 
 The Evercraft-owned Fabric edge provides `POST /api/faie/soil/preview` for an explicitly supplied latitude/longitude in the contiguous United States. A visitor opens the collapsed "Have a specific location?" panel, enters the coordinates, and submits an opt-in on-demand request. The server performs a bounded read from USDA NRCS Soil Data Access with fixed SQL and capped provider concurrency, checks rate limits, and returns a compact `evercraft.faie.public-soil-preview.v1` response.

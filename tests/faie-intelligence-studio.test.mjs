@@ -132,14 +132,38 @@ test('source ledger shows the last cycle, not a fictional global connection list
 
 test('specific-site USDA soil proof is opt-in, source-backed and separate from regional preview', () => {
   const panel=html.slice(html.indexOf('id="soilPreviewPanel"'),html.indexOf('id="soilPreviewResult"')+200);
-  assert.match(panel,/Have a specific location\? Look up its USDA mapped soils/);
+  assert.match(panel,/Scan a real location: soil \+ weather \+ operational questions/);
   assert.match(panel,/id="soilLatitude"/);
   assert.match(panel,/id="soilLongitude"/);
-  assert.match(panel,/USDA Soil Data Access on demand/);
+  assert.match(panel,/FAIE asks USDA for mapped soil units/);
   assert.match(html,/id="soilPreviewForm"/);
   assert.match(html,/\/api\/faie\/soil\/preview/);
   assert.match(html,/document\.getElementById\('soilPreviewForm'\)\.addEventListener\('submit',runSoilPreview\)/);
-  assert.match(html,/Soil maps are not field tests/);
+  assert.match(html,/Survey mapping is not an on-site soil test/);
   assert.match(html,/data\.request_persisted!==false/);
   assert.match(html,/data\.site_suitability_verdict!==null/);
+});
+
+
+test('site intelligence scanner has simple entry, real source boundaries, and downloadable proof', () => {
+  for(const marker of [
+    'id="heroSiteScanJump"',
+    'id="siteScanRun"',
+    'id="siteScanExample"',
+    'id="siteScanResult"',
+    'id="siteScanDownload"',
+    '/api/faie/site/scan',
+    'Run two-source site scan',
+    'USDA NRCS · Reported',
+    'NOAA NWS · Modeled',
+    'wx.screening_flags',
+    'source_receipts',
+    'data.site_suitability_verdict!==null',
+    'latestSiteScan=data',
+    'evercraft-faie-site-scan.json',
+    'public_lookup_persisted!==false',
+    'Official site scan unavailable'
+  ]) assert.ok(html.includes(marker),'site-scan experience contract missing: '+marker);
+  assert.match(html,/Coordinates go to both official services/);
+  assert.match(html,/No automatic build, farm or investment recommendation/);
 });

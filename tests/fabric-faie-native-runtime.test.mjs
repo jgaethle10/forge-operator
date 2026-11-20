@@ -95,6 +95,15 @@ test('owned Fabric serves FAIE UI, public preview API, and native FAIE MCP witho
 
     assert.match(page,/id="soilPreviewPanel"/);
     assert.match(page,/id="soilPreviewForm"/);
+    assert.match(page,/id="siteScanRun"/);
+    assert.match(page,/id="siteScanExample"/);
+    assert.match(page,/id="siteScanResult"/);
+    assert.match(page,/id="siteScanDownload"/);
+    const absentSite=await fetch(runtime.url+'/api/faie/site/scan',{
+      method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({})
+    });
+    assert.equal(absentSite.status,400,'site scan must reject missing coordinates without calling upstream services');
+
     const missingSoil=await fetch(runtime.url+'/api/faie/soil/preview',{
       method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({})
     });

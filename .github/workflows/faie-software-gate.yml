@@ -8,6 +8,7 @@ on:
       - 'scripts/faie-soil-live-acceptance.mjs'
       - 'systemia/mcp/fabric-faie-runtime.mjs'
       - 'systemia/mcp/fabric-faie-soil-preview.test.mjs'
+      - 'systemia/mcp/fabric-faie-site-scan.test.mjs'
       - 'public/faie/**'
       - 'systemia/sentinel/sources/**'
       - 'systemia/sentinel/region-profile.mjs'
@@ -25,6 +26,7 @@ on:
       - 'scripts/faie-soil-live-acceptance.mjs'
       - 'systemia/mcp/fabric-faie-runtime.mjs'
       - 'systemia/mcp/fabric-faie-soil-preview.test.mjs'
+      - 'systemia/mcp/fabric-faie-site-scan.test.mjs'
       - 'public/faie/**'
       - 'systemia/sentinel/sources/**'
       - 'systemia/sentinel/region-profile.mjs'
@@ -71,6 +73,9 @@ jobs:
 
       - name: FAIE USDA mapped soil public preview source, privacy and rate-limit tests
         run: node --test systemia/mcp/fabric-faie-soil-preview.test.mjs
+
+      - name: FAIE V12 official weather and operational site-scan tests
+        run: node --test systemia/faie/nws-site-forecast.test.mjs systemia/faie/site-scan.test.mjs systemia/mcp/fabric-faie-site-scan.test.mjs
 
       - name: FAIE Saban swarm proof
         run: npm run proof:saban-faie
