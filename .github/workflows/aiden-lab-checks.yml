@@ -3,6 +3,7 @@ name: Aiden's Lab public surface checks
 on:
   pull_request:
     paths:
+      - 'public/apps/infinite-classroom/play/index.html'
       - 'public/aiden-lab/**'
       - 'tests/aiden-lab-public.test.mjs'
       - '.github/workflows/aiden-lab-checks.yml'
