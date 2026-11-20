@@ -568,10 +568,12 @@ function buildMeshes(){
  for(let iz=0;iz<cells;iz++)for(let ix=0;ix<cells;ix++){
   const x=min+span*ix/cells,z=min+span*iz/cells,dx=span/cells,dz=dx;
   const a=[x,terrain(x,z),z],b=[x+dx,terrain(x+dx,z),z],c=[x+dx,terrain(x+dx,z+dz),z+dz],d=[x,terrain(x,z+dz),z+dz];
-  const avg=(a[1]+b[1]+c[1]+d[1])/4,water=Math.hypot((x+1250)/1000,(z-1450)/850)<1;
-  const v=(Math.sin(x*.014+z*.009)*.5+.5),color=water?[.15,.43,.50]:avg>270?[.48,.53,.48]:avg>110?[.31+.06*v,.46+.03*v,.37]:[.28+.08*v,.40+.08*v,.31+.025*v];
+  const avg=(a[1]+b[1]+c[1]+d[1])/4,water=seattle?seattle.water(x,z):Math.hypot((x+1250)/1000,(z-1450)/850)<1;
+  const v=(Math.sin(x*.014+z*.009)*.5+.5),color=seattle?(water?[.10,.34,.48]:[.38+.07*v,.50+.05*v,.44]):water?[.15,.43,.50]:avg>270?[.48,.53,.48]:avg>110?[.31+.06*v,.46+.03*v,.37]:[.28+.08*v,.40+.08*v,.31+.025*v];
   w.quad(a,b,c,d,color);
  }
+ if(seattle)addSeattleWebGL(w);
+ else{
  // Airport: deliberately flat and drawn above synthetic terrain near the center.
  w.quad([-46,8,-940],[46,8,-940],[46,8,980],[-46,8,980],[.14,.19,.22]);
  w.quad([-51,7,-955],[-46,7,-955],[-46,7,995],[-51,7,995],[.78,.73,.60]);
@@ -586,6 +588,7 @@ function buildMeshes(){
   const {x,y,z,h,r,t}=tree;
   w.box(x,y+h*.12,z,2.1,h*.24,2.1,[.35,.34,.25]);
   w.cone(x,y+h*.23,z,r,h,[.12+t*.04,.27+t*.09,.21+t*.06]);
+ }
  }
  // Flight gate rings: original synthetic geometry rather than flight-path authority.
  for(let i=0;i<core.gates.length;i++){
@@ -746,6 +749,73 @@ function drawCedarLake(ctx,project){
  }
  return count;
 }
+/* Seattle buildings from official city GIS footprints; heights and facades synthetic. */
+function addSeattleShapes(quad,project,eye){
+ const candidates=[];
+ for(const b of [...seattle.buildings,...seattle.landmarks.filter(l=>l.type!=='needle'&&l.type!=='wheel')]){
+  const dx=b.x-eye[0],dz=b.z-eye[2];if(dx*dx+dz*dz>2600*2600)continue;
+  const p=project([b.x,seattle.ground(b.x,b.z)+b.h/2,b.z]);
+  if(!p||p.d>2800||p.u<-170||p.u>canvas.width+170)continue;
+  candidates.push({b,d:dx*dx+dz*dz});
+ }
+ candidates.sort((a,b)=>a.d-b.d);let visible=0;
+ const cap=scenePerf.renderCostMs>26?140:scenePerf.renderCostMs>17?250:430;
+ for(const {b} of candidates.slice(0,cap)){
+  const y=seattle.ground(b.x,b.z),h=y+b.h,ax=b.x-b.w/2,bx=b.x+b.w/2,az=b.z-b.d/2,bz=b.z+b.d/2;
+  const tones=b.kind==='tower'?['#587589','#344e67','#90a9ba']:b.kind==='market'?['#b98a68','#a35f58','#d4c4ae']:b.shade>.5?['#5e8191','#385c71','#9bb6ba']:['#a69e96','#767e82','#c1bcb5'];
+  quad([ax,h,az],[bx,h,az],[bx,h,bz],[ax,h,bz],tones[2]);
+  quad([ax,y,az],[bx,y,az],[bx,h,az],[ax,h,az],tones[0]);
+  quad([bx,y,az],[bx,y,bz],[bx,h,bz],[bx,h,az],tones[1]);
+  quad([bx,y,bz],[ax,y,bz],[ax,h,bz],[bx,h,bz],tones[0]);
+  quad([ax,y,bz],[ax,y,az],[ax,h,az],[ax,h,bz],tones[1]);visible++;
+ }
+ const needle=seattle.landmarks.find(l=>l.type==='needle');
+ if(needle){
+  const {x,z}=needle,y=seattle.ground(x,z);
+  const block=(width,height,yCenter,fill)=>{
+   const ax=x-width/2,bx=x+width/2,az=z-width/2,bz=z+width/2,t=yCenter+height/2,b=yCenter-height/2;
+   quad([ax,b,az],[bx,b,az],[bx,t,az],[ax,t,az],fill);
+   quad([bx,b,az],[bx,b,bz],[bx,t,bz],[bx,t,az],fill);
+   quad([ax,t,az],[bx,t,az],[bx,t,bz],[ax,t,bz],fill);
+  };
+  block(9,166,y+83,'#d6e3e5');block(56,10,y+172,'#ddd2b3');block(42,7,y+180,'#6b8b96');block(3,28,y+192,'#eff1e9');
+ }
+ return {visible,source:seattle.buildings.length};
+}
+function labelSeattleLandmarks(ctx,project,w,h){
+ let count=0;
+ for(const l of seattle.landmarks){
+  const p=project([l.x,seattle.ground(l.x,l.z)+l.h+16,l.z]);
+  if(!p||p.d>2700||p.u<25||p.u>w-25||p.v<20||p.v>h-50)continue;
+  ctx.save();ctx.font='bold 11px system-ui';ctx.textAlign='center';
+  const label=l.name.toUpperCase(),width=Math.min(w-32,ctx.measureText(label).width+18);
+  ctx.fillStyle='#061c2de0';ctx.fillRect(p.u-width/2,p.v-19,width,23);
+  ctx.strokeStyle='#ebbd84';ctx.strokeRect(p.u-width/2,p.v-19,width,23);
+  ctx.fillStyle='#fff4d9';ctx.fillText(label,p.u,p.v-4);ctx.restore();
+  if(++count>=6)break;
+ }return count;
+}
+function addSeattleWebGL(b){
+ for(const t of seattle.buildings){
+  const y=seattle.ground(t.x,t.z),c=t.shade>.55?[.35,.52,.60]:[.63,.62,.58];
+  b.box(t.x,y+t.h/2,t.z,t.w,t.h,t.d,c);
+ }
+ for(const l of seattle.landmarks){
+  const y=seattle.ground(l.x,l.z);
+  if(l.type==='needle'){
+   b.box(l.x,y+84,l.z,8,168,8,[.80,.88,.88]);
+   b.box(l.x,y+173,l.z,58,11,58,[.85,.72,.51]);
+   b.box(l.x,y+181,l.z,42,9,42,[.32,.56,.65]);
+   b.cone(l.x,y+197,l.z,2,24,[.86,.89,.90]);
+  }else if(l.type==='wheel'){
+   for(let j=0;j<40;j++){const a=j*Math.PI/20,q=(j+1)*Math.PI/20,r=27;
+    b.quad([l.x+r*Math.cos(a),y+32+r*Math.sin(a),l.z],
+      [l.x+r*Math.cos(q),y+32+r*Math.sin(q),l.z],
+      [l.x+(r-3)*Math.cos(q),y+32+(r-3)*Math.sin(q),l.z],
+      [l.x+(r-3)*Math.cos(a),y+32+(r-3)*Math.sin(a),l.z],[.94,.81,.60]);}
+  }else b.box(l.x,y+l.h/2,l.z,l.w,l.h,l.d,l.type==='tower'?[.26,.42,.53]:[.65,.62,.57]);
+ }
+}
 function render2D(){
  const dpi=Math.min(window.devicePixelRatio||1,1.25),w=Math.round(canvas.clientWidth*dpi),h=Math.round(canvas.clientHeight*dpi);
  if(!w||!h)return;if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;}
@@ -767,27 +837,30 @@ function render2D(){
  scenePerf.cloudsVisible=drawCedarClouds(ctx,project,focal,w,h);
  function quad(a,b,c,d,color){const ps=[a,b,c,d].map(project);if(ps.some(q=>!q))return;const avg=ps.reduce((t,q)=>t+q.d,0)/4;if(avg>8500)return;shapes.push({avg,pts:ps,color});}
  const shapes=[];
- const ground=core.groundHeight,step=260,rx=Math.floor(state.x/step)*step,rz=Math.floor(state.z/step)*step;
+ const ground=core.groundHeight,step=seattle?180:260,rx=Math.floor(state.x/step)*step,rz=Math.floor(state.z/step)*step;
  for(let a=-15;a<=15;a++)for(let b=-16;b<=20;b++){
   const X=rx+a*step,Z=rz+b*step,t=[X,ground(X,Z),Z],u=[X+step,ground(X+step,Z),Z],v=[X+step,ground(X+step,Z+step),Z+step],q=[X,ground(X,Z+step),Z+step];
-  const avg=(t[1]+u[1]+v[1]+q[1])/4,water=Math.hypot((X+1250)/1000,(Z-1450)/850)<1;
+  const avg=(t[1]+u[1]+v[1]+q[1])/4,water=seattle?seattle.water(X,Z):Math.hypot((X+1250)/1000,(Z-1450)/850)<1;
   const slope=Math.abs(t[1]-v[1])/step,variation=cedarHash(a+Math.floor(rx/step),b+Math.floor(rz/step));
-  const col=water?(variation>.5?'#3b7c87':'#417f87'):avg>275?'#89948a':avg>115?(slope>.12?'#708477':variation>.45?'#577b6c':'#658779'):slope>.12?'#6b8475':variation>.66?'#497868':variation>.32?'#628c77':'#588171';
+  const col=seattle?(water?'#296b80':variation>.5?'#80998f':'#68867d'):water?(variation>.5?'#3b7c87':'#417f87'):avg>275?'#89948a':avg>115?(slope>.12?'#708477':variation>.45?'#577b6c':'#658779'):slope>.12?'#6b8475':variation>.66?'#497868':variation>.32?'#628c77':'#588171';
   quad(t,u,v,q,col);
  }
  // Airport and strips, laid out as in the WebGL valley.
- quad([-46,8,-940],[46,8,-940],[46,8,980],[-46,8,980],'#2b3c47');
+ if(!seattle){quad([-46,8,-940],[46,8,-940],[46,8,980],[-46,8,980],'#2b3c47');
  for(let Z=-875;Z<900;Z+=115)quad([-3,9,Z],[3,9,Z],[3,9,Z+52],[-3,9,Z+52],'#ede0af');
  for(let j=0;j<6;j++){const X=140+j*55,Z=-620+j*84;quad([X-17,49,Z-27],[X+17,49,Z-27],[X+17,49,Z+27],[X-17,49,Z+27],'#d5e2d7');}
+ }
+ if(seattle)scenePerf.city=addSeattleShapes(quad,project,eye);
  shapes.sort((a,b)=>b.avg-a.avg);
  for(const shape of shapes){const q=shape.pts;ctx.beginPath();ctx.moveTo(q[0].u,q[0].v);q.slice(1).forEach(p=>ctx.lineTo(p.u,p.v));ctx.closePath();ctx.fillStyle=shape.color;ctx.fill();}
  scenePerf.terrainPolygons=shapes.length;
- scenePerf.waterGlints=drawCedarLake(ctx,project);
- scenePerf.treesVisible=drawCedarPines(ctx,project,eye,focal,w,h);
+ scenePerf.waterGlints=seattle?0:drawCedarLake(ctx,project);
+ scenePerf.treesVisible=seattle?0:drawCedarPines(ctx,project,eye,focal,w,h);
  // Rounded mountain skyline and a thin light haze layer in the far distance.
  ctx.save();ctx.globalAlpha=.18;const haz=ctx.createLinearGradient(0,h*.48,0,h*.84);haz.addColorStop(0,'#e4ddaf');haz.addColorStop(1,'#daeac500');ctx.fillStyle=haz;ctx.fillRect(0,h*.42,w,h*.4);ctx.restore();
  // World training gates are projected in 3D; draw ring paths with depth-sensitive line weight.
  core.gates.forEach((g,i)=>{const p=project([g.x,g.y,g.z]);if(!p)return;const r=52*focal/p.d;if(r<2||r>h*6)return;ctx.save();ctx.globalAlpha=i<state.checkpoints?.22:.92;ctx.lineWidth=Math.min(6,Math.max(1,3.2*focal/p.d));ctx.strokeStyle=i<state.checkpoints?'#b2dec4':i===state.checkpoints?'#ffbf77':'#a6f3db';ctx.shadowColor=ctx.strokeStyle;ctx.shadowBlur=17;ctx.beginPath();ctx.ellipse(p.u,p.v,r,r,0,0,Math.PI*2);ctx.stroke();ctx.restore();});
+ if(seattle)scenePerf.cityLabels=labelSeattleLandmarks(ctx,project,w,h);
  // Aircraft follows the 3D flight state; cockpit view hides the chase airplane.
  if(view!=='cockpit'&&state.craft==='custom'){drawCustom2D(ctx,w,h,state.design,state.bank);}
  else if(view!=='cockpit'){
