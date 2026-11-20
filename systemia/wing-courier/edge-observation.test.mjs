@@ -35,7 +35,7 @@ test('wrong service body cannot impersonate owned Fabric',async()=>{
 test('malformed and oversized responses fail closed',async()=>{
  const malformed=await observeCourierEdgePrerequisite({fetchImpl:fake(200,'{bad json')});
  assert.equal(malformed.reason,'health_invalid_json');
- const big=await observeCourierEdgePrerequisite({fetchImpl:fake(200,'x'.repeat(5000))});
+ const big=await observeCourierEdgePrerequisite({fetchImpl:fake(200,'x'.repeat(129*1024))});
  assert.equal(big.reason,'oversized_health_response');
 });
 test('blocked external network is recorded, not misrepresented as an active owned edge',async()=>{
