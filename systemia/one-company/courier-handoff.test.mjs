@@ -16,7 +16,7 @@ const receipt=(names=['camera-original.mov','logo.png'])=>({
 const intake=()=>({
  schema:'evercraft.wing-courier.intake-handoff.v1',packageId:ID,
  intakeState:'candidate_only',candidateId:'intake-synthetic-private',
- intakeReceiptHash:H,admissionGranted:false,executionGranted:false,
+ intakeReceiptHash:'sha256:'+H,admissionGranted:false,executionGranted:false,
  customerDeliveryGranted:false
 });
 const plan=(o={})=>projectOneCompanyCourierHandoff({
