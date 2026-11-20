@@ -62,6 +62,13 @@ test('receiver custody survives absent Passport and is offered to Systemia when 
   assert.equal(admission.executionGranted,false);
   assert.equal(admission.admissionGranted,false);
   assert.equal(admission.intakeState,'candidate_only');
+  assert.equal(admission.oneCompanyPlan?.stage,'AWAITING_SEPARATE_SYSTEMIA_MISSION_ADMISSION');
+  assert.equal(admission.oneCompanyPlan?.departments.some(
+    row=>row.department==='saban'&&row.state==='CAPACITY_PROPOSALS_ONLY'),true);
+  assert.equal(admission.oneCompanyPlan?.departments.some(
+    row=>row.department==='forensiscope'&&row.state==='NOT_APPLICABLE_NO_AUDIO_VIDEO'),true);
+  assert.equal(admission.oneCompanyPlan?.productionAuthority,false);
+  assert.equal(admission.oneCompanyPlan?.realNodeRuntimeObserved,false);
   const third=await cycle({config:cfg});
   assert.equal(third.intake.attempted,0,'admission must be durable and idempotent');
  }finally{await broker.close();fs.rmSync(root,{recursive:true,force:true})}
