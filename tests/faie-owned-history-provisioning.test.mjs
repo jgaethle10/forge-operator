@@ -80,3 +80,18 @@ test('will not invent an environment or write through a symlinked config file',(
     assert.equal(fs.readFileSync(real,'utf8'),original);
   });
 });
+
+test('resident updater and fresh installer require FAIE private archive without weakening release gates',()=>{
+  const updater=fs.readFileSync('scripts/update-fabric-owned-edge.sh','utf8');
+  const installer=fs.readFileSync('scripts/install-fabric-owned-edge.sh','utf8');
+  const releaseGate=fs.readFileSync('.github/workflows/faie-agnormal-launch-gate.yml','utf8');
+  assert.match(updater,/ensure_faie_owned_history_state/);
+  assert.match(updater,/FAIE_HISTORY_ENV_CHANGED/);
+  assert.match(updater,/fabric\.env\.before-faie-history/);
+  assert.match(updater,/rollback "faie_owned_history_state_hold"/);
+  assert.match(updater,/restore_edge_attestation_env/);
+  assert.match(installer,/provision-faie-owned-history\.mjs/);
+  assert.match(installer,/--confirm-owned-host/);
+  assert.match(releaseGate,/faie-land-history-live-acceptance\.mjs/);
+  assert.match(releaseGate,/OWNED_SOURCE_LINKED_LAND_HISTORY_VERIFIED/);
+});
