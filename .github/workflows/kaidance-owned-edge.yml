@@ -6,12 +6,16 @@ on:
       - 'public/kaidance/**'
       - 'infra/evercraft-edge/kaidance/**'
       - 'tests/kaidance-owned-edge.test.mjs'
+      - 'tests/kaidance-public-fallback-readback.test.mjs'
+      - 'scripts/probe-kaidance-fallback.mjs'
       - '.github/workflows/kaidance-owned-edge.yml'
   push:
     paths:
       - 'public/kaidance/**'
       - 'infra/evercraft-edge/kaidance/**'
       - 'tests/kaidance-owned-edge.test.mjs'
+      - 'tests/kaidance-public-fallback-readback.test.mjs'
+      - 'scripts/probe-kaidance-fallback.mjs'
       - '.github/workflows/kaidance-owned-edge.yml'
   workflow_dispatch:
 
@@ -31,6 +35,7 @@ jobs:
         run: |
           node --test tests/kaidance-owned-edge.test.mjs
           node --test tests/kaidance-public-observatory.test.mjs
+          node --test tests/kaidance-public-fallback-readback.test.mjs
       - name: Validate example Caddy route without networking or deployment
         run: |
           set -euo pipefail
