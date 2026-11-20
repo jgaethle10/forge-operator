@@ -1,4 +1,5 @@
-// KAIDANCE CONFLUENCE FIELD V04
+import {scenicChapter,SCENIC_LEG_SECONDS} from './field-chapters.mjs';
+// KAIDANCE CONFLUENCE FIELD V05 · Living journeys
 // Living network sculpture, inspired by Evercraft's own HUDSON river theater.
 // ALL continuous streams/routes/explorer motion are ILLUSTRATIVE, not live jobs,
 // agents, private Systemia execution or a measurement of Collider operations.
@@ -49,10 +50,32 @@ if(canvas&&stage&&marker){
    exploreButton=document.getElementById('fieldExplore'),
    drawer=document.getElementById('fieldDrawer'),
    drawerClose=document.getElementById('fieldClose'),
-   drawerTopics=document.getElementById('fieldTopics');
+   drawerTopics=document.getElementById('fieldTopics'),
+   routeFrom=document.getElementById('fieldRouteFrom'),
+   routeTo=document.getElementById('fieldRouteTo'),
+   routeProgress=document.getElementById('fieldRouteProgress'),
+   recordTopic=document.getElementById('fieldRecordTopic');
   let w=1,h=1,px=1,frame=0,prev=0,time=0,paused=false,visible=true;
-  let pointerX=0,pointerY=0,focus='kaidance',journeyIndex=0,flashStart=-100;
-  let lastSource='conceptual',recordFocus=null;
+  let focus='kaidance',journeyIndex=0,flashStart=-100;
+  let lastNarratedOrdinal=-1,manualUntil=0,recordFocus=null,recordUntil=0;
+  const EVENT_HIGHLIGHT_SECONDS=13;
+  function syncStory(chapter){
+   routeProgress.style.transform='scaleX('+chapter.progress.toFixed(3)+')';
+   if(manualUntil>time)return;
+   if(chapter.ordinal!==lastNarratedOrdinal){
+    lastNarratedOrdinal=chapter.ordinal;
+    focus=chapter.toKey;
+    sourceState.textContent='ILLUSTRATED JOURNEY · CHAPTER '+(chapter.index+1)+' / '+chapter.total;
+    storyTitle.textContent=chapter.title;
+    storyMeta.textContent=chapter.meta;
+    routeFrom.textContent=chapter.from.name;
+    routeTo.textContent=chapter.to.name;
+   }
+   if(recordFocus&&time>=recordUntil){
+    recordFocus=null;recordTopic.hidden=true;recordTopic.textContent='';
+   }
+  }
+
   function colors(hex,alpha){
    const value=hex.replace('#','');
    const rgb=[0,2,4].map(p=>parseInt(value.slice(p,p+2),16));
@@ -130,9 +153,9 @@ if(canvas&&stage&&marker){
    }
    ctx.restore();
   }
-  function currents(){
+  function currents(chapter){
    ctx.save();ctx.globalCompositeOperation='lighter';
-   const active=new Set([routes[journeyIndex%routes.length][0],routes[journeyIndex%routes.length][1],focus]);
+   const active=new Set([chapter.fromKey,chapter.toKey,focus]);
    for(let i=0;i<connections.length;i++){
     const [a,b]=connections[i],c=path(a,b,i%3-1);
     const bright=active.has(a)&&active.has(b);
@@ -152,6 +175,29 @@ if(canvas&&stage&&marker){
     }
    }
    ctx.restore();
+  }
+  function arrivalBloom(chapter){
+   // A local, colored destination bloom occurs on *illustrative approach*.
+   // It is intentionally distinct from the central white verified-cycle flash.
+   if(chapter.arrival<=0||reduced.matches)return;
+   const p=point(chapter.toKey),intensity=Math.sin(chapter.arrival*Math.PI);
+   if(intensity<=0)return;
+   const color=byKey[chapter.toKey].color;
+   halo(p.x,p.y,55+chapter.arrival*48,color,intensity*.92);
+   ctx.save();ctx.strokeStyle=colors(color,intensity*.46);
+   ctx.lineWidth=1.3;ctx.beginPath();
+   ctx.arc(p.x,p.y,14+chapter.arrival*55,0,TAU);ctx.stroke();
+   ctx.restore();
+   for(let i=0;i<12;i++){
+    const angle=TAU*i/12+time*.22;
+    const reach=16+chapter.arrival*(21+11*random(i+166));
+    const end=reach+11*intensity;
+    const dx=Math.cos(angle),dy=Math.sin(angle);
+    ctx.save();ctx.strokeStyle=colors(color,intensity*.34);
+    ctx.lineWidth=.8;ctx.beginPath();
+    ctx.moveTo(p.x+dx*reach,p.y+dy*reach);
+    ctx.lineTo(p.x+dx*end,p.y+dy*end);ctx.stroke();ctx.restore();
+   }
   }
   function collisions(){
    // The collider is a central confluence, not the whole visual field.
@@ -175,9 +221,15 @@ if(canvas&&stage&&marker){
     ctx.beginPath();ctx.ellipse(c.x,c.y,rr,rr*.7,0,0,TAU);ctx.stroke();ctx.restore();
    }
   }
-  function nodes(){
+  function nodes(chapter){
    for(const sys of systems){
-    const p=point(sys.key),active=sys.key===focus;
+    const p=point(sys.key),active=sys.key===focus||sys.key===chapter.toKey;
+    const recorded=recordFocus===sys.key&&time<recordUntil;
+    if(recorded){
+     ctx.save();ctx.setLineDash([2,5]);ctx.strokeStyle=colors(sys.color,.52);
+     ctx.lineWidth=1;ctx.beginPath();ctx.arc(p.x,p.y,21+Math.sin(time*.7)*2,0,TAU);
+     ctx.stroke();ctx.restore();
+    }
     const r=sys.key==='kaidance'?10:active?8:5.6;
     halo(p.x,p.y,active?58:31,sys.color,active?1.35:.97);
     dot(p.x,p.y,r,sys.color,active?.85:.65);
@@ -196,14 +248,22 @@ if(canvas&&stage&&marker){
    ctx.fillText('KAIDANCE',c.x,c.y-24);
    ctx.restore();
   }
-  function voyager(){
+  function voyager(chapter){
    // Spider-like photon explorer: mobile and varied silhouette, not just a
    // point with static whiskers. Its path is scenic / selected, never a job.
-   journeyIndex=Math.floor(time/10.5)%routes.length;
-   const [a,b]=routes[journeyIndex],fraction=(time%10.5)/10.5;
+   const [a,b]=[chapter.fromKey,chapter.toKey],fraction=chapter.progress;
    const c=path(a,b),p=at(c,clamp(fraction,.01,.99));
    const next=at(c,clamp(fraction+.008,.02,1));
    const angle=Math.atan2(next.y-p.y,next.x-p.x),size=w<680?17:22;
+   // A luminous comet wake makes direction legible even between systems.
+   ctx.save();ctx.globalCompositeOperation='lighter';
+   for(let trail=13;trail>=1;trail--){
+    const prior=at(c,Math.max(.002,fraction-trail*.007));
+    const strength=(1-trail/14)*.44;
+    halo(prior.x,prior.y,4+strength*10,byKey[b].color,strength);
+    dot(prior.x,prior.y,Math.max(.2,1.7*(1-trail/14)),byKey[b].color,strength);
+   }
+   ctx.restore();
    ctx.save();ctx.translate(p.x,p.y);ctx.rotate(angle);
    halo(0,0,size*5,'#b8ffeb',1.3);
    ctx.globalCompositeOperation='lighter';
@@ -228,8 +288,10 @@ if(canvas&&stage&&marker){
    // Route index derives from elapsed scenic time, not frame-dependent thresholds.
   }
   function draw(){
+   const chapter=scenicChapter(time,routes,byKey);
+   syncStory(chapter);
    ctx.clearRect(0,0,w,h);
-   backdrop();currents();collisions();nodes();voyager();
+   backdrop();currents(chapter);arrivalBloom(chapter);collisions();nodes(chapter);voyager(chapter);
   }
   function step(timestamp){
    frame=requestAnimationFrame(step);
@@ -244,11 +306,15 @@ if(canvas&&stage&&marker){
    if(!byKey[key])return;
    focus=key;
    sourceState.textContent=kind;
+   routeFrom.textContent='EXPLORE';
+   routeTo.textContent=byKey[key].name;
    storyTitle.textContent=byKey[key].name;
    storyMeta.textContent=byKey[key].detail+' · Visual routes are illustrative, not missions.';
    // Move the explorer toward this conceptual station on the next segment.
-   const index=routes.findIndex(pair=>pair.includes(key));
-   if(index>=0){journeyIndex=index;time=index*10.5;}
+   const index=routes.findIndex(pair=>pair[1]===key);
+   if(index>=0){journeyIndex=index;time=index*SCENIC_LEG_SECONDS+.25;}
+   manualUntil=time+8;
+   lastNarratedOrdinal=-1;
    draw();
   }
   canvas.addEventListener('click',event=>{
@@ -298,7 +364,13 @@ if(canvas&&stage&&marker){
     [/collider|kaidance|pulse|heartbeat/,'kaidance']
    ];
    const found=choices.find(([re])=>re.test(title));
-   if(found)selection(found[1],'PUBLIC GITHUB RECORD · CONCEPTUAL ROUTE');
+   // A receipt may tint a topic, but must never hijack the ongoing scenic tour
+   // or impersonate a newly completed Systemia mission.
+   if(found){
+    recordFocus=found[1];recordUntil=time+EVENT_HIGHLIGHT_SECONDS;
+    recordTopic.textContent='PUBLIC GITHUB TOPIC · '+byKey[recordFocus].name;
+    recordTopic.hidden=false;
+   }
   });
   const beatObserver=new MutationObserver(()=>{
    if(marker.classList.contains('beat'))flashStart=time;

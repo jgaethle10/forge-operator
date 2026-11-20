@@ -2,6 +2,8 @@ name: KAIDANCE Independent Public HTTPS Readback
 
 on:
   push:
+    branches:
+      - main
     paths:
       - 'public/kaidance/**'
       - 'scripts/probe-kaidance-fallback.mjs'
@@ -37,7 +39,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: kaidance-v04-independent-public-https-receipt
+          name: kaidance-v05-independent-public-https-receipt
           path: artifacts/kaidance-fallback-readback.json
           if-no-files-found: warn
           retention-days: 30

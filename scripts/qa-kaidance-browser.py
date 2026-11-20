@@ -44,6 +44,15 @@ try:
    assert page.locator("#fieldExplore").is_visible()
    assert page.locator("#fieldMode").is_visible()
    assert page.locator("#fieldSource").count()==0  # Real public source remains in the separate receipt panel.
+   assert page.locator("#fieldStoryTitle").is_visible()
+   assert page.locator("#fieldRouteFrom").inner_text().strip()
+   assert page.locator("#fieldRouteTo").inner_text().strip()
+   assert "ILLUSTRATED JOURNEY" in page.locator("#fieldStoryKind").inner_text()
+   before_progress=page.locator("#fieldRouteProgress").evaluate("el=>getComputedStyle(el).transform")
+   page.wait_for_timeout(950)
+   after_progress=page.locator("#fieldRouteProgress").evaluate("el=>getComputedStyle(el).transform")
+   assert before_progress!=after_progress,"Illustrated route chapter progress did not advance"
+
    reactor=page.locator("#currentField").evaluate("""el=>{
      const c=el.getContext('2d');
      if(!c)return {pixels:0,bright:0};
@@ -99,6 +108,7 @@ try:
     assert page.locator("#fieldTopics button").count()==7
     page.locator("#fieldTopics button").get_by_text("HUDSON").click()
     assert page.locator("#fieldStoryTitle").inner_text()=="HUDSON"
+    assert page.locator("#fieldRouteTo").inner_text()=="HUDSON"
     assert not page.locator("#fieldDrawer").is_visible()
     page.locator("#fieldPause").click()
     assert page.locator("#fieldPause").inner_text()=="RESUME"
@@ -120,6 +130,7 @@ try:
     page.wait_for_timeout(1200)
     assert page.locator("#currentField").is_visible()
     assert page.locator("#fieldStoryTitle").is_visible()
+    assert page.locator("#fieldRouteProgress").is_visible()
     page.screenshot(path=str(OUTPUT/"iphone-direct-live.png"),full_page=False)
    page.close()
   browser.close()

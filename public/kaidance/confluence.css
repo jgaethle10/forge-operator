@@ -99,3 +99,27 @@ body.portrait .telemetry{display:none!important}
 @media(prefers-reduced-motion:reduce){
  .field-controls button{transition:none}
 }
+
+
+/* V05: chapter-by-chapter scenic narrative, not operational mission telemetry. */
+.field-story{min-width:min(290px,74vw);padding-bottom:14px}
+.field-route{display:flex;gap:9px;align-items:center;margin:8px 0 5px;
+ color:#c5e7f0;font-size:10px;letter-spacing:.08em;font-weight:800;flex-wrap:wrap}
+.field-route-symbol{font-size:15px;color:#abfff0;filter:drop-shadow(0 0 7px #89efdf88)}
+.field-route-track{height:2px;background:#446b7390;border-radius:4px;margin-top:11px;overflow:hidden}
+.field-route-track i{display:block;height:100%;width:100%;transform:scaleX(0);transform-origin:left center;
+ background:linear-gradient(90deg,#54aee2,#acfff0,#f1d59e);box-shadow:0 0 12px #88e6e8;
+ will-change:transform}
+.field-record-topic{display:block;margin-top:8px;color:#eedbb5;font-size:8px;line-height:1.35;
+ text-transform:uppercase;letter-spacing:.1em}
+.field-record-topic[hidden]{display:none}
+@media(max-width:760px){
+ .field-story{max-width:78vw;padding:9px 12px 11px}
+ .field-route{font-size:9px;gap:6px;margin:6px 0 4px}
+ .field-route-symbol{font-size:12px}
+ .field-route-track{margin-top:8px}
+ .field-record-topic{font-size:7px}
+}
+@media(prefers-reduced-motion:reduce){
+ .field-route-track i{transition:none}
+}

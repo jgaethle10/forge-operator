@@ -7,7 +7,7 @@ import {createHash} from 'node:crypto';
 import {fileURLToPath} from 'node:url';
 
 const FILES=Object.freeze([
- 'index.html','app.mjs','style.css','experience.css','collider-v3.css','confluence.css','visual.mjs','collider-engine.mjs','current-field.mjs','pulse-source.mjs','work-source.mjs','mark.svg'
+ 'index.html','app.mjs','style.css','experience.css','collider-v3.css','confluence.css','visual.mjs','collider-engine.mjs','current-field.mjs','field-chapters.mjs','pulse-source.mjs','work-source.mjs','mark.svg'
 ]);
 const MAX_BYTES=300_000;
 
@@ -49,8 +49,11 @@ export async function probeKaidanceFallback({root,fetchImpl=fetch,now=new Date()
     !app.includes("from './work-source.mjs'")||
     !app.includes("fetch('./pulse.json'"))throw Error('fallback_client_provenance_missing');
  if(!source.includes('assessPublicPulse')||!work.includes('normalizePublicActivity'))throw Error('fallback_source_validation_missing');
- if(!results['current-field.mjs'].text.includes('CONFLUENCE FIELD V04')||
-    !results['confluence.css'].text.includes('KAIDANCE V04'))throw Error('fallback_current_field_assets_missing');
+ if(!results['current-field.mjs'].text.includes("from './field-chapters.mjs'"))throw Error('fallback_chapter_import_missing');
+ if(!results['current-field.mjs'].text.includes('CONFLUENCE FIELD V05')||
+    !results['confluence.css'].text.includes('KAIDANCE V04')||
+    !results['field-chapters.mjs'].text.includes('SCENIC_LEG_SECONDS'))throw Error('fallback_current_field_assets_missing');
+ if(!html.includes('id="fieldRouteProgress"')||!html.includes('id="fieldRecordTopic"'))throw Error('fallback_story_choreography_missing');
  if(!results['collider-engine.mjs'].text.includes('AMBIENT ART')||
     !results['collider-v3.css'].text.includes('KAIDANCE COLLIDER V03'))throw Error('fallback_reactor_assets_missing');
  if(!results['visual.mjs'].text.includes('Ambient art only')||
