@@ -50,3 +50,18 @@ test('Demand SSH listener is isolated, key-only, and remote-forwards to one loop
   assert.doesNotMatch(sshd,/^AllowTcpForwarding yes$/m);
   assert.ok(!sshd.split('\n').some(line=>line.startsWith('HostKey /etc/ssh/ssh_host_')));
 });
+
+test('Penguin relay installer is key-fingerprint-gated and does not alter normal SSH/Fabric',()=>{
+  const script=read('./install-penguin-demand-relay.sh');
+  assert.match(script,/--expected-fingerprint/);
+  assert.match(script,/ssh-keygen -lf "\$PUBLIC_FILE" -E sha256/);
+  assert.match(script,/if \[\[ "\$ACTUAL_FINGERPRINT" != "\$EXPECTED_FINGERPRINT" \]\]/);
+  assert.match(script,/--public-key-file/);
+  assert.match(script,/\buseradd --system/);
+  assert.match(script,/ssh-keygen -q -t ed25519/);
+  assert.match(script,/sshd -t -f "\$CONFIG"/);
+  assert.match(script,/systemctl enable --now "\$SERVICE"/);
+  assert.match(script,/MaxSessions|restrict,port-forwarding/);
+  assert.doesNotMatch(script,/systemctl (?:stop|restart|enable|disable)\s+(?:ssh|sshd|evercraft-public-edge|evercraft-fabric)(?:[.\s]|$)/);
+  assert.doesNotMatch(script,/sshd_not_to_be_run/);
+});
