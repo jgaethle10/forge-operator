@@ -523,8 +523,12 @@ function drawTraveler(from,to,t){
  var size=width<=620?clamp(width*.19,70,93):clamp(width*.105,105,163);
  var state=travelerState(clock,t),breath=presencePulse(clock);
  var bob=Math.sin(clock*1.06)*.017;
+ // Safe mobile/desktop stage framing: the bow and stern remain visible.
+ // This cinematic offset never modifies the canonical route or tap geometry.
+ var drawX=clamp(pos.x,size*1.70,Math.max(size*1.70,width-size*1.70));
+ var drawY=clamp(pos.y,size*2.12+12,Math.max(size*2.12+12,height-size*.67-12));
  ctx.save();
- ctx.translate(pos.x,pos.y+size*bob);
+ ctx.translate(drawX,drawY+size*bob);
  ctx.rotate(clamp(ahead.dy/Math.max(1,Math.hypot(ahead.dx,ahead.dy)),-1,1)*.044
   +Math.sin(clock*.67)*.014);
  ctx.scale(size*facing,size);
@@ -595,6 +599,15 @@ function drawTraveler(from,to,t){
  drawRoyalSail(.66,-1.52,-.50,.79,-wind,2);
  drawRoyalSail(-.09,-1.58,-.64,1.06,mainWind,0);
  drawRoyalSail(-.09,-1.95,-1.57,.72,wind,3);
+ // A royal swallowtail streams from the high central mast.
+ ctx.beginPath();ctx.moveTo(-.09,-2.03);
+ ctx.quadraticCurveTo(.13,-2.14,.43,-2.05+wind*.035);
+ ctx.lineTo(.26,-1.96+wind*.04);
+ ctx.lineTo(.43,-1.90+wind*.03);
+ ctx.quadraticCurveTo(.12,-1.95,-.09,-1.98);ctx.closePath();
+ var pennant=ctx.createLinearGradient(-.1,-2.06,.45,-1.96);
+ pennant.addColorStop(0,"#fff1bb");pennant.addColorStop(.65,"#d8f9e7");pennant.addColorStop(1,"rgba(101,241,230,.28)");
+ ctx.fillStyle=pennant;ctx.fill();ctx.strokeStyle="rgba(255,232,182,.72)";ctx.lineWidth=.015;ctx.stroke();
  // A distinct forward triangular staysail, billowing towards the gilded prow.
  ctx.beginPath();ctx.moveTo(.65,-1.53);
  ctx.quadraticCurveTo(1.18,-1.20,1.57,-.49);
