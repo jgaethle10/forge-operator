@@ -78,6 +78,11 @@ test('v7 scenic junctions branch only toward their current destination',()=>{
  }
 });
 test('film-mode is reversible and remains evidence honest',()=>{
+ assert.match(watch,/body\.film-mode #story,body\.film-mode #story-sub/);
+ assert.match(watch,/body\.film-mode \.facts,body\.film-mode #receipt,body\.film-mode #next/);
+ assert.match(watch,/body\.film-mode #film:hover,body\.film-mode #film:focus-visible/);
+ assert.match(watch,/Immersive Watch: scenery occupies the canvas/);
+
  assert.match(watch,/id="film" type="button" aria-pressed="false"/);
  assert.match(watch,/body\.film-mode/);
  assert.match(code,/function setFilmMode\(on\)/);
