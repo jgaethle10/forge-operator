@@ -27,7 +27,7 @@ export function validOwnedOrigin(raw) {
   return u.origin;
 }
 
-export function assessAsset({status, finalUrl, contentType, body}, asset, expectedBody, origin) {
+export function assessAsset({status, finalUrl, contentType, programMarker, body}, asset, expectedBody, origin) {
   const findings = [];
   let u = null;
   try { u = new URL(finalUrl); } catch { findings.push('INVALID_FINAL_URL'); }
@@ -35,6 +35,7 @@ export function assessAsset({status, finalUrl, contentType, body}, asset, expect
   if (!u || u.href !== expectedUrl) findings.push('WRONG_OR_REDIRECTED_ORIGIN');
   if (status !== 200) findings.push('HTTP_NOT_200');
   if (!asset.type.test(String(contentType || ''))) findings.push('UNEXPECTED_CONTENT_TYPE');
+  if (programMarker !== 'aidens-lab-v1') findings.push('OWNED_FABRIC_ROUTE_IDENTITY_MISSING');
   if (typeof body !== 'string' || body.length > 300000) findings.push('INVALID_OR_OVERSIZED_BODY');
   if (!String(body).includes(asset.identity)) findings.push('MISSING_PAGE_OR_ASSET_IDENTITY');
   if (sha256(String(body)) !== sha256(expectedBody)) findings.push('SOURCE_LIVE_SHA256_MISMATCH');
@@ -75,7 +76,9 @@ export async function runPublicCanary({origin = DEFAULT_ORIGIN, fetcher = fetch,
       });
       const body = await r.text();
       receipt.assets.push(assessAsset({
-        status: r.status, finalUrl: r.url, contentType: r.headers.get('content-type'), body
+        status: r.status, finalUrl: r.url,
+        contentType: r.headers.get('content-type'),
+        programMarker: r.headers.get('x-evercraft-static-program'), body
       }, asset, expectedBody, verifiedOrigin));
     } catch (error) {
       receipt.assets.push({
@@ -90,7 +93,7 @@ export async function runPublicCanary({origin = DEFAULT_ORIGIN, fetcher = fetch,
     receipt.assets.every((row) => row.state === 'EXACT_SOURCE_VERIFIED');
   receipt.publication_state = receipt.public_https_verified ? 'EXACT_SOURCE_PUBLIC_VERIFIED' : 'HOLD_UNVERIFIED_PUBLIC_ROUTE';
   receipt.limits = [
-    'Static parity does not independently verify an Evercraft-owned server or deployment receipt.',
+    'The owned Fabric program marker and exact source parity are checked, but deployment receipts still need independent review.'
     'This is not medical appraisal, clinical validity, a five-minute live heartbeat, or a backend research runner.'
   ];
   return receipt;
