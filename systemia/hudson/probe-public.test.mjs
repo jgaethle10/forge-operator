@@ -17,6 +17,8 @@ test('only fresh, limited public source records can earn verification',()=>{
  assert.equal(validateHudsonSnapshot(specimen({events:[{...specimen().events[0],source_url:'https://private.example/secret'}]}),{now}).ok,false);
  assert.equal(validateHudsonSnapshot(specimen({events:[{...specimen().events[0],public:false}]}),{now}).ok,false);
  assert.equal(validateHudsonSnapshot(specimen({events:[{...specimen().events[0],source_verified:false}]}),{now}).ok,false);
+ assert.equal(validateHudsonSnapshot(specimen({events:[{...specimen().events[0],title:'Private subject name'}]}),{now}).ok,false);
+ assert.equal(validateHudsonSnapshot(specimen({events:[{...specimen().events[0],id:'b'.repeat(40)}]}),{now}).ok,false);
 });
 function response(status,body,contentType='application/json; charset=utf-8',cache='no-store'){
  return {status,headers:{get(k){return k==='content-type'?contentType:k==='cache-control'?cache:null}},async text(){return typeof body==='string'?body:JSON.stringify(body)}};
