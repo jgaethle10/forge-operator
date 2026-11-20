@@ -293,6 +293,7 @@ function travelerState(time,progress){
   yaw:Math.sin(time*.19+.8)*.31+Math.sin(time*.53)*.085,
   roll:time*.17+Math.sin(time*.27)*.38,
   veil:.23+.27*(.5+.5*Math.sin(time*.16+1.8)),
+  integrity: .28+.72*Math.min(clamp(progress/.18,0,1),clamp((1-progress)/.16,0,1)),
   scan:arrival*(.45+.55*Math.sin(time*.94+.7)**2)
  };
 }
@@ -346,6 +347,8 @@ function drawTraveler(from,to,t){
  var state=travelerState(clock,t);
  ctx.save();ctx.translate(pos.x,pos.y);ctx.rotate(angle+state.yaw);
  ctx.globalCompositeOperation="source-over";
+ // Briefly assemble from water on departure and unravel on arrival.
+ ctx.globalAlpha=state.integrity;
  // Its dark, refractive envelope is a distinct focal point in bright currents.
  var atmosphere=ctx.createRadialGradient(0,0,size*.09,0,0,size*1.85);
  atmosphere.addColorStop(0,"rgba(1,12,27,.83)");
@@ -381,7 +384,7 @@ function drawTraveler(from,to,t){
   ctx.closePath();
   var colors=shades[layer],grad=ctx.createLinearGradient(-size*.33,-thick*1.6,outer,thick*1.4);
   grad.addColorStop(0,colors[0]);grad.addColorStop(.49,colors[1]);grad.addColorStop(1,colors[2]);
-  ctx.globalAlpha=f.opacity;ctx.fillStyle=grad;ctx.fill();
+  ctx.globalAlpha=f.opacity*state.integrity;ctx.fillStyle=grad;ctx.fill();
   ctx.strokeStyle=layer%2===0?"rgba(192,255,235,.57)":"rgba(197,191,255,.55)";
   ctx.lineWidth=1.1;ctx.stroke();
   ctx.beginPath();ctx.moveTo(-size*.12,-thick*.12);
@@ -390,14 +393,18 @@ function drawTraveler(from,to,t){
   ctx.restore();
  }
  // A partially hidden aperture, never a fixed eye, face or mechanical core.
- ctx.save();ctx.rotate(-state.roll*.22);
- var aperture=size*(.23+.09*state.opening);
+ ctx.save();ctx.rotate(-state.roll*.22+Math.sin(clock*.31)*.26);
+ var aperture=size*(.16+.085*state.opening);
  ctx.beginPath();
- ctx.moveTo(-aperture*.95,-aperture*.31);
- ctx.bezierCurveTo(-aperture*.34,-aperture*1.13,aperture*.83,-aperture*.68,aperture*.99,-aperture*.06);
- ctx.bezierCurveTo(aperture*.47,aperture*.82,-aperture*.37,aperture*.99,-aperture*.95,-aperture*.31);
- ctx.closePath();ctx.fillStyle="rgba(1,12,25,.92)";ctx.fill();
- ctx.strokeStyle="rgba(182,253,231,"+(.60+.16*state.pulse).toFixed(3)+")";
+ ctx.moveTo(-aperture*.90,-aperture*.26);
+ ctx.lineTo(-aperture*.18,-aperture*.94);
+ ctx.lineTo(aperture*.18,-aperture*.41);
+ ctx.lineTo(aperture*.86,-aperture*.54);
+ ctx.lineTo(aperture*.56,aperture*.08);
+ ctx.lineTo(aperture*.31,aperture*.76);
+ ctx.lineTo(-aperture*.41,aperture*.35);
+ ctx.closePath();ctx.fillStyle="rgba(4,28,41,.75)";ctx.fill();
+ ctx.strokeStyle="rgba(182,253,231,"+(.46+.14*state.pulse).toFixed(3)+")";
  ctx.lineWidth=1.3;ctx.stroke();ctx.restore();
  // Thin broken caustics reveal depth only fleetingly.
  for(var arc=0;arc<3;arc++){
