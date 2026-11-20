@@ -199,7 +199,8 @@ if(canvas&&stage&&marker){
   function voyager(){
    // Spider-like photon explorer: mobile and varied silhouette, not just a
    // point with static whiskers. Its path is scenic / selected, never a job.
-   const [a,b]=routes[journeyIndex%routes.length],fraction=(time%10.5)/10.5;
+   journeyIndex=Math.floor(time/10.5)%routes.length;
+   const [a,b]=routes[journeyIndex],fraction=(time%10.5)/10.5;
    const c=path(a,b),p=at(c,clamp(fraction,.01,.99));
    const next=at(c,clamp(fraction+.008,.02,1));
    const angle=Math.atan2(next.y-p.y,next.x-p.x),size=w<680?11:17;
@@ -224,7 +225,7 @@ if(canvas&&stage&&marker){
    ctx.fillStyle=tail;ctx.beginPath();ctx.arc(0,0,size*4,0,TAU);ctx.fill();
    dot(0,0,3.1,'#f5ffff',1);
    ctx.restore();
-   if(fraction>.997)journeyIndex=(journeyIndex+1)%routes.length;
+   // Route index derives from elapsed scenic time, not frame-dependent thresholds.
   }
   function draw(){
    ctx.clearRect(0,0,w,h);
@@ -247,7 +248,7 @@ if(canvas&&stage&&marker){
    storyMeta.textContent=byKey[key].detail+' · Visual routes are illustrative, not missions.';
    // Move the explorer toward this conceptual station on the next segment.
    const index=routes.findIndex(pair=>pair.includes(key));
-   if(index>=0){journeyIndex=index;time=Math.floor(time/10.5)*10.5;}
+   if(index>=0){journeyIndex=index;time=index*10.5;}
    draw();
   }
   canvas.addEventListener('click',event=>{
