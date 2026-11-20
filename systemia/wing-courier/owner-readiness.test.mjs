@@ -41,6 +41,8 @@ test('local Harbor evidence snapshot never executes, sends, or reveals private f
  assert.equal(r.serviceMutationPerformed,false);
  assert.equal(r.customerFilesMoved,false);
  assert.equal(r.tokensReadByThisTool,false);
+ assert.equal(r.signingKeysReadByThisTool,true,'--config may parse owner-local private key types');
+ assert.equal(r.signingKeysPublished,false);
  assert.equal(r.workerExecutionAuthorized,false);
  assert.equal(r.paymentAuthorized,false);
  assert.ok(calls.every(c=>['git','systemctl'].includes(c.command)));
@@ -52,6 +54,7 @@ test('Harbor without private config reports hold but still inspects exact role u
  const r=observeOwnerReadiness({wing:'harbor',platform:'linux',nodeMajor:22,uid:1000,
   exec:fakeExec(calls,{serviceState:'not-found',active:'inactive'})});
  assert.equal(r.ownerPrivateConfig,'NOT_SUPPLIED');
+ assert.equal(r.signingKeysReadByThisTool,false);
  assert.equal(r.userServiceState,'NOT_INSTALLED');
  assert.equal(r.status,'HOLD_FOR_PRIVATE_SETUP');
  assert.equal(r.nextGate,'OWNER_PRIVATE_RECEIVER_CONFIG_AND_KEY_ENROLLMENT');
