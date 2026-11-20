@@ -79,7 +79,8 @@ async function main(){
  // Never print mission details, private advice or source customer records.
  console.log(JSON.stringify({schema:'evercraft.systemia.advisory-runner-summary.v1',
   state:result.state,planned:result.plan.queue.length,
-  held:result.plan.held.length,received:result.provider_calls_performed,
+  held:result.plan.held.length,attempted:result.provider_calls_performed,
+  received:result.results.filter(x=>x.state==='advisory_received').length,
   shadow:!execute,keys:result.results.map(x=>({key:x.key,state:x.state}))}));
 }
 const invoked=process.argv[1]?pathToFileURL(path.resolve(process.argv[1])).href:'';
