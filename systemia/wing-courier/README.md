@@ -44,7 +44,7 @@ Evercraft Payments after customer preview approval -> verified master delivery
 
 ## Already implemented in source
 - `envelope.mjs`: Node 22 built-in X25519, Ed25519, HKDF, AES-256-GCM. Streamed encrypt/decrypt for large files; private flatten-only filenames, digest/size and no-symlink safeguards, atomic staging, duplicate rejection; receipt with **zero** downstream authority. The source manifest and asset bytes are inside the encrypted ciphertext; the relay sees only opaque IDs and routing wing identifiers.
-- `broker.mjs`: authenticated, wing-scoped staged/upload/ready/poll/download/ack operations and durable ciphertext bytes with private filesystem permissions. HTTPS/TLS must be provided by an independently verified **owned** edge, because the broker refuses any non-loopback bind. No receiver storage credentials or sender private keys on broker. `ACK_REPORTED_BY_RECEIVER` is not an independently attested client delivery.
+- `broker.mjs`: authenticated, wing-scoped staged/upload/ready/poll/download/ack operations and durable ciphertext bytes with private filesystem permissions. ACK requires the receiver's **Ed25519 signature bound to exact package ID, from/to wings, ciphertext hash and local custody receipt hash**; possession of a bearer token alone cannot falsely mark receipt. The broker also enforces bounded stored-byte and reservation quotas. HTTPS/TLS must be provided by an independently verified **owned** edge, because the broker refuses any non-loopback bind. No receiver storage credentials or sender private keys on broker. `ACK_REPORTED_BY_RECEIVER` is not an independently attested client delivery.
 - `client.mjs`: source packaging, retryable identical package-id push, outbound-only polling, receive-side signature/hash/decrypt, duplicate import protection, private receipt and broker acknowledgment. Both agents call **outbound**, so NextGen does not need an internet-facing listener, full tailnet enrollment, public SSH or Google Drive.
 - `intake-bridge.mjs`: locally verified receipt becomes a **Passport-gated inert Intake Fabric candidate** referencing locally held source files. The source adapter requires a real `intake.write.agent` grant, never a claim inside customer media. No remote mission admission or execution.
 - `resident.mjs`: repeat outbound polling, durable local receipts, retry of previously downloaded but not yet Passport-ingested custody packets; safe errors and no automatic render/send.
@@ -66,9 +66,9 @@ Create a chmod 0600 JSON file **on the owned broker**, using private files holdi
  "port":8791,
  "wings":[
   {"wing":"harbor","sendTokenFile":"/private/secrets/harbor.send",
-   "receiveTokenFile":"/private/secrets/harbor.receive","allowedDestinations":["fallen"]},
+   "receiveTokenFile":"/private/secrets/harbor.receive","ackVerifyPublicKeyFile":"/private/trusted/harbor.sign.pub","allowedDestinations":["fallen"]},
   {"wing":"fallen","sendTokenFile":"/private/secrets/fallen.send",
-   "receiveTokenFile":"/private/secrets/fallen.receive","allowedDestinations":["harbor"]}
+   "receiveTokenFile":"/private/secrets/fallen.receive","ackVerifyPublicKeyFile":"/private/trusted/fallen.sign.pub","allowedDestinations":["harbor"]}
  ]
 }
 ```
@@ -110,6 +110,7 @@ The example lists only three filenames for readability; the real first case has 
  "receiveTokenFile":"/private/secrets/fallen.receive",
  "destinationDir":"/home/coach/.local/share/evercraft/fallen-intake/media",
  "receiverPrivateKeyFile":"/private/keys/fallen/decrypt.key",
+ "receiverSigningKeyFile":"/private/keys/fallen/sign.key",
  "senderVerifyPublicKeys":{"harbor":"/private/trusted/harbor.sign.pub"},
  "intakeStateDir":"/private/systemia/intake",
  "passportStateDir":"/private/systemia/passport",

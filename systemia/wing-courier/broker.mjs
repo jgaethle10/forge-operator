@@ -46,8 +46,14 @@ export async function startWingCourierBroker({stateDir,wingCredentials,host='127
    typeof row.sendToken!=='string'||row.sendToken.length<32||
    typeof row.receiveToken!=='string'||row.receiveToken.length<32||
    row.sendToken===row.receiveToken||!Array.isArray(row.allowedDestinations)||
-   !row.allowedDestinations.every(allowedWing))throw fail('credentials_invalid');
-  credentials.set(row.wing,{...row,allowedDestinations:new Set(row.allowedDestinations)});
+   !row.allowedDestinations.every(allowedWing)||
+   !row.ackVerifyPublicKeyFile)throw fail('credentials_invalid');
+  const keyStat=fs.lstatSync(row.ackVerifyPublicKeyFile);
+  if(!keyStat.isFile()||keyStat.isSymbolicLink())throw fail('ack_public_key_unsafe');
+  const ackVerifyPublicKey=crypto.createPublicKey(fs.readFileSync(row.ackVerifyPublicKeyFile));
+  if(ackVerifyPublicKey.asymmetricKeyType!=='ed25519')throw fail('ack_key_must_be_ed25519');
+  credentials.set(row.wing,{...row,ackVerifyPublicKey,
+   allowedDestinations:new Set(row.allowedDestinations)});
  }
  secureDir(path.resolve(stateDir));const root=path.join(stateDir,'packages');secureDir(path.resolve(root));
  const locks=new Set();
@@ -159,16 +165,26 @@ export async function startWingCourierBroker({stateDir,wingCredentials,host='127
    }
    const ack=/^\/v1\/envelopes\/([a-f0-9]{32})\/ack$/.exec(url.pathname);
    if(ack&&req.method==='POST'){
-    const {file,state}=location(ack[1]);auth(req,state.toWing,'receive');
+    const {file,state}=location(ack[1]);
+    const receiver=auth(req,state.toWing,'receive');
     const body=await json(req);
-    if(!HEX.test(body.receiptSha256||'')||body.ciphertextSha256!==state.ciphertextSha256)
-     throw fail('ack_fields_invalid');
+    if(body.schema!=='evercraft.wing-courier.receiver-ack.v1'||
+       !HEX.test(body.receiptSha256||'')||body.ciphertextSha256!==state.ciphertextSha256||
+       body.id!==state.id||body.fromWing!==state.fromWing||body.toWing!==state.toWing||
+       typeof body.signature!=='string')throw fail('ack_fields_invalid');
+    const signature=Buffer.from(body.signature,'base64');
+    if(signature.length!==64 || body.signature!==signature.toString('base64'))throw fail('ack_signature_invalid',403);
+    const attested={schema:body.schema,id:body.id,fromWing:body.fromWing,toWing:body.toWing,
+      ciphertextSha256:body.ciphertextSha256,receiptSha256:body.receiptSha256};
+    if(!crypto.verify(null,Buffer.from(JSON.stringify(attested)),receiver.ackVerifyPublicKey,signature))
+      throw fail('ack_signature_invalid',403);
     if(state.state==='ACK_REPORTED_BY_RECEIVER'){
      if(state.ack?.receiptSha256!==body.receiptSha256)throw fail('ack_conflict',409);
      return reply(res,200,{id:state.id,state:state.state,idempotent:true});
     }
     if(state.state!=='READY')throw fail('ack_not_ready',409);
-    state.ack={receiptSha256:body.receiptSha256,receivedAt:new Date().toISOString()};
+    state.ack={receiptSha256:body.receiptSha256,receivedAt:new Date().toISOString(),
+      receiverKeyVerified:true,signature:body.signature};
     state.state='ACK_REPORTED_BY_RECEIVER';atomicJson(file,state);
     return reply(res,200,{id:state.id,state:state.state,idempotent:false});
    }
@@ -195,7 +211,8 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
    return fs.readFileSync(p,'utf8').trim();
   };
   const wings=cfg.wings.map(w=>({wing:w.wing,allowedDestinations:w.allowedDestinations,
-   sendToken:getSecret(w.sendTokenFile),receiveToken:getSecret(w.receiveTokenFile)}));
+   sendToken:getSecret(w.sendTokenFile),receiveToken:getSecret(w.receiveTokenFile),
+   ackVerifyPublicKeyFile:w.ackVerifyPublicKeyFile}));
   const svc=await startWingCourierBroker({
    stateDir:cfg.stateDir,wingCredentials:wings,port:cfg.port??8791,host:'127.0.0.1'});
   process.stdout.write(JSON.stringify({ready:true,loopback:svc.url,encryptedOnly:true,externalTransportReady:false})+'\n');

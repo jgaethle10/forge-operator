@@ -92,7 +92,7 @@ function recoverLocalCustody({root,item,wing}){
  return {directory:dir,receipt,recovered:true};
 }
 export async function pollWingInbox({baseUrl,tokenFile,wing,destinationDir,receiverPrivateKeyFile,
- senderVerifyPublicKeys}){
+ receiverSigningKeyFile,senderVerifyPublicKeys}){
  if(!/^[a-z][a-z0-9-]{1,47}$/.test(wing||''))fail('wing_invalid');
  const base=resolveBase(baseUrl),token=keyText(tokenFile);
  const root=path.resolve(destinationDir);const ds=fs.lstatSync(root);
@@ -121,8 +121,18 @@ export async function pollWingInbox({baseUrl,tokenFile,wing,destinationDir,recei
      receiverPrivateKeyFile,trustedSenderPublicKeyFile:signer,
      expectedFromWing:item.fromWing,expectedToWing:wing});
    const receiptDigest=sha(Buffer.from(JSON.stringify(imported.receipt)));
+   if(!receiverSigningKeyFile)fail('receiver_ack_key_missing');
+   const privateKeyStat=fs.lstatSync(receiverSigningKeyFile);
+   if(!privateKeyStat.isFile()||privateKeyStat.isSymbolicLink()||
+     (privateKeyStat.mode&0o077)!==0)fail('receiver_ack_key_not_private');
+   const ackKey=crypto.createPrivateKey(fs.readFileSync(receiverSigningKeyFile));
+   if(ackKey.asymmetricKeyType!=='ed25519')fail('receiver_ack_key_invalid');
+   const attested={schema:'evercraft.wing-courier.receiver-ack.v1',id:item.id,
+     fromWing:item.fromWing,toWing:wing,ciphertextSha256:item.ciphertextSha256,
+     receiptSha256:receiptDigest};
+   const signature=crypto.sign(null,Buffer.from(JSON.stringify(attested)),ackKey).toString('base64');
    const ack=await request(base,token,'POST','/v1/envelopes/'+id+'/ack',{
-    json:{receiptSha256:receiptDigest,ciphertextSha256:item.ciphertextSha256}});
+    json:{...attested,signature}});
    const response=await ack.json();
    if(response.state!=='ACK_REPORTED_BY_RECEIVER')fail('ack_missing');
    results.push({id,state:'RECEIVED_VERIFIED_AND_ACK_REPORTED',assets:imported.receipt.assets.length,
@@ -154,7 +164,7 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
    const [configFile]=args;const cfg=readConfig(configFile);
    console.log(JSON.stringify(await pollWingInbox({baseUrl:cfg.baseUrl,tokenFile:cfg.receiveTokenFile,
     wing:cfg.wing,destinationDir:cfg.destinationDir,receiverPrivateKeyFile:cfg.receiverPrivateKeyFile,
-    senderVerifyPublicKeys:cfg.senderVerifyPublicKeys})));
+    receiverSigningKeyFile:cfg.receiverSigningKeyFile,senderVerifyPublicKeys:cfg.senderVerifyPublicKeys})));
   }else throw Error('usage: keys <private-dir> <wing> | prepare <private-config> <source-dir> <output.wing> <kind> <filenames...> | push <private-config> <bundle.wing> | poll <private-config>');
  }catch(e){console.error(e?.message||String(e));process.exitCode=2}
 }

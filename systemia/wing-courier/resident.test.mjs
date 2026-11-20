@@ -25,15 +25,15 @@ test('receiver custody survives absent Passport and is offered to Systemia when 
  const senderToken=path.join(harbor,'send.token'),receiverToken=path.join(fallen,'receive.token');
  fs.writeFileSync(senderToken,hs,{mode:0o600});fs.writeFileSync(receiverToken,fr,{mode:0o600});
  const broker=await startWingCourierBroker({stateDir:serverState,wingCredentials:[
-  {wing:'harbor',sendToken:hs,receiveToken:hr,allowedDestinations:['fallen']},
-  {wing:'fallen',sendToken:fsToken,receiveToken:fr,allowedDestinations:['harbor']}
+  {wing:'harbor',sendToken:hs,receiveToken:hr,allowedDestinations:['fallen'],ackVerifyPublicKeyFile:path.join(harbor,'sign.pub')},
+  {wing:'fallen',sendToken:fsToken,receiveToken:fr,allowedDestinations:['harbor'],ackVerifyPublicKeyFile:path.join(fallen,'sign.pub')}
  ]});
  try{
   const send=await pushEncryptedWingBundle({baseUrl:broker.url,tokenFile:senderToken,bundleFile:bundle,metaFile:bundle+'.json'});
   assert.equal(send.state,'BROKER_CIPHERTEXT_STORED');
   const passportStateDir=path.join(root,'passport'),intakeStateDir=path.join(root,'intake');
   const cfg={baseUrl:broker.url,receiveTokenFile:receiverToken,wing:'fallen',destinationDir:inbox,
-   receiverPrivateKeyFile:path.join(fallen,'decrypt.key'),senderVerifyPublicKeys:{harbor:path.join(harbor,'sign.pub')},
+   receiverPrivateKeyFile:path.join(fallen,'decrypt.key'),receiverSigningKeyFile:path.join(fallen,'sign.key'),senderVerifyPublicKeys:{harbor:path.join(harbor,'sign.pub')},
    passportStateDir,intakeStateDir,adapterActorRef:'adapter:wing-courier'};
   const first=await cycle({config:cfg});
   assert.equal(first.received,1,JSON.stringify(first));
