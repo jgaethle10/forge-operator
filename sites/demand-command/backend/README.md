@@ -12,6 +12,33 @@ This is an **Evercraft-owned, Python-standard-library** API supporting the local
 - Duplicate detection rejects the same business/domain + pain fingerprint, and `/contact-check` exposes suspected previous outreach. It is an advisory gate, **not** comprehensive cross-account deduplication.
 - No `DELETE` route. Events form an append-only SHA-256-linked log. This is tamper-evident for event rows, not tamperproof against privileged database alteration.
 
+## Port collision: Infrastructure Watch opened instead
+
+On NextGen, `http://127.0.0.1:8796/` may already be assigned to an Infrastructure Watch or other local service, including one exposed through Windows/WSL localhost routing. **Do not kill or restart another Evercraft service just to make this port available.**
+
+From the checked-out backend directory, choose a separate port, start the Demand API in its own terminal, and verify the response *on the same machine* before opening the browser:
+
+```bash
+git -C "$HOME/evercraft-demand-canary" pull --ff-only
+cd "$HOME/evercraft-demand-canary/sites/demand-command/backend"
+export EVERCRAFT_DEMAND_PORT=18896
+export EVERCRAFT_DEMAND_DB="$HOME/.local/state/evercraft/demand-command.sqlite"
+# Use your already configured private token if present. Otherwise create one for this session.
+if [ -z "${EVERCRAFT_DEMAND_TOKEN:-}" ]; then
+  export EVERCRAFT_DEMAND_TOKEN="$(python3 -c 'import secrets; print(secrets.token_urlsafe(48))')"
+fi
+python3 server.py
+```
+
+In a **second** NextGen terminal (same Linux user/session), confirm the new socket and identity without printing the token. If the token was generated only in the first terminal, the second terminal does not inherit it; instead, confirm the public shell title below, or use an authenticated request from the first terminal before starting the server:
+
+```bash
+curl -fsS --max-time 3 http://127.0.0.1:18896/ | grep -o '<title>[^<]*</title>' | head -1
+# Expected: <title>Evercraft Demand Command | Private Console</title>
+```
+
+Only after seeing that title, open **http://127.0.0.1:18896/** in your NextGen browser. If the Windows browser still opens another site on that port, report the server's `Demand Command API bound...` line and the curl title; do not change the infrastructure service. For authentication, paste the secret into the browser console only; do not include it in chats or screenshots. The local-only server does not send messages.
+
 ## Quick local canary
 
 ```bash
