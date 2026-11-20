@@ -42,9 +42,9 @@ test('public first-party inquiry stores consented record with no payment or agen
 
 test('every currently shipped public project select value is accepted by real private Fabric intake',async()=>{
  const html=fs.readFileSync(new URL('../public/commercial-studio/index.html',import.meta.url),'utf8');
- const select=html.match(/<select\\s+id="project"\\s+name="project"[^>]*>([\\s\\S]*?)<\\/select>/);
+ const select=html.match(/<select\s+id="project"\s+name="project"[^>]*>([\s\S]*?)<\/select>/);
  assert.ok(select,'the public buyer project selector must be present');
- const pageProjects=[...select[1].matchAll(/<option(?:\\s+[^>]*)?>([^<]+)<\\/option>/g)].map(x=>x[1].trim());
+ const pageProjects=[...select[1].matchAll(/<option(?:\s+[^>]*)?>([^<]+)<\/option>/g)].map(x=>x[1].trim());
  assert.deepEqual(pageProjects,STUDIO_PROJECT_OPTIONS,
   'the current public form must match canonical server options in the same order');
  assert.equal(pageProjects[0],STUDIO_INTRO_PROJECT,'default pilot is the live introductory offer');
@@ -62,9 +62,9 @@ test('every currently shipped public project select value is accepted by real pr
    const alert=JSON.parse(fs.readFileSync(alertFile,'utf8'));
    assert.equal(alert.project,project);
    assert.equal(alert.pii_stored,false);
-   assert.doesNotMatch(JSON.stringify(alert),/person\\d+@example\\.test/);
+   assert.doesNotMatch(JSON.stringify(alert),/person\d+@example\.test/);
   }
-  const records=fs.readFileSync(path.join(dir,'inquiries.ndjson'),'utf8').trim().split('\\n').map(JSON.parse);
+  const records=fs.readFileSync(path.join(dir,'inquiries.ndjson'),'utf8').trim().split('\n').map(JSON.parse);
   assert.deepEqual(records.map(x=>x.project),pageProjects);
   assert.equal(records.every(x=>x.agent_execution_authorized===false&&x.automated_payment===false),true);
  }finally{await runtime.close();fs.rmSync(dir,{force:true,recursive:true});}
