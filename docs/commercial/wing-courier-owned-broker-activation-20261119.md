@@ -2,14 +2,16 @@
 
 **November 19, 2026. Source-only installation helper, NOT a live broker deployment.**
 
-Engineering objective: enable the owner-controlled Penguin wing operator to activate the already implemented encrypted, ciphertext-only Courier broker on \`127.0.0.1:8791\` without using public media upload, manually moving client photos, opening NextGen to the internet, admitting Harbor's vendor machine to a broad tailnet, or granting customer send/payment permissions.
+Engineering objective: enable the owner-controlled Penguin wing operator to activate the already implemented encrypted, ciphertext-only Courier broker on \`127.0.0.1:8851\` without using public media upload, manually moving client photos, opening NextGen to the internet, admitting Harbor's vendor machine to a broad tailnet, or granting customer send/payment permissions.
+
+**Port correction:** The prior 8791 allocation belongs to the active Saban Microseed Gateway on Penguin. Wing Courier now uses `127.0.0.1:8851`. Operator must first prove port 8851 unoccupied on the actual broker host and independently confirm that the Fabric HTTPS runtime is co-located with that loopback broker before enabling any route. Never stop or reconfigure Saban to make room.
 
 ## Safety model
 
 - \`systemia/wing-courier/install-broker.mjs\` is **dry run unless both** \`--activate\` and \`--confirm-owned-host\` are supplied by an approved operator on the actual authorized owner machine. A chat instruction or GitHub merge never runs this activation.
-- Preflight requires Node 22+, non-root user, private and same-user-owned 0600 broker JSON and four distinct >=43-character token files, two distinct valid Ed25519 receiver acknowledgment *public* keys, existing owner-controlled 0700 state folder, exact port 8791, exact two wings (\`harbor\` and \`fallen\`) and no other destinations, no symlinked path components. It does **not** generate or print keys, read customer media, or enable the Fabric route.
+- Preflight requires Node 22+, non-root user, private and same-user-owned 0600 broker JSON and four distinct >=43-character token files, two distinct valid Ed25519 receiver acknowledgment *public* keys, existing owner-controlled 0700 state folder, exact port 8851, exact two wings (\`harbor\` and \`fallen\`) and no other destinations, no symlinked path components. It does **not** generate or print keys, read customer media, or enable the Fabric route.
 - Activated service is a normal user systemd unit, with \`NoNewPrivileges\`, \`PrivateTmp\`, and restrictive \`UMask=0077\`. A pre-existing unit is a **HOLD** requiring separate change review, not silently overwritten.
-- After activation, a local readback asks \`127.0.0.1:8791/health\` for the ciphertext-only service contract and submits **no bearer token** to assert both send and receive endpoints return HTTP 403. This is a fail-closed protocol canary, not cryptographic process identity attestation or external TLS verification.
+- After activation, a local readback asks \`127.0.0.1:8851/health\` for the ciphertext-only service contract and submits **no bearer token** to assert both send and receive endpoints return HTTP 403. This is a fail-closed protocol canary, not cryptographic process identity attestation or external TLS verification.
 - \`EVERCRAFT_WING_COURIER_ROUTE_ENABLED\` stays **unset/off**. Enabling it later is a **separate, owned Fabric-runtime change** requiring peer-key verification, the live broker readiness and owner security approval. Never activate the route merely because this local canary passes.
 - No external media transfer, customer file custody, Systemia Passport admission, Fallen creative acceptance, invoice, delivery or Meta Messenger media send is authorized here.
 
@@ -20,7 +22,7 @@ Start with the exact broker JSON contract already documented in \`systemia/wing-
 \`\`\`json
 {
   "stateDir": "/private/evercraft/wing-courier",
-  "port": 8791,
+  "port": 8851,
   "wings": [
     {
       "wing": "harbor",
