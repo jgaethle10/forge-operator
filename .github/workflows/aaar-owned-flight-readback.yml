@@ -48,3 +48,35 @@ jobs:
           name: aaar-owned-external-readback
           path: artifacts/aaar-public-readback/receipt.json
           if-no-files-found: warn
+  hosted-mobile-controls:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install isolated browser test dependency
+        run: npm install --no-save --no-audit --no-fund playwright@1.55.1
+      - name: Install supported Chromium browser
+        run: npx playwright install chromium
+      - name: Execute actual owned HTTPS AAAR buttons in phone emulation
+        id: live
+        shell: bash
+        run: |
+          mkdir -p artifacts/aaar-public-readback
+          set +e
+          node scripts/probe-aaar-mobile-browser.mjs https://worlds.systemiacommandcenters.com/worlds/flight/ > artifacts/aaar-public-readback/mobile-controls.json
+          rc=$?
+          cat artifacts/aaar-public-readback/mobile-controls.json
+          if test "$rc" -ne 0; then
+            echo "::error::AAAR live flight controls failed. This remains below real iPhone Safari acceptance."
+          fi
+          exit "$rc"
+      - name: Preserve live control test receipt
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: aaar-live-mobile-controls
+          path: artifacts/aaar-public-readback/mobile-controls.json
+          if-no-files-found: warn
