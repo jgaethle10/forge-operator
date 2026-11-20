@@ -46,6 +46,11 @@ const receiptLink=value=>{
   if(u.hostname==='jgaethle10.github.io' && u.pathname.startsWith('/forge-operator/'))return u.href;
  }catch{}return null;
 };
+const hasFreshReceiptSignal=(signal,published,now=Date.now())=>{
+ const observed=safeTime(signal?.observed_at);
+ return !!(observed && published && observed<=published+120000 && now-observed<=7*60000 &&
+   signal?.state==='observed' && receiptLink(signal?.receipt_url));
+};
 function formatTime(t){return new Date(t).toLocaleString(undefined,{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'});}
 function relativeTime(t){
  if(!t)return 'Unavailable';
@@ -88,8 +93,8 @@ async function loadFeed(){
   $('source-caption').textContent=fresh?'Source-reported activity, not independent access to private model state.':'Motion is illustrative until a fresh approved public report exists.';
   $('observation-age').textContent=relativeTime(published);
   $('last-observed').textContent=published?'Last publisher report: '+formatTime(published):'No verified live observation';
-  $('inference-state').textContent=fresh&&signals.inference?.state==='observed'&&receiptLink(signals.inference?.receipt_url)?'Source-reported activity':'Unverified';
-  $('mission-state').textContent=fresh&&signals.missions?.state==='observed'&&receiptLink(signals.missions?.receipt_url)?'Source-reported activity':'Unverified';
+  $('inference-state').textContent=fresh&&hasFreshReceiptSignal(signals.inference,published)?'Source-reported activity':'Unverified';
+  $('mission-state').textContent=fresh&&hasFreshReceiptSignal(signals.missions,published)?'Source-reported activity':'Unverified';
   sourceEvents=[];
   if(fresh && Array.isArray(feed.events)){
    for(const item of feed.events.slice(0,12)){
