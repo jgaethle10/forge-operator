@@ -226,11 +226,139 @@ function hashes(){
  if(state.contextImage&&!HASH.test(context))throw Error('Wait for vicinity image fingerprinting before saving or loading');
  return {source_kind:'operator_supplied_image_unverified',site_sha256:site,context_sha256:state.contextImage?context:null};
 }
+// Each operator image has an independent, non-verified source declaration.
+// No value in this form can promote an image to georeferenced, licensed or approved.
+const SOURCE_SCHEMA='evercraft.kennedy.operator-source-declaration.v1';
+const SOURCE_RIGHTS=new Set(['unknown','owned','licensed','public_domain','written_permission']);
+const SOURCE_SLOTS=['site','context'];
+const SOURCE_FIELDS={
+ site:{provider:'siteProvider',reference:'siteReference',date:'siteCaptured',rights:'siteRights'},
+ context:{provider:'contextProvider',reference:'contextReference',date:'contextCaptured',rights:'contextRights'}
+};
+function validDate(value){
+ if(value==='')return true;
+ if(!/^\\d{4}-\\d{2}-\\d{2}$/.test(value))return false;
+ const d=new Date(value+'T00:00:00Z');
+ return !Number.isNaN(d.getTime())&&d.toISOString().slice(0,10)===value;
+}
+function sourceForm(slot){
+ const ids=SOURCE_FIELDS[slot];if(!ids)throw Error('Unsupported source slot');
+ const out={provider:$(ids.provider).value.trim(),reference:$(ids.reference).value.trim(),
+            capture_date:$(ids.date).value.trim(),rights_basis:$(ids.rights).value};
+ if(out.provider.length>100||out.reference.length>240||!validDate(out.capture_date)||
+    !SOURCE_RIGHTS.has(out.rights_basis))throw Error('Invalid image source declaration');
+ return out;
+}
+function sourceDeclaration(slot){
+ const isSite=slot==='site';
+ const image=isSite?state.siteImage:state.contextImage;
+ if(!image)return null;
+ const form=sourceForm(slot);
+ return {schema:SOURCE_SCHEMA,slot,
+         file_name:isSite?state.siteSource:state.contextSource,
+         source_sha256:isSite?state.siteHash||null:state.contextHash||null,
+         ...form,operator_declaration_only:true,
+         independent_rights_verification:false,geographic_registration_verified:false,
+         approved_for_construction:false};
+}
+function sourceDeclarations(){
+ return {site:sourceDeclaration('site'),context:sourceDeclaration('context')};
+}
+function validateSavedSources(records,binding){
+ if(records===undefined)return {site:null,context:null}; // pre-metadata real-image drafts
+ if(!records||typeof records!=='object'||Array.isArray(records)||
+    Object.keys(records).some(k=>!SOURCE_SLOTS.includes(k)))throw Error('Source declarations invalid');
+ const output={};
+ for(const slot of SOURCE_SLOTS){
+  const row=records[slot],isSite=slot==='site';
+  const expectedHash=isSite?binding.site_sha256:binding.context_sha256;
+  const expectedFile=isSite?state.siteSource:state.contextSource;
+  if(!expectedHash){
+   if(row!==null&&row!==undefined)throw Error('Unbound source declaration');
+   output[slot]=null;continue;
+  }
+  if(row===null||row===undefined){output[slot]=null;continue;}
+  if(typeof row!=='object'||Array.isArray(row)||row.schema!==SOURCE_SCHEMA||
+     row.slot!==slot||row.file_name!==expectedFile||row.source_sha256!==expectedHash||
+     row.operator_declaration_only!==true||
+     row.independent_rights_verification!==false||
+     row.geographic_registration_verified!==false||
+     row.approved_for_construction!==false||
+     typeof row.provider!=='string'||row.provider.length>100||
+     typeof row.reference!=='string'||row.reference.length>240||
+     typeof row.capture_date!=='string'||!validDate(row.capture_date)||
+     !SOURCE_RIGHTS.has(row.rights_basis))
+      throw Error('Source declaration mismatches image or claimed verification');
+  output[slot]={provider:row.provider,reference:row.reference,
+                capture_date:row.capture_date,rights_basis:row.rights_basis};
+ }
+ return output;
+}
+function applySourceFields(values){
+ for(const slot of SOURCE_SLOTS){
+  const ids=SOURCE_FIELDS[slot],data=values[slot]||{};
+  $(ids.provider).value=data.provider||'';
+  $(ids.reference).value=data.reference||'';
+  $(ids.date).value=data.capture_date||'';
+  $(ids.rights).value=data.rights_basis||'unknown';
+ }
+ renderSourceStatus();
+}
+function resetSourceFields(slot){
+ const ids=SOURCE_FIELDS[slot];
+ if(!ids)throw Error('Unsupported source slot');
+ for(const key of ['provider','reference','date'])$(ids[key]).value='';
+ $(ids.rights).value='unknown';
+ renderSourceStatus();
+}
+function qualification(){
+ const reasons=[];
+ if(!state.siteImage)return {status:'HOLD',source_class:'synthetic_demonstration',
+   missing:['real_site_image','site_georegistration','independent_rights_review'],
+   verified_imagery_rights:false,verified_geographic_registration:false,
+   production_plan_release_allowed:false};
+ for(const slot of SOURCE_SLOTS){
+  const image=slot==='site'?state.siteImage:state.contextImage;
+  if(!image){if(slot==='context')reasons.push('context_image_missing');continue;}
+  const row=sourceDeclaration(slot);
+  if(!/^[a-f0-9]{64}$/.test(row.source_sha256||''))reasons.push(slot+'_sha256_pending');
+  for(const field of ['provider','reference','capture_date'])
+   if(!row[field])reasons.push(slot+'_'+field+'_missing');
+  if(row.rights_basis==='unknown')reasons.push(slot+'_rights_basis_unrecorded');
+ }
+ reasons.push('independent_rights_review_required','geographic_registration_unverified',
+              'engineering_review_required');
+ return {status:'HOLD',source_class:'operator_supplied_image_unverified',missing:reasons,
+  verified_imagery_rights:false,verified_geographic_registration:false,
+  production_plan_release_allowed:false};
+}
+function renderSourceStatus(){
+ const node=$('sourceReadiness');if(!node)return;
+ try{
+  const q=qualification();
+  node.textContent=q.source_class==='synthetic_demonstration'
+   ?'FICTIONAL DEMO · No real source. Plans remain illustrations.'
+   :'SOURCE HOLD · '+q.missing.filter(x=>!['independent_rights_review_required','geographic_registration_unverified','engineering_review_required'].includes(x)).length+
+    ' metadata/coverage gaps. Rights and geographic registration are not independently verified. Concept use only.';
+  node.classList?.toggle('source-hold',q.source_class!=='synthetic_demonstration');
+ }catch(err){
+  node.textContent='SOURCE HOLD · Invalid metadata: '+err.message;
+  node.classList?.add('source-hold');
+ }
+}
+for(const slot of SOURCE_SLOTS){
+ const ids=SOURCE_FIELDS[slot];
+ for(const id of Object.values(ids))$(id).addEventListener('input',renderSourceStatus);
+ $(ids.rights).addEventListener('change',renderSourceStatus);
+}
+renderSourceStatus();
+
 function makeDraft(){
  const binding=hashes();
  return {
   schema:SCHEMA,created_at:new Date().toISOString(),
   source_binding:binding,source_mode:binding.source_kind,
+  source_declarations:sourceDeclarations(),
   image_names:{site:state.siteSource||'',context:state.contextSource||''},
   project:{name:($('siteName').value||'').slice(0,90),address:($('address').value||'').slice(0,160),revision:($('rev').value||'').slice(0,90),imagery_rights_note:($('sourceText').value||'').slice(0,160)},
   marks:validateMarks(state.marks),
@@ -252,6 +380,7 @@ function restoreDraft(d){
   throw Error('Real source classification mismatch; no synthetic draft can be promoted to a real image');
  }
  if(d.image_names?.site!==state.siteSource||String(d.image_names?.context||'')!==String(state.contextSource||''))throw Error('Image filenames do not match the saved draft');
+ const validatedSources=validateSavedSources(d.source_declarations,binding);
  const marks=validateMarks(d.marks);
  const p=d.project||{};
  for(const [key,max] of [['name',90],['address',160],['revision',90],['imagery_rights_note',160]])if(typeof p[key]!=='string'||p[key].length>max)throw Error('Invalid project details');
@@ -265,6 +394,7 @@ function restoreDraft(d){
  // Validate ALL fields and image bindings before changing the active drawing.
  state.marks=marks;state.calibration=calibration;state.calibrationPending=null;state.pending=null;
  $('siteName').value=p.name;$('address').value=p.address;$('rev').value=p.revision;$('sourceText').value=p.imagery_rights_note;
+ applySourceFields(validatedSources);
  draw();return marks.length;
 }
 function save(){
@@ -288,7 +418,8 @@ function load(ev){
 $('draftSave').addEventListener('click',save);
 $('draftLoad').addEventListener('change',load);
 // Exposed only for isolated regression testing. No external network or persistence.
-window.__evercraftDraft={makeDraft,restoreDraft,validateMarks};
+window.__evercraftDraft={makeDraft,restoreDraft,validateMarks,
+ sourceDeclarations,qualification,resetSourceFields,renderSourceStatus,validateSavedSources};
 })();
 
 </script>
