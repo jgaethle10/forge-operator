@@ -390,6 +390,24 @@
       "optional_env_args": {
         "--expected-facebook-page-id": "EVERCRAFT_CLIP_WORK_SABAN_FACEBOOK_PAGE_ID"
       }
+    },
+    {
+      "service_key": "model-council-heartbeat",
+      "mode": "cycle",
+      "manifest": "systemia/organism/model-council-heartbeat.workflow.json",
+      "executable": "systemia/mission-bridge/model-council/heartbeat-runner.mjs",
+      "cadence_seconds": 300,
+      "optional_when_unconfigured": true,
+      "env_args": {
+        "--packet-file": "SYSTEMIA_ADVISORY_MISSION_PACKET_FILE",
+        "--ledger-dir": "SYSTEMIA_ADVISORY_LEDGER_DIR"
+      },
+      "optional_env_args": {
+        "--credential-state-dir": "RAVEN_PROVIDER_CREDENTIAL_STATE_DIR",
+        "--rolling-budget-cents": "SYSTEMIA_ADVISORY_ROLLING_BUDGET_CENTS",
+        "--admission-key-file": "SYSTEMIA_ADVISORY_ADMISSION_KEY_FILE",
+        "--execute": "SYSTEMIA_ADVISORY_EXECUTE"
+      }
     }
   ]
 }
