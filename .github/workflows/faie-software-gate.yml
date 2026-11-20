@@ -20,6 +20,8 @@ on:
       - 'server.ts'
       - 'package.json'
       - '.github/workflows/faie-software-gate.yml'
+      - '.github/workflows/faie-agnormal-launch-gate.yml'
+      - 'tests/faie-independent-live-gates.test.mjs'
   push:
     branches:
       - main
@@ -41,6 +43,8 @@ on:
       - 'server.ts'
       - 'package.json'
       - '.github/workflows/faie-software-gate.yml'
+      - '.github/workflows/faie-agnormal-launch-gate.yml'
+      - 'tests/faie-independent-live-gates.test.mjs'
   workflow_dispatch:
 
 permissions:
@@ -108,6 +112,9 @@ jobs:
         run: |
           node --check scripts/provision-faie-owned-history.mjs
           node --test tests/faie-owned-history-provisioning.test.mjs
+
+      - name: FAIE independent live-source telemetry and mandatory composite-release contract
+        run: node --test tests/faie-independent-live-gates.test.mjs
 
       - name: FAIE Saban swarm proof
         run: npm run proof:saban-faie
