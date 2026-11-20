@@ -10,6 +10,7 @@ on:
       - 'scripts/diagnose-fabric-owned-edge-release.sh'
       - 'tests/aiden-lab-resident-release.test.mjs'
       - 'tests/aiden-lab-resident-updater-contract.test.mjs'
+      - 'tests/aiden-lab-release-doctor-worlds.test.mjs'
       - '.github/workflows/aiden-lab-resident-release.yml'
   push:
     branches: [main]
@@ -21,6 +22,7 @@ on:
       - 'scripts/diagnose-fabric-owned-edge-release.sh'
       - 'tests/aiden-lab-resident-release.test.mjs'
       - 'tests/aiden-lab-resident-updater-contract.test.mjs'
+      - 'tests/aiden-lab-release-doctor-worlds.test.mjs'
       - '.github/workflows/aiden-lab-resident-release.yml'
   workflow_dispatch:
 
@@ -42,4 +44,4 @@ jobs:
         run: |
           bash -n scripts/update-fabric-owned-edge.sh
           bash -n scripts/diagnose-fabric-owned-edge-release.sh
-          node --test tests/aiden-lab-resident-release.test.mjs tests/aiden-lab-resident-updater-contract.test.mjs
+          node --test tests/aiden-lab-resident-release.test.mjs tests/aiden-lab-resident-updater-contract.test.mjs tests/aiden-lab-release-doctor-worlds.test.mjs
