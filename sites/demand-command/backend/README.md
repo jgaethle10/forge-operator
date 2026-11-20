@@ -120,6 +120,29 @@ python3 revenue_desk_bridge.py --inspect-schema
 If `$HOME/evercraft-demand-canary` already exists, don't reclone over it; inspect its branch and working tree before updating. This invocation is **read-only** and attempts to inspect Revenue Desk at `127.0.0.1:8795`. If it reports *Connection refused*, that is a distinct finding: Revenue Desk isn't listening on that address/port in this WSL session. Do not start or restart services based solely on a port assumption. No tokens or buyer data should be pasted into chats.
 
 
+## NextGen private source pulse (November 19, 2026, interface-only)
+
+The confirmed local NextGen screenshot shows the **private console at `http://127.0.0.1:18896/`**, with the Demand API connected and **zero local Demand dossiers**. Zero dossiers does **not** mean Revenue Desk has zero source records. The previous aggregate reconciliation observed 16 source records; that historical snapshot is not a current claim about the live system.
+
+This iteration adds:
+- A separate **Revenue Desk · Live source pulse**, with source-record count, reported due-review count, reply claims requiring provider reconciliation, and original-source-evidence gaps.
+- A concrete *Next review* instruction per source row, based only on the already-defined review-tier rules.
+- Automatic **read-only source loading after login**, manual refresh, and five-minute checks **only while this authenticated page is open and visible**. This browser interval is *not* the Systemia heartbeat or a headless background job.
+- A stale-data warning when local Revenue Desk at 8795 is unavailable. Source review does not import leads, send messages, claim Gmail delivery, or mutate the Revenue Desk.
+
+To obtain the new interface on an existing NextGen engineering canary, with no API/service restart:
+
+```bash
+cd "$HOME/evercraft-demand-canary"
+git status --short
+git pull --ff-only
+git log -1 --oneline
+```
+
+Run `git pull --ff-only` **only if the worktree is clean**. Then hard-refresh `http://127.0.0.1:18896/` and connect with the existing private token, if that service remains running. The server reads `console.html` from disk on each request, so a UI-only change requires no service restart. **Don't paste tokens or private source records into chat or GitHub.**
+
+Acceptance: a separate source pulse appears; on successful source fetch it displays source counts and a sortable-by-existing-order review table, without changing the local dossier counters. If Revenue Desk is unavailable, the interface explicitly reports a failed source check instead of treating it as zero opportunities.
+
 ## Live source review panel (v8, private / read-only)
 
 The existing authenticated console now includes **Revenue Desk · Live Source Review**. This reads current source records directly from loopback `127.0.0.1:8795` on each request instead of copying buyer data into the Demand SQLite database. It displays a prioritized review tier, business/buyer, recorded pain, source reference, exact source signal when available, prior outbound recipient/subject/body/channel, and evidence checks. The UI escapes source fields and holds the token only in memory.
