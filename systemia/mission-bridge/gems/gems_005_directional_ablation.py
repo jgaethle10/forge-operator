@@ -24,7 +24,9 @@ def measure(reference,model,matrix,north_flat,north,truth,full,corridor,known):
     prob=np.zeros(north.shape,'float32')
     prob[north]=reference.predict(model,matrix,north_flat,matrix.shape[1])
     rendered=reference.render(prob,.2,True)
-    stop=int(np.where(north)[0].max())+1
+    # Match the other full-area experiments: retain three southern zero-padded
+    # rows beyond the last scored northern row for the 300m proximity kernel.
+    stop=min(north.shape[0],int(np.where(north)[0].max())+4)
     f=score_masked_proxy(reference,rendered[:stop],truth[:stop],full[:stop],known[:stop])
     c=score_masked_proxy(reference,rendered[:stop],truth[:stop],corridor[:stop],known[:stop])
     return {"full_terms":f,"corridor_terms":c,"full_dti":score_pooled_terms([f]),
