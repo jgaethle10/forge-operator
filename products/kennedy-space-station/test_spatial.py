@@ -95,11 +95,13 @@ class StudyHTTPTest(KennedyHomeTest):
         status, raw_events, _ = self.api("GET", "/api/kss/outbox")
         self.assertEqual(status, 200)
         events = json.loads(raw_events)
-        self.assertEqual(len(events), 1)
-        self.assertEqual(events[0]["study_id"], first["id"])
-        self.assertEqual(events[0]["event_type"], "kss.spatial.study.saved.v1")
-        self.assertEqual(events[0]["state"], "pending")
-        self.assertEqual(len(events[0]["payload_sha256"]), 64)
+        # Other regression tests may share this class-level server and its
+        # append-only outbox. Assert this study's receipt, not a global count.
+        events_for_study = [e for e in events if e["study_id"] == first["id"]]
+        self.assertEqual(len(events_for_study), 1)
+        self.assertEqual(events_for_study[0]["event_type"], "kss.spatial.study.saved.v1")
+        self.assertEqual(events_for_study[0]["state"], "pending")
+        self.assertEqual(len(events_for_study[0]["payload_sha256"]), 64)
         url = f'/api/kss/sites/{a}/studies/{first["id"]}'
         status, content, _ = self.api("GET", url)
         self.assertEqual(status, 200)
@@ -115,7 +117,9 @@ class StudyHTTPTest(KennedyHomeTest):
         self.assertEqual(status, 201, content)
         self.assertEqual(json.loads(content)["revision"], 2)
         _, raw_events, _ = self.api("GET", "/api/kss/outbox")
-        self.assertEqual(len(json.loads(raw_events)), 2)
+        saved_events = [e for e in json.loads(raw_events) if e["site_id"] == a]
+        self.assertEqual(len(saved_events), 2)
+        self.assertEqual(len({e["study_id"] for e in saved_events}), 2)
         status, content, _ = self.api("GET", url)
         self.assertEqual(json.loads(content)["model"]["parcel"]["width"], 80)
         status, content, _ = self.api("GET", f"/api/kss/sites/{a}/studies")
