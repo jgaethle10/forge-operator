@@ -20,6 +20,7 @@ export const ASSETS = Object.freeze([
   { path: 'classroom/index.html', source: 'public/apps/infinite-classroom/play/index.html', type: /text\/html/i, identity: 'INFINITE CLASSROOM', learningMarker: 'classroom-practice-v1' },
   { path: 'physics/index.html', type: /text\/html/i, identity: 'Physics Atlas', learningMarker: 'physics-model-v1' },
   { path: 'world/index.html', type: /text\/html/i, identity: 'Earth & World Atlas', learningMarker: 'earth-globe-v1' },
+  { path: 'watershed/index.html', type: /text\/html/i, identity: 'Watershed Laboratory', learningMarker: 'watershed-water-balance-v1' },
 ]);
 const ROOT = fileURLToPath(new URL('../', import.meta.url));
 const sha256 = (s) => createHash('sha256').update(s).digest('hex');
