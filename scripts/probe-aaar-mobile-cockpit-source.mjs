@@ -125,6 +125,14 @@ try{
  await runwayPage.waitForFunction(()=>document.getElementById('flightStatus')?.textContent==='ON RUNWAY / TAXI',null,{timeout:10000});
  assert.equal(await runwayPage.locator('#mobileBrake').isVisible(),true,'Mobile hold-to-brake button missing');
  await runwayPage.waitForFunction(()=>window.AAARSceneMetrics?.().frames>=3,null,{timeout:10000});
+ const passportHud=await runwayPage.evaluate(()=>{
+  const quest=document.getElementById('skyQuest').getBoundingClientRect();
+  const instruments=document.querySelector('.flight-telemetry').getBoundingClientRect();
+  return {questTop:quest.top,instrumentsBottom:instruments.bottom,questWidth:quest.width,screenWidth:innerWidth};
+ });
+ assert.ok(passportHud.questTop>=passportHud.instrumentsBottom+5,
+  'Sky Passport overlaps phone instruments: '+JSON.stringify(passportHud));
+ assert.ok(passportHud.questWidth<passportHud.screenWidth-20,'Sky Passport too wide for phone');
  await runwayPage.screenshot({path:evidenceDir+'/phone-boeing-field-runway.png',animations:'disabled'});
  const runwayControlBounds=await runwayPage.evaluate(()=>{
   const rect=id=>{const r=document.getElementById(id).getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom}};
