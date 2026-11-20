@@ -97,6 +97,17 @@ export function publishOwnedKaidancePulse({sourceFile,ownedPublicRoot,approvalFi
   const projection=projectPublicKaidancePulse(privateSafePulse,{now});
   const assessed=assessPublicPulse(projection,now.getTime());
   if(!assessed.ok||!assessed.sourceFresh)fail('private_safe_pulse_missing_or_stale');
+  // Refuse cycle rollback and recycled observations. Recovered/reset Collider lineage
+  // requires separate operator-authorized reconciliation, never a silent public replay.
+  if(fs.existsSync(target)){
+    let previous;
+    try{previous=JSON.parse(fs.readFileSync(target,'utf8'))}catch{fail('existing_public_pulse_invalid')}
+    const prior=assessPublicPulse(previous,now.getTime());
+    if(!prior.ok)fail('existing_public_pulse_invalid');
+    if(projection.cycle_number<prior.cycle_number)fail('public_cycle_regression_forbidden');
+    if(Date.parse(projection.observed_at)<=prior.observed_at)fail('public_observation_replay_forbidden');
+    if(now.getTime()<=prior.published_at)fail('publisher_clock_regression_forbidden');
+  }
   // A degraded/unattested pulse may be published, but it is never called verified.
   const publishedBytes=Buffer.from(JSON.stringify(projection,null,2)+'\n','utf8');
   const publicHash=sha256(publishedBytes);
