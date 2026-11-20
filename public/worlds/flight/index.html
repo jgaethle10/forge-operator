@@ -1242,6 +1242,69 @@ function forRunwayQuads(emit){
   }
  }
 }
+/* Evercraft Flight School 1.4 Vista: original game-only airport environment.
+ * The field coordinates are grounded, but apron layouts, markings, planted strips,
+ * lighting, support buildings and parked vehicles are deliberately invented.
+ * All locations use the same airport-local basis as landing physics, never a second map.
+ */
+function forAirportVistaQuads(emit,focus=null){
+ if(!seattle||!window.AAARGroundOps?.enabled)return 0;
+ const ops=window.AAARGroundOps;let count=0;
+ for(const f of ops.fields){
+  const start=-f.length/2,end=f.length/2,half=f.width/2,side=f.code==='KSEA'?-1:1;
+  const rect=(u1,v1,u2,v2,h,c,hex)=>{
+   const a=Math.min(u1,u2),b=Math.max(u1,u2),c1=Math.min(v1,v2),d=Math.max(v1,v2);
+   const center=ops.point(f,(a+b)/2,(c1+d)/2);
+   if(focus&&Math.hypot(center.x-focus.x,center.z-focus.z)>4200)return;
+   const p=ops.point(f,a,c1),q=ops.point(f,b,c1),t=ops.point(f,b,d),v=ops.point(f,a,d);
+   emit([p.x,h,p.z],[q.x,h,q.z],[t.x,h,t.z],[v.x,h,v.z],c,hex);count++;
+  };
+  const taxi=side*(half+82),apron=side*(half+225);
+  // Each airport gets its own asphalt corridor, pale shoulders and yellow taxi centerline.
+  for(let v=start+35;v<end-20;v+=105){
+   const z2=Math.min(v+105,end-20),varn=(Math.sin(v*.061+f.x*.004)+1)/2;
+   rect(taxi-27,v,taxi+27,z2,f.level+.18,[.35+varn*.018,.39+varn*.017,.40+varn*.016],'#657076');
+   rect(taxi-1.15,v,taxi+1.15,z2,f.level+.30,[.97,.73,.30],'#f7c456');
+   rect(taxi-30,v,taxi-27,z2,f.level+.20,[.77,.74,.65],'#c1bda5');
+   rect(taxi+27,v,taxi+30,z2,f.level+.20,[.77,.74,.65],'#c1bda5');
+   // Vegetation breaks up large blank areas without covering runway or taxi lanes.
+   for(const sign of [-1,1]){
+    const u=sign*(half+43),green=.41+.04*Math.sin(v*.017+sign);
+    rect(u-16,v,u+16,z2,f.level+.12,[.28,green,.29],'#64866d');
+    if(v<start+1300||v>end-700)
+     rect(u-8,v+22,u-4,Math.min(v+34,z2),f.level+.14,[.40,.48,.33],'#899566');
+   }
+  }
+  for(let i=0;i<(f.code==='KSEA'?7:5);i++){
+   const v=start+265+i*(f.code==='KSEA'?405:470);
+   if(v>end-200)break;
+   // Perpendicular taxiway entries and hold-short double yellow lines.
+   rect(side*(half-6),v-18,taxi+side*22,v+18,f.level+.31,[.31,.37,.39],'#566269');
+   rect(taxi-30,v-1.2,taxi+30,v+1.2,f.level+.38,[.97,.73,.28],'#f3be4c');
+   rect(side*(half+20),v-21,side*(half+22),v+21,f.level+.4,[.93,.80,.39],'#f4d36d');
+   rect(side*(half+25),v-21,side*(half+27),v+21,f.level+.4,[.93,.80,.39],'#f4d36d');
+  }
+  // Wide concrete apron panels near hangars and gates, with darker expansion joints.
+  const slabs=f.code==='KSEA'?11:7;
+  for(let j=0;j<slabs;j++){
+   const v=start+80+j*118,inner=side*(half+115),outer=apron+side*135;
+   rect(inner,v,outer,v+116,f.level+.21,
+    j%3===0?[.54,.55,.54]:[.58,.59,.57],j%3===0?'#9a9e9b':'#aab1ad');
+   rect(inner,v+114,outer,v+116,f.level+.26,[.35,.41,.42],'#66747b');
+   if(j%2===0){
+    rect(apron-side*40,v+25,apron+side*30,v+27,f.level+.33,[.95,.73,.32],'#efbf53');
+    rect(apron+side*28,v+27,apron+side*30,v+65,f.level+.33,[.95,.73,.32],'#efbf53');
+   }
+  }
+  // Runway touchdown zones: subtle skid streaks and non-authoritative threshold texture.
+  for(const approach of [start+230,end-400])for(let i=0;i<7;i++){
+   const v=approach+i*20,alpha=i%2===0?.155:.11;
+   rect(-6.5,v,-4.7,v+12,f.level+.37,[alpha,alpha+.04,alpha+.06],'#343f43');
+   rect(4.7,v,6.5,v+12,f.level+.37,[alpha,alpha+.04,alpha+.06],'#343f43');
+  }
+ }
+ return count;
+}
 function airportStructures(emitBox){
  if(!seattle||!window.AAARGroundOps?.enabled)return;
  const ops=window.AAARGroundOps;
@@ -1282,6 +1345,7 @@ function addRunwaySoftware(quad,project,ctx,w,h){
 }
 function addRunwayWebGL(w){
  forRunwayQuads((a,b,c,d,color)=>w.quad(a,b,c,d,color,3));
+ forAirportVistaQuads((a,b,c,d,color)=>w.quad(a,b,c,d,color,3));
  airportStructures((x,y,z,width,height,depth,color,roof)=>{
   w.box(x,y,z,width,height,depth,color,1);
   w.box(x,y+height*.5+1,z,width+3,2,depth+3,roof);
@@ -1443,7 +1507,7 @@ function render2D(){
  for(let Z=-875;Z<900;Z+=115)quad([-3,9,Z],[3,9,Z],[3,9,Z+52],[-3,9,Z+52],'#ede0af');
  for(let j=0;j<6;j++){const X=140+j*55,Z=-620+j*84;quad([X-17,49,Z-27],[X+17,49,Z-27],[X+17,49,Z+27],[X-17,49,Z+27],'#d5e2d7');}
  }
- if(seattle){scenePerf.city=addSeattleShapes(quad,project,eye);forRunwayQuads((a,b,c,d,_rgb,color)=>quad(a,b,c,d,color));addRunwaySoftware(quad,project,ctx,w,h);}
+ if(seattle){scenePerf.city=addSeattleShapes(quad,project,eye);forRunwayQuads((a,b,c,d,_rgb,color)=>quad(a,b,c,d,color));forAirportVistaQuads((a,b,c,d,_rgb,color)=>quad(a,b,c,d,color),state);addRunwaySoftware(quad,project,ctx,w,h);}
  shapes.sort((a,b)=>b.avg-a.avg);
  for(const shape of shapes){const q=shape.pts;ctx.beginPath();ctx.moveTo(q[0].u,q[0].v);q.slice(1).forEach(p=>ctx.lineTo(p.u,p.v));ctx.closePath();ctx.fillStyle=shape.color;ctx.fill();}
  scenePerf.terrainPolygons=shapes.length;
