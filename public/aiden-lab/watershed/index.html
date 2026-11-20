@@ -230,7 +230,7 @@ function updateZone(){
  for(const btn of $('zoneList').querySelectorAll('button'))
   btn.setAttribute('aria-pressed',String(Number(btn.dataset.zone)===selectedZone));
 }
-function terrain(i){const s=params().slope;return .29+((4-i)*s*.018)+Math.sin(i*2.13)*.023}
+function terrain(i){const s=params().slope;return .26+i*s*.017+Math.sin(i*2.13)*.023}
 function dot(x,y,r,color){ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fillStyle=color;ctx.fill()}
 function drawLandscape(){
  const w=width,h=height,p=params();
