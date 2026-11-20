@@ -348,7 +348,14 @@ def start():
     path.chmod(0o600)
     db_connect(path).close()
     port = int(os.environ.get('EVERCRAFT_DEMAND_PORT', '8796'))
-    server = ThreadingHTTPServer(('127.0.0.1', port), API)
+    try:
+        server = ThreadingHTTPServer(('127.0.0.1', port), API)
+    except OSError as exc:
+        raise SystemExit(
+            f'Demand Command did not start on 127.0.0.1:{port}: {exc}. '
+            'Another local service may own this port. Do not stop it. '
+            'Try EVERCRAFT_DEMAND_PORT=18896 and verify the private /api/heartbeat identity.'
+        ) from exc
     server.api_token = token
     server.db_path = str(path)
     print(f'Demand Command API bound to 127.0.0.1:{port} (private; no outbound transport)', flush=True)
