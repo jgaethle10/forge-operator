@@ -53,3 +53,17 @@ test('AAAR mobile v0.8 interaction: analog inputs and safe cockpit gestures',()=
   assert.match(page,/data-hud="full"/);
   assert.match(page,/orientation:landscape/);
 });
+
+test('Cedar Basin v0.9 shares deterministic world-space scenery between renderers',()=>{
+  assert.match(page,/function cedarHash\(i,j\)/);
+  assert.match(page,/function cedarForest\(\)/);
+  assert.match(page,/const forest=cedarForest\(\)/);
+  assert.match(page,/for\(const tree of forest\)/);
+  assert.match(page,/function drawCedarPines\(/);
+  assert.match(page,/function drawCedarClouds\(/);
+  assert.match(page,/function drawCedarLake\(/);
+  assert.match(page,/scenePerf\.renderCostMs/);
+  assert.match(page,/window\.AAARSceneMetrics/);
+  assert.match(page,/renderCostMs\*2\.2/);
+  assert.doesNotMatch(page,/cdn\.jsdelivr|unpkg\.com|threejs\.org/);
+});
