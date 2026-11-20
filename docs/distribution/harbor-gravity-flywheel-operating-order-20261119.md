@@ -94,6 +94,34 @@ Aspirational target: relevant, meaningful, rights-cleared media on the overwhelm
 ```
 Private media licensing, credentials and customer details must stay out of public GitHub. Public schema is for implementation planning, never a forged live receipt.
 
+## 1B. Permanent all-approved-Page mission | November 19, 2026 | no sunset
+**Founder instruction supersedes all temporary campaign framing:** Harbor's global entertainment and information flywheel is a **continuous operating capability**, not merely the seven-day sample editorial desk. Seven-day plans are rolling programming tools. The live-news desk persists indefinitely until the founder directs otherwise, including nights, weekends and holidays when actual staffing and systems support it. Do not claim 24/7 live operations until continuous source ingestion, authorized Harbor publishing and telemetry are independently proven.
+
+**All approved Pages, now and later:** Publish/monitor across all current Page IDs that pass the *latest* live identity/permission register and explicit founder rules. "Connected" is not equivalent to approved for this beat or authorized for every post. Preserve frozen Little Red Writing Press, held Atlas/Black Box, unrelated clients and exclusions. Additional products can enter the flywheel over time without replacing the mission. The live register, not a hard-coded count of 22, determines the eligible targets. Future-approved Pages must not be confused with account creation permission.
+
+### Required durable data models
+- `PageRegistry`: immutable Meta/provider account ID; display name and rename review state; business ownership; current permissions; approved brand text; audience and primary/secondary beats; allowed post/comment/media formats; editor/approver; publication/rights restrictions; Journal linkage; current READY / REVIEW / HELD / FROZEN / EXCLUDED / RETIRED status; source of approval and last audited timestamp; last provider readback. Changes are versioned.
+- `BeatRegistry`: subject/theme, primary-signal feeds, geographies, audiences, priority, relevant Pages, journal franchise, discovery freshness, safety/rights rules, source provenance, correction policy.
+- `StoryCluster`: source URL/digest, author/origin, original event time, verification state, media rights and original/creator-native share options, Journal story and current canonical owned URL, proposed post derivatives, per-Page dedup and recent performance, update history and corrections.
+- `PublicationLedger`: exact account + platform, approved hash, job idempotency key, real submit/readback, media origin/license, story ID, first-comment status and provider-comment receipt, journal URL and link validity, engagement/traffic/lead attribution, rollback or hold.
+- `CoverageGap`: evidence of repeated unmet audience demand or missing category, observed stories/questions and alternative existing Page/franchise fit, new brand candidate, cost of additional coverage, responsible approver and launch state. A gap triggers a **proposal**, never automatic Page creation.
+
+### Adding a product or franchise to the flywheel
+1. Detect a real public product launch or repeated underserved audience signal. Classify `PRODUCT_READY`, `SERIES_ON_EXISTING_PAGE`, or `NEW_PAGE_CANDIDATE`, and record evidence.
+2. Prefer an existing approved Page unless there is a demonstrably distinct audience and sustainable coverage. No page sprawl for its own sake.
+3. Get founder approval for new Page/rename, editorial mission, About/Bio/category, original profile/cover, product availability language, links and customer action. Never move a Page out of HELD/FROZEN on a model's assumption.
+4. Confirm account owner and specific Meta/provider Page ID, exact supported scopes, safe content and comment ability, rights provenance, publication limits and exclusion screening. Verify independent identity readback.
+5. Add seed topics/feeds, approved editorial formats and properly licensed original media production. Prove one package -> validator -> provider post ID/permalink -> public readback. Separately prove first-comment route before declaring Journal crosslinking working.
+6. Mark ACTIVE only after approval and receipts. If removed/paused/locked, set HELD immediately and prevent dispatch while retaining audit history and existing users/followers.
+
+### Permanent cadence and service health
+- Five-minute Systemia heartbeat is the **desired owner-operated source refresh/queue admission** where existing execution is real; it is not permission to post every five minutes.
+- Harbor runs rotating global beat intake, evidence gathering, asset preparation, approved distribution and reply/analytics work around the clock. Protect each Page from flooding via local cooldown, quality gate and idempotency. Newsworthiness can preempt a preplanned slot.
+- Provide daily content and funnel receipts, and a weekly gap/coverage scorecard. Signals include verified source-to-live-post latency, Page/category coverage, media originality/rights, first-comment Journal link success *among eligible posts*, video retention, corrections, audience engagement quality, and independently confirmed leads/payments.
+- When offline: buffer safe candidates, warn on held/delayed news, verify timestamp and freshness on recovery, refuse stale "breaking" headlines, reconcile last post/comment IDs and resume without duplicates.
+- The existing Harbor morning briefing remains a baseline, **not the full 24/7 implementation**. Do not add unowned third-party runtimes or a second independent publisher. Implement authenticated bounded Systemia↔Harbor transport and verify round-trip ACK, independent provider receipts and overnight continuity.
+- Standing issue: [Harbor 24/7 Gravity Flywheel #2348](https://github.com/jgaethle10/forge-operator/issues/2348). Record actual pickup, coverage changes, blockers and shipped receipts there; GitHub documentation does not itself notify Harbor's private process.
+
 ## 2. Editorial franchises, routing and thresholds
 1. **Daily Gravity:** one audience-worthy discovery or original short demonstration per day *network-wide*, not per Page. Wonder, science, useful history, physical machines, sports and inventions belong, even when they do not advertise Evercraft. Verify sources and media rights first.
 2. **The Next Frontier:** two weekly features spanning aviation, robotics, autonomy, earth/ocean/space and science. Evidence-based, no invented FAA predictions or aircraft safety claims. Route to relevant approved current Page, NOT to an imagined Frontier Page.
