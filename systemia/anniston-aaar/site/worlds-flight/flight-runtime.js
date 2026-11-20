@@ -79,9 +79,60 @@ function buildMeshes(){
   meshes[craft.id]=p.upload();
  }
 }
+function buildCustomMesh(design){
+ if(!gl||!program)return;
+ const d=window.AAARFoundry.validate(design),p=builder();
+ const body=[.86,.91,.88],accent=[.96,.60,.38];
+ const scale=Math.min(2.2,Math.max(.32,17/Math.max(d.spanM,d.bodyLengthM)));
+ const length=d.bodyLengthM*scale, width=Math.max(.6,d.bodyWidthM*scale);
+ p.box(0,0,0,width,Math.max(.35,width*.45),length,body);
+ p.box(0,.25,Math.min(length*.18,2),width*.56,.4,length*.38,[.21,.44,.55]);
+ if(d.type==='wing'){
+   const wing=d.spanM*scale/2,chord=d.chordM*scale,sw=Math.tan(d.sweepDeg*Math.PI/180)*wing*.36;
+   for(const sign of [-1,1]){
+     const a=[sign*width*.45,.1,-chord*.5],b=[sign*wing,.1,-chord*.5+sw],c=[sign*wing,.1,chord*.5+sw],e=[sign*width*.45,.1,chord*.5];
+     p.quad(a,b,c,e,body);
+   }
+   const tail=Math.min(wing*.5,Math.sqrt(d.tailAreaM2)*scale*.5);
+   if(tail>.04)p.box(0,.15,-length*.39,Math.max(.1,tail*2),.16,.65,[.68,.82,.83]);
+   if(d.tailAreaM2>.3)p.tri([0,Math.max(.7,length*.16),-length*.48],[0,0,-length*.50],[0,0,-length*.23],accent);
+ }else{
+   const radius=Math.max(.5,d.rotorRadiusM*scale*1.5),ring=Math.max(width*1.1,d.rotorRadiusM*scale*2.3);
+   for(let i=0;i<d.rotors;i++){
+    const theta=2*Math.PI*i/d.rotors+Math.PI/4,x=Math.cos(theta)*ring,z=Math.sin(theta)*ring;
+    p.box(x/2,.05,z/2,Math.abs(x)+.4,.16,.15,[.53,.79,.78]);
+    for(let a=0;a<12;a++){const u=a*Math.PI/6,v=(a+1)*Math.PI/6;
+      p.tri([x,.22,z],[x+radius*Math.cos(u),.22,z+radius*Math.sin(u)],[x+radius*Math.cos(v),.22,z+radius*Math.sin(v)],[.58,.74,.76]);}
+    p.box(x,.25,z,.3,.2,.3,accent);
+   }
+ }
+ if(meshes.custom?.buffer)gl.deleteBuffer(meshes.custom.buffer);
+ meshes.custom=p.upload();
+}
 function planeModel(s){const c=Math.cos,b=Math.sin,cy=c(s.yaw),sy=b(s.yaw),cp=c(-s.pitch),sp=b(-s.pitch),cr=c(-s.bank),sr=b(-s.bank);const RY=[cy,0,-sy,0,0,1,0,0,sy,0,cy,0,0,0,0,1];const RX=[1,0,0,0,0,cp,sp,0,0,-sp,cp,0,0,0,0,1];const RZ=[cr,sr,0,0,-sr,cr,0,0,0,0,1,0,0,0,0,1];const T=identity();T[12]=s.x;T[13]=s.y;T[14]=s.z;return mul(mul(mul(T,RY),RX),RZ);}
 let fallback2D=false;
 /* Native Canvas2D perspective fallback for restricted devices. No third-party rendering engine. */
+function drawCustom2D(ctx,w,h,d,bank){
+ const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+ const cx=w/2,cy=h*.71,sc=Math.max(.55,Math.min(1.65,h/640));ctx.save();ctx.translate(cx,cy);ctx.scale(sc,sc);ctx.rotate(-bank*.83);
+ ctx.shadowColor='#031624b9';ctx.shadowBlur=22;ctx.shadowOffsetY=9;
+ const paint=(points,fill)=>{ctx.beginPath();ctx.moveTo(points[0][0],points[0][1]);for(const p of points.slice(1))ctx.lineTo(p[0],p[1]);ctx.closePath();ctx.fillStyle=fill;ctx.fill();ctx.strokeStyle='#567783';ctx.lineWidth=1.4;ctx.stroke();};
+ if(d.type==='wing'){
+  const hs=clamp(d.spanM*11,46,133),nose=clamp(d.bodyLengthM*6,45,91),tail=nose*.7,chord=clamp(d.chordM*11,14,54);
+  const sweep=Math.tan(d.sweepDeg*Math.PI/180)*hs*.35;
+  for(const sign of [-1,1])paint([[sign*8,-chord*.5],[sign*hs,-chord*.5+sweep],[sign*hs,chord*.5+sweep],[sign*8,chord*.5]],'#d7e4e4');
+  if(d.tailAreaM2>.05){const tw=clamp(Math.sqrt(d.tailAreaM2)*30,8,62);paint([[-tw,tail*.72],[tw,tail*.72],[tw*.84,tail],[ -tw*.84,tail]],'#a0c2c4');}
+  paint([[0,-nose],[-9,-nose*.75],[-11,tail*.72],[-5,tail],[5,tail],[11,tail*.72],[9,-nose*.75]],'#f7f3e9');
+  ctx.fillStyle='#315b71';ctx.beginPath();ctx.ellipse(0,-nose*.45,5,16,0,0,Math.PI*2);ctx.fill();
+ }else{
+  const n=d.rotors,ring=95,rotorR=clamp(d.rotorRadiusM*75,11,31);
+  for(let i=0;i<n;i++){const a=2*Math.PI*i/n+Math.PI/4,x=Math.cos(a)*ring,y=Math.sin(a)*ring;ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(x,y);ctx.strokeStyle='#9abcbf';ctx.lineWidth=7;ctx.stroke();ctx.beginPath();ctx.arc(x,y,rotorR,0,Math.PI*2);ctx.fillStyle='#c4e4df55';ctx.fill();ctx.strokeStyle='#f4d0ad';ctx.lineWidth=2.5;ctx.stroke();ctx.beginPath();ctx.arc(x,y,4,0,Math.PI*2);ctx.fillStyle='#eaa370';ctx.fill();}
+  const bw=clamp(d.bodyWidthM*35,12,40),bl=clamp(d.bodyLengthM*30,22,75);
+  paint([[0,-bl],[-bw,-bl*.6],[-bw,bl*.55],[-bw*.7,bl],[bw*.7,bl],[bw,bl*.55],[bw,-bl*.6]],'#d1e8e6');
+  ctx.fillStyle='#2c6372';ctx.fillRect(-bw*.28,-bl*.48,bw*.56,bl*.46);
+ }
+ ctx.shadowBlur=0;ctx.shadowOffsetY=0;ctx.restore();
+}
 function render2D(){
  const dpi=Math.min(window.devicePixelRatio||1,1.25),w=Math.round(canvas.clientWidth*dpi),h=Math.round(canvas.clientHeight*dpi);
  if(!w||!h)return;if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;}
@@ -110,12 +161,13 @@ function render2D(){
  // World training gates are projected in 3D; draw ring paths with depth-sensitive line weight.
  core.gates.forEach((g,i)=>{const p=project([g.x,g.y,g.z]);if(!p)return;const r=52*focal/p.d;if(r<2||r>h*6)return;ctx.save();ctx.globalAlpha=i<state.checkpoints?.22:.92;ctx.lineWidth=Math.min(6,Math.max(1,3.2*focal/p.d));ctx.strokeStyle=i<state.checkpoints?'#b2dec4':i===state.checkpoints?'#ffbf77':'#a6f3db';ctx.shadowColor=ctx.strokeStyle;ctx.shadowBlur=17;ctx.beginPath();ctx.ellipse(p.u,p.v,r,r,0,0,Math.PI*2);ctx.stroke();ctx.restore();});
  // Aircraft follows the 3D flight state; cockpit view hides the chase airplane.
- if(view!=='cockpit'){
+ if(view!=='cockpit'&&state.craft==='custom'){drawCustom2D(ctx,w,h,state.design,state.bank);}
+ else if(view!=='cockpit'){
   const cx=w/2,cy=h*.69,sc=Math.max(.52,Math.min(1.6,h/650));
   ctx.save();ctx.translate(cx,cy);ctx.scale(sc,sc);ctx.rotate(-state.bank*.80);ctx.shadowColor='#041522b7';ctx.shadowBlur=26;ctx.shadowOffsetY=8;
   ctx.fillStyle='#142d3b';ctx.beginPath();ctx.moveTo(-93,13);ctx.lineTo(-10,-8);ctx.lineTo(-15,52);ctx.lineTo(-36,64);ctx.lineTo(-35,73);ctx.lineTo(0,67);ctx.lineTo(35,73);ctx.lineTo(36,64);ctx.lineTo(15,52);ctx.lineTo(10,-8);ctx.lineTo(93,13);ctx.lineTo(102,2);ctx.lineTo(10,-32);ctx.lineTo(0,-91);ctx.lineTo(-10,-32);ctx.lineTo(-102,2);ctx.closePath();ctx.fill();
   ctx.shadowBlur=0;ctx.shadowOffsetY=0;ctx.fillStyle='#d8ecec';ctx.beginPath();ctx.moveTo(0,-91);ctx.lineTo(9,-31);ctx.lineTo(100,4);ctx.lineTo(91,15);ctx.lineTo(13,-5);ctx.lineTo(15,54);ctx.lineTo(36,68);ctx.lineTo(33,73);ctx.lineTo(0,66);ctx.lineTo(-33,73);ctx.lineTo(-36,68);ctx.lineTo(-15,54);ctx.lineTo(-13,-5);ctx.lineTo(-91,15);ctx.lineTo(-100,4);ctx.lineTo(-9,-31);ctx.closePath();ctx.fill();
-  ctx.fillStyle=core.aircraft[state.craft].skin;ctx.fillRect(-100,4,24,8);ctx.fillRect(76,4,24,8);ctx.fillStyle='#286077';ctx.beginPath();ctx.ellipse(0,-20,6,22,0,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#93cbd9';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(0,-86);ctx.lineTo(0,65);ctx.stroke();ctx.restore();
+  ctx.fillStyle=state.craft==='custom'?'#f2aa7c':core.aircraft[state.craft].skin;ctx.fillRect(-100,4,24,8);ctx.fillRect(76,4,24,8);ctx.fillStyle='#286077';ctx.beginPath();ctx.ellipse(0,-20,6,22,0,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#93cbd9';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(0,-86);ctx.lineTo(0,65);ctx.stroke();ctx.restore();
  }
  // Low-opacity directional wind lines and cinematic shadows, still decorative.
  ctx.save();ctx.strokeStyle='#d8f5e640';ctx.lineWidth=1;for(let i=0;i<7;i++){const ux=(w*.12+i*w*.14+state.flightTime*7)%w,vy=h*.55+(i%3)*20;ctx.beginPath();ctx.moveTo(ux,vy);ctx.lineTo(ux+25,vy);ctx.stroke();}ctx.restore();
@@ -136,18 +188,18 @@ function render(){
  const vp=mul(perspective(view==='cockpit'?78*Math.PI/180:70*Math.PI/180,canvas.width/canvas.height,.5,15000),lookAt(eye,focus,up));
  gl.useProgram(program);gl.uniformMatrix4fv(uVP,false,vp);drawMesh(meshes.world,identity());if(view!=='cockpit')drawMesh(meshes[state.craft],planeModel(state));
 }
-function hud(){const round=n=>Math.round(n).toLocaleString('en-US');$('speedOut').textContent=round(state.speed*1.94384);$('altOut').textContent=round(state.y*3.28084);$('headOut').textContent=String(Math.round((state.yaw*180/Math.PI+3600)%360)).padStart(3,'0');$('pitchOut').textContent=(state.pitch*180/Math.PI).toFixed(0);$('bankOut').textContent=(state.bank*180/Math.PI).toFixed(0);$('throttleOut').textContent=round(state.throttle*100);const sec=Math.floor(state.flightTime);$('flightTime').textContent='T+ '+String(Math.floor(sec/60)).padStart(2,'0')+':'+String(sec%60).padStart(2,'0');$('gateProgress').querySelectorAll('i').forEach((el,i)=>el.classList.toggle('done',i<state.checkpoints));const next=core.gates[state.checkpoints];$('nextGate').textContent=next?`NEXT: ${next.title} · ${state.checkpoints} / 3`:'MISSION COMPLETE · 3 / 3';$('flightStatus').textContent=state.condition==='GROUND_CONTACT'?'GROUND CONTACT':state.paused?'PAUSED':'SIMULATION ACTIVE';$('pauseToggle').textContent=state.paused?'▶ Resume':'Ⅱ Pause';$('cameraToggle').textContent=view==='chase'?'◉ Chase view':'◉ Cockpit view';}
+function hud(){const round=n=>Math.round(n).toLocaleString('en-US');$('speedOut').textContent=round(state.speed*1.94384);$('altOut').textContent=round(state.y*3.28084);$('headOut').textContent=String(Math.round((state.yaw*180/Math.PI+3600)%360)).padStart(3,'0');$('pitchOut').textContent=(state.pitch*180/Math.PI).toFixed(0);$('bankOut').textContent=(state.bank*180/Math.PI).toFixed(0);$('throttleOut').textContent=round(state.throttle*100);const sec=Math.floor(state.flightTime);$('flightTime').textContent='T+ '+String(Math.floor(sec/60)).padStart(2,'0')+':'+String(sec%60).padStart(2,'0');$('gateProgress').querySelectorAll('i').forEach((el,i)=>el.classList.toggle('done',i<state.checkpoints));const next=core.gates[state.checkpoints];$('nextGate').textContent=next?`NEXT: ${next.title} · ${state.checkpoints} / 3`:'MISSION COMPLETE · 3 / 3';$('flightStatus').textContent=state.condition==='GROUND_CONTACT'?'GROUND CONTACT':state.paused?'PAUSED':state.craft==='custom'?'FOUNDRY FLIGHT / SCREENING':'SIMULATION ACTIVE';$('pauseToggle').textContent=state.paused?'▶ Resume':'Ⅱ Pause';$('cameraToggle').textContent=view==='chase'?'◉ Chase view':'◉ Cockpit view';}
 function controls(){const has=(...a)=>a.some(k=>held.has(k));const t=k=>touch.has(k);return {pitch:(has('w','arrowup')||t('pitchUp')?1:0)-(has('s','arrowdown')||t('pitchDown')?1:0),bank:(has('d','arrowright')||t('right')?1:0)-(has('a','arrowleft')||t('left')?1:0),rudder:(has('e')?1:0)-(has('q')?1:0),throttle:(has('shift')||t('throttleUp')?1:0)-(has('control')||t('throttleDown')?1:0)};}
 function notify(message,seconds=3){$('flightAlert').textContent=message;$('flightAlert').classList.add('active');alertUntil=performance.now()+seconds*1000;$('flightA11y').textContent=message;}
 function frame(timestamp){if(!running)return;const dt=Math.min(.05,(timestamp-last)/1000||.016);last=timestamp;
  const was=state.checkpoints,prior=state.condition;core.step(state,controls(),dt);
  if(was!==state.checkpoints)notify(state.checkpoints>=3?'MISSION COMPLETE · SAVE YOUR FLIGHT':`GATE ${state.checkpoints} CLEARED`,4);
  if(prior!==state.condition&&state.condition==='GROUND_CONTACT'){state.paused=true;notify('GROUND CONTACT · RESTART OR SAVE FLIGHT',5);}
- if(state.speed<core.aircraft[state.craft].stall&&!state.paused&&Math.floor(timestamp/800)!==Math.floor((timestamp-16)/800))notify('LOW AIRSPEED · SIMULATED STALL',1.0);
+ if((state.craft==='custom'?state.aero?.stall:state.speed<core.aircraft[state.craft].stall)&&!state.paused&&Math.floor(timestamp/800)!==Math.floor((timestamp-16)/800))notify('LOW AIRSPEED · SIMULATED STALL',1.0);
  if(!fallback2D||timestamp-lastDraw>65){render();lastDraw=timestamp;}if(timestamp-lastHUD>100){hud();lastHUD=timestamp;}if(alertUntil&&timestamp>alertUntil){$('flightAlert').classList.remove('active');alertUntil=0;}
  frames++;requestAnimationFrame(frame);
 }
-function reset(kind=state.craft){state=core.start(kind);view='chase';hud();notify('FLIGHT RESTARTED · SYNTHETIC RANGE',2);}
+function reset(kind=state.craft){const design=state.design;state=core.start(kind,kind==='custom'?design:null);view='chase';hud();notify('FLIGHT RESTARTED · SYNTHETIC RANGE',2);}
 function togglePause(){state.paused=!state.paused;hud();notify(state.paused?'SIMULATION PAUSED':'SIMULATION RESUMED',1.2);}
 function saveFlight(){const receipt=core.flightReceipt(state);try{localStorage.setItem('evercraft-aaar-last-flight',JSON.stringify(receipt));}catch{}
  const sent=window.parent!==window;
@@ -156,9 +208,15 @@ function saveFlight(){const receipt=core.flightReceipt(state);try{localStorage.s
 }
 function begin(){if(running)return;running=true;$('startScreen').style.display='none';canvas.focus({preventScroll:true});last=performance.now();requestAnimationFrame(frame);notify('FLIGHT RANGE ACTIVE · W/S PITCH · A/D BANK',3);}
 function initEvents(){
+ window.addEventListener('AAAR_FOUNDRY_OPEN',()=>{if(running)state.paused=true;hud();});
+ window.addEventListener('AAAR_LAUNCH_CRAFT',event=>{
+   const design=window.AAARFoundry.validate(event.detail);state=core.start('custom',design);
+   const select=$('planeType');let opt=select.querySelector('option[value=custom]');if(!opt){opt=document.createElement('option');opt.value='custom';select.appendChild(opt);}opt.textContent=design.name;select.value='custom';
+   if(gl&&program)buildCustomMesh(design);view='chase';if(!running)begin();else{state.paused=false;}hud();notify('CUSTOM '+(design.type==='wing'?'WING':'ROTORCRAFT')+' LAUNCHED · ANALYTICAL GAME MODEL',4);
+ });
  $('beginFlight').addEventListener('click',begin);
  $('skipToControls').addEventListener('click',()=>{notify('W/S PITCH · A/D BANK · SHIFT/CTRL THROTTLE',5);$('beginFlight').focus();});
- $('planeType').addEventListener('change',e=>{reset(e.target.value);});
+ $('planeType').addEventListener('change',e=>{if(e.target.value==='custom'&&state.design)reset('custom');else if(e.target.value!=='custom')reset(e.target.value);});
  $('cameraToggle').addEventListener('click',()=>{view=view==='chase'?'cockpit':'chase';hud();});
  $('pauseToggle').addEventListener('click',togglePause);$('resetFlight').addEventListener('click',()=>reset());$('saveFlight').addEventListener('click',saveFlight);
  $('fullscreenToggle').addEventListener('click',async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else if(shell.requestFullscreen)await shell.requestFullscreen();}catch{notify('FULLSCREEN NOT AVAILABLE ON THIS DEVICE',2);}});
@@ -166,9 +224,9 @@ function initEvents(){
   const start=e=>{e.preventDefault();b.setPointerCapture?.(e.pointerId);touch.add(key);};
   const end=e=>{e.preventDefault();touch.delete(key);};b.addEventListener('pointerdown',start);b.addEventListener('pointerup',end);b.addEventListener('pointercancel',end);b.addEventListener('lostpointercapture',()=>touch.delete(key));
  }
- document.addEventListener('keydown',e=>{const k=e.key.toLowerCase();if(['w','s','a','d','q','e','shift','control','arrowup','arrowdown','arrowleft','arrowright',' '].includes(k)){if(running&&!e.target.closest('select'))e.preventDefault();held.add(k);}if(e.repeat)return;if(k==='c'){$('cameraToggle').click();}if(k==='r')reset();if(k==='p'||k===' ')togglePause();});
+ document.addEventListener('keydown',e=>{if(document.getElementById('foundryOverlay')?.classList.contains('open'))return;const k=e.key.toLowerCase();if(['w','s','a','d','q','e','shift','control','arrowup','arrowdown','arrowleft','arrowright',' '].includes(k)){if(running&&!e.target.closest('select'))e.preventDefault();held.add(k);}if(e.repeat)return;if(k==='c'){$('cameraToggle').click();}if(k==='r')reset();if(k==='p'||k===' ')togglePause();});
  document.addEventListener('keyup',e=>held.delete(e.key.toLowerCase()));window.addEventListener('blur',()=>{held.clear();touch.clear();if(running&&!state.paused){state.paused=true;hud();}});document.addEventListener('visibilitychange',()=>{if(document.hidden&&running){state.paused=true;}});
- window.addEventListener('message',event=>{if(event.source!==window.parent||event.source===window)return;if(event.data?.type==='AAAR_WORLD_PAUSE'){state.paused=true;hud();}if(event.data?.type==='AAAR_WORLD_RESUME'){state.paused=false;hud();}});
+ window.addEventListener('message',event=>{if(event.source!==window.parent||event.source===window)return;if(event.data?.type==='AAAR_WORLD_PAUSE'){state.paused=true;hud();}if(event.data?.type==='AAAR_WORLD_RESUME'){state.paused=false;hud();}if(event.data?.type==='AAAR_OPEN_FOUNDRY'){window.AAARFoundryUI?.open();}});
 }
 try{if(gl)initGL();else{fallback2D=true;$('flightStatus').textContent='SOFTWARE 3D VIEW';}initEvents();hud();render();}catch(error){$('beginFlight').disabled=true;$('beginFlight').textContent='GRAPHICS UNAVAILABLE';$('startScreen').querySelector('p').textContent=String(error.message||error)+' This does not affect your saved AAAR registry.';}
 })();
