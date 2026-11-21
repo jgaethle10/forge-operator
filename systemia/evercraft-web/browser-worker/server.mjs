@@ -12,6 +12,7 @@ import {
 } from './policy.mjs';
 
 const PORT = Math.max(1, Math.min(65535, Number(process.env.PORT || 8787)));
+const BIND_HOST = process.env.EVERCRAFT_BROWSER_BIND_HOST === '127.0.0.1' ? '127.0.0.1' : '0.0.0.0';
 const WORKER_TOKEN = String(process.env.EVERCRAFT_BROWSER_WORKER_TOKEN || '');
 const MAX_CONCURRENCY = Math.max(1, Math.min(8, Number(process.env.EVERCRAFT_BROWSER_MAX_CONCURRENCY || 2)));
 const MAX_BODY_BYTES = 64 * 1024;
@@ -548,7 +549,7 @@ const server = http.createServer(async (req,res) => {
   }
 });
 
-server.listen(PORT,'0.0.0.0',() => {
+server.listen(PORT,BIND_HOST,() => {
   console.log(JSON.stringify({event:'browser_worker_listening',port:PORT,engine:ENGINE,max_concurrency:MAX_CONCURRENCY}));
 });
 
