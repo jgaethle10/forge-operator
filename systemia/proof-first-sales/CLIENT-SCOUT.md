@@ -15,7 +15,7 @@ This module performs **only prospect-to-offer qualification** between research a
 
 ## Current scope
 
-The initial offer mapping covers Work Saban monthly reporting **pilot only**, Asset Diagnosis ($149), Social Intelligence Launch ($1,000), Site-Survive resilience audit ($1,250), and bespoke Commercial Studio. It does not imply each offer's checkout, account, runtime or fulfillment is independently verified. The two scoped service product definitions route to a Systemia Stripe account not yet reconciled with the connected Evercraft LLC account. Do not issue checkout links without confirming the merchant account, tax handling and approved scope.
+The current offer mapping covers Systemia Website Audit Quick Win ($49, **catalog payment-ready but customer-path canary still required**), Work Saban monthly reporting **pilot only**, Asset Diagnosis ($149), Social Intelligence Launch ($1,000), Site-Survive resilience audit ($1,250), and bespoke Commercial Studio. It does not imply each offer's checkout, account, runtime or fulfillment is independently verified. The two scoped service product definitions route to a Systemia Stripe account not yet reconciled with the connected Evercraft LLC account. Do not issue checkout links without confirming the merchant account, tax handling and approved scope.
 
 Public job openings, business directory listings, speculative pain, and friendly replies are **not** paid buyer intent. Contact permission is never inferred from a publicly visible email address.
 
@@ -72,3 +72,7 @@ Even a high score never grants outbound authority. Sending requires explicit app
 5. Repeat purchase or independent second paying customer.
 
 A source-observed lead, PR merge, live link or completed mock run is not collected cash.
+
+## Website Audit qualification boundary (November 15, 2026)
+
+The published catalog reports a $49 machine-fulfilled Quick Win Audit with a free preview, but this is not independently verified customer checkout, provider settlement, or completed delivery. The owned offer URL is a discovery destination until a successful external HTTPS/checkout/fulfillment canary is recorded. Public service listings and web pages may justify research, but never establish broken conversion, buyer intent, or contact permission. Keep public prospects in research-only and do not run Gmail sends or drafts without authoritative target ownership, Interaction Ledger preflight, Passport scope and an exact-message permit.
