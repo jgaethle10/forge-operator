@@ -20,6 +20,18 @@ const HUB_LINKS=Object.freeze([
   '../work-saban/demo/'
 ]);
 const digest=x=>createHash('sha256').update(x).digest('hex');
+
+// Founder-approved identity for the free tools hub only (not underlying product brands).
+// Validate both repository source and independently observed deployed HTML.
+export function freeHubBrandContract(html){
+  const value=String(html||'');
+  return /<meta\s+name=["']theme-color["']\s+content=["']#050b12["']\s*\/?>/i.test(value)
+    && /color-scheme\s*:\s*dark\b/i.test(value)
+    && /--bg\s*:\s*#050b12\b/i.test(value)
+    && /--ice\s*:\s*#8adfff\b/i.test(value)
+    && !/--red\s*:/i.test(value);
+}
+
 const robotsNoindex=text=>/<meta\s+name=["']robots["'][^>]+content=["'][^"']*\bnoindex\b/i.test(text||'');
 function expectedURL(spec){
   const url=new URL(ROOT+spec.path);
@@ -42,6 +54,8 @@ export function classifySurface(spec,observation,source){
   };
   if(typeof source!=='string')return {...out,state:'SOURCE_NOT_IN_MAIN'};
   if(!source.includes(spec.identity))throw Error('source_identity_missing:'+spec.key);
+  const brandSourcePass=spec.key==='free_hub'?freeHubBrandContract(source):null;
+  if(spec.key==='free_hub'&&!brandSourcePass) return {...out,state:'BRAND_SOURCE_DRIFT',brand_source_verified:false,brand_public_verified:false};
   if(!observation?.observed)return {...out,state:'PUBLIC_UNOBSERVED',error:observation?.error||'unobserved'};
   if(observation.status!==200 || observation.final_url!==url || !/^text\/html\b/i.test(observation.content_type||'')){
     return {...out,state:'PUBLIC_RESPONSE_NOT_VERIFIED',final_url:observation.final_url||null};
@@ -51,10 +65,13 @@ export function classifySurface(spec,observation,source){
   const identity=html.includes(spec.identity);
   const noindex=robotsNoindex(html) || /\bnoindex\b/i.test(observation.x_robots_tag||'');
   const foundLinks=spec.key==='free_hub' ? HUB_LINKS.every(href=>html.includes('href="'+href)) : null;
+  const brandPublicPass=spec.key==='free_hub'?freeHubBrandContract(html):null;
   const result={...out,exact_source_readback:exact,identity_verified:identity,
-    source_links_verified:foundLinks,public_noindex:noindex};
+    source_links_verified:foundLinks,public_noindex:noindex,
+    brand_source_verified:brandSourcePass,brand_public_verified:brandPublicPass};
   if(!identity)return {...result,state:'PUBLIC_IDENTITY_MISMATCH'};
   if(spec.key==='free_hub'&&!foundLinks)return {...result,state:'PUBLIC_FREE_LINKS_MISSING'};
+  if(spec.key==='free_hub'&&!brandPublicPass)return {...result,state:'PUBLIC_BRAND_DRIFT'};
   if(noindex)return {...result,state:'PUBLIC_INDEX_HOLD'};
   if(!exact)return {...result,state:'PUBLIC_SOURCE_DRIFT'};
   return {...result,state:'PUBLIC_HTML_GET_VERIFIED'};

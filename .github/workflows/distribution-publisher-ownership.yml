@@ -8,6 +8,7 @@ on:
       - 'systemia/distribution/probe-owned-search-candidates.mjs'
       - 'systemia/distribution/probe-owned-search-candidates.test.mjs'
       - 'systemia/distribution/probe-free-first-public.mjs'
+      - 'public/try/index.html'
       - 'systemia/distribution/probe-free-first-public.test.mjs'
       - 'systemia/distribution/audit-publisher-ownership.mjs'
       - 'systemia/distribution/audit-publisher-ownership.test.mjs'
