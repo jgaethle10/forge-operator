@@ -1,0 +1,138 @@
+{
+  "schema": "evercraft.faie.international-pilot-source-registry.v1",
+  "mission_key": "faie-el-salvador-coffee-evidence-pilot-20261115",
+  "country": {
+    "name": "El Salvador",
+    "iso2": "SV"
+  },
+  "admission": "CANDIDATE_PENDING_SYSTEMIA_ADMISSION",
+  "deployment_state": "NOT_DEPLOYED",
+  "integration_state": "SOURCE_DISCOVERY_ONLY",
+  "public_demo_verified": false,
+  "payment_verified": false,
+  "field_evidence_verified": false,
+  "evidence_policy": {
+    "upstream_evidence_states_preserved": true,
+    "mapped_data_not_field_observation": true,
+    "source_catalog_is_not_live_ingestion": true,
+    "no_unverified_suitability_verdict": true,
+    "operator_data_requires_consent": true,
+    "publication_authority": false,
+    "decision_authority": false,
+    "payments_or_outreach_authority": false
+  },
+  "source_review_date": "2026-11-15",
+  "sources": [
+    {
+      "id": "sv-centa-soil-mapping",
+      "institution": "CENTA",
+      "kind": "government_source_catalog",
+      "url": "https://www.centa.gob.sv/mapa-digital-de-suelos/",
+      "dimensions": [
+        "soil"
+      ],
+      "source_state": "DISCOVERED_NOT_INGESTED",
+      "data_character": "published documentation; no parcel data fetched",
+      "notes": "Do not substitute these maps for field sampling or treat the website as an observation."
+    },
+    {
+      "id": "sv-marn-mag-centa-soil-mapserver",
+      "institution": "MARN/MAG/CENTA",
+      "kind": "public_arcgis_map_service",
+      "url": "https://geoportal.snet.gob.sv/server/rest/services/clima/servicio_suelos_pais/MapServer",
+      "layers": [
+        {
+          "id": 0,
+          "name": "organic matter"
+        },
+        {
+          "id": 1,
+          "name": "pH"
+        },
+        {
+          "id": 2,
+          "name": "texture"
+        }
+      ],
+      "dimensions": [
+        "soil"
+      ],
+      "source_state": "DISCOVERED_NOT_INGESTED",
+      "data_character": "MODELED spatial interpolation drawing on historical field and environmental inputs",
+      "notes": "Projection, licensing, layer availability, geometry, timestamps and parcel-scale accuracy need direct verification before runtime integration. Never label as a current field soil test."
+    },
+    {
+      "id": "sv-mag-agricultural-thematic-maps",
+      "institution": "MAG",
+      "kind": "government_source_catalog",
+      "url": "https://www.mag.gob.sv/mapas-tematicos-sobre-frutales-granos-basicos-hortalizas-pecuarios-y-suelos/",
+      "dimensions": [
+        "production",
+        "soil",
+        "land_use"
+      ],
+      "source_state": "DISCOVERED_NOT_INGESTED",
+      "data_character": "published regional thematic map collection; site precision not verified",
+      "notes": "Check individual dataset terms, coverage, update frequency and relevance."
+    },
+    {
+      "id": "sv-mag-agricultural-statistics",
+      "institution": "MAG",
+      "kind": "government_source_catalog",
+      "url": "https://www.mag.gob.sv/servicios/estadisticas-agropecuarias/",
+      "dimensions": [
+        "markets",
+        "production",
+        "economics"
+      ],
+      "source_state": "DISCOVERED_NOT_INGESTED",
+      "data_character": "official published market and agricultural statistical series; data not retrieved",
+      "notes": "Aggregate prices and production must never be presented as the named cooperative's results."
+    },
+    {
+      "id": "sv-bcr-geoagricultural-census",
+      "institution": "Banco Central de Reserva",
+      "kind": "government_geoportal",
+      "url": "https://geoportal.bcr.gob.sv/",
+      "dimensions": [
+        "production",
+        "markets",
+        "labor"
+      ],
+      "source_state": "DISCOVERED_NOT_INGESTED",
+      "data_character": "census and geostatistical portal; data not retrieved",
+      "notes": "Census reporting years and statistical units must be stated whenever used."
+    }
+  ],
+  "minimum_evidence_dimensions": [
+    "soil",
+    "water",
+    "heat_and_climate",
+    "crop_health",
+    "energy",
+    "logistics",
+    "labor",
+    "economics",
+    "policy",
+    "resilience"
+  ],
+  "pilot_question": "What evidence is available and what remains unknown about soil constraints, water risks, production resilience and market logistics for a coffee producer or cooperative in western El Salvador?",
+  "candidate_regions": [
+    "Ahuachapán, El Salvador",
+    "Chalchuapa, Santa Ana, El Salvador"
+  ],
+  "outputs": [
+    "source-linked evidence and uncertainty brief",
+    "coverage and provenance ledger",
+    "missing-data acquisition queue",
+    "operator review checklist"
+  ],
+  "launch_gates": [
+    "Systemia admission and dedupe",
+    "country dataset access and license review",
+    "source timestamp/projection/crop relevance validation",
+    "independent exact FAIE public edge and MCP receipt",
+    "human-reviewed bounded output using locally appropriate evidence",
+    "payment-to-fulfillment verification before self-service sale"
+  ]
+}
