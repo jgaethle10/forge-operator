@@ -1,0 +1,52 @@
+name: On The Go V13 Original Words Bella YOU Auditions
+on:
+  push:
+    branches: [feature/onthego-bella-native-voice-20261026]
+    paths:
+      - 'systemia/media-studio/on-the-go-native-you-v13.py'
+      - '.github/workflows/otg-v13-native-you.yml'
+  pull_request:
+    paths:
+      - 'systemia/media-studio/on-the-go-native-you-v13.py'
+      - '.github/workflows/otg-v13-native-you.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  original-words-bella:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.11'}
+      - name: Verify original words preserved
+        run: python systemia/media-studio/on-the-go-native-you-v13.py --verify-only
+      - name: Install original Bella speech generator
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq espeak-ng libsndfile1 ffmpeg
+          python -m pip install --disable-pip-version-check 'kokoro==0.9.4' 'soundfile>=0.12,<1.0'
+      - name: Generate new native stress auditions
+        env:
+          HF_HUB_DISABLE_TELEMETRY: '1'
+        run: python systemia/media-studio/on-the-go-native-you-v13.py otg-v13-you-native
+      - name: Verify hashes of all four audition WAV files
+        run: |
+          python - <<'PY'
+          import json,hashlib,pathlib
+          root=pathlib.Path('otg-v13-you-native')
+          r=json.loads((root/'evidence.json').read_text())
+          assert r['voice']=='af_bella' and len(r['options'])==4
+          for o in r['options']:
+            f=root/o['filename']
+            assert f.read_bytes()[:4]==b'RIFF'
+            assert hashlib.sha256(f.read_bytes()).hexdigest()==o['sha256']
+          print('PASS: original-words Bella WAV evidence')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: otg-v13-native-bella-you-review-private
+          path: otg-v13-you-native/
+          retention-days: 7
+          if-no-files-found: error

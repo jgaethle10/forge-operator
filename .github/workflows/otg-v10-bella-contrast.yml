@@ -1,0 +1,56 @@
+name: On The Go V10 YOU Contrast Bella Audition
+on:
+  push:
+    branches: [feature/onthego-bella-native-voice-20261026]
+    paths: 
+      - 'systemia/media-studio/on-the-go-bella-contrast-v10.py'
+      - '.github/workflows/otg-v10-bella-contrast.yml'
+  pull_request:
+    paths:
+      - 'systemia/media-studio/on-the-go-bella-contrast-v10.py'
+      - '.github/workflows/otg-v10-bella-contrast.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  original-voice-contrast:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Verify persuasive contrast copy
+        run: python systemia/media-studio/on-the-go-bella-contrast-v10.py --verify-only
+      - name: Install original Bella runtime
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq espeak-ng libsndfile1 ffmpeg
+          python -m pip install --disable-pip-version-check 'kokoro==0.9.4' 'soundfile>=0.12,<1.0'
+      - name: Produce three native contrast performances
+        env:
+          HF_HUB_DISABLE_TELEMETRY: '1'
+        run: python systemia/media-studio/on-the-go-bella-contrast-v10.py otg-v10-native-contrast
+      - name: Validate original WAV evidence and landing time
+        run: |
+          python - <<'PY'
+          import json,hashlib,pathlib,wave
+          root=pathlib.Path("otg-v10-native-contrast")
+          receipt=json.loads((root/"evidence.json").read_text())
+          assert receipt["voiceId"]=="af_bella" and len(receipt["takes"])==3
+          for item in receipt["takes"]:
+              assert 7.45<=item["endSec"]<=7.85
+              for p,s in ((item["nativeWav"],item["nativeSha256"]),(item["masterWav"],item["masterSha256"])):
+                  data=(root/p).read_bytes()
+                  assert data[:4]==b'RIFF' and hashlib.sha256(data).hexdigest()==s
+              with wave.open(str(root/item["masterWav"]),"rb") as w:
+                  assert w.getnframes()==720000 and w.getframerate()==24000
+          print("PASS: native Bella evidence, final YOU lands immediately before 8-sec reveal")
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: onthego-v10-bella-natural-you-private
+          path: otg-v10-native-contrast/
+          retention-days: 7
+          if-no-files-found: error

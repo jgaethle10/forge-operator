@@ -1,0 +1,56 @@
+name: On The Go V16 Continuous Bella YOU Stress
+on:
+  push:
+    branches: [feature/onthego-bella-native-voice-20261026]
+    paths:
+      - 'systemia/media-studio/on-the-go-v16-connected-voice.py'
+      - '.github/workflows/onthego-v16-connected-bella.yml'
+  pull_request:
+    paths:
+      - 'systemia/media-studio/on-the-go-v16-connected-voice.py'
+      - '.github/workflows/onthego-v16-connected-bella.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  native-emphasis:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Verify original spoken words preserved
+        run: python systemia/media-studio/on-the-go-v16-connected-voice.py --verify-only
+      - name: Install native Kokoro pipeline
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq espeak-ng libsndfile1 ffmpeg
+          python -m pip install --disable-pip-version-check 'kokoro==0.9.4' 'soundfile>=0.12,<1.0'
+      - name: Render uninterrupted Bella alternatives
+        env:
+          HF_HUB_DISABLE_TELEMETRY: '1'
+        run: python systemia/media-studio/on-the-go-v16-connected-voice.py otg-v16-connected
+      - name: Validate model evidence & master lengths
+        run: |
+          python - <<'PY'
+          import json,hashlib,pathlib,wave
+          root=pathlib.Path('otg-v16-connected')
+          d=json.loads((root/'evidence.json').read_text())
+          assert d['connectedSingleReading'] and not d['independentWordEdits'] and len(d['takes'])==4
+          for a in d['takes']:
+            assert a['endSec']<=7.93
+            for file,key in ((a['nativeFile'],'nativeHash'),(a['masterFile'],'masterHash')):
+              p=root/file
+              assert hashlib.sha256(p.read_bytes()).hexdigest()==a[key]
+            with wave.open(str(root/a['masterFile']),'rb') as w:
+              assert w.getframerate()==24000 and w.getnframes()==720000
+          print('PASS: original words; four continuous model performances; no splices; no overlap with reveal')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: onthego-v16-continuous-native-bella-private
+          path: otg-v16-connected/
+          retention-days: 7
+          if-no-files-found: error
