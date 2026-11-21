@@ -36,7 +36,7 @@ async function jsonRequest(url, {
     method,
     headers: requestHeaders,
     body: body === undefined ? undefined : JSON.stringify(body),
-    signal,
+    signal: signal || AbortSignal.timeout(15_000),
   });
 
   let payload = null;
@@ -83,6 +83,52 @@ function routeAllowed(method, route) {
     method === 'POST' &&
     /^\/v1\/leases\/[^/]+\/(?:renew|release)$/.test(route)
   ) return true;
+  return false;
+}
+
+
+/**
+ * Persistent HP worker admission: only a bounded SHA-256 MicroSeed computation.
+ * This is enforced ON THE DEVICE after decrypting the broker command, so a
+ * future broker-side policy mistake cannot invoke filesystem/exec/service APIs.
+ * Default ephemeral agent behavior is preserved for existing callers.
+ */
+export function narrowContentHashCommandAllowed(command) {
+  const method = String(command?.method || 'GET').toUpperCase();
+  const route = String(command?.route || '');
+  const body = command?.body;
+  if (method === 'GET' && (route === '/v1/health' || route === '/v1/capacity')) {
+    return true;
+  }
+  if (method === 'POST' && route === '/v1/leases') {
+    return body && typeof body === 'object' &&
+      body.workload_class === 'systemia.content-hash.v1' &&
+      Number.isFinite(Number(body.requested_ttl_ms)) &&
+      Number(body.requested_ttl_ms) > 0 &&
+      Number(body.requested_ttl_ms) <= 120000;
+  }
+  if (method === 'POST' && route === '/v1/jobs') {
+    const input = body?.input;
+    const payload = input?.payload;
+    const key = String(body?.idempotency_key || '');
+    if (body?.workload_class !== 'systemia.content-hash.v1' ||
+        !/^[a-zA-Z0-9._-]{8,128}$/.test(key) ||
+        // Canonical NodeSeed /v1/jobs places the idempotency key in the
+        // top-level request. A duplicate input key is optional, but when
+        // provided it must match exactly to prevent divergent job identity.
+        (input?.idempotency_key !== undefined && input.idempotency_key !== key) ||
+        !body.lease_id || !body.token ||
+        !payload || typeof payload !== 'object' ||
+        payload.bytes_base64 !== undefined ||
+        payload.value === undefined) return false;
+    try {
+      const bytes = Buffer.byteLength(JSON.stringify(payload));
+      return bytes > 0 && bytes <= 4096;
+    } catch { return false; }
+  }
+  if (method === 'POST' && /^\/v1\/leases\/[a-zA-Z0-9_-]{1,128}\/release$/.test(route)) {
+    return typeof body?.token === 'string' && body.token.length > 0;
+  }
   return false;
 }
 
@@ -163,8 +209,14 @@ export async function startOutboundNodeAgent({
   localAllocatorToken,
   pollBackoffMs = 100,
   capacityRefreshEveryPoll = true,
+  commandPolicy = 'default',
+  expectedNodeId = '',
+  expectedDeviceFingerprint = '',
+  preRegisterGuard = null,
+  capacityWorkloadAllowlist = null,
 } = {}) {
   const broker = assertBrokerUrl(brokerUrl);
+  if (!['default', 'content-hash-only'].includes(commandPolicy)) throw new Error('unsupported_worker_command_policy');
   const localEndpoint = String(localCapacityEndpoint || '').replace(/\/$/, '');
   if (!localEndpoint) throw new Error('localCapacityEndpoint is required');
   if (!/^http:\/\/(127\.0\.0\.1|localhost|\[::1\])(?::\d+)?$/i.test(localEndpoint)) {
@@ -187,8 +239,22 @@ export async function startOutboundNodeAgent({
   let pollController = null;
   let registeredAt = null;
   let lastCommandAt = null;
+  let lastPollAt = null;
+  let lastSuccessfulPollAt = null;
   let lastError = null;
   let loopPromise = null;
+
+  function constrainedCapacity(capacity) {
+    if (capacityWorkloadAllowlist === null) return capacity;
+    if (!Array.isArray(capacityWorkloadAllowlist) ||
+        capacityWorkloadAllowlist.length !== 1 ||
+        capacityWorkloadAllowlist[0] !== 'systemia.content-hash.v1' ||
+        !Array.isArray(capacity?.supported_workloads) ||
+        !capacity.supported_workloads.includes('systemia.content-hash.v1')) {
+      throw new Error('remote_capacity_allowlist_invalid');
+    }
+    return {...capacity,supported_workloads:['systemia.content-hash.v1']};
+  }
 
   async function localRequest(route, {
     method = 'GET',
@@ -207,15 +273,25 @@ export async function startOutboundNodeAgent({
   }
 
   async function register() {
+    if (typeof preRegisterGuard === 'function') await preRegisterGuard();
     const capacityResponse = await localRequest('/v1/capacity');
     if (!capacityResponse.ok) {
       throw new Error(`local_capacity_failed:${capacityResponse.status}`);
     }
-    const capacity = capacityResponse.body;
+    const capacity = constrainedCapacity(capacityResponse.body);
     nodeId = String(capacity.node_id || '');
     deviceFingerprint = String(capacity.device_fingerprint || '');
     if (!nodeId || !deviceFingerprint) {
       throw new Error('local Compute capacity is missing device identity');
+    }
+    if (expectedNodeId && nodeId !== expectedNodeId) {
+      throw new Error('remote_agent_physical_node_identity_mismatch');
+    }
+    // Bind the live capacity key to the previously owner-reviewed NodeSeed
+    // receipt. A key swap after preflight may not silently enroll under the
+    // same node ID. Existing ephemeral callers without this opt-in are unchanged.
+    if (expectedDeviceFingerprint && deviceFingerprint !== expectedDeviceFingerprint) {
+      throw new Error('remote_agent_physical_device_fingerprint_mismatch');
     }
 
     const challenge = await jsonRequest(`${broker}/v1/remote/challenge`, {
@@ -257,6 +333,9 @@ export async function startOutboundNodeAgent({
     commandReplayGuard = new ReplayGuard();
     commandResultCache = new Map();
     registeredAt = new Date().toISOString();
+    // A new session must earn its own successful poll; an old session's
+    // heartbeat must not advertise new-session liveness.
+    lastSuccessfulPollAt = null;
     lastError = null;
     return registration.body;
   }
@@ -264,7 +343,8 @@ export async function startOutboundNodeAgent({
   async function execute(command) {
     const method = String(command.method || 'GET').toUpperCase();
     const route = String(command.route || '');
-    if (!routeAllowed(method, route)) {
+    if (!routeAllowed(method, route) ||
+        (commandPolicy === 'content-hash-only' && !narrowContentHashCommandAllowed(command))) {
       return {
         status: 403,
         body: { error: 'remote_route_not_allowed' },
@@ -326,7 +406,17 @@ export async function startOutboundNodeAgent({
         if (capacityRefreshEveryPoll) {
           const fresh = await localRequest('/v1/capacity');
           if (!fresh.ok) throw new Error(`local_capacity_failed:${fresh.status}`);
-          capacity = fresh.body;
+          capacity = constrainedCapacity(fresh.body);
+          // The live NodeSeed can restart between registration and polls.
+          // Never advertise a different device under the previously attested
+          // session token, even if the node ID and workload names still match.
+          if (expectedNodeId && capacity.node_id !== expectedNodeId) {
+            throw new Error('remote_agent_physical_node_identity_mismatch');
+          }
+          if (expectedDeviceFingerprint &&
+              capacity.device_fingerprint !== expectedDeviceFingerprint) {
+            throw new Error('remote_agent_physical_device_fingerprint_mismatch');
+          }
         }
 
         pollController = new AbortController();
@@ -337,6 +427,7 @@ export async function startOutboundNodeAgent({
           signal: pollController.signal,
         });
         pollController = null;
+        lastPollAt = new Date().toISOString();
 
         if (!running) break;
 
@@ -345,6 +436,10 @@ export async function startOutboundNodeAgent({
           continue;
         }
         if (polled.status === 204) {
+          // Empty 204 is a successful round trip. Clear a prior transient
+          // failure, and record proof that the poll loop reached the broker.
+          lastSuccessfulPollAt = new Date().toISOString();
+          lastError = null;
           backoff = pollBackoffMs;
           continue;
         }
@@ -401,6 +496,7 @@ export async function startOutboundNodeAgent({
         await sendResult(commandId, result);
 
         lastCommandAt = new Date().toISOString();
+        lastSuccessfulPollAt = lastCommandAt;
         lastError = null;
         backoff = pollBackoffMs;
       } catch (error) {
@@ -428,10 +524,13 @@ export async function startOutboundNodeAgent({
       return {
         schema: 'evercraft.remote-capacity.node-agent-status.v1',
         running,
+        command_policy: commandPolicy,
         node_id: nodeId,
         device_fingerprint: deviceFingerprint,
         registered_at: registeredAt,
         last_command_at: lastCommandAt,
+        last_poll_at: lastPollAt,
+        last_successful_poll_at: lastSuccessfulPollAt,
         last_error: lastError,
         public_ingress: false,
         local_compute_scope: 'loopback_only',
