@@ -1,0 +1,112 @@
+name: Fallen Wikimedia Public-Domain Footage Probe
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/fallen-wikimedia-footage-probe.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  public-archive-alternate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v5
+      - name: Ensure FFmpeg availability
+        run: |
+          if ! command -v ffmpeg >/dev/null 2>&1; then
+            sudo apt-get update -qq && sudo apt-get install -y ffmpeg
+          fi
+      - name: Verify real Creative Commons archive bytes and create non-public review contact sheets
+        run: |
+          set -euo pipefail
+          mkdir -p archive-review /tmp/evercraft-commons
+          python3 - <<'PY'
+          import json,datetime,urllib.request,hashlib,subprocess
+          from pathlib import Path
+          items=[
+          {'id':'yuma-cbp-2019','date':'2019-06-04','location':'Yuma, Arizona, USA',
+           'credit':'U.S. Customs and Border Protection',
+           'record':'https://commons.wikimedia.org/wiki/File:New_Bollard_Wall_Installed_Near_Yuma,_AZ.webm',
+           'media':'https://upload.wikimedia.org/wikipedia/commons/0/0b/New_Bollard_Wall_Installed_Near_Yuma%2C_AZ.webm'},
+          {'id':'voa-border-2020','date':'2020-10-29','location':'Multiple border locations; verify each shot before geographic use',
+           'credit':'Voice of America / Spike Johnson, Christian von Preysing, Elizabeth Lee',
+           'record':'https://commons.wikimedia.org/wiki/File:Trump%E2%80%99s_Border_Wall_and_Other_Tools_Border_Agents_Use.webm',
+           'media':'https://upload.wikimedia.org/wikipedia/commons/c/ce/Trump%E2%80%99s_Border_Wall_and_Other_Tools_Border_Agents_Use.webm'}
+          ]
+          result=[]
+          for item in items:
+            row={k:v for k,v in item.items() if k!='media'}
+            media=Path('/tmp/evercraft-commons')/(item['id']+'.webm')
+            request=urllib.request.Request(item['media'],headers={'User-Agent':'EvercraftArchiveResearch/1.0 (non-publishing technical media review)'})
+            try:
+              with urllib.request.urlopen(request,timeout=55) as response:
+                row['http_status']=response.status
+                row['content_type']=response.headers.get('Content-Type','')
+                if not ('video' in row['content_type'] or 'octet-stream' in row['content_type']):
+                  raise ValueError('non-video response')
+                limit=125*1024*1024
+                total=0
+                with media.open('wb') as output:
+                  while True:
+                    data=response.read(1024*1024)
+                    if not data:break
+                    total+=len(data)
+                    if total>limit:raise ValueError('exceeds scout byte limit')
+                    output.write(data)
+              p=subprocess.run(['ffprobe','-v','error','-select_streams','v:0',
+                '-show_entries','format=duration,size:stream=codec_name,width,height',
+                '-of','json',str(media)],capture_output=True,text=True,timeout=20)
+              if p.returncode!=0:raise ValueError('ffprobe invalid')
+              probe=json.loads(p.stdout)
+              if not probe.get('streams'):raise ValueError('video stream missing')
+              row['status']='preview_source_bytes_verified'
+              row['sha256']=hashlib.sha256(media.read_bytes()).hexdigest()
+              row['ffprobe']=probe
+              duration=float(probe['format']['duration'])
+              for i,ratio in enumerate((.1,.3,.55,.8)):
+                timecode=max(0,duration*ratio)
+                still=Path('archive-review')/(item['id']+'-'+str(i)+'.jpg')
+                frames=subprocess.run(['ffmpeg','-y','-v','error','-ss',str(timecode),
+                  '-i',str(media),'-frames:v','1',
+                  '-vf','scale=800:-2','-q:v','3',str(still)],
+                  capture_output=True,text=True,timeout=20)
+                if frames.returncode!=0:raise ValueError('cannot generate review still')
+            except Exception as error:
+              row.update(status='blocked',reason=type(error).__name__+': '+str(error)[:140])
+              media.unlink(missing_ok=True)
+            result.append(row)
+            print('ARCHIVE',item['id'],row['status'],row.get('reason',''))
+          receipt={'schema':'evercraft.fallen.wikimedia-video-scout.v1',
+            'purpose':'source preview only, not a client film',
+            'warning':'Yuma 2019 and broader 2020 footage MUST NOT be labeled as Lukeville 2023',
+            'rights':'Government-origin/public-domain claims from Commons require independent review of embedded footage, logos, individuals and endorsement',
+            'verified_count':sum(x['status']=='preview_source_bytes_verified' for x in result),
+            'client_release_authorized':False,'published':False,'sources':result,
+            'timestamp_utc':datetime.datetime.now(datetime.timezone.utc).isoformat()}
+          Path('archive-review/probe.json').write_text(json.dumps(receipt,indent=2)+'\n')
+          PY
+      - name: Save contact sheets and source receipts for human creative review
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fallen-public-domain-video-scout
+          path: archive-review/
+          retention-days: 7
+      - name: Save original verified Yuma archive for PRIVATE editorial audition
+        uses: actions/upload-artifact@v4
+        with:
+          name: fallen-yuma-2019-original-internal
+          path: /tmp/evercraft-commons/yuma-cbp-2019.webm
+          if-no-files-found: error
+          retention-days: 1
+      - name: Enforce at least one real source was retrieved
+        run: |
+          python3 - <<'PY'
+          import json,sys
+          r=json.load(open('archive-review/probe.json'))
+          if not r['verified_count']:
+            print('NO-GO: archive access failed; no footage-based reel.')
+            sys.exit(2)
+          print('Sources obtained for human shot review only. No cinematic or rights approval.')
+          PY
