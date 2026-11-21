@@ -1,0 +1,47 @@
+name: Site Planner tests
+on:
+  push:
+    paths:
+      - 'products/site-planner/**'
+      - '.github/workflows/site-planner-server.yml'
+  pull_request:
+    paths:
+      - 'products/site-planner/**'
+      - '.github/workflows/site-planner-server.yml'
+permissions:
+  contents: read
+jobs:
+  smoke-and-engineering:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile owned application
+        run: python3 -m py_compile products/site-planner/server.py products/site-planner/outbox_audit.py
+      - name: Test provenance, queue state machine, and outbox checks
+        working-directory: products/site-planner
+        run: python3 -m unittest discover -v
+
+  real-browser-acceptance:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install browser QA tooling
+        run: |
+          python3 -m pip install --user 'playwright==1.56.0'
+          python3 -m playwright install --with-deps chromium webkit
+      - name: Verify actual Chromium and WebKit rendering and PDF
+        working-directory: products/site-planner
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+          SITE_PLANNER_BROWSER_QA_OUTPUT: ${{ runner.temp }}/site-planner-browser-qa
+        run: python3 browser_acceptance.py
+      - name: Upload synthetic screenshots and test PDF
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: site-planner-browser-acceptance
+          path: ${{ runner.temp }}/site-planner-browser-qa
+          if-no-files-found: warn
+          retention-days: 7
