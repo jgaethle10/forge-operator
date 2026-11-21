@@ -1,0 +1,35 @@
+name: Mossmere Read-Only Decision Observer
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/society/window-decision-receipts.mjs'
+      - 'systemia/society/window-decision-observer.mjs'
+      - 'tests/window-decision-receipts.test.mjs'
+      - 'tests/window-decision-observer.test.mjs'
+      - 'systemia/society/window-snapshot-fetch.mjs'
+      - 'tests/window-snapshot-fetch.test.mjs'
+      - '.github/workflows/window-policy-observer.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  policy-observer:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Validate read-only observation contracts and safety gate
+        run: |
+          node --check systemia/society/window-decision-receipts.mjs
+          node --check systemia/society/window-decision-observer.mjs
+          node --check systemia/society/window-snapshot-fetch.mjs
+          node --test tests/window-decision-receipts.test.mjs tests/window-decision-observer.test.mjs tests/window-snapshot-fetch.test.mjs
+          node --test tests/workflow-writer-audit.test.mjs

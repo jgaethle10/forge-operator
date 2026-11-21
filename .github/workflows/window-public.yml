@@ -4,6 +4,12 @@ on:
     paths:
       - 'public/the-window/**'
       - 'tests/the-window-public.test.mjs'
+      - 'tests/window-decision-receipts.test.mjs'
+      - 'tests/window-decision-observer.test.mjs'
+      - 'tests/window-snapshot-fetch.test.mjs'
+      - 'systemia/society/window-decision-receipts.mjs'
+      - 'systemia/society/window-decision-observer.mjs'
+      - 'systemia/society/window-snapshot-fetch.mjs'
       - '.github/workflows/window-public.yml'
   push:
     branches:
@@ -12,6 +18,12 @@ on:
     paths:
       - 'public/the-window/**'
       - 'tests/the-window-public.test.mjs'
+      - 'tests/window-decision-receipts.test.mjs'
+      - 'tests/window-decision-observer.test.mjs'
+      - 'tests/window-snapshot-fetch.test.mjs'
+      - 'systemia/society/window-decision-receipts.mjs'
+      - 'systemia/society/window-decision-observer.mjs'
+      - 'systemia/society/window-snapshot-fetch.mjs'
       - '.github/workflows/window-public.yml'
 
 permissions:
@@ -31,4 +43,4 @@ jobs:
           node --check public/the-window/world.mjs
           node --check public/the-window/client.mjs
       - name: Prove identical world reconstruction and disclosure
-        run: node --test tests/the-window-public.test.mjs
+        run: node --test tests/the-window-public.test.mjs tests/window-decision-receipts.test.mjs tests/window-decision-observer.test.mjs tests/window-snapshot-fetch.test.mjs
