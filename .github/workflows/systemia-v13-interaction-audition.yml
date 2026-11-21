@@ -1,0 +1,54 @@
+name: Systemia V13 Interaction & Repair Voice Auditions
+on:
+  pull_request:
+    paths:
+      - 'systemia/graphics-command/campaigns/systemia-v13-interaction-audition.py'
+      - '.github/workflows/systemia-v13-interaction-audition.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  conversation-audition:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Check interaction intent and unchanged lexical content
+        run: python systemia/graphics-command/campaigns/systemia-v13-interaction-audition.py --verify-only
+      - name: Install existing Voice Foundry model dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq espeak-ng libsndfile1 ffmpeg
+          python -m pip install --disable-pip-version-check 'kokoro==0.9.4' 'soundfile>=0.12,<1.0'
+      - name: Render complete voice takes in baseline and direction-sensitive variants
+        env:
+          HF_HUB_DISABLE_TELEMETRY: '1'
+        run: python systemia/graphics-command/campaigns/systemia-v13-interaction-audition.py --out private-v13-turntaking
+      - name: Independent checks for files and publishing boundary
+        run: |
+          python - <<'PY'
+          import hashlib,json,pathlib,subprocess
+          root=pathlib.Path('private-v13-turntaking')
+          data=json.loads((root/'v13-turntaking-receipt.json').read_text())
+          assert len(data['files'])==14 and len(data['turns'])==7
+          assert not data['published'] and not data['publicationAuthority']
+          assert not data['performancesApprovedByHuman']
+          assert not data['modelAndVoiceCommercialRightsVerified']
+          for c in data['files']:
+              source=root/c['file']
+              assert hashlib.sha256(source.read_bytes()).hexdigest()==c['sha256']
+              p=json.loads(subprocess.check_output(['ffprobe','-v','error','-show_streams','-of','json',str(source)]))
+              assert p['streams'][0]['sample_rate']=='24000'
+              assert p['streams'][0]['channels']==1
+              assert c['durationSec']>0.5
+          print('14 dry real Kokoro model takes; no human acting approval or release')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: systemia-v13-real-interaction-two-voice-auditions
+          path: private-v13-turntaking/
+          retention-days: 14
+          if-no-files-found: error

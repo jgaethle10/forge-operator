@@ -1,0 +1,94 @@
+{
+  "schema": "evercraft.graphics-command.visual-review-candidate.v1",
+  "campaignId": "systemia-university-i-said-draft-v1",
+  "filmTitle": "Systemia University | Visual Graduation V8 | Director's Review",
+  "missionRef": "github:issue:1450",
+  "reviewPr": "github:pr:1471",
+  "origin": "original_owned_html_css_javascript_frame_animation",
+  "frameSource": "exact_time_browser_render_no_interpolated_frames",
+  "evidenceState": "fictional_training_reenactment",
+  "founderFeedback": "V7 visually closer; sound still not there. Raise visual quality against supplied ElevenLabs reference while retaining original identity.",
+  "shots": [
+    {
+      "id": "agent-aperture",
+      "startsAt": 0,
+      "endsAt": 3.9,
+      "focus": "One Systemia-specific luminous geometric mechanism",
+      "instruction": "Strong foreground material/light/reflections, uncluttered negative space; not ElevenLabs icon or orb"
+    },
+    {
+      "id": "proposal-draft",
+      "startsAt": 3.9,
+      "endsAt": 4.55,
+      "focus": "One legible proposal",
+      "instruction": "Present draft full frame with depth, camera move, text-safe constraints"
+    },
+    {
+      "id": "proposal-sent",
+      "startsAt": 4.55,
+      "endsAt": 7,
+      "focus": "DRAFT becomes SENT",
+      "instruction": "One meaningful status transition with optical focus/lighting shift"
+    },
+    {
+      "id": "client-message",
+      "startsAt": 7,
+      "endsAt": 11.1,
+      "focus": "Who approved this?",
+      "instruction": "One oversized client message; deliberate pause to read"
+    },
+    {
+      "id": "human-authorization",
+      "startsAt": 11.1,
+      "endsAt": 15,
+      "focus": "YOU",
+      "instruction": "Human permission lineage and accountability without claiming legal liability"
+    },
+    {
+      "id": "brand-resolution",
+      "startsAt": 15,
+      "endsAt": 18,
+      "focus": "Delegate the work. Not the responsibility.",
+      "instruction": "Author-controlled close, verify canonical product name and visual identity"
+    }
+  ],
+  "media": {
+    "name": "Systemia_University_Visual_Graduation_V8_18s_Review.mp4",
+    "sha256": "796611b939392c0b642c7bb20df1f4af0021ca0b3b05c812442d14dc9001b046",
+    "bytes": 7245706,
+    "width": 1600,
+    "height": 900,
+    "fps": 24,
+    "videoFrames": 432,
+    "durationSec": 18,
+    "sourceFramesCaptured": 432,
+    "sourceFrameHashesUnique": 432,
+    "interpolationUsed": false
+  },
+  "audio": {
+    "track": "unchanged internal V7 AAC",
+    "compressedAudioMd5": "b630a3197dcf2fa71a6772c86b2aff10",
+    "voicePerformanceApproved": false,
+    "commercialRightsCleared": false
+  },
+  "truth": {
+    "nativeWorldEngineWebGpu": false,
+    "productScreenCaptured": false,
+    "realCustomerEvent": false,
+    "canonicalBrandAssetsVerified": false,
+    "approvedForFallenShotTournament": false,
+    "admittedIntoFallen": false,
+    "universityEnrollmentVerified": false,
+    "publishingAuthorized": false,
+    "paidGenerationAuthorized": false
+  },
+  "originalSourceStatus": "Conversation source kit available for founder review; not committed into GitHub branch. Must import and code review stage renderer before source-of-truth deployment.",
+  "nextGates": [
+    "Founder visual direction approval",
+    "Native source import and World Engine / Fallen integration review",
+    "Human reaction/character visual quality",
+    "Actor/agent audition and real audio performance",
+    "Shot Tournament selection and Fallen admission",
+    "Verified University enrollment route and final founder release"
+  ]
+}

@@ -1,0 +1,63 @@
+name: Systemia V15 Emotion-Context Voice Audition (private)
+on:
+  pull_request:
+    paths:
+      - 'systemia/graphics-command/campaigns/systemia-v15-emotion-context-plan.json'
+      - 'systemia/graphics-command/campaigns/systemia-v15-context-performance.py'
+      - 'systemia/graphics-command/campaigns/systemia-v15-context-performance.test.py'
+      - '.github/workflows/systemia-v15-emotion-context.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  contextual-real-voice:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Test actual sequential beliefs and emotional direction, reject tampering
+        run: |
+          python systemia/graphics-command/campaigns/systemia-v15-context-performance.test.py
+          python systemia/graphics-command/campaigns/systemia-v15-context-performance.py \
+            systemia/graphics-command/campaigns/systemia-v15-emotion-context-plan.json --verify-only
+      - name: Install existing Voice Foundry Kokoro CPU runtime
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq espeak-ng libsndfile1 ffmpeg
+          python -m pip install --disable-pip-version-check 'kokoro==0.9.4' 'soundfile>=0.12,<1.0'
+      - name: Render fourteen genuinely new whole-turn neural auditions
+        env:
+          HF_HUB_DISABLE_TELEMETRY: '1'
+        run: |
+          python systemia/graphics-command/campaigns/systemia-v15-context-performance.py \
+            systemia/graphics-command/campaigns/systemia-v15-emotion-context-plan.json \
+            --out private-context-auditions
+      - name: Independently verify audio bytes and no fabricated human approvals
+        run: |
+          python - <<'PY'
+          import hashlib,json,pathlib,subprocess
+          root=pathlib.Path('private-context-auditions')
+          r=json.loads((root/'context-performance-audition-receipt.json').read_text())
+          assert len(r['files'])==14
+          assert len({(c['turnId'],c['variant']) for c in r['files']})==14
+          assert not any(r[k] for k in [
+            'contextEnteredVoiceModel','emotionConditioningInModel','voiceCommercialRightsVerified',
+            'performedByHumanActor','humanListeningReviewCompleted','publicationAuthorized'])
+          for c in r['files']:
+            wav=root/c['file']
+            assert wav.is_file() and hashlib.sha256(wav.read_bytes()).hexdigest()==c['sha256']
+            result=json.loads(subprocess.check_output(['ffprobe','-v','error','-show_streams','-of','json',str(wav)]))
+            assert result['streams'][0]['sample_rate']=='24000'
+            assert result['streams'][0]['channels']==1
+          print('14 original voice audition candidates; no claimed contextual model or release approval')
+          PY
+      - name: Private rights-held actor audition evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: systemia-v15-emotion-context-v02-v06-real-auditions
+          path: private-context-auditions/
+          retention-days: 14
+          if-no-files-found: error

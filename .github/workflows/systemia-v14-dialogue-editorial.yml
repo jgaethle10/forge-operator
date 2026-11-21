@@ -1,0 +1,32 @@
+name: Systemia V14 Action-Conditioned Dialogue Editorial Canary
+on:
+  pull_request:
+    paths:
+      - 'systemia/graphics-command/campaigns/systemia-v14-action-dialogue-alignment.json'
+      - 'systemia/graphics-command/campaigns/systemia-v14-action-dialogue-alignment.test.mjs'
+      - '.github/workflows/systemia-v14-dialogue-editorial.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  dialogue-to-action-release-hold:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify story-state causality and honest review-only receipts
+        run: node --test systemia/graphics-command/campaigns/systemia-v14-action-dialogue-alignment.test.mjs
+      - name: Preserve voice rights and publishing controls
+        run: |
+          node --input-type=module - <<'NODE'
+          import fs from 'node:fs';
+          const x=JSON.parse(fs.readFileSync('systemia/graphics-command/campaigns/systemia-v14-action-dialogue-alignment.json','utf8'));
+          if(x.admission.publicationAuthorized||x.admission.commercialVoiceRightsVerified||x.admission.dynamicResponseConditionedVoice)
+            throw Error('creative_audition_misrepresented_as_finished_product');
+          if(x.dialogue.find(c=>c.id==='resolution').startSec < x.actions.find(c=>c.id==='approval-required-on').timeSec+.15)
+            throw Error('premature_agent_acknowledgement');
+          console.log('V14 editorial action-gate verified. No generation, deployment, paid media or publish.');
+          NODE
