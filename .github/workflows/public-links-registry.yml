@@ -11,6 +11,7 @@ on:
     paths:
       - 'scripts/audit-public-links.mjs'
       - '.github/workflows/public-links-registry.yml'
+      - 'tests/public-links-revenue-readiness.test.mjs'
       - 'public/**'
   schedule:
     - cron: '17 17 * * 1'
@@ -27,6 +28,8 @@ jobs:
           node-version: '22'
       - name: Build source inventory (no network or payments)
         run: node scripts/audit-public-links.mjs > public-link-inventory.json
+      - name: Verify exact-SKU revenue readiness boundaries
+        run: node --test tests/public-links-revenue-readiness.test.mjs
       - name: Validate source inventory
         run: |
           node --input-type=module -e "

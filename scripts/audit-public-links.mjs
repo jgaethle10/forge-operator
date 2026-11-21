@@ -43,6 +43,48 @@ const payments = (payment.links || []).map(x=>({
   payment_authority:'Evercraft Payments',
   caveat:'Historical processor-link record, not proof of an Evercraft order or payment'
 }));
+// Cross-check the three source-of-truth documents without assuming commerce is live.
+const productDirectory = JSON.parse(readFileSync(new URL('../public/mesh/checkout-ready/products.json', import.meta.url),'utf8'));
+const commercialReadiness = JSON.parse(readFileSync(new URL('../public/.well-known/evercraft-commercial-readiness.json', import.meta.url),'utf8'));
+const readinessFindings = [];
+const priceByKey = new Map(payments.map(x=>[x.key,x]));
+const productRows = (productDirectory.products || []).map(p=>{
+  const source = priceByKey.get(p.sku_key);
+  const expectedPage = 'public/' + new URL(p.landing_page).pathname.replace(/^\\/,'').replace(/^forge-operator\\//,'') + 'index.html';
+  const sourceRoute = all.find(x=>x.source===expectedPage);
+  const problems = [];
+  if(!source) problems.push('no_exact_payment_link_inventory_record');
+  if(source && source.url!==p.checkout_url) problems.push('catalog_checkout_url_mismatch');
+  if(source && Number.parseInt(source.price.replace(/[^0-9]/g,''),10)!==p.price_usd) problems.push('catalog_price_mismatch');
+  if(!sourceRoute) problems.push('missing_product_landing_page_source');
+  const result={sku_key:p.sku_key,product:p.exact_checkout_product,
+    listed_price_usd:p.price_usd,landing_page:p.landing_page,
+    processor_checkout_url:p.checkout_url,source_page_present:!!sourceRoute,
+    original_processor_link_recorded:!!source,
+    exact_sku_source_consistent:problems.length===0,
+    issues:problems,public_url_verified:false,
+    processor_form_verified_now:false,canonical_order_verified:false,
+    payment_received_verified:false,fulfillment_verified:false};
+  if(problems.length) readinessFindings.push({sku_key:p.sku_key,issues:problems});
+  return result;
+});
+if(productRows.length!==payments.length) readinessFindings.push({issue:'product_count_differs_from_exact_payment_links'});
+const nativeCheckout={
+  current_state:commercialReadiness.current_state,
+  checkout_ready:commercialReadiness.commercial_checkout_ready===true,
+  may_charge_customers:commercialReadiness.may_charge_customers===true,
+  authenticated_provider_paid_receipt_observed:
+    commercialReadiness.current_owned_payment_rail?.authenticated_provider_paid_receipt_observed===true,
+  warning:'Native Evercraft Payments release is separate from seven existing exact-SKU hosted processor checkouts.'
+};
+const processorSnapshot={
+  checked_on:commercialReadiness.separate_systemia_hosted_stripe?.checked_on||payment.checked_on,
+  browser_verified_at:commercialReadiness.separate_systemia_hosted_stripe?.automated_browser_checked_at||null,
+  browser_verified_count:commercialReadiness.separate_systemia_hosted_stripe?.automated_rendered_exact_sku_forms_verified||0,
+  live_verified_now:false,automatic_reconciliation_proven:false,
+  payment_received_verified:false
+};
+
 const legacy = JSON.parse(readFileSync(new URL('../public/.well-known/evercraft-payments-buyer-doors.json', import.meta.url),'utf8'));
 const archived = (legacy.offers || []).map(x=>({
   kind:'legacy_buyer_offer_archived',key:x.slug,product:x.title,
@@ -61,8 +103,8 @@ if (probe) {
   // Front-load the founder-reported broken and revenue-critical doors.
   // Sorting alphabetically alone would bury Clip/Journal beneath generated pages.
   const priorities = [
-    'clip/', 'evercraft-clip/', 'journal/', 'legacy-rescue-lab/',
-    'mesh/checkout-ready/', 'try/', 'work-saban/', 'findmypart/',
+    'mesh/checkout-ready/', 'try/', 'journal/', 'legacy-rescue-lab/',
+    'work-saban/', 'findmypart/',
     'forensiscope/', 'research/', 'fallen-studios/', 'rivet/'
   ].map(route=>site+route);
   const eligible = all.filter(x=>x.url.startsWith(site));
@@ -101,6 +143,6 @@ const result={schema:'evercraft.public-link-inventory.v1',
     payment_links_in_snapshot:payments.length,legacy_archived_offers:archived.length,
     probed:all.filter(x=>x.observed_at).length},
   note:'Source existence != public routing != functional product != payment completion. Observed HTTP null means untested. Generated routes are not separate businesses.',
-  families:overview,findings,public_routes:all,payment_link_records:payments,
+  families:overview,findings,revenue_readiness:{native_checkout:nativeCheckout,processor_snapshot:processorSnapshot,source_consistency_findings:readinessFindings,products:productRows},public_routes:all,payment_link_records:payments,
   archived_legacy_offers:archived};
 process.stdout.write(JSON.stringify(result,null,2)+'\n');
