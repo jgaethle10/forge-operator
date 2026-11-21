@@ -102,7 +102,19 @@ export async function executeAmbientFabricPlan({
       };
     }
 
-    const provided=await inputProvider({task,placement,plan});
+    // A single input provider fault must not reject the entire admitted batch.
+    // Hold only this unit and do not leak exception text into public receipts.
+    let provided;
+    try{
+      provided=await inputProvider({task,placement,plan});
+    }catch{
+      return {
+        status:'held',
+        unit_id:placement.unit_id,
+        task_id:placement.task_id,
+        reason:'workload_input_provider_failed',
+      };
+    }
     if(provided===undefined){
       return {
         status:'held',
@@ -137,9 +149,21 @@ export async function executeAmbientFabricPlan({
       ].join('|')
     ).slice(0,48);
 
-    const telemetry=typeof telemetryProvider==='function'
-      ? await telemetryProvider({task,placement,plan})
-      : provided?.telemetry||undefined;
+    // This is execution/safety telemetry, not passive analytics. A broken
+    // provider is a per-unit safety HOLD, never a fail-open dispatch.
+    let telemetry;
+    try{
+      telemetry=typeof telemetryProvider==='function'
+        ? await telemetryProvider({task,placement,plan})
+        : provided?.telemetry||undefined;
+    }catch{
+      return {
+        status:'held',
+        unit_id:placement.unit_id,
+        task_id:placement.task_id,
+        reason:'telemetry_provider_failed',
+      };
+    }
 
     const requestBody={
       request:{

@@ -1,0 +1,27 @@
+name: Saban Ambient Provider Safety
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/saban/ambient-fabric-executor.mjs'
+      - 'tests/saban-ambient-fabric-provider-isolation.test.mjs'
+      - 'tests/saban-ambient-fabric-executor.test.mjs'
+      - '.github/workflows/saban-ambient-provider-safety.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  provider-isolation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check syntax
+        run: node --check systemia/saban/ambient-fabric-executor.mjs
+      - name: Run synthetic provider-fault and gateway regressions
+        run: node --test tests/saban-ambient-fabric-provider-isolation.test.mjs tests/saban-ambient-fabric-executor.test.mjs
