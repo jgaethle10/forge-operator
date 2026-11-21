@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import dgram from 'node:dgram';
+import { assessMappingResult } from './edge-mapping-acceptance.mjs';
 import net from 'node:net';
 import process from 'node:process';
 import { randomBytes } from 'node:crypto';
@@ -28,8 +29,8 @@ if (!['all','web','dns'].includes(scope)) {
 }
 
 const allMappings = [
-  { external: 80, internal: 18080, proto: 'TCP', desc: 'Evercraft Fabric HTTP', scope:'web', lifetime:86400 },
-  { external: 443, internal: 8443, proto: 'TCP', desc: 'Evercraft Fabric HTTPS', scope:'web', lifetime:86400 },
+  { external: 80, internal: 18080, proto: 'TCP', desc: 'Evercraft Fabric HTTP', scope:'web', lifetime:86400, production:true },
+  { external: 443, internal: 8443, proto: 'TCP', desc: 'Evercraft Fabric HTTPS', scope:'web', lifetime:86400, production:true },
   { external: 53, internal: 1053, proto: 'TCP', desc: 'Evercraft Edge authoritative DNS TCP', scope:'dns', lifetime:86400, production:true },
   { external: 53, internal: 1053, proto: 'UDP', desc: 'Evercraft Edge authoritative DNS UDP', scope:'dns', lifetime:86400, production:true },
   { external: 53053, internal: 1053, proto: 'TCP', desc: 'Evercraft Edge DNS diagnostic TCP', scope:'dns-diagnostic', lifetime:600, diagnostic:true },
@@ -49,6 +50,8 @@ const out = {
   scope,
   mappings,
   host_forward_preflight: null,
+  public_ingress_verified: false,
+  public_ingress_verification_source: 'independent_external_canary_required',
 };
 
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
@@ -179,10 +182,9 @@ async function natPmpMap() {
       }
     }
     {
-      const production=result.mappings.filter(x=>x.requested?.production);
-      const diagnostic=result.mappings.filter(x=>x.requested?.diagnostic);
-      result.success=production.length>0&&production.every(x=>x.success===true);
-      result.diagnostic_success=diagnostic.length>0&&diagnostic.every(x=>x.success===true);
+      const assessment=assessMappingResult(mappings,result.mappings);
+      result.success=assessment.production_ok;
+      result.diagnostic_success=assessment.diagnostic_ok;
     }
   } finally {
     socket.close();
@@ -367,10 +369,9 @@ async function upnpMap() {
         mapping_results: mapped,
       });
       {
-        const production=mapped.filter(x=>x.requested?.production);
-        const diagnostic=mapped.filter(x=>x.requested?.diagnostic);
-        result.success=production.length>0&&production.every(x=>x.success===true);
-        result.diagnostic_success=diagnostic.length>0&&diagnostic.every(x=>x.success===true);
+        const assessment=assessMappingResult(mappings,mapped);
+        result.success=assessment.production_ok;
+        result.diagnostic_success=assessment.diagnostic_ok;
       }
       if (result.success) {
         result.location = location;
@@ -463,10 +464,9 @@ async function pcpMap() {
       }
     }
     {
-      const production=result.mappings.filter(x=>x.requested?.production);
-      const diagnostic=result.mappings.filter(x=>x.requested?.diagnostic);
-      result.success=production.length>0&&production.every(x=>x.success===true);
-      result.diagnostic_success=diagnostic.length>0&&diagnostic.every(x=>x.success===true);
+      const assessment=assessMappingResult(mappings,result.mappings);
+      result.success=assessment.production_ok;
+      result.diagnostic_success=assessment.diagnostic_ok;
     }
     const firstIp = result.mappings.find(x => x.external_ip)?.external_ip;
     if (firstIp) result.external_ip = firstIp;
@@ -523,16 +523,10 @@ async function main() {
     out.diagnostic_mapping_control_ok = pcp.diagnostic_success === true;
   }
 
-  out.production_mapping_control_ok = mappings.filter(m=>m.production).every(m=>
-    out.attempts.some(a=>Array.isArray(a.mappings)&&a.mappings.some(x=>
-      x.success===true && x.requested?.external===m.external && x.requested?.internal===m.internal && x.requested?.proto===m.proto
-    ))
-  );
-  out.diagnostic_mapping_control_ok = mappings.filter(m=>m.diagnostic).every(m=>
-    out.attempts.some(a=>Array.isArray(a.mappings)&&a.mappings.some(x=>
-      x.success===true && x.requested?.external===m.external && x.requested?.internal===m.internal && x.requested?.proto===m.proto
-    ))
-  );
+  // Never combine partial successes across different mapping protocols.
+  // The selected provider has to attest all requested production mappings.
+  out.production_mapping_control_ok = out.ok === true;
+  out.diagnostic_mapping_control_ok = out.ok === true && pcp.diagnostic_success === true;
   console.log(JSON.stringify(out, null, 2));
   process.exit(out.ok ? 0 : 1);
 }
