@@ -1,0 +1,21 @@
+{
+  "schema":"evercraft.clip.audio-review.v1",
+  "campaign":"evercraft-web",
+  "recorded_at":"2026-10-20",
+  "status":"HOLD",
+  "owner_feedback":"That sounds terrible.",
+  "source_of_truth":"The October 20 listening feedback supersedes earlier descriptions such as 'original' or 'dynamic'. Technical clean levels are not proof of acoustic quality.",
+  "held_auditions":[
+    {"id":"A_original_piano_strings","sha256":"994fc583ff6b89a7778940fc1ce3f1008ceba5da17b58de2248facb72bf9297c","decision":"not_approved"},
+    {"id":"B_original_felt_piano","sha256":"e2d0038fb47155859f5a3b76d8453e7e0140967af7e649a02cf25d7ec5175ae0","decision":"not_approved"},
+    {"id":"C_weight_of_silence","sha256":"a9081e0131311057a9a05ae9075cd80897486c43f89a73a3c7f6783321acedee","decision":"not_approved"}
+  ],
+  "audio_issue":"Subjective musical realism, performance and film effectiveness fail; no amount of peak normalization proves quality.",
+  "next_candidate_requirements":{
+    "instrument_source":"Documented, commercial-clearance-ready real recorded or high-quality multi-sample instrument with proper attack, release, pedal and dynamic response.",
+    "performance":"Human-reviewed phrasing, tempo breathing, motif and emotional arc, not a mechanical arpeggio or sustained chord wallpaper.",
+    "mix":"No generic synthesized risers/booms as substitute for storytelling, space for silence, dialogue clarity checked by listening.",
+    "release":"No audio publication or commercial claims without owner human audition approval and separate rights review."
+  },
+  "production_release_authority":false
+}

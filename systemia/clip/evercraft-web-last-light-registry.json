@@ -1,0 +1,65 @@
+{
+  "schema": "evercraft.clip.music-foundation-registry.v1",
+  "campaign": "evercraft-web-commercial",
+  "evaluated_at": "2026-10-21",
+  "review_context": "Owner strongly liked The Last Light Steinway V2 as sound foundation in another Evercraft music thread. Orchestra versions remain unapproved.",
+  "media_source": "Existing user-owned Evercraft library audio; originals were inspected and hashed without alteration.",
+  "master_reference": {
+    "title": "The Last Light · Steinway V2",
+    "wav": {
+      "file": "Evercraft_The_Last_Light_Steinway_V2_24bit.wav",
+      "sha256": "630efc0e8206ec7a6f4f0dac41634ab2a34da7f518f9f90be0b339b4e5a2015e",
+      "sample_rate": 44100,
+      "bit_depth": 24,
+      "duration_seconds": 35
+    },
+    "listening_mp3": {
+      "file": "Evercraft_The_Last_Light_Steinway_V2_Listen.mp3",
+      "sha256": "bab362e49ee6e4671f03de403b20e584f08d7bc038873fdf299e088fe4b495b4"
+    },
+    "feedback_state": "positively_received_timbre_foundation",
+    "full_score_approved": false,
+    "commercial_music_approved": false,
+    "performed_by_human_verified": false,
+    "sample_rights_release_cleared": false,
+    "preserve_exact_bytes": true
+  },
+  "orchestration_candidates": [
+    {
+      "id": "cello-answer-v3",
+      "file": "The_Last_Light_V3_01_Cello_Answer.mp3",
+      "sha256": "c5700ec4606c784fcdb080a9845fe5648179cffe8ad8ff039cdcfcbddf718876",
+      "duration_seconds": 35,
+      "status": "UNAPPROVED",
+      "publish_authorized": false
+    },
+    {
+      "id": "orchestral-arrival-v3",
+      "file": "The_Last_Light_V3_02_Orchestral_Arrival.mp3",
+      "sha256": "c552173538281536ed7b135e4f4b962abc263e06a515e4df873d3f5cc0e86f70",
+      "duration_seconds": 35,
+      "status": "UNAPPROVED",
+      "publish_authorized": false
+    }
+  ],
+  "comparison": {
+    "integrated_loudness_lufs_approx": -22.4,
+    "measured_by": "ffmpeg ebur128",
+    "interpretation": "Comparable loudness only, not musical quality or approval.",
+    "same_timeline_seconds": 35
+  },
+  "offline_listening_room": {
+    "mode": "self-contained offline HTML, three recordings embedded",
+    "other_local_take_import": true,
+    "same_timestamp_switching": true,
+    "private_review_json_export": true,
+    "playback_test": "Chromium scripted playback/seek/import/review export and phone viewport passed",
+    "not_hardware_test": true
+  },
+  "hard_gates": {
+    "human_listening_release_approval": false,
+    "commercial_sound_rights_verified": false,
+    "evercraft_web_public_customer_access_verified": false,
+    "publication_authorized": false
+  }
+}

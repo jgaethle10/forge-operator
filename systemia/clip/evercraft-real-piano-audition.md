@@ -1,0 +1,9 @@
+# Evercraft Web: sampled upright piano audition
+
+This is a research/audition cut, NOT an Evercraft Instrument Foundry product release and NOT a final soundtrack. Last three candidates A/B/C were rejected by founder; they remain blocked by `evercraft-web-audio-gate.mjs`.
+
+Source: **Meta Open Sound Piano**, 88-key upright piano, 4 velocity layers, individual real recorded notes. License CC0 1.0, source revision `251c0be57d5d1b3242b91f53e0cde62ab1cb42d9`. https://github.com/facebookincubator/Meta-open-sound/tree/251c0be57d5d1b3242b91f53e0cde62ab1cb42d9/systems/instruments/meta-piano
+
+Run source review then render: `python -m pip install numpy scipy soundfile`; `python tests/evercraft-real-piano-audition.test.py`; `python systemia/clip/evercraft-real-piano-audition.py`. CI downloads ONLY notes used in the short original phrase; caches source for that ephemeral run; outputs stereo 48kHz 24-bit PCM and two MP3 review takes, plus input digests and refusal-to-publish metadata. All output is **unapproved** and goes through a real listening test. Any future approval must be human-reviewed and separately rights-cleared for combined commercial usage. This package licenses the original recording only under the cited CC0; does not imply licensing of another work, voice, footage or commercial.
+
+Audio constraints: sample velocity selection, non-grid voicing, natural recorded attack, short damper behavior, restrained spatial widening, no artificial orchestral SFX, no maximizer, no loudness-target workaround. Two variants: close and subtle room. Digital metrics are diagnostic only, not acoustic quality scores.

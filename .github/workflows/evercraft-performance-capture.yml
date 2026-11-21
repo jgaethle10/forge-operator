@@ -1,0 +1,21 @@
+name: Evercraft local human performance capture integrity
+on:
+  pull_request:
+    paths:
+      - 'public/evercraft-performance-capture/**'
+      - 'tests/evercraft-performance-capture.test.mjs'
+      - '.github/workflows/evercraft-performance-capture.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  local-capture-integrity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test no-cloud local performance capture contract
+        run: node --test tests/evercraft-performance-capture.test.mjs

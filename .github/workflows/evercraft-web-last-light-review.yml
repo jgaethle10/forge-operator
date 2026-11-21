@@ -1,0 +1,21 @@
+name: Evercraft Web Last Light source protection
+on:
+  pull_request:
+    paths:
+      - 'systemia/clip/evercraft-web-last-light-registry.json'
+      - 'tests/evercraft-web-last-light-registry.test.mjs'
+      - '.github/workflows/evercraft-web-last-light-review.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  protect-liked-master:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify foundation fingerprints and block false orchestra or ad approval
+        run: node --test tests/evercraft-web-last-light-registry.test.mjs
