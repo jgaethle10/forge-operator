@@ -166,6 +166,10 @@ test('optical wake follows river deformation, never fabricated activity',()=>{
 });
 test('v8 currents and confluences have different silhouettes and optical depth',()=>{
  assert.match(code,/Braided bands instead of hairline pipes/);
+ assert.match(code,/function drawConfluenceWeather\(radius,tint,seedIndex,surge,central\)/);
+ assert.match(code,/drawConfluenceWeather\(r,p\.color,i,surge,central\)/);
+ assert.match(code,/var plumes=central\?5:3/);
+ assert.match(code,/for\(var speck=0;speck<18;speck\+\+\)/);
  assert.match(code,/function drawConfluences\(\)/);
  assert.match(code,/Each confluence is a suspended deep-water lens/);
  assert.match(code,/Large atmospheric wells give every basin its own volume/);
