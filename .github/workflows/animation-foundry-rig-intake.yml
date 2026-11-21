@@ -1,0 +1,119 @@
+name: Animation Foundry Licensed Rig Intake
+on:
+  pull_request:
+    paths:
+      - 'systemia/animation-foundry/rig-candidate-inspector.py'
+      - '.github/workflows/animation-foundry-rig-intake.yml'
+  push:
+    branches: [feat/animation-foundry-creative-gate-rc11]
+    paths:
+      - 'systemia/animation-foundry/rig-candidate-inspector.py'
+      - '.github/workflows/animation-foundry-rig-intake.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  cc0-rig-benchmark:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install headless Blender
+        run: |
+          sudo apt-get update -qq
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends blender xvfb libegl1 libgl1 libopengl0 libgl1-mesa-dri
+      - name: Download a published CC0 cartoon rig benchmark
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/rig-intake
+          curl -fL --retry 3 --max-time 90 \
+            https://opengameart.org/sites/default/files/Tiby_Character_MnF_0.zip \
+            -o /tmp/rig-intake/candidate.zip
+          sha256sum /tmp/rig-intake/candidate.zip | tee /tmp/rig-intake/download.sha256
+          cat > /tmp/rig-intake/provenance.json <<'JSON'
+          {
+            "source": "https://opengameart.org/content/tiby-3d-rigged-model",
+            "direct_asset": "https://opengameart.org/sites/default/files/Tiby_Character_MnF_0.zip",
+            "author": "PINKCANNON",
+            "published_license": "CC0",
+            "scope": "Rig intake benchmark only: NOT Kennedy art, NOT approved aesthetic reference",
+            "third_party_scripts": "Blender run with --disable-autoexec"
+          }
+          JSON
+      - name: Extract candidate safely and choose original blend
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile
+          import os,stat
+          root=Path('/tmp/rig-intake/extracted');root.mkdir(parents=True,exist_ok=True)
+          z=ZipFile('/tmp/rig-intake/candidate.zip')
+          total=0
+          for member in z.infolist():
+            if member.is_dir():continue
+            if '\\' in member.filename or member.filename.startswith('/'):
+              raise SystemExit('UNSAFE_FILENAME')
+            parts=Path(member.filename).parts
+            if '..' in parts or len(parts)>8:raise SystemExit('UNSAFE_PATH')
+            if member.file_size>120_000_000:raise SystemExit('FILE_TOO_LARGE')
+            if stat.S_ISLNK((member.external_attr>>16)&0xffff):
+              raise SystemExit('SYMLINK_BLOCKED')
+            total+=member.file_size
+            if total>250_000_000:raise SystemExit('ARCHIVE_TOO_LARGE')
+            dest=root.joinpath(*parts)
+            dest.parent.mkdir(parents=True,exist_ok=True)
+            with z.open(member) as f,open(dest,'wb') as out:
+              while True:
+                b=f.read(1_048_576)
+                if not b:break
+                out.write(b)
+          files=sorted(root.rglob('*.blend'),key=lambda p:p.stat().st_size,reverse=True)
+          if not files:raise SystemExit('NO_BLENDER_SCENE')
+          Path('/tmp/rig-intake/selected.txt').write_text(str(files[0]))
+          print('BENCHMARK_ASSET',files[0],files[0].stat().st_size)
+          PY
+      - name: Inspect with Blender scripting disabled
+        env:
+          LIBGL_ALWAYS_SOFTWARE: '1'
+        run: |
+          mkdir -p /tmp/rig-intake/review
+          xvfb-run -a blender --disable-autoexec -b -t 2 \
+            --python systemia/animation-foundry/rig-candidate-inspector.py \
+            -- "$(cat /tmp/rig-intake/selected.txt)" /tmp/rig-intake/review
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('/tmp/rig-intake/review/rig_inspection.json').read_text())
+          assert d['armatures']>=1 and d['mesh_vertices']>100
+          assert d['kennedy_identity_match'] is False and d['visual_approved'] is False
+          assert len(list(Path('/tmp/rig-intake/review').glob('candidate_*.png')))==3
+          print('VALID_LICENSED_BENCHMARK_READ_ONLY',d['armatures'],d['mesh_vertices'])
+          PY
+      - name: Test facial, hand and license scorecard
+        run: node --test systemia/animation-foundry/rig-candidate-scorecard.test.mjs
+      - name: Produce rig rejection reasons from inspected scene
+        run: |
+          node --input-type=module <<'JS'
+          import {readFileSync,writeFileSync} from 'node:fs';
+          import {evaluateRigCandidate} from './systemia/animation-foundry/rig-candidate-scorecard.mjs';
+          const m=JSON.parse(readFileSync('/tmp/rig-intake/review/rig_inspection.json','utf8'));
+          const p=JSON.parse(readFileSync('/tmp/rig-intake/provenance.json','utf8'));
+          const r=evaluateRigCandidate(m,{source:p.source,license:p.published_license});
+          writeFileSync('/tmp/rig-intake/review/rig_scorecard.json',JSON.stringify(r,null,2));
+          if(r.characterApproved!==false) throw Error('invalid_character_approval');
+          if(r.status!=='REFERENCE_ONLY') throw Error('benchmark_unexpectedly_promoted_to_performance');
+          if(!r.issues.includes('insufficient_independent_finger_bones')||
+             !r.issues.includes('missing_facial_performance_controls'))
+            throw Error('expected_known_gaps_not_detected');
+          console.log('RIG_BENCHMARK_CORRECTLY_REJECTED_FOR_KENNEDY',r.issues);
+          JS
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: external-cc0-rig-intake-review-not-kennedy
+          path: |
+            /tmp/rig-intake/review/
+            /tmp/rig-intake/provenance.json
+            /tmp/rig-intake/download.sha256
+          retention-days: 14
+          if-no-files-found: warn

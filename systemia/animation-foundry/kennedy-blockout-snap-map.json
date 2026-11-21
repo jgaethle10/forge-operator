@@ -1,0 +1,15 @@
+{
+  "schema": "evercraft.animation.snap-rig-map.v1",
+  "armature": "Kennedy_CTRL_Rig",
+  "bones": {
+    "thumbTip": "thumb_R",
+    "middleTip": "middle_R",
+    "wrist": "hand_R",
+    "palm": "forearm_R"
+  },
+  "metersPerBlenderUnit": 1,
+  "startFrame": 17,
+  "durationSec": 1,
+  "snapAudioTimeSec": 0.625,
+  "note": "Engineering scheduled Foley marker aligned to measured finger separation near frame 24.5. Does not prove a rendered audio waveform or creative quality."
+}
