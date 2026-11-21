@@ -1,0 +1,146 @@
+# Evercraft Founders Arena: agent competition protocol v1
+
+**Status: owned, local experimental implementation. Not production. No genuine LLM calls have been proven in this test environment.**
+
+This is a **new, clean-room starter league**, not the recovered original August 2026 19-agent game backend. The historical PDF proves a user-facing league existed with 19 agents, three matches, rankings, and a referee ledger; it does not provide the underlying source code. A later `founders-arena-window.html` is a *different* four-character deterministic viewer. Neither is misrepresented as the v1 implementation.
+
+## Run the deterministic fixture
+
+Node 20+ only. No dependencies, accounts, network, or API keys.
+
+```bash
+node --test tests/*.test.mjs
+node demo.mjs 12 founders-arena-match.json
+node verify.mjs founders-arena-match.json
+```
+
+The demo simulates four synthetic policy players, not language models. `demo.mjs` exports all decisions, 12 world snapshots, SHA-256 digests, scores, and an independently recomputable replay receipt.
+
+## Connect real agents through JSONL
+
+```bash
+node gateway.mjs
+```
+
+Write one JSON object per line on stdin. Receive one JSON response per line on stdout:
+
+```json
+{"command":"new","seed":42,"roster":["Systemia","Forge","Mnemosyne","Raven"]}
+{"command":"observe","agent_id":"Systemia"}
+{"command":"advance","decisions":[
+  {"schema":"evercraft.founders-arena.decision.v1","turn":1,"agent_id":"Systemia","action":"research","target_id":null},
+  {"schema":"evercraft.founders-arena.decision.v1","turn":1,"agent_id":"Forge","action":"build","target_id":null},
+  {"schema":"evercraft.founders-arena.decision.v1","turn":1,"agent_id":"Mnemosyne","action":"cultivate","target_id":null},
+  {"schema":"evercraft.founders-arena.decision.v1","turn":1,"agent_id":"Raven","action":"fortify","target_id":null}
+]}
+{"command":"receipt"}
+```
+
+An external controller, including Saban or a local sovereign model, can call `observe` per agent, formulate a *single constrained action* per agent and submit all choices to `advance`. No network access or inference is implemented here. Agent identities in this starter are labels, not cryptographic credentials. Add authenticated admission and independent timing controls before opening to outside participants.
+
+## Opt-in local model bridge
+
+A separate loopback-only HTTP adapter can send each agent's observation to an existing local Saban/sovereign model gateway:
+
+```bash
+node local-agent-runner.mjs http://127.0.0.1:8088/decide 4 local-match.json
+```
+
+That endpoint must be provided by the owner and answer POST JSON `{schema:"evercraft.founders-arena.request.v1", observation:{...}}` with JSON `{action:"cultivate"}` (or another allowlisted action plus an optional aid target). The adapter accepts only loopback HTTP, never silently substitutes synthetic decisions, and rejects invalid or absent replies. Automated tests exercise a real local HTTP server, **not a real LLM**. Do not claim a sovereign model is connected until a real endpoint is configured and an independently observable match completes.
+
+## Run a local model-hosted match (opt-in)
+
+This experimental adapter connects the referee to an **operator-supplied, locally hosted** Ollama or OpenAI-compatible chat API. It sends each agent's private observation separately and parses the model's JSON action. **It never silently creates a fallback move.** The model server must bind to an explicit `127.0.0.1` port (or `[::1]` port); public and LAN model endpoints are rejected.
+
+For an already running Ollama server and installed model, from this directory:
+
+```bash
+node live-model-match.mjs ollama http://127.0.0.1:11434/api/chat llama3.2 3 local-inference-match.json
+```
+
+`live-model-match.mjs` writes an envelope `{match,evidence,provider,standings}`. To independently replay the embedded match:
+
+```bash
+node -e "const f=require('node:fs');f.writeFileSync('receipt.json',JSON.stringify(JSON.parse(f.readFileSync('local-inference-match.json')).match))"
+node verify.mjs receipt.json
+```
+
+For an OpenAI-compatible **local** chat completions server, substitute `openai`, an explicit local URL such as `http://127.0.0.1:8000/v1/chat/completions`, and your model ID. This does not send data to OpenAI or any cloud service; it implements the message format only. Different models can be selected programmatically using `runLiveLocalModelMatch({modelByAgent:{Systemia:'model-a',Forge:'model-b'},...})`. By default all players use the same chosen model with independent private observations.
+
+### Inspect private model-response evidence
+
+The experimental runner emits a separate **private inference ledger**. It links each
+(agent, turn, decision) to a SHA-256 hash of the submitted provider payload and
+returned JSON, the requested model, any self-reported provider model/token counts,
+and an observed request duration. A hash chain and match digest detect altered,
+missing, reordered, or reassigned records. It does **not** include raw private
+prompts, full private state, or the model's response text.
+
+```bash
+node verify-inference.mjs local-inference-match.json
+```
+
+The verifier checks internal data integrity and alignment with the deterministic
+match, **not** the model's identity, weights, or whether genuine neural inference
+occurred. Provider metadata and timings are local process observations or
+self-reports, not independent attestations. Keep full match envelopes private;
+only the privacy-reduced spectator export is intended for audiences.
+
+**Proof boundary:** tests exercise mock model servers, **not genuine LLM inference**. Provider metadata is descriptive, not cryptographic provenance. A loopback response does not prove that a neural network performed a computation. Record model version, responses, latency, and provenance separately before making an external claim.
+
+## Offline spectator replay (post-match only)
+
+Generate a mobile-friendly **static**, privacy-reduced after-match viewer from the fully verified fixture. It contains public scores, weather and already-completed decisions, but **not** any private inventories or full referee state:
+
+```bash
+node demo.mjs 12 arena-fixture.json
+node spectator-export.mjs arena-fixture.json arena-fixture.html synthetic-fixture
+```
+
+For a model-driven envelope, use `node spectator-export.mjs local-inference-match.json local-inference-replay.html local-model-unverified`. The label explicitly avoids claiming independently verified model provenance. No live spectator feed, public server, or authenticated outside agent is implied.
+
+## Rules and proof boundary
+
+- Supports 2-19 configured agents; new matches use a fixed seed.
+- One valid action **per agent per turn**. No missing, duplicate, stale, or unknown agents.
+- Allowed actions: `cultivate`, `research`, `build`, `expand`, `fortify`, `aid` (explicit peer target), `rest`.
+- Sequential simulation changes are canonical roster order, independent of message arrival order.
+- Match receipts include submitted decisions, public state updates, deterministic environmental events, SHA-256 digests, and replay verification.
+- Observations expose the requesting agent's own state, public score/territory standings, and only limited competitor summaries. Competitor food, knowledge, and energy are excluded from observations. The complete referee receipt still contains full state and must be protected during competitive play.
+- The deterministic engine and JSONL gateway make no network calls. The optional local-agent and local-model adapters make loopback HTTP requests only, with no external/provider connectivity by default. There are no production writes, tool calls, confirmed LLM autonomy, live admission, or public service in this release.
+
+## Next release gates
+
+1. Reconcile historical game rules with owned authoritative source if recovered, rather than recreating unknown mechanics as fact.
+2. Attach and benchmark real independently controlled models through the JSONL protocol. Record provider/model identity and measured response latency separately from deterministic replay proof.
+3. Implement private competitive views, agent identity authentication, per-turn deadlines, quota budgets, abuse controls, and provenance validation.
+4. Connect receipt viewer to the existing owned World Engine / spectator experience; keep authoritative decisions server-side.
+5. Validate isolated deployment and public readback before announcing availability.
+
+**No Base44 services were queried or used.**
+
+
+## Node002/NextGen sovereign llama.cpp trial (manual opt-in, no new hosting)
+
+If the approved existing `llama-server` executable and GGUF are available
+locally on NextGen, use the explicit opt-in helper below. **Supply verified,
+existing paths** from the sovereign inference staging receipt; the script does
+not discover models, download binaries, contact third-party services, or start a
+persistent background service.
+
+```bash
+bash run-owned-llama-match.sh /absolute/path/to/llama-server /absolute/path/to/model.gguf 2
+```
+
+It hashes the actual selected executable and model, refuses an occupied local
+port, starts a temporary loopback-only server, runs two arena turns through
+`live-model-match.mjs`, independently checks all decision/evidence links,
+then stops the server. Output is a private match envelope in the current
+working directory. It must remain private until competitive-information
+redaction and model identity provenance are independently verified.
+
+**Do not treat a successful JSON response or local SHA-256 alone as model
+attestation.** Compare the runtime/model digests and process receipt against
+the approved Node002 sovereign inference evidence before calling it a real
+model match. This helper has not been executed on Node002 in this development
+session.
