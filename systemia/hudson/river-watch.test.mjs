@@ -135,8 +135,8 @@ test('skyward three-mast ship keeps hull on curved route while sails stay above 
   assert.ok(Math.abs(s.x-(47+v*290))<1e-9);
   assert.ok(Math.abs(s.y-(205+v*426))<1e-9);
   assert.ok(Math.abs(s.angle-Math.atan2(426,290))<.001);
-  assert.ok(s.size>=9&&s.size<=32);
-  assert.ok(s.size*2.90<=clearance+.01);
+  assert.ok(s.size>=9&&s.size<=38);
+  assert.ok(s.size*3.15<=clearance+.01);
  }
 });
 test('ship keeps wind-filled cloudy sails, rigging, reflection, sculpted hull and a true wake',()=>{
@@ -144,6 +144,8 @@ test('ship keeps wind-filled cloudy sails, rigging, reflection, sculpted hull an
  assert.match(code,/Layer several softly refracted cloud pillows INSIDE/);
  assert.match(code,/Real projected rigging lines connect mastheads/);
  assert.match(code,/The prow lifts two soft diffraction arcs/);
+ assert.match(code,/Low-key occlusion is crucial at phone scale/);
+ assert.match(code,/A sharply illuminated prow streak breaks away/);
  assert.match(code,/Crescent keel/);
  assert.match(code,/for\(var cloud=0;cloud<19;cloud\+\+\)/);
  assert.match(code,/for\(var star=0;star<42;star\+\+\)/);
