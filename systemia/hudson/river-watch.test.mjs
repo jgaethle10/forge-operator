@@ -12,7 +12,7 @@ const code=watch.match(/<script>([\s\S]*?)<\/script>/)?.[1];
 test('river Watch is an interactive site and not an image stand-in',()=>{
  assert.match(home,/href="\.\/watch\/"/);
  assert.match(home,/Enter the Current/);
- assert.match(watch,/hudson-watch-release" content="river-current-v11-spectral-navigator"/);
+ assert.match(watch,/hudson-watch-release" content="river-current-v12-skyward-schooner"/);
  assert.match(watch,/canvas id="current"/);
  assert.match(watch,/id="explore"/);
  assert.match(watch,/id="pause"/);
@@ -99,52 +99,65 @@ test('river topology has seven named confluences and multi-channel currents',()=
  assert.match(code,/drawWatershed\(field\);drawRivers\(\);drawParticles\(dt\);drawConfluences\(\)/);
 });
 
-test('spectral ship stays attached to the canonical current and points down its tangent',()=>{
+test('v12 scenic route uses the same already-displaced water that is actually painted',()=>{
+ assert.match(code,/function locateScenic\(from,to,t\)/);
+ assert.match(code,/edge\.warpedPoints\|\|edge\.points/);
+ const a=code.indexOf('function locateScenic(from,to,t){');
+ const b=code.indexOf('function shapeRiverChannels(field){',a);
+ assert.ok(a>=0&&b>a);
+ const pts=Array.from({length:91},(_,i)=>({x:i*2,y:100+i*.5}));
+ const displaced=pts.map(p=>({x:p.x+17,y:p.y-6}));
+ const ctx={Math,clamp:(v,l,h)=>Math.max(l,Math.min(h,v)),
+  locate:()=>({x:0,y:0,dx:0,dy:0}),
+  findEdge:()=>({from:'a',to:'b',points:pts,warpedPoints:displaced})};
+ const locateScenic=new vm.Script(code.slice(a,b)+';locateScenic').runInNewContext(ctx);
+ const p=locateScenic('a','b',.5),reverse=locateScenic('b','a',.5);
+ assert.equal(p.x,107);assert.equal(p.y,116.5);
+ assert.equal(reverse.x,p.x);assert.equal(reverse.y,p.y);
+ assert.ok(p.dx>0&&reverse.dx<0,'course tangent reverses with route direction');
+});
+test('skyward three-mast ship keeps hull on curved route while sails stay above the horizon',()=>{
  assert.match(code,/function shipPathPose\(from,to,t\)/);
- assert.match(code,/var pos=locate\(from,to,t\)/);
- assert.match(code,/var angle=Math\.atan2\(dy,dx\)/);
- assert.match(code,/ctx\.translate\(pose\.x,pose\.y\)/);
- assert.match(code,/ctx\.rotate\(pose\.angle\)/);
+ assert.match(code,/function drawSkywardSail\(x,height,wind,tint,heading\)/);
+ assert.match(code,/ctx\.translate\(x,0\);ctx\.rotate\(-heading\)/);
+ assert.match(code,/drawSkywardSail\(-\.84,\.92,\.4,0,pose\.angle\)/);
+ assert.match(code,/drawSkywardSail\(-\.07,1\.64,\.8,2,pose\.angle\)/);
+ assert.match(code,/ctx\.translate\(pose\.x,pose\.y\);ctx\.rotate\(pose\.angle\)/);
  assert.doesNotMatch(code,/var drawX=clamp\(/);
  const a=code.indexOf('function shipPathPose(from,to,t){');
  const b=code.indexOf('function drawMistySail(',a);
  const pose=new vm.Script(code.slice(a,b)+';shipPathPose').runInNewContext({
   Math,width:390,height:844,clamp:(v,l,h)=>Math.max(l,Math.min(h,v)),
-  locate:(_a,_b,v)=>({x:47+v*290,y:205+v*426})
+  locateScenic:(_a,_b,v)=>({x:47+v*290,y:205+v*426})
  });
  for(const v of [.02,.15,.5,.83,.97]){
-  const s=pose('discovery','hudson',v);
+  const s=pose('discovery','hudson',v),clearance=Math.min(s.x,390-s.x,s.y,844-s.y);
   assert.ok(Math.abs(s.x-(47+v*290))<1e-9);
   assert.ok(Math.abs(s.y-(205+v*426))<1e-9);
   assert.ok(Math.abs(s.angle-Math.atan2(426,290))<.001);
   assert.ok(s.size>=9&&s.size<=32);
-  const c=Math.min(s.x,390-s.x,s.y,844-s.y);
-  assert.ok(s.size*2.90<=c+.01);
+  assert.ok(s.size*2.90<=clearance+.01);
  }
 });
-test('Spectral Navigator adds dimensional cloud sails, reflective carved keel and prismatic stars',()=>{
- assert.match(code,/Spectral Navigator v11/);
- assert.match(code,/function drawMistySail\(x,span,wind,tint\)/);
- assert.match(code,/function drawShipStardustWake\(trip\)/);
+test('ship keeps wind-filled cloudy sails, rigging, reflection, sculpted hull and a true wake',()=>{
+ assert.match(code,/Skyward three-mast schooner/);
+ assert.match(code,/Layer several softly refracted cloud pillows INSIDE/);
+ assert.match(code,/Real projected rigging lines connect mastheads/);
+ assert.match(code,/The prow lifts two soft diffraction arcs/);
+ assert.match(code,/Crescent keel/);
  assert.match(code,/for\(var cloud=0;cloud<19;cloud\+\+\)/);
  assert.match(code,/for\(var star=0;star<42;star\+\+\)/);
- assert.match(code,/drawMistySail\(-\.07,1\.64/);
- assert.match(code,/Rigging lines connect the upper cloud spires/);
- assert.match(code,/A carved aftcastle and starlit deck/);
- assert.match(code,/for\(var prong=0;prong<9;prong\+\+\)/);
- assert.match(code,/Three wind-filled aurora sails, mounted on ONE side/);
- assert.match(code,/Crescent keel/);
+ assert.match(code,/function drawShipStardustWake\(trip\)/);
  assert.match(code,/drawFoldingWake\(trip\);drawShipStardustWake\(trip\)/);
- assert.match(code,/drawTraveler\(trip\.from,trip\.to,\.04\+trip\.t\*\.92\)/);
  assert.doesNotMatch(code,/function drawRoyalSail\(/);
 });
-test('sparkle wake traces the existing water, not fake activity',()=>{
+test('optical wake follows river deformation, never fabricated activity',()=>{
  const a=code.indexOf('function drawShipStardustWake(trip){');
  const b=code.indexOf('function drawTraveler(from,to,t){',a);
  assert.ok(a>=0&&b>a);
  const w=code.slice(a,b);
+ assert.match(w,/locateScenic\(trip\.from,trip\.to,/);
  assert.match(w,/shipPathPose\(trip\.from,trip\.to,front\)/);
- assert.match(w,/locate\(trip\.from,trip\.to,/);
  assert.match(w,/for\(var thread=0;thread<3;thread\+\+\)/);
  assert.match(w,/for\(var star=0;star<23;star\+\+\)/);
  assert.doesNotMatch(w,/Math\.random\(\)/);
