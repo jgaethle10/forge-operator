@@ -1,0 +1,33 @@
+{
+  "uid": "evercraft_relay_alignment",
+  "type": "app",
+  "config": {
+    "name": "Evercraft Relay",
+    "description": "Human-confirmed decision and milestone alignment for CRM deal handoffs. Private pilot; not a meeting transcription product.",
+    "distribution": "marketplace",
+    "auth": {
+      "type": "oauth",
+      "redirectUrls": [
+        "http://localhost:8765/oauth/callback"
+      ],
+      "requiredScopes": [
+        "oauth",
+        "crm.objects.deals.read"
+      ],
+      "optionalScopes": [],
+      "conditionallyRequiredScopes": []
+    },
+    "permittedUrls": {
+      "fetch": [
+        "https://relay.example.invalid/v1/hubspot/"
+      ],
+      "img": [],
+      "iframe": []
+    },
+    "support": {
+      "supportEmail": "jessegaethle10@gmail.com",
+      "documentationUrl": "https://jgaethle10.github.io/forge-operator/relay/pilot/",
+      "supportUrl": "https://jgaethle10.github.io/forge-operator/relay/pilot/"
+    }
+  }
+}
