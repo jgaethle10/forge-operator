@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-11-21T21:46:24.323Z",
+  "updated_at": "2026-11-21T21:47:36.053Z",
   "url_count": 3020,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
@@ -141,8 +141,8 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "7ab85439b27720b153f90e82cc08a00ea62fd9b3e827274b49da78c3f92728e8",
-      "last_changed": "2026-11-21T21:46:24.323Z",
+      "content_sha256": "fc4595f97ed8b8c2894e7b78a9ab4381069a828cde4838688a6c32552e1f1ad9",
+      "last_changed": "2026-11-21T21:47:36.053Z",
       "priority": 80
     },
     "/chum/strike/": {
