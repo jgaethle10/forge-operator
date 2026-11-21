@@ -5,6 +5,7 @@ import net from 'node:net';
 import { createHash, randomBytes } from 'node:crypto';
 import { verifyNodeAttestation } from '../systemia/compute/device-identity.mjs';
 import { classifyPublicEdgeIngress } from '../systemia/network/public-edge-ingress-watch.mjs';
+import { diagnoseExternalEdgeLayers } from '../systemia/network/public-edge-layer-diagnosis.mjs';
 
 const sha=(value)=>'sha256:'+createHash('sha256').update(
   typeof value==='string'?value:JSON.stringify(value)
@@ -844,6 +845,11 @@ try{
       observed_at:new Date().toISOString(),
     },
   });
+  receipt.network_layers=diagnoseExternalEdgeLayers({
+    checks:receipt.checks,
+    publicTcp:receipt.public_tcp,
+    compositeVerified:true,
+  });
   receipt.verified=true;
   receipt.state='public_https_verified';
   receipt.public_https_verified=true;
@@ -857,6 +863,13 @@ try{
   receipt.error_code=clean(error?.code||'')||null;
   receipt.error_name=clean(error?.name||'')||null;
   receipt.failure_stage=failureStage(receipt.checks,receipt.error);
+  receipt.network_layers=diagnoseExternalEdgeLayers({
+    checks:receipt.checks,
+    publicTcp:receipt.public_tcp,
+    failureStage:receipt.failure_stage,
+    error:receipt.error,
+    compositeVerified:false,
+  });
   const tcpLike=/timeout|ECONNREFUSED|EHOSTUNREACH|ENETUNREACH|ECONNRESET/i.test(receipt.error);
   receipt.ingress_diagnosis=classifyPublicEdgeIngress({
     local:{ok:true},
