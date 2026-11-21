@@ -46,7 +46,7 @@ check_dest() {
     exit 2
   fi
   local count
-  count="$(find "$DEST" -mindepth 1 -maxdepth 1 -type f | wc -l)"
+  count="$(find "$DEST" -mindepth 1 -maxdepth 1 | wc -l)"
   if [[ "$count" != 1 ]]; then
     echo 'Digest release contains unexpected files' >&2
     exit 2
