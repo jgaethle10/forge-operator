@@ -13,6 +13,16 @@ This extends Evercraft's existing **Fallen** one-time signed enrollment bootstra
 - A separate `fallen` route and its own marker continue working unchanged. Neither role may use the other role's recipient-enrollment schema or route.
 - Harbor's retrieval client `systemia/wing-courier/retrieve-harbor-bootstrap.mjs` demands the **independently verified** SHA-256 of the encrypted package and Harbor X25519 recipient fingerprint *before* it will contact the owned Fabric endpoint. It checks exact challenge pins, expiry, signed claim response, ciphertext digest, final recipient schema, and writes an exclusive 0600 private file with no output contents. It does not decrypt/install credentials or run a service.
 
+### Immediate read-only Harbor action
+
+Before exchanging recipient keys or touching credentials, run the new local owner readiness inspector on Harbor's **actual** machine:
+
+```bash
+node systemia/wing-courier/owner-readiness.mjs --wing harbor
+```
+
+This only reports source revision, compatible Node/Linux/user-systemd, and existing user-service state. It makes **no network requests** and reads **no bearer token**. A compatible host with an unconfigured receiver remains `HOLD_FOR_PRIVATE_SETUP`, as intended. See `docs/commercial/wing-courier-owner-readiness-20261120.md`. Post only status labels, never host paths, keys, or media information.
+
 ### Owner-only setup prerequisites
 
 1. On the **real Penguin** private operator runtime, independently verify source provenance; obtain Harbor's actual existing Ed25519 public signer and Harbor X25519 public recipient key and compare public SPKI SHA256 pins over an **out-of-band authenticated owner channel**. GitHub comments and synthetic test keys are not that proof. No new keys, private credential or customer footage in GitHub.

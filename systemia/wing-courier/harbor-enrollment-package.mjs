@@ -38,10 +38,18 @@ function sealedOutput(file){
  try{fs.lstatSync(file);fail('output_already_exists')}
  catch(e){if(e?.code!=='ENOENT')throw e}
 }
-function ensureToken(raw){
- if(raw.length<32||raw.length>512||!/^[\x21-\x7e]+$/.test(raw.toString('utf8')))
-   fail('token_format_invalid');
- if(!raw.equals(Buffer.from(raw.toString('utf8'))))fail('token_encoding_invalid');
+// Match the broker's actual credential contract; accept one conventional
+// final line ending from an owner-private token file, but never embed it in
+// the authenticated ciphertext or the Harbor receiver's token file.
+function canonicalToken(raw){
+ if(!Buffer.isBuffer(raw)||raw.length<43||raw.length>258)
+  fail('token_format_invalid');
+ const value=raw.toString('utf8'),token=value.replace(/\r?\n$/,'');
+ if(value!==token&&value!==token+'\n'&&value!==token+'\r\n')
+  fail('token_format_invalid');
+ if(!/^[A-Za-z0-9_-]{43,256}$/.test(token)||
+    !raw.equals(Buffer.from(value,'utf8')))fail('token_format_invalid');
+ return Buffer.from(token,'utf8');
 }
 function privateKey(file){
  let key;try{key=crypto.createPrivateKey(ownedFile(file,{privateFile:true}))}
@@ -59,19 +67,25 @@ export function createEncryptedHarborEnrollment({
 }={}){
  if(!HEX.test(expectedRecipientFingerprint||''))fail('trusted_recipient_pin_required');
  sealedOutput(outputFile);
- const token=ownedFile(receiveTokenFile,{privateFile:true});
- ensureToken(token);
- let recipient;
- try{recipient=crypto.createPublicKey(ownedFile(recipientPublicKeyFile))}
- catch{fail('recipient_public_key_invalid')}
- if(recipient.asymmetricKeyType!=='x25519'||
-    pubFingerprint(recipient)!==expectedRecipientFingerprint)
-   fail('recipient_public_key_untrusted');
- const eph=crypto.generateKeyPairSync('x25519');
- const salt=crypto.randomBytes(16),nonce=crypto.randomBytes(12);
- const secret=crypto.diffieHellman({privateKey:eph.privateKey,publicKey:recipient});
- const key=Buffer.from(crypto.hkdfSync('sha256',secret,salt,INFO,32));
+ const raw=ownedFile(receiveTokenFile,{privateFile:true});
+ let token;try{token=canonicalToken(raw)}finally{raw.fill(0)}
+ let secret=null,key=null;
  try{
+  const pub=ownedFile(recipientPublicKeyFile);
+  // createPublicKey() can also parse a private PEM. It must never do so on
+  // Penguin's owner-side recipient registration boundary.
+  if(!/^-----BEGIN PUBLIC KEY-----\r?\n/.test(pub.toString('utf8')))
+   fail('recipient_public_key_invalid');
+  let recipient;
+  try{recipient=crypto.createPublicKey(pub)}
+  catch{fail('recipient_public_key_invalid')}
+  if(recipient.asymmetricKeyType!=='x25519'||
+     pubFingerprint(recipient)!==expectedRecipientFingerprint)
+    fail('recipient_public_key_untrusted');
+  const eph=crypto.generateKeyPairSync('x25519');
+  const salt=crypto.randomBytes(16),nonce=crypto.randomBytes(12);
+  secret=crypto.diffieHellman({privateKey:eph.privateKey,publicKey:recipient});
+  key=Buffer.from(crypto.hkdfSync('sha256',secret,salt,INFO,32));
   const cipher=crypto.createCipheriv('aes-256-gcm',key,nonce);
   cipher.setAAD(aad(expectedRecipientFingerprint));
   const ciphertext=Buffer.concat([cipher.update(token),cipher.final()]);
@@ -91,7 +105,7 @@ export function createEncryptedHarborEnrollment({
    recipientFingerprint:expectedRecipientFingerprint,
    plaintextReturned:false,tokenInstalledOnHarbor:false,
    transferAttempted:false,serviceActivated:false});
- }finally{key.fill(0);secret.fill(0);token.fill(0)}
+ }finally{key?.fill(0);secret?.fill(0);token.fill(0)}
 }
 function strictB64(value,max){
  if(typeof value!=='string'||value.length>max||!value.length||
@@ -133,25 +147,25 @@ export function openEncryptedHarborEnrollment({
   fail('private_key_recipient_mismatch');
  const secret=crypto.diffieHellman({privateKey:recipient,publicKey:eph});
  const key=Buffer.from(crypto.hkdfSync('sha256',secret,salt,INFO,32));
- let plaintext;
+ let plaintext,canonical;
  try{
   const decipher=crypto.createDecipheriv('aes-256-gcm',key,nonce);
   decipher.setAAD(aad(expectedRecipientFingerprint));decipher.setAuthTag(tag);
   plaintext=Buffer.concat([decipher.update(ciphertext),decipher.final()]);
-  ensureToken(plaintext);
+  canonical=canonicalToken(plaintext);
   sealedOutput(outputTokenFile);
-  fs.writeFileSync(outputTokenFile,plaintext,{flag:'wx',mode:0o600});
+  fs.writeFileSync(outputTokenFile,canonical,{flag:'wx',mode:0o600});
   return Object.freeze({schema:'evercraft.wing-courier.harbor-enrollment-opened.v1',
    status:'PRIVATE_SCOPED_CREDENTIAL_WRITTEN',
    packageSha256:expectedPackageSha256,
    recipientFingerprint:expectedRecipientFingerprint,
-   tokenBytes:plaintext.length,tokenDisplayed:false,
+   tokenBytes:canonical.length,tokenDisplayed:false,
    authenticatedBrokerVerified:false,residentActivated:false,
    customerMediaTransferred:false,customerDeliveryAuthorized:false});
  }catch(e){
   if(e?.message?.startsWith('harbor_enrollment_package_'))throw e;
   fail('cryptographic_authentication_failed');
- }finally{key.fill(0);secret.fill(0);plaintext?.fill(0)}
+ }finally{key.fill(0);secret.fill(0);plaintext?.fill(0);canonical?.fill(0)}
 }
 
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)){
