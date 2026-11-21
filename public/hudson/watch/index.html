@@ -539,9 +539,9 @@ function shipPathPose(from,to,t){
  var dx=b.x-a.x,dy=b.y-a.y;
  var angle=Math.atan2(dy,dx);
  // The whole ship (sails, mist and sparkles) fits inside the tight river bends.
- var base=width<=620?clamp(width*.072,24,32):clamp(Math.min(width,height)*.042,30,46);
+ var base=width<=620?clamp(width*.086,27,38):clamp(Math.min(width,height)*.050,36,56);
  var clearance=Math.min(pos.x,width-pos.x,pos.y,height-pos.y);
- var size=Math.min(base,Math.max(9,clearance/2.90));
+ var size=Math.min(base,Math.max(9,clearance/3.15));
  return {x:pos.x,y:pos.y,angle:angle,size:size};
 }
 
@@ -644,6 +644,14 @@ function drawTraveler(from,to,t){
  var pose=shipPathPose(from,to,t),state=travelerState(clock,t),pulse=presencePulse(clock);
  ctx.save();ctx.translate(pose.x,pose.y);ctx.rotate(pose.angle);
  ctx.scale(pose.size,pose.size);ctx.globalAlpha=.78+.22*state.integrity;
+ // Low-key occlusion is crucial at phone scale: light sails cannot vanish
+ // into bright blue currents. It is transparent at the outer boundary.
+ var contrast=ctx.createRadialGradient(-.05,-.38,.16,-.05,-.38,2.08);
+ contrast.addColorStop(0,"rgba(0,6,18,.89)");
+ contrast.addColorStop(.44,"rgba(1,12,33,.74)");
+ contrast.addColorStop(.77,"rgba(1,17,36,.32)");
+ contrast.addColorStop(1,"rgba(0,10,26,0)");
+ ctx.fillStyle=contrast;ctx.beginPath();ctx.ellipse(-.05,-.38,2.08,2.00,0,0,7);ctx.fill();
  var aura=ctx.createRadialGradient(-.13,-.42,.04,-.13,-.42,1.90);
  aura.addColorStop(0,"rgba(201,255,234,.21)");
  aura.addColorStop(.35,"rgba(76,206,205,.18)");
@@ -674,6 +682,9 @@ function drawTraveler(from,to,t){
  hull.addColorStop(.26,"rgba(4,24,50,.97)");
  hull.addColorStop(.67,"rgba(1,8,26,.99)");
  hull.addColorStop(1,"rgba(90,204,221,.55)");
+ ctx.save();ctx.translate(-.08,.16);
+ ctx.fillStyle="rgba(0,3,16,.88)";
+ ctx.shadowColor="rgba(1,7,23,.84)";ctx.shadowBlur=.31;ctx.fill();ctx.restore();
  ctx.fillStyle=hull;ctx.shadowColor="rgba(135,255,241,.60)";
  ctx.shadowBlur=.13;ctx.fill();ctx.shadowBlur=0;
  ctx.strokeStyle="rgba(225,255,243,.99)";ctx.lineWidth=.053;ctx.stroke();
@@ -717,6 +728,13 @@ function drawTraveler(from,to,t){
  ctx.quadraticCurveTo(-.58,-1.64,.02,-1.54);ctx.closePath();
  ctx.fillStyle="rgba(174,249,235,.30)";ctx.fill();
  ctx.strokeStyle="rgba(241,255,248,.66)";ctx.lineWidth=.018;ctx.stroke();
+ ctx.restore();
+ // A sharply illuminated prow streak breaks away from the bow for a moment.
+ var forward=.25+.24*Math.sin(clock*.71)**2;
+ ctx.save();ctx.globalCompositeOperation="lighter";
+ ctx.beginPath();ctx.moveTo(1.43,-.27);
+ ctx.quadraticCurveTo(1.96,-.39,2.45+forward,-.36);
+ ctx.strokeStyle="rgba(172,255,230,.44)";ctx.lineWidth=.035;ctx.stroke();
  ctx.restore();
  // A carved aftcastle and starlit deck make the translucent outline a ship.
  ctx.beginPath();ctx.moveTo(-1.35,-.21);ctx.lineTo(-1.10,-.53);
