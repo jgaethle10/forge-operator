@@ -6,6 +6,7 @@ import { pathToFileURL } from 'node:url';
 import { admitMultiplicationRequest } from './admission.mjs';
 import { createWorkState, loadWorkState } from './work-state.mjs';
 import { runScheduler } from './scheduler.mjs';
+import { createPrivateSabanTransitionJournal } from '../graphics-command/saban-transition-journal.mjs';
 import { recommendFormation } from './autoscaler.mjs';
 import { evaluateSwarmQuality } from './quality-gate.mjs';
 import { sanitizePrivateInventoryRows } from './private-inventory.mjs';
@@ -327,7 +328,8 @@ export async function executeMultiplicationPlan({
   rootDir = process.cwd(),
   reconcile = false,
   statePath = null,
-  resume = false
+  resume = false,
+  graphicsJournalDir = null
 }) {
   if (!contract.adapter) {
     throw new Error(`No execution adapter declared for ${contract.software_id}`);
@@ -353,15 +355,24 @@ export async function executeMultiplicationPlan({
         maxAttempts: Number(contract.max_attempts_per_job || 3)
       });
 
-  const schedulerReceipt = await runScheduler({
-    state,
-    adapter,
-    physicalWorkers: plan.physical_workers,
-    plan,
-    contract,
-    rootDir,
-    statePath
+  // A private, explicit per-run journal is entirely optional. Creation fails
+  // before any work is dispatched. A graphics write failure never retries work.
+  const journal=graphicsJournalDir===null?null:createPrivateSabanTransitionJournal({
+    directory:graphicsJournalDir,sourceClass:'scheduler_observation'
   });
+  let schedulerReceipt;
+  try{
+    schedulerReceipt = await runScheduler({
+      state,
+      adapter,
+      physicalWorkers: plan.physical_workers,
+      plan,
+      contract,
+      rootDir,
+      statePath,
+      onStateObservation:journal?(event)=>journal.record(event):null
+    });
+  }finally{journal?.close();}
 
   const results = Object.values(schedulerReceipt.state.jobs || {})
     .filter((job) => job.state === 'completed')
@@ -401,6 +412,12 @@ export async function executeMultiplicationPlan({
     result_summary: summarizeResults(results),
     results_digest: resultsDigest,
     scheduler_summary: schedulerReceipt.summary,
+    graphics_observation:journal?{
+      ...journal.summary(),
+      callback_failures:schedulerReceipt.observation_summary.failures,
+      complete_event_history:false,
+      privately_stored:true
+    }:null,
     state_path: statePath,
     sample_results: results.slice(0, 24),
     reconciliation,
@@ -437,6 +454,12 @@ async function main() {
   const registryPath = argValue(argv, '--registry', DEFAULT_REGISTRY);
   const inventoryPath = argValue(argv, '--inventory', null);
   const execute = hasFlag(argv, '--execute');
+  const graphicsJournalDir=argValue(argv,'--graphics-journal-dir',null);
+  if(hasFlag(argv,'--graphics-journal-dir') &&
+     (graphicsJournalDir===null||!execute||!hasFlag(argv,'--state')||
+       !path.isAbsolute(graphicsJournalDir))){
+    throw new Error('Private graphics journal requires --execute, explicit --state, and absolute --graphics-journal-dir');
+  }
   const reconcile = hasFlag(argv, '--reconcile');
   const resume = hasFlag(argv, '--resume');
   const auto = hasFlag(argv, '--auto') || (!hasFlag(argv, '--fixed') && !argv.includes('--agents'));
@@ -505,7 +528,8 @@ async function main() {
         rootDir,
         reconcile,
         statePath,
-        resume
+        resume,
+        graphicsJournalDir
       })),
       mode: reconcile ? 'execute_and_reconcile' : 'execute',
       plan
