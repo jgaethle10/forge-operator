@@ -1,0 +1,35 @@
+name: FIRST-CONTACT research verification
+
+on:
+  push:
+    branches:
+      - research/first-contact-uap-001
+    paths:
+      - "systemia/research/first-contact/**"
+      - ".github/workflows/first-contact-research.yml"
+  pull_request:
+    paths:
+      - "systemia/research/first-contact/**"
+      - ".github/workflows/first-contact-research.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: first-contact-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  first-contact-tests:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Run all first-contact Node tests
+        run: node --test systemia/research/first-contact/*.test.mjs
+      - name: Audit research input schemas
+        run: node systemia/research/first-contact/validate-research-artifacts.mjs

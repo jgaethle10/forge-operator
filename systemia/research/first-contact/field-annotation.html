@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>EVERCRAFT | FIRST CONTACT | Local Pixel Desk</title>
+  <style>
+    :root{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:#161616;background:#f6f6f6}
+    *{box-sizing:border-box}body{margin:0}header{padding:22px max(20px,4vw);background:#fff;border-bottom:2px solid #181818}
+    .eyebrow{letter-spacing:.18em;font-size:11px;font-weight:800;color:#b7212b}
+    h1{font-size:clamp(24px,3.6vw,42px);letter-spacing:-.04em;margin:7px 0}h2{font-size:19px;letter-spacing:-.02em}
+    p{line-height:1.45;color:#505050;font-size:14px}main{max-width:1450px;margin:auto;padding:22px}
+    .banner{border-left:4px solid #b7212b;background:#fff;padding:14px 18px;margin-bottom:18px}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .panel{background:#fff;border:1px solid #dedede;border-radius:12px;padding:18px;min-width:0}
+    .pill{font-size:11px;letter-spacing:.07em;border:1px solid #bbb;border-radius:30px;padding:4px 9px}
+    .card-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+    label{display:block;font-size:12px;font-weight:750;margin:13px 0 5px}
+    input[type=text],textarea{font:13px ui-monospace,monospace;width:100%;padding:10px;background:#fbfbfb;
+      border:1px solid #aaa;border-radius:6px;color:#171717}
+    input[type=file]{display:block;max-width:100%;font-size:13px}
+    textarea{min-height:160px;resize:vertical}canvas{display:block;width:100%;height:auto;
+      background:#e6e6e6;border:1px solid #bbb;border-radius:6px;cursor:crosshair;touch-action:manipulation}
+    canvas:focus{outline:3px solid #b7212b;outline-offset:2px}
+    .viewport{background:#efefef;min-height:95px;border-radius:6px;overflow:hidden;margin-top:14px}
+    .small{font-size:12px;color:#555}.mono{font-family:ui-monospace,monospace}
+    .row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+    .compact{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    button{border:0;background:#171717;color:white;padding:12px 18px;border-radius:8px;font-size:14px;
+      font-weight:700;cursor:pointer}button:hover{background:#b7212b}button:disabled{opacity:.45;cursor:wait}
+    .claims{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:8px}
+    .claim{display:flex;gap:8px;align-items:flex-start;padding:9px;border:1px solid #ddd;border-radius:7px;margin:0;font-weight:500}
+    .claim input{margin-top:2px}pre{overflow:auto;white-space:pre-wrap;word-wrap:break-word;
+      background:#111;color:#eee;border-radius:7px;padding:15px;min-height:86px}
+    .footer{margin:18px 0 35px;font-size:12px;color:#555}
+    @media(max-width:860px){.grid{grid-template-columns:1fr}main{padding:12px}}
+  </style>
+</head>
+<body>
+<header>
+  <div class="eyebrow">EVERCRAFT / SYSTEMIA / RESEARCH</div>
+  <h1>FIRST CONTACT <span style="color:#b7212b">/ PIXEL DESK</span></h1>
+  <p>Offline manual measurement of a known target in two <strong>rectified PNG</strong> images.
+    No accounts, third-party code, upload endpoints, camera access or automatic evidence certification.</p>
+</header>
+<main>
+  <div class="banner"><strong>Research only.</strong>
+    Only use authorized, non-sensitive pictures. These must already be lens-rectified PNGs with separately
+    calibrated optics, camera poses and measured capture times. The images never leave this browser;
+    only a JSON measurement packet is saved to your computer. The original camera-native files and
+    independent survey/clock records must remain separately preserved.</div>
+  <section class="panel" aria-labelledby="setupTitle">
+    <h2 id="setupTitle">01 / Measurement settings</h2>
+    <div class="compact">
+      <div><label for="caseId">Case / reference session ID</label>
+        <input type="text" id="caseId" maxlength="100" placeholder="CALIBRATION-REAL-001" autocomplete="off"></div>
+      <div><label for="maxMiss">Predeclared maximum ray miss, meters</label>
+        <input type="text" id="maxMiss" inputmode="decimal" placeholder="Measured threshold, not a demo guess"></div>
+      <div><label for="minParallax">Predeclared minimum parallax, degrees</label>
+        <input type="text" id="minParallax" inputmode="decimal" placeholder="Must be >0 and <90"></div>
+    </div>
+    <p>Do not set acceptance tolerances after reviewing results and then call them preregistered.
+      This tool does not independently establish when they were declared.</p>
+  </section>
+  <div class="grid" style="margin-top:16px">
+    <section class="panel" aria-labelledby="titleA">
+      <div class="card-head"><h2 id="titleA">02 / Camera A</h2><span class="pill">LOCAL FILE</span></div>
+      <label for="photoA">Rectified PNG frame (up to 32 MiB)</label><input id="photoA" type="file" accept="image/png,.png">
+      <p class="small" id="statusA" role="status">No image loaded</p>
+      <div class="viewport"><canvas id="canvasA" width="1280" height="150" tabindex="0" aria-label="Camera A, click to select marker. Arrow keys nudge marker one pixel, Shift plus arrow nudges one tenth pixel."></canvas></div>
+      <p class="small mono" id="pointA">Marker: not selected</p>
+      <label for="cameraFileA">Import actual camera calibration JSON (optional)</label>
+      <input type="file" id="cameraFileA" accept=".json,application/json">
+      <label for="cameraA">Camera intrinsics, rotation and surveyed observer ENU (JSON)</label>
+      <textarea id="cameraA" spellcheck="false" placeholder='{"sensorId":"A","imageWidthPixels":1280,"imageHeightPixels":720,"fxPixels":0,"fyPixels":0,"cxPixels":0,"cyPixels":0,"rectifiedImage":true,"observerMeters":{"x":0,"y":0,"z":0},"rotationCameraToEnu":[[1,0,0],[0,0,1],[0,-1,0]]}'></textarea>
+      <label for="timeA">Measured original capture timestamp, Unix milliseconds</label>
+      <input type="text" id="timeA" inputmode="numeric" placeholder="Must be independently synchronized">
+    </section>
+    <section class="panel" aria-labelledby="titleB">
+      <div class="card-head"><h2 id="titleB">03 / Camera B</h2><span class="pill">LOCAL FILE</span></div>
+      <label for="photoB">Rectified PNG frame (up to 32 MiB)</label><input id="photoB" type="file" accept="image/png,.png">
+      <p class="small" id="statusB" role="status">No image loaded</p>
+      <div class="viewport"><canvas id="canvasB" width="1280" height="150" tabindex="0" aria-label="Camera B, click to select marker. Arrow keys nudge marker one pixel, Shift plus arrow nudges one tenth pixel."></canvas></div>
+      <p class="small mono" id="pointB">Marker: not selected</p>
+      <label for="cameraFileB">Import actual camera calibration JSON (optional)</label>
+      <input type="file" id="cameraFileB" accept=".json,application/json">
+      <label for="cameraB">Camera intrinsics, rotation and surveyed observer ENU (JSON)</label>
+      <textarea id="cameraB" spellcheck="false" placeholder='{"sensorId":"B","imageWidthPixels":1280,"imageHeightPixels":720,"fxPixels":0,"fyPixels":0,"cxPixels":0,"cyPixels":0,"rectifiedImage":true,"observerMeters":{"x":0,"y":0,"z":0},"rotationCameraToEnu":[[1,0,0],[0,0,1],[0,-1,0]]}'></textarea>
+      <label for="timeB">Measured original capture timestamp, Unix milliseconds</label>
+      <input type="text" id="timeB" inputmode="numeric" placeholder="Must match camera A for instantaneous triangulation">
+    </section>
+  </div>
+  <section class="panel" style="margin-top:16px" aria-labelledby="evidenceTitle">
+    <h2 id="evidenceTitle">04 / Operator evidence attestations</h2>
+    <p>Unchecked claims remain <strong>false</strong> in the exported packet and cause the downstream
+    geometry gate to HOLD. Only check when supported by real records; checkmarks themselves cannot authenticate any claim.</p>
+    <div class="claims">
+      <label class="claim"><input type="checkbox" data-claim="calibratedPointing">Actual optical and pointing calibration records exist</label>
+      <label class="claim"><input type="checkbox" data-claim="surveyedObserverPositions">Both observer positions are surveyed in one ENU frame</label>
+      <label class="claim"><input type="checkbox" data-claim="synchronizedClocks">Capture clocks are independently synchronized</label>
+      <label class="claim"><input type="checkbox" data-claim="independentSensorIdentities">Two independent camera identities verified</label>
+      <label class="claim"><input type="checkbox" data-claim="samePhysicalTarget">The same physical reference target is seen in both images</label>
+    </div>
+    <div class="row" style="margin-top:16px">
+      <button id="exportBtn" type="button">Export local two-view JSON packet</button>
+      <span class="small">The packet can be run through <span class="mono">pixel-two-view-cli.mjs</span>.</span>
+    </div>
+    <pre id="result" aria-live="polite">Load two rectified PNG frames, select the same stationary target, and supply verified camera calibration data.</pre>
+  </section>
+  <p class="footer">FIRST-CONTACT-001 · Local read-only annotation · No source-native footage upload ·
+    A geometric candidate is not independent field verification, an anomaly finding, or evidence of extraterrestrial origin.</p>
+</main>
+<script type="module">
+  import {createFieldPixelPacket} from "./field-annotation-core.mjs";
+  import {rectifiedPixelToEnuBearing} from "./pixel-bearing.mjs";
+  import {evaluateSynchronizedPair} from "./observation-sync.mjs";
+  const $=id=>document.getElementById(id);
+  const state={
+    A:{image:null,source:null,point:null,loadGeneration:0},
+    B:{image:null,source:null,point:null,loadGeneration:0}
+  };
+  function message(id,text){$(id).textContent=text;}
+  function clamp(v,lo,hi){return Math.max(lo,Math.min(hi,v));}
+  function paint(side){
+    const data=state[side],canvas=$("canvas"+side),ctx=canvas.getContext("2d");
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    if(!data.image)return;
+    ctx.drawImage(data.image,0,0);
+    if(data.point){
+      const x=data.point.uPixels+.5,y=data.point.vPixels+.5;
+      const radius=Math.max(6,Math.min(canvas.width,canvas.height)/70);
+      ctx.save();
+      ctx.lineWidth=Math.max(2,canvas.width/800);
+      ctx.strokeStyle="#fff";ctx.beginPath();ctx.arc(x,y,radius+2,0,Math.PI*2);ctx.stroke();
+      ctx.strokeStyle="#b7212b";ctx.beginPath();ctx.arc(x,y,radius,0,Math.PI*2);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(x-radius-5,y);ctx.lineTo(x+radius+5,y);
+      ctx.moveTo(x,y-radius-5);ctx.lineTo(x,y+radius+5);ctx.stroke();
+      ctx.restore();
+    }
+  }
+  function setPoint(side,u,v){
+    const data=state[side];
+    if(!data.image)return;
+    const width=data.image.width,height=data.image.height;
+    data.point={
+      uPixels:Math.round(clamp(u,0,width-1)*1000)/1000,
+      vPixels:Math.round(clamp(v,0,height-1)*1000)/1000
+    };
+    message("point"+side,"Marker: u="+data.point.uPixels+", v="+data.point.vPixels+
+      " (zero-based pixel-center coordinates; manual annotation only)");
+    paint(side);
+  }
+  async function sha256(file){
+    if(!globalThis.crypto||!crypto.subtle)throw new Error("WebCrypto unavailable. Open through localhost HTTPS/secure context.");
+    const bytes=await file.arrayBuffer();
+    const digest=await crypto.subtle.digest("SHA-256",bytes);
+    return "sha256:"+Array.from(new Uint8Array(digest)).map(x=>x.toString(16).padStart(2,"0")).join("");
+  }
+  async function loadPhoto(side,file){
+    const data=state[side],generation=++data.loadGeneration;
+    if(data.image && data.image.close)data.image.close();
+    data.image=null;data.point=null;data.source=null;
+    paint(side);message("point"+side,"Marker: not selected");
+    if(!file){message("status"+side,"No image loaded");return;}
+    try{
+      if(!/\.png$/i.test(file.name)||(file.type && file.type!=="image/png"))
+        throw new Error("Use a lens-rectified PNG, not uncorrected JPEG/native footage");
+      if(file.size<1||file.size>33554432)
+        throw new Error("Rectified PNG must be between 1 byte and 32 MiB");
+      const pngHeader=new Uint8Array(await file.slice(0,24).arrayBuffer());
+      const sig=[137,80,78,71,13,10,26,10];
+      if(pngHeader.length!==24||sig.some((n,i)=>pngHeader[i]!==n)||
+        String.fromCharCode(...pngHeader.slice(12,16))!=="IHDR")
+        throw new Error("Invalid PNG signature or missing IHDR header");
+      const view=new DataView(pngHeader.buffer);
+      const declaredWidth=view.getUint32(16),declaredHeight=view.getUint32(20);
+      if(declaredWidth<2||declaredHeight<2||
+        declaredWidth>8192||declaredHeight>8192||declaredWidth*declaredHeight>30000000)
+        throw new Error("PNG is too large (max 8192/side, 30 megapixels)");
+      message("status"+side,"Reading local PNG and calculating SHA-256...");
+      const [bitmap,digest]=await Promise.all([createImageBitmap(file),sha256(file)]);
+      if(bitmap.width!==declaredWidth||bitmap.height!==declaredHeight){
+        bitmap.close();throw new Error("Decoded PNG dimensions disagree with source header");
+      }
+      if(generation!==data.loadGeneration){bitmap.close();return;}
+      if(bitmap.width<2||bitmap.height<2||bitmap.width>8192||bitmap.height>8192||
+         bitmap.width*bitmap.height>30000000){
+        bitmap.close();throw new Error("Unsupported image dimensions (max 8192/side, 30 megapixels)");
+      }
+      data.image=bitmap;
+      data.source={kind:"rectified_png_derivative",fileName:file.name,sha256:digest,sizeBytes:file.size,
+        imageWidthPixels:bitmap.width,imageHeightPixels:bitmap.height};
+      const canvas=$("canvas"+side);
+      canvas.width=bitmap.width;canvas.height=bitmap.height;
+      paint(side);
+      message("status"+side,bitmap.width+"×"+bitmap.height+" rectified PNG • "+
+        (file.size/1048576).toFixed(2)+" MiB • sha256:"+digest.slice(7,19)+"…");
+    }catch(err){
+      if(generation!==data.loadGeneration)return;
+      message("status"+side,"HOLD: "+err.message);
+    }
+  }
+  for(const side of ["A","B"]){
+    $("photo"+side).addEventListener("change",event=>loadPhoto(side,event.target.files?.[0]));
+    $("cameraFile"+side).addEventListener("change",async event=>{
+      const file=event.target.files?.[0];if(!file)return;
+      try{
+        if(file.size<1||file.size>65536)throw new Error("Camera calibration JSON must be <=64 KiB");
+        const value=JSON.parse(await file.text());
+        $("camera"+side).value=JSON.stringify(value.camera||value,null,2);
+      }catch(err){message("result","Camera "+side+" calibration import error: "+err.message);}
+    });
+    $("canvas"+side).addEventListener("pointerdown",event=>{
+      const canvas=$("canvas"+side),rect=canvas.getBoundingClientRect();
+      if(!state[side].image||rect.width===0||rect.height===0)return;
+      const u=(event.clientX-rect.left)*canvas.width/rect.width-.5;
+      const v=(event.clientY-rect.top)*canvas.height/rect.height-.5;
+      setPoint(side,u,v);canvas.focus();
+    });
+    $("canvas"+side).addEventListener("keydown",event=>{
+      const point=state[side].point;
+      if(!point||!["ArrowLeft","ArrowRight","ArrowUp","ArrowDown"].includes(event.key))return;
+      event.preventDefault();
+      const step=event.shiftKey ? 0.1 : 1;
+      const du=event.key==="ArrowLeft"?-step:event.key==="ArrowRight"?step:0;
+      const dv=event.key==="ArrowUp"?-step:event.key==="ArrowDown"?step:0;
+      setPoint(side,point.uPixels+du,point.vPixels+dv);
+    });
+  }
+  function requiredNumber(id){
+    const raw=$(id).value.trim();
+    if(raw===""||!Number.isFinite(Number(raw)))throw new Error(id+" requires a finite number");
+    return Number(raw);
+  }
+  function timestamp(id){
+    const raw=$(id).value.trim();
+    if(!/^[0-9]+$/.test(raw))throw new Error(id+" needs Unix capture milliseconds, not a date guess");
+    const value=Number(raw);
+    if(!Number.isSafeInteger(value))throw new Error(id+" is not a safe integer timestamp");
+    return value;
+  }
+  function sourceObservation(side){
+    const data=state[side];
+    if(!data.image||!data.point||!data.source)
+      throw new Error("Camera "+side+" requires a rectified image and selected marker");
+    let camera;
+    try{camera=JSON.parse($("camera"+side).value);}
+    catch{throw new Error("Camera "+side+" metadata is not valid JSON");}
+    return {camera,detection:{...data.point,captureEpochMilliseconds:timestamp("time"+side)},
+      source:data.source};
+  }
+  $("exportBtn").addEventListener("click",()=>{
+    const button=$("exportBtn");
+    button.disabled=true;
+    try{
+      const claims={};
+      for(const input of document.querySelectorAll("[data-claim]"))
+        claims[input.dataset.claim]=input.checked;
+      const packet=createFieldPixelPacket({
+        caseId:$("caseId").value,
+        first:sourceObservation("A"),second:sourceObservation("B"),
+        quality:{maxRayMissMeters:requiredNumber("maxMiss"),
+          minParallaxDegrees:requiredNumber("minParallax")},
+        evidence:claims
+      });
+      const first=rectifiedPixelToEnuBearing(packet.first);
+      const second=rectifiedPixelToEnuBearing(packet.second);
+      const preview=evaluateSynchronizedPair({
+        first,second,evidence:packet.evidence,
+        maxRayMissMeters:packet.quality.maxRayMissMeters,
+        minParallaxDegrees:packet.quality.minParallaxDegrees
+      });
+      const file=new Blob([JSON.stringify(packet,null,2)+"\n"],{type:"application/json"});
+      const url=URL.createObjectURL(file);
+      const link=document.createElement("a");
+      link.href=url;
+      link.download=packet.caseId.replace(/[^a-z0-9_-]/gi,"_")+".rectified-pixels.json";
+      document.body.appendChild(link);link.click();link.remove();
+      setTimeout(()=>URL.revokeObjectURL(url),1500);
+      const estimate=preview.geometry?.midpointEstimateMeters;
+      message("result","Local JSON exported. Geometry status: "+preview.status+
+        (preview.reason?" ("+preview.reason+")":"")+
+        (estimate?"\nConditional ENU candidate (m): "+JSON.stringify(estimate):"")+
+        "\nClaims authenticated: NO. Camera native footage preserved here: NO."+
+        "\nImage hashes identify local rectified PNG bytes only, not original camera capture."+
+        "\nRun: node systemia/research/first-contact/pixel-two-view-cli.mjs <downloaded-json-file>");
+    }catch(err){message("result","HOLD: "+err.message+". No output was exported.");}
+    finally{button.disabled=false;}
+  });
+</script>
+</body>
+</html>

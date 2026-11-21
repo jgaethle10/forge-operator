@@ -1,0 +1,151 @@
+{
+  "schema": "evercraft.first-contact.calibration-session-input.v1",
+  "sessionId": "SYNTHETIC-KNOWN-TARGET-001",
+  "exampleOnly": true,
+  "disclaimer": "All positions, angles, timestamps and attestations are invented for software testing. Not a field calibration receipt.",
+  "groundTruthMeters": {
+    "x": 50,
+    "y": 300,
+    "z": 25
+  },
+  "evidence": {
+    "knownTargetIndependentlySurveyed": true,
+    "acceptanceThresholdsDeclaredBeforeCapture": true,
+    "calibratedPointing": true,
+    "surveyedObserverPositions": true,
+    "synchronizedClocks": true,
+    "independentSensorIdentities": true,
+    "samePhysicalTarget": true
+  },
+  "quality": {
+    "maxRayMissMeters": 0.01,
+    "minParallaxDegrees": 1
+  },
+  "acceptance": {
+    "maxP95PositionErrorMeters": 0.1,
+    "maxRejectedFraction": 0,
+    "minAcceptedSamples": 3
+  },
+  "samples": [
+    {
+      "first": {
+        "sensorId": "synthetic-A",
+        "captureEpochMilliseconds": 1760000000000,
+        "observerMeters": {
+          "x": 0,
+          "y": 0,
+          "z": 5
+        },
+        "azimuthDegrees": 9.462322208025626,
+        "elevationDegrees": 3.76233031232997
+      },
+      "second": {
+        "sensorId": "synthetic-B",
+        "captureEpochMilliseconds": 1760000000000,
+        "observerMeters": {
+          "x": 100,
+          "y": 0,
+          "z": 20
+        },
+        "azimuthDegrees": 350.5376777919744,
+        "elevationDegrees": 0.9418519674681363
+      }
+    },
+    {
+      "first": {
+        "sensorId": "synthetic-A",
+        "captureEpochMilliseconds": 1760000001000,
+        "observerMeters": {
+          "x": 0,
+          "y": 0,
+          "z": 5
+        },
+        "azimuthDegrees": 9.462322208025626,
+        "elevationDegrees": 3.76233031232997
+      },
+      "second": {
+        "sensorId": "synthetic-B",
+        "captureEpochMilliseconds": 1760000001000,
+        "observerMeters": {
+          "x": 100,
+          "y": 0,
+          "z": 20
+        },
+        "azimuthDegrees": 350.5376777919744,
+        "elevationDegrees": 0.9418519674681363
+      }
+    },
+    {
+      "first": {
+        "sensorId": "synthetic-A",
+        "captureEpochMilliseconds": 1760000002000,
+        "observerMeters": {
+          "x": 0,
+          "y": 0,
+          "z": 5
+        },
+        "azimuthDegrees": 9.462322208025626,
+        "elevationDegrees": 3.76233031232997
+      },
+      "second": {
+        "sensorId": "synthetic-B",
+        "captureEpochMilliseconds": 1760000002000,
+        "observerMeters": {
+          "x": 100,
+          "y": 0,
+          "z": 20
+        },
+        "azimuthDegrees": 350.5376777919744,
+        "elevationDegrees": 0.9418519674681363
+      }
+    },
+    {
+      "first": {
+        "sensorId": "synthetic-A",
+        "captureEpochMilliseconds": 1760000003000,
+        "observerMeters": {
+          "x": 0,
+          "y": 0,
+          "z": 5
+        },
+        "azimuthDegrees": 9.462322208025626,
+        "elevationDegrees": 3.76233031232997
+      },
+      "second": {
+        "sensorId": "synthetic-B",
+        "captureEpochMilliseconds": 1760000003000,
+        "observerMeters": {
+          "x": 100,
+          "y": 0,
+          "z": 20
+        },
+        "azimuthDegrees": 350.5376777919744,
+        "elevationDegrees": 0.9418519674681363
+      }
+    },
+    {
+      "first": {
+        "sensorId": "synthetic-A",
+        "captureEpochMilliseconds": 1760000004000,
+        "observerMeters": {
+          "x": 0,
+          "y": 0,
+          "z": 5
+        },
+        "azimuthDegrees": 9.462322208025626,
+        "elevationDegrees": 3.76233031232997
+      },
+      "second": {
+        "sensorId": "synthetic-B",
+        "captureEpochMilliseconds": 1760000004000,
+        "observerMeters": {
+          "x": 100,
+          "y": 0,
+          "z": 20
+        },
+        "azimuthDegrees": 350.5376777919744,
+        "elevationDegrees": 0.9418519674681363
+      }
+    }
+  ]
+}

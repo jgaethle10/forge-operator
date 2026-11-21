@@ -1,0 +1,88 @@
+{
+  "schema": "evercraft.first-contact.synthetic-pixel-error-input.v1",
+  "synthetic": true,
+  "disclaimer": "INVENTED target, camera matrices and pixels. No field measurements, independent camera calibration, provenance or 3D validation.",
+  "parameters": {
+    "firstCamera": {
+      "sensorId": "camera-A",
+      "observerMeters": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "imageWidthPixels": 1280,
+      "imageHeightPixels": 720,
+      "fxPixels": 800,
+      "fyPixels": 800,
+      "cxPixels": 640,
+      "cyPixels": 360,
+      "skewPixels": 0,
+      "rectifiedImage": true,
+      "rotationCameraToEnu": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          -1,
+          0
+        ]
+      ]
+    },
+    "secondCamera": {
+      "sensorId": "camera-B",
+      "observerMeters": {
+        "x": 3,
+        "y": 0,
+        "z": 0
+      },
+      "imageWidthPixels": 1280,
+      "imageHeightPixels": 720,
+      "fxPixels": 800,
+      "fyPixels": 800,
+      "cxPixels": 640,
+      "cyPixels": 360,
+      "skewPixels": 0,
+      "rectifiedImage": true,
+      "rotationCameraToEnu": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          -1,
+          0
+        ]
+      ]
+    },
+    "targetMeters": {
+      "x": 0,
+      "y": 10,
+      "z": 1
+    },
+    "pixelStdDevPixels": 0,
+    "commonPixelBias": {
+      "uPixels": 0,
+      "vPixels": 0
+    },
+    "focalScaleErrorFraction": 0.05,
+    "draws": 400,
+    "seed": 91115,
+    "maxRayMissMeters": 0.5,
+    "minParallaxDegrees": 1
+  }
+}
