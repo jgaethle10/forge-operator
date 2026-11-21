@@ -1,0 +1,62 @@
+name: AAAR legacy memory evidence checks
+
+on:
+  pull_request:
+    paths:
+      - 'research/aaar/legacy-memory/**'
+      - 'public/findmypart/sample-report/**'
+      - 'tests/aaar-legacy-memory.test.mjs'
+      - '.github/workflows/aaar-legacy-memory.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: aaar-legacy-memory-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  evidence-qa:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - name: Checkout candidate
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate all AAAR research JavaScript syntax
+        run: |
+          set -euo pipefail
+          node --check research/aaar/legacy-memory/supplier-preflight.mjs
+          node --check research/aaar/legacy-memory/source-conflict-review.mjs
+          node --check research/aaar/legacy-memory/civilian-cnc-memory-check.mjs
+      - name: Run source evidence and civilian compatibility guards
+        run: node --test tests/aaar-legacy-memory.test.mjs
+      - name: Verify live source ledgers stay on hold
+        run: |
+          set -euo pipefail
+          node research/aaar/legacy-memory/supplier-preflight.mjs research/aaar/legacy-memory/supplier-candidates-2026-11-19.json > /tmp/aaar-supplier-preflight.json
+          node research/aaar/legacy-memory/source-conflict-review.mjs research/aaar/legacy-memory/document-claims-2026-11-19.json > /tmp/aaar-warranty-conflict.json
+          node research/aaar/legacy-memory/civilian-cnc-memory-check.mjs research/aaar/legacy-memory/civilian-cnc-reference-2026-11-19.json > /tmp/aaar-cnc-limits.json
+          node --input-type=module - <<'NODE'
+          import fs from 'node:fs';
+          import assert from 'node:assert/strict';
+          const p=JSON.parse(fs.readFileSync('/tmp/aaar-supplier-preflight.json','utf8'));
+          const w=JSON.parse(fs.readFileSync('/tmp/aaar-warranty-conflict.json','utf8'));
+          const c=JSON.parse(fs.readFileSync('/tmp/aaar-cnc-limits.json','utf8'));
+          assert.equal(p.candidate_count,4);
+          assert.ok(p.candidates.every(x=>x.state==='RESEARCH_HOLD'&&!x.response_authorized));
+          assert.equal(p.automatic_submission_permitted,false);
+          assert.equal(w.disposition,'HOLD_CLARIFICATION');
+          assert.equal(w.conflicts.length,1);
+          assert.equal(w.automatic_customer_quote_authorized,false);
+          assert.equal(c.manual_capacity_ceiling_mb,8);
+          assert.ok(c.candidates.every(x=>x.review_state==='PUBLISHED_LIMIT_EXCEEDED_HOLD'));
+          assert.equal(c.purchasing_authorized,false);
+          console.log('AAAR_EVIDENCE_PREFLIGHT_PASS 4_SUPPLIER_HOLDS 1_WARRANTY_CONFLICT 2_CNC_CAPACITY_HOLDS');
+          NODE

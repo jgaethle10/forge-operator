@@ -1,0 +1,35 @@
+{
+  "schema": "evercraft.findmypart.civilian-memory-case.v1",
+  "case_id": "SIEMENS-SINUMERIK-810D-PUBLIC-MANUAL-2006",
+  "classification": "PUBLIC_CIVILIAN_RESEARCH_ONLY",
+  "observed_date": "2026-11-19",
+  "equipment_reference": {
+    "equipment": "Siemens SINUMERIK 810D CCU, manual 03/2006",
+    "source_type": "manufacturer_manual",
+    "source_url": "https://cache.industry.siemens.com/dl/files/676/28515676/att_72939/v1/PHC_0306_en.pdf?download=true",
+    "manual_page": "4-76 (PDF page index 75)",
+    "published_capacity_ceiling_mb": 8,
+    "card_type": "PCMCIA Type II flash",
+    "manufacturer_recommends": "Siemens PC cards",
+    "notes": "Manual describes software upgrade/operation functions and cautions against card removal while energized. No particular machine serial, firmware, or customer equipment examined."
+  },
+  "public_candidates": [
+    {
+      "name": "PCcardsDirect PCDATA256MBI, listed 256 MB industrial PCMCIA ATA",
+      "capacity_mb": 256,
+      "form_factor": "PCMCIA_TYPE_II_FLASH",
+      "public_catalog_url": "https://www.pccardsdirect.com/products/industrial-pcmcia-ata-cards.php",
+      "vendor_status": "PUBLIC_CATALOG_UNVERIFIED"
+    },
+    {
+      "name": "California PC FLASH FPCI-256MB-2162TM2, listed 256 MB PIO4",
+      "capacity_mb": 256,
+      "form_factor": "PCMCIA_TYPE_II_FLASH",
+      "public_catalog_url": "https://www.californiapc.com/Industrial-Flash-Memory/Industrial-Grade-PCMCIA-Tough-Metal-Series-2/",
+      "vendor_status": "PUBLIC_CATALOG_UNVERIFIED"
+    }
+  ],
+  "human_review_required": true,
+  "actual_buyer_order": false,
+  "customer_specific_compatibility_test": false
+}
