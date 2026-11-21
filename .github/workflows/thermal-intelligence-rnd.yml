@@ -1,0 +1,47 @@
+name: Thermal Intelligence R&D tests
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/research/thermal-intelligence/**'
+      - '.github/workflows/thermal-intelligence-rnd.yml'
+  push:
+    branches:
+      - 'research/thermal-intelligence-001'
+    paths:
+      - 'systemia/research/thermal-intelligence/**'
+      - '.github/workflows/thermal-intelligence-rnd.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  thermal-research-offline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out research source
+        uses: actions/checkout@v4
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test four offline thermal models
+        run: node --test systemia/research/thermal-intelligence/*.test.mjs
+      - name: Run synthetic hourly screening
+        run: |
+          node systemia/research/thermal-intelligence/run-profile.mjs systemia/research/thermal-intelligence/sample-synthetic-profile.json > "$RUNNER_TEMP/hourly.json"
+          node -e 'const x=require(process.argv[1]); if(x.dataStatus!=="synthetic"||x.fieldDeploymentApproved!==false||x.periods!==24)process.exit(1)' "$RUNNER_TEMP/hourly.json"
+      - name: Verify rejected synthetic calorimetry evidence stays rejected
+        run: |
+          node systemia/research/thermal-intelligence/run-measurements.mjs systemia/research/thermal-intelligence/sample-synthetic-measurements.json > "$RUNNER_TEMP/calorimetry.json"
+          node -e 'const x=require(process.argv[1]); if(x.evidenceClass!=="SYNTHETIC_CALORIMETRY"||x.independentlyVerified!==false||x.fieldDeploymentApproved!==false||x.screen!=="DATA_REVIEW_REQUIRED")process.exit(1)' "$RUNNER_TEMP/calorimetry.json"
+      - name: Verify passive wall-meter importer remains unverified
+        run: |
+          node systemia/research/thermal-intelligence/run-wall-meter.mjs systemia/research/thermal-intelligence/sample-synthetic-wall-meter.json > "$RUNNER_TEMP/wall-meter.json"
+          node -e 'const x=require(process.argv[1]); if(x.evidenceClass!=="SYNTHETIC_WALL_METER_INPUT"||x.independentlyVerified!==false||x.thermalRecoveryVerified!==false||x.fieldDeploymentApproved!==false||x.intervalCount!==3||x.qualityReviewRequired!==true)process.exit(1)' "$RUNNER_TEMP/wall-meter.json"
+      - name: Verify software node probe cannot claim wall power or recovered heat
+        run: |
+          node systemia/research/thermal-intelligence/run-node-readiness.mjs > "$RUNNER_TEMP/node-readiness.json"
+          node -e 'const x=require(process.argv[1]); if(x.evidenceClass!=="LOCAL_SOFTWARE_CONTEXT_ONLY"||x.runtimeContext.atWallElectricKWh!==null||x.runtimeContext.usefulRecoveredHeatKWh!==null||x.independentlyVerified!==false||x.fieldDeploymentApproved!==false)process.exit(1)' "$RUNNER_TEMP/node-readiness.json"
