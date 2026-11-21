@@ -127,3 +127,32 @@ test('conformance state survives capability generation without inventing live pr
     }
   }
 });
+
+
+test('Website Audit discovery consistently discloses hosted checkout and human review',()=>{
+  const id='audit-center-website-audit-machine-v1';
+  const source=authorizedOffers.find(row=>row.public_id===id);
+  const mirror=capabilities.capabilities.find(row=>row.public_id===id);
+  const sell=sellNow.offers.find(row=>row.public_id===id);
+  const json=JSON.parse(fs.readFileSync('public/chum/capabilities/'+id+'/capability.json','utf8'));
+  const door=JSON.parse(fs.readFileSync('public/chum/intents/'+id+'/offer.json','utf8'));
+  const revenue=JSON.parse(fs.readFileSync('public/chum/revenue.json','utf8'));
+  const revenueRecords=[...(revenue.offers||[]),...(revenue.discovery_offers||[])].filter(row=>row.public_id===id);
+  assert.ok(source&&mirror&&sell&&json&&door,'missing $49 Website Audit source or discovery surface');
+  assert.ok(revenueRecords.length>=1,'missing Website Audit revenue index');
+  for(const row of [source,mirror,sell,json,door,...revenueRecords]){
+    assert.equal(row.commercial_state,'sell_now',id);
+    assert.equal(row.machine_state,'human_handoff_ready',id);
+    assert.match(row.pricing,/human-reviewed report/i,id);
+    assert.doesNotMatch(row.pricing,/machine-fulfilled|automatically fulfilled/i,id);
+    assert.equal(row.entry_paid_offer?.fulfillment,'human_reviewed',id);
+    assert.match(row.entry_paid_offer?.scope||'',/reviewed report delivered by email/i,id);
+    assert.equal(row.entry_paid_offer?.price,'$49',id);
+    if(Array.isArray(row.offers)){
+      const quick=row.offers.find(item=>item.offer_key==='quick');
+      assert.equal(quick?.fulfillment,'human_reviewed',id);
+    }
+  }
+  assert.equal(source.human_ui_required,true);
+  assert.equal(json.live_canary_evidence,null,'do not fabricate production receipts');
+});
