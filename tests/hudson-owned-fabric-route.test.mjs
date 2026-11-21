@@ -28,13 +28,15 @@ test('HUDSON is served read-only by the owned Fabric runtime with a functioning 
   assert.match(watch.headers.get('content-security-policy'),/connect-src 'self'/);
   const river=await watch.text();
   assert.match(river,/HUDSON \| Enter the Current/);
-  assert.match(river,/hudson-watch-release" content="river-current-v11-spectral-navigator"/);
+  assert.match(river,/hudson-watch-release" content="river-current-v12-skyward-schooner"/);
   assert.match(river,/id="current"/);
   assert.match(river,/drawTraveler\(from,to,t\)/);
   assert.match(river,/travelerState\(time,progress\)/);
   assert.match(river,/ribbonForm\(time,layer,state\)/);
   assert.match(river,/drawFoldingWake\(trip\)/);
-  assert.match(river,/Spectral Navigator v11/);
+  assert.match(river,/Skyward three-mast schooner/);
+  assert.match(river,/locateScenic\(from,to,t\)/);
+  assert.match(river,/drawSkywardSail\(x,height,wind,tint,heading\)/);
   assert.match(river,/shipPathPose\(from,to,t\)/);
   assert.match(river,/drawMistySail\(x,span,wind,tint\)/);
   assert.match(river,/drawShipStardustWake\(trip\)/);
