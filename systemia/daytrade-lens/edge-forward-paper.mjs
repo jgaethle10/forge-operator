@@ -26,6 +26,12 @@ export function freezeForwardPaperCohort(candidateReview, evaluation, {
   if (!evaluation?.signal_key || evaluation.signal_key !== candidateReview.signal_key) {
     throw new Error("edge_forward_paper_evaluation_mismatch");
   }
+  if (!Number.isFinite(transaction_cost_bps) || transaction_cost_bps < 0) {
+    throw new Error("edge_forward_paper_transaction_cost_invalid");
+  }
+  if (!["NEGATIVE_EXCESS_RETURN", "POSITIVE_EXCESS_RETURN"].includes(evaluation.learned_direction)) {
+    throw new Error("edge_forward_paper_direction_invalid");
+  }
 
   const protocol = {
     schema: "evercraft.daytrade.forward-paper-protocol.v1",
@@ -76,15 +82,25 @@ export function scoreForwardPaperCohort(protocol, measurements = []) {
     new Date(row.observed_at).getTime() > cutoff
   );
   const origins = [...new Set(rows.map((row) => row.origin_entity_ref).filter(Boolean))];
+  // Apply direction first, then deduct costs. Costs must never improve a losing
+  // trade, including when the observed return opposes the frozen direction.
+  const direction = protocol.learned_direction === "NEGATIVE_EXCESS_RETURN" ? -1 : 1;
+  const cost = Number(protocol.transaction_cost_bps) / 10000;
   const signed = rows.map((row) => {
-    const raw = Number(row.forward_return || 0) - Number(row.benchmark_return || 0);
-    const net = raw - Math.sign(raw || 1) * (Number(protocol.transaction_cost_bps) / 10000);
-    return protocol.learned_direction === "NEGATIVE_EXCESS_RETURN" ? -net : net;
+    if (row.forward_return == null || row.benchmark_return == null) return Number.NaN;
+    const forward = Number(row.forward_return);
+    const benchmark = Number(row.benchmark_return);
+    if (!Number.isFinite(forward) || !Number.isFinite(benchmark)) return Number.NaN;
+    return direction * (forward - benchmark) - cost;
   });
-  const meanNet = signed.length ? signed.reduce((a,b) => a+b,0) / signed.length : 0;
+  const validReturns = signed.every(Number.isFinite);
+  const meanNet = validReturns && signed.length
+    ? signed.reduce((a,b) => a+b,0) / signed.length
+    : 0;
   const checks = {
     minimum_forward_events: rows.length >= Number(protocol.minimum_forward_events),
     minimum_distinct_origins: origins.length >= Number(protocol.minimum_distinct_origins),
+    valid_finite_returns: validReturns,
     frozen_direction_positive_after_costs: meanNet > 0,
     no_retroactive_events: rows.every((row) => new Date(row.observed_at).getTime() > cutoff),
   };
