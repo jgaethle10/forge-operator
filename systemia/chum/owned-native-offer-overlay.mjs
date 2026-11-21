@@ -73,8 +73,8 @@ export function withOwnedNativeWorkflowXray(input){
     public_url:BUYER_URL,
     human_start_url:BUYER_URL,
     human_start_url_state:'public_https_verified',
-    payment_authority:'Evercraft Payments with Stripe provider verification',
-    invocation_status:'EXTERNAL BUYER PATH OBSERVED: owned offer page is reachable and founder reached the Stripe-hosted checkout. Live machine matching, settlement and fulfillment require separate verification.',
+    payment_authority:'Evercraft Payments; customer-selected, operator-verified settlement method required',
+    invocation_status:'Owned offer page discovery only. No currently verified merchant payment rail, paid receipt, or fulfillment authority is implied by this record.',
     catalog_version:'2026-10-16.native-owned-v1',
   }];
 }
