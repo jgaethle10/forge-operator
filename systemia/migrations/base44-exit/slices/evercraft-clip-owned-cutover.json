@@ -1,0 +1,72 @@
+{
+  "schema": "evercraft.systemia.base44-migration-slice.v1",
+  "slice": "evercraft_clip_canonical_campaign_data_and_provider_publishing",
+  "priority": 1,
+  "source": {
+    "platform": "base44",
+    "role": "legacy_campaign_records_asset_storage_and_oauth",
+    "legacy_source_role": "read_only_extraction_while_migrating",
+    "new_legacy_writes_allowed": false
+  },
+  "target": {
+    "source_control": "github",
+    "orchestration": "systemia",
+    "runtime": "yard_evercraft_compute",
+    "private_state": "evercraft_owned_private_state_dir",
+    "publisher": "systemia/clip/native-video-publishers.mjs",
+    "media_storage": "evercraft_owned_object_storage_pending",
+    "identity": "evercraft_home_credential_vault",
+    "authoritative_ledger": "systemia/clip/owned-campaign-migration.mjs",
+    "deployment_state": "not_deployed"
+  },
+  "observed": {
+    "legacy_application_count_minimum": "100 per 2026-10-17 estate inventory (entire estate, not just Clip)",
+    "clip_page_registry_count": 26,
+    "clip_staged_campaign_count": 1,
+    "clip_current_draft_destinations": 9,
+    "clip_excluded_page_count": 3,
+    "rc35_verified_master_sha256": "40ec6ae598e13099ffab9f58b53b55bb207820ef79a6216ad6298b222a56994c",
+    "rc35_legacy_media_library_url_present": true,
+    "rc35_media_host_owned": false,
+    "legacy_clip_app_status": "ready",
+    "legacy_clip_workspace_sandbox_bridge": "blocked_integration_credit_exhaustion",
+    "native_provider_video_adapter_pr": "https://github.com/jgaethle10/forge-operator/pull/1593",
+    "provider_publishing_tokens_rekeyed": false,
+    "owned_media_copy_proven": false,
+    "source_row_export_reconciled": false,
+    "private_state_import_deployed": false,
+    "runtime_health_proven": false,
+    "integration_parity_verified": false,
+    "provider_receipts_for_company_announcement": false
+  },
+  "rules": {
+    "secret_values_may_enter_public_repo": false,
+    "legacy_credential_export_allowed": false,
+    "identity_and_provider_connectors_must_be_reauthorized": true,
+    "legacy_publish_status_never_transfer_to_authority": true,
+    "owner_approval_must_be_explicit": true,
+    "blocking_brands": [
+      "Havenly Cleaning",
+      "Evercraft Property Services",
+      "R&B Chicken & Soul"
+    ],
+    "unauthorized_publication_not_allowed": true,
+    "legacy_schedulers_turned_off_only_after_rollback_safe_cutover": true,
+    "customer_private_rows_may_enter_public_repo": false
+  },
+  "acceptance": [
+    "complete_private_source_export_manifest_and_row_count_reconciliation",
+    "owned_state_persistent_import_receipt",
+    "media_bytes_copied_to_owned_origin_and_sha256_verified",
+    "all_required_platform_credentials_reauthorized_in_evercraft_vault",
+    "owned_publish_runtime_deployed_to_authorized_capacity",
+    "live_private_readback_and_health_receipt",
+    "one authorized_canary_or_sandbox_post_with_provider_permalink",
+    "real_business_page_post_receipts_and_duplicate_prevention",
+    "legacy_app_read_only",
+    "verified_rollback_and_observation_window",
+    "legacy_schedules_stopped_without_losing_delivery"
+  ],
+  "next_action": "import private Clip records to Evercraft-owned persistent state; rehost verified RC35 on owned object storage; reauthorize social connectors; deploy and canary native publisher; then retire Base44 writes.",
+  "destructive_cutover_allowed": false
+}
