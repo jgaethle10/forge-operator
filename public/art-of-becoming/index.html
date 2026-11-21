@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f7f4ef">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="description" content="Make something beautiful out of the days you show up for yourself. Private habit art by Evercraft.">
+  <title>The Art of Becoming | Evercraft</title>
+  <style>
+    :root{color-scheme:light;--paper:#f7f4ef;--ink:#24312f;--sub:#67726d;--line:#deded6;--sage:#436a59;--sage-deep:#304e43;--surface:#fffcf7;--gold:#c59b63}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.55 ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+    button,input,select{font:inherit}button{cursor:pointer}button:focus-visible,select:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid #a97c42;outline-offset:3px}
+    .shell{max-width:1270px;padding:0 28px;margin:auto}.top{border-bottom:1px solid var(--line);background:#fbf9f4}.top-inner{min-height:76px;display:flex;justify-content:space-between;align-items:center;gap:20px}.logo{font-weight:850;letter-spacing:.17em;font-size:12px}.logo-mark{display:inline-block;width:23px;height:23px;vertical-align:middle;margin-right:10px;border-radius:50% 50% 48% 10%;background:var(--sage);transform:rotate(-20deg)}.tag{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--sub);font-weight:750}
+    .intro{padding:55px 0 38px;max-width:830px}.eyebrow{color:var(--sage);font-weight:800;letter-spacing:.17em;text-transform:uppercase;font-size:11px;margin:0 0 12px}.intro h1{font-family:Georgia,serif;font-weight:400;letter-spacing:-.045em;font-size:clamp(43px,6.2vw,80px);line-height:1.05;margin:0 0 19px}.intro p:last-child{font-size:17px;max-width:620px;color:var(--sub);margin:0}
+    .world-link{display:inline-block;border:1px solid #436a59;background:#436a59;color:white;text-decoration:none;border-radius:10px;padding:12px 17px;font-size:13px;font-weight:800;margin-top:12px}.world-link:hover{background:#304e43}.intro p:has(.world-link){margin-top:14px;max-width:none}
+    .layout{display:grid;grid-template-columns:minmax(0,1.02fr) minmax(320px,.82fr);gap:30px;align-items:start}.panel{background:var(--surface);border:1px solid var(--line);border-radius:21px;box-shadow:0 15px 60px #3444380a}.art-panel{padding:20px}.art-top{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:1px 4px 16px}.art-title{font-family:Georgia,serif;font-size:23px;letter-spacing:-.025em}.tiny{font-size:12px;color:var(--sub)}.art-frame{position:relative;overflow:hidden;border-radius:14px;min-height:330px;box-shadow:inset 0 0 0 1px #0000000b;background:#eae5dc;aspect-ratio:1 / 1.06}.art-frame svg{width:100%;height:100%;display:block}.art-frame.hard:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(170deg,#7c899526,transparent 65%)}.art-foot{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:19px 4px 3px}.art-foot strong{font-size:13px}.mini-track{width:145px;height:6px;background:#e9e9e1;border-radius:8px;overflow:hidden}.mini-track span{display:block;height:100%;background:var(--sage);transition:width .35s ease}.save-inline{border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--sage-deep);font-size:11px;font-weight:800;padding:8px 11px;margin:12px 4px 3px;cursor:pointer}.save-inline:hover{border-color:var(--sage)}
+    .control-col{display:grid;gap:18px}.section{padding:25px}.section h2{font-family:Georgia,serif;font-size:23px;font-weight:400;line-height:1.22;margin:0 0 8px}.section .sub{font-size:13px;color:var(--sub);margin:0 0 18px}.goal-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.goal{padding:11px 12px;text-align:left;border:1px solid var(--line);border-radius:10px;color:var(--ink);background:#fff;min-height:50px;font-size:12px;font-weight:750;transition:border-color .2s,background .2s}.goal:hover{border-color:var(--sage)}.goal[aria-pressed="true"]{border-color:var(--sage);background:#eaf0e9;color:#25483b;box-shadow:inset 0 0 0 1px var(--sage)}
+    .check-row{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin:13px 0}.date-input{border-radius:8px;border:1px solid var(--line);background:#fff;color:var(--ink);padding:7px 10px;font-size:12px;max-width:155px}.actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:17px}.action{border-radius:11px;border:1px solid var(--line);padding:14px 10px;min-height:62px;font-size:13px;font-weight:780;background:#fff;color:var(--ink)}.action.primary{background:var(--sage);border-color:var(--sage);color:white}.action.primary:hover{background:var(--sage-deep)}.action[aria-pressed="true"]{outline:2px solid var(--gold);outline-offset:2px}.linkbtn{border:0;background:transparent;padding:10px 0 0;color:var(--sage);font-size:12px;font-weight:750;text-decoration:underline;text-underline-offset:3px}.help{margin:11px 0 0;font-size:12px;color:var(--sub)}.notice{min-height:20px;color:var(--sage-deep);font-size:12px;font-weight:700}
+    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;border:1px solid var(--line);background:var(--line);border-radius:14px;overflow:hidden}.stat{background:var(--surface);padding:18px 12px;text-align:center}.stat strong{font-family:Georgia,serif;font-weight:400;font-size:31px;display:block;line-height:1.15}.stat span{font-size:11px;color:var(--sub);display:block;margin-top:7px}.week{display:flex;justify-content:space-between;gap:6px;margin-top:22px}.day{display:grid;gap:6px;text-align:center;flex:1}.day b{font-size:10px;color:var(--sub);font-weight:700}.dot{width:24px;height:24px;display:grid;place-items:center;margin:auto;border:1px solid var(--line);border-radius:50%;font-size:12px;color:var(--sub);background:#fff}.dot.kept{background:var(--sage);color:#fff;border-color:var(--sage)}.dot.hard{background:#eee2d8;border-color:#d8bba2;color:#835d4c}
+    .lower{padding:36px 0 90px}.lower-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(290px,.66fr);gap:26px}.gallery-title{font-family:Georgia,serif;font-size:29px;font-weight:400;margin:0 0 8px}.gallery-intro{color:var(--sub);font-size:13px;margin:0 0 18px}.gallery{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.gallery-item{background:var(--surface);border:1px solid var(--line);padding:8px;border-radius:13px}.gallery-item .thumb{overflow:hidden;border-radius:7px;aspect-ratio:1 / 1.04}.thumb svg{display:block;width:100%;height:100%}.gallery-item strong{font-size:12px;display:block;margin:8px 3px 0}.gallery-item small{font-size:10px;color:var(--sub);display:block;margin:1px 3px 4px}.empty{border:1px dashed #b8c3b8;padding:28px;border-radius:13px;color:var(--sub);font-size:13px;background:#fdfbf6}.privacy{padding:24px}.privacy h3{font-family:Georgia,serif;font-size:22px;font-weight:400;margin:0 0 9px}.privacy p{font-size:12px;color:var(--sub);margin:0 0 13px}.privacy select{width:100%;border:1px solid var(--line);background:#fff;padding:11px;border-radius:8px;margin:7px 0 12px}.privacy label{font-size:12px;font-weight:800}.data-actions{display:flex;gap:10px;flex-wrap:wrap}.data-actions button{font-size:12px;font-weight:800;border:1px solid var(--line);border-radius:8px;padding:9px 12px;background:#fff;color:var(--ink)}.data-actions .danger{color:#8b4c48}.footer{border-top:1px solid var(--line);padding:20px 0 35px;display:flex;justify-content:space-between;gap:20px;color:var(--sub);font-size:11px}
+    @media(max-width:870px){.layout,.lower-grid{grid-template-columns:1fr}.control-col{grid-template-columns:1fr 1fr}.control-col .stat-wrap{grid-column:1/-1}.art-panel{max-width:640px}.lower-grid{gap:20px}.intro{padding-top:40px}}
+    @media(max-width:570px){.shell{padding:0 17px}.top-inner{min-height:64px}.tag{font-size:9px}.intro{padding:30px 0}.intro p:last-child{font-size:15px}.art-panel{padding:12px}.art-frame{min-height:0}.control-col{grid-template-columns:1fr}.control-col .stat-wrap{grid-column:auto}.section{padding:20px}.gallery{grid-template-columns:repeat(2,minmax(0,1fr))}.footer{display:block}.mini-track{width:100px}.art-title{font-size:19px}}
+    @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important}}
+  </style>
+</head>
+<body>
+<header class="top"><div class="shell top-inner"><div class="logo"><span class="logo-mark" aria-hidden="true"></span> EVERCRAFT <span style="color:#9da69c">/</span> BECOMING</div><span class="tag">A private creative ritual · Prototype</span></div></header>
+<main class="shell">
+  <section class="intro">
+    <p class="eyebrow">The Art of Becoming / Chapter One</p>
+    <h1>Make something beautiful<br>out of showing up.</h1>
+    <p>Every intentional day becomes part of a world you can keep building. The original collectible paintings remain available here, while Franchise, Symphony and Sanctuary now have a lifelong campus prototype.</p><p><a class="world-link" href="./worlds.html">Explore Becoming Worlds →</a></p>
+  </section>
+  <div class="layout">
+    <section class="panel art-panel" aria-label="Your growing artwork">
+      <div class="art-top"><div><div class="tiny" id="art-kicker">A work in progress</div><div class="art-title" id="art-title">The first canvas</div></div><span class="tag" id="art-status">0 / 7</span></div>
+      <div class="art-frame" id="art-frame" aria-live="polite"></div>
+      <div class="art-foot"><div><strong id="art-caption">Your next choice is a brushstroke.</strong><div class="tiny" id="art-detail">Your artwork stays yours.</div></div><div class="mini-track" aria-hidden="true"><span id="art-track" style="width:0%"></span></div></div><button class="save-inline" id="save-art" type="button">Save this artwork as SVG</button>
+    </section>
+    <div class="control-col">
+      <section class="panel section">
+        <h2>What are you creating toward?</h2>
+        <p class="sub">Choose one intention. Your entries stay separate for each choice.</p>
+        <div class="goal-grid" id="goals" role="group" aria-label="Your intention"></div>
+      </section>
+      <section class="panel section">
+        <h2>Today's brushstroke</h2>
+        <p class="sub" id="prompt">A day I chose not to drink</p>
+        <div class="check-row"><label for="check-date" class="tiny">Reflect on this day</label><input id="check-date" class="date-input" type="date" aria-label="Check-in date"></div>
+        <div class="actions"><button class="action primary" id="kept" type="button">I followed through</button><button class="action" id="hard" type="button">Today was hard</button></div>
+        <button class="linkbtn" id="clear-day" type="button">Clear this day's reflection</button>
+        <p class="help">Only you decide what counts as following through. A missing check-in is not a failure.</p>
+        <div class="notice" id="notice" role="status" aria-live="polite"></div>
+      </section>
+      <section class="stat-wrap">
+        <div class="stats" aria-label="Your self-reported progress">
+          <div class="stat"><strong id="days">0</strong><span>Days followed through</span></div>
+          <div class="stat"><strong id="streak">0</strong><span>Consecutive check-ins</span></div>
+          <div class="stat"><strong id="pieces">0</strong><span>Finished artworks</span></div>
+        </div>
+        <div class="week" id="week" aria-label="Last seven days"></div>
+        <p class="help">Empty circles mean unrecorded, not unsuccessful. Streaks reflect self-reported check-ins, not verified behavior.</p>
+      </section>
+    </div>
+  </div>
+  <section class="lower">
+    <div class="lower-grid">
+      <div><h2 class="gallery-title">Your collection</h2><p class="gallery-intro">Every seven different days you record following through completes one artwork. Earned pieces remain here if you later correct a reflection, though your current day count adjusts.</p><div class="gallery" id="gallery"></div></div>
+      <aside class="panel privacy">
+        <h3>Make it your own</h3>
+        <label for="theme">Artwork style</label>
+        <select id="theme"><option value="garden">The wildflower garden</option><option value="constellation">The night sky</option><option value="mosaic">The living mosaic</option></select>
+        <h3 style="margin-top:18px">Private by design</h3>
+        <p>This prototype saves reflections only in this browser on this device. It has no account, server sync, analytics, or backup service. Clearing site data can erase your progress, so export a copy if it matters to you.</p>
+        <div class="data-actions"><button id="export" type="button">Export my data</button><button id="import" type="button">Restore backup</button><input id="import-file" type="file" accept=".json,application/json" hidden aria-label="Choose your backup JSON file"><button class="danger" id="erase" type="button">Erase device data</button></div>
+        <p id="storage-note" style="margin-top:13px"></p>
+      </aside>
+    </div>
+  </section>
+</main>
+<footer class="shell footer"><span>EVERCRAFT · THE ART OF BECOMING · CONCEPT MVP</span><span>For reflection, not medical treatment or proof of sobriety. If stopping alcohol may cause withdrawal, seek medical guidance.</span></footer>
+<script type="module">
+import { STORAGE_KEY, GOALS, THEMES, dayKey, shiftDay, emptyState, normalizeState, setCheckIn, getProgress, artworkSeed } from './engine.mjs';
+
+const $ = id => document.getElementById(id);
+const today = dayKey();
+let selectedDay = today;
+let state = emptyState();
+let canStore = true;
+try {
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (raw !== null) {
+    try { state = normalizeState(JSON.parse(raw), today); }
+    catch { $('storage-note').textContent = 'A saved reflection could not be read. You can start fresh or restore a backup.'; }
+  }
+  const probe = STORAGE_KEY + '.probe';
+  localStorage.setItem(probe, 'ok');
+  localStorage.removeItem(probe);
+} catch { canStore = false; }
+if (!canStore) $('storage-note').textContent = 'Browser storage is unavailable. Changes in this session may not be saved.';
+
+function save() {
+  if (!canStore) return;
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+  catch { canStore = false; $('storage-note').textContent = 'Storage unavailable. Export your data before leaving.'; }
+}
+function random(seed) {
+  let n = seed >>> 0;
+  return () => { n = (Math.imul(1664525, n) + 1013904223) >>> 0; return n / 4294967296; };
+}
+function garden(seed, count) {
+  const rnd = random(seed);
+  const flowers = [];
+  const palettes = ['#d9a5a0','#f4d5b4','#faf0d1','#b4c1a2','#e0c5cd','#c3cfd1','#b38a7c'];
+  for (let i = 0; i < 7; i++) {
+    const x = 68 + i * 66 + (rnd() - .5) * 40;
+    const y = 258 + rnd() * 210;
+    const radius = 21 + rnd() * 17;
+    const color = palettes[i];
+    if (i < count) {
+      const petals = Array.from({length: 7}, (_, j) => {
+        const angle = (Math.PI * 2 * j) / 7;
+        return `<ellipse cx="${(x + Math.cos(angle)*radius*.62).toFixed(1)}" cy="${(y + Math.sin(angle)*radius*.62).toFixed(1)}" rx="${(radius*.57).toFixed(1)}" ry="${(radius*.38).toFixed(1)}" fill="${color}" opacity=".88" transform="rotate(${j*360/7} ${x.toFixed(1)} ${y.toFixed(1)})"/>`;
+      }).join('');
+      flowers.push(`<path d="M${x.toFixed(1)} 650 Q${(x-30).toFixed(1)} ${(y+68).toFixed(1)} ${x.toFixed(1)} ${y.toFixed(1)}" fill="none" stroke="#637f6b" stroke-width="4" opacity=".75"/><ellipse cx="${(x-22).toFixed(1)}" cy="${(y+65).toFixed(1)}" rx="27" ry="9" transform="rotate(-29 ${(x-22).toFixed(1)} ${(y+65).toFixed(1)})" fill="#92aa88" opacity=".84"/>${petals}<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(radius*.35).toFixed(1)}" fill="#b98550"/>`);
+    }
+  }
+  return `<rect width="540" height="620" fill="#f0e8d9"/><circle cx="416" cy="142" r="128" fill="#e8d8b9" opacity=".58"/><path d="M0 420 Q140 360 300 423 T540 396 V620 H0Z" fill="#ccd7c4" opacity=".56"/><path d="M0 555 Q230 450 540 515 V620 H0Z" fill="#c0cdb6" opacity=".7"/>${flowers.join('')}<path d="M0 595 Q160 550 290 590 T540 578 V620 H0Z" fill="#9cae94" opacity=".44"/>`;
+}
+function constellation(seed, count) {
+  const rnd = random(seed);
+  let bg = '<rect width="540" height="620" fill="#172d42"/><circle cx="410" cy="105" r="100" fill="#34516a" opacity=".35"/>';
+  for (let i=0; i<48; i++) { const x=rnd()*540,y=rnd()*620; bg += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(.7+rnd()*1.25).toFixed(2)}" fill="#d2d9dc" opacity=".43"/>`; }
+  for (let i=0; i<7; i++) {
+    const x=85+(i%3)*170+(rnd()-.5)*42, y=95+Math.floor(i/3)*180+(rnd()-.5)*36;
+    if (i < count) {
+      const nodes = [[-19,10],[26,-24],[55,28],[-2,55]];
+      bg += `<path d="M${x-19} ${y+10} L${x+26} ${y-24} L${x+55} ${y+28} L${x-2} ${y+55}Z" stroke="#b3c9cc" stroke-width="1.3" fill="none" opacity=".65"/>`;
+      for(const [dx,dy] of nodes) bg += `<circle cx="${x+dx}" cy="${y+dy}" r="4.1" fill="#fff1d2"/><circle cx="${x+dx}" cy="${y+dy}" r="11" fill="#c7e3e0" opacity=".1"/>`;
+    }
+  }
+  return bg;
+}
+function mosaic(seed, count) {
+  const rnd = random(seed);
+  let art = '<rect width="540" height="620" fill="#e9e6dc"/><circle cx="265" cy="300" r="202" fill="none" stroke="#c8d6ca" stroke-width="2"/>';
+  const palette=['#456e69','#c89880','#e1b46e','#a7bbb1','#7d98a3','#d7acaa','#7e947d'];
+  for(let i=0; i<7; i++) {
+    const angle=i*Math.PI*2/7-Math.PI/2, radius=145+(rnd()-.5)*18, cx=270+radius*Math.cos(angle),cy=306+radius*Math.sin(angle);
+    if(i < count) {
+      const color=palette[(i+seed%palette.length)%palette.length], rotation=(angle*180/Math.PI)+90+(rnd()-.5)*9;
+      art += `<g transform="translate(${cx.toFixed(1)} ${cy.toFixed(1)}) rotate(${rotation.toFixed(1)})"><path d="M0 -103 L56 -23 L39 63 L0 83 L-39 63 L-56 -23Z" fill="${color}" opacity=".94" stroke="#fcf8ed" stroke-width="6"/><path d="M0 -70 L28 -8 L0 50 L-28 -8Z" fill="#f6dfbf" opacity=".58"/><circle cy="-4" r="12" fill="#f9ecda" opacity=".8"/></g>`;
+    } else rnd();
+  }
+  return art;
+}
+function artSvg(goal, number, theme, steps) {
+  const seed = artworkSeed(goal, number, theme);
+  const body = theme === 'constellation' ? constellation(seed, steps) : theme === 'mosaic' ? mosaic(seed, steps) : garden(seed, steps);
+  const label = `${steps} of 7 marks on artwork ${number}`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540 620" role="img" aria-label="${label}"><title>${label}</title>${body}<rect x="13" y="13" width="514" height="594" rx="3" fill="none" stroke="${theme === 'constellation' ? '#b6cad2' : '#fffdf8'}" stroke-width="1.3" opacity=".43"/></svg>`;
+}
+function downloadArtwork(number, steps, theme = state.theme) {
+  const blob = new Blob([artSvg(state.goal, number, theme, steps)], {type:'image/svg+xml;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'becoming-' + state.goal + '-canvas-' + String(number).padStart(2,'0') + '.svg';
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+function notify(message) { $('notice').textContent = message; }
+function render() {
+  const goal = GOALS.find(item => item.id === state.goal) || GOALS[0];
+  const progress = getProgress(state, state.goal, today);
+  const records = state.entries[state.goal] || {};
+  const isFinished = progress.artMarks > 0 && progress.brushstrokes === 0;
+  const finishedTheme = state.canvasThemes?.[state.goal]?.[progress.completedPieces-1] || state.theme;
+  const shownNumber = isFinished ? progress.completedPieces : progress.completedPieces + 1;
+  const shownCount = isFinished ? 7 : progress.brushstrokes;
+  $('goals').innerHTML = GOALS.map(item => `<button class="goal" data-goal="${item.id}" type="button" aria-pressed="${item.id===state.goal}">${item.name}</button>`).join('');
+  $('prompt').textContent = goal.prompt;
+  $('art-kicker').textContent = isFinished ? 'Finished and collected' : 'An original work in progress';
+  $('art-title').textContent = `Canvas ${String(shownNumber).padStart(2, '0')}`;
+  $('art-status').textContent = `${shownCount} / 7`;
+  $('art-frame').innerHTML = artSvg(state.goal, shownNumber, isFinished ? finishedTheme : state.theme, shownCount);
+  $('art-frame').classList.toggle('hard', progress.todayStatus === 'hard');
+  $('art-caption').textContent = isFinished ? 'You made something worth keeping.' : progress.todayStatus === 'hard' ? 'The canvas is still yours.' : progress.brushstrokes ? 'One more day, one more detail.' : 'Your next choice is a brushstroke.';
+  $('art-detail').textContent = isFinished ? 'Your next completed day begins a new canvas.' : `${progress.nextPieceIn} more completed ${progress.nextPieceIn===1?'day':'days'} for a finished piece.`;
+  $('art-track').style.width = `${(shownCount/7)*100}%`;
+  $('days').textContent = progress.successes;
+  $('streak').textContent = progress.streak;
+  $('pieces').textContent = progress.completedPieces;
+  $('check-date').value = selectedDay;
+  $('check-date').max = today;
+  $('check-date').min = shiftDay(today, -30);
+  $('kept').setAttribute('aria-pressed', String(records[selectedDay] === 'kept'));
+  $('hard').setAttribute('aria-pressed', String(records[selectedDay] === 'hard'));
+  $('theme').value = state.theme;
+  const week = [];
+  for(let i=6; i>=0; i--) {
+    const date=shiftDay(today,-i), status=records[date] || '', weekday=new Date(date+'T12:00:00').toLocaleDateString(undefined,{weekday:'short'});
+    week.push(`<div class="day" aria-label="${date}: ${status || 'not recorded'}"><b>${weekday}</b><span class="dot ${status}" aria-hidden="true">${status==='kept'?'✓':status==='hard'?'~':'·'}</span></div>`);
+  }
+  $('week').innerHTML = week.join('');
+  const gallery = [];
+  for (let i=progress.completedPieces; i>=Math.max(1,progress.completedPieces-11); i--) gallery.push(`<div class="gallery-item"><div class="thumb">${artSvg(state.goal,i,state.canvasThemes?.[state.goal]?.[i-1] || state.theme,7)}</div><strong>Canvas ${String(i).padStart(2,'0')}</strong><small>Seven days of intention</small><button class="save-inline" data-download-art="${i}" type="button" aria-label="Save Canvas ${i} as SVG">Save SVG</button></div>`);
+  $('gallery').innerHTML = gallery.length ? gallery.join('') : '<div class="empty">Your first completed masterpiece will live here. Seven intentional days, one original piece, and nothing to prove to anyone else.</div>';
+}
+function log(status) {
+  try {
+    state = setCheckIn(state,state.goal,selectedDay,status,today);
+    save();
+    render();
+    notify(status==='kept'?'A new brushstroke. This day is yours.':status==='hard'?'A hard day is part of the story. Nothing you made was erased.':'Reflection cleared. Your previous progress is safe.');
+  } catch { notify('Could not save that date. Please choose a valid recent day.'); }
+}
+$('goals').addEventListener('click', event => {
+  const btn=event.target.closest('button[data-goal]'); if(!btn) return;
+  if(!GOALS.some(goal=>goal.id===btn.dataset.goal)) return;
+  state.goal=btn.dataset.goal; selectedDay=today; save(); render(); notify('');
+});
+$('check-date').addEventListener('change', event => {
+  const key=event.target.value;
+  if(key < shiftDay(today,-30) || key > today) { render(); return; }
+  selectedDay=key; render(); notify('');
+});
+$('kept').addEventListener('click',()=>log('kept'));
+$('hard').addEventListener('click',()=>log('hard'));
+$('clear-day').addEventListener('click',()=>log(null));
+$('theme').addEventListener('change',event=>{
+  if (!THEMES.includes(event.target.value)) return;
+  state.theme=event.target.value; save(); render(); notify('Style selected for your current or next canvas. Finished paintings keep their original style.');
+});
+$('save-art').addEventListener('click',()=>{
+  const progress = getProgress(state, state.goal, today);
+  const finished = progress.artMarks > 0 && progress.brushstrokes === 0;
+  const theme = finished ? (state.canvasThemes?.[state.goal]?.[progress.completedPieces-1] || state.theme) : state.theme;
+  downloadArtwork(finished ? progress.completedPieces : progress.completedPieces + 1, finished ? 7 : progress.brushstrokes, theme);
+});
+$('gallery').addEventListener('click', event => {
+  const button = event.target.closest('button[data-download-art]');
+  if (!button) return;
+  const number = Number(button.dataset.downloadArt);
+  if (!Number.isSafeInteger(number) || number < 1 || number > getProgress(state,state.goal,today).completedPieces) return;
+  downloadArtwork(number,7,state.canvasThemes?.[state.goal]?.[number-1] || state.theme);
+});
+$('export').addEventListener('click',()=>{
+  const blob=new Blob([JSON.stringify({app:'The Art of Becoming',exportedAt:new Date().toISOString(),data:state},null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob),link=document.createElement('a');
+  link.href=url;link.download='art-of-becoming-private-backup.json';document.body.appendChild(link);link.click();link.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+});
+$('import').addEventListener('click',()=>$('import-file').click());
+$('import-file').addEventListener('change',async event=>{
+  const file=event.target.files && event.target.files[0];
+  if (!file) return;
+  try {
+    if (file.size > 1024*1024) throw new Error('Backup exceeds the one megabyte safety limit.');
+    const payload=JSON.parse(await file.text());
+    if (!payload || payload.app !== 'The Art of Becoming' || !payload.data || payload.data.version !== 1) throw new Error('This is not a compatible Art of Becoming backup.');
+    if (!confirm('Restore this backup and replace your current reflections on this device? Export your current data first if you need to keep it.')) return;
+    state=normalizeState(payload.data,today);
+    selectedDay=today;save();render();
+    notify(canStore ? 'Backup restored on this device.' : 'Backup opened for this session, but browser storage is unavailable.');
+  } catch(error) { notify(error.message || 'Unable to restore this backup.'); }
+  finally { event.target.value=''; }
+});
+$('erase').addEventListener('click',()=>{
+  if(!confirm('Erase all reflections on this device for every intention? This cannot be undone. Export a backup first if you want to keep them.'))return;
+  try{localStorage.removeItem(STORAGE_KEY)}catch{}
+  state=emptyState();selectedDay=today;render();notify('All locally stored reflections were cleared.');
+});
+render();
+</script>
+</body>
+</html>
