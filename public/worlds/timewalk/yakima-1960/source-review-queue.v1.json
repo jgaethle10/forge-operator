@@ -1,0 +1,150 @@
+{
+  "schema": "evercraft.timewalk.source-review-queue.v1",
+  "worldId": "yakima-wa-downtown-1960-alpha",
+  "targetYear": 1960,
+  "city": "Yakima",
+  "region": "WA",
+  "country": "US",
+  "status": "research-only-not-a-renderable-world",
+  "verifiedHistoricalSources": [
+    {
+      "id": "loc-1952-yakima-sheet-6",
+      "atlasEdition": 1952,
+      "sheetNumber": 6,
+      "viewerPage": 11,
+      "placeId": "ae-larson",
+      "sourceId": "loc-yakima-1952-sheets-six-fifteen",
+      "viewerUrl": "https://www.loc.gov/resource/g4284ym.g4284ym_g093811952/?sp=11&r=0.251,0.255,0.496,0.416,0",
+      "digitalPixelsExamined": false,
+      "sourceImageReuse": "LOC online Sanborn public domain",
+      "geometryValidated": false
+    },
+    {
+      "id": "loc-1952-yakima-sheet-15",
+      "atlasEdition": 1952,
+      "sheetNumber": 15,
+      "viewerPage": 20,
+      "placeId": "capitol",
+      "sourceId": "loc-yakima-1952-sheets-six-fifteen",
+      "viewerUrl": "https://www.loc.gov/resource/g4284ym.g4284ym_g093811952/?sp=20&st=image&r=0.56,0.858,0.345,0.289,0",
+      "digitalPixelsExamined": false,
+      "sourceImageReuse": "LOC online Sanborn public domain",
+      "geometryValidated": false
+    }
+  ],
+  "physicalAtlas": {
+    "sourceArchive": "CSUN Sanborn Collection",
+    "representedYear": 1960,
+    "identifiedSheets": [
+      6,
+      15
+    ],
+    "correctionRoundsReported": 6,
+    "sheetPasteoverDatesRecorded": false,
+    "originalSheetImagesExamined": false,
+    "landmarkFootprintsApparentlyUnchangedAsArchivistReported": true,
+    "neighboringStructuresChangedAsArchivistReported": true,
+    "sourceStatus": "archivist-direct-correspondence-not-independent-image-inspection",
+    "copyRights": "unverified",
+    "commercial3dDerivativeRights": "unverified"
+  },
+  "supplementalAlignment": {
+    "candidateId": "mapsnap-v2-yakima-1952",
+    "name": "mapsnap v2 auto-georeferenced 1952 Yakima volume",
+    "directoryUrl": "https://mapsnap.org/runs/v2.0/states/wa",
+    "volumeYear": 1952,
+    "volumeSheetsInCatalog": 92,
+    "volumeSheetsPlacedByAutomation": 73,
+    "volumeLevelSummaryVerified": true,
+    "exactSheet6Placed": false,
+    "exactSheet15Placed": false,
+    "referenceAnnotationUrl": null,
+    "sourceAttribution": "mapsnap and OpenStreetMap contributors",
+    "terms": "Open Database License 1.0 for georeferencing annotations, distinct from LOC online map-image public-domain status",
+    "georeferencingQuality": "automated_may_be_wrong_block_or_town",
+    "importedControls": [],
+    "coordinateReferenceSystem": null,
+    "independentSurveyReviewed": false,
+    "mayDetermineProductionPlacement": false,
+    "note": "Volume-level placements are not evidence that sheet 6 or 15 is correctly placed. Do not adopt ODbL control points without separate licensing and QC review."
+  },
+  "reviewUnits": [
+    {
+      "id": "larson-1952-vs-1960",
+      "placeId": "ae-larson",
+      "sheetNumber": 6,
+      "name": "A.E. Larson Building",
+      "kind": "named-landmark",
+      "archivistReport": "apparently-identical-footprint",
+      "status": "independent-review-required",
+      "source1952PixelsReviewed": false,
+      "source1960PixelsReviewed": false,
+      "perFeatureOutlineVerified": false,
+      "historicShopfrontVerified": false,
+      "approvedFor1960Geometry": false
+    },
+    {
+      "id": "capitol-1952-vs-1960",
+      "placeId": "capitol",
+      "sheetNumber": 15,
+      "name": "Capitol Theatre",
+      "kind": "named-landmark",
+      "archivistReport": "apparently-identical-footprint",
+      "status": "independent-review-required",
+      "source1952PixelsReviewed": false,
+      "source1960PixelsReviewed": false,
+      "perFeatureOutlineVerified": false,
+      "historicShopfrontVerified": false,
+      "approvedFor1960Geometry": false
+    },
+    {
+      "id": "neighbors-sheet-6",
+      "placeId": null,
+      "sheetNumber": 6,
+      "name": "Neighboring structures near Larson",
+      "kind": "unidentified-neighbor-inventory",
+      "archivistReport": "nearby-changes-exist-unidentified",
+      "status": "changed-building-identification-required",
+      "source1952PixelsReviewed": false,
+      "source1960PixelsReviewed": false,
+      "perFeatureOutlineVerified": false,
+      "historicShopfrontVerified": false,
+      "approvedFor1960Geometry": false
+    },
+    {
+      "id": "neighbors-sheet-15",
+      "placeId": null,
+      "sheetNumber": 15,
+      "name": "Neighboring structures near Capitol",
+      "kind": "unidentified-neighbor-inventory",
+      "archivistReport": "nearby-changes-exist-unidentified",
+      "status": "changed-building-identification-required",
+      "source1952PixelsReviewed": false,
+      "source1960PixelsReviewed": false,
+      "perFeatureOutlineVerified": false,
+      "historicShopfrontVerified": false,
+      "approvedFor1960Geometry": false
+    }
+  ],
+  "reviewerWorkflow": {
+    "requiredFor1960Geometry": [
+      "review-source-1952-sheet-pixels",
+      "review-actual-1960-source-sheet-or-rights-cleared-source-derived-evidence",
+      "identify-individual-structure",
+      "document-1952-vs-1960-outline-comparison",
+      "check-historical-site-and-year",
+      "independently-verify-survey-control-points",
+      "review-necessary-derivative-rights",
+      "human-accept-geometry-for-canonical-worlds"
+    ],
+    "noAutomaticApproval": true,
+    "noAutomaticDownload": true,
+    "noAutomaticPublication": true,
+    "noAutomaticCharge": true
+  },
+  "renderer": null,
+  "worldGeometry": null,
+  "worldPhysics": null,
+  "worldNavigation": null,
+  "productionApproved": false
+}

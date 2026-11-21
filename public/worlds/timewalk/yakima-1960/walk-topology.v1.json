@@ -1,0 +1,120 @@
+{
+  "schema": "evercraft.timewalk.walk-topology.v1",
+  "worldId": "yakima-wa-downtown-1960-alpha",
+  "sceneYear": 1960,
+  "mode": "walk",
+  "id": "larson-to-capitol-downtown",
+  "title": "Historic Yakima walking study · Larson Building to Capitol Theatre",
+  "location": {
+    "city": "Yakima",
+    "region": "WA",
+    "country": "US"
+  },
+  "routeAuthority": "historical-storyboard-not-realworld-navigation",
+  "historical1960CrossingsVerified": false,
+  "realWorldNavigationAuthorized": false,
+  "geometry": null,
+  "coordinates": null,
+  "metricDistances": null,
+  "sources": [
+    {
+      "sourceId": "yakima-city-walking-tour",
+      "role": "historical-place markers on a circa-2008 street map; stop 27 and stop 10",
+      "sourceYear": 2008
+    },
+    {
+      "sourceId": "capitol-2022-technical-packet",
+      "role": "modern theatre entrance orientation along South Third",
+      "sourceYear": 2022
+    },
+    {
+      "sourceId": "nps-larson-1984-nomination",
+      "role": "Larson main entrance on South Second and 1931/1963 construction changes",
+      "sourceYear": 1984
+    }
+  ],
+  "routeNodes": [
+    {
+      "id": "larson-building",
+      "kind": "historical-landmark",
+      "placeId": "ae-larson",
+      "title": "A.E. Larson Building",
+      "tourStop": 27,
+      "streetContext": "South Second Street and Yakima Avenue",
+      "position": null,
+      "nodeEvidence": "landmark-documented-route-placement-coarse"
+    },
+    {
+      "id": "second-and-yakima",
+      "kind": "intersection-concept",
+      "placeId": null,
+      "title": "South Second Street and Yakima Avenue",
+      "tourStop": null,
+      "streetContext": "Second Street / Yakima Avenue",
+      "position": null,
+      "nodeEvidence": "modern-street-topology-only"
+    },
+    {
+      "id": "third-and-yakima",
+      "kind": "intersection-concept",
+      "placeId": null,
+      "title": "South Third Street and Yakima Avenue",
+      "tourStop": null,
+      "streetContext": "Third Street / Yakima Avenue",
+      "position": null,
+      "nodeEvidence": "modern-street-topology-only"
+    },
+    {
+      "id": "capitol-theatre",
+      "kind": "historical-landmark",
+      "placeId": "capitol",
+      "title": "Capitol Theatre",
+      "tourStop": 10,
+      "streetContext": "South Third Street, block south of Yakima Avenue",
+      "position": null,
+      "nodeEvidence": "landmark-documented-modern-entrance-only"
+    }
+  ],
+  "routeSegments": [
+    {
+      "id": "larson-to-second",
+      "from": "larson-building",
+      "to": "second-and-yakima",
+      "streetLabel": "South Second Street",
+      "distanceMeters": null,
+      "status": "illustrative-walk-sequence",
+      "historical1960CrossingVerified": false,
+      "note": "Larson's main door faces Second Street per 1984 nomination; exact 1960 pedestrian approach not inspected."
+    },
+    {
+      "id": "second-to-third",
+      "from": "second-and-yakima",
+      "to": "third-and-yakima",
+      "streetLabel": "East Yakima Avenue",
+      "distanceMeters": null,
+      "status": "illustrative-walk-sequence",
+      "historical1960CrossingVerified": false,
+      "note": "Between South Second and South Third; modern tour map confirms street topology, not 1960 traffic controls or sidewalk placement."
+    },
+    {
+      "id": "third-to-capitol",
+      "from": "third-and-yakima",
+      "to": "capitol-theatre",
+      "streetLabel": "South Third Street",
+      "distanceMeters": null,
+      "status": "illustrative-walk-sequence",
+      "historical1960CrossingVerified": false,
+      "note": "Contemporary theatre technical packet locates its main entrance midway south along S Third; historic 1960 frontage remains unverified."
+    }
+  ],
+  "authoringCue": {
+    "idealExperience": "Original Worlds first-person movement passes historic evidence waypoints; overlays provide claims and uncertainty by year.",
+    "historicalAppearanceAnchor": "Use separately reviewed Larson pre-1963 storefront period profile; do not show later bank remodel at 1960.",
+    "integrationStatus": "data-contract-only-not-executable-navigation",
+    "sourceRights": "no third-party aerial image or Google/NAVTEQ base-map reproduction",
+    "constraints": [
+      "No GPS pin, no precise route measurements, no navigation, no guaranteed 1960 street crossings.",
+      "No renderer, physics, meshes, sidewalk geometry or scene save ownership."
+    ]
+  }
+}
