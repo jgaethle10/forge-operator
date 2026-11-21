@@ -56,7 +56,7 @@ jobs:
       - name: Verify replay receipt exists and is valid JSON
         if: github.event_name != 'pull_request'
         run: |
-          node -e 'const fs=require("node:fs"); const p=process.env.PRACTICE_REPORT_PATH; const raw=fs.readFileSync(p,"utf8"); const data=JSON.parse(raw); if (!data || typeof data!=="object" || Array.isArray(data)) throw Error("Invalid practice receipt"); console.log("Historical replay receipt validated:",p);'
+          node -e 'const fs=require("node:fs"); const p=process.env.PRACTICE_REPORT_PATH; const d=JSON.parse(fs.readFileSync(p,"utf8")); if(d?.schema!=="evercraft.daytrade-practice-camp.v1" || d?.mode!=="SIMULATION_ONLY" || d?.live_order_capability_used!==false) throw Error("Invalid practice identity or execution mode"); if(!Array.isArray(d.source_stats)||d.source_stats.length===0||d.source_stats.some(x=>!Number.isFinite(x.bars)||x.bars<=0)) throw Error("Historical market data absent or incomplete"); if(!Array.isArray(d.adversarial_drills)||d.adversarial_drills.length===0||d.adversarial_drills.some(x=>x.passed!==true)) throw Error("Adversarial safety drills failed"); if(!Array.isArray(d.sessions)||d.sessions.length===0||!Number.isFinite(d.summary?.sessions)||d.summary.sessions!==d.sessions.length) throw Error("No verified replay sessions"); if(!Number.isFinite(d.summary?.hard_violations)||d.summary.hard_violations!==0) throw Error("Risk rule violations"); console.log(JSON.stringify({historical_practice_verified:true,session_count:d.summary.sessions,simulated_trades:d.summary.trades,source_symbols:d.source_stats.length,mode:d.mode}));'
 
       - name: Render shareable historical simulation report
         if: github.event_name != 'pull_request'
