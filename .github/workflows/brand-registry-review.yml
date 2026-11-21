@@ -1,0 +1,61 @@
+name: Evercraft Brand Registry Review
+
+on:
+  pull_request:
+    paths:
+      - 'docs/brand/**'
+      - 'scripts/brand/**'
+      - 'tests/brand-*.test.mjs'
+      - 'public/.well-known/evercraft-products.json'
+      - 'registry/public-products.json'
+      - 'registry/catalog.json'
+      - '.github/workflows/brand-registry-review.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-private-brand-review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Source check
+        run: |
+          node --check scripts/brand/compile-review-wall.mjs
+          node --check scripts/brand/audit-public-discovery-exposures.mjs
+          node --check scripts/brand/reconcile-product-catalog.mjs
+      - name: Brand custody, restriction, and catalog tests
+        run: |
+          node --test tests/brand-identity-registry.test.mjs tests/brand-review-wall.test.mjs tests/brand-governance-and-exclusion-audit.test.mjs tests/brand-catalog-reconciliation.test.mjs
+      - name: Generate internal review outputs (not public)
+        run: |
+          node scripts/brand/compile-review-wall.mjs --output tmp/evercraft-brand-review.html
+          node scripts/brand/reconcile-product-catalog.mjs --out tmp/evercraft-catalog-review.json
+      - name: Enforce private publication boundary
+        run: |
+          if node scripts/brand/compile-review-wall.mjs --public; then
+            echo "ERROR: public brand compilation was not blocked"
+            exit 1
+          fi
+          if node scripts/brand/reconcile-product-catalog.mjs --public; then
+            echo "ERROR: public catalog publication was not blocked"
+            exit 1
+          fi
+          node --input-type=module <<'NODE'
+          import assert from 'node:assert/strict';
+          import fs from 'node:fs';
+          const c=JSON.parse(fs.readFileSync('tmp/evercraft-catalog-review.json','utf8'));
+          const h=fs.readFileSync('tmp/evercraft-brand-review.html','utf8');
+          assert.equal(c.publication_approved,false);
+          assert.equal(c.counts.restricted_hold,2);
+          assert.equal(c.counts.linked_review,12);
+          assert.equal(c.counts.requires_brand_review,55);
+          assert.ok(!/SkyOps|AliEV|RIVET/.test(h));
+          assert.match(h,/INTERNAL BRAND REVIEW/);
+          console.log('No public output approved; historical catalog reconciled.');
+          NODE

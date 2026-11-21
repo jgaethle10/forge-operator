@@ -1,0 +1,54 @@
+{
+  "schema": "evercraft.brand-design-policy.v1",
+  "source_custody": {
+    "title": "Evercraft Brand Standards Manual",
+    "version": "1.0",
+    "issued": "2026-06",
+    "classification": "confidential",
+    "copy_into_public": false,
+    "source_type": "user-owned library reference",
+    "master_vector_verified": false
+  },
+  "parent_identity": {
+    "primary_mark": "Three ascending parallelograms plus open champagne-gold continuity arc; original vector to be verified, never reverse engineered from brochure",
+    "cannot_substitute_unverified_reconstruction": true,
+    "institutional_palette": {
+      "core_black": "#0B0B0B",
+      "titanium": "#B7BDC5",
+      "champagne_gold": "#B79A56"
+    },
+    "technology_only_accent": {
+      "electric_ice_blue": "#4FB8FF",
+      "scope": "Digital systems and technology-focused interfaces only; not parent institutional collateral"
+    },
+    "mark_rules": [
+      "Retain the three ascending forms and proportional relationships",
+      "Do not close or remove the open arc",
+      "Do not imply a tech demo mark is the parent master",
+      "Never create a new master mark from generative art or PDF raster",
+      "Preserve sub-brand distinctive verified original marks"
+    ]
+  },
+  "child_identity": {
+    "allow_verified_unique_palette": true,
+    "do_not_color_status_as_health_or_risk": true,
+    "do_not_assign_parent_mark_as_unique_product_logo": true,
+    "unverified_asset_fallback": "Plain typographic Evercraft endorsement until approved source parent master is found"
+  },
+  "public_release": {
+    "status": "not_authorized",
+    "can_publish_from_inventory": false,
+    "requires_original_asset": true,
+    "requires_legal_rights": true,
+    "requires_editorial_signoff": true,
+    "requires_truthful_active_product_scope": true,
+    "requires_current_user_route": true,
+    "requires_restricted_project_check": true
+  },
+  "forbidden_public_promotional_keys": [
+    "skyops-parking",
+    "rivet",
+    "aliev"
+  ],
+  "notes": "The review preview may use digital accent graphics but must not claim to be the company's approved institutional lockup; external branding uses exact approved source assets only."
+}
