@@ -125,3 +125,75 @@ test('same opportunity with a second verified company mailbox cannot evade exist
  assert.ok(r.prospects[0].reasons.includes('prior_contact_reconcile_before_new_outreach'));
  assert.ok(r.prospects[1].reasons.includes('duplicate_opportunity_across_agents'));
 });
+
+
+const verifiedDsn=(over={})=>({
+ dsn_message_id:'dsn-001',original_sent_message_id:'mail-1',
+ recipient_address:'orders@acme.example',
+ delivery_state:'permanent_failure',occurred_at:'2026-11-19T19:12:00-08:00',
+ source_kind:'gmail_delivery_status_notification',source_verified_by_operator:true,...over
+});
+
+test('an operator-verified permanent DSN for the exact Gmail recipient creates a bounce hold',()=>{
+ const r=reconcileGmailOutreach(args({messages:[email(1,'orders@acme.example')],
+   deliveryEvents:[verifiedDsn()]}));
+ assert.equal(r.delivery_event_coverage.accepted,1);
+ assert.equal(r.delivery_event_coverage.hard_bounces,1);
+ assert.equal(r.prospects[0].contact_state,'bounced');
+ assert.ok(r.prospects[0].reasons.includes('verified_dsn_hard_bounce_hold'));
+ assert.equal(r.prospects[0].delivery_status_hold_ref,'gmail:dsn-001');
+ assert.equal(r.prospects[0].actionable_as_new_cold_target,false);
+ assert.equal(r.provider_delivery_verified,false);
+ assert.ok(!JSON.stringify(r).includes('orders@acme.example'));
+});
+
+test('temporary Gmail delivery delay is a hold, not a permanent bounce or a reply',()=>{
+ const r=reconcileGmailOutreach(args({messages:[email(1,'orders@acme.example')],
+   deliveryEvents:[verifiedDsn({delivery_state:'temporary_delay'})]}));
+ assert.equal(r.delivery_event_coverage.pending_delays,1);
+ assert.equal(r.delivery_event_coverage.hard_bounces,0);
+ assert.equal(r.prospects[0].contact_state,'delivery_delayed');
+ assert.ok(r.prospects[0].reasons.includes('verified_dsn_delivery_delay_hold'));
+ assert.equal(r.prospects[0].actionable_as_new_cold_target,false);
+ assert.equal(r.funnel.inbound_non_auto_messages,0);
+});
+
+test('a DSN for a different recipient cannot fabricate another recipient bounce',()=>{
+ const r=reconcileGmailOutreach(args({messages:[email(1,'other@acme.example')],
+   deliveryEvents:[verifiedDsn()]}));
+ assert.equal(r.delivery_event_coverage.accepted,0);
+ assert.equal(r.delivery_event_coverage.rejected,1);
+ assert.equal(r.record_coverage.invalid,1);
+ assert.equal(r.quota.quota_verified,false);
+ assert.equal(r.prospects[0].contact_state,'unknown');
+ assert.equal(r.prospects[0].actionable_as_new_cold_target,false);
+});
+
+test('unverified DSN assertions fail closed without claiming a verified bounce',()=>{
+ const r=reconcileGmailOutreach(args({messages:[email(1,'orders@acme.example')],
+   deliveryEvents:[verifiedDsn({source_verified_by_operator:false})]}));
+ assert.equal(r.delivery_event_coverage.rejected,1);
+ assert.equal(r.delivery_event_coverage.hard_bounces,0);
+ assert.equal(r.prospects[0].contact_state,'unknown');
+ assert.equal(r.quota.quota_verified,false);
+});
+
+test('permanent failure beats a later delay and duplicate DSN ids are not recounted',()=>{
+ const b=verifiedDsn();
+ const r=reconcileGmailOutreach(args({messages:[email(1,'orders@acme.example')],
+   deliveryEvents:[b,b,verifiedDsn({dsn_message_id:'dsn-002',delivery_state:'temporary_delay',occurred_at:'2026-11-19T19:20:00-08:00'})]}));
+ assert.equal(r.delivery_event_coverage.accepted,2);
+ assert.equal(r.delivery_event_coverage.hard_bounces,1);
+ assert.equal(r.prospects[0].contact_state,'bounced');
+ assert.equal(r.prospects[0].delivery_status_hold_ref,'gmail:dsn-001');
+});
+
+test('delivery status never grants automatic sending or claims provider confirmation',()=>{
+ const r=reconcileGmailOutreach(args({messages:[email(1,'orders@acme.example')],
+   deliveryEvents:[verifiedDsn()]}));
+ assert.equal(r.delivery_event_coverage.operator_asserted_evidence_only,true);
+ assert.equal(r.delivery_event_coverage.provider_delivery_verified,false);
+ assert.equal(r.quota.allow_unattended_sending,false);
+ assert.equal(r.prospects[0].send_authorized,false);
+ assert.equal(r.send_performed,false);
+});
