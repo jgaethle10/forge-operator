@@ -13,6 +13,7 @@
     "proof:webgpu-reference-frame": "node webgpu-reference-frame.proof.mjs"
   },
   "dependencies": {
-    "playwright": "1.63.0"
+    "playwright": "1.63.0",
+    "tsx": "^4.21.0"
   }
 }

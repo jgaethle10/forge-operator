@@ -97,6 +97,18 @@ jobs:
           name: evercraft-webgpu-device-conformance
           path: /tmp/evercraft-webgpu-device-conformance.json
           if-no-files-found: error
+      - name: Prove actual RC13 World Engine scene GPU pixels
+        env:
+          EVERCRAFT_RC13_PIXEL_OUTPUT: ${{ runner.temp }}/rc13-native-pixels
+          EVERCRAFT_NATIVE_BROWSER_STATE_DIR: ${{ runner.temp }}/evercraft-native-browser
+        run: node rc13-native-pixels.proof.mjs > "$RUNNER_TEMP/rc13-native-pixels-console.json"
+      - name: Upload four RC13 native GPU PNGs and evidence receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: fallen-rc13-native-gpu-pixels
+          path: ${{ runner.temp }}/rc13-native-pixels/*
+          if-no-files-found: error
+          retention-days: 30
       - name: Build worker image
         run: docker build -t evercraft/browser-worker:ci .
       - name: Smoke worker image
