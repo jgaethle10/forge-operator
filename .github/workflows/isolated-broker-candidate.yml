@@ -1,0 +1,40 @@
+name: Isolated broker recovery candidate proof
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/prove-isolated-broker-candidate.mjs'
+      - 'tests/isolated-broker-recovery-candidate.test.mjs'
+      - 'systemia/yard/isolated-resident-broker-deployment.mjs'
+      - 'tests/isolated-yard-broker-deployment.test.mjs'
+      - 'systemia/network/outbound-capacity-broker.mjs'
+      - 'systemia/yard/broker-recovery-admission.mjs'
+      - 'tests/broker-cold-restart-identity.test.mjs'
+      - '.github/workflows/isolated-broker-candidate.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/prove-isolated-broker-candidate.mjs'
+      - 'tests/isolated-broker-recovery-candidate.test.mjs'
+      - 'systemia/yard/isolated-resident-broker-deployment.mjs'
+      - 'tests/isolated-yard-broker-deployment.test.mjs'
+      - 'systemia/network/outbound-capacity-broker.mjs'
+      - 'systemia/yard/broker-recovery-admission.mjs'
+      - 'tests/broker-cold-restart-identity.test.mjs'
+      - '.github/workflows/isolated-broker-candidate.yml'
+
+jobs:
+  lab-proof:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Syntax check isolated proof
+        run: node --check scripts/prove-isolated-broker-candidate.mjs && node --check systemia/yard/isolated-resident-broker-deployment.mjs
+      - name: Prove no-authority cold-start and legacy identity rejection
+        run: node --test tests/isolated-broker-recovery-candidate.test.mjs tests/isolated-yard-broker-deployment.test.mjs tests/broker-cold-restart-identity.test.mjs
