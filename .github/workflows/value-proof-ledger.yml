@@ -1,0 +1,29 @@
+name: Systemia Value Proof
+
+on:
+  pull_request:
+    paths:
+      - "systemia/value-proof/**"
+      - "tests/value-proof-ledger.test.mjs"
+      - ".github/workflows/value-proof-ledger.yml"
+  push:
+    branches: [main]
+    paths:
+      - "systemia/value-proof/**"
+      - "tests/value-proof-ledger.test.mjs"
+      - ".github/workflows/value-proof-ledger.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  value-proof-ledger:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Validate proof filtering and economic status
+        run: node --test tests/value-proof-ledger.test.mjs
