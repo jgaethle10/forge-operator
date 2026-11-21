@@ -1,0 +1,14 @@
+{
+  "schema": "evercraft.gems.public-evidence-ledger.v1",
+  "competition": "DOE GEMS Prize Challenge",
+  "source": "participant-supplied DrivenData receipt archive, independently hash-compared to local staged GeoTIFF",
+  "submission_id": 330339,
+  "submission_state": "Completed",
+  "official_public_dti_reported": 0.0552,
+  "official_public_dti_independently_refetched": false,
+  "submitted_at_utc": "2026-11-19T04:04:38Z",
+  "submitted_raster_sha256": "3b2360bed8966b4bfdae76bfeb5436bf6dccd16ac9dc5ff402434736bdee57a4",
+  "raster_sha256_verified_against_archived_receipt": true,
+  "selected_for_final_scoring_reported": true,
+  "source_note": "No server-side checksum from DrivenData; do not infer verified final score or prize."
+}

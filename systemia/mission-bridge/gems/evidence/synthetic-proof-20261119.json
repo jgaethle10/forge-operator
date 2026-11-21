@@ -1,0 +1,28 @@
+{
+  "schema": "evercraft.gems.synthetic-proof-checkpoint.v1",
+  "source_commit": "49f4911e4924eadbd94b70be5975cff6e67b9d61",
+  "workflow_run_id": 44461802464,
+  "workflow_name": "Systemia Chat Mission Bridge",
+  "job_name": "admission-contract",
+  "job_id": 135351860014,
+  "workflow_conclusion": "success",
+  "artifact_name": "gems-synthetic-research-smoke",
+  "artifact_id": 14501578668,
+  "artifact_download_verified": true,
+  "artifact_file_name": "gems-synthetic-research-smoke.json",
+  "artifact_receipt_sha256": "sha256:2b4351a8c30ef17011bb5fd20577ef922eb93c3d0f0035ebcc72b5a75552bf15",
+  "independent_local_digest_match": true,
+  "synthetic_fixture": "synthetic-fixed-v1",
+  "synthetic_holdout_f1": {
+    "unlabeled-as-negative": 0.9090909090909091,
+    "exclude-near-unlabeled": 0.7593582887700535
+  },
+  "experiment_interpretation": "The synthetic near-fault exclusion variant did not improve this fixed holdout; this is not evidence about unmapped faults in the official GEMS dataset.",
+  "experiment_dataset": "synthetic_only",
+  "official_gems_dataset_used": false,
+  "official_dti_claimed": false,
+  "private_saban_execution_claimed": false,
+  "charged_compute_usd": 0,
+  "production_changed": false,
+  "note": "This checkpoint records a verified external CI fixture receipt. It is not a Passport authorization, leaderboard result, or future-eligible research evaluation."
+}

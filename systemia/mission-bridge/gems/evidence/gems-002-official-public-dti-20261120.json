@@ -1,0 +1,22 @@
+{
+  "schema": "evercraft.gems.official-scored-submission.v1",
+  "source": "owner-provided DrivenData participant portal receipt, archived in ChatGPT Library",
+  "recorded_at_utc": "2026-11-20T02:03:48Z",
+  "participant_account": "jgaethle10",
+  "competition": "DOE GEMS",
+  "submission_id": 330456,
+  "status": "Completed",
+  "official_public_dti": 0.0461,
+  "selected_for_final": false,
+  "candidate_sha256": "7d2b4cf8bc16421e36b196b2b6b349b65e0b6732560a392b98ac699ff3c6be80",
+  "incumbent": {
+    "submission_id": 330339,
+    "official_public_dti": 0.0552,
+    "selected_for_final": true
+  },
+  "delta_gems002_minus_001": -0.0091,
+  "relative_change_percent": -16.485507246376812,
+  "verified_against": "gems_002_drivendata_receipt.json owner library file",
+  "limits": "Receipt user-supplied; not separately fetched from authenticated DrivenData portal in this chat; public subset not final prize evaluation.",
+  "research_implication": "1000m exclusion improved internal holdout-mapped-fault recovery but underperformed incumbent on publicly scored new-fault target. Preserve GEMS-001 as selected. Investigate mismatch and avoid changing final selection based on proxy scores."
+}

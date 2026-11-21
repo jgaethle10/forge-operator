@@ -1,0 +1,78 @@
+{
+  "schema": "evercraft.gems.gems003-disagreement-study.v1",
+  "date": "2026-11-19",
+  "description": "Offline analysis of actual GEMS-001 and GEMS-002 submitted candidate raster bytes. No organizer labels needed; not a test-set score.",
+  "gems001_sha256": "3b2360bed8966b4bfdae76bfeb5436bf6dccd16ac9dc5ff402434736bdee57a4",
+  "gems002_sha256": "7d2b4cf8bc16421e36b196b2b6b349b65e0b6732560a392b98ac699ff3c6be80",
+  "public_dti": {
+    "gems001": 0.0552,
+    "gems002": 0.0461
+  },
+  "finite_pixels": 5167373,
+  "old_only_cells_ge_02": 199664,
+  "new_only_cells_ge_02": 259136,
+  "overlap_cells_ge_02": 185133,
+  "new_only_spatial_proximity_to_old": [
+    {
+      "distance": "within 300m",
+      "cells": 220439
+    },
+    {
+      "distance": "300m to 1km",
+      "cells": 32912
+    },
+    {
+      "distance": "1km to 3km",
+      "cells": 5463
+    },
+    {
+      "distance": "3km to 10km",
+      "cells": 322
+    }
+  ],
+  "old_only_spatial_proximity_to_new": [
+    {
+      "distance": "within 300m",
+      "cells": 187409
+    },
+    {
+      "distance": "300m to 1km",
+      "cells": 11109
+    },
+    {
+      "distance": "1km to 3km",
+      "cells": 1068
+    },
+    {
+      "distance": "3km to 10km",
+      "cells": 78
+    }
+  ],
+  "new_only_within_1km_percent": 97.76758150160533,
+  "new_only_confidence_ge_05_cells": 71068,
+  "new_only_confidence_ge_05_farther_than_1km_cells": 5,
+  "interpretation": "Nearly all model disagreements are proximal geometric shifts/re-weighting rather than truly remote new regions. Spatial proximity alone does not identify correctness or DTI.",
+  "exploratory_variants": [
+    {
+      "name": "conservative",
+      "criteria": "Preserve all GEMS-001 valid pixels exactly unless GEMS-001 predicts zero and GEMS-002 >=0.70 within 10 pixels of GEMS-001 predictions >=0.20",
+      "added_pixels": 29783,
+      "total_positive_cells": 414580,
+      "sha256": "282f7696a3f9ba8d18d4a329254b8bcbdb449ed190c177b8ebce00ae856c3578"
+    },
+    {
+      "name": "broader",
+      "criteria": "Preserve all GEMS-001 valid pixels exactly unless GEMS-001 predicts zero and GEMS-002 >=0.60 within 30 pixels of GEMS-001 predictions >=0.20",
+      "added_pixels": 46417,
+      "total_positive_cells": 431214,
+      "sha256": "f9d3303a8edefff4bb6162a1b51841a2d02025f3a13ba97bc2f6d2c9a2ae33c7"
+    }
+  ],
+  "all_variants_preserve_original_gems001_probabilities": true,
+  "all_variants_preserve_valid_nan_mask": true,
+  "hidden_new_fault_labels_available": false,
+  "holdout_validated": false,
+  "official_gems003_dti_known": false,
+  "scored_submission_made": false,
+  "decision": "diagnostic research only; GEMS-001 stays selected. No recommendation to spend next UTC submission on arbitrary unsupervised blends."
+}

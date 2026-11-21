@@ -1,0 +1,98 @@
+{
+  "schema": "evercraft.gems.real-candidate-topology-audit.v1",
+  "source": "user_preserved_submission_zip",
+  "submission_id_from_archived_receipt": 330339,
+  "candidate_sha256": "3b2360bed8966b4bfdae76bfeb5436bf6dccd16ac9dc5ff402434736bdee57a4",
+  "crs": "EPSG:32611",
+  "dimensions": [
+    3292,
+    3730
+  ],
+  "pixel_size_m": [
+    100,
+    100
+  ],
+  "finite_cells": 5167373,
+  "positive_cells": 384797,
+  "positive_probability_quantiles": {
+    "min": 0.20000048,
+    "q25": 0.24581179,
+    "median": 0.30022985,
+    "q75": 0.37956902,
+    "p90": 0.48377576,
+    "p95": 0.5714697,
+    "p99": 0.69203564,
+    "max": 0.89711666
+  },
+  "threshold_topology": [
+    {
+      "threshold": 0.1,
+      "cells_at_or_above": 384797,
+      "components_8_connected": 104311,
+      "single_cell_components": 53844,
+      "components_at_least_10_cells": 6195,
+      "largest_component_size_cells": 3568
+    },
+    {
+      "threshold": 0.3,
+      "cells_at_or_above": 192760,
+      "components_8_connected": 45002,
+      "single_cell_components": 22470,
+      "components_at_least_10_cells": 3208,
+      "largest_component_size_cells": 3568
+    },
+    {
+      "threshold": 0.5,
+      "cells_at_or_above": 34010,
+      "components_8_connected": 5515,
+      "single_cell_components": 2554,
+      "components_at_least_10_cells": 503,
+      "largest_component_size_cells": 3567
+    }
+  ],
+  "north_south_row_bands": [
+    {
+      "rows": [
+        0,
+        932
+      ],
+      "valid_cells": 2577329,
+      "cells_ge_0_3": 53458,
+      "fraction_of_valid_ge_0_3": 0.020741628
+    },
+    {
+      "rows": [
+        933,
+        1865
+      ],
+      "valid_cells": 1239050,
+      "cells_ge_0_3": 73231,
+      "fraction_of_valid_ge_0_3": 0.059102538
+    },
+    {
+      "rows": [
+        1866,
+        2797
+      ],
+      "valid_cells": 735561,
+      "cells_ge_0_3": 35507,
+      "fraction_of_valid_ge_0_3": 0.048271999
+    },
+    {
+      "rows": [
+        2798,
+        3729
+      ],
+      "valid_cells": 615433,
+      "cells_ge_0_3": 30564,
+      "fraction_of_valid_ge_0_3": 0.049662595
+    }
+  ],
+  "connectivity": "8_neighbor",
+  "no_official_labels_used": true,
+  "official_dti_computed": false,
+  "performance_claim": false,
+  "submission_modified": false,
+  "external_network_called": false,
+  "interpretation": "Prediction topology only. Isolated regions and confidence distribution are diagnostic signals, not direct evidence of model errors or improved official DTI."
+}

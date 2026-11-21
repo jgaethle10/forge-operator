@@ -1,0 +1,34 @@
+{
+  "schema": "evercraft.gems.real-data-ablation-reproduced.v1",
+  "source": "owner-provided Work archive gems_002_real_data_ablation.zip",
+  "archive_sha256": "2854798f87ef414d15c7f3e248d0dbd30b19553061ba069c04b9ff7e2204fd22",
+  "source_commit": "ca4782e9461f6b86e4eca219cd05c8c85a61a24c",
+  "inputs": {
+    "example_submission": "2176d08e485aa2cd2860ce8df539db4faf4d76163b38a4dd8c30a40454d35cbc",
+    "existing_faults": "7ba308ccdc4418b31a178f4f1ef21aaa6e152e4028f2f6f64b01f7eb25ae4093",
+    "numerical_features": "4371c82e3b8339b807bdffcf4ef59a225520fe2988d521be208ae33743123bc5"
+  },
+  "run_a_result_sha256": "c4a890c7e94c85dc18ecb465af66e05fd274adc6475e4a856ca0d8fa64df3d23",
+  "run_b_result_sha256": "4b99f4c3dd05228a0010150739bf63f832339c8108ede522a331abb128582bee",
+  "archive_compare_reexecuted": true,
+  "all_fold_ledgers_equal_excluding_runtime": true,
+  "pooled_northern": {
+    "baseline": 0.07469303236744734,
+    "exclude_300m": 0.08879694376459656,
+    "exclude_1000m": 0.10121027409483738
+  },
+  "locked_southern": {
+    "baseline": 0.10226687840254084,
+    "exclude_1000m": 0.13675248915438878,
+    "absolute_gain": 0.034485610751847945,
+    "relative_gain_percent": 33.72
+  },
+  "input_hashes_in_archive_match_pinned_manifest": true,
+  "training_raster_bytes_not_in_archive": true,
+  "independent_raster_rehash_in_this_chat": false,
+  "validation_target": "held-out mapped fault labels, NOT hidden newly mapped faults",
+  "submission_made": false,
+  "private_saban_dispatch": false,
+  "next_step": "whole connected fault component holdouts, fixed baseline vs preselected 1000m",
+  "note": "This independently verifies the uploaded experiment evidence and compares ledgers; it does not rerun the original training because 419MB feature raster was omitted."
+}

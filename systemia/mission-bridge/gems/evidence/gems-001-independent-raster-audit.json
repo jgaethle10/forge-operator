@@ -1,0 +1,87 @@
+{
+  "schema": "evercraft.gems.candidate-independent-local-audit.v1",
+  "source": "preserved_user_supplied_gems_001_verified_submission.zip",
+  "validation_method": "rasterio_read_actual_geotiff_bytes",
+  "submission_id_in_archived_receipt": 330339,
+  "official_public_dti_in_archived_receipt": 0.0552,
+  "official_score_independently_fetched": false,
+  "file_sha256": "3b2360bed8966b4bfdae76bfeb5436bf6dccd16ac9dc5ff402434736bdee57a4",
+  "file_bytes": 3173751,
+  "width": 3292,
+  "height": 3730,
+  "band_count": 1,
+  "dtype": "float32",
+  "crs": "EPSG:32611",
+  "transform_first_six": [
+    100,
+    0,
+    243350,
+    0,
+    -100,
+    4508550
+  ],
+  "resolution_meters": [
+    100,
+    100
+  ],
+  "nodata_representation": "NaN",
+  "finite_pixels": 5167373,
+  "nan_pixels": 7111787,
+  "inf_pixels": 0,
+  "positive_pixels": 384797,
+  "out_of_range_pixels": 0,
+  "finite_min": 0,
+  "finite_max": 0.8971166610717773,
+  "row_quartile_coverage": [
+    {
+      "row_start": 0,
+      "row_end_exclusive": 933,
+      "finite_pixels": 2577329,
+      "positive_pixels": 109828,
+      "positive_fraction_of_finite": 0.04261310837692821
+    },
+    {
+      "row_start": 933,
+      "row_end_exclusive": 1866,
+      "finite_pixels": 1239050,
+      "positive_pixels": 155385,
+      "positive_fraction_of_finite": 0.12540656147855211
+    },
+    {
+      "row_start": 1866,
+      "row_end_exclusive": 2798,
+      "finite_pixels": 735561,
+      "positive_pixels": 70975,
+      "positive_fraction_of_finite": 0.09649097763475768
+    },
+    {
+      "row_start": 2798,
+      "row_end_exclusive": 3730,
+      "finite_pixels": 615433,
+      "positive_pixels": 48609,
+      "positive_fraction_of_finite": 0.07898341492900121
+    }
+  ],
+  "checks": {
+    "source_checksum_matches_receipt": true,
+    "source_checksum_matches_prior_validation": true,
+    "size_3292_by_3730": true,
+    "single_band": true,
+    "float32": true,
+    "epsg_32611": true,
+    "hundred_meter_grid": true,
+    "nan_nodata": true,
+    "no_infinite_values": true,
+    "predictions_within_0_1": true,
+    "finite_count_matches_prior_validation": true,
+    "nan_count_matches_prior_validation": true,
+    "positive_count_matches_prior_validation": true
+  },
+  "all_structural_checks_passed": true,
+  "reference_raster_loaded": false,
+  "official_allowed_area_mask_verified": false,
+  "geological_generalization_verified": false,
+  "read_only": true,
+  "submission_modified": false,
+  "paid_compute_usd": 0
+}
