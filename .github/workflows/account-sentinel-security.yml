@@ -1,0 +1,42 @@
+name: Account Sentinel security checks
+on:
+  push:
+    paths:
+      - 'systemia/raven/account-sentinel/**'
+      - '.github/workflows/account-sentinel-security.yml'
+  pull_request:
+    paths:
+      - 'systemia/raven/account-sentinel/**'
+      - '.github/workflows/account-sentinel-security.yml'
+permissions:
+  contents: read
+jobs:
+  security-policy-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout reviewed source
+        uses: actions/checkout@v4
+      - name: Install Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify core policy and provider boundary
+        run: node --test systemia/raven/account-sentinel/policy.test.mjs systemia/raven/account-sentinel/demo.test.mjs systemia/raven/account-sentinel/gateway-race.test.mjs systemia/raven/account-sentinel/http-smoke.test.mjs systemia/raven/account-sentinel/sandbox-bank-reader.test.mjs
+      - name: Saban workforce scenario multiplication
+        run: |
+          node systemia/saban/multiplier.mjs \
+            --software account-sentinel \
+            --registry systemia/raven/account-sentinel/saban-registry.json \
+            --fixed --agents 72 --workers 4 --execute --reconcile \
+            --state artifacts/saban-multiplier/account-sentinel-state.json
+      - name: Require complete Saban proof receipt
+        run: node systemia/raven/account-sentinel/verify-saban-receipt.mjs
+      - name: Preserve redacted Saban execution receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: account-sentinel-saban-receipt
+          path: artifacts/saban-multiplier/account-sentinel-latest.json
+          if-no-files-found: warn
+          retention-days: 14

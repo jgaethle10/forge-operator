@@ -1,0 +1,168 @@
+{
+  "schema": "evercraft.account-sentinel.saban-scenarios.v1",
+  "environment": "simulation_only",
+  "scenarios": [
+    {
+      "id": "authorized",
+      "expected_allowed": true,
+      "expected_provider_reads": 1,
+      "expected_result_data": true,
+      "network_allowed": false,
+      "real_bank_access": false,
+      "financial_writes_allowed": false
+    },
+    {
+      "id": "transfer",
+      "expected_allowed": false,
+      "expected_provider_reads": 0,
+      "expected_result_data": false,
+      "network_allowed": false,
+      "real_bank_access": false,
+      "financial_writes_allowed": false
+    },
+    {
+      "id": "rogue",
+      "expected_allowed": false,
+      "expected_provider_reads": 0,
+      "expected_result_data": false,
+      "network_allowed": false,
+      "real_bank_access": false,
+      "financial_writes_allowed": false
+    },
+    {
+      "id": "revoked",
+      "expected_allowed": false,
+      "expected_provider_reads": 0,
+      "expected_result_data": false,
+      "network_allowed": false,
+      "real_bank_access": false,
+      "financial_writes_allowed": false
+    },
+    {
+      "id": "expired",
+      "expected_allowed": false,
+      "expected_provider_reads": 0,
+      "expected_result_data": false,
+      "network_allowed": false,
+      "real_bank_access": false,
+      "financial_writes_allowed": false
+    },
+    {
+      "id": "tampered",
+      "expected_allowed": false,
+      "expected_provider_reads": 0,
+      "expected_result_data": false,
+      "network_allowed": false,
+      "real_bank_access": false,
+      "financial_writes_allowed": false
+    },
+    {
+      "id": "other_account",
+      "expected_allowed": false,
+      "expected_provider_reads": 0,
+      "expected_result_data": false,
+      "network_allowed": false,
+      "real_bank_access": false,
+      "financial_writes_allowed": false
+    },
+    {
+      "id": "missing_scope",
+      "expected_allowed": false,
+      "expected_provider_reads": 0,
+      "expected_result_data": false,
+      "network_allowed": false,
+      "real_bank_access": false,
+      "financial_writes_allowed": false
+    },
+    {
+      "id": "connector_offline",
+      "expected_allowed": false,
+      "expected_provider_reads": 0,
+      "expected_result_data": false,
+      "network_allowed": false,
+      "real_bank_access": false,
+      "financial_writes_allowed": false
+    },
+    {
+      "id": "revocation_offline",
+      "expected_allowed": false,
+      "expected_provider_reads": 0,
+      "expected_result_data": false,
+      "network_allowed": false,
+      "real_bank_access": false,
+      "financial_writes_allowed": false
+    },
+    {
+      "id": "audit_offline",
+      "expected_allowed": false,
+      "expected_provider_reads": 0,
+      "expected_result_data": false,
+      "network_allowed": false,
+      "real_bank_access": false,
+      "financial_writes_allowed": false
+    },
+    {
+      "id": "provider_offline",
+      "expected_allowed": false,
+      "expected_provider_reads": 1,
+      "expected_result_data": false,
+      "network_allowed": false,
+      "real_bank_access": false,
+      "financial_writes_allowed": false
+    },
+    {
+      "id": "revoked_during_read",
+      "expected_allowed": false,
+      "expected_provider_reads": 1,
+      "expected_result_data": false,
+      "network_allowed": false,
+      "real_bank_access": false,
+      "financial_writes_allowed": false
+    },
+    {
+      "id": "connector_during_read",
+      "expected_allowed": false,
+      "expected_provider_reads": 1,
+      "expected_result_data": false,
+      "network_allowed": false,
+      "real_bank_access": false,
+      "financial_writes_allowed": false
+    },
+    {
+      "id": "identity_during_read",
+      "expected_allowed": false,
+      "expected_provider_reads": 1,
+      "expected_result_data": false,
+      "network_allowed": false,
+      "real_bank_access": false,
+      "financial_writes_allowed": false
+    },
+    {
+      "id": "revocation_unavailable_during_read",
+      "expected_allowed": false,
+      "expected_provider_reads": 1,
+      "expected_result_data": false,
+      "network_allowed": false,
+      "real_bank_access": false,
+      "financial_writes_allowed": false
+    },
+    {
+      "id": "grant_changed_during_read",
+      "expected_allowed": false,
+      "expected_provider_reads": 1,
+      "expected_result_data": false,
+      "network_allowed": false,
+      "real_bank_access": false,
+      "financial_writes_allowed": false
+    },
+    {
+      "id": "audit_after_read",
+      "expected_allowed": false,
+      "expected_provider_reads": 1,
+      "expected_result_data": false,
+      "network_allowed": false,
+      "real_bank_access": false,
+      "financial_writes_allowed": false
+    }
+  ]
+}
