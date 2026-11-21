@@ -1,0 +1,21 @@
+name: Compute Cell source-only readiness review
+on:
+  pull_request:
+    paths:
+      - 'systemia/compute/compute-cell-readiness.mjs'
+      - 'systemia/compute/compute-cell-readiness.test.mjs'
+      - 'systemia/compute/COMPUTE_CELL_READINESS.md'
+      - '.github/workflows/compute-cell-readiness-review.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify source-only evidence guard
+        run: node --test systemia/compute/compute-cell-readiness.test.mjs
