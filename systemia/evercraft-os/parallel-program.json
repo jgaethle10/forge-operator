@@ -1,0 +1,183 @@
+{
+  "schema": "evercraft.os.parallel-program.v1",
+  "mission_key": "evercraft-os-parallel-completion-20261021",
+  "mission_authority": "systemia",
+  "multiplication_authority": "saban",
+  "state": "proposal_not_admitted",
+  "mode": "read_only_preflight",
+  "execution_authority_granted": false,
+  "budget_commitment_authorized": false,
+  "public_deployment_authorized": false,
+  "definition": "Readiness lanes may progress independently. This manifest does not admit or dispatch agents, install code, spend money, publish, or modify production; every consequential operation requires an exact authorization and evidence receipt.",
+  "lanes": [
+    {
+      "id": "runtime",
+      "objective": "Prove persistent user-session host, workload lifecycle, release and rollback.",
+      "owner": "Evercraft OS / Yard / Compute",
+      "source_anchors": [
+        "systemia/evercraft-os/runtime.mjs",
+        "systemia/yard/operator.mjs"
+      ],
+      "existing_work": [
+        "https://github.com/jgaethle10/forge-operator/pull/1228",
+        "https://github.com/jgaethle10/forge-operator/pull/1239",
+        "https://github.com/jgaethle10/forge-operator/pull/1229"
+      ],
+      "acceptance": "Independent boot, process lifecycle, rollback, and exact running-artifact deployment receipts."
+    },
+    {
+      "id": "app_packages",
+      "objective": "Finish signed executable installation, updates, capability isolation and verified uninstall.",
+      "owner": "Evercraft OS / Passport",
+      "source_anchors": [
+        "systemia/evercraft-os/app-package.mjs",
+        "systemia/evercraft-os/install-ledger.mjs"
+      ],
+      "existing_work": [
+        "https://github.com/jgaethle10/forge-operator/pull/1239",
+        "https://github.com/jgaethle10/forge-operator/issues/1349"
+      ],
+      "acceptance": "A permitted app genuinely installs, runs, upgrades, and uninstalls with runtime receipts."
+    },
+    {
+      "id": "device_fleet",
+      "objective": "Enroll attested hardware, prove bounded capacity placement and outage failover.",
+      "owner": "NodeSeed / Saban / Compute",
+      "source_anchors": [
+        "systemia/compute/node-seed.mjs",
+        "systemia/saban/nodeseed-pool.mjs",
+        "systemia/evercraft-os/field-node-probe.mjs"
+      ],
+      "existing_work": [
+        "https://github.com/jgaethle10/forge-operator/issues/1332",
+        "https://github.com/jgaethle10/forge-operator/pull/1258"
+      ],
+      "acceptance": "Two authorized physical nodes transfer idempotent work without admitting shadow-only nodes."
+    },
+    {
+      "id": "data_memory",
+      "objective": "Make durable tenant-aware state, provenance, synchronization, backup and restore real.",
+      "owner": "Context Fabric / Lineage",
+      "source_anchors": [
+        "systemia/context-fabric/fabric.mjs",
+        "systemia/lineage"
+      ],
+      "existing_work": [
+        "https://github.com/jgaethle10/forge-operator/issues/758"
+      ],
+      "acceptance": "Encrypted backup and restore preserves records, conflicts, history, permissions and tenant boundaries."
+    },
+    {
+      "id": "identity_access",
+      "objective": "Complete customer recovery, MFA/passkeys and tenant/team authorization.",
+      "owner": "Identity / Passport",
+      "source_anchors": [
+        "systemia/identity/identity.mjs",
+        "systemia/passport"
+      ],
+      "existing_work": [
+        "https://github.com/jgaethle10/forge-operator/blob/main/systemia/identity/README.md"
+      ],
+      "acceptance": "Real account enrollment and recovery pass user isolation and revocation canaries."
+    },
+    {
+      "id": "events_jobs",
+      "objective": "Hard-test durable queues, retries, dead letters, acknowledgments and crash recovery.",
+      "owner": "Signal Fabric / Relay / Systemia",
+      "source_anchors": [
+        "systemia/notification-fabric/fabric.mjs",
+        "systemia/signal-fabric"
+      ],
+      "existing_work": [
+        "https://github.com/jgaethle10/forge-operator/blob/main/systemia/notification-fabric/README.md"
+      ],
+      "acceptance": "Cross-process replay after forced crash preserves one logical effect and durable delivery."
+    },
+    {
+      "id": "autonomous_execution",
+      "objective": "Prove Saban formation, authority, checkpointing and NodeSeed-based recovery.",
+      "owner": "Systemia / Saban / Execution Gate",
+      "source_anchors": [
+        "systemia/saban/formation.mjs",
+        "systemia/saban/distributed-executor.mjs"
+      ],
+      "existing_work": [
+        "https://github.com/jgaethle10/forge-operator/pull/1258",
+        "https://github.com/jgaethle10/forge-operator/issues/1426"
+      ],
+      "acceptance": "Real admitted mission with exact authorizations, leased nodes, execution and reconciliation receipts."
+    },
+    {
+      "id": "payments_delivery",
+      "objective": "Prove provider settlement, canonical order, entitlement, delivered work and refunds.",
+      "owner": "Evercraft Payments / Raven / Meter",
+      "source_anchors": [
+        "systemia/payments",
+        "systemia/meter/meter.mjs"
+      ],
+      "existing_work": [
+        "https://github.com/jgaethle10/forge-operator/issues/1303",
+        "https://github.com/jgaethle10/forge-operator/issues/1224",
+        "https://github.com/jgaethle10/forge-operator/pull/1536"
+      ],
+      "acceptance": "Independent payment receipt to delivery and balanced reversal, without synthetic revenue claims."
+    },
+    {
+      "id": "developer_platform",
+      "objective": "Finish SDKs, external-client conformance, specialist doors and sandbox.",
+      "owner": "Fabric / CHUM / Capability Mesh",
+      "source_anchors": [
+        "systemia/mcp",
+        "systemia/capability-mesh"
+      ],
+      "existing_work": [
+        "https://github.com/jgaethle10/forge-operator/pull/1506",
+        "https://github.com/jgaethle10/forge-operator/issues/1468"
+      ],
+      "acceptance": "External client installs and invokes governed capability through working route with receipts.",
+      "saban_registered_software": "chum"
+    },
+    {
+      "id": "unified_experience",
+      "objective": "Deliver one consistent accessible desktop/mobile OS workspace and app handoff.",
+      "owner": "Evercraft Home / People Layer / Gravity",
+      "source_anchors": [
+        "systemia/evercraft-home/server.mjs",
+        "systemia/people"
+      ],
+      "existing_work": [
+        "https://github.com/jgaethle10/forge-operator/issues/1349",
+        "https://github.com/jgaethle10/forge-operator/pull/1228"
+      ],
+      "acceptance": "Real authorized task continues across mobile and desktop with accurate status."
+    },
+    {
+      "id": "reliability_security",
+      "objective": "Prove public-edge resilience, secret isolation, incident handling and restore.",
+      "owner": "Guardian / Sentinel / Raven / Yard",
+      "source_anchors": [
+        "systemia/sentinel",
+        "systemia/compute"
+      ],
+      "existing_work": [
+        "https://github.com/jgaethle10/forge-operator/issues/1468",
+        "https://github.com/jgaethle10/forge-operator/pull/1511"
+      ],
+      "acceptance": "Independent canary and recovery exercise verify the restored route and persisted data."
+    },
+    {
+      "id": "business_operations",
+      "objective": "Unify CRM, customers, contracts, fulfillment and financial reconciliation.",
+      "owner": "Systemia / Interaction Ledger / Revenue",
+      "source_anchors": [
+        "systemia/interaction-ledger/ledger.mjs",
+        "systemia/control-plane/control-plane.mjs"
+      ],
+      "existing_work": [
+        "https://github.com/jgaethle10/forge-operator/issues/1445",
+        "https://github.com/jgaethle10/forge-operator/pull/1396"
+      ],
+      "acceptance": "Full customer lifecycle with permissioned communications, zero duplicate sends and receipts."
+    }
+  ]
+}
