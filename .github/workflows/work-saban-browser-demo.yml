@@ -26,4 +26,6 @@ jobs:
         run: |
           node --check public/work-saban/demo/engine.mjs
           node --check public/work-saban/demo/demo.js
-          node --test tests/work-saban-browser-demo.test.mjs
+          node --check public/work-saban/demo/visual-replay.mjs
+          node --check public/work-saban/demo/visual-replay-ui.mjs
+          node --test tests/work-saban-browser-demo.test.mjs public/work-saban/demo/visual-replay.test.mjs

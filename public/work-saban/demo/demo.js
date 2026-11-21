@@ -1,4 +1,6 @@
 import {calculateExample,auditExample,formatCents,formatReportMarkdown} from './engine.mjs';
+import {prepareVerifiedReplay} from './visual-replay.mjs';
+import {showProofReplay} from './visual-replay-ui.mjs';
 // Only fetch our published, non-private six-row fixture. No user uploads or POSTs.
 const $=id=>document.getElementById(id);
 async function digest(text){
@@ -39,6 +41,7 @@ $('run').addEventListener('click',async()=>{
       +'Calculation location: this browser\n'
       +'AI/registered workers: NOT USED\n'
       +'Customer data uploaded: NONE';
+    showProofReplay(prepareVerifiedReplay(result,{sourceHash,reportHash,auditPassed:true}),{formatCents});
     $('output').hidden=false;
     // In a phone browser, a result below the hero should never require hunting or extra scrolling.
     requestAnimationFrame(()=>{
