@@ -1,0 +1,32 @@
+name: External Capability Admission
+on:
+  pull_request:
+    paths:
+      - "systemia/capability-mesh/external-adoption-*"
+      - ".github/workflows/external-capability-admission.yml"
+      - "package.json"
+  push:
+    branches: [main]
+    paths:
+      - "systemia/capability-mesh/external-adoption-*"
+      - ".github/workflows/external-capability-admission.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  source-adoption:
+    name: Source-only adoption review
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Validate reviewed upstream manifest without installing candidate code
+        run: |
+          node --check systemia/capability-mesh/external-adoption-gate.mjs
+          node --test systemia/capability-mesh/external-adoption-gate.test.mjs
+          node systemia/capability-mesh/external-adoption-gate.mjs > /tmp/external-adoption-review.json
+          node -e "const x=require('/tmp/external-adoption-review.json'); if(x.status!=='review_only'||x.summary.live_adapters!==0||x.external_code_executed!==false) process.exit(1)"
