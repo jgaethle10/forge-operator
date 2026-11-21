@@ -387,6 +387,44 @@ function drawBranchingSurge(trip){
  ctx.restore();
 }
 
+// A portal has its own bounded, slowly swirling inner weather.
+// Decorative source-history scenery, NEVER a live system or mission indicator.
+function drawConfluenceWeather(radius,tint,seedIndex,surge,central){
+ ctx.save();ctx.beginPath();ctx.arc(0,0,radius*.75,0,Math.PI*2);ctx.clip();
+ ctx.globalCompositeOperation="screen";
+ var plumes=central?5:3;
+ for(var n=0;n<plumes;n++){
+  var theta=clock*(n%2?-.083:.065)+n*2.40+seedIndex*.91;
+  var reach=radius*(.36+.16*Math.sin(clock*.21+n*1.7));
+  var x=Math.cos(theta)*reach,y=Math.sin(theta)*reach*.68;
+  var size=radius*(.31+(n%3)*.072+surge*.08);
+  var cloud=ctx.createRadialGradient(x,y,0,x,y,size);
+  cloud.addColorStop(0,rgba(tint,.19+surge*.14));
+  cloud.addColorStop(.38,rgba(tint,.095+surge*.075));
+  cloud.addColorStop(1,rgba(tint,0));
+  ctx.fillStyle=cloud;ctx.beginPath();ctx.arc(x,y,size,0,Math.PI*2);ctx.fill();
+ }
+ // Two gently rotating, incomplete undersea star-stream arcs.
+ for(var band=0;band<2;band++){
+  var a=clock*(band?-.12:.087)+seedIndex*.70+band*1.6;
+  ctx.beginPath();ctx.ellipse(0,0,radius*(.55+band*.09),
+     radius*(.33+band*.075),a,a+.15,a+2.4);
+  ctx.strokeStyle=rgba(tint,.19+surge*.24);ctx.lineWidth=central?2.2:1.25;
+  ctx.stroke();
+ }
+ // 18 deterministic sparks drift around each glass basin, not mission logs.
+ for(var speck=0;speck<18;speck++){
+  var seed=seeded(seedIndex*1003+speck*47+13);
+  var a=clock*(speck%3?-.064:.078)+speck*2.399963+seedIndex;
+  var r=radius*(.38+.27*seed);
+  var x=Math.cos(a)*r,y=Math.sin(a)*r*.78;
+  var twinkle=Math.pow(.5+.5*Math.sin(clock*.72+seed*9+speck),3);
+  ctx.fillStyle=speck%5?"rgba(216,255,244,"+(.20+.42*twinkle+surge*.20).toFixed(3)+")":
+                          "rgba(255,234,195,"+(.24+.55*twinkle).toFixed(3)+")";
+  ctx.beginPath();ctx.arc(x,y,(central?1.55:.95)*(.32+.66*twinkle),0,Math.PI*2);ctx.fill();
+ }
+ ctx.restore();
+}
 function drawConfluences(){
  // Each confluence is a suspended deep-water lens, not an atomic icon.
  var trip=routeAt();
@@ -406,6 +444,7 @@ function drawConfluences(){
   glass.addColorStop(0,"rgba(1,6,20,.99)");glass.addColorStop(.7,"rgba(2,16,31,.92)");
   glass.addColorStop(1,rgba(p.color,.17+surge*.11));
   ctx.fillStyle=glass;ctx.beginPath();ctx.arc(0,0,r*.79*(1+surge*.08),0,Math.PI*2);ctx.fill();
+  drawConfluenceWeather(r,p.color,i,surge,central);
   ctx.globalCompositeOperation="lighter";
   // Three incomplete elliptical horizons move independently like refracted water.
   for(var ring=0;ring<3;ring++){
