@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="index,follow"><meta name="theme-color" content="#061419">
+<meta name="description" content="Explore a fictional Relay decision-alignment scenario. Structured check-ins, human resolution and acknowledgment, without a customer account.">
+<link rel="canonical" href="https://jgaethle10.github.io/forge-operator/relay/pilot/demo/">
+<title>Relay | Interactive Fictional Walkthrough</title>
+<style>
+:root{color-scheme:dark;--bg:#061419;--panel:#0d252b;--line:#35565d;--ink:#f2f7f6;--sub:#bed0ce;--mint:#a2edda;--gold:#ffc68c}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 80% 5%,#174b46 0%,transparent 35%),var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,Segoe UI,sans-serif}a{color:var(--mint)}.wrap{max-width:1000px;padding:0 22px;margin:0 auto}.nav{display:flex;justify-content:space-between;gap:16px;align-items:center;padding-top:24px;padding-bottom:24px;border-bottom:1px solid var(--line)}.brand{text-transform:uppercase;font-size:13px;font-weight:800;letter-spacing:.18em;text-decoration:none}.brand span{display:block;font-size:10px;color:var(--mint);letter-spacing:.22em}main{padding-bottom:90px}.eyebrow{display:block;color:var(--mint);font-size:11px;text-transform:uppercase;font-weight:800;letter-spacing:.2em;margin-top:55px}h1{font-size:clamp(2.6rem,6vw,4.4rem);letter-spacing:-.055em;line-height:1.1;margin:18px 0}h2{font-size:1.45rem;margin:0 0 12px;letter-spacing:-.02em}p{color:var(--sub)}.lede{max-width:730px;font-size:1.09rem}.disclose{margin:26px 0 28px;border-left:3px solid var(--mint);padding:14px 18px;background:#112b30;color:#e4f4ed}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px}.card small{display:block;color:var(--mint);text-transform:uppercase;letter-spacing:.14em;font-weight:800}.card strong{display:block;font-size:1.6rem;margin-top:14px}.card p{margin:4px 0}.bar{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;margin:24px 0 12px}.bar h2{margin:0}.button{appearance:none;border:1px solid var(--mint);border-radius:8px;background:var(--mint);color:#0a201f;font:inherit;font-weight:800;padding:12px 18px;cursor:pointer;min-height:48px}.button:focus-visible,a:focus-visible{outline:3px solid var(--gold);outline-offset:4px}.button[disabled]{cursor:default;opacity:.45}.result{min-height:115px;background:#0b2229;border:1px solid #3b6665;border-radius:12px;padding:20px}.result strong{display:block;color:var(--gold);margin-bottom:6px}.step{margin-top:28px;padding-top:24px;border-top:1px solid var(--line)}.step p{max-width:730px}.action-set{display:flex;gap:10px;flex-wrap:wrap}.stamp{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.11em;color:var(--mint)}.finished{border:1px solid #5e9b88;padding:20px;border-radius:12px;background:#0c2927}.footer{margin-top:40px;padding-top:30px;border-top:1px solid var(--line);font-size:13px;color:#9fbdb8}
+@media(max-width:650px){.grid{grid-template-columns:1fr}.wrap{padding:0 16px}.nav{align-items:flex-start}.card{padding:18px}.bar{align-items:flex-start;flex-direction:column}.bar .button{width:100%}.action-set .button{flex:1}}
+</style>
+</head>
+<body><div class="wrap">
+<nav class="nav"><a class="brand" href="../">EVERCRAFT<span>RELAY / PRIVATE PILOT</span></a><a href="../#request">Request a private pilot</a></nav>
+<main><span class="eyebrow">Fictional interactive walkthrough</span><h1>Two people.<br>One date.<br>Two different plans.</h1>
+<p class="lede">This short walkthrough demonstrates the structure of the Relay pilot: independent check-ins, an explainable mismatch, a human-recorded decision and individual acknowledgment.</p>
+<div class="disclose"><strong>This is a simulated example, not a hosted customer workspace.</strong> No real meetings, accounts, messages, or private data are accessed. All names, dates, decisions and acknowledgments below are fictional. Relay does not independently determine who is correct.</div>
+<section aria-labelledby="one"><div class="bar"><h2 id="one">01 / Compare separate recollections</h2><button class="button" id="compare">Compare check-ins</button></div>
+<div class="grid"><article class="card"><small>Morgan · project manager</small><strong>Nov 02</strong><p>Construction begins</p></article><article class="card"><small>Alex · permitting lead</small><strong>Nov 02</strong><p>Permit submission</p></article></div>
+<div class="result" id="comparison" role="status" aria-live="polite">Both fictional check-ins are recorded. They have not been compared yet.</div>
+</section>
+<section class="step" aria-labelledby="two"><h2 id="two">02 / Clarify with the humans</h2><p>Someone must verify the actual agreement. Relay's current pilot cannot infer intent, certify attendance or resolve a dispute without a person deciding what belongs in the record.</p>
+<button class="button" id="resolve" disabled>Record example human decision</button>
+<div id="decision" class="result" role="status" aria-live="polite" style="margin-top:12px">No decision recorded in this demonstration.</div></section>
+<section class="step" aria-labelledby="three"><h2 id="three">03 / Ask each person to acknowledge</h2><p>The owner records a decision. Each person separately acknowledges the current version. A clicked acknowledgment is a receipt, not proof of comprehension.</p>
+<div class="action-set"><button class="button" id="ack-morgan" disabled>Acknowledge as Morgan</button><button class="button" id="ack-alex" disabled>Acknowledge as Alex</button></div>
+<div id="ack-status" class="result" role="status" aria-live="polite" style="margin-top:12px">0 of 2 fictional acknowledgments.</div></section>
+<section class="step"><span class="stamp">What is available now</span><h2>Interested in trying the real private pilot?</h2><p>The existing Node.js pilot runs locally with structured check-ins, versioned owner decisions and acknowledgment records. It is not yet a publicly hosted, enterprise-secure, AI-semantic meeting integration. Pilot inquiries are reviewed individually.</p>
+<a class="button" style="text-decoration:none;display:inline-block" href="../#request">Request a private pilot</a>
+</section><div class="footer">Evercraft Relay · Clarity before consequences. This page contains a fictional scenario and browser-only simulated interactions, not customer results.</div>
+</main></div>
+<script type="module">
+import {compareStructuredCheckins} from './logic.mjs';
+const $=id=>document.getElementById(id);
+const sample=[{date:'2026-11-02',event:'construction_start'},{date:'2026-11-02',event:'permit_submission'}];
+let compared=false,resolved=false;const ack={morgan:false,alex:false};
+$('compare').addEventListener('click',()=>{
+  const result=compareStructuredCheckins(sample);
+  if(result.status!=='clarification_needed')return;
+  compared=true;
+  $('comparison').textContent='Clarification needed: Both check-ins refer to November 2, but describe different milestones. Relay surfaces the structured difference; a human must determine the actual decision.';
+  $('resolve').disabled=false;
+});
+$('resolve').addEventListener('click',()=>{
+  if(!compared)return;resolved=true;
+  $('decision').textContent='Illustrative owner-confirmed record, version 1: November 2 is the permit submission date. Construction begins after approval. Accountable owner: permitting lead.';
+  $('ack-morgan').disabled=false;$('ack-alex').disabled=false;
+  $('resolve').disabled=true;
+});
+function acknowledge(who){
+  if(!resolved||ack[who])return;
+  ack[who]=true;$('ack-'+who).disabled=true;
+  const count=Number(ack.morgan)+Number(ack.alex);
+  $('ack-status').textContent=count+' of 2 fictional participants acknowledged the simulated version 1 record. '+(count===2?'Both example acknowledgments are recorded.':'One is still pending.');
+}
+$('ack-morgan').addEventListener('click',()=>acknowledge('morgan'));
+$('ack-alex').addEventListener('click',()=>acknowledge('alex'));
+</script>
+</body></html>
