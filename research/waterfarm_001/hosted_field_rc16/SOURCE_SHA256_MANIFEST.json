@@ -1,0 +1,153 @@
+{
+  "schema": "evercraft.aqua.rc16.source_sha.v1",
+  "files": {
+    "DEPLOYMENT_GATE.md": {
+      "sha256": "2c5c1ef5d5a37f612ce34fe50b27784db9c624a3e9d2d8503013f4daa429ea68",
+      "bytes": 2714
+    },
+    "QA_RELEASE_RECEIPT.md": {
+      "sha256": "b77c8f4bf427f3894e95612845e52714fb1f5dfc1be1903149b15c0358ed5f7a",
+      "bytes": 1838
+    },
+    "RC15_ENGINEERING_DECISION.md": {
+      "sha256": "4d47ef760980d32cf3cff8cdda688159a1eae602414fe4556843de1d8d5dea37",
+      "bytes": 5673
+    },
+    "RC16_ENGINEERING_DECISION.md": {
+      "sha256": "1b181bb5ab6866a8976be2b12b6b6254cebe6afa97d9267883c6d991cf113a82",
+      "bytes": 4900
+    },
+    "README.md": {
+      "sha256": "84be3e214b19daa7a536201b8c344416bd588c2b23f1d3cd2183f29b3e93697e",
+      "bytes": 2669
+    },
+    "app/app.js": {
+      "sha256": "e4fdff87473c0530527800c8020aff396aad7b9e166b1bfda750b6a5dd760796",
+      "bytes": 9428
+    },
+    "app/core.mjs": {
+      "sha256": "019ea78d73a64cae9f03bafff8fc0415546723a08272a3548b95ac8076a38b5d",
+      "bytes": 9601
+    },
+    "app/journal.mjs": {
+      "sha256": "fe143a1fa086fe7b475841956f79eca82c3245588cfd4c0089d9f1486bad8a9d",
+      "bytes": 5710
+    },
+    "app/readiness.mjs": {
+      "sha256": "8980c7f334449ab4f086bd664b66343b3c906f7b2eb2b1c03e0f5f98b7255c36",
+      "bytes": 1672
+    },
+    "app/storage.mjs": {
+      "sha256": "315ec41079f6b76c6a699b35fd2c6478ccbbc715ed62b0774f7475d58f1b1ceb",
+      "bytes": 3829
+    },
+    "apple-touch-icon.png": {
+      "sha256": "93a0baab649a3ae7e2d76c25d489760863787c65d71cfd57ad6f9d34ab1aa645",
+      "bytes": 5497
+    },
+    "deployment/Caddyfile.aqua.example": {
+      "sha256": "8e3cfa5085dbe7def26ba7d32b83b5ea23028a54b1b5ee7b284541a5d1cbce01",
+      "bytes": 935
+    },
+    "deployment/REAL_IPHONE_ACCEPTANCE.md": {
+      "sha256": "2182605253cf8daa8d6d965fc4eeff5f31d5ad9c1b072fc4aed44f2870a89c3c",
+      "bytes": 1690
+    },
+    "deployment/__pycache__/verify_hosted.cpython-313.pyc": {
+      "sha256": "c6e0c7b4dbab682ae69e4175194420fb6167fdde08e5aed1572587b03b60a2fc",
+      "bytes": 8856
+    },
+    "deployment/verify_hosted.py": {
+      "sha256": "e1add8c2456e77b0fda3ed6dc204e26dc8500dc33dab36873637a8a9df54672e",
+      "bytes": 4951
+    },
+    "icon-192.png": {
+      "sha256": "0a1576732241b6471143b2baf6e01c8d74abb430936dbb53ab4db62dcc892622",
+      "bytes": 5938
+    },
+    "icon-512.png": {
+      "sha256": "2bb0b50c884504dc9771e1d330d20efa401bb4284fe9c71638f57e7667c7535b",
+      "bytes": 16574
+    },
+    "icon.svg": {
+      "sha256": "68ed2ff4840f820aed7fec89657f99a0d92b76f5d3aefbd942bbce66b9d78bc2",
+      "bytes": 350
+    },
+    "index.html": {
+      "sha256": "4330b8e364a37a6991d0a703363c461d047fa193b313f047bca3c07bae7145bd",
+      "bytes": 14148
+    },
+    "manifest.webmanifest": {
+      "sha256": "dc285a340fa961399789a92616cb67bfb1a2d3213fe3e57b69cde78bdf1f1ae8",
+      "bytes": 719
+    },
+    "qa/desktop_rc16.png": {
+      "sha256": "9b5c9286ebf17c551b5d10276c7c194cc0376eef5a3e025de2919823a62b402f",
+      "bytes": 780502
+    },
+    "qa/phone_rc16.png": {
+      "sha256": "b67859c64b10a44f28f7f5e698e274a2481ae334043ed6b049dd5913cd0965ca",
+      "bytes": 398459
+    },
+    "qa/rc16_browser.log": {
+      "sha256": "096bd4d911bd3742b21e2a8347dbb1f3dd92938be481129af2f1043baf26c12e",
+      "bytes": 626
+    },
+    "qa/rc16_host_tests.log": {
+      "sha256": "30a4b9d3e698ee9bc9f8a9c8c679c79d7ac1bc46ffb58660dedcace0b29898a3",
+      "bytes": 570
+    },
+    "qa/rc16_injected_browser_report.json": {
+      "sha256": "b99d71386ed32d58359debd59071874b35de899bd4e9681d637c007cb564f557",
+      "bytes": 625
+    },
+    "qa/rc16_tests.log": {
+      "sha256": "255065965715e74a1b76d70d7cc681eed2be9be4549cec6f045402b0664daa49",
+      "bytes": 12059
+    },
+    "sw.js": {
+      "sha256": "22b31cf1c84cda33e290fd8ecb37bc07eebb82b9d377a940f2d9d0dc6a390526",
+      "bytes": 2477
+    },
+    "tests/__pycache__/test_hosted_verifier.cpython-313.pyc": {
+      "sha256": "7edbfcbfebac734527335fd4c81232ea9d4947fd185b8e0c5092eeb8ae9f73da",
+      "bytes": 5668
+    },
+    "tests/browser_injected_qa.py": {
+      "sha256": "2896c7bfbca13d1bff66b0b7ef0ce6c3c0dc579b39575fadde2174c3d7755b09",
+      "bytes": 5895
+    },
+    "tests/core.test.mjs": {
+      "sha256": "5e58a6b121218abf84deabc2e83af9205e22fa3d5f5d680074a8163af4356591",
+      "bytes": 4208
+    },
+    "tests/hosted_acceptance.py": {
+      "sha256": "f275d2a71ba2cc48d688bde5ecbd9d7653254f81c103bb22562774aeca6c0cf5",
+      "bytes": 5331
+    },
+    "tests/journal.test.mjs": {
+      "sha256": "4d53a5ea39d4462627403192b9c089104bd25e638d0aeaf83776b09636b4be8c",
+      "bytes": 5907
+    },
+    "tests/package.test.mjs": {
+      "sha256": "d75a3421fe6a3e369d2e18fe72fbedc1989c58f09f820903b2a2921d563129ea",
+      "bytes": 2228
+    },
+    "tests/readiness.test.mjs": {
+      "sha256": "cf6ca18ff4f342c109c687d33297d89158acd5d5827d1f330f64817f7c4cec90",
+      "bytes": 1653
+    },
+    "tests/storage.test.mjs": {
+      "sha256": "a8c042ca7006ffcb7273484e407896980917f0a4ae2879ca45a5333ffbebf04f",
+      "bytes": 4236
+    },
+    "tests/sw.test.mjs": {
+      "sha256": "c941c7c65b1191b72fa51d82e8dba607531b7e97039e06e4a5422e294dbf0375",
+      "bytes": 4446
+    },
+    "tests/test_hosted_verifier.py": {
+      "sha256": "4398de7bb7d251c653b98603d51d476965b5f9f5e8df49df31faeb034dbdd6dd",
+      "bytes": 2486
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "scope": "DOM emulation, in-memory fake IndexedDB, no genuine SW/HTTPS/iPhone test",
+  "cases": {
+    "start_visible_390": true,
+    "no_horizontal_overflow_390": true,
+    "15_readings_390": true,
+    "backup_exported_390": true,
+    "corrupted_backup_rejected_390": true,
+    "cold_restore_390": true,
+    "start_visible_1365": true,
+    "no_horizontal_overflow_1365": true,
+    "15_readings_1365": true,
+    "backup_exported_1365": true,
+    "corrupted_backup_rejected_1365": true,
+    "cold_restore_1365": true
+  },
+  "errors": []
+}

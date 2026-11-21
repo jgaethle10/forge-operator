@@ -1,0 +1,76 @@
+{
+  "year": 2024,
+  "expected_days": 366,
+  "rows": 366,
+  "missing_precip_days": [],
+  "absent_calendar_days": [],
+  "flagged_days": [],
+  "trace_days": 31,
+  "nontrace_measured_days": 335,
+  "observed_nontrace_mm": 213.1,
+  "monthly_mm_lower_bound": [
+    48.6,
+    13.2,
+    14.8,
+    3.8,
+    7,
+    1.1,
+    1.3,
+    7.2,
+    1.6,
+    7,
+    49.3,
+    58.2
+  ],
+  "rain_days_nontrace": [
+    19,
+    6,
+    7,
+    3,
+    6,
+    2,
+    2,
+    5,
+    2,
+    7,
+    14,
+    14
+  ],
+  "source_url": "https://www.ncei.noaa.gov/access/services/data/v1?dataset=daily-summaries&stations=USW00024243&startDate=2024-01-01&endDate=2024-12-31&dataTypes=PRCP&units=metric&format=csv&includeAttributes=true",
+  "source_state": "SCREEN_COMPLETE_API_ATTRIBUTES_TRACES_ZERO_LOWER_BOUND",
+  "limitation": "Tool-extracted official NOAA Access API CSV; separate raw .dly flags check pending. Trace reported as zero catch lower bound. Station weather is not rooftop catch.",
+  "tank_scenarios_100m2_80pct_1000ld": [
+    {
+      "tank_capacity_l": 250,
+      "delivered_l": 11058,
+      "overflow_l": 5990,
+      "ending_l": 0,
+      "admitted_l": 17048,
+      "mass_balance_error_l": 0
+    },
+    {
+      "tank_capacity_l": 1000,
+      "delivered_l": 16584,
+      "overflow_l": 464,
+      "ending_l": 0,
+      "admitted_l": 17048,
+      "mass_balance_error_l": 0
+    },
+    {
+      "tank_capacity_l": 5000,
+      "delivered_l": 17048,
+      "overflow_l": 0,
+      "ending_l": 0,
+      "admitted_l": 17048,
+      "mass_balance_error_l": 0
+    },
+    {
+      "tank_capacity_l": 20000,
+      "delivered_l": 17048,
+      "overflow_l": 0,
+      "ending_l": 0,
+      "admitted_l": 17048,
+      "mass_balance_error_l": 0
+    }
+  ]
+}

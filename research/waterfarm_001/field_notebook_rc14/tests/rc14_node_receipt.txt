@@ -1,0 +1,316 @@
+TAP version 13
+# Subtest: 14-day operator baseline: total volume energy, honest evidence
+ok 1 - 14-day operator baseline: total volume energy, honest evidence
+  ---
+  duration_ms: 3.80873
+  type: 'test'
+  ...
+# Subtest: US gallons converted exactly
+ok 2 - US gallons converted exactly
+  ---
+  duration_ms: 1.673908
+  type: 'test'
+  ...
+# Subtest: M3 converted exactly
+ok 3 - M3 converted exactly
+  ---
+  duration_ms: 1.282784
+  type: 'test'
+  ...
+# Subtest: missing energy means unknown not zero
+ok 4 - missing energy means unknown not zero
+  ---
+  duration_ms: 1.92414
+  type: 'test'
+  ...
+# Subtest: measured zero energy is zero
+ok 5 - measured zero energy is zero
+  ---
+  duration_ms: 0.960362
+  type: 'test'
+  ...
+# Subtest: no flow produces undefined per m3 energy
+ok 6 - no flow produces undefined per m3 energy
+  ---
+  duration_ms: 0.787646
+  type: 'test'
+  ...
+# Subtest: synthetic demo never admitted as operator readings
+ok 7 - synthetic demo never admitted as operator readings
+  ---
+  duration_ms: 1.996877
+  type: 'test'
+  ...
+# Subtest: relabelled synthetic meter still HOLD
+ok 8 - relabelled synthetic meter still HOLD
+  ---
+  duration_ms: 0.266675
+  type: 'test'
+  ...
+# Subtest: reject too few readings
+ok 9 - reject too few readings
+  ---
+  duration_ms: 0.359722
+  type: 'test'
+  ...
+# Subtest: reject missing date
+ok 10 - reject missing date
+  ---
+  duration_ms: 0.482985
+  type: 'test'
+  ...
+# Subtest: reject rollback
+ok 11 - reject rollback
+  ---
+  duration_ms: 0.591766
+  type: 'test'
+  ...
+# Subtest: reject mixed units
+ok 12 - reject mixed units
+  ---
+  duration_ms: 0.557986
+  type: 'test'
+  ...
+# Subtest: reject changed meter
+ok 13 - reject changed meter
+  ---
+  duration_ms: 0.273054
+  type: 'test'
+  ...
+# Subtest: reject negative
+ok 14 - reject negative
+  ---
+  duration_ms: 0.205905
+  type: 'test'
+  ...
+# Subtest: reject unsafe integer
+ok 15 - reject unsafe integer
+  ---
+  duration_ms: 0.292633
+  type: 'test'
+  ...
+# Subtest: reject header changed
+ok 16 - reject header changed
+  ---
+  duration_ms: 0.16855
+  type: 'test'
+  ...
+# Subtest: reject unknown unit
+ok 17 - reject unknown unit
+  ---
+  duration_ms: 0.504126
+  type: 'test'
+  ...
+# Subtest: reject observation kind mix
+ok 18 - reject observation kind mix
+  ---
+  duration_ms: 0.20978
+  type: 'test'
+  ...
+# Subtest: template is blank and cannot be falsely audited
+ok 19 - template is blank and cannot be falsely audited
+  ---
+  duration_ms: 0.963807
+  type: 'test'
+  ...
+# Subtest: valid BOM CRLF CSV
+ok 20 - valid BOM CRLF CSV
+  ---
+  duration_ms: 0.975455
+  type: 'test'
+  ...
+# Subtest: reject malformed quote
+ok 21 - reject malformed quote
+  ---
+  duration_ms: 0.165325
+  type: 'test'
+  ...
+# Subtest: reject huge file
+ok 22 - reject huge file
+  ---
+  duration_ms: 0.133107
+  type: 'test'
+  ...
+# Subtest: SHA-256 source fingerprint matches standard test vector
+ok 23 - SHA-256 source fingerprint matches standard test vector
+  ---
+  duration_ms: 0.187588
+  type: 'test'
+  ...
+# Subtest: report SHA-256 matches core calculation
+ok 24 - report SHA-256 matches core calculation
+  ---
+  duration_ms: 1.37011
+  type: 'test'
+  ...
+# Subtest: fifteen readings become fourteen days
+ok 25 - fifteen readings become fourteen days
+  ---
+  duration_ms: 2.083956
+  type: 'test'
+  ...
+# Subtest: one-meter export accepted by RC12 engine
+ok 26 - one-meter export accepted by RC12 engine
+  ---
+  duration_ms: 3.607983
+  type: 'test'
+  ...
+# Subtest: CSV export same result as standalone analysis
+ok 27 - CSV export same result as standalone analysis
+  ---
+  duration_ms: 2.745906
+  type: 'test'
+  ...
+# Subtest: missing optional kWh remains unknown
+ok 28 - missing optional kWh remains unknown
+  ---
+  duration_ms: 0.828016
+  type: 'test'
+  ...
+# Subtest: one unknown energy interval makes total energy unknown
+ok 29 - one unknown energy interval makes total energy unknown
+  ---
+  duration_ms: 1.025168
+  type: 'test'
+  ...
+# Subtest: reject missing date without fake zero days
+ok 30 - reject missing date without fake zero days
+  ---
+  duration_ms: 0.440141
+  type: 'test'
+  ...
+# Subtest: reject duplicated date
+ok 31 - reject duplicated date
+  ---
+  duration_ms: 0.152296
+  type: 'test'
+  ...
+# Subtest: reject decreasing cumulative meter
+ok 32 - reject decreasing cumulative meter
+  ---
+  duration_ms: 0.142501
+  type: 'test'
+  ...
+# Subtest: reject phantom first-day energy
+ok 33 - reject phantom first-day energy
+  ---
+  duration_ms: 0.281457
+  type: 'test'
+  ...
+# Subtest: reject fixture IDs
+ok 34 - reject fixture IDs
+  ---
+  duration_ms: 0.377389
+  type: 'test'
+  ...
+# Subtest: reject meter ID comma or newline
+ok 35 - reject meter ID comma or newline
+  ---
+  duration_ms: 0.201118
+  type: 'test'
+  ...
+# Subtest: reject unsupported unit
+ok 36 - reject unsupported unit
+  ---
+  duration_ms: 0.093729
+  type: 'test'
+  ...
+# Subtest: reject NaN, exponential and whitespace
+ok 37 - reject NaN, exponential and whitespace
+  ---
+  duration_ms: 0.186145
+  type: 'test'
+  ...
+# Subtest: reject impossible calendar date
+ok 38 - reject impossible calendar date
+  ---
+  duration_ms: 0.169982
+  type: 'test'
+  ...
+# Subtest: leap date increments
+ok 39 - leap date increments
+  ---
+  duration_ms: 0.071175
+  type: 'test'
+  ...
+# Subtest: import backup schema validation rejects inserted garbage
+ok 40 - import backup schema validation rejects inserted garbage
+  ---
+  duration_ms: 0.243561
+  type: 'test'
+  ...
+# Subtest: import backup rejects edited source kind
+ok 41 - import backup rejects edited source kind
+  ---
+  duration_ms: 0.203261
+  type: 'test'
+  ...
+# Subtest: import backup rejects reordered days
+ok 42 - import backup rejects reordered days
+  ---
+  duration_ms: 0.200356
+  type: 'test'
+  ...
+# Subtest: import backup resets report truth flags
+ok 43 - import backup resets report truth flags
+  ---
+  duration_ms: 0.91117
+  type: 'test'
+  ...
+# Subtest: backup fingerprints source CSV
+ok 44 - backup fingerprints source CSV
+  ---
+  duration_ms: 1.551007
+  type: 'test'
+  ...
+# Subtest: partial field journal exports but not auditable baseline
+ok 45 - partial field journal exports but not auditable baseline
+  ---
+  duration_ms: 0.222489
+  type: 'test'
+  ...
+# Subtest: changed decimals reject leading space in existing RC12 parser
+ok 46 - changed decimals reject leading space in existing RC12 parser
+  ---
+  duration_ms: 0.326113
+  type: 'test'
+  ...
+# Subtest: reject future date masquerading as an observed reading
+ok 47 - reject future date masquerading as an observed reading
+  ---
+  duration_ms: 0.143343
+  type: 'test'
+  ...
+# Subtest: plain-text backup round trips with immutable integrity
+ok 48 - plain-text backup round trips with immutable integrity
+  ---
+  duration_ms: 2.399664
+  type: 'test'
+  ...
+# Subtest: manually pasted backup rejects corrupted source before replacing records
+ok 49 - manually pasted backup rejects corrupted source before replacing records
+  ---
+  duration_ms: 1.240557
+  type: 'test'
+  ...
+# Subtest: reject invalid/oversized backup paste
+ok 50 - reject invalid/oversized backup paste
+  ---
+  duration_ms: 1.321478
+  type: 'test'
+  ...
+# Subtest: future-dated backup is held even if it has a recomputed source fingerprint
+ok 51 - future-dated backup is held even if it has a recomputed source fingerprint
+  ---
+  duration_ms: 1.013011
+  type: 'test'
+  ...
+1..51
+# tests 51
+# suites 0
+# pass 51
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 92.047512

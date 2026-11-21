@@ -1,0 +1,19 @@
+# EXAMPLE only. Manually review against the EXISTING Evercraft-owned HTTPS
+# site block and current edge/router map. Do NOT paste as a separate site.
+# Expects RC16 static assets in /srv/evercraft/aqua-rc16/ on an owned host.
+# This does not configure DNS, TLS or an operator data backend.
+@aquaBare path /aqua
+redir @aquaBare /aqua/ 308
+handle_path /aqua/* {
+    root * /srv/evercraft/aqua-rc16
+    header {
+        X-Content-Type-Options "nosniff"
+        Referrer-Policy "no-referrer"
+        X-Frame-Options "DENY"
+        Permissions-Policy "camera=(), microphone=(), geolocation=()"
+        Content-Security-Policy "default-src 'none'; script-src 'self'; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'none'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'"
+    }
+    @worker path /sw.js
+    header @worker Cache-Control "no-cache, must-revalidate"
+    file_server
+}

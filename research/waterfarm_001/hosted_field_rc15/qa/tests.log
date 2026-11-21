@@ -1,0 +1,430 @@
+TAP version 13
+# Subtest: 14-day operator baseline: total volume energy, honest evidence
+ok 1 - 14-day operator baseline: total volume energy, honest evidence
+  ---
+  duration_ms: 6.780975
+  type: 'test'
+  ...
+# Subtest: US gallons converted exactly
+ok 2 - US gallons converted exactly
+  ---
+  duration_ms: 4.207895
+  type: 'test'
+  ...
+# Subtest: M3 converted exactly
+ok 3 - M3 converted exactly
+  ---
+  duration_ms: 2.463556
+  type: 'test'
+  ...
+# Subtest: missing energy means unknown not zero
+ok 4 - missing energy means unknown not zero
+  ---
+  duration_ms: 4.643268
+  type: 'test'
+  ...
+# Subtest: measured zero energy is zero
+ok 5 - measured zero energy is zero
+  ---
+  duration_ms: 1.257398
+  type: 'test'
+  ...
+# Subtest: no flow produces undefined per m3 energy
+ok 6 - no flow produces undefined per m3 energy
+  ---
+  duration_ms: 1.054139
+  type: 'test'
+  ...
+# Subtest: synthetic demo never admitted as operator readings
+ok 7 - synthetic demo never admitted as operator readings
+  ---
+  duration_ms: 3.791482
+  type: 'test'
+  ...
+# Subtest: relabelled synthetic meter still HOLD
+ok 8 - relabelled synthetic meter still HOLD
+  ---
+  duration_ms: 0.330213
+  type: 'test'
+  ...
+# Subtest: reject too few readings
+ok 9 - reject too few readings
+  ---
+  duration_ms: 0.603865
+  type: 'test'
+  ...
+# Subtest: reject missing date
+ok 10 - reject missing date
+  ---
+  duration_ms: 0.831038
+  type: 'test'
+  ...
+# Subtest: reject rollback
+ok 11 - reject rollback
+  ---
+  duration_ms: 0.365225
+  type: 'test'
+  ...
+# Subtest: reject mixed units
+ok 12 - reject mixed units
+  ---
+  duration_ms: 0.322649
+  type: 'test'
+  ...
+# Subtest: reject changed meter
+ok 13 - reject changed meter
+  ---
+  duration_ms: 0.402373
+  type: 'test'
+  ...
+# Subtest: reject negative
+ok 14 - reject negative
+  ---
+  duration_ms: 0.243875
+  type: 'test'
+  ...
+# Subtest: reject unsafe integer
+ok 15 - reject unsafe integer
+  ---
+  duration_ms: 0.271042
+  type: 'test'
+  ...
+# Subtest: reject header changed
+ok 16 - reject header changed
+  ---
+  duration_ms: 0.176251
+  type: 'test'
+  ...
+# Subtest: reject unknown unit
+ok 17 - reject unknown unit
+  ---
+  duration_ms: 0.336393
+  type: 'test'
+  ...
+# Subtest: reject observation kind mix
+ok 18 - reject observation kind mix
+  ---
+  duration_ms: 0.228586
+  type: 'test'
+  ...
+# Subtest: template is blank and cannot be falsely audited
+ok 19 - template is blank and cannot be falsely audited
+  ---
+  duration_ms: 0.867941
+  type: 'test'
+  ...
+# Subtest: valid BOM CRLF CSV
+ok 20 - valid BOM CRLF CSV
+  ---
+  duration_ms: 0.907326
+  type: 'test'
+  ...
+# Subtest: reject malformed quote
+ok 21 - reject malformed quote
+  ---
+  duration_ms: 0.550178
+  type: 'test'
+  ...
+# Subtest: reject huge file
+ok 22 - reject huge file
+  ---
+  duration_ms: 1.150891
+  type: 'test'
+  ...
+# Subtest: SHA-256 source fingerprint matches standard test vector
+ok 23 - SHA-256 source fingerprint matches standard test vector
+  ---
+  duration_ms: 1.016333
+  type: 'test'
+  ...
+# Subtest: report SHA-256 matches core calculation
+ok 24 - report SHA-256 matches core calculation
+  ---
+  duration_ms: 2.060038
+  type: 'test'
+  ...
+# Subtest: fifteen readings become fourteen days
+ok 25 - fifteen readings become fourteen days
+  ---
+  duration_ms: 4.233318
+  type: 'test'
+  ...
+# Subtest: one-meter export accepted by RC12 engine
+ok 26 - one-meter export accepted by RC12 engine
+  ---
+  duration_ms: 6.625914
+  type: 'test'
+  ...
+# Subtest: CSV export same result as standalone analysis
+ok 27 - CSV export same result as standalone analysis
+  ---
+  duration_ms: 8.143475
+  type: 'test'
+  ...
+# Subtest: missing optional kWh remains unknown
+ok 28 - missing optional kWh remains unknown
+  ---
+  duration_ms: 1.615111
+  type: 'test'
+  ...
+# Subtest: one unknown energy interval makes total energy unknown
+ok 29 - one unknown energy interval makes total energy unknown
+  ---
+  duration_ms: 1.421791
+  type: 'test'
+  ...
+# Subtest: reject missing date without fake zero days
+ok 30 - reject missing date without fake zero days
+  ---
+  duration_ms: 0.70995
+  type: 'test'
+  ...
+# Subtest: reject duplicated date
+ok 31 - reject duplicated date
+  ---
+  duration_ms: 0.340657
+  type: 'test'
+  ...
+# Subtest: reject decreasing cumulative meter
+ok 32 - reject decreasing cumulative meter
+  ---
+  duration_ms: 0.289899
+  type: 'test'
+  ...
+# Subtest: reject phantom first-day energy
+ok 33 - reject phantom first-day energy
+  ---
+  duration_ms: 2.072473
+  type: 'test'
+  ...
+# Subtest: reject fixture IDs
+ok 34 - reject fixture IDs
+  ---
+  duration_ms: 0.667837
+  type: 'test'
+  ...
+# Subtest: reject meter ID comma or newline
+ok 35 - reject meter ID comma or newline
+  ---
+  duration_ms: 0.885959
+  type: 'test'
+  ...
+# Subtest: reject unsupported unit
+ok 36 - reject unsupported unit
+  ---
+  duration_ms: 0.448103
+  type: 'test'
+  ...
+# Subtest: reject NaN, exponential and whitespace
+ok 37 - reject NaN, exponential and whitespace
+  ---
+  duration_ms: 0.414297
+  type: 'test'
+  ...
+# Subtest: reject impossible calendar date
+ok 38 - reject impossible calendar date
+  ---
+  duration_ms: 0.270009
+  type: 'test'
+  ...
+# Subtest: leap date increments
+ok 39 - leap date increments
+  ---
+  duration_ms: 0.170806
+  type: 'test'
+  ...
+# Subtest: import backup schema validation rejects inserted garbage
+ok 40 - import backup schema validation rejects inserted garbage
+  ---
+  duration_ms: 0.688534
+  type: 'test'
+  ...
+# Subtest: import backup rejects edited source kind
+ok 41 - import backup rejects edited source kind
+  ---
+  duration_ms: 0.323838
+  type: 'test'
+  ...
+# Subtest: import backup rejects reordered days
+ok 42 - import backup rejects reordered days
+  ---
+  duration_ms: 0.996084
+  type: 'test'
+  ...
+# Subtest: import backup resets report truth flags
+ok 43 - import backup resets report truth flags
+  ---
+  duration_ms: 5.525241
+  type: 'test'
+  ...
+# Subtest: backup fingerprints source CSV
+ok 44 - backup fingerprints source CSV
+  ---
+  duration_ms: 4.06443
+  type: 'test'
+  ...
+# Subtest: partial field journal exports but not auditable baseline
+ok 45 - partial field journal exports but not auditable baseline
+  ---
+  duration_ms: 0.631679
+  type: 'test'
+  ...
+# Subtest: changed decimals reject leading space in existing RC12 parser
+ok 46 - changed decimals reject leading space in existing RC12 parser
+  ---
+  duration_ms: 0.779752
+  type: 'test'
+  ...
+# Subtest: reject future date masquerading as an observed reading
+ok 47 - reject future date masquerading as an observed reading
+  ---
+  duration_ms: 0.615805
+  type: 'test'
+  ...
+# Subtest: plain-text backup round trips with immutable integrity
+ok 48 - plain-text backup round trips with immutable integrity
+  ---
+  duration_ms: 6.068743
+  type: 'test'
+  ...
+# Subtest: manually pasted backup rejects corrupted source before replacing records
+ok 49 - manually pasted backup rejects corrupted source before replacing records
+  ---
+  duration_ms: 3.59571
+  type: 'test'
+  ...
+# Subtest: reject invalid/oversized backup paste
+ok 50 - reject invalid/oversized backup paste
+  ---
+  duration_ms: 4.00935
+  type: 'test'
+  ...
+# Subtest: future-dated backup is held even if it has a recomputed source fingerprint
+ok 51 - future-dated backup is held even if it has a recomputed source fingerprint
+  ---
+  duration_ms: 2.206107
+  type: 'test'
+  ...
+# Subtest: all first-party asset files present
+ok 52 - all first-party asset files present
+  ---
+  duration_ms: 1.847565
+  type: 'test'
+  ...
+# Subtest: manifest installs under current path, not a 3rd-party domain
+ok 53 - manifest installs under current path, not a 3rd-party domain
+  ---
+  duration_ms: 2.391956
+  type: 'test'
+  ...
+# Subtest: hosted origin CSP blocks third-party scripts and network sync
+ok 54 - hosted origin CSP blocks third-party scripts and network sync
+  ---
+  duration_ms: 0.666896
+  type: 'test'
+  ...
+# Subtest: offline service worker precache lists every runtime asset
+ok 55 - offline service worker precache lists every runtime asset
+  ---
+  duration_ms: 0.326736
+  type: 'test'
+  ...
+# Subtest: different origin localStorage cannot silently be presented as RC15 IndexedDB
+ok 56 - different origin localStorage cannot silently be presented as RC15 IndexedDB
+  ---
+  duration_ms: 0.626954
+  type: 'test'
+  ...
+# Subtest: no remote endpoint or CDN dependency
+ok 57 - no remote endpoint or CDN dependency
+  ---
+  duration_ms: 0.952702
+  type: 'test'
+  ...
+# Subtest: no IndexedDB holds rather than claiming a save
+ok 58 - no IndexedDB holds rather than claiming a save
+  ---
+  duration_ms: 2.249056
+  type: 'test'
+  ...
+# Subtest: empty store reads null; no invented notebook
+ok 59 - empty store reads null; no invented notebook
+  ---
+  duration_ms: 7.08216
+  type: 'test'
+  ...
+# Subtest: transactional save and read carry full validated backup
+ok 60 - transactional save and read carry full validated backup
+  ---
+  duration_ms: 8.076332
+  type: 'test'
+  ...
+# Subtest: reject stale writes from second tab: no last writer wins
+ok 61 - reject stale writes from second tab: no last writer wins
+  ---
+  duration_ms: 19.805733
+  type: 'test'
+  ...
+# Subtest: two tabs cannot independently create notebook over first
+ok 62 - two tabs cannot independently create notebook over first
+  ---
+  duration_ms: 4.433016
+  type: 'test'
+  ...
+# Subtest: delete requires exact current notebook state
+ok 63 - delete requires exact current notebook state
+  ---
+  duration_ms: 10.518524
+  type: 'test'
+  ...
+# Subtest: corrupt stored value held, never silently dropped
+ok 64 - corrupt stored value held, never silently dropped
+  ---
+  duration_ms: 3.24392
+  type: 'test'
+  ...
+# Subtest: valid backup integrity reflects source, not field authentication
+ok 65 - valid backup integrity reflects source, not field authentication
+  ---
+  duration_ms: 5.641294
+  type: 'test'
+  ...
+# Subtest: register install/activate/fetch handlers, versioned cache
+ok 66 - register install/activate/fetch handlers, versioned cache
+  ---
+  duration_ms: 26.004695
+  type: 'test'
+  ...
+# Subtest: cross-origin HTTP requests are not intercepted
+ok 67 - cross-origin HTTP requests are not intercepted
+  ---
+  duration_ms: 0.878803
+  type: 'test'
+  ...
+# Subtest: POST requests are not intercepted
+ok 68 - POST requests are not intercepted
+  ---
+  duration_ms: 1.462931
+  type: 'test'
+  ...
+# Subtest: same-origin assets can return from installed offline static cache
+ok 69 - same-origin assets can return from installed offline static cache
+  ---
+  duration_ms: 3.89902
+  type: 'test'
+  ...
+# Subtest: uncached same-origin GET uses first-party network only
+ok 70 - uncached same-origin GET uses first-party network only
+  ---
+  duration_ms: 2.530204
+  type: 'test'
+  ...
+1..70
+# tests 70
+# suites 0
+# pass 70
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 304.688946

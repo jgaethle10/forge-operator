@@ -1,0 +1,178 @@
+{
+  "metadata": {
+    "NOAA_API_RAW_CSV_IN_GITHUB": "research/waterfarm_001/noaa/data_rc05/2024_yakima_prcp_ncei_attributed.csv",
+    "purpose": "independent normalized value-only calculation parity, NOT raw downloaded NOAA CSV",
+    "trace_days": 31,
+    "measured_total_mm": 213.1
+  },
+  "cases": [
+    {
+      "year": 2024,
+      "station": "USW00024243",
+      "weather_source_sha256": "7608a30c23ff51c2e99895afa6780ddaaeb0f95bab652f6f3ee7aff207dcf5db",
+      "weather_state": "QC_ATTRIBUTES_SCREEN_COMPLETE_TRACES_ZERO_LOWER_BOUND",
+      "assumptions": {
+        "roof_area_m2": 100,
+        "tank_l": 250,
+        "daily_demand_l": 1000,
+        "capture_fraction": 0.8,
+        "first_flush_mm_per_wet_day": 0.0
+      },
+      "gross_roof_potential_l": 17048.0,
+      "tank_admitted_l": 17048.0,
+      "delivered_l": 11058.0,
+      "overflow_l": 5990.0,
+      "ending_tank_l": 0.0,
+      "outside_makeup_l": 354942.0,
+      "month_delivered_l": [
+        2898.0,
+        908.0,
+        618.0,
+        304.0,
+        482.0,
+        88.0,
+        104.0,
+        522.0,
+        128.0,
+        560.0,
+        1768.0,
+        2678.0
+      ],
+      "balance_error_l": 0.0,
+      "evidence_state": "REAL_STATION_OBSERVATIONS__HYPOTHETICAL_ROOF_STORAGE_AND_DEMAND__NOT_SITE_YIELD",
+      "limitations": [
+        "Snow and ice reported as precipitation may not be capturable on observation day",
+        "Trace precipitation lower-bound modeled as 0 usable liters, but not called dry",
+        "No treatment/disinfection/roof approvals assumed; first flush based on wet DAYS not individual events",
+        "Assumed rain enters tank before same-day demand; no evaporation or leaks",
+        "Station precipitation can differ from host-site rainfall and irrigation demand"
+      ]
+    },
+    {
+      "year": 2024,
+      "station": "USW00024243",
+      "weather_source_sha256": "7608a30c23ff51c2e99895afa6780ddaaeb0f95bab652f6f3ee7aff207dcf5db",
+      "weather_state": "QC_ATTRIBUTES_SCREEN_COMPLETE_TRACES_ZERO_LOWER_BOUND",
+      "assumptions": {
+        "roof_area_m2": 100,
+        "tank_l": 1000,
+        "daily_demand_l": 1000,
+        "capture_fraction": 0.8,
+        "first_flush_mm_per_wet_day": 0.0
+      },
+      "gross_roof_potential_l": 17048.0,
+      "tank_admitted_l": 17048.0,
+      "delivered_l": 16584.0,
+      "overflow_l": 464.0,
+      "ending_tank_l": 0.0,
+      "outside_makeup_l": 349416.0,
+      "month_delivered_l": [
+        3888.0,
+        1056.0,
+        1184.0,
+        304.0,
+        560.0,
+        88.0,
+        104.0,
+        576.0,
+        128.0,
+        560.0,
+        3480.0,
+        4656.0
+      ],
+      "balance_error_l": 0.0,
+      "evidence_state": "REAL_STATION_OBSERVATIONS__HYPOTHETICAL_ROOF_STORAGE_AND_DEMAND__NOT_SITE_YIELD",
+      "limitations": [
+        "Snow and ice reported as precipitation may not be capturable on observation day",
+        "Trace precipitation lower-bound modeled as 0 usable liters, but not called dry",
+        "No treatment/disinfection/roof approvals assumed; first flush based on wet DAYS not individual events",
+        "Assumed rain enters tank before same-day demand; no evaporation or leaks",
+        "Station precipitation can differ from host-site rainfall and irrigation demand"
+      ]
+    },
+    {
+      "year": 2024,
+      "station": "USW00024243",
+      "weather_source_sha256": "7608a30c23ff51c2e99895afa6780ddaaeb0f95bab652f6f3ee7aff207dcf5db",
+      "weather_state": "QC_ATTRIBUTES_SCREEN_COMPLETE_TRACES_ZERO_LOWER_BOUND",
+      "assumptions": {
+        "roof_area_m2": 100,
+        "tank_l": 5000,
+        "daily_demand_l": 1000,
+        "capture_fraction": 0.8,
+        "first_flush_mm_per_wet_day": 0.0
+      },
+      "gross_roof_potential_l": 17048.0,
+      "tank_admitted_l": 17048.0,
+      "delivered_l": 17048.0,
+      "overflow_l": 0.0,
+      "ending_tank_l": 0.0,
+      "outside_makeup_l": 348952.0,
+      "month_delivered_l": [
+        3888.0,
+        1056.0,
+        1184.0,
+        304.0,
+        560.0,
+        88.0,
+        104.0,
+        576.0,
+        128.0,
+        560.0,
+        3944.0,
+        4656.0
+      ],
+      "balance_error_l": 0.0,
+      "evidence_state": "REAL_STATION_OBSERVATIONS__HYPOTHETICAL_ROOF_STORAGE_AND_DEMAND__NOT_SITE_YIELD",
+      "limitations": [
+        "Snow and ice reported as precipitation may not be capturable on observation day",
+        "Trace precipitation lower-bound modeled as 0 usable liters, but not called dry",
+        "No treatment/disinfection/roof approvals assumed; first flush based on wet DAYS not individual events",
+        "Assumed rain enters tank before same-day demand; no evaporation or leaks",
+        "Station precipitation can differ from host-site rainfall and irrigation demand"
+      ]
+    },
+    {
+      "year": 2024,
+      "station": "USW00024243",
+      "weather_source_sha256": "7608a30c23ff51c2e99895afa6780ddaaeb0f95bab652f6f3ee7aff207dcf5db",
+      "weather_state": "QC_ATTRIBUTES_SCREEN_COMPLETE_TRACES_ZERO_LOWER_BOUND",
+      "assumptions": {
+        "roof_area_m2": 100,
+        "tank_l": 20000,
+        "daily_demand_l": 1000,
+        "capture_fraction": 0.8,
+        "first_flush_mm_per_wet_day": 0.0
+      },
+      "gross_roof_potential_l": 17048.0,
+      "tank_admitted_l": 17048.0,
+      "delivered_l": 17048.0,
+      "overflow_l": 0.0,
+      "ending_tank_l": 0.0,
+      "outside_makeup_l": 348952.0,
+      "month_delivered_l": [
+        3888.0,
+        1056.0,
+        1184.0,
+        304.0,
+        560.0,
+        88.0,
+        104.0,
+        576.0,
+        128.0,
+        560.0,
+        3944.0,
+        4656.0
+      ],
+      "balance_error_l": 0.0,
+      "evidence_state": "REAL_STATION_OBSERVATIONS__HYPOTHETICAL_ROOF_STORAGE_AND_DEMAND__NOT_SITE_YIELD",
+      "limitations": [
+        "Snow and ice reported as precipitation may not be capturable on observation day",
+        "Trace precipitation lower-bound modeled as 0 usable liters, but not called dry",
+        "No treatment/disinfection/roof approvals assumed; first flush based on wet DAYS not individual events",
+        "Assumed rain enters tank before same-day demand; no evaporation or leaks",
+        "Station precipitation can differ from host-site rainfall and irrigation demand"
+      ]
+    }
+  ]
+}

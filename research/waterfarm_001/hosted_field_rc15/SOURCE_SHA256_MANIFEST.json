@@ -1,0 +1,31 @@
+{
+  "date": "2026-11-10",
+  "status": "RC15 research; not hosted or native iPhone verified",
+  "sha256": {
+    "DEPLOYMENT_GATE.md": "2c5c1ef5d5a37f612ce34fe50b27784db9c624a3e9d2d8503013f4daa429ea68",
+    "RC15_ENGINEERING_DECISION.md": "4d47ef760980d32cf3cff8cdda688159a1eae602414fe4556843de1d8d5dea37",
+    "README.md": "d657a689ba381b66c7731a6b107215ae54966c08c42437b8912a6fe6a14d93d8",
+    "app/app.js": "53632da963d40ee7c900aaf544938957869fe3150e169332df578e353e15ee77",
+    "app/core.mjs": "019ea78d73a64cae9f03bafff8fc0415546723a08272a3548b95ac8076a38b5d",
+    "app/journal.mjs": "fe143a1fa086fe7b475841956f79eca82c3245588cfd4c0089d9f1486bad8a9d",
+    "app/storage.mjs": "315ec41079f6b76c6a699b35fd2c6478ccbbc715ed62b0774f7475d58f1b1ceb",
+    "icon.svg": "68ed2ff4840f820aed7fec89657f99a0d92b76f5d3aefbd942bbce66b9d78bc2",
+    "index.html": "e87191ec7be83962903ebfaa2c52d8ff842c35e9e3168899236ce3b5e79af671",
+    "manifest.webmanifest": "e5c4f80bac485c0a8a457d3c4fbe6656bbc3e64ff18675f6fca0e2f328ad5c64",
+    "qa/browser_console.log": "424737bc2c39b387134212320b739d30c8887ec7d0540677f7e90974ad1b8cda",
+    "qa/desktop_rc15.png": "c0a4155e28dd8847a1a742df9c90f5f170e564ea01fd4e409c6b23c750d487c4",
+    "qa/injected_browser_report.json": "cc6959eeb57c252f16f1f1b47bf376e81a6cff146ec77fb91e778087aa65d3ee",
+    "qa/legacy_tests.log": "97ce9561abacf14a4425a7d97d07053f3308af83752a7ff195202a47b8c41906",
+    "qa/phone_rc15.png": "2f43552e423303cdad7cbd27ca87e91e27a9d771b7d0825d2f9ba483860a323e",
+    "qa/test_receipt.txt": "c2e985dce2e11078452aeec584b2647d423170f15d2a37e9a50fed2e67e57782",
+    "qa/tests.log": "6314aac3c8ca04da419b3168f8b9a07e146442d239c4815620f9d02f31e53e94",
+    "sw.js": "fe26e64f438e836a53008185f4538e34df125d2fe71bbcc8beb7a2531ae0d26f",
+    "tests/browser_injected_qa.py": "6fc34c5fcaf61a012d718e1a677f505c598683f50ecaadcb132b342d701cbc07",
+    "tests/core.test.mjs": "5e58a6b121218abf84deabc2e83af9205e22fa3d5f5d680074a8163af4356591",
+    "tests/hosted_acceptance.py": "f275d2a71ba2cc48d688bde5ecbd9d7653254f81c103bb22562774aeca6c0cf5",
+    "tests/journal.test.mjs": "4d53a5ea39d4462627403192b9c089104bd25e638d0aeaf83776b09636b4be8c",
+    "tests/package.test.mjs": "a59fc7912ebceb7bd282a22897d3e916a23c475fd2a8edad526cedca50daa557",
+    "tests/storage.test.mjs": "a8c042ca7006ffcb7273484e407896980917f0a4ae2879ca45a5333ffbebf04f",
+    "tests/sw.test.mjs": "70ff8fbb8459e447ab34505e5da19ea88b641f566b13b968e634529c1786c204"
+  }
+}

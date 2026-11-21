@@ -1,0 +1,10 @@
+Evercraft Aqua RC13 local acceptance receipt
+Node JS: 46/46 passed (24 inherited + 22 journal)
+Python browser QA: system Chromium executable /usr/bin/chromium
+Viewport: 390x844 mobile; 1365x900 desktop
+Input: synthetic 15 readings daily of WELL-A L (Nov 1-15, 2026), intervals = 14
+Result: 1750.0 L observed-input arithmetic, both viewports
+Exports: RC12-compatible CSV, JSON audit, JSON notebook backup
+Tampered backup SHA: HOLD; valid notebook retained
+External HTTP requests: 0; JS errors: 0; horizontal overflow: none
+What this does NOT test: native iPhone Safari persistence, real meter readings, source authenticity, water saved, downstream irrigation efficiency, physical equipment or actual site calibration.

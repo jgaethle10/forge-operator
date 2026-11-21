@@ -1,0 +1,23 @@
+{
+  "chromium_phone": {
+    "pass": true,
+    "start_button_bottom": 590.4,
+    "viewport_h": 844,
+    "reading_count": 15,
+    "audit_interval_count": 14,
+    "network_requests": 0,
+    "errors": []
+  },
+  "chromium_desktop": {
+    "pass": true,
+    "start_button_bottom": 685.1,
+    "viewport_h": 900,
+    "reading_count": 15,
+    "audit_interval_count": 14,
+    "network_requests": 0,
+    "errors": []
+  },
+  "webkit": {
+    "not_run": "BrowserType.launch: Executable doesn't exist at /home/oai/.cache/ms-playwright/webkit-2227/pw_run.sh\n\u2554\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2557\n\u2551 Looks like Playwright was just installed or updated.       \u2551\n\u2551 Please run the following command to download new browsers: \u2551\n\u2551                                                            \u2551\n\u2551     playwright install                                     \u2551\n\u2551                                                            \u2551\n\u2551 <3 Playwright Team "
+  }
+}

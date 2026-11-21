@@ -1,0 +1,10 @@
+2026-11-10 RC15 LOCAL ACCEPTANCE
+Node v22.16.0, Python 3.13, Chromium /usr/bin/chromium.
+- 51 inherited RC14 engine/journal tests PASS.
+- 8 new IndexedDB asynchronous mock tests PASS.
+- 6 package/manifest/CSP policy tests PASS.
+- 5 worker/cache event simulation tests PASS.
+- TOTAL: 70/70 PASS under Node test runner.
+- 12 injected-document Chromium UI scenarios PASS at 390px and 1365px with simulated IndexedDB (backup restore + corrupted HOLD + CSV). Zero page errors.
+- NO live-origin browser navigation: http://localhost and file:// blocked by environment.
+- NO real IndexedDB persistence test, SW offline navigation test, iPhone native test or deployment claim.
