@@ -75,6 +75,7 @@ export function classifyPublicEdgeIngress({
   dns: dnsState,
   external,
   expectedAddresses=[],
+  now=Date.now(),
 }={}){
   const localOk=local?.ok===true;
   const dnsOk=dnsState?.ok===true;
@@ -82,6 +83,20 @@ export function classifyPublicEdgeIngress({
   const expected=[...new Set((expectedAddresses||[]).map(clean).filter(Boolean))];
   const resolved=[...new Set((dnsState?.addresses||[]).map(clean).filter(Boolean))];
   const addressMatch=!expected.length||expected.some((value)=>resolved.includes(value));
+  // Classification consumes an external observation from a trusted caller.
+  // A self-reported source label is provenance, NOT authentication.
+  const observedMs=Date.parse(externalState.observed_at||'');
+  const nowMs=Number(now);
+  const hasProbeProvenance=Boolean(externalState.source)&&Number.isFinite(observedMs);
+  const freshProbe=hasProbeProvenance&&Number.isFinite(nowMs)&&
+    observedMs<=nowMs+30_000&&nowMs-observedMs<=5*60_000;
+  const probeFlagsComplete=[
+    externalState.tcp_reachable,externalState.tls_reachable,externalState.http_reachable,
+  ].every((flag)=>typeof flag==='boolean');
+  const httpStatusObserved=Number.isInteger(externalState.status)&&
+    externalState.status>=100&&externalState.status<=599;
+  const externalEvidenceComplete=freshProbe&&probeFlagsComplete&&
+    (externalState.http_reachable===false||httpStatusObserved);
 
   let state='unknown';
   let severity='medium';
@@ -104,10 +119,13 @@ export function classifyPublicEdgeIngress({
     state='external_probe_required';
     severity='medium';
     remediation='obtain_independent_external_probe';
-  }else if(
-    externalState.tcp_reachable===false ||
-    (externalState.tcp_reachable===null && externalState.tls_reachable===false)
-  ){
+  }else if(!hasProbeProvenance){
+    state='external_probe_incomplete';
+    remediation='obtain_complete_external_probe';
+  }else if(!freshProbe){
+    state='external_probe_stale';
+    remediation='refresh_independent_external_probe';
+  }else if(externalState.tcp_reachable===false){
     state='nat_or_firewall_ingress_blocked';
     severity='high';
     remediation='prefer_outbound_service_relay_then_safe_port_mapping_repair';
@@ -120,14 +138,24 @@ export function classifyPublicEdgeIngress({
     severity='high';
     remediation='repair_public_edge_route_binding';
   }else if(
+    externalEvidenceComplete &&
     externalState.tcp_reachable===true &&
-    externalState.tls_reachable!==false &&
-    externalState.http_reachable!==false
+    externalState.tls_reachable===true &&
+    externalState.http_reachable===true &&
+    externalState.status>=200 &&
+    externalState.status<300
   ){
     state='public_ingress_verified';
     severity='none';
     remediation='monitor';
     directIngressReady=true;
+  }else if(probeFlagsComplete&&httpStatusObserved&&externalState.status>=400){
+    state='http_response_unhealthy';
+    severity='high';
+    remediation='inspect_public_http_response';
+  }else{
+    state='external_probe_incomplete';
+    remediation='obtain_complete_external_probe';
   }
 
   return {
@@ -141,12 +169,14 @@ export function classifyPublicEdgeIngress({
     resolved_addresses:resolved,
     expected_addresses:expected,
     external_probe:externalState,
+    external_probe_fresh:freshProbe,
+    external_evidence_complete:externalEvidenceComplete,
     remediation,
     outbound_service_relay_preferred:
       state==='nat_or_firewall_ingress_blocked',
     arbitrary_router_admin_allowed:false,
     evidence_complete:
-      localOk && dnsOk && addressMatch && externalState.observed,
+      localOk && dnsOk && addressMatch && externalEvidenceComplete,
   };
 }
 
