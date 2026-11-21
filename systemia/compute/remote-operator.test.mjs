@@ -5,8 +5,9 @@ import path from 'node:path';
 import { EvercraftRemoteOperator } from './remote-operator.mjs';
 
 const root = fs.mkdtempSync(path.join(os.tmpdir(), 'evercraft-remote-operator-'));
-const state = path.join(root, '.operator-state');
 const home = path.join(root, 'home');
+// Exercise the case where agent-visible workspace and receipt state overlap.
+const state = path.join(home, '.operator-state');
 fs.mkdirSync(home, { recursive: true });
 fs.writeFileSync(path.join(home, 'hello.txt'), 'hello evercraft\n');
 fs.mkdirSync(path.join(home, '.ssh'), { recursive: true });
@@ -22,7 +23,10 @@ try {
   const status = operator.status();
   assert.equal(status.ok, true);
   assert.deepEqual(status.roots, ['home']);
-  assert.equal(status.execution.root_privilege, false);
+  assert.equal(
+    status.execution.root_privilege,
+    typeof process.geteuid === 'function' ? process.geteuid() === 0 : null
+  );
   assert.equal(status.execution.ambient_secret_environment_forwarded, false);
   assert.equal(status.network_observation.read_only, true);
 
@@ -52,6 +56,55 @@ try {
     () => operator.read({ root_key: 'home', path: '.ssh/id_ed25519' }),
     /operator_sensitive_path_denied/
   );
+
+  // The agent can read its approved work, never the audit state even
+  // when the state directory lives under an admitted filesystem root.
+  const protectedReceipt = path.join(state, 'operator-receipts.jsonl');
+  assert.ok(fs.existsSync(protectedReceipt));
+  assert.throws(
+    () => operator.list({ root_key: 'home', path: '.operator-state' }),
+    /operator_state_dir_denied/
+  );
+  assert.throws(
+    () => operator.read({ root_key: 'home', path: '.operator-state/operator-receipts.jsonl' }),
+    /operator_state_dir_denied/
+  );
+  assert.throws(
+    () => operator.write({
+      root_key: 'home',
+      path: '.operator-state/operator-receipts.jsonl',
+      content: 'audit tamper',
+      approval_ref: 'proof:user-approved',
+      overwrite: true,
+    }),
+    /operator_state_dir_denied/
+  );
+  assert.throws(
+    () => operator.write({
+      root_key: 'home',
+      path: '.operator-state/subdir/payload.txt',
+      content: 'audit tamper',
+      approval_ref: 'proof:user-approved',
+    }),
+    /operator_state_dir_denied/
+  );
+  const auditViaSymlink = path.join(home, 'audit-alias');
+  fs.symlinkSync(state, auditViaSymlink, 'dir');
+  assert.throws(
+    () => operator.read({ root_key: 'home', path: 'audit-alias/operator-receipts.jsonl' }),
+    /operator_state_dir_denied/
+  );
+  assert.throws(
+    () => operator.write({
+      root_key: 'home',
+      path: 'audit-alias/injected.txt',
+      content: 'audit tamper',
+      approval_ref: 'proof:user-approved',
+    }),
+    /operator_state_dir_denied/
+  );
+  assert.equal(fs.existsSync(path.join(state, 'subdir', 'payload.txt')), false);
+  assert.equal(fs.existsSync(path.join(state, 'injected.txt')), false);
 
   const written = operator.write({
     root_key: 'home',
@@ -116,6 +169,7 @@ try {
     system_service_control_blocked: true,
     mutation_approval_required: true,
     receipt_contents_redacted: true,
+    receipt_state_file_api_isolated: true,
     read_only_network_observation_available: true,
     chromeos_host_boundary_not_overclaimed: true,
   }));

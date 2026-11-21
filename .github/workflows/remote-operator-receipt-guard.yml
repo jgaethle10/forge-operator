@@ -1,0 +1,26 @@
+name: Remote Operator Receipt State Guard
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/compute/remote-operator.mjs'
+      - 'systemia/compute/remote-operator.test.mjs'
+      - '.github/workflows/remote-operator-receipt-guard.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  receipt-state-file-api:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check remote-operator syntax
+        run: node --check systemia/compute/remote-operator.mjs
+      - name: Run receipt-state isolation and existing operator regression
+        run: node systemia/compute/remote-operator.test.mjs

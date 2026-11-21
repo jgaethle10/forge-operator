@@ -180,6 +180,7 @@ export class EvercraftRemoteOperator {
     if (!stateDir) throw new Error('operator_state_dir_required');
     this.stateDir = path.resolve(stateDir);
     fs.mkdirSync(this.stateDir, { recursive: true, mode: 0o700 });
+    this.stateDir = fs.realpathSync(this.stateDir);
     fs.chmodSync(this.stateDir, 0o700);
     this.receiptFile = path.join(this.stateDir, 'operator-receipts.jsonl');
     this.maxReadBytes = boundedInt(maxReadBytes, 1024 * 1024, 1024, 8 * 1024 * 1024);
@@ -204,7 +205,9 @@ export class EvercraftRemoteOperator {
       execution: {
         mode: 'bounded-program',
         interactive_tty: false,
-        root_privilege: false,
+        // Report the process's actual effective privilege. File-API
+        // containment is not an OS sandbox and can run as root if misconfigured.
+        root_privilege: typeof process.geteuid === 'function' ? process.geteuid() === 0 : null,
         programs: [...DEFAULT_PROGRAMS].sort(),
         ambient_secret_environment_forwarded: false,
       },
@@ -242,6 +245,22 @@ export class EvercraftRemoteOperator {
     return { key, root };
   }
 
+  // Operator metadata and receipts are not job artifacts. A caller may
+  // authorize access to a workspace without authorizing mutation or export
+  // of the operator's own audit trail. This guards file APIs only; arbitrary
+  // subprocesses require a separate OS-enforced privilege boundary.
+  #denyStateDir(target) {
+    const relative = path.relative(this.stateDir, target);
+    if (
+      relative === '' ||
+      (relative !== '..' &&
+        !relative.startsWith('..' + path.sep) &&
+        !path.isAbsolute(relative))
+    ) {
+      throw new Error('operator_state_dir_denied');
+    }
+  }
+
   #resolveExisting(rootKey, relativePath, { allowSensitive = false } = {}) {
     const { key, root } = this.#root(rootKey);
     const relative = cleanRelative(relativePath);
@@ -250,6 +269,7 @@ export class EvercraftRemoteOperator {
     ensureInside(root, target);
     const real = fs.realpathSync(target);
     ensureInside(root, real);
+    this.#denyStateDir(real);
     return { key, root, relative, target: real };
   }
 
@@ -259,6 +279,7 @@ export class EvercraftRemoteOperator {
     if (sensitivePath(relative)) throw new Error('operator_sensitive_path_denied');
     const target = path.resolve(root, relative);
     ensureInside(root, target);
+    this.#denyStateDir(target);
     let parentCandidate = path.dirname(target);
     while (!fs.existsSync(parentCandidate)) {
       const next = path.dirname(parentCandidate);
@@ -267,6 +288,7 @@ export class EvercraftRemoteOperator {
     }
     const parent = fs.realpathSync(parentCandidate);
     ensureInside(root, parent);
+    this.#denyStateDir(parent);
     if (fs.existsSync(target) && fs.lstatSync(target).isSymbolicLink()) {
       throw new Error('operator_symlink_write_denied');
     }
