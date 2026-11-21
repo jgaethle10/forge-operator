@@ -1,0 +1,213 @@
+{
+  "schema": "evercraft.watershed.public-evidence.v1",
+  "snapshot_id": "yakima-2026-11-09-a",
+  "presentation": "ARCHIVED_EVIDENCE_PREVIEW",
+  "human_publication_approved": false,
+  "status_message": "Read-only research preview. These measurements are archived, not a live feed or approved water-supply forecast.",
+  "source_collected_at": "2026-11-10T02:02:01.775Z",
+  "source_observed_date": "2026-11-09",
+  "display_date": "November 9, 2026",
+  "area": "Yakima Basin, Washington",
+  "source_run_url": "https://github.com/jgaethle10/forge-operator/actions/runs/42739867324",
+  "source_artifact_id": 13729085715,
+  "evidence_sha256": {
+    "water_usgs_nrcs": "2ec5c69a15c28d83225f58065c3912405f93407e6368cac23a263bcb328f4eb3",
+    "nrcs_station_medians": "974c217b36df9d5400c011c3cb8856f83234f703be41233c8f86574b2cf5cc0d",
+    "nrcs_basin": "4695dcc5f09a09428b16b1cf63461f320139655d1730c0c21cb1287576eb39bb",
+    "usbr_reservoir": "c159bb66d337fd400a5c5fc8ac533cd600361e1a4cf0383d6a8c37a19efe0aa1"
+  },
+  "nrcs": {
+    "source_url": "https://wcc.sc.egov.usda.gov/reports/UpdateReport.html?format=SNOTEL%20Snowpack%20Update%20Report&report=Washington",
+    "period": "1991–2020",
+    "observed_on": "2026-11-09",
+    "warning": "* NRCS cautions that the early-season analysis may not represent actual basin conditions.",
+    "basins": [
+      {
+        "id": "upper-yakima",
+        "name": "Upper Yakima",
+        "index_percent": 11,
+        "warning_flag": true
+      },
+      {
+        "id": "naches",
+        "name": "Naches",
+        "index_percent": 109,
+        "warning_flag": true
+      },
+      {
+        "id": "lower-yakima",
+        "name": "Lower Yakima",
+        "index_percent": 130,
+        "warning_flag": true
+      }
+    ]
+  },
+  "snow": {
+    "observed_on": "2026-11-08",
+    "reporting_floor_median_in": 1,
+    "stations": [
+      {
+        "id": "375:WA:SNTL",
+        "name": "Bumping Ridge",
+        "observed_on": "2026-11-08",
+        "swe_in": 0.2,
+        "depth_in": 0,
+        "median_in": 0.1,
+        "ratio_percent": null,
+        "comparison_state": "below_1_in_median_reporting_floor",
+        "source_url": "https://wcc.sc.egov.usda.gov/awdbRestApi/services/v1/data"
+      },
+      {
+        "id": "478:WA:SNTL",
+        "name": "Fish Lake",
+        "observed_on": "2026-11-08",
+        "swe_in": 0,
+        "depth_in": 0,
+        "median_in": 0.2,
+        "ratio_percent": null,
+        "comparison_state": "below_1_in_median_reporting_floor",
+        "source_url": "https://wcc.sc.egov.usda.gov/awdbRestApi/services/v1/data"
+      },
+      {
+        "id": "502:WA:SNTL",
+        "name": "Green Lake",
+        "observed_on": "2026-11-08",
+        "swe_in": 1.3,
+        "depth_in": 5,
+        "median_in": 0.8,
+        "ratio_percent": null,
+        "comparison_state": "below_1_in_median_reporting_floor",
+        "source_url": "https://wcc.sc.egov.usda.gov/awdbRestApi/services/v1/data"
+      },
+      {
+        "id": "642:WA:SNTL",
+        "name": "Morse Lake",
+        "observed_on": "2026-11-08",
+        "swe_in": 2.9,
+        "depth_in": 9,
+        "median_in": 1.6,
+        "ratio_percent": 181.2,
+        "comparison_state": "station_only_valid",
+        "source_url": "https://wcc.sc.egov.usda.gov/awdbRestApi/services/v1/data"
+      },
+      {
+        "id": "734:WA:SNTL",
+        "name": "Sasse Ridge",
+        "observed_on": "2026-11-08",
+        "swe_in": 0,
+        "depth_in": 0,
+        "median_in": 0.4,
+        "ratio_percent": null,
+        "comparison_state": "below_1_in_median_reporting_floor",
+        "source_url": "https://wcc.sc.egov.usda.gov/awdbRestApi/services/v1/data"
+      },
+      {
+        "id": "863:WA:SNTL",
+        "name": "White Pass E.S.",
+        "observed_on": "2026-11-08",
+        "swe_in": 0,
+        "depth_in": 1,
+        "median_in": 0,
+        "ratio_percent": null,
+        "comparison_state": "below_1_in_median_reporting_floor",
+        "source_url": "https://wcc.sc.egov.usda.gov/awdbRestApi/services/v1/data"
+      }
+    ]
+  },
+  "rivers": {
+    "units": "cfs",
+    "sites": [
+      {
+        "id": "USGS-12484500",
+        "name": "Yakima River at Umtanum",
+        "discharge_cfs": 647,
+        "observed_at": "2026-11-10T01:15:00.000Z",
+        "source_url": "https://api.waterdata.usgs.gov/ogcapi/v0/collections/latest-continuous/items/7d324443-8fe3-4f42-9dbf-709581fcea63?f=json"
+      },
+      {
+        "id": "USGS-12500450",
+        "name": "Yakima River at Union Gap",
+        "discharge_cfs": 925,
+        "observed_at": "2026-11-10T01:30:00.000Z",
+        "source_url": "https://api.waterdata.usgs.gov/ogcapi/v0/collections/latest-continuous/items/6d55e230-a32f-4dd9-b96a-d79de2a0a6a1?f=json"
+      },
+      {
+        "id": "USGS-12510500",
+        "name": "Yakima River at Kiona",
+        "discharge_cfs": 1540,
+        "observed_at": "2026-11-10T01:30:00.000Z",
+        "source_url": "https://api.waterdata.usgs.gov/ogcapi/v0/collections/latest-continuous/items/57e82737-dcfa-46a5-9313-e27336f5a0ad?f=json"
+      }
+    ],
+    "configured_gauge_count": 4,
+    "reporting_gauge_count": 3
+  },
+  "reservoirs": {
+    "observed_on": "2026-11-08",
+    "unit": "acre-feet",
+    "sites": [
+      {
+        "id": "KEE",
+        "name": "Keechelus",
+        "storage_af": 9183.03,
+        "observed_on": "2026-11-08",
+        "time_zone": "unresolved",
+        "provisional": true,
+        "source_url": "https://data.usbr.gov/catalog/8304/item/131246"
+      },
+      {
+        "id": "KAC",
+        "name": "Kachess",
+        "storage_af": 55912,
+        "observed_on": "2026-11-08",
+        "time_zone": "unresolved",
+        "provisional": true,
+        "source_url": "https://data.usbr.gov/catalog/8303/item/131227"
+      },
+      {
+        "id": "CLE",
+        "name": "Cle Elum",
+        "storage_af": 22089,
+        "observed_on": "2026-11-08",
+        "time_zone": "unresolved",
+        "provisional": true,
+        "source_url": "https://data.usbr.gov/catalog/8199/item/129798"
+      },
+      {
+        "id": "BUM",
+        "name": "Bumping",
+        "storage_af": 3484,
+        "observed_on": "2026-11-08",
+        "time_zone": "unresolved",
+        "provisional": true,
+        "source_url": "https://data.usbr.gov/catalog/8187/item/129605"
+      },
+      {
+        "id": "RIM",
+        "name": "Rimrock",
+        "storage_af": 56431.2,
+        "observed_on": "2026-11-08",
+        "time_zone": "unresolved",
+        "provisional": true,
+        "source_url": "https://data.usbr.gov/catalog/8410/item/132729"
+      }
+    ],
+    "derived_provisional_sum_af": 147099.23,
+    "sum_scope": "simple arithmetic across five provisional same-source-reported-day observations",
+    "timezone_reconciled": false,
+    "official_system_total": false,
+    "percent_capacity": null
+  },
+  "limitations": [
+    "This archive is not a live feed. Observation times vary by source.",
+    "All NRCS basin indices have official early-season warning flags.",
+    "Five of six selected station-level snow ratios are suppressed for tiny historical medians.",
+    "Only three of four configured USGS gauges reported fresh discharge in this collection.",
+    "USBR reporting-day time zones are unresolved, and storage may be revised.",
+    "No flood threat, irrigation allocation, winter forecast or basin-wide Evercraft percentage is inferred."
+  ],
+  "forecast_authorized": false,
+  "flood_alert_authorized": false,
+  "customer_delivery_verified": false,
+  "payment_verified": false
+}

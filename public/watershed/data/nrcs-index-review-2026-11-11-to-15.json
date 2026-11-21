@@ -1,0 +1,157 @@
+{
+  "schema": "evercraft.watershed.staged-index-history.v1",
+  "presentation": "INTERNAL_SOURCE_REVIEW_ONLY",
+  "source_family": "USDA NRCS Washington SNOTEL Snowpack Update Report",
+  "nrcs_source_url": "https://wcc.sc.egov.usda.gov/reports/UpdateReport.html?format=SNOTEL%20Snowpack%20Update%20Report&report=Washington",
+  "baseline": "1991-2020",
+  "sourced_as_of": "2026-11-15",
+  "live_feed": false,
+  "human_publication_approved": false,
+  "water_supply_forecast_authorized": false,
+  "percent_reservoir_capacity_authorized": false,
+  "reservoir_history_calculated": false,
+  "preservation_note": "November 11 is retained in the evidence branch; November 12–15 are verified 30-day GitHub Actions staging artifacts and are not yet permanently archived.",
+  "official_warning": "* NRCS warns that early-season basin indices may not accurately represent actual conditions; these percentages do not predict winter water supplies.",
+  "days": [
+    {
+      "date": "2026-11-11",
+      "source_run_id": "43113718418",
+      "source_run_url": "https://github.com/jgaethle10/forge-operator/actions/runs/43113718418",
+      "staging_run_url": null,
+      "preservation": "ledger_recorded",
+      "source_report_sha256": "cc87d982156c8f10b6cebebc462e702809f25aeea1f01d522c5f028a93ee3d68",
+      "source_receipts_verified": true,
+      "reservoir_reported_site_count": 5,
+      "reservoir_comparable_sum_af": null,
+      "indices": [
+        {
+          "id": "upper-yakima",
+          "percent": 34,
+          "nrcs_warning": true
+        },
+        {
+          "id": "naches",
+          "percent": 85,
+          "nrcs_warning": true
+        },
+        {
+          "id": "lower-yakima",
+          "percent": 108,
+          "nrcs_warning": true
+        }
+      ]
+    },
+    {
+      "date": "2026-11-12",
+      "source_run_id": "43318005667",
+      "source_run_url": "https://github.com/jgaethle10/forge-operator/actions/runs/43318005667",
+      "staging_run_url": "https://github.com/jgaethle10/forge-operator/actions/runs/43318074571",
+      "preservation": "temporary_staged",
+      "source_report_sha256": "bae6ab4082f27df64502df2d1b17136eaa4ee0569aa2f9a9159725377b5c906e",
+      "source_receipts_verified": true,
+      "reservoir_reported_site_count": 5,
+      "reservoir_comparable_sum_af": null,
+      "indices": [
+        {
+          "id": "upper-yakima",
+          "percent": 5,
+          "nrcs_warning": true
+        },
+        {
+          "id": "naches",
+          "percent": 66,
+          "nrcs_warning": true
+        },
+        {
+          "id": "lower-yakima",
+          "percent": 109,
+          "nrcs_warning": true
+        }
+      ]
+    },
+    {
+      "date": "2026-11-13",
+      "source_run_id": "43515210761",
+      "source_run_url": "https://github.com/jgaethle10/forge-operator/actions/runs/43515210761",
+      "staging_run_url": "https://github.com/jgaethle10/forge-operator/actions/runs/43515294377",
+      "preservation": "temporary_staged",
+      "source_report_sha256": "d69f7a3c3e1a28367c672bf4e3cdf1afab287eebf3b7cdd16504fe6bd93310a4",
+      "source_receipts_verified": true,
+      "reservoir_reported_site_count": 4,
+      "reservoir_comparable_sum_af": null,
+      "indices": [
+        {
+          "id": "upper-yakima",
+          "percent": 4,
+          "nrcs_warning": true
+        },
+        {
+          "id": "naches",
+          "percent": 52,
+          "nrcs_warning": true
+        },
+        {
+          "id": "lower-yakima",
+          "percent": 86,
+          "nrcs_warning": true
+        }
+      ]
+    },
+    {
+      "date": "2026-11-14",
+      "source_run_id": "43638873450",
+      "source_run_url": "https://github.com/jgaethle10/forge-operator/actions/runs/43638873450",
+      "staging_run_url": "https://github.com/jgaethle10/forge-operator/actions/runs/43638914009",
+      "preservation": "temporary_staged",
+      "source_report_sha256": "e05c1d918eedfb38a1394848fbca5d0ea3e83ec9e93b093f2333fbed69ce7eae",
+      "source_receipts_verified": true,
+      "reservoir_reported_site_count": 4,
+      "reservoir_comparable_sum_af": null,
+      "indices": [
+        {
+          "id": "upper-yakima",
+          "percent": 15,
+          "nrcs_warning": true
+        },
+        {
+          "id": "naches",
+          "percent": 50,
+          "nrcs_warning": true
+        },
+        {
+          "id": "lower-yakima",
+          "percent": 110,
+          "nrcs_warning": true
+        }
+      ]
+    },
+    {
+      "date": "2026-11-15",
+      "source_run_id": "43761206929",
+      "source_run_url": "https://github.com/jgaethle10/forge-operator/actions/runs/43761206929",
+      "staging_run_url": "https://github.com/jgaethle10/forge-operator/actions/runs/43761259252",
+      "preservation": "temporary_staged",
+      "source_report_sha256": "c39371b93ade4c6515207922b49456b492f5b1d5eb7cba63f34a6121690b6899",
+      "source_receipts_verified": true,
+      "reservoir_reported_site_count": 5,
+      "reservoir_comparable_sum_af": null,
+      "indices": [
+        {
+          "id": "upper-yakima",
+          "percent": 17,
+          "nrcs_warning": true
+        },
+        {
+          "id": "naches",
+          "percent": 57,
+          "nrcs_warning": true
+        },
+        {
+          "id": "lower-yakima",
+          "percent": 120,
+          "nrcs_warning": true
+        }
+      ]
+    }
+  ]
+}
