@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#f8f8f7">
+<meta name="robots" content="noindex,follow">
+<title>Evercraft Build Alpha | From idea to first preview</title>
+<meta name="description" content="Describe a website idea and create a free, local, downloadable static concept. Evercraft Build alpha: no account, uploads, payments or deployments.">
+<link rel="stylesheet" href="./style.css">
+<script type="module" src="./app.mjs"></script>
+</head>
+<body>
+<header class="topbar">
+  <div class="shell nav">
+    <a class="brand" href="../try/" aria-label="Evercraft home">EVERCRAFT<span> / BUILD</span></a>
+    <span class="state-label">ALPHA · LOCAL PREVIEW</span>
+  </div>
+</header>
+<main class="shell">
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="eyebrow"><span class="live-dot"></span> FROM IDEA TO FIRST DRAFT</div>
+    <h1 id="hero-title">What do you want <em>to build?</em></h1>
+    <p>Tell Evercraft what you're imagining. Create a simple website concept you can preview, refine, and download. No account or payment needed for this alpha.</p>
+  </section>
+  <div class="workspace">
+    <section class="panel prompt-panel" aria-labelledby="prompt-title">
+      <div class="panel-title"><span class="step-no">01</span><h2 id="prompt-title">Describe your idea</h2></div>
+      <form id="builder" novalidate>
+        <label for="prompt">Your build request</label>
+        <textarea id="prompt" name="prompt" rows="7" maxlength="1500" required placeholder="Build me a modern website for my landscaping business with project photos and an estimate request..."></textarea>
+        <div class="suggestions" aria-label="Try an example">
+          <button class="chip" type="button" data-example="Build me a modern website for a landscaping business with a project gallery and an estimate request." data-brand="Cedar & Stone" data-kind="website">Landscaping</button>
+          <button class="chip" type="button" data-example="Create a clean landing page for a bakery with a menu, location and a way to contact us." data-brand="Morning Crumb" data-kind="landing">Bakery</button>
+          <button class="chip" type="button" data-example="Build an app where a cleaning company can manage customers, appointments and billing." data-brand="Clear Day" data-kind="app">Business app</button>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="kind">Project type</label>
+            <select id="kind" name="kind">
+              <option value="website">Website</option>
+              <option value="landing">Landing page</option>
+              <option value="app">Web application (brief only)</option>
+              <option value="automation">Automation (brief only)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="brand">Project name <span class="optional">optional</span></label>
+            <input id="brand" name="brand" type="text" maxlength="60" placeholder="Your Business" autocomplete="off">
+          </div>
+        </div>
+        <button class="primary" type="submit">Create my concept <span aria-hidden="true">↗</span></button>
+        <p id="form-status" class="form-status" aria-live="polite">Your prompt stays on this device. Nothing is submitted to Evercraft.</p>
+      </form>
+      <div class="trust"><span>Private on-device generation</span><span>Exportable HTML</span><span>No credit card</span></div>
+    </section>
+    <section class="panel output-panel" aria-labelledby="output-title">
+      <div class="panel-title"><span class="step-no">02</span><h2 id="output-title">Your first result</h2></div>
+      <div id="empty-state" class="empty-state">
+        <div class="preview-glyph" aria-hidden="true"><div></div><div></div><div></div></div>
+        <h3>A blank canvas, ready.</h3>
+        <p>Describe something on the left. Your downloadable website concept or scoped build brief will appear here.</p>
+      </div>
+      <div id="result" hidden>
+        <div class="result-heading"><span class="pill" id="result-mode">Website concept</span><span class="result-state">Preview only</span></div>
+        <h3 id="result-name"></h3>
+        <p id="result-description" class="result-description"></p>
+        <div id="frame-wrap" class="frame-wrap" hidden>
+          <div class="browser-top"><span aria-hidden="true">● ● ●</span><span>Local design preview · not online</span></div>
+          <iframe id="preview" title="Generated website concept" sandbox="" loading="lazy"></iframe>
+        </div>
+        <section class="scope" aria-labelledby="scope-title">
+          <h4 id="scope-title">Your proposed scope</h4>
+          <ul id="features"></ul>
+        </section>
+        <div class="result-actions">
+          <button class="primary" type="button" id="download-html" hidden>Download HTML concept</button>
+          <button class="secondary" type="button" id="download-brief">Download build brief</button>
+        </div>
+        <p class="caveat">This free alpha creates a local concept, not a deployed application. Scheduling, payments, accounts, customer submissions and other integrations are not connected.</p>
+      </div>
+    </section>
+  </div>
+  <section class="boundary" aria-label="What comes next">
+    <div><span class="step-no">03</span><h2>From concept to a real product</h2></div>
+    <p>Our next milestone is securely connecting customer projects to authorized Systemia/Saban build jobs, real test receipts, isolated previews, scoped checkout, and verified delivery. We will not label those capabilities live before the full customer journey passes testing.</p>
+  </section>
+</main>
+<footer class="shell footer">
+  <span>Evercraft Build · A first-party experiment by Evercraft LLC</span>
+  <a href="../try/">Explore current Evercraft tools</a>
+</footer>
+</body>
+</html>
