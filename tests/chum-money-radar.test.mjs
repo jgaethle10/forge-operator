@@ -33,7 +33,9 @@ function publicEvent(stage, id = stage) {
     product_key: 'findmypart-paid-hunt-v1',
     public_id: 'findmypart-paid-hunt-v1',
     stage,
-    occurred_at: '2026-09-26T05:00:00.000Z',
+    // Keep this session inside all rolling acquisition windows; hard-coded Sep 26
+    // fell out of the 30d window on Oct 26 and falsely failed the entire Forge build.
+    occurred_at: new Date(Date.now() - 60_000).toISOString(),
     actor_class: 'human_probable',
     actor_confidence: 'high',
     provider_claim: 'direct',
