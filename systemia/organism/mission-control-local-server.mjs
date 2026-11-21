@@ -35,9 +35,9 @@ function write(res,status,body,ctype='text/plain; charset=utf-8'){
  res.writeHead(status,headers({'Content-Type':ctype}));
  res.end(body);
 }
-export function createLocalMissionControlServer({stateFiles=[],nodeWatches=[],loadSnapshot=null}={}){
- if(!stateFiles.length&&!nodeWatches.length&&!loadSnapshot)throw Error('explicit local source configuration required');
- const getSnapshot=loadSnapshot||(()=>buildLocalMissionSnapshot({stateFiles,nodeWatches}));
+export function createLocalMissionControlServer({stateFiles=[],nodeWatches=[],nodeIdentityProofs=[],loadSnapshot=null}={}){
+ if(!stateFiles.length&&!nodeWatches.length&&!nodeIdentityProofs.length&&!loadSnapshot)throw Error('explicit local source configuration required');
+ const getSnapshot=loadSnapshot||(()=>buildLocalMissionSnapshot({stateFiles,nodeWatches,nodeIdentityProofs}));
  const server=http.createServer(async(req,res)=>{
   // Fail closed even if a future caller binds this reusable listener to a
   // wildcard/LAN interface instead of the CLI's mandated IPv4 loopback.
@@ -84,25 +84,30 @@ export function createLocalMissionControlServer({stateFiles=[],nodeWatches=[],lo
  return server;
 }
 function args(argv){
- const cfg={stateFiles:[],nodeWatches:[],port:8766};const nodes={node001:{},node002:{}};
+ const cfg={stateFiles:[],nodeWatches:[],nodeIdentityProofs:[],port:8766};const nodes={node001:{},node002:{}};
  for(let i=0;i<argv.length;i++){
   const key=argv[i],value=argv[++i];
   if(!value||value.startsWith('--'))throw Error('Missing value for '+key);
   if(key==='--state')cfg.stateFiles.push(value);
   else if(key==='--port'){const p=Number(value);if(!Number.isSafeInteger(p)||p<1024||p>65535)throw Error('Invalid local port');cfg.port=p;}
-  else if(/^--node00[12]-(watch|id)$/.test(key)){
-   const [,slot,field]=key.match(/^--(node00[12])-(watch|id)$/);
+  else if(/^--node00[12]-(watch|id|attestation|public-key|nonce-file)$/.test(key)){
+   const [,slot,field]=key.match(/^--(node00[12])-(watch|id|attestation|public-key|nonce-file)$/);
    if(nodes[slot][field])throw Error('Duplicate node argument');
    nodes[slot][field]=value;
   }else throw Error('Unknown argument '+key);
  }
  for(const [nodeKey,n] of Object.entries(nodes)){
-  if(n.watch||n.id){
-   if(!n.watch||!n.id)throw Error('Watch file and exact node ID required together');
-   cfg.nodeWatches.push({nodeKey,file:n.watch,expectedNodeId:n.id});
+  if(n.watch&&!n.id)throw Error('Exact owner-pinned node ID required for watcher');
+  if(n.watch)cfg.nodeWatches.push({nodeKey,file:n.watch,expectedNodeId:n.id});
+  const hasIdentity=Boolean(n.attestation||n['public-key']||n['nonce-file']);
+  if(hasIdentity){
+   if(!n.id||!n.attestation||!n['public-key']||!n['nonce-file'])throw Error('Identity proof requires node ID, attestation, public key and nonce-file');
+   cfg.nodeIdentityProofs.push({nodeKey,file:n.attestation,
+    keyFile:n['public-key'],nonceFile:n['nonce-file'],expectedNodeId:n.id});
   }
+  if(n.id&&!n.watch&&!hasIdentity)throw Error('Node ID without explicit source');
  }
- if(cfg.stateFiles.length>80||!cfg.stateFiles.length&&!cfg.nodeWatches.length)throw Error('Choose explicit local goal or node watch files');
+ if(cfg.stateFiles.length>80||!cfg.stateFiles.length&&!cfg.nodeWatches.length&&!cfg.nodeIdentityProofs.length)throw Error('Choose explicit local goal or node watch files');
  return cfg;
 }
 const isCli=process.argv[1]&&fileURLToPath(import.meta.url)===process.argv[1];

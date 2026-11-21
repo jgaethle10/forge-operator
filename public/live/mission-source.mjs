@@ -72,5 +72,20 @@ export function parseOperatorSnapshot(raw,now=Date.now()){
       note:safeLabel(n.note||'',230),source_receipt_hash:n.source_receipt_hash,
       provenance:'LOCAL SELF-REPORT · NOT AUTHENTICATED'};
   });
-  return {schema:SNAPSHOT_SCHEMA,exported_at:exported,missions,nodes,authority:'OPERATOR-REPORTED / UNVERIFIED'};
+  const identityInputs=raw.identity_checks??[];
+  if(!Array.isArray(identityInputs)||identityInputs.length>2)throw new Error('Expected up to two device identity observations.');
+  const identityKeys=new Set();
+  const identity_checks=identityInputs.map(n=>{
+    if(!n||typeof n!=='object'||Array.isArray(n)||!['node001','node002'].includes(n.node_key)||identityKeys.has(n.node_key))throw new Error('Invalid identity node slot.');
+    if(n.verification!=='pinned_signature_verified')throw new Error('Unrecognized signed identity observation.');
+    const observed=safeTime(n.observed_at,now);
+    if(!observed||Date.parse(observed)>Date.parse(exported)+300000)throw new Error('Invalid identity observation timestamp.');
+    identityKeys.add(n.node_key);
+    const stale=now-Date.parse(observed)>60000;
+    return {node_key:n.node_key,verification:stale?'expired':'operator_reported_key_check',
+      observed_at:observed,provenance:'OPERATOR IMPORT CLAIM · NOT BROWSER-AUTHENTICATED',
+      note:stale?'Pinned key-possession record is over 60 seconds old. Status unknown.':
+      'Operator adapter reports a verified signed challenge. Browser cannot authenticate this import; remote connection and health remain unknown.'};
+  });
+  return {schema:SNAPSHOT_SCHEMA,exported_at:exported,missions,nodes,identity_checks,authority:'OPERATOR-REPORTED / UNVERIFIED'};
 }

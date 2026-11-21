@@ -57,3 +57,35 @@ The local server does **not** authenticate the human sitting at the device: any 
 The ordinary public GitHub Pages version of Mission Control does not call this local adapter. It continues to show public development receipts and optional manually imported local snapshots. No public website can discover private node files through this addition.
 
 Verification: `node --test tests/systemia-mission-control-local-server.test.mjs`. The new local loopback server is opt-in and is not installed as a service.
+
+
+## Build 06: operator-pinned signed NodeSeed identity challenge (private, opt-in)
+
+This verifies **key possession only**, using the repository's existing `verifyNodeAttestation` Ed25519 routine, an **owner-pinned public key from a previously verified enrollment**, a matching exact node ID, and an exact locally supplied challenge. A signature is considered valid for at most 60 seconds from the signed observation time. There is no network request, remote device discovery, admission, execution, payment action or automatic enrollment.
+
+A PINNED SIGNATURE is **not** an authenticated remote health feed. In particular, an imported JSON claim in the browser is not independently authenticated there. The public top-row Penguin and NextGen health labels must remain `HEALTH UNKNOWN`.
+
+Use only if an already authorized NodeSeed challenge/attestation exchange has produced a matching signed attestation. Keep all three selected files **outside the repository**, on an owner-controlled machine:
+
+- `/private/node001-attestation.json`: the signed NodeSeed attestation envelope obtained from the approved exchange
+- `/private/node001-owner-pinned.pem`: public key pinned from prior trusted enrollment, never copied from the attestation being checked
+- `/private/node001-challenge.txt`: exact owner-issued challenge (at least 16 random-safe characters); never trust an attacker-chosen challenge as an authorization
+
+Review locally via:
+
+```bash
+node systemia/organism/mission-control-local-server.mjs \
+  --node001-id "EXACT_PREVIOUSLY_VERIFIED_NODE_ID" \
+  --node001-attestation "/private/node001-attestation.json" \
+  --node001-public-key "/private/node001-owner-pinned.pem" \
+  --node001-nonce-file "/private/node001-challenge.txt" \
+  --port 8766
+```
+
+Then open `http://127.0.0.1:8766/mission-control.html` on that machine. The same flags work with `mission-control-export.mjs`, plus `--out /private/unused-snapshot.json`; export remains create-only with mode 0600. Use `node002` variants only against an actually enrolled Node002. The identity check may be selected alone, or alongside approved goal and watch files.
+
+The adapter fails closed for mismatched node ID, invalid signature, changed signed statement, mismatched owner-pinned key, wrong challenge, expired observation, duplicate inputs, symlinks or unbounded files. Successful proof exports only the selected node slot, a summary of the verification and observation time, never raw keys, fingerprint, nonce, signed statement or private file paths.
+
+**Important limitations:** A locally selected challenge is not by itself evidence of a fresh remote challenge-response ceremony or a replay-resistant broker session. A valid signature proves possession of the matching private key at the signed observation time, not that the node is online now, that a network path is authenticated, or that a payment or job completed. Do not copy the attestation's key into the pin file or put this loopback viewer behind public ingress.
+
+Tests: `node --test tests/systemia-mission-control-identity.test.mjs tests/systemia-mission-control-local-server.test.mjs`.
