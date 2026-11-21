@@ -1,0 +1,26 @@
+name: AirCore V0.1 engineering model
+on:
+  push:
+    branches:
+      - feat/bofa-aircore-v01-20261028
+    paths:
+      - 'systemia/breath-of-fresh-air/**'
+      - '.github/workflows/aircore-v01.yml'
+  pull_request:
+    paths:
+      - 'systemia/breath-of-fresh-air/**'
+      - '.github/workflows/aircore-v01.yml'
+permissions:
+  contents: read
+jobs:
+  aircore-model:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify Node version
+        run: node --version
+      - name: AirCore sizing tests
+        run: node --test systemia/breath-of-fresh-air/aircore-sizing.test.mjs
+      - name: Print unvalidated sizing estimate
+        run: node systemia/breath-of-fresh-air/aircore-sizing.mjs
