@@ -8,7 +8,7 @@
   const selectors = {
     facebook: 'div[role="article"]',
     reddit: 'shreddit-post, [data-testid="post-container"], article[data-post-id]',
-    youtube: 'ytd-rich-grid-media, ytd-video-renderer, ytd-compact-video-renderer, ytd-grid-video-renderer, ytd-reel-item-renderer'
+    youtube: 'ytd-rich-grid-media, ytd-video-renderer, ytd-compact-video-renderer, ytd-grid-video-renderer, ytd-reel-item-renderer, ytm-video-with-context-renderer, ytm-shorts-lockup-view-model'
   };
   let settings = DEFAULTS;
   let queued = false;
