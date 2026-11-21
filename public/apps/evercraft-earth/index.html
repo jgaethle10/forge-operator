@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#071019">
+<title>What Changed Here? | Evercraft Earth</title>
+<meta name="description" content="A source-linked geographic evidence explorer. Early Evercraft Earth prototype, not a public safety determination.">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoQNNy3Q5wo7bA=" crossorigin="">
+<style>
+:root{color-scheme:dark;--bg:#070d15;--panel:#0d1823;--line:#283746;--ink:#edf6ff;--muted:#9aafc2;--aqua:#79e4dc;--amber:#f2c879;--blue:#86baff}
+*{box-sizing:border-box}html,body{height:100%}body{margin:0;background:radial-gradient(circle at 10% 0%,#152f3d 0%,#070d15 45%);color:var(--ink);font:14px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
+a{color:#a4d4ff}button,input,select{font:inherit}button,select,input[type=date]{border:1px solid #355063;border-radius:9px;background:#13222f;color:var(--ink);padding:9px;cursor:pointer}button:hover{border-color:var(--aqua)}button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(--aqua);outline-offset:2px}
+.shell{max-width:1600px;margin:0 auto;padding:18px}.head{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-bottom:14px}.eyebrow{text-transform:uppercase;letter-spacing:.2em;font-size:10px;font-weight:800;color:var(--aqua)}
+h1{font-size:clamp(26px,4vw,43px);line-height:1.06;margin:6px 0}h2{font-size:15px;margin:0}p{margin:6px 0 0;color:var(--muted)}.head p{max-width:720px}
+.flag{border:1px solid #6b5941;border-radius:100px;background:#302517;color:#f6d69f;padding:8px 14px;font-size:12px;font-weight:800}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 370px;gap:13px}.panel{background:linear-gradient(160deg,#11202c,#0a151f);border:1px solid var(--line);border-radius:16px;overflow:hidden}.tools{display:flex;gap:9px;align-items:center;flex-wrap:wrap;padding:12px;border-bottom:1px solid var(--line)}.tools label{font-size:11px;text-transform:uppercase;color:var(--muted);letter-spacing:.1em;font-weight:800}.tools select{max-width:200px}.tools input[type=date]{max-width:150px}.tools .sp{flex:1}
+.mapwrap{position:relative;min-height:560px}#map{height:560px;background:#091b26}.leaflet-container{font:inherit;background:#0d2435}.leaflet-control-attribution{font-size:10px!important}.mapnotice{position:absolute;z-index:550;top:12px;left:12px;right:12px;pointer-events:none;display:flex;justify-content:space-between;gap:8px}.mapnotice span{background:#06131de9;border:1px solid #41606b;color:#d4e7f3;padding:6px 10px;border-radius:8px;font-size:11px;font-weight:800}.mapfoot{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:10px 14px;border-top:1px solid var(--line);font-size:11px;color:var(--muted)}
+.sidebar{display:grid;gap:12px;align-content:start}.section{padding:15px}.section h2{margin-bottom:10px}.small{font-size:12px}.muted{color:var(--muted)}.big{font-size:21px;font-weight:800}.row{display:flex;justify-content:space-between;align-items:center;gap:12px}.stack{display:grid;gap:9px}
+.layerbuttons{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.layerbuttons button{font-size:12px;text-align:left}.layerbuttons button[aria-pressed=true]{border-color:var(--aqua);color:var(--aqua);background:#153039}
+.action{display:block;width:100%;text-align:center;font-weight:750}.primary{background:#75e5da;color:#052023;border-color:#75e5da}.primary:hover{background:#a3fff1}.divider{height:1px;background:var(--line);margin:13px 0}
+.finding{border:1px solid #314452;border-radius:11px;padding:11px;margin-top:8px;background:#0a1822}.finding:hover{border-color:#7bd7d4}.finding button{background:none;border:0;padding:0;text-align:left;width:100%;cursor:pointer}.finding h3{font-size:13px;margin:0;color:#f0f7ff}.finding .delta{font-size:20px;font-weight:900;margin:5px 0;color:var(--aqua)}.finding .delta.unknown{font-size:14px;color:var(--amber)}.finding small{color:var(--muted)}
+.source{border-top:1px solid var(--line);padding:10px 0}.source:first-of-type{border-top:0}.source b{display:block;font-size:12px}.source a{font-size:11px}.legend{display:flex;flex-wrap:wrap;gap:12px}.pill{font-size:10px;color:#a7bac9;border:1px solid #3a515b;padding:3px 8px;border-radius:100px}
+.warning{background:#2c2517;border:1px solid #665435;color:#f9dfa8;border-radius:10px;padding:10px;font-size:11px}.footer{padding:15px 2px;color:#78909e;font-size:11px}.hidden{display:none}
+@media(max-width:1080px){.layout{grid-template-columns:1fr}.sidebar{grid-template-columns:1fr 1fr}.sidebar .full{grid-column:1/-1}#map{height:480px}.mapwrap{min-height:480px}}
+@media(max-width:640px){.shell{padding:10px}.sidebar{grid-template-columns:1fr}.sidebar .full{grid-column:auto}.tools{align-items:flex-end}.tools label{display:block}.tools select,.tools input[type=date]{max-width:145px}.mapnotice{flex-direction:column;align-items:flex-start}#map{height:420px}.mapwrap{min-height:420px}}
+</style>
+</head>
+<body>
+<main class="shell">
+ <header class="head">
+  <div><div class="eyebrow">Evercraft / Earth intelligence / Pilot 001</div><h1>What changed here?</h1><p>Investigate a place through dated, source-linked geographic observations. Select a region, compare time windows, and see what the evidence can actually support.</p></div>
+  <div class="flag" id="modeFlag">NO VERIFIED DATA LOADED</div>
+ </header>
+ <div class="layout">
+  <section class="panel" aria-label="Geographic map">
+   <div class="tools">
+    <div><label for="place">Explore location</label><select id="place"><option value="yakima">Yakima Valley, WA</option><option value="seattle">Seattle, WA</option><option value="nyc">New York City, NY</option></select></div>
+    <div><label for="fromDate">Earlier snapshot</label><input type="date" id="fromDate" value="2023-01-01"></div>
+    <div><label for="toDate">Later snapshot</label><input type="date" id="toDate" value="2026-10-28"></div>
+    <div class="sp"></div><button id="resetView" type="button">Reset view</button>
+   </div>
+   <div class="mapwrap">
+    <div class="mapnotice"><span id="mapStatus">No observation points loaded</span><span id="overlayMode">Coverage unknown ≠ no risk</span></div>
+    <div id="map" role="application" aria-label="Interactive map with imported evidence observations"></div>
+   </div>
+   <div class="mapfoot"><div class="legend"><span>● Observations: <b id="pointCount">0</b></span><span>▣ Paired comparisons: <b id="pairCount">0</b></span></div><span>Map © OpenStreetMap contributors. Location presets are navigation anchors, not evidence.</span></div>
+  </section>
+  <aside class="sidebar">
+   <section class="panel section"><h2>Investigate a layer</h2><div class="layerbuttons" id="layers">
+     <button type="button" data-topic="pfas" aria-pressed="true">◉ Water / PFAS</button>
+     <button type="button" data-topic="fire" aria-pressed="false">◉ Fire activity</button>
+     <button type="button" data-topic="land" aria-pressed="false">◉ Land change</button>
+     <button type="button" data-topic="infrastructure" aria-pressed="false">◉ Infrastructure</button>
+    </div><p class="small">Layers contain no measurements until you load an evidence file or a labeled demonstration.</p>
+   </section>
+   <section class="panel section"><h2>Evidence controls</h2><div class="stack">
+     <button class="action primary" id="demo" type="button">Load synthetic demonstration</button>
+     <button class="action" id="upload" type="button">Import GeoJSON or EPA ledger</button>
+     <input class="hidden" id="file" type="file" accept=".json,.geojson,application/json,application/geo+json">
+     <button class="action" id="template" type="button">Download example evidence format</button>
+     <button class="action" id="clear" type="button">Clear evidence</button>
+    </div><p class="small" id="uploadStatus" role="status">Imports are processed locally in your browser. This pilot does not transmit uploaded files.</p>
+   </section>
+   <section class="panel section full"><div class="row"><h2>Change investigation</h2><span class="pill" id="topicBadge">PFAS</span></div>
+    <p class="small" id="summary">Nothing to compare yet. Load observations to investigate a location.</p>
+    <div id="findings" aria-live="polite"></div>
+   </section>
+   <section class="panel section full"><h2>Official research doors</h2><p class="small">Useful starting points, not yet connected as automated feeds.</p>
+    <div class="source"><b>Washington State DOH · PFAS testing</b><a href="https://doh.wa.gov/data-and-statistical-reports/washington-tracking-network-wtn/pfas" target="_blank" rel="noopener noreferrer">Open official PFAS data and dashboard ↗</a></div>
+    <div class="source"><b>US EPA · UCMR 5 national dataset</b><a href="https://www.epa.gov/dwucmr/occurrence-data-unregulated-contaminant-monitoring-rule" target="_blank" rel="noopener noreferrer">Open occurrence data ↗</a></div>
+    <div class="source"><b>NASA FIRMS · active fire</b><a href="https://firms.modaps.eosdis.nasa.gov/web-services/" target="_blank" rel="noopener noreferrer">Open data services ↗</a></div>
+    <div class="source"><b>USGS · EarthExplorer</b><a href="https://earthexplorer.usgs.gov/" target="_blank" rel="noopener noreferrer">Explore historical imagery ↗</a></div>
+   </section>
+   <section class="panel section full"><div class="warning"><b>Evidence standard:</b> A detected substance at a water source does not establish the concentration in every household. A missing record does not prove an area is safe. Imported records are source-linked but <b>not independently verified</b> by Evercraft Earth. This pilot is not a health or emergency alert service.</div></section>
+  </aside>
+ </div>
+ <footer class="footer">EVERCRAFT EARTH · PILOT / DRAFT · Read-only local evidence explorer. No automated monitoring, hazard conclusions, or production integration implied.</footer>
+</main>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script>
+(function(){
+'use strict';
+const centers={yakima:[46.6021,-120.5059,10],seattle:[47.6062,-122.3321,10],nyc:[40.7128,-74.006,10]};
+const topics={pfas:'Water / PFAS',fire:'Fire activity',land:'Land change',infrastructure:'Infrastructure'};
+const $=id=>document.getElementById(id);
+const state={topic:'pfas',features:[],ledger:[],ledgerSource:null,kind:'empty',map:null,markers:null};
+function elt(tag,cls,value){const n=document.createElement(tag);if(cls)n.className=cls;if(value!==undefined)n.textContent=String(value);return n;}
+function safeLink(url){try{const u=new URL(url);return u.protocol==='https:'?u.href:null;}catch(_){return null;}}
+function norm(f){
+ if(!f||f.type!=='Feature'||!f.geometry||f.geometry.type!=='Point'||!Array.isArray(f.geometry.coordinates))return null;
+ const [lon,lat]=f.geometry.coordinates.map(Number),p=f.properties||{};
+ if(!Number.isFinite(lat)||!Number.isFinite(lon)||Math.abs(lat)>90||Math.abs(lon)>180)return null;
+ if(!['pfas','fire','land','infrastructure'].includes(p.topic))return null;
+ if(typeof p.site_id!=='string'||!p.site_id.trim()||typeof p.metric!=='string'||!p.metric.trim())return null;
+ if(typeof p.observed_at!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(p.observed_at)||isNaN(Date.parse(p.observed_at+'T00:00:00Z')))return null;
+ if(typeof p.value!=='number'||!Number.isFinite(p.value)||typeof p.unit!=='string'||!p.unit.trim())return null;
+ if(state.kind!=='synthetic'&&(!safeLink(p.source_url)||!p.source_name))return null;
+ return {lat:lat,lon:lon,site_id:p.site_id.slice(0,120),name:String(p.name||p.site_id).slice(0,160),topic:p.topic,metric:p.metric.slice(0,100),value:p.value,unit:p.unit.slice(0,30),date:p.observed_at,source_name:String(p.source_name||'Synthetic example').slice(0,100),source_url:safeLink(p.source_url),synthetic:state.kind==='synthetic'};
+}
+function groupData(){
+ const groups=new Map();
+ for(const o of state.features.filter(x=>x.topic===state.topic)){
+  const k=[o.site_id,o.topic,o.metric,o.unit].join('|');
+  if(!groups.has(k))groups.set(k,[]);
+  groups.get(k).push(o);
+ }
+ return [...groups.values()].map(rows=>{
+  rows.sort((a,b)=>a.date.localeCompare(b.date));
+  const from=rows.filter(x=>x.date<=$('fromDate').value).at(-1);
+  const to=rows.filter(x=>x.date<=$('toDate').value).at(-1);
+  return {rows,from,to,anchor:to||from||rows.at(-1)};
+ });
+}
+function makeDemo(){
+ const specs=[
+  ['Example Water Station A','pfas','PFOS',12,8,'ng/L',46.607,-120.517],
+  ['Example Fire Cell B','fire','Hotspot observations',31,18,'detections',46.63,-120.42],
+  ['Example Land Cell C','land','Impervious cover',9,13,'%',46.57,-120.45],
+  ['Example Bridge Segment D','infrastructure','Inspection issues',5,3,'findings',46.59,-120.57]
+ ];
+ const features=[];
+ specs.forEach((x,i)=>{['2023-01-01','2025-10-01'].forEach((date,j)=>{
+   features.push({type:'Feature',geometry:{type:'Point',coordinates:[x[7],x[6]]},properties:{
+    site_id:'SYN-'+(i+1),name:x[0],topic:x[1],metric:x[2],value:x[j===0?3:4],
+    unit:x[5],observed_at:date,source_name:'SYNTHETIC EXAMPLE ONLY',source_url:null
+   }});
+ });});
+ return {type:'FeatureCollection',features};
+}
+function loadCollection(data,kind){
+ if(!data||data.type!=='FeatureCollection'||!Array.isArray(data.features))throw Error('Expected a GeoJSON FeatureCollection.');
+ if(data.features.length>25000)throw Error('Maximum 25,000 features per import.');
+ const previous=state.kind;
+ state.kind=kind;
+ const valid=data.features.map(norm).filter(Boolean);
+ if(!valid.length){state.kind=previous;throw Error('No valid observations. Check topic, site_id, metric, numeric value, unit, date, and HTTPS source fields.');}
+ state.features=valid;state.ledger=[];state.ledgerSource=null;
+ $('modeFlag').textContent=kind==='synthetic'?'SYNTHETIC DEMONSTRATION':'SOURCE-LINKED / NOT VERIFIED';
+ $('overlayMode').textContent=kind==='synthetic'?'SIMULATED DATA · NOT REAL RESULTS':'Imported observations · unverified';
+ $('uploadStatus').textContent='Loaded '+valid.length+' valid observations. '+(data.features.length-valid.length)+' rejected. '+(kind==='synthetic'?'These are invented example numbers.':'Check source records before publishing.');
+ render();
+}
+function loadLedger(data){
+ if(!data||data.schema!=='evercraft.earth.ucmr5-evidence-ledger.v1'||!Array.isArray(data.records))throw Error('Expected an EPA UCMR 5 evidence ledger.');
+ if(!data.records.length||data.records.length>25000)throw Error('Ledger must contain 1–25,000 observations.');
+ if(!data.source||!/^([a-f0-9]{64})$/.test(data.source.original_file_sha256||''))throw Error('Missing source file fingerprint.');
+ if(data.source.url!=='https://www.epa.gov/dwucmr/occurrence-data-unregulated-contaminant-monitoring-rule')throw Error('Unrecognized EPA data source URL.');
+ const records=data.records.map((r,i)=>{
+  if(!r||!['quantified','below_reporting_limit'].includes(r.result_status))throw Error('Bad result state at record '+(i+1));
+  if(r.latitude!==null||r.longitude!==null||r.geolocation_status!=='not_geocoded')throw Error('Unverified geolocation at record '+(i+1));
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(r.observed_at||'')||isNaN(Date.parse(r.observed_at+'T00:00:00Z')))throw Error('Invalid observation date');
+  if(!r.pws_id||!r.pws_name||!r.sample_id||!r.contaminant||!r.sample_point_id)throw Error('Incomplete EPA identifiers at record '+(i+1));
+  if(typeof r.reporting_limit!=='number'||!Number.isFinite(r.reporting_limit)||r.reporting_limit<=0)throw Error('Invalid reporting limit');
+  if(r.result_status==='quantified'&&(!Number.isFinite(r.value)||r.value<r.reporting_limit))throw Error('Invalid quantified value');
+  if(r.result_status==='below_reporting_limit'&&r.value!==null)throw Error('Below-limit result must not contain measured numeric value');
+  if(typeof r.unit!=='string'||!r.unit.trim())throw Error('Missing unit');
+  return {pws_id:String(r.pws_id).slice(0,80),pws_name:String(r.pws_name).slice(0,160),
+    sample_id:String(r.sample_id).slice(0,80),sample_point_id:String(r.sample_point_id).slice(0,80),
+    contaminant:String(r.contaminant).slice(0,60),observed_at:r.observed_at,
+    result_status:r.result_status,value:r.value,reporting_limit:r.reporting_limit,
+    unit:r.unit.slice(0,30),source_row:r.source_row};
+ });
+ state.kind='epa-ledger';state.features=[];state.ledger=records;state.ledgerSource=data.source;
+ $('modeFlag').textContent='EPA EVIDENCE / NOT GEOCODED';
+ $('overlayMode').textContent='EPA tabular data · no verified map positions';
+ $('uploadStatus').textContent='Imported '+records.length+' EPA observations with '+data.source.original_file_sha256.slice(0,12)+'… source fingerprint. No location points inferred.';
+ render();
+}
+function renderLedger(){
+ $('pointCount').textContent='0';$('pairCount').textContent='0';drawMarkers([]);
+ $('mapStatus').textContent='EPA ledger: no verified sample-point coordinates';
+ $('topicBadge').textContent='EPA UCMR 5';
+ const list=$('findings');list.replaceChildren();
+ if($('fromDate').value>$('toDate').value){$('summary').textContent='Earlier snapshot must not be later than the later snapshot.';return;}
+ if(state.topic!=='pfas'){$('summary').textContent='Imported EPA UCMR 5 records cover the PFAS layer only. No evidence loaded for this other layer.';return;}
+ const rows=state.ledger.filter(r=>r.observed_at>=$('fromDate').value&&r.observed_at<=$('toDate').value)
+   .sort((a,b)=>b.observed_at.localeCompare(a.observed_at));
+ const detects=rows.filter(r=>r.result_status==='quantified').length;
+ $('summary').textContent=rows.length+' EPA sample/analyte records in date window: '+detects+' quantified, '+(rows.length-detects)+' below reporting limit. No geolocation, compliance determination, or household-level claim.';
+ if(!rows.length){list.append(elt('div','finding','No imported records in this date window. This is not evidence of no contamination.'));return;}
+ const visible=rows.slice(0,100);
+ for(const r of visible){
+  const box=elt('div','finding');
+  box.append(elt('h3','',r.pws_name+' · '+r.contaminant));
+  box.append(elt('div',r.result_status==='quantified'?'delta':'delta unknown',
+   r.result_status==='quantified'?r.value+' '+r.unit:'Below reporting limit (< '+r.reporting_limit+' '+r.unit+')'));
+  box.append(elt('small','',r.observed_at+' · System '+r.pws_id+' · Entry point '+r.sample_point_id+' · Sample '+r.sample_id));
+  box.append(elt('div','small muted','Not geocoded · Not a tap-water reading · Unverified imported record'));
+  const link=elt('a','small','EPA source dataset ↗');link.href=state.ledgerSource.url;link.target='_blank';link.rel='noopener noreferrer';box.append(link);
+  list.append(box);
+ }
+ if(rows.length>visible.length)list.append(elt('p','small muted','Only the first 100 of '+rows.length+' matching records are shown. Narrow the imported subset or date window for full review.'));
+}
+function render(){
+ if(state.kind==='epa-ledger')return renderLedger();
+ const groups=groupData();
+ $('topicBadge').textContent=topics[state.topic];
+ $('pointCount').textContent=String(groups.filter(g=>g.to).length);
+ const comparable=groups.filter(g=>g.from&&g.to&&g.from.date<g.to.date);
+ $('pairCount').textContent=String(comparable.length);
+ $('mapStatus').textContent=state.kind==='empty'?'No observations loaded':groups.length+' observation series · '+topics[state.topic];
+ const list=$('findings');list.replaceChildren();
+ if($('fromDate').value>$('toDate').value){$('summary').textContent='Earlier snapshot must not be later than the later snapshot.';drawMarkers([]);return;}
+ if(!groups.length){$('summary').textContent='No '+topics[state.topic].toLowerCase()+' observations loaded. This is a coverage gap, not evidence of safety.';drawMarkers([]);return;}
+ $('summary').textContent=comparable.length+' paired comparisons from '+groups.length+' series. Observations without two distinct dated samples remain inconclusive.';
+ for(const g of groups){
+  const a=g.anchor;
+  const box=elt('div','finding');const btn=elt('button');
+  const h=elt('h3','',a.name+' · '+a.metric);btn.append(h);
+  const valid=g.from&&g.to&&g.from.date<g.to.date;
+  const d=valid?g.to.value-g.from.value:null;
+  const sign=d>0?'+':'';
+  const delta=elt('div',valid?'delta':'delta unknown',valid?sign+Number(d.toPrecision(6))+' '+a.unit:'Insufficient dated evidence');
+  btn.append(delta);
+  btn.append(elt('small','',valid?g.from.date+' ('+g.from.value+') → '+g.to.date+' ('+g.to.value+')': 'Requires separate earlier and later observations'));
+  btn.addEventListener('click',()=>{if(state.map)state.map.setView([a.lat,a.lon],12);});
+  box.append(btn);
+  const detail=elt('div','small muted','Coverage: '+g.rows.length+' record(s) · '+(a.synthetic?'SYNTHETIC / invented':'Uploaded / not independently verified'));
+  box.append(detail);
+  if(a.source_url){const link=elt('a','small','Source: '+a.source_name+' ↗');link.href=a.source_url;link.rel='noopener noreferrer';link.target='_blank';box.append(link);}
+  list.append(box);
+ }
+ drawMarkers(groups.filter(g=>g.to));
+}
+function drawMarkers(groups){
+ if(!state.map)return;
+ state.markers.clearLayers();
+ groups.forEach(g=>{
+  const a=g.to;
+  const color=a.synthetic?'#f2c879':'#79e4dc';
+  const marker=L.circleMarker([a.lat,a.lon],{radius:9,color:'#07141b',weight:2,fillColor:color,fillOpacity:0.9}).addTo(state.markers);
+  const popup=elt('div');
+  popup.append(elt('b','',a.name),elt('div','',a.metric+': '+a.value+' '+a.unit),elt('div','',a.date));
+  popup.append(elt('small','',a.synthetic?'INVENTED DEMO VALUE':'Uploaded · not independently verified'));
+  if(a.source_url){const link=elt('a','',' Source ↗');link.href=a.source_url;link.target='_blank';link.rel='noopener noreferrer';popup.append(link);}
+  marker.bindPopup(popup);marker.on('click',()=>{const boxes=$('findings').querySelectorAll('.finding');for(const box of boxes){if(box.textContent.includes(a.name)){box.scrollIntoView({block:'nearest',behavior:'smooth'});break;}}});
+ });
+}
+function center(){const c=centers[$('place').value];if(state.map)state.map.setView([c[0],c[1]],c[2]);}
+function saveTemplate(){
+ const demo=makeDemo();
+ demo.features.forEach(f=>{f.properties.source_name='Replace with the publishing agency';f.properties.source_url='https://www.epa.gov/dwucmr/occurrence-data-unregulated-contaminant-monitoring-rule';});
+ const b=new Blob([JSON.stringify(demo,null,2)],{type:'application/geo+json'});
+ const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='evercraft-earth-EXAMPLE-NOT-REAL-DATA.geojson';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+}
+$('place').addEventListener('change',center);$('resetView').addEventListener('click',center);
+$('fromDate').addEventListener('change',render);$('toDate').addEventListener('change',render);
+$('layers').querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
+ state.topic=b.dataset.topic;$('layers').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));render();
+}));
+$('demo').addEventListener('click',()=>{loadCollection(makeDemo(),'synthetic');$('fromDate').value='2023-01-01';$('toDate').value='2026-10-23';$('place').value='yakima';center();render();});
+$('clear').addEventListener('click',()=>{state.features=[];state.ledger=[];state.ledgerSource=null;state.kind='empty';$('modeFlag').textContent='NO VERIFIED DATA LOADED';$('overlayMode').textContent='Coverage unknown ≠ no risk';$('uploadStatus').textContent='All observations cleared from this browser session.';render();});
+$('upload').addEventListener('click',()=>$('file').click());
+$('file').addEventListener('change',async e=>{
+ const file=e.target.files[0];if(!file)return;
+ try{if(file.size>5*1024*1024)throw Error('File exceeds 5 MB pilot limit.');const data=JSON.parse(await file.text());if(data.schema==='evercraft.earth.ucmr5-evidence-ledger.v1')loadLedger(data);else loadCollection(data,'imported');}catch(err){$('uploadStatus').textContent='Import failed: '+err.message;}finally{e.target.value='';}
+});
+$('template').addEventListener('click',saveTemplate);
+if(typeof L==='undefined'){$('mapStatus').textContent='Map library unavailable; evidence list can still be used.';}
+else{
+ const c=centers.yakima;
+ state.map=L.map('map',{zoomControl:true}).setView([c[0],c[1]],c[2]);
+ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'© OpenStreetMap contributors'}).addTo(state.map);
+ state.markers=L.layerGroup().addTo(state.map);
+}
+render();
+})();
+</script>
+</body>
+</html>

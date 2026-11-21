@@ -1,0 +1,22 @@
+{
+  "schema_note": "Illustrative headers only; replace after inspecting the official CSV and data dictionary. This is NOT a Washington DOH mapping.",
+  "columns": {
+    "site_id": "Source ID",
+    "name": "Source Name",
+    "observed_at": "Sample Date",
+    "latitude": "Latitude",
+    "longitude": "Longitude",
+    "value": "Reported Numeric Value",
+    "qualifier": "Result Qualifier"
+  },
+  "fixed": {
+    "topic": "pfas",
+    "metric": "PFOS",
+    "unit": "ng/L",
+    "source_name": "Replace with actual data publisher",
+    "source_url": "https://example.org/replace-with-official-dataset"
+  },
+  "allowed_qualifiers": [
+    "DETECTED"
+  ]
+}
