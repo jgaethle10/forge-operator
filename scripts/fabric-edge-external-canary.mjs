@@ -5,6 +5,7 @@ import net from 'node:net';
 import { createHash, randomBytes } from 'node:crypto';
 import { verifyNodeAttestation } from '../systemia/compute/device-identity.mjs';
 import { classifyPublicEdgeIngress } from '../systemia/network/public-edge-ingress-watch.mjs';
+import { classifyFabricCommerceCheckout } from '../systemia/mcp/fabric-commerce-edge-health.mjs';
 
 const sha=(value)=>'sha256:'+createHash('sha256').update(
   typeof value==='string'?value:JSON.stringify(value)
@@ -670,15 +671,9 @@ try{
   if(health.read_only!==true||health.transactional!==false||health.external_action_authority!==false){
     throw new Error('fabric_authority_boundary_failed');
   }
-  if(
-    health.mcp_read_only!==true||
-    health.human_offer_checkout_enabled!==true||
-    health.human_offer_checkout_requires_explicit_confirmation!==true||
-    health.human_offer_checkout_handoff_mode!=='explicit_evercraft_page'||
-    health.payment_authority!=='Evercraft Payments'||
-    health.payment_router!=='Raven Nexus'
-  ){
-    throw new Error('fabric_human_commerce_boundary_failed');
+  const commerceBoundary=classifyFabricCommerceCheckout(health);
+  if(!commerceBoundary.ok){
+    throw new Error('fabric_human_commerce_boundary_failed:'+commerceBoundary.reason);
   }
   if(health.base44_transport_enabled!==false) throw new Error('base44_transport_enabled');
   if(health.aliev_public_path!=='/aliev'){
@@ -708,6 +703,10 @@ try{
     transactional:false,
     external_action_authority:false,
     base44_transport_enabled:false,
+    checkout_boundary_state:commerceBoundary.state,
+    checkout_route_ready:commerceBoundary.checkout_route_ready,
+    checkout_payment_verified:false,
+    checkout_fulfillment_verified:false,
     aliev_public_path:health.aliev_public_path,
     edge_attestation_supported:health.edge_attestation_supported===true,
     mobile_path:health.mobile_path,

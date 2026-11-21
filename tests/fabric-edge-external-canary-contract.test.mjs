@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import { classifyFabricCommerceCheckout } from '../systemia/mcp/fabric-commerce-edge-health.mjs';
 
 const script=fs.readFileSync('scripts/fabric-edge-external-canary.mjs','utf8');
 
@@ -140,4 +141,73 @@ test('FAIE AgNormal external proof executes a bounded live decision packet and p
 test('FAIE external health metadata exposes the clean design-partner path',()=>{
   assert.ok(script.includes("faieHealth.design_partner_surface!=='/faie/agnormal/'"));
   assert.ok(script.includes("design_partner_surface:faieHealth.design_partner_surface"));
+});
+
+
+const heldCommerceHealth={
+  mcp_read_only:true,
+  human_offer_checkout_enabled:false,
+  human_offer_checkout_requires_explicit_confirmation:true,
+  human_offer_checkout_handoff_mode:'explicit_evercraft_page',
+  payment_authority:'Evercraft Payments',
+  payment_router:'Raven Nexus',
+  base44_transport_enabled:false,
+  checkout_legacy_dependency:false,
+  checkout_operational_state:'held_owned_payment_endpoint_unconfigured',
+  checkout_purchase_intent_configured:false,
+  checkout_direct_offer_ops_configured:false,
+  checkout_provider_paid_verified:false,
+  checkout_fulfillment_verified:false,
+};
+
+test('public Fabric canary treats explicitly held checkout as online, not paid',()=>{
+  const result=classifyFabricCommerceCheckout(heldCommerceHealth);
+  assert.deepEqual(result,{
+    ok:true,state:'checkout_held_no_charge',checkout_route_ready:false,
+    payment_verified:false,fulfillment_verified:false,
+  });
+  assert.ok(script.includes('classifyFabricCommerceCheckout(health)'));
+  assert.ok(script.includes('checkout_boundary_state:commerceBoundary.state'));
+});
+
+test('public Fabric canary requires both owned payment endpoints when enabled',()=>{
+  const configured={
+    ...heldCommerceHealth,
+    human_offer_checkout_enabled:true,
+    checkout_operational_state:'owned_checkout_route_configured',
+    checkout_purchase_intent_configured:true,
+    checkout_direct_offer_ops_configured:true,
+  };
+  const result=classifyFabricCommerceCheckout(configured);
+  assert.equal(result.ok,true);
+  assert.equal(result.checkout_route_ready,true);
+  assert.equal(result.payment_verified,false);
+  assert.equal(result.fulfillment_verified,false);
+  for(const broken of [
+    {...configured,checkout_purchase_intent_configured:false},
+    {...configured,checkout_direct_offer_ops_configured:false},
+    {...configured,checkout_operational_state:'held_owned_payment_endpoint_unconfigured'},
+  ]){
+    assert.equal(classifyFabricCommerceCheckout(broken).ok,false);
+  }
+});
+
+test('public Fabric canary rejects inconsistent or insecure checkout holds',()=>{
+  const overrides=[
+    {human_offer_checkout_enabled:true},
+    {checkout_purchase_intent_configured:true},
+    {checkout_direct_offer_ops_configured:true},
+    {checkout_provider_paid_verified:true},
+    {checkout_fulfillment_verified:true},
+    {checkout_legacy_dependency:true},
+    {base44_transport_enabled:true},
+    {human_offer_checkout_requires_explicit_confirmation:false},
+    {payment_authority:'Stripe'},
+    {payment_router:'direct_stripe'},
+    {checkout_operational_state:'unknown'},
+  ];
+  for(const override of overrides){
+    const result=classifyFabricCommerceCheckout({...heldCommerceHealth,...override});
+    assert.equal(result.ok,false,JSON.stringify(override));
+  }
 });
