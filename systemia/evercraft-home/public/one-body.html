@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#101311">
+<meta name="referrer" content="no-referrer">
+<title>Evercraft | One Body</title>
+<style>
+:root{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#171a17;background:#efeee9}
+*{box-sizing:border-box}body{margin:0}.top{background:#101311;color:#f1f1e8;display:flex;justify-content:space-between;align-items:center;gap:14px;padding:18px clamp(18px,5vw,70px);position:sticky;top:0;z-index:5}
+.brand{font-size:12px;font-weight:800;letter-spacing:.18em}.brand span{font-size:11px;font-weight:450;color:#aaa99f;letter-spacing:normal;margin-left:12px}.top a{color:#dadacf;text-decoration:none;border:1px solid #4a4d46;border-radius:6px;padding:9px 14px;font-size:12px}
+main{max-width:1500px;margin:auto;padding:clamp(20px,4vw,55px)}.eyebrow{font-size:10px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:#686c60}
+h1{font:400 clamp(42px,6vw,82px)/1.05 Georgia,serif;letter-spacing:-.04em;margin:15px 0 18px}p{line-height:1.6;color:#626760}.intro{max-width:720px;font-size:16px}
+.controls{display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin:30px 0 18px}.status{padding:11px 14px;background:#e2e0d7;border:1px solid #c4c6b9;border-radius:7px;font-size:12px;font-weight:700}.status.good{background:#dfeae1;color:#234d35}.status.bad{background:#f0dfd9;color:#77392c}.status.wait{background:#e5e3de;color:#51554e}
+button{font:inherit;font-size:12px;padding:11px 17px;cursor:pointer;background:#171b18;color:#faf9f5;border:1px solid #171b18;border-radius:6px}button.secondary{background:transparent;color:#2e352d;border-color:#b8bcb2}button:disabled{opacity:.5;cursor:not-allowed}
+.stamp{font-size:11px;color:#6f736c}.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:#c9ccc3;border:1px solid #c9ccc3;margin:16px 0 26px}.metric{background:#f8f7f2;padding:20px}.metric label{display:block;text-transform:uppercase;color:#656b60;font-size:10px;letter-spacing:.1em;font-weight:700}.metric b{font:400 38px Georgia,serif;display:block;margin-top:9px}.metric em{display:block;font-style:normal;color:#85887e;font-size:11px;margin-top:8px}
+.panel{border:1px solid #d4d5cb;background:#f8f7f2;padding:22px;border-radius:10px}.split{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(275px,.75fr);gap:20px}.panel h2{font:400 26px Georgia,serif;margin:0}.panel .sub{font-size:12px;color:#75786f;margin:7px 0 14px}
+.plot{width:100%;height:430px;border-radius:7px;background:radial-gradient(circle at 30% 10%,#22312b 0%,#121a17 50%,#0d1311 100%);overflow:auto;position:relative}
+svg{width:100%;min-width:620px;height:430px;display:block}.edge{fill:none;stroke:#6f8d79;stroke-opacity:.38;stroke-width:1.2}.edge.unobserved_overdue{stroke:#f0be82;stroke-width:2;stroke-dasharray:6 5;stroke-opacity:.9}.edge.planned_unverified{stroke:#829494;stroke-dasharray:3 6}.edge.consumer_receipt_verified{stroke:#8bf0c0;stroke-width:2.5;stroke-opacity:.9}
+.node{cursor:pointer;outline:none}.node rect{fill:#1c3027;stroke:#6d8875;stroke-width:1.2;rx:9}.node.event rect{fill:#2b3328;stroke:#a4a889}.node.coordinator rect{fill:#2c4938;stroke:#94bca1}.node.lane rect{fill:#192a34;stroke:#7f99ad}.node:focus rect,.node.selected rect{stroke:#edf9c1;stroke-width:2.6}.node text{font-size:11px;fill:#ecf5ed;pointer-events:none}.node .subtitle{fill:#b6c7b9;font-size:9px}
+.legend{display:flex;gap:14px;flex-wrap:wrap;margin:12px 0 0;font-size:11px;color:#686f65}.swatch{display:inline-block;width:17px;height:3px;vertical-align:middle;margin-right:5px;background:#87979a}.swatch.overdue{background:#e9b97f}.swatch.ack{background:#4fb98a}
+.details{border-top:1px solid #d9d9d1;padding-top:16px;margin-top:18px;min-height:65px;font-size:12px;color:#656961}.details strong{color:#222b22}
+.gaps{display:grid;gap:8px;margin-top:16px;max-height:400px;overflow:auto}.gap{border:1px solid #d8d9cf;background:#f3f2ec;border-radius:6px;padding:12px;font-size:12px;overflow-wrap:anywhere}.gap b{display:block;color:#383e34;font-size:11px;margin-bottom:5px}.gap.overdue{border-left:4px solid #c99854}.gap.verified{border-left:4px solid #568f67}
+.empty{color:#92978b;font-size:13px;padding:80px 28px;text-align:center}.notice{margin-top:22px;border-top:1px solid #d3d6ce;padding-top:16px;font-size:12px;color:#797d73;line-height:1.6}
+.small{font-size:11px;color:#788075}a{color:#2b583a}
+@media(max-width:980px){.split{grid-template-columns:1fr}.plot{height:380px}svg{height:380px}.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:540px){.brand span{display:block;margin:4px 0 0}.top{padding:14px 18px}.top a{font-size:11px}.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.metric{padding:13px}.metric b{font-size:29px}.panel{padding:15px}main{padding:18px}h1{font-size:44px}}
+</style>
+</head>
+<body>
+<header class="top"><div class="brand">EVERCRAFT <span>PRIVATE SYSTEMIA CONTROL ROOM</span></div><a href="/">Home</a></header>
+<main>
+<section>
+<div class="eyebrow">Systemia / Operating Body / Evidence</div>
+<h1>One body. Visible connections.</h1>
+<p class="intro">What was routed, which consumers actually acknowledged it, and what has gone unobserved. A receipt proves inbox acceptance, not finished work. Nothing here grants permission to execute.</p>
+<div class="controls">
+<span class="status wait" id="state" role="status" aria-live="polite">Checking access…</span>
+<button id="refresh" type="button">Refresh snapshot</button>
+<button id="auto" class="secondary" type="button" aria-pressed="true">Auto-refresh: on</button>
+<span id="seen" class="stamp">No authorized snapshot retrieved</span>
+</div>
+</section>
+<section class="metrics" aria-label="Observed snapshot handoffs">
+<div class="metric"><label>Routed handoffs</label><b id="count-handoffs">—</b><em>Plans, not deliveries</em></div>
+<div class="metric"><label>Unverified</label><b id="count-unverified">—</b><em>Missing accepted receipt</em></div>
+<div class="metric"><label>Overdue observation</label><b id="count-overdue">—</b><em>Unknown, not necessarily failed</em></div>
+<div class="metric"><label>Verified consumer ACK</label><b id="count-verified">—</b><em>Inbox acceptance only</em></div>
+</section>
+<div class="split">
+<section class="panel">
+<h2>Handoff topology</h2><p class="sub">Persisted routes and observed consumer acknowledgements. Select a node to inspect connections.</p>
+<div class="plot" id="plot" aria-label="Read-only system handoff graph"><div class="empty">No verified snapshot yet. The graph will appear only after authenticated retrieval.</div></div>
+<div class="legend"><span><i class="swatch"></i>Unverified</span><span><i class="swatch overdue"></i>Overdue without observation</span><span><i class="swatch ack"></i>Consumer ACK verified</span></div>
+<div id="details" class="details" aria-live="polite">Choose a graph node to inspect its declared status.</div>
+</section>
+<aside class="panel">
+<h2>Where work stops</h2>
+<p class="sub">The first 12 unconfirmed handoffs in this sampled snapshot.</p>
+<div id="gaps" class="gaps"><p class="small">Awaiting an authorized read.</p></div>
+<div class="notice"><strong>Truth boundary.</strong> This page reads the protected Evercraft Home API using your current signed-in session. An API response is not evidence that Node001, NextGen, or specialists are online. No simulated activity, buyer details, payment authority, or execution control is shown. An unavailable or revoked snapshot clears the display.</div>
+</aside>
+</div>
+</main>
+<script>
+'use strict';
+const API='/api/systemia/one-body/snapshot';
+const SVG='http://www.w3.org/2000/svg';
+const by=id=>document.getElementById(id);
+let active=true,busy=false,last=null;
+const escCount=n=>Number.isSafeInteger(n)&&n>=0?n.toLocaleString():'—';
+function status(label,mode){
+ const el=by('state');el.textContent=label;el.className='status '+(mode||'wait');
+}
+function clear(message){
+ last=null;
+ for(const id of ['handoffs','unverified','overdue','verified'])by('count-'+id).textContent='—';
+ by('plot').replaceChildren();
+ const empty=document.createElement('div');empty.className='empty';empty.textContent=message;
+ by('plot').append(empty);
+ by('details').textContent='No current authorized snapshot to inspect.';
+ by('gaps').replaceChildren();
+ const p=document.createElement('p');p.className='small';p.textContent=message;by('gaps').append(p);
+ by('seen').textContent='No current authorized snapshot';
+}
+function setText(el,text){el.textContent=String(text==null?'':text)}
+function svg(tag,attrs={},text){
+ const e=document.createElementNS(SVG,tag);
+ for(const [k,v] of Object.entries(attrs))e.setAttribute(k,String(v));
+ if(text!=null)e.textContent=String(text);
+ return e;
+}
+function showDetails(n,edges){
+ const connected=edges.filter(e=>e.from===n.id||e.to===n.id);
+ by('details').replaceChildren();
+ const b=document.createElement('strong');setText(b,n.name||'Unnamed node');by('details').append(b);
+ const p=document.createElement('p');setText(p,(n.kind||'unclassified')+' · '+(n.status||'unknown')+' · '+connected.length+' declared connections');by('details').append(p);
+}
+function draw(data){
+ const host=by('plot');host.replaceChildren();
+ const nodes=data.nodes.slice(0,70).filter(n=>n&&typeof n.id==='string');
+ const ids=new Set(nodes.map(n=>n.id));
+ const edges=data.edges.slice(0,160).filter(e=>e&&ids.has(e.from)&&ids.has(e.to));
+ if(!nodes.length){const div=document.createElement('div');div.className='empty';div.textContent='The authorized state has no sampled graph nodes.';host.append(div);return}
+ const lanes={coordinator:[],product:[],event:[],lane:[],other:[]};
+ for(const node of nodes){const kind=Object.hasOwn(lanes,node.kind)?node.kind:'other';lanes[kind].push(node)}
+ const positions=new Map();const dimensions={w:960,h:460};
+ const columns=[['coordinator',95],['product',280],['event',485],['lane',720],['other',900]];
+ for(const [kind,x] of columns){
+  const group=lanes[kind],height=Math.max(1,group.length);
+  group.forEach((n,i)=>positions.set(n.id,{x,y:Math.round(60+(i+.5)*Math.min(340/height,62)),kind}));
+ }
+ const content=svg('svg',{viewBox:'0 0 960 460',role:'img','aria-label':'One-Body routes and acknowledgements'});
+ const labels=svg('g');for(const [kind,x] of columns.slice(0,4))labels.append(svg('text',{x,y:30,fill:'#9ebba6','font-size':12,'font-weight':'700','text-anchor':'middle'},kind.toUpperCase()));
+ content.append(labels);
+ const connections=svg('g');
+ for(const e of edges){
+  const a=positions.get(e.from),b=positions.get(e.to);
+  if(!a||!b)continue;
+  const start=a.x+68,end=b.x-68;
+  const d='M '+start+' '+a.y+' C '+(start+end)/2+' '+a.y+', '+(start+end)/2+' '+b.y+', '+end+' '+b.y;
+  const statusClass=['unobserved_overdue','planned_unverified','consumer_receipt_verified'].includes(e.relationship)?e.relationship:'';
+  connections.append(svg('path',{d,class:'edge '+statusClass}));
+ }
+ content.append(connections);
+ const all=svg('g');
+ for(const n of nodes){
+  const p=positions.get(n.id);if(!p)continue;
+  const group=svg('g',{class:'node '+p.kind,transform:'translate('+(p.x-68)+','+(p.y-19)+')',tabindex:'0',role:'button','aria-label':String(n.name||'Node')});
+  group.append(svg('rect',{width:136,height:38}));
+  const label=String(n.name||'Unnamed').slice(0,21);
+  group.append(svg('text',{x:68,y:17,'text-anchor':'middle'},label));
+  group.append(svg('text',{x:68,y:30,'text-anchor':'middle',class:'subtitle'},String(n.status||'unverified').slice(0,25)));
+  const select=()=>{content.querySelectorAll('.node').forEach(x=>x.classList.remove('selected'));group.classList.add('selected');showDetails(n,edges)};
+  group.addEventListener('click',select);
+  group.addEventListener('keydown',ev=>{if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();select()}});
+  all.append(group);
+ }
+ content.append(all);host.append(content);showDetails(nodes[0],edges);
+}
+function render(data){
+ last=data;
+ const counts=data.summary?.counts||{};
+ for(const [id,key] of [['handoffs','handoffs'],['unverified','unverified'],['overdue','unobserved_overdue'],['verified','consumer_receipt_verified']])
+  by('count-'+id).textContent=escCount(counts[key]);
+ draw(data);
+ const target=by('gaps');target.replaceChildren();
+ const samples=Array.isArray(data.summary?.gap_samples)?data.summary.gap_samples.slice(0,12):[];
+ if(!samples.length){const p=document.createElement('p');p.className='small';p.textContent='No unconfirmed handoffs in the current sample. This does not establish runtime health.';target.append(p)}
+ for(const x of samples){
+  const item=document.createElement('div');item.className='gap '+(x.status==='unobserved_overdue'?'overdue':'');
+  const b=document.createElement('b');b.textContent=String(x.status||'unverified').replaceAll('_',' ');item.append(b);
+  const p=document.createElement('span');p.textContent=String(x.event_id||'opaque event')+' → '+String(x.lane||'unknown lane');item.append(p);target.append(item);
+ }
+ const source=typeof data.observed_at==='string'?data.observed_at:'unknown time';
+ by('seen').textContent='Snapshot observed '+source+(data.summary?.sample_truncated?' · recent sample only':'');
+ status('Snapshot received · runtime unverified','good');
+}
+async function refresh(){
+ if(busy||document.hidden)return;
+ busy=true;by('refresh').disabled=true;
+ status('Checking authorized snapshot…','wait');
+ try{
+  const response=await fetch(API,{method:'GET',credentials:'same-origin',cache:'no-store',redirect:'error',
+   headers:{accept:'application/json'},signal:AbortSignal.timeout(9000)});
+  if(!response.ok){
+   clear(response.status===401?'Sign in to Evercraft Home to view One-Body.':response.status===403?'Current Passport grant does not permit this view.':response.status===503?'One-Body runtime snapshot is not configured or unavailable.':'Could not retrieve an authorized snapshot.');
+   status(response.status===401?'Sign-in required':response.status===403?'Access denied':response.status===503?'Runtime not connected':'Read unavailable','bad');
+   return;
+  }
+  const payload=await response.json();
+  if(payload?.ok!==true||payload.schema!=='evercraft.one-body.home-snapshot.v1'||payload.execution_authority_granted!==false)
+   throw Error('invalid_authorized_response');
+  const data=payload.snapshot;
+  if(!data||data.schema!=='evercraft.systemia.visual-snapshot.v1'||
+    !Array.isArray(data.nodes)||!Array.isArray(data.edges)||!Array.isArray(data.receipts)||
+    data.nodes.length>500||data.edges.length>1000||data.receipts.length>2000)
+   throw Error('unsupported_snapshot');
+  render(data);
+ }catch(e){clear('No current authorized snapshot. Check Home connectivity and permissions.');status('Read unavailable','bad')}
+ finally{busy=false;by('refresh').disabled=false}
+}
+by('refresh').addEventListener('click',refresh);
+by('auto').addEventListener('click',()=>{
+ active=!active;by('auto').textContent='Auto-refresh: '+(active?'on':'off');by('auto').setAttribute('aria-pressed',String(active));
+ if(active)refresh();
+});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&active)refresh()});
+setInterval(()=>{if(active&&!document.hidden)refresh()},30000);
+refresh();
+</script>
+</body></html>

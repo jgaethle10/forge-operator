@@ -1,0 +1,203 @@
+import assert from 'node:assert/strict';
+import { buildOneBodyVisualSnapshot } from './one-body-visibility.mjs';
+import { recordBodyLaneAcknowledgement } from './one-body.mjs';
+import { generateKeyPairSync, sign } from 'node:crypto';
+import { bodyLaneReceiptSigningMessage, verifySignedBodyLaneReceipt } from './one-body-lane-signature.mjs';
+
+import { execFileSync } from 'node:child_process';
+import { mkdtempSync,writeFileSync,rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const observedAt='2026-11-04T23:00:00Z';
+const privateEventId='customer-personal-private-identifer-123';
+const privateReceiptId='payment-private-receipt-789';
+const state={
+  schema:'evercraft.one-body.state.v1',
+  events:{
+    [privateEventId]:{
+      event_id:privateEventId,product_key:'forensiscope',
+      occurred_at:'2026-11-04T21:00:00Z',
+      lanes:['context_fabric','organism_goal_runtime'],source_ref:'private-source-ref',
+    },
+    recent:{
+      event_id:'recent',product_key:'evercraft-clip',
+      occurred_at:'2026-11-04T22:55:00Z',
+      lanes:['signal_fabric'],
+    },
+  },
+  opportunities:{},products:{},lane_queues:{},
+};
+const base={state,observedAt,overdueAfterMs:60*60*1000};
+const withoutProof=buildOneBodyVisualSnapshot(base);
+assert.equal(withoutProof.schema,'evercraft.systemia.visual-snapshot.v1');
+assert.equal(withoutProof.summary.counts.handoffs,3);
+assert.equal(withoutProof.summary.counts.unobserved_overdue,2);
+assert.equal(withoutProof.summary.counts.unverified,3);
+assert.equal(withoutProof.summary.counts.consumer_receipt_verified,0);
+assert.equal(withoutProof.summary.verified_runtime_health,false);
+assert.equal(withoutProof.summary.payment_verified,false);
+assert.equal(withoutProof.summary.execution_authority_granted,false);
+assert.ok(withoutProof.nodes.some(x=>x.kind==='event'));
+assert.ok(withoutProof.nodes.some(x=>x.kind==='lane'));
+assert.ok(withoutProof.edges.some(x=>x.relationship==='unobserved_overdue'));
+assert.ok(withoutProof.edges.some(x=>x.relationship==='planned_unverified'));
+assert.equal(withoutProof.receipts.length,0);
+assert.ok(withoutProof.nodes.length<=60);
+assert.ok(withoutProof.edges.length<=160);
+const json=JSON.stringify(withoutProof);
+assert.ok(!json.includes(privateEventId),'raw event identity must not leak');
+assert.ok(!json.includes('private-source-ref'),'source references must not leak');
+assert.ok(!json.includes(privateReceiptId),'receipt refs must not leak');
+assert.ok(!withoutProof.summary.gap_samples.some(x=>x.event_id===privateEventId));
+
+const receipt={
+  schema:'evercraft.one-body.lane-consumer-receipt.v1',
+  event_id:privateEventId, lane:'context_fabric',receipt_ref:privateReceiptId,
+  observed_at:'2026-11-04T22:10:00Z',
+  verified:true, // The incoming boolean itself provides no authority.
+};
+const supplied=buildOneBodyVisualSnapshot({...base,receiptObservations:[receipt]});
+assert.equal(supplied.summary.counts.consumer_receipt_verified,0);
+const rejected=buildOneBodyVisualSnapshot({...base,receiptObservations:[receipt],verifyReceipt:()=>false});
+assert.equal(rejected.summary.counts.consumer_receipt_verified,0);
+const accepted=buildOneBodyVisualSnapshot({
+  ...base,receiptObservations:[receipt,receipt,
+    {...receipt,lane:'unknown_lane'},
+    {...receipt,observed_at:'2026-11-04T23:10:00Z'},
+    {...receipt,observed_at:'2026-11-04T20:00:00Z'},
+  ],
+  verifyReceipt:(r)=>r.receipt_ref===privateReceiptId && r.event_id===privateEventId && r.lane==='context_fabric',
+});
+assert.equal(accepted.summary.counts.consumer_receipt_verified,1);
+assert.equal(accepted.receipts.length,1);
+assert.equal(accepted.summary.counts.unobserved_overdue,1);
+assert.equal(accepted.summary.counts.unverified,2);
+assert.ok(!JSON.stringify(accepted).includes(privateReceiptId));
+assert.equal(accepted.receipts[0].verification,'trusted_adapter_callback');
+assert.ok(accepted.nodes.every(n=>typeof n.id==='string'&&typeof n.name==='string'));
+assert.ok(accepted.edges.every(e=>typeof e.from==='string'&&typeof e.to==='string'));
+
+
+const verifier=r=>r.receipt_ref===privateReceiptId &&
+  r.event_id===privateEventId && r.lane==='context_fabric';
+assert.throws(()=>recordBodyLaneAcknowledgement(state,receipt,{
+  now:observedAt
+}),/lane_receipt_unverified/);
+assert.throws(()=>recordBodyLaneAcknowledgement(state,{...receipt,lane:'unknown'},{
+  now:observedAt,verifyReceipt:()=>true
+}),/lane_not_routed/);
+assert.throws(()=>recordBodyLaneAcknowledgement(state,{...receipt,observed_at:'2026-11-04T23:10:00Z'},{
+  now:observedAt,verifyReceipt:()=>true
+}),/invalid_lane_receipt_time/);
+const stored=recordBodyLaneAcknowledgement(state,receipt,{
+  now:observedAt,verifyReceipt:verifier
+});
+assert.equal(stored.recorded,true);
+assert.equal(state.lane_acknowledgements,undefined);
+assert.equal(Object.keys(stored.state.lane_acknowledgements).length,1);
+assert.ok(!JSON.stringify(stored.state).includes('"verified":true'));
+assert.equal(recordBodyLaneAcknowledgement(stored.state,receipt,{
+  now:observedAt,verifyReceipt:verifier
+}).recorded,false);
+assert.throws(()=>recordBodyLaneAcknowledgement(stored.state,{
+  ...receipt,receipt_ref:'new-ref',observed_at:'2026-11-04T21:10:00Z'
+},{now:observedAt,verifyReceipt:()=>true}),/stale_lane_receipt/);
+const beforeReverification=buildOneBodyVisualSnapshot({...base,state:stored.state});
+assert.equal(beforeReverification.summary.counts.consumer_receipt_verified,0);
+const afterReverification=buildOneBodyVisualSnapshot({
+  ...base,state:stored.state,verifyReceipt:verifier
+});
+assert.equal(afterReverification.summary.counts.consumer_receipt_verified,1);
+assert.equal(afterReverification.summary.private_acknowledgement_refs_seen,1);
+assert.ok(!JSON.stringify(afterReverification).includes(privateReceiptId));
+
+const {publicKey,privateKey}=generateKeyPairSync('ed25519');
+const keyId='owned-context-consumer-1';
+const claims={
+  schema:'evercraft.one-body.lane-consumer-receipt.v1',
+  event_id:privateEventId,
+  lane:'context_fabric',
+  receipt_ref:'private-signed-ack-ref',
+  observed_at:'2026-11-04T22:20:00Z',
+  signer_key_id:keyId,
+};
+const signedReceipt={
+  ...claims,
+  signature_base64:sign(null,bodyLaneReceiptSigningMessage(claims),privateKey).toString('base64')
+};
+const anchors={
+  [keyId]:{
+    lane:'context_fabric',
+    public_key_pem:publicKey.export({type:'spki',format:'pem'}),
+  }
+};
+const trustedVerify=r=>verifySignedBodyLaneReceipt(r,{trustedConsumers:anchors});
+assert.equal(trustedVerify(signedReceipt),true);
+assert.equal(verifySignedBodyLaneReceipt(signedReceipt),false);
+assert.equal(trustedVerify({...signedReceipt,lane:'signal_fabric'}),false);
+assert.equal(trustedVerify({...signedReceipt,receipt_ref:'tampered'}),false);
+assert.equal(trustedVerify({...signedReceipt,signer_key_id:'unknown'}),false);
+const signedState=recordBodyLaneAcknowledgement(state,signedReceipt,{
+  now:observedAt,verifyReceipt:trustedVerify
+});
+assert.equal(signedState.recorded,true);
+const signedBeforeReverify=buildOneBodyVisualSnapshot({...base,state:signedState.state});
+assert.equal(signedBeforeReverify.summary.counts.consumer_receipt_verified,0);
+const signedAfterReverify=buildOneBodyVisualSnapshot({
+  ...base,state:signedState.state,verifyReceipt:trustedVerify
+});
+assert.equal(signedAfterReverify.summary.counts.consumer_receipt_verified,1);
+assert.ok(!JSON.stringify(signedAfterReverify).includes(claims.receipt_ref));
+assert.equal(buildOneBodyVisualSnapshot({
+  ...base,state:signedState.state,verifyReceipt:()=>false
+}).summary.counts.consumer_receipt_verified,0);
+
+
+const dir=mkdtempSync(join(tmpdir(),'evercraft-onebody-'));
+try {
+  const statePath=join(dir,'onebody.json'),trustPath=join(dir,'trust.json');
+  writeFileSync(statePath,JSON.stringify(signedState.state));
+  const cli=fileURLToPath(new URL('./one-body-visibility.mjs',import.meta.url));
+  const emptyTrust=JSON.parse(execFileSync(process.execPath,[cli,statePath],{encoding:'utf8'}));
+  assert.equal(emptyTrust.summary.counts.consumer_receipt_verified,0);
+  writeFileSync(trustPath,JSON.stringify(anchors));
+  // CLI export time uses the machine's current date; the synthetic event is in the past.
+  const verifiedCli=JSON.parse(execFileSync(process.execPath,[
+    cli,statePath,'--trusted-consumers-file',trustPath
+  ],{encoding:'utf8'}));
+  assert.equal(verifiedCli.summary.counts.consumer_receipt_verified,1);
+  assert.ok(!JSON.stringify(verifiedCli).includes(claims.receipt_ref));
+  writeFileSync(trustPath,JSON.stringify({}));
+  const revokedCli=JSON.parse(execFileSync(process.execPath,[
+    cli,statePath,'--trusted-consumers-file',trustPath
+  ],{encoding:'utf8'}));
+  assert.equal(revokedCli.summary.counts.consumer_receipt_verified,0);
+} finally { rmSync(dir,{recursive:true,force:true}); }
+
+assert.throws(()=>buildOneBodyVisualSnapshot({state:{}}),/invalid_one_body_state/);
+assert.throws(()=>buildOneBodyVisualSnapshot({...base,observedAt:'invalid'}),/invalid_observed_at/);
+assert.throws(()=>buildOneBodyVisualSnapshot({...base,maxEvents:100}),/invalid_event_limit/);
+assert.throws(()=>buildOneBodyVisualSnapshot({...base,overdueAfterMs:0}),/invalid_overdue_threshold/);
+assert.throws(()=>buildOneBodyVisualSnapshot({...base,receiptObservations:{}}),/invalid_receipt_observations/);
+
+const empty=buildOneBodyVisualSnapshot({
+  state:{schema:'evercraft.one-body.state.v1',events:{}},observedAt
+});
+assert.equal(empty.nodes.length,1);
+assert.equal(empty.edges.length,0);
+assert.equal(empty.summary.total_state_events,0);
+
+console.log(JSON.stringify({
+  ok:true,schema:'evercraft.one-body.visualization-proof.v1',
+  checks:[
+    'persisted routes export to existing Living Graph format',
+    'unknown and overdue unconfirmed handoffs remain explicit',
+    'untrusted supplied receipts do not prove acknowledgement',
+    'trusted callback can mark only matching lane-consumer receipt',
+    'duplicate, future, and pre-event receipts cannot forge results',
+    'hashed exported identifiers protect raw source and receipt references',
+    'visualization grants neither runtime health nor payment nor execution authority',
+  ]
+},null,2));
