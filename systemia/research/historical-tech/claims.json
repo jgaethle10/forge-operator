@@ -1,0 +1,61 @@
+{
+  "schema": "evercraft.historical-tech.claims.v1",
+  "program": "HIST-TECH-001",
+  "source_note": "Source discovery from Gaia 2026 promotional trailer; primary and independent sources are recorded separately.",
+  "recorded_at": "2026-11-02",
+  "claims": [
+    {
+      "id": "HT-001",
+      "claim": "Nikola Tesla constructed and attempted a wireless power and communication project at Wardenclyffe.",
+      "status": "historically_documented",
+      "technical_proof": "Not proof of operational global energy transfer.",
+      "sources": [
+        "https://teslasciencecenter.org/teslas-wireless-power/",
+        "https://www.si.edu/object/nikola-tesla-papers%3Asiris_sil_1102446"
+      ],
+      "next_step": "Identify original patents and design details; isolate experimentally tractable mechanism."
+    },
+    {
+      "id": "HT-002",
+      "claim": "A modern resonant system transferred 60 watts over more than two meters at approximately 40 percent transfer efficiency.",
+      "status": "experimentally_supported",
+      "technical_proof": "Published MIT/Science research; distinguish transfer-stage efficiency from whole-system wall-to-load.",
+      "sources": [
+        "https://pubmed.ncbi.nlm.nih.gov/17556549/",
+        "https://doi.org/10.1126/science.1143254"
+      ],
+      "next_step": "Define instrumented low-voltage coupling benchmark and efficiency accounting."
+    },
+    {
+      "id": "HT-003",
+      "claim": "John Worrell Keely discovered an etheric force powering his motor without conventional input.",
+      "status": "historically_refuted",
+      "technical_proof": "Hidden compressed-air supply documented after dismantling apparatus; do not frame as a validated mechanism.",
+      "sources": [
+        "https://www.neh.gov/humanities/2010/mayjune/curio/the-etheric-force-machine",
+        "https://pubmed.ncbi.nlm.nih.gov/31204338/"
+      ],
+      "next_step": "Document hidden-input and measurement controls as an adverse example."
+    },
+    {
+      "id": "HT-004",
+      "claim": "Broad frequency-based devices can heal serious diseases without conventional treatment.",
+      "status": "unsupported_as_stated",
+      "technical_proof": "No specific device, dose, indication or clinical trial identified by this trailer; no therapeutic inference is justified.",
+      "sources": [
+        "https://www.cancer.gov/about-cancer/treatment/cam"
+      ],
+      "next_step": "Specify each exact claimed treatment before a systematic clinical-evidence review; no human testing."
+    },
+    {
+      "id": "HT-005",
+      "claim": "Alleged antigravity or overunity devices constitute replicable engineered systems.",
+      "status": "unverified",
+      "technical_proof": "Promotional claims do not supply input/output measurements, calibrated instruments or reproducible schematics.",
+      "sources": [
+        "https://www.gaia.com/series/forbidden-technologies-humanity-s-stolen-future"
+      ],
+      "next_step": "Identify primary patent/document and independent proof, or hold with no prototype."
+    }
+  ]
+}
