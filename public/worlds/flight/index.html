@@ -247,6 +247,29 @@ html.seattle-mode .sky-haze{
  background:linear-gradient(180deg,#c2dce910 5%,transparent 31%,#e8bc8a24 55%,#f1d4ae12 75%,transparent 93%)
 }
 </style>
+<style id="aaar-vista-portrait-hud-v14">
+/* Flight School Vista: do not bury Sky Passport beneath phone instruments.
+ * Keep the challenge visible but compact, and leave the flight scene as the hero.
+ */
+@media (max-width:750px) and (orientation:portrait){
+ .seattle-mode .flight-shell.touch-cockpit #skyQuest{
+  top:calc(124px + env(safe-area-inset-top,0px));
+  bottom:auto;left:50%;right:auto;
+  transform:translateX(-50%);
+  width:min(275px,calc(100vw - 34px));
+  max-width:calc(100vw - 34px);min-width:0;
+  padding:5px 9px;gap:1px;
+  border-radius:9px;
+  background:#051e2edb;
+ }
+ .seattle-mode .flight-shell.touch-cockpit #skyQuest strong{
+  font-size:8px;letter-spacing:.07em;white-space:nowrap;
+ }
+ .seattle-mode .flight-shell.touch-cockpit #skyQuest span{
+  font-size:8px;line-height:1.35;white-space:normal;
+ }
+}
+</style>
 <style id="aaar-sky-passport-style">
 #skyQuest{display:none;position:absolute;bottom:96px;left:50%;transform:translateX(-50%);z-index:2;padding:8px 12px;min-width:245px;max-width:330px;pointer-events:none;background:#061927bf;border:1px solid #c6eac16c;border-radius:10px;box-shadow:0 8px 32px #001b2a78;backdrop-filter:blur(12px);text-align:center;line-height:1.5}
 .seattle-mode #skyQuest{display:flex;flex-direction:column;gap:1px}
@@ -1242,6 +1265,69 @@ function forRunwayQuads(emit){
   }
  }
 }
+/* Evercraft Flight School 1.4 Vista: original game-only airport environment.
+ * The field coordinates are grounded, but apron layouts, markings, planted strips,
+ * lighting, support buildings and parked vehicles are deliberately invented.
+ * All locations use the same airport-local basis as landing physics, never a second map.
+ */
+function forAirportVistaQuads(emit,focus=null){
+ if(!seattle||!window.AAARGroundOps?.enabled)return 0;
+ const ops=window.AAARGroundOps;let count=0;
+ for(const f of ops.fields){
+  const start=-f.length/2,end=f.length/2,half=f.width/2,side=f.code==='KSEA'?-1:1;
+  const rect=(u1,v1,u2,v2,h,c,hex)=>{
+   const a=Math.min(u1,u2),b=Math.max(u1,u2),c1=Math.min(v1,v2),d=Math.max(v1,v2);
+   const center=ops.point(f,(a+b)/2,(c1+d)/2);
+   if(focus&&Math.hypot(center.x-focus.x,center.z-focus.z)>4200)return;
+   const p=ops.point(f,a,c1),q=ops.point(f,b,c1),t=ops.point(f,b,d),v=ops.point(f,a,d);
+   emit([p.x,h,p.z],[q.x,h,q.z],[t.x,h,t.z],[v.x,h,v.z],c,hex);count++;
+  };
+  const taxi=side*(half+82),apron=side*(half+225);
+  // Each airport gets its own asphalt corridor, pale shoulders and yellow taxi centerline.
+  for(let v=start+35;v<end-20;v+=105){
+   const z2=Math.min(v+105,end-20),varn=(Math.sin(v*.061+f.x*.004)+1)/2;
+   rect(taxi-27,v,taxi+27,z2,f.level+.18,[.35+varn*.018,.39+varn*.017,.40+varn*.016],'#657076');
+   rect(taxi-1.15,v,taxi+1.15,z2,f.level+.30,[.97,.73,.30],'#f7c456');
+   rect(taxi-30,v,taxi-27,z2,f.level+.20,[.77,.74,.65],'#c1bda5');
+   rect(taxi+27,v,taxi+30,z2,f.level+.20,[.77,.74,.65],'#c1bda5');
+   // Vegetation breaks up large blank areas without covering runway or taxi lanes.
+   for(const sign of [-1,1]){
+    const u=sign*(half+43),green=.41+.04*Math.sin(v*.017+sign);
+    rect(u-16,v,u+16,z2,f.level+.12,[.28,green,.29],'#64866d');
+    if(v<start+1300||v>end-700)
+     rect(u-8,v+22,u-4,Math.min(v+34,z2),f.level+.14,[.40,.48,.33],'#899566');
+   }
+  }
+  for(let i=0;i<(f.code==='KSEA'?7:5);i++){
+   const v=start+265+i*(f.code==='KSEA'?405:470);
+   if(v>end-200)break;
+   // Perpendicular taxiway entries and hold-short double yellow lines.
+   rect(side*(half-6),v-18,taxi+side*22,v+18,f.level+.31,[.31,.37,.39],'#566269');
+   rect(taxi-30,v-1.2,taxi+30,v+1.2,f.level+.38,[.97,.73,.28],'#f3be4c');
+   rect(side*(half+20),v-21,side*(half+22),v+21,f.level+.4,[.93,.80,.39],'#f4d36d');
+   rect(side*(half+25),v-21,side*(half+27),v+21,f.level+.4,[.93,.80,.39],'#f4d36d');
+  }
+  // Wide concrete apron panels near hangars and gates, with darker expansion joints.
+  const slabs=f.code==='KSEA'?11:7;
+  for(let j=0;j<slabs;j++){
+   const v=start+80+j*118,inner=side*(half+115),outer=apron+side*135;
+   rect(inner,v,outer,v+116,f.level+.21,
+    j%3===0?[.54,.55,.54]:[.58,.59,.57],j%3===0?'#9a9e9b':'#aab1ad');
+   rect(inner,v+114,outer,v+116,f.level+.26,[.35,.41,.42],'#66747b');
+   if(j%2===0){
+    rect(apron-side*40,v+25,apron+side*30,v+27,f.level+.33,[.95,.73,.32],'#efbf53');
+    rect(apron+side*28,v+27,apron+side*30,v+65,f.level+.33,[.95,.73,.32],'#efbf53');
+   }
+  }
+  // Runway touchdown zones: subtle skid streaks and non-authoritative threshold texture.
+  for(const approach of [start+230,end-400])for(let i=0;i<7;i++){
+   const v=approach+i*20,alpha=i%2===0?.155:.11;
+   rect(-6.5,v,-4.7,v+12,f.level+.37,[alpha,alpha+.04,alpha+.06],'#343f43');
+   rect(4.7,v,6.5,v+12,f.level+.37,[alpha,alpha+.04,alpha+.06],'#343f43');
+  }
+ }
+ return count;
+}
 function airportStructures(emitBox){
  if(!seattle||!window.AAARGroundOps?.enabled)return;
  const ops=window.AAARGroundOps;
@@ -1261,14 +1347,83 @@ function airportStructures(emitBox){
    i%2?[.87,.73,.46]:[.30,.58,.70],[.26,.37,.42]);
  }
 }
+function airportVistaDetails(box,focus=null){
+ if(!seattle||!window.AAARGroundOps?.enabled)return 0;
+ const ops=window.AAARGroundOps;let count=0;
+ for(const f of ops.fields){
+  const side=f.code==='KSEA'?-1:1,start=-f.length/2,half=f.width/2,y=f.level;
+  const b=(u,v,cy,w,h,d,color,nearColor=null)=>{
+   const p=ops.point(f,u*side,v);
+   if(focus&&Math.hypot(p.x-focus.x,p.z-focus.z)>3900)return;
+   box(p.x,y+cy,p.z,w,h,d,color,nearColor||color);count++;
+  };
+  // Larger, differently shaped silhouettes: Boeing maintenance base versus SEA's gates.
+  if(f.code==='KBFI'){
+   for(let h=0;h<5;h++){
+    const u=half+300+h*101,v=start+340+h*170;
+    b(u,v,31,95,60,100,[.59,.64,.68],[.30,.39,.44]);
+    b(u,v,61.5,105,3.5,110,[.26,.37,.44],[.25,.34,.40]);
+    // Tall ribbed hangar doors rather than anonymous grey blocks.
+    for(let k=0;k<7;k++)b(u-36+k*12.4,v-52,27,10.5,48,2.5,
+      k%2?[.31,.46,.50]:[.25,.37,.42]);
+    b(u+52,v+15,12,12,20,24,[.74,.76,.72],[.30,.40,.42]);
+   }
+  }else{
+   // Broad terminal with gate spurs and visible blue-glass curtain walls.
+   for(let wing=0;wing<3;wing++){
+    const u=half+330+wing*80,v=start+550+wing*420;
+    b(u,v,29,140,56,245,[.70,.75,.74],[.33,.42,.46]);
+    b(u,v,58,151,4,253,[.28,.39,.45],[.24,.34,.40]);
+    for(let q=0;q<9;q++)b(u-66+q*16,v-124,35,10.5,22,3,
+      q%2?[.34,.60,.71]:[.25,.48,.61]);
+    for(let gate=0;gate<5;gate++){
+     const gv=v-105+gate*50;
+     b(u-98,gv,11,76,10,13,[.73,.79,.79],[.30,.39,.41]); // jet bridge
+     b(u-143,gv,7,15,12,18,[.38,.53,.57],[.34,.44,.46]);
+     b(u-169,gv,4,48,8,13,[.89,.91,.89],[.65,.73,.75]); // parked jet body
+     b(u-169,gv,7,13,3,65,[.87,.91,.92],[.68,.73,.78]); // swept wing silhouette
+     b(u-147,gv,11,3,13,9,[.34,.52,.65],[.33,.47,.59]); // tail
+    }
+   }
+  }
+  // Ground lighting poles, small vehicles, and roof skylights create scale cues.
+  for(let j=0;j<14;j++){
+   const v=start+125+j*180;if(v>f.length/2-60)break;
+   const u=half+124+((j%3)*25);
+   b(u,v,13,1.4,26,1.4,[.62,.69,.71]);
+   b(u,v,26,8,2,5,[.94,.91,.76],[.87,.84,.68]);
+  }
+  for(let j=0;j<(f.code==='KSEA'?13:9);j++){
+   const u=half+150+(j%4)*48,v=start+145+Math.floor(j/4)*115+(j%2)*24;
+   const paint=j%4===0?[.84,.71,.43]:j%4===1?[.32,.56,.70]:j%4===2?[.75,.78,.77]:[.91,.87,.78];
+   b(u,v,3,22,5,12,paint,[.32,.40,.46]);
+   b(u,v-2.5,6,12,4.2,9,[.32,.45,.50],[.26,.38,.41]);
+   for(const a of [-1,1])for(const z of [-1,1])
+    b(u+a*9,v+z*4,1.4,3.4,2.8,2.5,[.14,.18,.21]);
+  }
+  // Small stationary planes parked near maintenance apron at Boeing Field.
+  if(f.code==='KBFI')for(let j=0;j<7;j++){
+   const u=half+158+(j%3)*64,v=start+120+Math.floor(j/3)*210;
+   b(u,v,5,6,7,36,[.92,.92,.88],[.62,.68,.71]);
+   b(u,v,5.5,36,2.6,8,[.79,.86,.87],[.35,.53,.65]);
+   b(u,v-14,7.5,15,2.5,5,[.83,.86,.84],[.40,.52,.58]);
+   b(u,v+14,7,4,9,4,[.33,.52,.65],[.33,.52,.65]);
+  }
+ }
+ return count;
+}
 function addRunwaySoftware(quad,project,ctx,w,h){
- airportStructures((x,y,z,wid,hei,dep,color,roof)=>{
+ const toHex=c=>'#'+c.map(v=>Math.max(0,Math.min(255,Math.round(v*255))).toString(16).padStart(2,'0')).join('');
+ const drawBox=(x,y,z,wid,hei,dep,color,roof)=>{
   const ax=x-wid/2,bx=x+wid/2,az=z-dep/2,bz=z+dep/2,top=y+hei/2,bottom=y-hei/2;
-  const toHex=c=>'#'+c.map(v=>Math.round(v*255).toString(16).padStart(2,'0')).join('');
+  // Culling prevents faraway gate-detail boxes from burdening Canvas2D.
+  if(Math.hypot(x-state.x,z-state.z)>3900)return;
   quad([ax,bottom,az],[bx,bottom,az],[bx,top,az],[ax,top,az],toHex(color));
   quad([bx,bottom,az],[bx,bottom,bz],[bx,top,bz],[bx,top,az],toHex(color));
   quad([ax,top,az],[bx,top,az],[bx,top,bz],[ax,top,bz],toHex(roof));
- });
+ };
+ airportStructures(drawBox);
+ airportVistaDetails(drawBox,state);
  for(const f of window.AAARGroundOps.fields){
   const p=project([f.x,f.level+95,f.z]);
   if(!p||p.d>4000||p.u<65||p.u>w-65||p.v<26||p.v>h-35)continue;
@@ -1282,9 +1437,14 @@ function addRunwaySoftware(quad,project,ctx,w,h){
 }
 function addRunwayWebGL(w){
  forRunwayQuads((a,b,c,d,color)=>w.quad(a,b,c,d,color,3));
+ forAirportVistaQuads((a,b,c,d,color)=>w.quad(a,b,c,d,color,3));
  airportStructures((x,y,z,width,height,depth,color,roof)=>{
   w.box(x,y,z,width,height,depth,color,1);
   w.box(x,y+height*.5+1,z,width+3,2,depth+3,roof);
+ });
+ airportVistaDetails((x,y,z,width,height,depth,color,roof)=>{
+  w.box(x,y,z,width,height,depth,color,1);
+  if(roof!==color)w.box(x,y+height*.5+.9,z,width+1,1.8,depth+1,roof);
  });
  for(const f of window.AAARGroundOps.fields){
   const ops=window.AAARGroundOps,half=f.width/2;
@@ -1409,6 +1569,85 @@ function addSeattleWebGL(b){
  }
 }
 
+/* Vista aircraft: hand-authored Canvas2D vectors, no remote textures or models.
+ * Distinct silhouettes and materials for trainer, glider and fast jet.
+ * Uses the same bank and speed state as the 3D version; stylistic game shading only.
+ */
+function drawVistaAircraft2D(ctx,w,h,s){
+ const type=s.craft,jet=type==='jet',glider=type==='glider';
+ const sc=Math.max(.51,Math.min(1.62,h/650)),span=glider?148:jet?105:99;
+ const cy=h*.69;
+ ctx.save();ctx.translate(w/2,cy);ctx.scale(sc,sc);ctx.rotate(-s.bank*.80);
+ const poly=(pts,fill,stroke=null,thick=1.25)=>{
+  ctx.beginPath();ctx.moveTo(pts[0][0],pts[0][1]);
+  for(const p of pts.slice(1))ctx.lineTo(p[0],p[1]);
+  ctx.closePath();ctx.fillStyle=fill;ctx.fill();
+  if(stroke){ctx.lineWidth=thick;ctx.strokeStyle=stroke;ctx.stroke();}
+ };
+ const col=jet?'#efebe0':glider?'#eaf5f3':'#f7f4e8',shade=jet?'#aeb7b6':glider?'#9ac5ce':'#c1cbd0';
+ const bright=ctx.createLinearGradient(-span,0,span,20);
+ bright.addColorStop(0,jet?'#829da8':'#a3c4d0');
+ bright.addColorStop(.22,col);bright.addColorStop(.65,'#f8fbf5');bright.addColorStop(1,shade);
+ const body=ctx.createLinearGradient(-13,0,17,0);
+ body.addColorStop(0,'#879ca7');body.addColorStop(.25,col);body.addColorStop(.64,'#fffdf5');body.addColorStop(1,'#8da6aa');
+ const nose=jet?-94:glider?-86:-82,tail=jet?67:glider?75:73;
+ const wingBack=jet?37:glider?14:21,wingFront=jet?2:glider?-21:-5;
+ // Soft shadow gives depth without relying on an external bitmap.
+ ctx.save();ctx.translate(3,10);ctx.shadowColor='#001724b0';ctx.shadowBlur=22;
+ poly([[-span+4,wingBack+5],[-9,wingBack+19],[-8,tail],[8,tail],[9,wingBack+19],[span-4,wingBack+5],
+       [span,wingFront+3],[11,-16],[0,nose+3],[-11,-16],[-span,wingFront+3]],'#07202e88');ctx.restore();
+ // Tailplanes and metallic trailing edges.
+ const tailSpan=glider?63:jet?47:43,tailLeading=jet?45:49;
+ poly([[-9,44],[-tailSpan,tailLeading+3],[-tailSpan+5,tailLeading+16],[-8,58]],shade,'#577989',1);
+ poly([[9,44],[tailSpan,tailLeading+3],[tailSpan-5,tailLeading+16],[8,58]],col,'#577989',1);
+ // Wings are split into left and right panels with independent specular fades.
+ const sweep=jet?26:glider?0:11,tipBack=jet?28:glider?7:18;
+ for(const side of [-1,1]){
+  poly([[side*9,-13],[side*span,wingFront+sweep],[side*span,wingFront+sweep+tipBack],[side*11,wingBack]],
+   bright,'#5a7e8b',1.6);
+  poly([[side*12,4],[side*(span-8),wingFront+sweep+tipBack-4],
+        [side*(span-9),wingFront+sweep+tipBack-1],[side*11,wingBack-2]],
+        jet?'#7f98a6':'#aec8ca');
+  poly([[side*(span-18),wingFront+sweep+3],[side*span,wingFront+sweep],
+        [side*span,wingFront+sweep+tipBack*.7],[side*(span-18),wingFront+sweep+tipBack*.9]],
+        type==='trainer'?'#f6a36a':jet?'#eb9e58':'#4b93b1');
+  // Flight control surfaces.
+  ctx.beginPath();ctx.moveTo(side*21,wingBack-3);
+  ctx.lineTo(side*(span*.70),wingFront+sweep+tipBack-2);
+  ctx.strokeStyle='#6d8f98';ctx.lineWidth=1.6;ctx.stroke();
+  if(jet){
+   poly([[side*25,33],[side*41,51],[side*46,62],[side*31,55]],'#da9b66','#6a7478');
+  }
+ }
+ // Raised fuselage, canopy framing and nose highlight.
+ poly([[0,nose],[-7.5,nose+24],[-13,-27],[-12,38],[-7,tail-9],
+       [0,tail],[7,tail-9],[12,38],[13,-27],[7.5,nose+24]],body,'#5c7f8a',1.5);
+ poly([[-7,nose+30],[0,nose+5],[7,nose+30],[3.4,-47],[-3.4,-47]],'#ffffff97');
+ const glass=ctx.createLinearGradient(-8,-49,8,-20);
+ glass.addColorStop(0,'#163e58');glass.addColorStop(.5,'#4586a0');glass.addColorStop(1,'#102c44');
+ poly([[-6,-43],[0,-52],[6,-43],[8,-17],[0,-11],[-8,-17]],glass,'#e4ffff',1.1);
+ poly([[-2,-44],[1,-47],[5,-30],[0,-36]],'#9de9ed76');
+ // Narrow fuselage rivet line and dorsal tail.
+ ctx.strokeStyle='#effdf8c4';ctx.lineWidth=1.4;ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(0,tail-7);ctx.stroke();
+ if(jet){
+  poly([[-8,43],[-3,43],[0,64],[-4,62]],'#cf874d');
+  poly([[8,43],[3,43],[0,64],[4,62]],'#cf874d');
+ }else if(!glider){
+  // The trainer's prop is a translucent animated disc, not a vehicle collision part.
+  const turn=s.flightTime*Math.max(.6,8*s.throttle);
+  ctx.save();ctx.translate(0,nose+3);ctx.rotate(turn);ctx.fillStyle='#bedade4c';
+  ctx.beginPath();ctx.ellipse(0,0,5,15,0,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#526d78';ctx.fillRect(-1.2,-18,2.4,36);ctx.restore();
+ }
+ if(glider){ctx.fillStyle='#d8ffff';ctx.beginPath();ctx.arc(0,tail-5,2.8,0,Math.PI*2);ctx.fill();}
+ // Wingtip and navigation-light glints are anchored to the aircraft.
+ for(const side of [-1,1]){
+  ctx.fillStyle=side<0?'#fb776b':'#76e9b1';
+  ctx.shadowBlur=8;ctx.shadowColor=ctx.fillStyle;ctx.beginPath();
+  ctx.arc(side*(span-2),wingFront+sweep+tipBack*.5,2.5,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
+ }
+ ctx.restore();
+}
 function render2D(){
  const dpi=Math.min(window.devicePixelRatio||1,1.25),w=Math.round(canvas.clientWidth*dpi),h=Math.round(canvas.clientHeight*dpi);
  if(!w||!h)return;if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;}
@@ -1443,7 +1682,7 @@ function render2D(){
  for(let Z=-875;Z<900;Z+=115)quad([-3,9,Z],[3,9,Z],[3,9,Z+52],[-3,9,Z+52],'#ede0af');
  for(let j=0;j<6;j++){const X=140+j*55,Z=-620+j*84;quad([X-17,49,Z-27],[X+17,49,Z-27],[X+17,49,Z+27],[X-17,49,Z+27],'#d5e2d7');}
  }
- if(seattle){scenePerf.city=addSeattleShapes(quad,project,eye);forRunwayQuads((a,b,c,d,_rgb,color)=>quad(a,b,c,d,color));addRunwaySoftware(quad,project,ctx,w,h);}
+ if(seattle){scenePerf.city=addSeattleShapes(quad,project,eye);forRunwayQuads((a,b,c,d,_rgb,color)=>quad(a,b,c,d,color));forAirportVistaQuads((a,b,c,d,_rgb,color)=>quad(a,b,c,d,color),state);addRunwaySoftware(quad,project,ctx,w,h);}
  shapes.sort((a,b)=>b.avg-a.avg);
  for(const shape of shapes){const q=shape.pts;ctx.beginPath();ctx.moveTo(q[0].u,q[0].v);q.slice(1).forEach(p=>ctx.lineTo(p.u,p.v));ctx.closePath();ctx.fillStyle=shape.color;ctx.fill();}
  scenePerf.terrainPolygons=shapes.length;
@@ -1465,13 +1704,8 @@ function render2D(){
  }
  // Aircraft follows the 3D flight state; cockpit view hides the chase airplane.
  if(view!=='cockpit'&&state.craft==='custom'){drawCustom2D(ctx,w,h,state.design,state.bank);}
- else if(view!=='cockpit'){
-  const cx=w/2,cy=h*.69,sc=Math.max(.52,Math.min(1.6,h/650));
-  ctx.save();ctx.translate(cx,cy);ctx.scale(sc,sc);ctx.rotate(-state.bank*.80);ctx.shadowColor='#041522b7';ctx.shadowBlur=26;ctx.shadowOffsetY=8;
-  ctx.fillStyle='#142d3b';ctx.beginPath();ctx.moveTo(-93,13);ctx.lineTo(-10,-8);ctx.lineTo(-15,52);ctx.lineTo(-36,64);ctx.lineTo(-35,73);ctx.lineTo(0,67);ctx.lineTo(35,73);ctx.lineTo(36,64);ctx.lineTo(15,52);ctx.lineTo(10,-8);ctx.lineTo(93,13);ctx.lineTo(102,2);ctx.lineTo(10,-32);ctx.lineTo(0,-91);ctx.lineTo(-10,-32);ctx.lineTo(-102,2);ctx.closePath();ctx.fill();
-  ctx.shadowBlur=0;ctx.shadowOffsetY=0;ctx.fillStyle='#d8ecec';ctx.beginPath();ctx.moveTo(0,-91);ctx.lineTo(9,-31);ctx.lineTo(100,4);ctx.lineTo(91,15);ctx.lineTo(13,-5);ctx.lineTo(15,54);ctx.lineTo(36,68);ctx.lineTo(33,73);ctx.lineTo(0,66);ctx.lineTo(-33,73);ctx.lineTo(-36,68);ctx.lineTo(-15,54);ctx.lineTo(-13,-5);ctx.lineTo(-91,15);ctx.lineTo(-100,4);ctx.lineTo(-9,-31);ctx.closePath();ctx.fill();
-  ctx.fillStyle=state.craft==='custom'?'#f2aa7c':core.aircraft[state.craft].skin;ctx.fillRect(-100,4,24,8);ctx.fillRect(76,4,24,8);ctx.fillStyle='#286077';ctx.beginPath();ctx.ellipse(0,-20,6,22,0,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#93cbd9';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(0,-86);ctx.lineTo(0,65);ctx.stroke();ctx.restore();
- }
+ else if(view!=='cockpit'){drawVistaAircraft2D(ctx,w,h,state);}
+
  // Peripheral speed streaks are gameplay effects, not measured wind.
  const speed=Math.min(1,Math.max(0,(state.speed-45)/115));
  if(speed>.12&&view!=='cockpit'){

@@ -12,6 +12,7 @@ on:
       - "scripts/probe-aaar-mobile-cockpit-source.mjs"
       - "tests/aaar-flight-static.test.mjs"
       - "tests/aaar-seattle-ground-ops.test.mjs"
+      - "tests/aaar-seattle-airport-vista.test.mjs"
       - ".github/workflows/aaar-owned-flight-readback.yml"
   push:
     branches: [main]
@@ -32,7 +33,7 @@ jobs:
         with:
           node-version: "22"
       - name: Pure Node release probe contract tests
-        run: node --test tests/aaar-public-readback.test.mjs tests/aaar-flight-static.test.mjs tests/aaar-seattle-ground-ops.test.mjs
+        run: node --test tests/aaar-public-readback.test.mjs tests/aaar-flight-static.test.mjs tests/aaar-seattle-ground-ops.test.mjs tests/aaar-seattle-airport-vista.test.mjs
       - name: Read-only external verification from GitHub network
         id: probe
         shell: bash
@@ -74,6 +75,13 @@ jobs:
         run: npx playwright install chromium
       - name: Validate v0.8 source cockpit stick and throttle in portrait and landscape
         run: node scripts/probe-aaar-mobile-cockpit-source.mjs
+      - name: Preserve source-rendered Chromium Vista scenes
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aaar-vista-chromium-screens
+          path: artifacts/aaar-vista/chromium/*.png
+          if-no-files-found: warn
       - name: Execute actual owned HTTPS AAAR buttons in phone emulation
         id: live
         shell: bash
@@ -113,6 +121,13 @@ jobs:
         env:
           AAAR_BROWSER: webkit
         run: node scripts/probe-aaar-mobile-cockpit-source.mjs
+      - name: Preserve source-rendered WebKit Vista scenes
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aaar-vista-webkit-screens
+          path: artifacts/aaar-vista/webkit/*.png
+          if-no-files-found: warn
       - name: Execute owned HTTPS AAAR buttons in mobile WebKit
         shell: bash
         run: |

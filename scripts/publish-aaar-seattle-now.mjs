@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Reviewed Seattle Flight School 1.3 one-asset release on the EXISTING owned Penguin Worlds vault.
+// Reviewed Seattle Vista 1.4 one-asset release on the EXISTING owned Penguin Worlds vault.
 // No server restart, repo reset, Journal edits, DNS or edge changes.
 // Run only on the actual Penguin host after fetching approved GitHub main.
 // This temporarily updates ONE tracked page; source checkout reconciliation
@@ -12,10 +12,10 @@ import {spawnSync} from 'node:child_process';
 
 const SCHEMA='evercraft.aaar.single-asset-release.v1';
 const REPO='jgaethle10/forge-operator';
-const PIN='267afc904628620fae3f48727501969ce3456e84';
+const PIN='b153f905be977fa0e0bc60668271159f299d10b6';
 const RELEASE='public/worlds/flight/index.html';
-const EXPECTED='5314b21f6572a177aa02da8e18624985019d2d7d5f8f81674db7413b56733825';
-const ALLOWED_OLD='1f8280fe6e05de30dab9b6f7a6954df334990571e78bdd30d91dd64dcf3aa13f';
+const EXPECTED='0a8e52a1b3a765e7f1861489950ce98c0250cc110f2a3bc87d3cfd5a04e0fb80';
+const ALLOWED_OLD='5314b21f6572a177aa02da8e18624985019d2d7d5f8f81674db7413b56733825';
 const ORIGIN='https://worlds.systemiacommandcenters.com';
 const apply=process.argv.includes('--apply');
 const hash=x=>createHash('sha256').update(x).digest('hex');
@@ -40,7 +40,7 @@ try{
  if(!/^(https:\/\/github\.com\/|git@github\.com:)jgaethle10\/forge-operator(\.git)?$/.test(remote))throw Error('untrusted_checkout_remote');
  cmd('git',['-C',repoRoot,'merge-base','--is-ancestor',PIN,'refs/remotes/origin/main']);
  const source=cmd('git',['-C',repoRoot,'show',PIN+':'+RELEASE]);
- if(hash(source)!==EXPECTED||!source.toString('utf8').includes('aaar-seattle-geography')||
+ if(hash(source)!==EXPECTED||!source.toString('utf8').includes('drawVistaAircraft2D')||!source.toString('utf8').includes('forAirportVistaQuads')||!source.toString('utf8').includes('aaar-seattle-geography')||
     !source.toString('utf8').includes('Space Needle'))throw Error('pinned_seattle_source_validation_failed');
 
  if(String(cmd('systemctl',['--user','is-active','evercraft-worlds-vault.service'],{encoding:'utf8'})).trim()!=='active')throw Error('worlds_vault_inactive');

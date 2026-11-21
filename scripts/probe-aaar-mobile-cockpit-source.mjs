@@ -1,7 +1,7 @@
 // AAAR v0.8 mobile cockpit E2E against the PR's LOCAL SOURCE, never the older hosted release.
 // Desktop / phone emulation is NOT physical iPhone Safari acceptance.
 import assert from 'node:assert/strict';
-import {readFile} from 'node:fs/promises';
+import {readFile,mkdir} from 'node:fs/promises';
 import {createServer} from 'node:http';
 import {once} from 'node:events';
 import {chromium,webkit} from 'playwright';
@@ -9,6 +9,8 @@ import {chromium,webkit} from 'playwright';
 const engine=process.env.AAAR_BROWSER==='webkit'?'webkit':'chromium';
 const browserDriver=engine==='webkit'?webkit:chromium;
 const html=await readFile('public/worlds/flight/index.html','utf8');
+const evidenceDir='artifacts/aaar-vista/'+engine;
+await mkdir(evidenceDir,{recursive:true});
 const server=createServer((req,res)=>{
  if(req.method!=='GET'||req.url!=='/worlds/flight/'){
   res.writeHead(404);res.end('not_found');return;
@@ -122,6 +124,16 @@ try{
  await runwayPage.waitForFunction(()=>document.querySelector('#startScreen')?.style.display==='none',null,{timeout:10000});
  await runwayPage.waitForFunction(()=>document.getElementById('flightStatus')?.textContent==='ON RUNWAY / TAXI',null,{timeout:10000});
  assert.equal(await runwayPage.locator('#mobileBrake').isVisible(),true,'Mobile hold-to-brake button missing');
+ await runwayPage.waitForFunction(()=>window.AAARSceneMetrics?.().frames>=3,null,{timeout:10000});
+ const passportHud=await runwayPage.evaluate(()=>{
+  const quest=document.getElementById('skyQuest').getBoundingClientRect();
+  const instruments=document.querySelector('.flight-telemetry').getBoundingClientRect();
+  return {questTop:quest.top,instrumentsBottom:instruments.bottom,questWidth:quest.width,screenWidth:innerWidth};
+ });
+ assert.ok(passportHud.questTop>=passportHud.instrumentsBottom+5,
+  'Sky Passport overlaps phone instruments: '+JSON.stringify(passportHud));
+ assert.ok(passportHud.questWidth<passportHud.screenWidth-20,'Sky Passport too wide for phone');
+ await runwayPage.screenshot({path:evidenceDir+'/phone-boeing-field-runway.png',animations:'disabled'});
  const runwayControlBounds=await runwayPage.evaluate(()=>{
   const rect=id=>{const r=document.getElementById(id).getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom}};
   return {brake:rect('mobileBrake'),stick:rect('flightStick'),throttle:rect('flightThrottleRange'),w:innerWidth,h:innerHeight};
@@ -153,6 +165,8 @@ try{
  assert.equal(school.active,'KSEA');
  assert.ok(Math.hypot(school.airports[0].x-school.airports[1].x,school.airports[0].z-school.airports[1].z)>8000);
  assert.ok(school.runwayVisible,'Phone runway scene missing terrain');
+ await runwayPage.waitForTimeout(250);
+ await runwayPage.screenshot({path:evidenceDir+'/phone-seatac-approach.png',animations:'disabled'});
  receipts.push({school:'Seattle runway and landing controls',runway_start:true,brake_visible:true,
   menu_runway:true,menu_approach:true,practice_mode:true,selected_airport:'KSEA',source_located_runways:true,fictional_physics:true});
  await runwayPage.close();
@@ -276,6 +290,8 @@ try{
   assert.equal(graphics.webgl_error,0,'WebGL renderer reports a GPU error');
  }
  if(process.env.AAAR_REQUIRE_WEBGL==='1')assert.equal(graphics.renderer,'webgl2','WebGL2 was unexpectedly replaced by fallback');
+ await laptopPage.waitForTimeout(250);
+ await laptopPage.screenshot({path:evidenceDir+'/desktop-seattle-flight.png',animations:'disabled'});
  receipts.push({city:'Seattle laptop',viewport:'1366x768',flight_started:true,init_errors:0,
   rendering_engine:graphics.renderer,shading_active:graphics.shading_active,
   triangles:graphics.world_triangles,webgl_program_linked:graphics.gl_program_linked});
