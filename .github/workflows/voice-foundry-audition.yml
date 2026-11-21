@@ -1,0 +1,41 @@
+name: Fallen Voice Foundry Audition Contract
+
+on:
+  pull_request:
+    paths:
+      - "systemia/media-studio/voice-foundry-audition.mjs"
+      - "systemia/media-studio/voice-foundry-audition.test.mjs"
+      - "systemia/media-studio/voice-foundry-kokoro-render.py"
+      - "systemia/media-studio/voice-foundry-kokoro-render.test.py"
+      - ".github/workflows/voice-foundry-audition.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audition-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install offline fixture dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y ffmpeg
+          python -m pip install numpy soundfile
+      - name: Verify JS audition gates
+        run: node --test systemia/media-studio/voice-foundry-audition.test.mjs
+      - name: Verify Python Kokoro adapter contract using mock audio
+        run: python systemia/media-studio/voice-foundry-kokoro-render.test.py
+      - name: Verify template generation, never render or fetch a model
+        run: |
+          node systemia/media-studio/voice-foundry-audition.mjs plan /tmp/evercraft-audition-plan.json
+          test -s /tmp/evercraft-audition-plan.json
+          python systemia/media-studio/voice-foundry-kokoro-render.py --help > /dev/null
