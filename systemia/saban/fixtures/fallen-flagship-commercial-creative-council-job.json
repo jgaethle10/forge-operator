@@ -1,0 +1,364 @@
+{
+  "schema": "evercraft.fallen.flagship.creative-council-handoff.v1",
+  "mission_id": "evercraft-fallen-commercial-studio-flagship-20261027",
+  "stage": "CREATIVE_REVIEW_ONLY",
+  "owner_approved_gpu_spend": true,
+  "publication_authority": false,
+  "source_state": "spec_proposal_not_produced",
+  "creative_direction": "THE WORK / THE IMAGE",
+  "repo_issue": "https://github.com/jgaethle10/forge-operator/issues/1676",
+  "production_budget": {
+    "currency": "USD",
+    "first_canary_total_allocation": 3,
+    "provider_enforced_cap": false,
+    "rentable_instance_started": false,
+    "owner_authorized_spending_usd": 3,
+    "provisioning_blocked_until_receipts_and_cleanup_verified": true,
+    "provider_spending_cap_confirmed": false
+  },
+  "roles": [
+    "story_architect",
+    "cinematography_director",
+    "visual_evidence_scout",
+    "data_graphics_director",
+    "world_builder",
+    "edit_rhythm_director",
+    "sound_director",
+    "voice_performance_director",
+    "music_composer",
+    "sound_design_engineer",
+    "mixing_engineer",
+    "brand_art_director",
+    "documentary_truth_guard",
+    "beauty_judge"
+  ],
+  "jobs": [
+    {
+      "kind": "fallen_creative_shot",
+      "key": "flagship-hook-real-work",
+      "shot": {
+        "id": "evercraft-fallen-flagship-01",
+        "sourceType": "generation_request",
+        "sourceId": "evercraft-flagship-presence:flagship-hook-real-work",
+        "beat": "hook",
+        "durationSec": 5,
+        "aspectRatio": "9:16",
+        "storyPrompt": "Evercraft Commercial Studio brand film The Work / The Image. First five seconds, real physical craftsmanship, proof of work before style. Voice: You put the work in.",
+        "intent": "Close tactile material craft details, believable human-scale subject. A real tool and a hand working on a real object. Open with friction, weight, texture and precise original sound; no neon, fake workers or floating logo.",
+        "subjectIds": [
+          "physical-work",
+          "human-hand",
+          "tool"
+        ],
+        "coverage": [],
+        "productionState": "requires_real_asset_or_approved_generation",
+        "footageTruth": "synthetic_spec_demo_not_customer_proof",
+        "crew": [
+          {
+            "role": "story_architect"
+          },
+          {
+            "role": "cinematography_director"
+          },
+          {
+            "role": "visual_evidence_scout"
+          },
+          {
+            "role": "data_graphics_director"
+          },
+          {
+            "role": "world_builder"
+          },
+          {
+            "role": "edit_rhythm_director"
+          },
+          {
+            "role": "sound_director"
+          },
+          {
+            "role": "voice_performance_director"
+          },
+          {
+            "role": "music_composer"
+          },
+          {
+            "role": "sound_design_engineer"
+          },
+          {
+            "role": "mixing_engineer"
+          },
+          {
+            "role": "brand_art_director"
+          },
+          {
+            "role": "documentary_truth_guard"
+          },
+          {
+            "role": "beauty_judge"
+          }
+        ]
+      }
+    },
+    {
+      "kind": "fallen_creative_shot",
+      "key": "flagship-bridge-why-seen",
+      "shot": {
+        "id": "evercraft-fallen-flagship-02",
+        "sourceType": "generation_request",
+        "sourceId": "evercraft-flagship-presence:flagship-bridge-why-seen",
+        "beat": "proof",
+        "durationSec": 5,
+        "aspectRatio": "9:16",
+        "storyPrompt": "Evercraft flagship real work transition, maintain source/geometry continuity, natural lighting and material surface, the product must remain recognizable.",
+        "intent": "Stay with the exact same physical subject, revealing the process and result. Camera motion must disclose shape and finish rather than orbit an anonymous object. Voice: People should see it.",
+        "subjectIds": [
+          "physical-work",
+          "material-surface"
+        ],
+        "coverage": [],
+        "productionState": "requires_real_asset_or_approved_generation",
+        "footageTruth": "synthetic_spec_demo_not_customer_proof",
+        "crew": [
+          {
+            "role": "story_architect"
+          },
+          {
+            "role": "cinematography_director"
+          },
+          {
+            "role": "visual_evidence_scout"
+          },
+          {
+            "role": "data_graphics_director"
+          },
+          {
+            "role": "world_builder"
+          },
+          {
+            "role": "edit_rhythm_director"
+          },
+          {
+            "role": "sound_director"
+          },
+          {
+            "role": "voice_performance_director"
+          },
+          {
+            "role": "music_composer"
+          },
+          {
+            "role": "sound_design_engineer"
+          },
+          {
+            "role": "mixing_engineer"
+          },
+          {
+            "role": "brand_art_director"
+          },
+          {
+            "role": "documentary_truth_guard"
+          },
+          {
+            "role": "beauty_judge"
+          }
+        ]
+      }
+    },
+    {
+      "kind": "fallen_creative_shot",
+      "key": "flagship-hero-transform",
+      "shot": {
+        "id": "evercraft-fallen-flagship-03",
+        "sourceType": "generation_request",
+        "sourceId": "evercraft-flagship-presence:flagship-hero-transform",
+        "beat": "climax",
+        "durationSec": 8,
+        "aspectRatio": "9:16",
+        "storyPrompt": "Vast spec-shot hero test: premium photoreal 3D tabletop depiction of recognizable precision metal craft; controlled camera, depth of field, physically based materials. Prove physical realism with 2-second motion canary before long render.",
+        "intent": "6–8 second GPU-canary candidate. One believable, machined-metal physical object built and revealed by motivated close macro-to-medium camera move; tactile contact shadows, precision highlights. A polished commercial image, not magical forging or a spinning logo. Voice: We make that first impression count.",
+        "subjectIds": [
+          "machined-object",
+          "surface-contact",
+          "lighting"
+        ],
+        "coverage": [],
+        "productionState": "requires_real_asset_or_approved_generation",
+        "footageTruth": "synthetic_spec_demo_not_customer_proof",
+        "crew": [
+          {
+            "role": "story_architect"
+          },
+          {
+            "role": "cinematography_director"
+          },
+          {
+            "role": "visual_evidence_scout"
+          },
+          {
+            "role": "data_graphics_director"
+          },
+          {
+            "role": "world_builder"
+          },
+          {
+            "role": "edit_rhythm_director"
+          },
+          {
+            "role": "sound_director"
+          },
+          {
+            "role": "voice_performance_director"
+          },
+          {
+            "role": "music_composer"
+          },
+          {
+            "role": "sound_design_engineer"
+          },
+          {
+            "role": "mixing_engineer"
+          },
+          {
+            "role": "brand_art_director"
+          },
+          {
+            "role": "documentary_truth_guard"
+          },
+          {
+            "role": "beauty_judge"
+          }
+        ]
+      }
+    },
+    {
+      "kind": "fallen_creative_shot",
+      "key": "flagship-service-proof",
+      "shot": {
+        "id": "evercraft-fallen-flagship-04",
+        "sourceType": "generation_request",
+        "sourceId": "evercraft-flagship-presence:flagship-service-proof",
+        "beat": "coverage",
+        "durationSec": 7,
+        "aspectRatio": "9:16",
+        "storyPrompt": "Evercraft studio film, sound, branded storytelling capabilities demonstrated through visually grounded objects and subject continuity. Keep imagery original or rights-cleared.",
+        "intent": "Two distinct but coherent commercial treatments showing what a real local business could receive: a product/service hero and a restrained motion-identity integration. Continuity and clean typography, no fake customers, no made-up metrics. Voice: Film. Motion. Sound. Built around your story.",
+        "subjectIds": [
+          "commercial-product-hero",
+          "brand-treatment"
+        ],
+        "coverage": [],
+        "productionState": "requires_real_asset_or_approved_generation",
+        "footageTruth": "synthetic_spec_demo_not_customer_proof",
+        "crew": [
+          {
+            "role": "story_architect"
+          },
+          {
+            "role": "cinematography_director"
+          },
+          {
+            "role": "visual_evidence_scout"
+          },
+          {
+            "role": "data_graphics_director"
+          },
+          {
+            "role": "world_builder"
+          },
+          {
+            "role": "edit_rhythm_director"
+          },
+          {
+            "role": "sound_director"
+          },
+          {
+            "role": "voice_performance_director"
+          },
+          {
+            "role": "music_composer"
+          },
+          {
+            "role": "sound_design_engineer"
+          },
+          {
+            "role": "mixing_engineer"
+          },
+          {
+            "role": "brand_art_director"
+          },
+          {
+            "role": "documentary_truth_guard"
+          },
+          {
+            "role": "beauty_judge"
+          }
+        ]
+      }
+    },
+    {
+      "kind": "fallen_creative_shot",
+      "key": "flagship-identity-cta",
+      "shot": {
+        "id": "evercraft-fallen-flagship-05",
+        "sourceType": "generation_request",
+        "sourceId": "evercraft-flagship-presence:flagship-identity-cta",
+        "beat": "cta",
+        "durationSec": 5,
+        "aspectRatio": "9:16",
+        "storyPrompt": "Premium minimal end card with actual approved identity: Evercraft Commercial Studio. Tone understated, confidence without cliché. No checkout link until verified.",
+        "intent": "Quiet one-camera or clean authored transition to approved Evercraft Commercial Studio brand lockup. Subordinate signature Evercraft || Fallen Studios. Typography composited from approved brand assets; never generated as image/video pixels. Voice: Let’s show them. CTA: Make your next commercial.",
+        "subjectIds": [
+          "approved-brand-logo",
+          "call-to-action"
+        ],
+        "coverage": [],
+        "productionState": "requires_real_asset_or_approved_generation",
+        "footageTruth": "synthetic_spec_demo_not_customer_proof",
+        "crew": [
+          {
+            "role": "story_architect"
+          },
+          {
+            "role": "cinematography_director"
+          },
+          {
+            "role": "visual_evidence_scout"
+          },
+          {
+            "role": "data_graphics_director"
+          },
+          {
+            "role": "world_builder"
+          },
+          {
+            "role": "edit_rhythm_director"
+          },
+          {
+            "role": "sound_director"
+          },
+          {
+            "role": "voice_performance_director"
+          },
+          {
+            "role": "music_composer"
+          },
+          {
+            "role": "sound_design_engineer"
+          },
+          {
+            "role": "mixing_engineer"
+          },
+          {
+            "role": "brand_art_director"
+          },
+          {
+            "role": "documentary_truth_guard"
+          },
+          {
+            "role": "beauty_judge"
+          }
+        ]
+      }
+    }
+  ]
+}

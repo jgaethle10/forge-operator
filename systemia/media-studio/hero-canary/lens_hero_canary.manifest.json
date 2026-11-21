@@ -1,0 +1,53 @@
+{
+  "schema": "evercraft.fallen.hero-canary-scene.v1",
+  "mission_id": "evercraft-fallen-commercial-studio-flagship-20261027",
+  "scene_id": "precision-lens-01",
+  "project": "The Work / The Image",
+  "state": "EDITABLE_SCENE_SOURCE_ONLY",
+  "visual_intent": "Tactile commercial macro shot of a precision camera lens. Camera follows authentic machined form, optical glass and knurled rings in a believable studio tabletop environment. No logo forged in smoke, no hologram clutter, no arbitrary geometry.",
+  "script": "systemia/media-studio/hero-canary/lens_hero_canary.py",
+  "originality": "Procedural geometry and materials authored for Evercraft; no external meshes or textures",
+  "subject": "precision camera lens / product cinematography",
+  "frame_rate": 24,
+  "frames": 48,
+  "duration_sec": 2,
+  "frame_size": {
+    "width": 540,
+    "height": 960
+  },
+  "master_aspect_ratio": "9:16",
+  "engine": "Blender Cycles",
+  "render_preset": {
+    "cycles_samples": 48,
+    "denoising": true,
+    "device_default": "CPU",
+    "gpu_requires_explicit_flag": true
+  },
+  "scene_asset_rights": {
+    "third_party_meshes": false,
+    "third_party_textures": false,
+    "external_sound": false,
+    "verified_publish_ready": false
+  },
+  "render_status": {
+    "blender_executed": false,
+    "rendered_frames": 0,
+    "gpu_rented": false,
+    "vast_spend_usd": 0,
+    "visual_quality_approved": false
+  },
+  "quality_gates": [
+    "Blender script must execute in actual target Blender environment",
+    "Confirm physically plausible materials and accurate shadows",
+    "Inspect contact-sheet and 2-second motion on mobile",
+    "Record exact compute/storage/bandwidth bill and deletion verification",
+    "Reject if the result resembles a technical demo more than a commissioned commercial"
+  ],
+  "operator_command": "blender -b -t 6 --python systemia/media-studio/hero-canary/lens_hero_canary.py -- --output /workspace/lens-canary --save-only --gpu",
+  "boundaries": {
+    "create_vast_instance": false,
+    "provider_api_writes": false,
+    "auto_publish": false,
+    "requires_external_watchdog": true
+  }
+}

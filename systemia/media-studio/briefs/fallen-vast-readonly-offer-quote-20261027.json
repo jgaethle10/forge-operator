@@ -1,0 +1,75 @@
+{
+  "schema": "evercraft.fallen.vast-offer-quote.v1",
+  "recorded_at_utc": "2026-10-27T16:22:14Z",
+  "provider": "Vast.ai",
+  "source_execution": "https://github.com/jgaethle10/forge-operator/actions/runs/40540220750",
+  "query_evidence": "provider_filtered_verified_eq_true_response_does_not_echo_verified_field",
+  "mode": "READ_ONLY",
+  "rental_started": false,
+  "provisioning_authorized": false,
+  "spend_observed_usd": 0,
+  "canary_allocation_usd": 3,
+  "max_estimated_compute_usd": 1.5,
+  "storage_network_tax_not_included": true,
+  "offer_count": 25,
+  "cheapest_offers": [
+    {
+      "offer_id": 40912225,
+      "usd_per_hour": 0.383,
+      "gpu": "RTX 4090",
+      "verification_evidence": "vast_filter_only",
+      "rental_approved": false,
+      "reliability": 0.997,
+      "vram_mb": 24564,
+      "ram_mb": 32219
+    },
+    {
+      "offer_id": 50685738,
+      "usd_per_hour": 0.416,
+      "gpu": "RTX 4090",
+      "verification_evidence": "vast_filter_only",
+      "rental_approved": false,
+      "reliability": 0.995,
+      "vram_mb": 24564,
+      "ram_mb": 48090
+    },
+    {
+      "offer_id": 17253925,
+      "usd_per_hour": 0.428,
+      "gpu": "RTX 4090",
+      "verification_evidence": "vast_filter_only",
+      "rental_approved": false,
+      "reliability": 0.999,
+      "vram_mb": 24564,
+      "ram_mb": 32012
+    },
+    {
+      "offer_id": 57239028,
+      "usd_per_hour": 0.43,
+      "gpu": "RTX 4090",
+      "verification_evidence": "vast_filter_only",
+      "rental_approved": false,
+      "reliability": 0.975,
+      "vram_mb": 24564,
+      "ram_mb": 63183
+    },
+    {
+      "offer_id": 56646109,
+      "usd_per_hour": 0.456,
+      "gpu": "RTX 4090",
+      "verification_evidence": "vast_filter_only",
+      "rental_approved": false,
+      "reliability": 0.988,
+      "vram_mb": 24564,
+      "ram_mb": 64397
+    }
+  ],
+  "final_rental_gates": [
+    "verify_host_status_with_provider_before_rent",
+    "independent_billing_limit_and_runtime_monitor",
+    "autoscheduled_destroy_and_cleanup_receipt",
+    "verify_asset_rights_and_upload_location",
+    "render_short_low_resolution_test_before_full_shot"
+  ],
+  "note": "Prices are transient, offers are not reserved and do not imply a live instance. This report is a dated read-only quote only."
+}

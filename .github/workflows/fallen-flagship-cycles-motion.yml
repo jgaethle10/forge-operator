@@ -1,0 +1,36 @@
+name: Fallen Studios real two-second CGI motion proof
+on:
+  push:
+    branches: [creative/fallen-flagship-20261027]
+    paths:
+      - '.github/workflows/fallen-flagship-cycles-motion.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  cpu-motion:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Blender and FFmpeg
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends blender ffmpeg
+      - name: Render actual 48 frames from Blender geometry and moving camera
+        run: |
+          mkdir -p artifacts/hero-canary
+          blender -b -t 4 --python systemia/media-studio/hero-canary/lens_hero_canary.py -- --output artifacts/hero-canary/lens-animation --preview-animation
+          test "$(find artifacts/hero-canary -name 'lens-animation_*.png' | wc -l)" -eq 48
+          ffmpeg -hide_banner -loglevel error -y -framerate 24 -i artifacts/hero-canary/lens-animation_%04d.png -c:v libx264 -pix_fmt yuv420p -crf 20 -preset medium -movflags +faststart artifacts/hero-canary/lens-2s-real-motion.mp4
+          ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1 artifacts/hero-canary/lens-2s-real-motion.mp4
+          sha256sum artifacts/hero-canary/lens-2s-real-motion.mp4
+      - name: Attach video and editable scene
+        uses: actions/upload-artifact@v4
+        with:
+          name: fallen-lens-two-second-real-cgi
+          path: |
+            artifacts/hero-canary/lens-2s-real-motion.mp4
+            artifacts/hero-canary/lens-animation.blend
+          if-no-files-found: error
+          retention-days: 14
