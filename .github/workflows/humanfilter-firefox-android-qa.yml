@@ -1,0 +1,50 @@
+name: HumanFilter Firefox Android candidate QA
+on:
+  push:
+    branches:
+      - humanfilter/firefox-android-*
+    paths:
+      - products/humanfilter/**
+      - .github/workflows/humanfilter-firefox-android-qa.yml
+  pull_request:
+    paths:
+      - products/humanfilter/android-firefox/**
+      - .github/workflows/humanfilter-firefox-android-qa.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  package-gecko-android:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install packaging and Gecko browser test tools
+        run: |
+          python -m pip install --disable-pip-version-check 'cairosvg==2.8.2' 'playwright==1.55.0'
+          python -m playwright install --with-deps firefox
+      - name: Build standalone Firefox Android candidate
+        run: python products/humanfilter/android-firefox/build.py /tmp/HumanFilter-Firefox-Android-Review-v0.1.4.zip
+      - name: Inspect source, permissions, versions and icons
+        run: python products/humanfilter/android-firefox/test_package.py /tmp/HumanFilter-Firefox-Android-Review-v0.1.4.zip
+      - name: Firefox mobile-sized DOM fixtures
+        run: python products/humanfilter/android-firefox/test_gecko_mobile.py
+      - name: Firefox extension Mozilla lint
+        run: |
+          mkdir -p /tmp/humanfilter-firefox-android
+          unzip -q /tmp/HumanFilter-Firefox-Android-Review-v0.1.4.zip -d /tmp/humanfilter-firefox-android
+          npx --yes web-ext@10.8.0 lint --source-dir /tmp/humanfilter-firefox-android --self-hosted --output=json --pretty > /tmp/firefox-android-lint.json
+          cat /tmp/firefox-android-lint.json
+      - name: Publish review artifact, NOT a signed mobile add-on
+        uses: actions/upload-artifact@v4
+        with:
+          name: humanfilter-firefox-android-review-v0.1.4
+          path: /tmp/HumanFilter-Firefox-Android-Review-v0.1.4.zip
+          if-no-files-found: error
+          retention-days: 90
