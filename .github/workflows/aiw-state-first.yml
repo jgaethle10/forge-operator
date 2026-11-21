@@ -1,0 +1,62 @@
+name: AIW state-first national experience
+on:
+  pull_request:
+    paths:
+      - 'research/infrastructure-watch/engineering/aiw_state_geometry.py'
+      - 'research/infrastructure-watch/engineering/aiw_state_first_gateway.py'
+      - 'research/infrastructure-watch/operator/aiw-state-first-private.html'
+      - 'research/infrastructure-watch/operator/aiw-state-first-nextgen.sh'
+      - 'research/infrastructure-watch/operator/aiw-state-hover-nextgen.sh'
+      - 'research/infrastructure-watch/tests/test_aiw_state_hover.mjs'
+      - 'research/infrastructure-watch/tests/test_aiw_state_first.py'
+      - '.github/workflows/aiw-state-first.yml'
+permissions:
+  contents: read
+jobs:
+  state-first-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate operator staging shell
+        run: |
+          bash -n research/infrastructure-watch/operator/aiw-state-first-nextgen.sh
+          bash -n research/infrastructure-watch/operator/aiw-state-hover-nextgen.sh
+      - name: Validate exact browser JavaScript inside private HTML
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          html=Path('research/infrastructure-watch/operator/aiw-state-first-private.html').read_text()
+          snippets=re.findall(r'<script>(.*?)</script>',html,re.S)
+          assert len(snippets)==1, 'Expected exactly one own inline UI controller'
+          Path('/tmp/aiw-state-first-ui.js').write_text(snippets[0])
+          PY
+          node --check /tmp/aiw-state-first-ui.js
+          node --check research/infrastructure-watch/tests/test_aiw_state_hover.mjs
+          node research/infrastructure-watch/tests/test_aiw_state_hover.mjs
+      - name: Validate cartographic boundaries and dated data contracts
+        run: |
+          python3 -m unittest discover -s research/infrastructure-watch/tests -p test_aiw_state_first.py -v
+      - name: Convert actual published US Atlas 3.0.1 state boundaries
+        run: |
+          curl -fLsS --retry 2 --connect-timeout 10 --max-time 60             'https://cdn.jsdelivr.net/npm/us-atlas@3.0.1/states-10m.json'             -o /tmp/aiw-us-atlas-states-10m.json
+          python3 research/infrastructure-watch/engineering/aiw_state_geometry.py             --source /tmp/aiw-us-atlas-states-10m.json             --dest /tmp/aiw-us-atlas-states.geojson
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('/tmp/aiw-us-atlas-states.geojson')
+          obj=json.loads(p.read_text())
+          assert obj['type']=='FeatureCollection'
+          assert 50<=len(obj['features'])<=65
+          assert any(f['properties']['name']=='Washington' for f in obj['features'])
+          assert all(f['geometry']['type'] in ('Polygon','MultiPolygon') for f in obj['features'])
+          print('REAL PUBLISHED BOUNDARIES: PASS',len(obj['features']))
+          PY
+

@@ -1,0 +1,21 @@
+name: AIW Washington read-only API
+on:
+  pull_request:
+    paths:
+      - 'research/infrastructure-watch/engineering/aiw_wa26_readonly_api.py'
+      - 'research/infrastructure-watch/tests/test_aiw_wa26_readonly_api.py'
+      - '.github/workflows/aiw-wa26-api.yml'
+permissions:
+  contents: read
+jobs:
+  verify-private-wa-api:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Validate private HTTP contract using local temporary SQLite
+        run: |
+          python3 -m unittest discover -s research/infrastructure-watch/tests -p test_aiw_wa26_readonly_api.py -v

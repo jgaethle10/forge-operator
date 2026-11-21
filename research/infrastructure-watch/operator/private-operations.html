@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>American Infrastructure Watch | Private Operations</title>
+<style>
+:root{font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#12365f;background:#eef5fd}
+*{box-sizing:border-box}body{margin:0}header{background:linear-gradient(115deg,#092e5d,#1268b5);color:white;padding:30px max(20px,calc((100% - 1020px)/2))}
+header p{color:#d3e8ff;max-width:690px}main{max-width:1020px;margin:auto;padding:20px}h1{margin:6px 0;font-size:clamp(28px,4vw,42px)}h2{font-size:18px;margin:0 0 10px}
+.flag{display:inline-block;font-size:12px;padding:6px 10px;background:#dbeeff;border-radius:50px;color:#173f70;font-weight:800}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}.card{background:white;border:1px solid #ccdded;border-radius:17px;padding:21px;box-shadow:0 4px 15px #153c6510}
+small,.muted{color:#55718b}.value{font-size:23px;font-weight:800;margin:7px 0}.warn{background:#fff5e8;border-color:#eed4ad}.error{background:#ffeded;border-color:#edc3c3}
+label{display:block;font-weight:700;margin:0 0 10px}.input{border:1px dashed #7faed7;background:#f5faff;padding:17px;border-radius:12px}
+input{max-width:100%}.span{grid-column:1/-1}.rows{display:grid;grid-template-columns:1fr auto;gap:8px 20px;font-size:14px}.rows>span:nth-child(even){font-weight:750;text-align:right}
+#state{font-weight:750;margin:10px 0}footer{padding:12px 0 35px;color:#58738a;font-size:12px}
+@media(max-width:660px){.grid{grid-template-columns:1fr}.span{grid-column:auto}}
+</style></head>
+<body><header><span class="flag">EVERCRAFT • PRIVATE OPERATOR VIEW</span><h1>American Infrastructure Watch</h1>
+<p>Operational evidence, without pretending historical bridge inspections are live safety alerts. This page works entirely offline and does not upload your receipt file.</p></header>
+<main><section class="grid" aria-label="Infrastructure monitoring">
+<div class="card span"><h2>Import an owned-node operations receipt</h2><label class="input" for="receipt">Choose a private aiw.private-operations.v1 JSON export<br><input id="receipt" type="file" accept=".json,application/json"></label>
+<p id="state" role="status" aria-live="polite">No receipt loaded. Monitoring status is unverified.</p><small>Use only an export produced by Evercraft's private-status utility. Do not place collector receipts, secrets, or source URLs on a publicly accessible host.</small></div>
+<div class="card" id="national"><h2>National source collector</h2><div class="value" id="nationalState">Unverified</div><div class="rows"><span>Successful checks</span><span id="nationalCount">Unknown</span><span>Last cycle</span><span id="nationalTime">Unknown</span><span>Verified five-minute schedule</span><span id="schedule">No</span></div></div>
+<div class="card" id="pnw"><h2>Owned regional evidence</h2><div class="value" id="pnwState">Unverified</div><div class="rows"><span>Coverage</span><span>WA, ID, OR</span><span>Data vintage</span><span>2026</span><span>Last heartbeat</span><span id="pnwTime">Unknown</span><span>Live emergency feed</span><span>No</span></div></div>
+<div class="card warn span"><h2>Publication decision: NOT VERIFIED</h2><p id="publication">A healthy operational snapshot is not proof that a national live service is ready to publish. Public release remains gated on independently verified deployment, evidence binding, source cycles, access, rollback, and owner approval.</p></div>
+</section><footer>American Infrastructure Watch • Private status viewer • No network requests • Condition ≠ imminent danger • Not for route-clearance decisions</footer></main>
+<script>
+'use strict';
+const el=id=>document.getElementById(id);
+const clean=x=>String(x??'Unknown').replace(/[<>]/g,'');
+function timestamp(s){const ms=Date.parse(s);return Number.isFinite(ms)?ms:null}
+function render(o){
+  if(!o||o.schema!=='evercraft.aiw.private-operations.v1'||o.visibility!=='private_owner_only'||o.public_release_ready!==false)throw Error('Unexpected or unsafe receipt schema');
+  const n=o.national_collector,p=o.owned_pnw_evidence;
+  if(!n||!p||typeof n.sources_expected!=='number'||typeof n.sources_ok!=='number')throw Error('Missing source counts');
+  const created=timestamp(o.generated_at_utc);
+  if(created===null||created>Date.now()+60000)throw Error('Receipt has invalid or future generation time');
+  const stale=Date.now()-created>600000;
+  const validNational=['healthy','degraded','stale','awaiting_first_cycle'].includes(n.state);
+  const validPnw=['healthy_snapshot','stale_or_invalid','unverified'].includes(p.state);
+  if(!validNational||!validPnw||n.sources_ok<0||n.sources_ok>n.sources_expected)throw Error('Inconsistent receipt values');
+  el('nationalState').textContent=stale?'Stale receipt':clean(n.state.replaceAll('_',' '));
+  el('nationalCount').textContent=n.sources_ok+' of '+n.sources_expected;
+  el('nationalTime').textContent=n.last_cycle_finished_at?new Date(n.last_cycle_finished_at).toLocaleString():'Not checked';
+  el('schedule').textContent=n.scheduled_300_second_cadence_verified===true?'Verified':'Not verified';
+  el('pnwState').textContent=stale?'Stale receipt':clean(p.state.replaceAll('_',' '));
+  el('pnwTime').textContent=p.last_checked_at_utc?new Date(p.last_checked_at_utc).toLocaleString():'Not checked';
+  el('state').textContent=stale?'Receipt loaded, but more than 10 minutes old. Operational freshness is unverified.':'Valid private report loaded. Generated '+new Date(created).toLocaleString()+'.';
+  el('national').className='card'+(stale||n.state!=='healthy'?' warn':'');
+  el('pnw').className='card'+(stale||p.state!=='healthy_snapshot'?' warn':'');
+}
+// This loopback API exists only when launched with aiw_private_viewer.py.
+// Static/offline copies retain the manual file-import experience.
+async function refreshLocalStatus(){
+  if(location.protocol!=='http:'||!['127.0.0.1','localhost'].includes(location.hostname))return;
+  try{
+    const response=await fetch('/api/private-status',{cache:'no-store',credentials:'omit'});
+    if(!response.ok)throw Error('Status unavailable');
+    const data=await response.json();
+    render(data);
+  }catch{
+    el('state').textContent='Private monitoring receipt unavailable. Choose a local JSON export to inspect it.';
+  }
+}
+refreshLocalStatus();
+if(location.protocol==='http:'&&['127.0.0.1','localhost'].includes(location.hostname))
+  setInterval(refreshLocalStatus,30000);
+el('receipt').addEventListener('change',async ev=>{
+  try{const file=ev.target.files[0];if(!file)return;if(file.size>200000)throw Error('Receipt is too large');
+    const obj=JSON.parse(await file.text());render(obj);
+  }catch(e){
+    el('state').textContent='Invalid receipt: '+String(e.message||e);
+    el('nationalState').textContent='Unverified';el('nationalCount').textContent='Unknown';
+    el('nationalTime').textContent='Unknown';el('schedule').textContent='No';
+    el('pnwState').textContent='Unverified';el('pnwTime').textContent='Unknown';
+    el('national').className='card error';el('pnw').className='card error';
+  }
+});
+</script></body></html>

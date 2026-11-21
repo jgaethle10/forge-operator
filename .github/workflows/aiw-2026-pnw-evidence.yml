@@ -1,0 +1,209 @@
+name: AIW 2026 Pacific Northwest evidence imports
+on:
+  pull_request:
+    paths:
+      - 'research/infrastructure-watch/**'
+      - '.github/workflows/aiw-2026-pnw-evidence.yml'
+permissions:
+  contents: read
+jobs:
+  import-neighboring-states:
+    if: github.event_name == 'pull_request'
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - state: Idaho
+            fips: '16'
+            expected: 4645
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Retrieve and verify official FHWA state JSON
+        run: |
+          python3 research/infrastructure-watch/scripts/fhwa_2026.py sync \
+            --state '${{ matrix.state }}' \
+            --counts research/infrastructure-watch/fhwa_state_inventory_counts_2025_2026.csv \
+            --out "$RUNNER_TEMP/aiw-pnw-${{ matrix.fips }}"
+      - name: Build distinct partial SQLite index
+        run: |
+          python3 research/infrastructure-watch/scripts/fhwa_2026.py build \
+            --counts research/infrastructure-watch/fhwa_state_inventory_counts_2025_2026.csv \
+            --out "$RUNNER_TEMP/aiw-pnw-${{ matrix.fips }}" \
+            --db "$RUNNER_TEMP/aiw-pnw-${{ matrix.fips }}/bridges2026.sqlite"
+      - name: Audit imported counts, conditions and source hash
+        run: |
+          python3 - <<'PY'
+          import json,sqlite3,os
+          from collections import Counter
+          from pathlib import Path
+          root=Path(os.environ['RUNNER_TEMP'])/'aiw-pnw-${{ matrix.fips }}'
+          rec=json.loads((root/'state_${{ matrix.fips }}_2026.receipt.json').read_text())
+          assert rec['state']=='${{ matrix.state }}' and rec['state_fips']=='${{ matrix.fips }}'
+          assert rec['verified'] is True and rec['expected']==rec['indexed']==${{ matrix.expected }}
+          with sqlite3.connect(root/'bridges2026.sqlite') as db:
+              rows=db.execute('SELECT bridge_id,name,latitude,longitude,condition FROM bridges').fetchall()
+              meta={k:json.loads(v) for k,v in db.execute('SELECT k,v FROM meta')}
+          assert len(rows)==${{ matrix.expected }} and len({r[0] for r in rows})==${{ matrix.expected }}
+          assert meta['partial'] is True and meta['complete_national_import'] is False
+          assert meta['states_verified']==1
+          ratings=dict(Counter(row[4] for row in rows))
+          audit={'state':'${{ matrix.state }}','state_fips':'${{ matrix.fips }}','year':2026,
+            'expected_count':${{ matrix.expected }},'observed_count':len(rows),
+            'conditions':ratings,'raw_sha256':rec['raw_sha256'],
+            'source_url':rec['source_url'],'source_index_warning':rec.get('source_index_warning'),
+            'partial_national':True,
+            'warning':'Historical inspection conditions, not emergency or route-clearance evidence.'}
+          (root/'audit.json').write_text(json.dumps(audit,indent=2)+'\n')
+          print(json.dumps(audit,indent=2))
+          PY
+      - name: Retain auditable source records, receipts and index
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aiw-2026-${{ matrix.fips }}-verified
+          path: |
+            ${{ runner.temp }}/aiw-pnw-${{ matrix.fips }}/state_${{ matrix.fips }}_2026.ndjson
+            ${{ runner.temp }}/aiw-pnw-${{ matrix.fips }}/state_${{ matrix.fips }}_2026.receipt.json
+            ${{ runner.temp }}/aiw-pnw-${{ matrix.fips }}/bridges2026.sqlite
+            ${{ runner.temp }}/aiw-pnw-${{ matrix.fips }}/audit.json
+          retention-days: 7
+  washington-unassigned-county-diagnostic:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Audit raw BL02 values without assigning missing counties
+        run: |
+          python3 - <<'PY'
+          import importlib.util,json,collections,hashlib,os
+          from pathlib import Path
+          source=Path('research/infrastructure-watch/scripts/wa_2026_county.py')
+          spec=importlib.util.spec_from_file_location('wa',source)
+          m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
+          raw=m.download()
+          sha=hashlib.sha256(raw).hexdigest()
+          assert sha==m.EXPECTED_SHA256, 'Source changed: refuse non-reproducible county audit'
+          rows=json.loads(raw);assert len(rows)==m.EXPECTED_COUNT
+          counts=collections.Counter();conditions=collections.Counter()
+          examples=collections.defaultdict(list)
+          for row in rows:
+              code=row.get('BL02')
+              result=m.county(code)
+              if result is not None: continue
+              if 'BL02' not in row:typ='missing_field'
+              elif code is None:typ='null'
+              elif isinstance(code,str) and code.strip()=='':typ='empty_string'
+              elif isinstance(code,bool):typ='boolean'
+              elif isinstance(code,(int,float,str)):typ='other_raw_value:'+repr(code)[:60]
+              else:typ='unrecognized_type:'+type(code).__name__
+              counts[typ]+=1
+              conditions[str(row.get('BC12'))]+=1
+              if len(examples[typ])<3: examples[typ].append({'bridge_id':row.get('BID01'),'raw_BL02':code})
+          out={'schema':'evercraft.aiw.wa_unassigned.v1','source_url':m.WA_URL,
+               'source_sha256':sha,'total_records':len(rows),'unassigned_total':sum(counts.values()),
+               'by_raw_BL02_reason':dict(counts),'unassigned_condition_counts':dict(conditions),
+               'samples_by_reason':dict(examples),'note':'Evidence diagnostic only: unassigned does not mean unsafe.'}
+          assert out['unassigned_total']==559, 'Unexpected county-assignment drift: investigate before using dashboard counts'
+          target=Path(os.environ['RUNNER_TEMP'])/'aiw-wa-unassigned-audit.json'
+          target.write_text(json.dumps(out,indent=2)+'\n')
+          print(json.dumps(out,indent=2))
+          PY
+      - name: Retain county diagnostic
+        uses: actions/upload-artifact@v4
+        with:
+          name: aiw-2026-wa-unassigned-county-audit
+          path: ${{ runner.temp }}/aiw-wa-unassigned-audit.json
+          retention-days: 7
+
+  oregon-source-discrepancy-audit:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Diagnose Oregon discrepancy without importing an unverified dataset
+        run: |
+          python3 - <<'PY'
+          import collections,hashlib,importlib.util,json,os
+          from pathlib import Path
+          f=Path('research/infrastructure-watch/scripts/fhwa_2026.py')
+          spec=importlib.util.spec_from_file_location('fhwa2026',f)
+          m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
+          index=m.parse_official_index(m.official_get(m.INDEX,max_bytes=2_000_000).decode(),target_state='Oregon')
+          info=index['Oregon']
+          raw=m.official_get(info['url'])
+          rows=json.loads(raw)
+          assert info['count']==8325,'Published count changed: halt and review'
+          ids=[r.get('BID01') for r in rows if isinstance(r,dict)] if isinstance(rows,list) else []
+          state_codes=collections.Counter(str(r.get('BL01')) for r in rows if isinstance(r,dict)) if isinstance(rows,list) else {}
+          grades=collections.Counter(str(r.get('BC12')) for r in rows if isinstance(r,dict)) if isinstance(rows,list) else {}
+          repeats=[k for k,v in collections.Counter(ids).items() if v>1][:8]
+          audit={'state':'Oregon','year':2026,'official_expected_count':info['count'],
+                 'downloaded_record_count':len(rows) if isinstance(rows,list) else None,
+                 'raw_sha256':hashlib.sha256(raw).hexdigest(),'source_url':info['url'],
+                 'payload_type':type(rows).__name__,'state_code_counts':dict(state_codes),
+                 'condition_counts':dict(grades),'duplicate_bridge_id_sample':repeats,
+                 'id_missing_count':sum(not x for x in ids),
+                 'full_state_import_verified':False,
+                 'note':'Diagnostic only. Do not treat this file as reconciled or current safety evidence.'}
+          dest=Path(os.environ['RUNNER_TEMP'])/'aiw-oregon-discrepancy.json'
+          dest.write_text(json.dumps(audit,indent=2)+'\n')
+          print(json.dumps(audit,indent=2))
+          PY
+      - name: Preserve quarantined Oregon discrepancy report
+        uses: actions/upload-artifact@v4
+        with:
+          name: aiw-2026-oregon-source-discrepancy
+          path: ${{ runner.temp }}/aiw-oregon-discrepancy.json
+          retention-days: 7
+
+  oregon-special-reconciliation:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Preserve 8326 raw Oregon records and reconcile exactly one N
+        run: |
+          python3 research/infrastructure-watch/scripts/oregon_2026_reconcile.py \
+            --out "$RUNNER_TEMP/aiw-oregon-reconciled"
+      - name: Independently validate published 8325 rated and one unclassified
+        run: |
+          python3 - <<'PY'
+          import collections,json,os
+          from pathlib import Path
+          dest=Path(os.environ['RUNNER_TEMP'])/'aiw-oregon-reconciled'
+          meta=json.loads((dest/'oregon_2026_reconciliation_audit.json').read_text())
+          assert meta['source_sha256']=='773af32721950315adb5b5cb64560ef698d3752dabd7ac7c3d5cc41d631bdcf2'
+          assert meta['official_classified_total']==8325 and meta['raw_records']==8326
+          assert meta['conditions']=={'G':2470,'F':5426,'P':429,'N':1}
+          lines=[json.loads(x) for x in (dest/'oregon_2026_reconciled.ndjson').read_text().splitlines()]
+          assert len(lines)==8326 and len({x['bridge_id'] for x in lines})==8326
+          assert sum(x['condition']=='N' for x in lines)==1
+          assert all(x['current_imminent_danger_verified'] is False for x in lines)
+          assert meta['national_import_complete'] is False
+          print(json.dumps(meta,indent=2))
+          PY
+      - name: Retain reconciled Oregon records and audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: aiw-2026-oregon-reconciled-with-unclassified
+          path: |
+            ${{ runner.temp }}/aiw-oregon-reconciled/oregon_2026_reconciled.ndjson
+            ${{ runner.temp }}/aiw-oregon-reconciled/oregon_2026_reconciliation_audit.json
+          retention-days: 7

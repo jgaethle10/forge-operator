@@ -1,0 +1,67 @@
+name: AIW v0.15 owned bridge evidence index
+on:
+  pull_request:
+    paths:
+      - 'public/infrastructure-watch/pnw-2026.html'
+      - 'research/infrastructure-watch/engineering/**'
+      - 'research/infrastructure-watch/tests/test_aiw_index_service.py'
+      - '.github/workflows/aiw-2026-owned-index.yml'
+permissions:
+  contents: read
+jobs:
+  verify-owned-index:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Compile and run local/HTTP regression tests
+        run: |
+          python3 -m py_compile research/infrastructure-watch/engineering/aiw_index_service.py
+          python3 -m unittest discover \
+            -s research/infrastructure-watch/tests \
+            -p test_aiw_index_service.py -v
+      - name: Reproduce full 2026 regional SQLite index from pinned atlas
+        run: |
+          python3 research/infrastructure-watch/engineering/aiw_index_service.py build \
+            --source public/infrastructure-watch/pnw-2026.html \
+            --db "$RUNNER_TEMP/aiw_2026_pnw.sqlite" \
+            > "$RUNNER_TEMP/aiw_2026_index_receipt.json"
+          python3 research/infrastructure-watch/engineering/aiw_index_service.py audit \
+            --db "$RUNNER_TEMP/aiw_2026_pnw.sqlite" \
+            > "$RUNNER_TEMP/aiw_2026_index_audit.json"
+      - name: Verify national-incompleteness and emergency-data absence
+        run: |
+          python3 - <<'PY'
+          import json,os,sqlite3
+          from pathlib import Path
+          p=Path(os.environ['RUNNER_TEMP'])
+          m=json.loads((p/'aiw_2026_index_audit.json').read_text())
+          assert m['raw_records']==21590
+          assert m['official_classified_records']==21589
+          assert m['unclassified_records']==1
+          assert m['states']['WA']=={'G':4298,'F':3918,'P':403,'N':0}
+          assert m['states']['ID']=={'G':1644,'F':2753,'P':248,'N':0}
+          assert m['states']['OR']=={'G':2470,'F':5426,'P':429,'N':1}
+          assert m['washington_county_bl02_unassigned']==559
+          assert m['yakima_county_records']==531
+          assert m['yakima_county_poor_condition']==27
+          assert m['national_import_complete'] is False
+          assert m['last_live_emergency_check'] is None
+          assert m['repair_funding_coverage']=='not_linked'
+          with sqlite3.connect(p/'aiw_2026_pnw.sqlite') as db:
+              assert db.execute('SELECT COUNT(*) FROM bridges').fetchone()[0]==21590
+          print('Verified index reproduces full PNW snapshot; no emergency/coverage overclaim.')
+          PY
+      - name: Retain review-only local database and receipts
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aiw-v015-source-pinned-owned-pnw-index
+          path: |
+            ${{ runner.temp }}/aiw_2026_pnw.sqlite
+            ${{ runner.temp }}/aiw_2026_index_receipt.json
+            ${{ runner.temp }}/aiw_2026_index_audit.json
+          retention-days: 7

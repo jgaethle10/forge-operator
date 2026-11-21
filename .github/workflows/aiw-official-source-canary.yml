@@ -1,0 +1,22 @@
+name: AIW official source canary offline contract
+on:
+  pull_request:
+    paths:
+      - 'research/infrastructure-watch/engineering/aiw_official_source_canary.py'
+      - 'research/infrastructure-watch/engineering/official-source-canary-registry.json'
+      - 'research/infrastructure-watch/tests/test_aiw_official_source_canary.py'
+      - '.github/workflows/aiw-official-source-canary.yml'
+permissions:
+  contents: read
+jobs:
+  verify-source-canary:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Offline source-access checks (no agency requests)
+        run: |
+          python3 -m unittest discover -s research/infrastructure-watch/tests -p test_aiw_official_source_canary.py -v

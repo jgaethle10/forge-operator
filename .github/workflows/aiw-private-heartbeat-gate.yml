@@ -1,0 +1,80 @@
+name: AIW private heartbeat and launch gates
+on:
+  pull_request:
+    paths:
+      - 'research/infrastructure-watch/engineering/**'
+      - 'research/infrastructure-watch/tests/test_aiw_heartbeat.py'
+      - 'public/infrastructure-watch/pnw-2026.html'
+      - '.github/workflows/aiw-private-heartbeat-gate.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  local-evidence-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Compile all AIW scripts and run heartbeat contract tests
+        run: |
+          python3 -m py_compile research/infrastructure-watch/engineering/aiw_index_service.py
+          python3 -m py_compile research/infrastructure-watch/engineering/aiw_launch_gate.py
+          python3 -m py_compile research/infrastructure-watch/engineering/aiw_heartbeat.py
+          python3 -m unittest discover -s research/infrastructure-watch/tests -p test_aiw_heartbeat.py -v
+      - name: Build vetted local index and start isolated loopback service
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 research/infrastructure-watch/engineering/aiw_index_service.py build \
+            --source public/infrastructure-watch/pnw-2026.html \
+            --db "$RUNNER_TEMP/aiw-test.sqlite" > "$RUNNER_TEMP/aiw-build.json"
+          python3 research/infrastructure-watch/engineering/aiw_index_service.py serve \
+            --db "$RUNNER_TEMP/aiw-test.sqlite" \
+            --html public/infrastructure-watch/pnw-2026.html \
+            --host 127.0.0.1 --port 8786 > "$RUNNER_TEMP/aiw-service.log" 2>&1 &
+          echo $! > "$RUNNER_TEMP/aiw-service.pid"
+          for i in $(seq 1 30); do
+            if curl --silent --fail http://127.0.0.1:8786/healthz > /dev/null; then exit 0; fi
+            sleep 1
+          done
+          echo 'FAIL: isolated loopback service never became healthy'
+          exit 1
+      - name: Run real HTTP launch gate and heartbeat receipt verification
+        shell: bash
+        run: |
+          set -euo pipefail
+          trap 'kill "$(cat "$RUNNER_TEMP/aiw-service.pid")" 2>/dev/null || true' EXIT
+          python3 research/infrastructure-watch/engineering/aiw_launch_gate.py \
+            --base-url http://127.0.0.1:8786 > "$RUNNER_TEMP/aiw-launch-gate.json"
+          python3 research/infrastructure-watch/engineering/aiw_heartbeat.py \
+            --origin http://127.0.0.1:8786 \
+            --receipt "$RUNNER_TEMP/aiw-heartbeat.json"
+          python3 - <<'PY'
+          import json,os,pathlib
+          base=pathlib.Path(os.environ['RUNNER_TEMP'])
+          gate=json.loads((base/'aiw-launch-gate.json').read_text())
+          beat=json.loads((base/'aiw-heartbeat.json').read_text())
+          assert gate['result']=='PASS'
+          assert beat['status']=='passed'
+          assert beat['scope']=='owned_pnw_v015_service_not_national_site'
+          assert beat['scheduler_registered'] is False
+          assert beat['source_update_performed'] is False
+          assert beat['evidence']['national_complete'] is False
+          assert beat['evidence']['live_emergency_check'] is False
+          print('PASS: isolated PNW evidence service only; no live national/alert claim.')
+          PY
+      - name: Upload auditable isolated-test receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aiw-private-heartbeat-launch-gate-receipts
+          path: |
+            ${{ runner.temp }}/aiw-build.json
+            ${{ runner.temp }}/aiw-service.log
+            ${{ runner.temp }}/aiw-launch-gate.json
+            ${{ runner.temp }}/aiw-heartbeat.json
+          if-no-files-found: warn
+          retention-days: 7

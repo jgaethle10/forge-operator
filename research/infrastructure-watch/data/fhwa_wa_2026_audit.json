@@ -1,0 +1,44 @@
+{
+  "title": "American Infrastructure Watch Washington 2026 state pilot",
+  "source": "Federal Highway Administration National Bridge Inventory (SNBI)",
+  "published_download_page": "https://www.fhwa.dot.gov/bridge/nbi/nbi_data_2026.cfm",
+  "raw_file": "https://www.fhwa.dot.gov/bridge/nbi/2026/JSON/WA26.json",
+  "source_raw_sha256": "c97fb57339f8f7bd9ae82cb807814443fb7cd8bb9fb99c45adc74f2ae3912c79",
+  "import_utc": "2026-11-11T01:09:27.932875+00:00",
+  "official_state_count": 8619,
+  "imported_records": 8619,
+  "conditions": {
+    "good": 4298,
+    "fair": 3918,
+    "poor": 403
+  },
+  "condition_counts_reconcile_to_official_report": true,
+  "report": "https://www.fhwa.dot.gov/bridge/nbi/no10/condition26.cfm",
+  "broad_state_bounds": {
+    "west": -125,
+    "south": 45.5,
+    "east": -116.8,
+    "north": 49.1
+  },
+  "coordinates_in_broad_bounds": 8618,
+  "coordinates_requires_review": 1,
+  "yakima_geographic_box": {
+    "west": -121.1,
+    "south": 46.3,
+    "east": -120.15,
+    "north": 47.2,
+    "records": 620,
+    "poor": 41,
+    "notice": "Geographic box, not Yakima County boundary."
+  },
+  "national_index_complete": false,
+  "historic_source": true,
+  "current_imminent_danger_claims": 0,
+  "issue_tracker": "https://github.com/jgaethle10/forge-operator/issues/1955",
+  "evidence_workflow": "https://github.com/jgaethle10/forge-operator/actions/runs/42936786525",
+  "rules": [
+    "Poor condition is not evidence of imminent failure",
+    "Do not use inventory records for current route clearance",
+    "Preserve unresolved federal-source inconsistencies"
+  ]
+}

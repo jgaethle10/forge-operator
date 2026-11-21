@@ -1,0 +1,25 @@
+name: AIW national-first private drilldown
+on:
+  pull_request:
+    paths:
+      - 'research/infrastructure-watch/engineering/aiw_national_private_gateway.py'
+      - 'research/infrastructure-watch/operator/aiw_wa26_national_drilldown.js'
+      - 'research/infrastructure-watch/operator/aiw-national-nextgen-map-v2.sh'
+      - 'research/infrastructure-watch/tests/test_aiw_national_private_gateway.py'
+      - '.github/workflows/aiw-national-private-drilldown.yml'
+permissions:
+  contents: read
+jobs:
+  verify-national-first:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Validate JS syntax and private U.S. map + WA data boundary
+        run: |
+          node --check research/infrastructure-watch/operator/aiw_wa26_national_drilldown.js
+          bash -n research/infrastructure-watch/operator/aiw-national-nextgen-map-v2.sh
+          python3 -m unittest discover -s research/infrastructure-watch/tests -p test_aiw_national_private_gateway.py -v
