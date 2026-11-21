@@ -1,0 +1,57 @@
+name: Roman real motion stock coverage
+on:
+  push:
+    branches:
+      - production/roman-merchant-media-scout-20261115
+    paths:
+      - '.github/workflows/roman-motion-coverage.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  get-footage:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - name: Acquire and verify selected food-motion reference clips
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p art/icy-tai art/flame-brew
+          fetch_video () {
+            local target="$1" id="$2" filetype
+            echo "FETCH ${target} id=${id}"
+            if curl --fail --location --silent --show-error --max-time 90 --max-filesize 120000000 \
+              "https://www.pexels.com/download/video/${id}/" -o "${target}"; then
+              filetype=$(file -b --mime-type "${target}")
+              if [[ "${filetype}" == "video/mp4" || "${filetype}" == "video/quicktime" ]]; then
+                sha256sum "${target}" >> art/SHA256SUMS.txt
+                return 0
+              fi
+              echo "Unexpected MIME: ${filetype}"
+            fi
+            rm -f "${target}"
+          }
+          fetch_video art/icy-tai/boba-stir.mp4 35828807 || true
+          fetch_video art/icy-tai/rolled-ice-cream-syrup.mp4 11599398 || true
+          fetch_video art/flame-brew/cheese-pull.mp4 17512966 || true
+          fetch_video art/flame-brew/oven-peel.mp4 6603832 || true
+          printf '%s\n' 'Stock footage for internal picture editing only; not filmed in Roman restaurants.' \
+            'Verify Pexels license, no implied endorsement, and depicted-product compatibility.' > art/RIGHTS_NOTICE.txt
+          find art -maxdepth 2 -type f -printf '%p %k KB\n'
+      - name: Downloadable footage for Icy Tai
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: roman-icy-tai-motion
+          path: art/icy-tai/
+          if-no-files-found: warn
+          retention-days: 7
+      - name: Downloadable footage for Flame and Brew
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: roman-flame-brew-motion
+          path: art/flame-brew/
+          if-no-files-found: warn
+          retention-days: 7

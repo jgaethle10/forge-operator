@@ -1,0 +1,63 @@
+name: Roman media asset verification probe
+on:
+  push:
+    branches:
+      - production/roman-merchant-media-scout-20261115
+    paths:
+      - '.github/workflows/roman-media-assets-probe.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+      - name: Pull selected public merchant menu hero images for INTERNAL review
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/roman-approved-review
+          curl --fail --location --silent --show-error --max-time 40 --retry 1 \
+            'https://tb-static.uber.com/prod/image-proc/processed_images/06267e777af9b315b2d01c19fbb15708/30be7d11a3ed6f6183354d1933fbb6c7.jpeg' \
+            -o artifacts/roman-approved-review/icy-tai-merchant-menu-candidate.jpg
+          curl --fail --location --silent --show-error --max-time 40 --retry 1 \
+            'https://tb-static.uber.com/prod/image-proc/processed_images/c7ccb162bcba72ff567f77e98a2094c9/4218ca1d09174218364162cd0b1a8cc1.jpeg' \
+            -o artifacts/roman-approved-review/flame-brew-merchant-menu-candidate.jpg
+          file artifacts/roman-approved-review/*.jpg
+          sha256sum artifacts/roman-approved-review/*.jpg > artifacts/roman-approved-review/SHA256SUMS.txt
+      - name: Probe real stock video, keep only validated MP4
+        shell: bash
+        run: |
+          mkdir -p artifacts/roman-approved-review
+          for spec in 'icy-roll:11599397' 'flame-oven:7172265'; do
+            name="${spec%%:*}"
+            id="${spec##*:}"
+            echo "Probing selected motion candidate ${name}"
+            if curl --fail --location --silent --show-error --max-time 90 --max-filesize 120000000 \
+              "https://www.pexels.com/download/video/${id}/" -o "artifacts/roman-approved-review/${name}.mp4"; then
+              if file -b --mime-type "artifacts/roman-approved-review/${name}.mp4" | grep -Eq '^video/(mp4|quicktime)$'; then
+                sha256sum "artifacts/roman-approved-review/${name}.mp4" >> artifacts/roman-approved-review/SHA256SUMS.txt
+              else rm -f "artifacts/roman-approved-review/${name}.mp4"; fi
+            else rm -f "artifacts/roman-approved-review/${name}.mp4"; fi
+          done
+      - name: Mark licensing and subject review as pending
+        shell: bash
+        run: |
+          cat > artifacts/roman-approved-review/READ_BEFORE_USE.txt <<'EOF'
+          FOR INTERNAL CREATIVE REVIEW ONLY.
+          Restaurant merchant ordering photographs: direct public menu images.
+          Image downloads do not verify original photographer/license or current products.
+          Pexels footage, if present: STOCK scenes, NOT either Roman restaurant.
+          Confirm individual clip, license and identity context before any commercial release.
+          Bella narration, sound mix and final client creative approval are not present.
+          EOF
+      - name: Preserve selected candidate bytes with digests
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: roman-internal-real-media-candidates
+          path: artifacts/roman-approved-review/
+          if-no-files-found: warn
+          retention-days: 7
