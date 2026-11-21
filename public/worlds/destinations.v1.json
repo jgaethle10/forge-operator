@@ -1,0 +1,92 @@
+{
+  "schema": "evercraft.worlds.destinations.v1",
+  "version": 1,
+  "home": "mossmere",
+  "gateway": "/worlds/gateway/",
+  "destinations": [
+    {
+      "id": "seattle-sky",
+      "name": "Seattle Sky Tour",
+      "category": "flight",
+      "status": "playable",
+      "path": "/worlds/flight/#seattle",
+      "capabilities": [
+        "flight",
+        "mobile_controls"
+      ],
+      "worldState": "isolated",
+      "description": "Seattle Vista flight experience"
+    },
+    {
+      "id": "mossmere",
+      "name": "Mossmere",
+      "category": "creation",
+      "status": "playable",
+      "path": "/worlds/",
+      "capabilities": [
+        "walk",
+        "edit_local",
+        "quests"
+      ],
+      "worldState": "local_browser",
+      "description": "Original garden world and workshop"
+    },
+    {
+      "id": "submerged-heritage",
+      "name": "Submerged Heritage",
+      "category": "exploration",
+      "status": "explore",
+      "path": "/worlds/heritage/",
+      "capabilities": [
+        "explore"
+      ],
+      "worldState": "isolated",
+      "description": "Underwater heritage exploration"
+    },
+    {
+      "id": "hidden-world-atlas",
+      "name": "Hidden World Atlas",
+      "category": "history",
+      "status": "explore",
+      "path": "/worlds/hidden-world/",
+      "capabilities": [
+        "read",
+        "explore"
+      ],
+      "worldState": "isolated",
+      "description": "Evidence-linked history and underground places"
+    },
+    {
+      "id": "perception-lab",
+      "name": "Perception Lab",
+      "category": "experiment",
+      "status": "experimental",
+      "path": "/worlds/perception-lab/",
+      "capabilities": [
+        "experiment"
+      ],
+      "worldState": "isolated",
+      "description": "Spatial perception experiments"
+    },
+    {
+      "id": "flight-range",
+      "name": "Flight Range",
+      "category": "flight",
+      "status": "playable",
+      "path": "/worlds/flight/",
+      "capabilities": [
+        "flight",
+        "aircraft_foundry"
+      ],
+      "worldState": "isolated",
+      "description": "Aircraft design and flight range"
+    }
+  ],
+  "integration": {
+    "sharedWorldSimulation": false,
+    "seamlessTravel": false,
+    "multiplayer": false,
+    "sharedPlayerProgress": false,
+    "personalDataTransferred": false
+  }
+}
