@@ -118,7 +118,7 @@ export function createInferenceEngine({
   if (!PROVIDERS.includes(providerKey)) throw new Error("raven_inference_provider_invalid");
   if (!modelKey) throw new Error("raven_inference_model_required");
 
-  async function inferOllama(input) {
+  async function inferOllama(input, maxOutputTokens = null) {
     const base = clean(ollamaOrigin, 2000).replace(/\/$/, "");
     const url = new URL(base);
     if (!["127.0.0.1", "localhost", "::1"].includes(url.hostname) || url.protocol !== "http:") {
@@ -131,18 +131,31 @@ export function createInferenceEngine({
         model: modelKey,
         prompt: input,
         stream: false,
+        ...(maxOutputTokens !== null ? {options:{num_predict:maxOutputTokens}} : {}),
       }),
     }, { fetchImpl, timeoutMs });
     const text = clean(body?.response);
     if (!response.ok || !text) {
       throw new Error(clean(body?.error || ("ollama_http_" + response.status), 2000));
     }
+    // Capped Mossmere requests require real Ollama usage counts; never
+    // fabricate zeros or infer them from string lengths.
+    const measured = maxOutputTokens === null ? null : {
+      input_tokens:body?.prompt_eval_count,
+      output_tokens:body?.eval_count,
+      cost_micro_usd:0,
+      evidence:'local_ollama_measured_zero_external_provider_fee'
+    };
+    if(measured&&(!Number.isInteger(measured.input_tokens)||measured.input_tokens<0||
+      !Number.isInteger(measured.output_tokens)||measured.output_tokens<0||
+      measured.output_tokens>maxOutputTokens))throw Error('ollama_capped_usage_unverified');
     return {
       text,
       provider: "ollama",
       model: clean(body?.model || modelKey, 300),
       provider_request_id: null,
       credential_ref: null,
+      usage:measured,
     };
   }
 
@@ -340,17 +353,21 @@ export function createInferenceEngine({
         raw_credential_returned: false,
       };
     },
-    async infer({ request_id, role, input }) {
+    async infer({ request_id, role, input, max_output_tokens = null }) {
       const requestId = clean(request_id, 260);
       const roleKey = clean(role, 120);
       const prompt = clean(input, 50000);
       if (!requestId) throw new Error("inference_request_id_required");
       if (!roleKey) throw new Error("inference_role_required");
       if (!prompt) throw new Error("inference_input_required");
+      if(max_output_tokens!==null&&(!Number.isInteger(max_output_tokens)||
+        max_output_tokens<1||max_output_tokens>900))throw Error('inference_output_budget_invalid');
+      if(max_output_tokens!==null&&providerKey!=='ollama')
+        throw Error('inference_hosted_output_budget_not_supported');
 
       const startedAt = now().toISOString();
       const result = providerKey === "ollama"
-        ? await inferOllama(prompt)
+        ? await inferOllama(prompt,max_output_tokens)
         : providerKey === "gemini"
           ? await inferGemini(prompt)
           : await inferOpenAI(prompt);
@@ -370,6 +387,7 @@ export function createInferenceEngine({
         base44_used: false,
         external_side_effects_authorized: false,
         raw_credential_returned: false,
+        ...(result.usage?{usage:result.usage}:{}),
       };
       return {
         status: "completed",
@@ -380,6 +398,7 @@ export function createInferenceEngine({
         started_at: startedAt,
         completed_at: completedAt,
         receipt: receiptCore,
+        ...(result.usage?{usage:result.usage}:{}),
       };
     },
   };
@@ -466,6 +485,7 @@ export async function startRavenInferenceGateway({
           request_id: body.request_id,
           role: body.role,
           input: body.input,
+          max_output_tokens: body?.constraints?.max_output_tokens ?? null,
         });
         return json(res, 200, {
           ...result,
