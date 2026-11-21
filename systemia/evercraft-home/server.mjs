@@ -54,6 +54,33 @@ function html(res, status, value) {
   res.end(String(value));
 }
 
+// The inspection journal is untrusted, user-entered text. Restrict its single
+// inline script by content hash and deny network/device APIs on this route.
+// No sensor permissions or session note uploads are authorized by Evercraft Home.
+function privateVehicleJournal(res, source) {
+  const scriptMatch = source.match(/<script>([\s\S]*?)<\/script>/i);
+  if (!scriptMatch) return json(res, 503, { ok: false, state: "vehicle_safety_script_missing" });
+  const scriptHash = createHash("sha256").update(scriptMatch[1], "utf8").digest("base64");
+  res.writeHead(200, {
+    ...securityHeaders,
+    "cache-control": "no-store",
+    "content-type": "text/html; charset=utf-8",
+    "content-security-policy": [
+      "default-src 'none'",
+      "script-src 'sha256-" + scriptHash + "'",
+      "style-src 'unsafe-inline'",
+      "img-src data:",
+      "connect-src 'none'",
+      "object-src 'none'",
+      "base-uri 'none'",
+      "form-action 'none'",
+      "frame-ancestors 'none'"
+    ].join("; "),
+    "permissions-policy": "camera=(), microphone=(), geolocation=(), bluetooth=()",
+  });
+  res.end(source);
+}
+
 function cookies(req) {
   const raw = String(req.headers.cookie || "");
   return Object.fromEntries(raw.split(";").map((part) => part.trim()).filter(Boolean).map((part) => {
@@ -1197,6 +1224,24 @@ export async function startEvercraftHomeServer({
           base44_required: false,
         });
       }
+    }
+
+    // Read-only vehicle safety status. No scan results or location data accepted.
+    if (req.method === "GET" && url.pathname === "/api/raven/vehicle-safety") {
+      const session = sessionFor(req);
+      if (!session.ok) return json(res, session.status, session);
+      const vehicle = readRavenOverview(repoRoot).vehicle_safety;
+      if (!vehicle) return json(res, 503, { ok: false, state: "vehicle_safety_not_available" });
+      return json(res, 200, { ok: true, subject: session.subject, ...vehicle });
+    }
+
+    // First-party authenticated QuickCheck. Client-local notes are unencrypted.
+    if (req.method === "GET" && url.pathname === "/safety/vehicle") {
+      const session = sessionFor(req);
+      if (!session.ok) return json(res, session.status, session);
+      const file = path.join(repoRoot, "products", "vehicle-sentinel", "quickcheck.html");
+      if (!fs.existsSync(file)) return json(res, 503, { ok: false, state: "vehicle_safety_source_unavailable" });
+      return privateVehicleJournal(res, fs.readFileSync(file, "utf8"));
     }
 
     if (req.method === "GET" && url.pathname === "/api/raven/overview") {
