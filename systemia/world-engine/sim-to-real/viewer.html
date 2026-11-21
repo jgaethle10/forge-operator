@@ -1,0 +1,94 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Evercraft // Sim-to-Real Field Lab RC01</title>
+<style>
+:root{color-scheme:dark;--bg:#050a12;--panel:#0d1623;--edge:#263448;--white:#eff6ff;--sub:#8ba0bb;--cyan:#6ee7f8;--orange:#ffa65e;--lime:#9bf6b4}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 75% 0,#11263d 0%,transparent 44%),var(--bg);font:14px/1.55 system-ui,-apple-system,Segoe UI,sans-serif;color:var(--white)}
+main{width:min(1400px,calc(100% - 32px));margin:0 auto;padding:28px 0 70px}
+.mast{display:flex;gap:18px;justify-content:space-between;align-items:start;margin-bottom:22px;flex-wrap:wrap}
+.eyebrow{font:700 11px/1.5 ui-monospace,monospace;letter-spacing:.22em;color:var(--cyan)}
+h1{font-size:clamp(30px,4vw,54px);font-weight:850;letter-spacing:-.055em;line-height:1.07;margin:8px 0 12px}
+p{margin:0;color:var(--sub);max-width:750px}
+.tag{border:1px solid #34506c;border-radius:99px;padding:9px 13px;font:700 11px ui-monospace,monospace;letter-spacing:.13em;color:#a3b9d1}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:14px}
+.stat,.panel{background:linear-gradient(160deg,#101c2c 0,#0a1019 90%);border:1px solid var(--edge);border-radius:17px}
+.stat{padding:17px 20px}.stat label{display:block;color:var(--sub);font:700 10px ui-monospace,monospace;letter-spacing:.13em;text-transform:uppercase}.stat strong{font-size:29px;letter-spacing:-.045em;display:block;margin-top:4px}.stat small{color:var(--sub)}
+.viewport{padding:14px}.viewportTop{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:5px 5px 14px}.legend{display:flex;gap:16px;flex-wrap:wrap;color:var(--sub);font:12px ui-monospace,monospace}
+.dot{display:inline-block;border-radius:50%;width:8px;height:8px;margin-right:7px}.stage{position:relative;overflow:hidden;border:1px solid #1b3550;border-radius:12px;background:#06121c}
+canvas{display:block;width:100%;height:auto;aspect-ratio:1.95}.watermark{position:absolute;right:14px;bottom:12px;font:700 11px ui-monospace,monospace;color:#718ba6;letter-spacing:.11em;pointer-events:none}
+.controls{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:15px}.btn,select,input[type=file]{background:#152537;border:1px solid #38506c;color:var(--white);border-radius:10px;padding:10px 14px;font:700 12px ui-monospace,monospace}
+.btn{cursor:pointer}.btn:hover{background:#1e3448}.btn.primary{background:#08788a;border-color:#1ebcce}.filelabel{color:var(--sub);font-size:12px}input[type=range]{flex:1;min-width:120px;accent-color:var(--cyan)}
+.bottom{display:grid;grid-template-columns:1.1fr .9fr;gap:14px;margin-top:14px}.bottom .panel{padding:20px}h2{font-size:15px;margin:0 0 13px;letter-spacing:.01em}.details{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.detail{padding:10px 13px;border:1px solid #26394d;border-radius:9px}.detail label{color:var(--sub);display:block;text-transform:uppercase;font:10px ui-monospace,monospace}.detail strong{font:700 16px ui-monospace,monospace}.bar{display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-top:1px solid #22364b;color:#c8d8e8}.bar b{color:#f5f8fe}
+.foot{font-size:11px;color:var(--sub);margin-top:14px}.meter{height:5px;border-radius:8px;background:#1c293b;overflow:hidden;margin-top:8px}.fill{height:100%;background:var(--cyan);width:0}
+@media(max-width:800px){.stats{grid-template-columns:repeat(2,1fr)}.bottom{grid-template-columns:1fr}.stat strong{font-size:25px}main{width:calc(100% - 20px)}.watermark{display:none}}
+</style></head><body><main>
+<header class="mast"><div><div class="eyebrow">EVERCRAFT // WORLD ENGINE // EXPERIMENTS</div><h1>SIM-TO-REAL <span style="color:var(--cyan)">FIELD LAB</span></h1><p>Rover autonomy, observable decisions, and reproducible failure evidence. Commands move a simulated robot only. This is not a hardware-qualified controller.</p></div><div class="tag">RC01 · MODELED EVIDENCE</div></header>
+<section class="stats"><div class="stat"><label>Guarded mission completion</label><strong id="guardedRate">—</strong><small id="guardedCount">load run data</small></div><div class="stat"><label>Direct-path completion</label><strong id="baseRate">—</strong><small id="baseCount">load run data</small></div><div class="stat"><label>Simulated trials</label><strong id="trialCount">—</strong><small>same seeds in each policy</small></div><div class="stat"><label>Physical trials</label><strong>0</strong><small>hardware authority disabled</small></div></section>
+<section class="panel viewport"><div class="viewportTop"><div class="eyebrow">LIVE REPLAY / TRAJECTORY TELEMETRY</div><div class="legend"><span><i class="dot" style="background:var(--cyan)"></i>Guarded</span><span><i class="dot" style="background:var(--orange)"></i>Direct path</span><span><i class="dot" style="background:#fa7b88"></i>Obstacle</span><span>1 square = 1 meter</span></div></div><div class="stage"><canvas id="map" width="1170" height="600" aria-label="Animated rover obstacle course"></canvas><div class="watermark">SYNTHETIC ENVIRONMENT · NOT SENSOR FOOTAGE</div></div><div class="controls"><button id="play" class="btn primary">▶ Play</button><button id="restart" class="btn">↺ Restart</button><label class="filelabel">Scenario</label><select id="scenario"></select><label class="filelabel">Time <span id="clock">0.0s</span></label><input id="scrub" type="range" min="0" max="1" step="1" value="0"><label class="filelabel">Load receipt</label><input id="file" type="file" accept="application/json,.json"></div></section>
+<section class="bottom"><article class="panel"><h2>Scenario physics and control</h2><div class="details" id="params"></div><p class="foot">Traction, actuator latency, steering gain and noisy pose observations are randomized per seed. Both policies receive identical scenario parameters. Visualized samples are recorded at 0.2-second intervals.</p></article><article class="panel"><h2>Evidence ledger</h2><div id="ledger"></div><div class="meter"><div class="fill" id="meterFill"></div></div><p class="foot" id="receiptHash">No receipt selected.</p></article></section>
+</main><script>
+// __EMBEDDED_REPORT__ is intentionally null in the GitHub source. Open the benchmark JSON using Load receipt.
+const EMBEDDED_REPORT = null;
+let report=EMBEDDED_REPORT,selected=1,timeIndex=0,playing=false,lastAt=0;
+const $=id=>document.getElementById(id),ctx=$('map').getContext('2d');
+const C={guarded:'#6ee7f8',baseline:'#ffa65e'};
+const P={xmin:-1,xmax:11,ymin:-3,ymax:3};
+function world(x,y){return {x:(x-P.xmin)/(P.xmax-P.xmin)*1170,y:(P.ymax-y)/(P.ymax-P.ymin)*600};}
+function pts(policy){return report?.runs.find(r=>r.seed===selected&&r.policy===policy)?.frames||[];}
+function run(policy){return report?.runs.find(r=>r.seed===selected&&r.policy===policy);}
+function fmt(x,n=2){return Number(x).toFixed(n);}
+function pickTimeFrame(frames){return frames[Math.min(timeIndex,frames.length-1)]||null;}
+function sceneDraw(){
+ ctx.clearRect(0,0,1170,600); ctx.fillStyle='#07141e';ctx.fillRect(0,0,1170,600);
+ ctx.lineWidth=1;ctx.strokeStyle='#1b3140';
+ for(let x=0;x<=11;x++){let a=world(x,P.ymin);ctx.beginPath();ctx.moveTo(a.x,0);ctx.lineTo(a.x,600);ctx.stroke();}
+ for(let y=-4;y<=4;y++){let a=world(P.xmin,y);ctx.beginPath();ctx.moveTo(0,a.y);ctx.lineTo(1170,a.y);ctx.stroke();}
+ const g=run('guarded');const obstacle=g?.scene.obstacle||{x:5,y:0,radius:.95};const center=world(obstacle.x,obstacle.y);const rr=obstacle.radius/(P.xmax-P.xmin)*1170;
+ ctx.fillStyle='#ff6f7b20';ctx.strokeStyle='#fa7b88';ctx.lineWidth=2;
+ ctx.beginPath();ctx.arc(center.x,center.y,rr,0,Math.PI*2);ctx.fill();ctx.stroke();
+ ctx.strokeStyle='#fa7b8850';ctx.setLineDash([7,10]);ctx.beginPath();ctx.arc(center.x,center.y,(obstacle.radius+.23+.3)/12*1170,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);
+ let goal=world(10,0);ctx.strokeStyle='#9bf6b4';ctx.lineWidth=2;ctx.beginPath();ctx.arc(goal.x,goal.y,17,0,Math.PI*2);ctx.stroke();ctx.beginPath();ctx.moveTo(goal.x-24,goal.y);ctx.lineTo(goal.x+24,goal.y);ctx.moveTo(goal.x,goal.y-24);ctx.lineTo(goal.x,goal.y+24);ctx.stroke();
+ ctx.fillStyle='#9bf6b4';ctx.font='600 13px ui-monospace,monospace';ctx.fillText('GOAL',goal.x-20,goal.y+40);
+ if(!report) {ctx.fillStyle='#a1bad0';ctx.font='600 20px system-ui';ctx.textAlign='center';ctx.fillText('Load a benchmark JSON receipt to inspect trajectories',585,300);ctx.textAlign='left';return;}
+ const wps=g?.waypoints||[];ctx.lineWidth=1;ctx.strokeStyle='#6ee7f83a';ctx.setLineDash([4,7]);ctx.beginPath();let st=world(0,0);ctx.moveTo(st.x,st.y);for(let q of wps){let a=world(q.x,q.y);ctx.lineTo(a.x,a.y);}ctx.stroke();ctx.setLineDash([]);
+ for(const policy of ['baseline','guarded']){
+   const frames=pts(policy);if(!frames.length)continue;
+   const upto=Math.min(timeIndex,frames.length-1);
+   ctx.strokeStyle=C[policy];ctx.lineWidth=3;ctx.shadowColor=C[policy];ctx.shadowBlur=10;ctx.beginPath();
+   frames.slice(0,upto+1).forEach((f,i)=>{let p=world(f.x,f.y);if(i)ctx.lineTo(p.x,p.y);else ctx.moveTo(p.x,p.y);});ctx.stroke();ctx.shadowBlur=0;
+   const frame=frames[upto],pt=world(frame.x,frame.y);ctx.save();ctx.translate(pt.x,pt.y);ctx.rotate(-frame.heading);
+   ctx.fillStyle=C[policy];ctx.beginPath();ctx.moveTo(16,0);ctx.lineTo(-11,-10);ctx.lineTo(-8,0);ctx.lineTo(-11,10);ctx.closePath();ctx.fill();ctx.restore();
+   ctx.fillStyle=C[policy];ctx.font='700 13px ui-monospace,monospace';ctx.fillText(policy==='guarded'?'GUARDED':'DIRECT',pt.x+17,pt.y-14);
+   if(frame.shielded){ctx.strokeStyle='#ffc36d';ctx.beginPath();ctx.arc(pt.x,pt.y,24,0,Math.PI*2);ctx.stroke();}
+ }
+ const starting=world(0,0);ctx.fillStyle='#d2e5f5';ctx.font='12px ui-monospace,monospace';ctx.fillText('START',starting.x-13,starting.y+30);
+}
+function updateUI(){
+ if(!report){sceneDraw();return;}
+ $('guardedRate').textContent=(report.scores.guarded.successRate*100).toFixed(0)+'%';
+ $('baseRate').textContent=(report.scores.baseline.successRate*100).toFixed(0)+'%';
+ $('guardedCount').textContent=`${report.scores.guarded.arrived} / ${report.scores.guarded.total} arrivals`;
+ $('baseCount').textContent=`${report.scores.baseline.arrived} / ${report.scores.baseline.total} arrivals`;
+ $('trialCount').textContent=report.runs.length;
+ const a=run('guarded');if(!a){sceneDraw();return;}
+ const params=a.parameters,rows=[['Traction',fmt(params.traction,3)],['Steering gain',fmt(params.steeringGain,3)],['Actuation delay',params.commandDelaySteps+' ticks'],['Pose noise',fmt(params.poseNoiseMeters,3)+' m'],['Compass noise',fmt(params.compassNoiseRadians,3)+' rad'],['Scenario seed',String(selected)]];
+ $('params').innerHTML=rows.map(([k,v])=>`<div class="detail"><label>${k}</label><strong>${v}</strong></div>`).join('');
+ $('ledger').innerHTML=['baseline','guarded'].map(p=>{let r=run(p);return `<div class="bar"><div><span style="color:${C[p]}">${p==='guarded'?'Guarded navigation':'Direct-to-goal'}</span><br><small>Clearance ${fmt(r.outcome.closestClearanceMeters)}m · ${r.outcome.shieldInterventions} safety blocks</small></div><b>${r.outcome.status.toUpperCase()}</b></div>`;}).join('');
+ $('receiptHash').textContent=`Benchmark digest SHA-256: ${report.sha256||'not supplied'} · Sample ${a.sha256.slice(0,14)}… · MODELED`;
+ let count=Math.max(pts('baseline').length,pts('guarded').length,1);$('scrub').max=count-1;timeIndex=Math.min(timeIndex,count-1);$('scrub').value=timeIndex;
+ let active=pickTimeFrame(pts('guarded'))||pickTimeFrame(pts('baseline'));$('clock').textContent=(active?.t||0).toFixed(1)+'s';$('meterFill').style.width=((timeIndex+1)/count*100).toFixed(2)+'%';sceneDraw();
+}
+function selectReport(next){
+ if(!next ||next.schema!=='evercraft.sim-to-real.benchmark.rc01'||!Array.isArray(next.runs)||!next.scores)throw Error('Unsupported benchmark receipt schema');
+ report=next;selected=next.runs.find(r=>r.frames?.length)?.seed??1;timeIndex=0;playing=false;$('play').textContent='▶ Play';
+ const seeds=[...new Set(next.runs.filter(r=>r.frames?.length).map(r=>r.seed))].sort((a,b)=>a-b);
+ $('scenario').innerHTML=seeds.map(s=>`<option value="${s}">Seed ${s}</option>`).join('');
+ $('scenario').value=selected;updateUI();
+}
+$('scenario').onchange=()=>{selected=Number($('scenario').value);timeIndex=0;updateUI();};
+$('scrub').oninput=()=>{timeIndex=Number($('scrub').value);updateUI();};
+$('restart').onclick=()=>{timeIndex=0;playing=false;$('play').textContent='▶ Play';updateUI();};
+$('play').onclick=()=>{if(!report)return;playing=!playing;$('play').textContent=playing?'Ⅱ Pause':'▶ Play';lastAt=0;};
+$('file').onchange=async e=>{const file=e.target.files?.[0];if(!file)return;try{selectReport(JSON.parse(await file.text()));}catch(err){window.alert(err.message);}};
+function animate(now){if(playing&&report){if(!lastAt)lastAt=now;if(now-lastAt>120){lastAt=now;timeIndex++;if(timeIndex>=Math.max(pts('baseline').length,pts('guarded').length)){playing=false;timeIndex--; $('play').textContent='▶ Play';}updateUI();}}requestAnimationFrame(animate);}requestAnimationFrame(animate);
+try{if(EMBEDDED_REPORT)selectReport(EMBEDDED_REPORT);}catch(e){console.warn(e);}sceneDraw();
+</script></body></html>
