@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#040b13">
-<meta name="hudson-watch-release" content="river-current-v11-spectral-navigator"><meta name="description" content="Watch HUDSON's flowing knowledge currents and source-linked replay on Evercraft's owned public observatory.">
+<meta name="hudson-watch-release" content="river-current-v12-skyward-schooner"><meta name="description" content="Watch HUDSON's flowing knowledge currents and source-linked replay on Evercraft's owned public observatory.">
 <title>HUDSON | Enter the Current</title>
 <style>
 :root{color-scheme:dark;--aqua:#9affdc;--chalk:#e2f7f1;--soft:#9ebabb}
@@ -176,6 +176,17 @@ function deflectCurrent(x,y,field){
   y:y+dy*inv*outward+dx*inv*curl
  };
 }
+// The scenic vessel uses the SAME deformed samples as the water renderer.
+// Canonical edge points and pointer hit-testing remain unchanged.
+function locateScenic(from,to,t){
+ var edge=findEdge(from,to);
+ if(!edge)return locate(from,to,t);
+ var points=edge.warpedPoints||edge.points;
+ var reverse=edge.from!==from,index=clamp(reverse?1-t:t,0,1)*90;
+ var k=Math.min(89,Math.floor(index)),u=index-k,p=points[k],q=points[k+1];
+ return {x:p.x+(q.x-p.x)*u,y:p.y+(q.y-p.y)*u,
+   dx:(q.x-p.x)*(reverse?-1:1),dy:(q.y-p.y)*(reverse?-1:1)};
+}
 function shapeRiverChannels(field){
  // Cache the 91 source points for each channel ONCE per frame. All seven
  // river lanes and flowing particles share the exact same displaced water.
@@ -329,7 +340,7 @@ function drawFoldingWake(trip){
  for(var band=0;band<3;band++){
   var left=wakeBands[band].left,right=wakeBands[band].right;
   for(var j=0;j<=20;j++){
-   var u=j/20,s=clamp(end-u*span,.01,.999),q=locate(trip.from,trip.to,s);
+   var u=j/20,s=clamp(end-u*span,.01,.999),q=locateScenic(trip.from,trip.to,s);
    var m=Math.hypot(q.dx,q.dy)||1,nx=-q.dy/m,ny=q.dx/m;
    var wave=Math.sin(clock*.68+u*8.5+band*2.2)*(1-u)*size*(.06+band*.017);
    var center=(band-1)*size*.16*(1-u)+wave,half=size*(.10+band*.016)*(1-u)*(.6+.4*Math.sin(u*Math.PI));
@@ -523,8 +534,8 @@ function drawPresenceRipple(from,to,t){
 // Scene geometry is illustrative only, never real inference or mission telemetry.
 // The ship is centered on the EXISTING river sample, not clamped somewhere else.
 function shipPathPose(from,to,t){
- var pos=locate(from,to,t);
- var a=locate(from,to,clamp(t-.018,0,1)),b=locate(from,to,clamp(t+.018,0,1));
+ var pos=locateScenic(from,to,t);
+ var a=locateScenic(from,to,clamp(t-.024,0,1)),b=locateScenic(from,to,clamp(t+.024,0,1));
  var dx=b.x-a.x,dy=b.y-a.y;
  var angle=Math.atan2(dy,dx);
  // The whole ship (sails, mist and sparkles) fits inside the tight river bends.
@@ -551,8 +562,21 @@ function drawMistySail(x,span,wind,tint){
  silk.addColorStop(.75,tint%2?"rgba(185,161,252,.55)":"rgba(117,248,223,.61)");
  silk.addColorStop(1,"rgba(29,69,121,.06)");
  ctx.fillStyle=silk;ctx.shadowBlur=.21;ctx.shadowColor="rgba(124,255,231,.78)";
- ctx.fill();ctx.shadowBlur=0;ctx.lineWidth=.032;
- ctx.strokeStyle="rgba(227,255,247,.97)";ctx.stroke();
+ ctx.fill();ctx.shadowBlur=0;
+ // Layer several softly refracted cloud pillows INSIDE the clipped sail.
+ // Their drift and bright rim form low-cost pseudo-volumetric depth.
+ ctx.save();ctx.clip();
+ for(var fold=0;fold<4;fold++){
+  var fx=x-.32+fold*.23+Math.sin(clock*.43+fold*1.7+wind)*.055;
+  var fy=tip*(.23+fold*.17),radius=.22+fold*.044;
+  var nebula=ctx.createRadialGradient(fx,fy,0,fx,fy,radius);
+  nebula.addColorStop(0,fold%2?"rgba(194,179,255,.35)":"rgba(207,255,237,.46)");
+  nebula.addColorStop(.45,"rgba(136,230,238,.15)");
+  nebula.addColorStop(1,"rgba(70,119,207,0)");
+  ctx.fillStyle=nebula;ctx.beginPath();ctx.arc(fx,fy,radius,0,7);ctx.fill();
+ }
+ ctx.restore();
+ ctx.lineWidth=.032;ctx.strokeStyle="rgba(227,255,247,.97)";ctx.stroke();
  // Cloud embroidery and moving silk folds make a sculptural, not flat, sail.
  for(var rib=1;rib<=4;rib++){
   var u=rib/5,y=tip*u;
@@ -570,6 +594,14 @@ function drawMistySail(x,span,wind,tint){
  }
  ctx.restore();
 }
+// Ship's length always follows the river's tangent. Its masts, however,
+// rise vertically in the camera's sky, independent of the hull's route heading.
+// This prevents a ninety-degree river turn from turning a ship into a needle.
+function drawSkywardSail(x,height,wind,tint,heading){
+ ctx.save();ctx.translate(x,0);ctx.rotate(-heading);
+ drawMistySail(0,height,wind,tint);
+ ctx.restore();
+}
 function drawShipStardustWake(trip){
  // Sparkling braided contrails are located on backward river samples, not a line.
  var front=.04+trip.t*.92;
@@ -579,14 +611,14 @@ function drawShipStardustWake(trip){
  for(var thread=0;thread<3;thread++){
   ctx.beginPath();
   for(var i=0;i<=22;i++){
-   var u=i/22,v=clamp(front-span*u,.001,.999),q=locate(trip.from,trip.to,v);
+   var u=i/22,v=clamp(front-span*u,.001,.999),q=locateScenic(trip.from,trip.to,v);
    var m=Math.hypot(q.dx,q.dy)||1;
    var offset=(thread-1)*pose.size*(.20+u*.50)+
        Math.sin(clock*.8+u*11+thread*2)*pose.size*.05*(1-u);
    var x=q.x-q.dy/m*offset,y=q.y+q.dx/m*offset;
    if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
   }
-  var end=locate(trip.from,trip.to,Math.max(.001,front-span));
+  var end=locateScenic(trip.from,trip.to,Math.max(.001,front-span));
   var g=ctx.createLinearGradient(pose.x,pose.y,end.x,end.y);
   g.addColorStop(0,thread===1?"rgba(211,255,235,.46)":"rgba(165,174,255,.32)");
   g.addColorStop(.51,thread===1?"rgba(94,245,217,.23)":"rgba(145,158,244,.15)");
@@ -597,7 +629,7 @@ function drawShipStardustWake(trip){
  }
  for(var star=0;star<23;star++){
   var u=.03+((clock*(.042+star%4*.004)+seeded(star*43+5))%1)*.94;
-  var q=locate(trip.from,trip.to,clamp(front-span*u,.001,.999));
+  var q=locateScenic(trip.from,trip.to,clamp(front-span*u,.001,.999));
   var m=Math.hypot(q.dx,q.dy)||1;
   var offset=(seeded(star*29+4)-.5)*pose.size*(.48+u*.77);
   var x=q.x-q.dy/m*offset,y=q.y+q.dx/m*offset;
@@ -662,22 +694,30 @@ function drawTraveler(from,to,t){
  gleam.addColorStop(.33,"rgba(161,255,227,.55)");
  gleam.addColorStop(1,"rgba(85,216,221,0)");
  ctx.fillStyle=gleam;ctx.beginPath();ctx.arc(1.83,-.54,.26,0,7);ctx.fill();
- // Three wind-filled aurora sails, mounted on ONE side of the hull.
- drawMistySail(-.84,.92,.4,0);
- drawMistySail(.70,1.03,-.2,1);
- drawMistySail(-.07,1.64,.8,2);
- // Rigging lines connect the upper cloud spires to the keel and gilded bow.
- ctx.save();ctx.strokeStyle="rgba(207,243,237,.53)";ctx.lineWidth=.015;
- for(var shroud of [[-.84,-.92,-1.39,-.12],[-.07,-1.64,-1.24,-.16],[-.07,-1.64,1.49,-.19],[.70,-1.03,1.34,-.14]]){
-  ctx.beginPath();ctx.moveTo(shroud[0],shroud[1]);
-  ctx.quadraticCurveTo((shroud[0]+shroud[2])*.5,-.41,shroud[2],shroud[3]);ctx.stroke();
- }ctx.restore();
+ // Skyward three-mast schooner: ship hull steers; the sail volume remains upright.
+ drawSkywardSail(-.84,.92,.4,0,pose.angle);
+ drawSkywardSail(.70,1.03,-.2,1,pose.angle);
+ drawSkywardSail(-.07,1.64,.8,2,pose.angle);
+ // Real projected rigging lines connect mastheads to stern, bow and side rails.
+ ctx.save();ctx.strokeStyle="rgba(216,252,241,.57)";ctx.lineWidth=.016;
+ var shrouds=[[-.84,.92,-1.39,-.12],[-.07,1.64,-1.24,-.16],
+   [-.07,1.64,1.49,-.19],[.70,1.03,1.34,-.14]];
+ for(var shroud of shrouds){
+  var sx=shroud[0]-shroud[1]*Math.sin(pose.angle);
+  var sy=-shroud[1]*Math.cos(pose.angle);
+  ctx.beginPath();ctx.moveTo(sx,sy);
+  ctx.quadraticCurveTo((sx+shroud[2])*.5,sy*.58,shroud[2],shroud[3]);ctx.stroke();
+ }
+ ctx.restore();
+ // The central pennant flickers in the same upright camera space as its mast.
+ ctx.save();ctx.translate(-.07,0);ctx.rotate(-pose.angle);
  var flutter=Math.sin(clock*.75)*.12;
- ctx.beginPath();ctx.moveTo(-.05,-1.63);
- ctx.bezierCurveTo(-.40,-1.79,-.84,-1.67+flutter,-1.15,-1.87+flutter);
- ctx.quadraticCurveTo(-.62,-1.63,-.05,-1.54);ctx.closePath();
- ctx.fillStyle="rgba(174,249,235,.28)";ctx.fill();
- ctx.strokeStyle="rgba(231,255,245,.56)";ctx.lineWidth=.018;ctx.stroke();
+ ctx.beginPath();ctx.moveTo(.02,-1.62);
+ ctx.bezierCurveTo(-.38,-1.78,-.76,-1.67+flutter,-1.10,-1.87+flutter);
+ ctx.quadraticCurveTo(-.58,-1.64,.02,-1.54);ctx.closePath();
+ ctx.fillStyle="rgba(174,249,235,.30)";ctx.fill();
+ ctx.strokeStyle="rgba(241,255,248,.66)";ctx.lineWidth=.018;ctx.stroke();
+ ctx.restore();
  // A carved aftcastle and starlit deck make the translucent outline a ship.
  ctx.beginPath();ctx.moveTo(-1.35,-.21);ctx.lineTo(-1.10,-.53);
  ctx.quadraticCurveTo(-.79,-.55,-.52,-.38);ctx.lineTo(-.48,-.13);
@@ -689,6 +729,16 @@ function drawTraveler(from,to,t){
   var xx=-1.10+prong*.29;ctx.beginPath();ctx.moveTo(xx,-.15);ctx.lineTo(xx,-.25);
   ctx.strokeStyle="rgba(255,236,194,.55)";ctx.lineWidth=.012;ctx.stroke();
  }
+ // The prow lifts two soft diffraction arcs into the surrounding current.
+ ctx.save();ctx.globalCompositeOperation="lighter";
+ for(var bow=0;bow<2;bow++){
+  var bobbing=.13*Math.sin(clock*.92+bow*.8);
+  ctx.beginPath();ctx.ellipse(1.67+bow*.20,-.01, .31+bow*.15,
+    .35+bow*.20+bobbing,0,-1.21,1.21);
+  ctx.strokeStyle=bow===0?"rgba(188,255,238,.41)":"rgba(151,162,255,.25)";
+  ctx.lineWidth=.018;ctx.stroke();
+ }
+ ctx.restore();
  // Bridge lights reveal architecture through the glowing cloud.
  for(var lamp=0;lamp<7;lamp++){
   var x=-1.03+lamp*.31,y=.057+Math.sin(lamp*.8)*.015;
