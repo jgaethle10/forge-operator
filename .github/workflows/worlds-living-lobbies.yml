@@ -1,0 +1,40 @@
+name: Worlds Living Lobbies policy
+on:
+  push:
+    paths:
+      - 'systemia/worlds/living-lobby-policy.mjs'
+      - 'systemia/worlds/living-lobby-invitation-proof.mjs'
+      - 'systemia/worlds/living-lobby-presence-proof.mjs'
+      - 'systemia/worlds/living-lobby-identity-bridge.mjs'
+      - 'tests/worlds-living-lobby-policy.test.mjs'
+      - 'tests/worlds-living-lobby-invitations.test.mjs'
+      - 'tests/worlds-living-lobby-presence.test.mjs'
+      - 'tests/worlds-living-lobby-identity-bridge.test.mjs'
+      - '.github/workflows/worlds-living-lobbies.yml'
+  pull_request:
+    paths:
+      - 'systemia/worlds/living-lobby-policy.mjs'
+      - 'systemia/worlds/living-lobby-invitation-proof.mjs'
+      - 'systemia/worlds/living-lobby-presence-proof.mjs'
+      - 'systemia/worlds/living-lobby-identity-bridge.mjs'
+      - 'tests/worlds-living-lobby-policy.test.mjs'
+      - 'tests/worlds-living-lobby-invitations.test.mjs'
+      - 'tests/worlds-living-lobby-presence.test.mjs'
+      - 'tests/worlds-living-lobby-identity-bridge.test.mjs'
+      - '.github/workflows/worlds-living-lobbies.yml'
+permissions:
+  contents: read
+jobs:
+  policy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --check systemia/worlds/living-lobby-policy.mjs
+      - run: node --check systemia/worlds/living-lobby-invitation-proof.mjs
+      - run: node --check systemia/worlds/living-lobby-presence-proof.mjs
+      - run: node --check systemia/worlds/living-lobby-identity-bridge.mjs
+      - run: node --test tests/worlds-living-lobby-policy.test.mjs tests/worlds-living-lobby-invitations.test.mjs tests/worlds-living-lobby-presence.test.mjs tests/worlds-living-lobby-identity-bridge.test.mjs
