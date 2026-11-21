@@ -1,0 +1,63 @@
+{
+  "schema": "evercraft.fungal-defense.release-gate-test-receipt.v1",
+  "observed_utc": "2026-11-10T02:06:45Z",
+  "local_calendar_date": "2026-11-09",
+  "execution_context": "Isolated assistant development container, not Evercraft Node001/Node002",
+  "branch": "research/fungal-defense-001",
+  "files": [
+    {
+      "path": "research/fungal-defense-001/tools/release_gate.py",
+      "git_blob_sha": "bcb666e5130579421eaa9f3a2dc7bba961d15a27",
+      "identical_to_locally_tested_bytes": true
+    },
+    {
+      "path": "research/fungal-defense-001/tools/run_owned_validation.py",
+      "git_blob_sha": "bd145f81d06ad2ba52689a92c5ba2ca288468979",
+      "identical_to_locally_tested_bytes": true
+    }
+  ],
+  "observations": [
+    {
+      "command": "python release_gate.py --self-test",
+      "observed": "PASS",
+      "details": "preview never allows publishing; no approvals means public is blocked; invalid fixture claims rejected"
+    },
+    {
+      "command": "python release_gate.py --manifest release-gates.json --stage preview",
+      "observed": "PASS",
+      "status": "preview_ready",
+      "can_publish": false
+    },
+    {
+      "command": "python release_gate.py --manifest release-gates.json --stage public",
+      "observed": "EXPECTED_BLOCK",
+      "exit_code": 2,
+      "can_publish": false,
+      "details": "Four review categories, explicit signoff and commit pin missing"
+    },
+    {
+      "command": "python -m py_compile run_owned_validation.py",
+      "observed": "PASS"
+    },
+    {
+      "command": "python run_owned_validation.py --output preflight-local-test.json",
+      "observed": "EXPECTED_FAIL",
+      "details": "No prior research checkout files in isolated environment; generated honest fail receipt instead of incorrect success"
+    }
+  ],
+  "verified_public_sources": [
+    {
+      "url": "https://www.cdc.gov/candida-auris/tracking-c-auris/index.html",
+      "observed": "As of 2026-11-09, CDC page states 6,304 clinical cases in 2024",
+      "web_review_only": true
+    }
+  ],
+  "explicit_limitations": [
+    "Full original validator suite was not re-run against canonical repo bytes in this session",
+    "Neither source_watch --online nor an Evercraft-node integration test was executed",
+    "No human review approvals obtained",
+    "No public deployment or host changes"
+  ],
+  "public_release_approved": false,
+  "owned_node_receipt_present": false
+}

@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>Evercraft Fungal Defense | Research Prototype 0.3</title>
+<style>
+:root{--ink:#14283a;--muted:#597083;--line:#dae6ed;--bg:#f4f8fa;--paper:#fff;--teal:#0a7779;--soft:#eaf5f4;--navy:#193b53;--focus:#0a7779}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;line-height:1.55}
+a{color:#076b79}a:hover{text-decoration-thickness:2px}:focus-visible{outline:3px solid var(--focus);outline-offset:3px}
+.wrap{width:min(1120px,calc(100% - 36px));margin:auto}.top{background:#fff;border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 0}.brand{font-weight:800;letter-spacing:-.02em}.brand span{color:var(--teal)}.flag{border:1px solid #bfd8dd;border-radius:99px;padding:4px 10px;color:#416376;font-size:12px;font-weight:700}
+.hero{padding:52px 0 32px}.eyebrow{color:var(--teal);letter-spacing:.13em;text-transform:uppercase;font-size:12px;font-weight:800}
+h1{font-size:clamp(32px,5vw,58px);line-height:1.08;letter-spacing:-.045em;max-width:900px;margin:12px 0 19px}
+.lede{font-size:clamp(17px,2.4vw,21px);color:var(--muted);max-width:810px;margin:0}
+.note{margin:26px 0 34px;background:#eaf1f6;border-left:4px solid #427e92;padding:16px 20px;border-radius:0 10px 10px 0;color:#345467}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:17px}.card{background:var(--paper);border:1px solid var(--line);border-radius:17px;padding:23px;box-shadow:0 5px 23px #16364a08}
+.card h3{margin:7px 0 9px;font-size:19px;letter-spacing:-.02em}.card p{margin:0;color:var(--muted);font-size:15px}
+.kicker{font-size:12px;text-transform:uppercase;letter-spacing:.1em;font-weight:800;color:var(--teal)}
+section{margin:22px 0}.maincard{padding:27px}.headrow{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap}
+h2{font-size:clamp(22px,3vw,29px);letter-spacing:-.025em;margin:2px 0 8px}
+.sub{color:var(--muted);font-size:14px;max-width:690px}
+.stat{font-size:clamp(38px,6vw,58px);line-height:1;font-weight:800;letter-spacing:-.055em;color:var(--navy);margin:14px 0 4px}
+label{font-weight:650;font-size:13px;color:var(--muted)}select{border:1px solid #aac4ce;border-radius:10px;padding:10px;background:#fff;color:var(--ink);font:inherit;min-width:132px;display:block;margin-top:5px}
+.controls{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end}.controls label{display:block}.controls select{width:100%;max-width:310px}.chart{display:flex;align-items:flex-end;gap:min(2vw,17px);height:260px;padding:16px 0 25px;border-bottom:1px solid var(--line);margin-top:22px}
+.barwrap{display:flex;flex-direction:column;justify-content:flex-end;align-items:center;flex:1;min-width:0;height:100%;position:relative}
+.bar{width:min(100%,68px);background:#b6d9dc;border:1px solid #85b8c0;border-radius:6px 6px 0 0;min-height:3px;transition:height .2s,background .2s}.bar.active{background:var(--teal);border-color:#096b6d}
+.barwrap span{position:absolute;bottom:-29px;font-size:12px;color:var(--muted)}.series-detail{font-size:14px;color:var(--muted);margin:43px 0 0}
+.pills{display:flex;gap:9px;flex-wrap:wrap;margin:14px 0}.pill{padding:5px 10px;border-radius:20px;background:var(--soft);color:#176a70;font-size:12px;font-weight:750}
+.prov-card{background:#f9fcfd;border:1px solid #c2dae3}.prov-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:20px 0}.prov-stat{padding:16px;background:#fff;border:1px solid #d5e5eb;border-radius:12px}.prov-stat strong{display:block;font-size:clamp(25px,4vw,39px);line-height:1.2;color:#193b53;font-variant-numeric:tabular-nums}.prov-stat small{display:block;color:#557283;font-weight:650}.provisional-table{width:100%;border-collapse:collapse;display:table;margin-top:15px;font-variant-numeric:tabular-nums}.provisional-table th,.provisional-table td{border-bottom:1px solid #d9e7ed;padding:10px 9px;text-align:left}.provisional-table td:not(:first-child),.provisional-table th:not(:first-child){text-align:right}.provisional-table th{font-size:12px;color:#526979}.sourcebox{margin-top:19px;padding:17px;border:1px solid var(--line);border-radius:12px;background:#f7fafb;font-size:13px;color:#4d6474}
+ul{padding-left:21px;color:var(--muted)}li{margin:8px 0}
+footer{border-top:1px solid var(--line);padding:27px 0 42px;color:#647d8b;font-size:13px}
+@media(max-width:750px){.prov-stats{gap:9px}.prov-stat{padding:12px}.provisional-table{font-size:12px}.provisional-table th,.provisional-table td{padding:8px 4px}.grid{grid-template-columns:1fr}.hero{padding:31px 0 23px}.maincard{padding:20px}.card{padding:20px}.top .wrap{padding:13px 0}.chart{gap:6px;height:205px}.barwrap span{font-size:10px}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap"><div class="brand">EVERCRAFT <span>/ FUNGAL DEFENSE</span></div><div class="flag">RESEARCH PROTOTYPE · 0.3</div></div></header>
+<main class="wrap">
+<div class="hero">
+<div class="eyebrow">Public-health evidence observatory</div>
+<h1>Better information.<br>Earlier action.</h1>
+<p class="lede">Fungal disease is a real and under-recognized public-health problem. We are building tools that keep documented threats separate from hypotheses and bring credible prevention guidance closer to the people who need it.</p>
+<div class="note"><strong>Research preview:</strong> This page is a static proof of concept, not a live outbreak monitor or medical diagnostic tool. The historical chart ends in 2024; the separate 2026 weekly panel shows provisional notifications, not finalized annual case totals. Do not use this dashboard to make clinical decisions.</div>
+</div>
+<div class="grid" aria-label="Evidence categories">
+<article class="card"><div class="kicker">Documented</div><h3>Fungal infections and resistance</h3><p>Some fungal pathogens cause severe illness and can be difficult to treat. Candida auris can spread between vulnerable patients in healthcare settings.</p></article>
+<article class="card"><div class="kicker">Being investigated</div><h3>Climate and adaptation</h3><p>Scientists are studying whether environmental warming contributes to the emergence of heat-tolerant pathogenic fungi. Causality and future risk are not fully established.</p></article>
+<article class="card"><div class="kicker">Actionable</div><h3>Infection prevention</h3><p>Early detection, screening where indicated, appropriate hygiene and effective healthcare environmental cleaning are established prevention measures.</p></article>
+</div>
+<section class="card maincard" aria-labelledby="trendtitle">
+<div class="headrow">
+<div><div class="kicker">United States · CDC surveillance sources</div><h2 id="trendtitle">Candida auris clinical cases</h2><p class="sub">Two independently sourced CDC datasets are available. Select the public tracking page or the corrected 2026 MMWR study. Different source snapshots must not be mixed. Neither series represents deaths, all infections or population prevalence.</p></div>
+<div class="controls"><div><label for="source">CDC source</label><select id="source" aria-controls="chart casecount sourceinfo"><option value="cdc_tracking_public">Public tracking page</option><option value="cdc_mmwr_2026_corrected">Corrected MMWR (2026)</option></select></div><div><label for="year">Inspect year</label><select id="year" aria-controls="casecount"></select></div></div>
+</div>
+<div class="stat" id="casecount" aria-live="polite">6,304</div>
+<div class="sub" id="caselabel">Reported clinical cases in 2024</div>
+<div class="chart" role="img" aria-label="CDC clinical Candida auris cases increased between 2016 and 2024. Use the year selector for exact counts." id="chart"></div>
+<p class="series-detail" id="detail">Choose a year to inspect exact reported counts. Trend is not adjusted for changes in screening, reporting or detection.</p>
+<div class="sourcebox" id="sourceinfo" role="note"></div><details class="sourcebox"><summary><strong>Show this source’s year-by-year data table</strong></summary><div id="datatable"></div></details><div class="sourcebox"><strong>Methods:</strong> 2024 is the latest year in these reviewed datasets. Counts are reported clinical cases, including non-invasive specimens, not confirmed invasive infections or deaths. The CDC suppresses small geographic case counts to protect patient and facility identification. The observatory never tries to reverse suppression. There are no invented 2025–2026 data or claims of live outbreak detection.</div>
+</section>
+<section class="card maincard prov-card" aria-labelledby="provisionalTitle" id="provisional">
+<div class="headrow">
+<div><div class="kicker">Separate CDC NNDSS weekly surveillance · preliminary</div><h2 id="provisionalTitle">2026 provisional notifications</h2><p class="sub">A different reporting system from the historical chart. These are cumulative notifications through a specific reporting week, not finalized yearly cases, deaths, confirmed infections or a live outbreak alert.</p></div>
+<div><label for="provisionalType">Notification category</label><select id="provisionalType" aria-controls="provisionalCurrent provisionalPrevious provisionalRows provisionalSource"><option value="clinical">Clinical notifications</option><option value="screening">Screening notifications</option></select></div>
+</div>
+<div class="pills"><span class="pill">PROVISIONAL</span><span class="pill">Week 43 · October 31, 2026</span><span class="pill">U.S. residents excluding territories</span></div>
+<div class="prov-stats">
+<div class="prov-stat"><small>2026 year-to-date</small><strong id="provisionalCurrent" aria-live="polite">6,572</strong><small>Through week 43, subject to revision</small></div>
+<div class="prov-stat"><small>2025 at the same week</small><strong id="provisionalPrevious">5,733</strong><small>Provisional comparison, not final annual data</small></div>
+</div>
+<div class="sub" id="provisionalExplanation">Clinical and screening notifications use different case definitions. Counts may be revised upward or downward; changes alone do not establish an outbreak or infection trend.</div>
+<div style="overflow-x:auto"><table class="provisional-table"><caption style="text-align:left;color:#526979;font-size:13px;padding:12px 0">CDC published surveillance snapshots. These are cumulative notification totals, not weekly new infections.</caption><thead><tr><th scope="col">Week ending</th><th scope="col">Week</th><th scope="col">2026 YTD</th><th scope="col">2025 same week</th></tr></thead><tbody id="provisionalRows"></tbody></table></div>
+<div class="sourcebox" id="provisionalSource">CDC NNDSS weekly tables. See linked original report for definitions, exclusions, revisions and jurisdiction reporting limitations.</div>
+<div class="sourcebox"><strong>Interpretation rule:</strong> Provisional cumulative notification counts can change because of reporting practices and revisions. Never combine them with the historical annual CDC tracking series, add clinical and screening numbers, or calculate new infections by subtracting week-to-week snapshots. This prototype does not predict individual infection risk.</div>
+</section>
+<section class="grid" aria-label="Resources and research">
+<article class="card"><div class="kicker">Prevention</div><h3>CDC infection control</h3><p>Healthcare prevention strategies, including screening, hand hygiene and transmission precautions. <a href="https://www.cdc.gov/candida-auris/prevention/index.html" target="_blank" rel="noopener">Read CDC guidance</a>.</p></article>
+<article class="card"><div class="kicker">Global priorities</div><h3>WHO response blueprint</h3><p>The WHO's June 2026 framework identifies diagnostics, surveillance, medicines and public-health capacity as urgent needs. <a href="https://www.who.int/publications/i/item/9789240122529" target="_blank" rel="noopener">Explore framework</a>.</p></article>
+<article class="card"><div class="kicker">Research</div><h3>What about warming?</h3><p>A 2026 peer-reviewed review explores fungal thermotolerance and pathogen emergence. It does not establish an inevitable fungal takeover. <a href="https://doi.org/10.1128/msphere.00109-26" target="_blank" rel="noopener">Read the paper</a>.</p></article>
+</section>
+</main>
+<footer><div class="wrap">Evercraft Fungal Defense · FUNGAL-DEFENSE-001 · Historical data reviewed 2026-11-04; provisional snapshots reviewed 2026-11-09. Research prototype only. Not affiliated with CDC or WHO.</div></footer>
+<script type="application/json" id="dataset-json">{"schema":"evercraft.fungal-defense.public-surveillance.v1","reviewed_at":"2026-11-04","scope":"United States; reported Candida auris clinical cases; aggregate, year of specimen collection","not_live":true,"exclusions":["screening-only cases","mortality","estimated total infections","2025 or 2026 projections"],"datasets":[{"id":"cdc_tracking_public","label":"CDC public tracking page","source_url":"https://www.cdc.gov/candida-auris/tracking-c-auris/index.html","source_page_reviewed":"2026-10-02","accessed_at":"2026-11-04","case_definition":"CDC-tracked clinical cases by specimen collection year; may include invasive and non-invasive specimens","values":[{"year":2016,"cases":48},{"year":2017,"cases":170},{"year":2018,"cases":329},{"year":2019,"cases":477},{"year":2020,"cases":766},{"year":2021,"cases":1559},{"year":2022,"cases":2915},{"year":2023,"cases":4523},{"year":2024,"cases":6304}],"expected_total":17091,"caveat":"Reported count changes can reflect screening, reporting, data revisions, and healthcare transmission; reported clinical cases do not equal invasive infections."},{"id":"cdc_mmwr_2026_corrected","label":"CDC corrected MMWR surveillance study","source_url":"https://www.cdc.gov/mmwr/volumes/75/ss/ss7504a1.htm","publication_date":"2026-07-02","data_frozen_at":"2026-02-20","accessed_at":"2026-11-04","case_definition":"Clinical cases in corrected CDC case-level surveillance analysis by specimen collection year","values":[{"year":2022,"cases":2882},{"year":2023,"cases":4428},{"year":2024,"cases":6197}],"expected_total":13507,"caveat":"This is a frozen analysis; it must not be substituted for or silently merged with the public tracking page series. Differences reflect data extraction, updates, and surveillance definitions."}],"suppression":{"source_rule":"CDC displays small geographic counts as '1 to 10' to protect identification of patients or facilities.","restricted_values":["1 to 10"],"policy":"Preserve suppression verbatim. Never infer exact small-cell counts by subtraction; never plot patient- or facility-level locations."},"interpretation":{"established":["Candida auris is a healthcare-associated fungal threat; some isolates are antifungal resistant.","Clinical and screening surveillance cases are distinct."],"investigational":["The contribution of climate-related selection and fungal thermotolerance to emerging human fungal disease."],"unsupported":["Inevitable fungal takeover","human behavior-control outbreaks"],"caution":"No data in this package measure the probability or timing of a fungal pandemic."}}</script>
+<script>
+(function() {
+"use strict";
+const manifest = JSON.parse(document.getElementById("dataset-json").textContent);
+const index = new Map(manifest.datasets.map(ds=>[ds.id,ds]));
+const sourceSelect = document.getElementById("source");
+const yearSelect = document.getElementById("year");
+const chart = document.getElementById("chart");
+const count = document.getElementById("casecount");
+const label = document.getElementById("caselabel");
+const detail = document.getElementById("detail");
+const sourceInfo = document.getElementById("sourceinfo");
+const table = document.getElementById("datatable");
+const fmt = v => v.toLocaleString("en-US");
+function el(tag, className, text) {
+  const node=document.createElement(tag);
+  if (className) node.className=className;
+  if (text!==undefined) node.textContent=text;
+  return node;
+}
+function render() {
+  const ds=index.get(sourceSelect.value) || manifest.datasets[0];
+  const rows=ds.values;
+  const existing=Number(yearSelect.value);
+  const selected=rows.some(row=>row.year===existing)?existing:rows[rows.length-1].year;
+  yearSelect.replaceChildren(...rows.map(row=>{
+    const o=el("option",null,String(row.year));o.value=String(row.year);return o;
+  }));
+  yearSelect.value=String(selected);
+  const active=rows.find(row=>row.year===selected);
+  count.textContent=fmt(active.cases);
+  label.textContent="Reported clinical cases in "+selected+" · "+ds.label;
+  const max=Math.max(...rows.map(row=>row.cases));
+  chart.replaceChildren(...rows.map(row=>{
+    const wrap=el("div","barwrap");
+    const bar=el("div","bar"+(row.year===selected?" active":""));
+    bar.style.height=Math.max(1,(100*row.cases/max))+"%";
+    bar.title=row.year+": "+fmt(row.cases)+" reported clinical cases";
+    wrap.append(bar,el("span",null,String(row.year)));
+    return wrap;
+  }));
+  chart.setAttribute("aria-label",ds.label+" clinical cases for "+rows.map(row=>row.year+": "+fmt(row.cases)).join("; "));
+  const other=manifest.datasets.find(item=>item.id!==ds.id);
+  const matching=other.values.find(row=>row.year===selected);
+  const difference=matching?Math.abs(active.cases-matching.cases):null;
+  detail.textContent="Selected: "+fmt(active.cases)+" reported clinical cases in "+selected+". "
+    +(difference!==null?"The other CDC source reports "+fmt(matching.cases)+" for this year (difference: "+fmt(difference)+"). These figures must not be combined. ":"")
+    +"Reported case trends are affected by changing surveillance, reporting and detection.";
+  sourceInfo.replaceChildren();
+  const bold=el("strong",null,"Source, version and definition: ");
+  const link=el("a",null,ds.label);link.href=ds.source_url;link.target="_blank";link.rel="noopener";
+  sourceInfo.append(bold,link,document.createTextNode(". "+ds.case_definition+" "+ds.caveat+" Last evidence review: "+manifest.reviewed_at+"."));
+  const t=el("table");t.style.width="100%";
+  t.innerHTML="<thead><tr><th scope='col'>Specimen year</th><th scope='col'>Reported clinical cases</th></tr></thead>";
+  const tbody=el("tbody");
+  for(const row of rows){const tr=el("tr");const y=el("th",null,String(row.year));y.scope="row";y.style.textAlign="left";const c=el("td",null,fmt(row.cases));c.style.textAlign="right";tr.append(y,c);tbody.append(tr)}
+  t.appendChild(tbody);table.replaceChildren(t);
+}
+sourceSelect.addEventListener("change",render);
+yearSelect.addEventListener("change",render);
+render();
+})();
+</script>
+<script type="application/json" id="provisional-dataset">{"schema":"evercraft.fungal-defense.nndss-provisional.v1","reviewed_at":"2026-11-09","surveillance_system":"CDC National Notifiable Diseases Surveillance System (NNDSS)","scope":"U.S. Residents, excluding U.S. Territories","pathogen":"Candida auris","status":"provisional_not_final","is_live":false,"kind":"cumulative notifications as of each epidemiological week; not finalized annual cases, incidence, deaths, or infections","clinical":{"definition":"Clinical case notifications; do not combine with screening-only notifications.","snapshots":[{"week":41,"week_ending":"2026-10-17","cumulative_2026":6211,"same_week_cumulative_2025":5452,"current_week_2026":63,"source_url":"https://stacks.cdc.gov/view/cdc/262543"},{"week":42,"week_ending":"2026-10-24","cumulative_2026":6379,"same_week_cumulative_2025":5584,"current_week_2026":78,"source_url":"https://stacks.cdc.gov/view/cdc/262666"},{"week":43,"week_ending":"2026-10-31","cumulative_2026":6572,"same_week_cumulative_2025":5733,"current_week_2026":91,"source_url":"https://stacks.cdc.gov/view/cdc/262786"}]},"screening":{"definition":"Screening case notifications; positive colonization screening is not a clinical case or necessarily infection.","snapshots":[{"week":43,"week_ending":"2026-10-31","cumulative_2026":7202,"same_week_cumulative_2025":6896,"current_week_2026":87,"source_url":"https://stacks.cdc.gov/view/cdc/262787"}]},"caveats":["Weekly counts are provisional and may increase or decrease when jurisdictions correct reports.","The national figure excludes U.S. territories and uses reporting notifications, not a final specimen-year annual tabulation.","A snapshot is a point-in-time report and is not proof of an active outbreak.","Do not subtract successive cumulative totals to infer new infections or death counts.","Not directly comparable with CDC's separate 2016–2024 finalized historical tracking data or its frozen MMWR case-level analysis.","Incomplete and variable jurisdiction reporting can affect comparisons.","No 2026 year-end estimate, individual risk score, or forecast is supplied."],"sources":[{"case_type":"clinical","document":"CDC NNDSS weekly clinical table week 43","url":"https://stacks.cdc.gov/view/cdc/262786/cdc_262786_DS1.pdf","published_on":"2026-10-31"},{"case_type":"screening","document":"CDC NNDSS weekly screening table week 43","url":"https://stacks.cdc.gov/view/cdc/262787/cdc_262787_DS1.pdf","published_on":"2026-10-31"}],"publication_policy":{"source_changes_require_manual_review":true,"no_automatic_case_updates":true,"no_alarm_generation":true,"public_launch_approval_required":true,"geographic_suppression_not_reconstructed":true}}</script>
+<script>
+(function(){
+"use strict";
+const report=JSON.parse(document.getElementById("provisional-dataset").textContent);
+const kind=document.getElementById("provisionalType");
+const current=document.getElementById("provisionalCurrent");
+const prior=document.getElementById("provisionalPrevious");
+const rows=document.getElementById("provisionalRows");
+const source=document.getElementById("provisionalSource");
+const explanation=document.getElementById("provisionalExplanation");
+const fmt=n=>n.toLocaleString("en-US");
+function el(tag,text){const node=document.createElement(tag);if(text!==undefined)node.textContent=text;return node}
+function render(){
+ const series=report[kind.value];
+ if(!series)return;
+ const last=series.snapshots[series.snapshots.length-1];
+ current.textContent=fmt(last.cumulative_2026);
+ prior.textContent=fmt(last.same_week_cumulative_2025);
+ explanation.textContent=series.definition+" These are preliminary national notifications, not all infections, final annual cases or verified outbreak alerts.";
+ rows.replaceChildren(...series.snapshots.map(point=>{
+   const tr=el("tr");
+   for(const value of [point.week_ending,String(point.week),fmt(point.cumulative_2026),fmt(point.same_week_cumulative_2025)]){
+      const cell=el("td",value);tr.append(cell)
+   }
+   return tr;
+ }));
+ source.replaceChildren();
+ const strong=el("strong","Source: ");
+ const link=el("a","CDC NNDSS "+kind.value+" report, week "+last.week);
+ link.href=last.source_url;link.target="_blank";link.rel="noopener";
+ source.append(strong,link,document.createTextNode(". Reporting week ended "+last.week_ending+". Scope: "+report.scope+". Source review: "+report.reviewed_at+". Provisional data may be revised; avoid cross-series comparisons."));
+}
+kind.addEventListener("change",render);
+render();
+})();
+</script>
+</body>
+</html>

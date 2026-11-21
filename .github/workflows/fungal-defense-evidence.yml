@@ -1,0 +1,55 @@
+name: Fungal Defense | Offline Evidence Checks
+on:
+  pull_request:
+    paths:
+      - 'research/fungal-defense-001/**'
+      - '.github/workflows/fungal-defense-evidence.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  offline-evidence:
+    name: Historical, provisional, and annual revision integrity
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      PIP_NO_INDEX: '1'
+    steps:
+      - name: Checkout proposed code (CI only; no deployment)
+        uses: actions/checkout@v4
+
+      - name: Run all offline Python regression tests
+        run: python3 -m unittest discover -s research/fungal-defense-001/tools -p 'test_*.py' -v
+
+      - name: Validate versioned CDC annual, archived and provisional data
+        run: |
+          python3 research/fungal-defense-001/tools/validate_surveillance.py --self-test
+          python3 research/fungal-defense-001/tools/check_observatory.py
+          python3 research/fungal-defense-001/tools/check_provisional.py
+          python3 research/fungal-defense-001/tools/check_annual_revision.py
+
+      - name: Verify public release is blocked by default
+        shell: bash
+        run: |
+          python3 research/fungal-defense-001/tools/release_gate.py --self-test
+          set +e
+          python3 research/fungal-defense-001/tools/release_gate.py --stage public > "$RUNNER_TEMP/fungal-public-gate.json"
+          code="$?"
+          set -e
+          test "$code" -eq 2
+          python3 - "$RUNNER_TEMP/fungal-public-gate.json" <<'PY'
+          import json
+          import sys
+          from pathlib import Path
+          record = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+          assert record["status"] == "blocked"
+          assert record["can_publish"] is False
+          print("PASS: public release remains blocked")
+          PY
+
+      - name: No application publication
+        run: |
+          echo 'Verification only; no hosting, live disease monitoring, alerting, or production deployment.'

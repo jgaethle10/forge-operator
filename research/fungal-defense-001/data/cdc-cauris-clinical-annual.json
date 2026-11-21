@@ -1,0 +1,108 @@
+{
+  "schema": "evercraft.fungal-defense.public-surveillance.v1",
+  "reviewed_at": "2026-11-04",
+  "scope": "United States; reported Candida auris clinical cases; aggregate, year of specimen collection",
+  "not_live": true,
+  "exclusions": [
+    "screening-only cases",
+    "mortality",
+    "estimated total infections",
+    "2025 or 2026 projections"
+  ],
+  "datasets": [
+    {
+      "id": "cdc_tracking_public",
+      "label": "CDC public tracking page",
+      "source_url": "https://www.cdc.gov/candida-auris/tracking-c-auris/index.html",
+      "source_page_reviewed": "2026-10-02",
+      "accessed_at": "2026-11-04",
+      "case_definition": "CDC-tracked clinical cases by specimen collection year; may include invasive and non-invasive specimens",
+      "values": [
+        {
+          "year": 2016,
+          "cases": 48
+        },
+        {
+          "year": 2017,
+          "cases": 170
+        },
+        {
+          "year": 2018,
+          "cases": 329
+        },
+        {
+          "year": 2019,
+          "cases": 477
+        },
+        {
+          "year": 2020,
+          "cases": 766
+        },
+        {
+          "year": 2021,
+          "cases": 1559
+        },
+        {
+          "year": 2022,
+          "cases": 2915
+        },
+        {
+          "year": 2023,
+          "cases": 4523
+        },
+        {
+          "year": 2024,
+          "cases": 6304
+        }
+      ],
+      "expected_total": 17091,
+      "caveat": "Reported count changes can reflect screening, reporting, data revisions, and healthcare transmission; reported clinical cases do not equal invasive infections."
+    },
+    {
+      "id": "cdc_mmwr_2026_corrected",
+      "label": "CDC corrected MMWR surveillance study",
+      "source_url": "https://www.cdc.gov/mmwr/volumes/75/ss/ss7504a1.htm",
+      "publication_date": "2026-07-02",
+      "data_frozen_at": "2026-02-20",
+      "accessed_at": "2026-11-04",
+      "case_definition": "Clinical cases in corrected CDC case-level surveillance analysis by specimen collection year",
+      "values": [
+        {
+          "year": 2022,
+          "cases": 2882
+        },
+        {
+          "year": 2023,
+          "cases": 4428
+        },
+        {
+          "year": 2024,
+          "cases": 6197
+        }
+      ],
+      "expected_total": 13507,
+      "caveat": "This is a frozen analysis; it must not be substituted for or silently merged with the public tracking page series. Differences reflect data extraction, updates, and surveillance definitions."
+    }
+  ],
+  "suppression": {
+    "source_rule": "CDC displays small geographic counts as '1 to 10' to protect identification of patients or facilities.",
+    "restricted_values": [
+      "1 to 10"
+    ],
+    "policy": "Preserve suppression verbatim. Never infer exact small-cell counts by subtraction; never plot patient- or facility-level locations."
+  },
+  "interpretation": {
+    "established": [
+      "Candida auris is a healthcare-associated fungal threat; some isolates are antifungal resistant.",
+      "Clinical and screening surveillance cases are distinct."
+    ],
+    "investigational": [
+      "The contribution of climate-related selection and fungal thermotolerance to emerging human fungal disease."
+    ],
+    "unsupported": [
+      "Inevitable fungal takeover",
+      "human behavior-control outbreaks"
+    ],
+    "caution": "No data in this package measure the probability or timing of a fungal pandemic."
+  }
+}

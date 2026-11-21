@@ -1,0 +1,114 @@
+{
+  "schema": "evercraft.fungal-defense.evidence-review-receipt.v1",
+  "review_date": "2026-11-15",
+  "workstream": "FUNGAL-DEFENSE-001",
+  "repository": "jgaethle10/forge-operator",
+  "branch": "research/fungal-defense-001",
+  "source_updates": [
+    {
+      "source": "CDC Tracking C. auris",
+      "url": "https://www.cdc.gov/candida-auris/tracking-c-auris/",
+      "published_on": "2026-11-13",
+      "year_2024": 6370,
+      "year_2025": 8780,
+      "context": "Retrospective reported clinical cases; not a novel fungal discovery"
+    },
+    {
+      "source": "CDC June 2016 clinical alert",
+      "url": "https://archive.cdc.gov/www_cdc_gov/fungal/candida-auris/candida-auris-alert.html",
+      "context": "Fungus first described 2009; hospital infection-control concern existed in 2016"
+    },
+    {
+      "source": "CDC November 2016 U.S. case report",
+      "url": "https://archive.cdc.gov/www_cdc_gov/media/releases/2016/p1104-candida-auris.html",
+      "context": "U.S. infections were publicly reported in 2016"
+    },
+    {
+      "source": "CDC treatment September 2026",
+      "url": "https://www.cdc.gov/candida-auris/hcp/clinical-care/index.html",
+      "context": "Some antifungal treatments remain recommended, with emerging resistance"
+    }
+  ],
+  "reviewed_artifacts": [
+    {
+      "path": "research/fungal-defense-001/observatory-v0.4.html",
+      "git_blob_sha": "d33e6a13135cfcb0371f19fdb12ec568e4c2268e"
+    },
+    {
+      "path": "research/fungal-defense-001/data/cdc-cauris-annual-2026-11-13.json",
+      "git_blob_sha": "74d11f1b13d78b7cf4324f4c6617ecbe6dc20eac"
+    },
+    {
+      "path": "research/fungal-defense-001/tools/check_annual_revision.py",
+      "git_blob_sha": "612decd86fbee64a0ab06dd7a8d0a4e06aafd23c"
+    },
+    {
+      "path": "research/fungal-defense-001/tools/test_annual_revision.py",
+      "git_blob_sha": "516185cc0c6f1d5c3fddc5636c11cac6002b3a21"
+    },
+    {
+      "path": "research/fungal-defense-001/tools/source_watch.py",
+      "git_blob_sha": "c2cc2b2edf83ff6fce5eb57463e9b5177c813058"
+    },
+    {
+      "path": "research/fungal-defense-001/tools/test_source_watch.py",
+      "git_blob_sha": "170f719dcec98fc1ce86ec88bda2ce23d0c73cd2"
+    },
+    {
+      "path": "research/fungal-defense-001/tools/run_owned_validation.py",
+      "git_blob_sha": "b8e70dd915809729d82a5f81a1dd161881c32bd8"
+    },
+    {
+      "path": "research/fungal-defense-001/tools/verify_checkout.py",
+      "git_blob_sha": "adc9f79bd431a94113ef6cbf7cdbcdeb3a1b95a3"
+    },
+    {
+      "path": "research/fungal-defense-001/tools/serve_local.py",
+      "git_blob_sha": "04a61beb8bc0e73f56e8a43dbd31cda16481749f"
+    }
+  ],
+  "actual_executions": [
+    {
+      "environment": "JS V8",
+      "name": "Committed HTML source and structure assertions",
+      "count": 21,
+      "status": "PASS"
+    },
+    {
+      "environment": "JS V8",
+      "name": "Syntax compile all three v0.4 inline JavaScript scripts",
+      "count": 3,
+      "status": "PASS"
+    },
+    {
+      "environment": "JS V8 with minimal DOM test double",
+      "name": "Annual year selector 2025/2024/2016 and ten-row data table",
+      "status": "PASS",
+      "observed": {
+        "2016": "51",
+        "2024": "6,370",
+        "2025": "8,780",
+        "rows": 10
+      }
+    },
+    {
+      "environment": "JS V8",
+      "name": "Post-update monitor, source, node checkout, preview and release-gate structural assertions",
+      "count": 12,
+      "status": "PASS"
+    }
+  ],
+  "pending_checks": [
+    "Exact committed Python unit suite not executed in isolated development container during this turn",
+    "GitHub PR verification workflow committed but has not returned an execution result",
+    "No owned NextGen/Penguin execution receipt",
+    "No live CDC source watch execution on an Evercraft host",
+    "No real browser, keyboard, screen-reader or mobile QA",
+    "No scientific expert or privacy and security publication approvals",
+    "No owned public deployment"
+  ],
+  "public_research_published": false,
+  "can_publish": false,
+  "source_monitor_automatically_updates_cases": false,
+  "caveat": "This is an evidence review and code-integrity receipt, not a public-health authority certification, full integration test or Evercraft runtime attestation."
+}
