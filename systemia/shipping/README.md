@@ -105,3 +105,17 @@ Shipping no longer has to go blind after delivery. A reply can be correlated bac
 Disposition remains evidence-bound. Shipping does not run a vibes engine over customer replies and call them "approved." A response remains `unknown` unless a classification is supplied with an explicit basis. Only an `approved` disposition with a `human_confirmed` basis can assert customer acceptance in the response record. Even then, Shipping does not infer satisfaction, payment, renewal, or downstream business outcome.
 
 Recipient-response signals can route work back into Systemia, for example scheduling, owner review, revision intake, relationship follow-up, or closeout review. Those signals never authorize autonomous customer communication.
+
+
+## Owned Ship relay candidate v0.1 (source-only, NOT customer-live)
+
+The new owned relay implements a **real loopback-only transport** behind the canonical Shipping Department. This is **not** a production delivery service. Its current interfaces are:
+
+- `owned-transfer-gate.mjs`: reserve an exact size/SHA-256 source under an explicit recipient reference and human authorization reference, encrypt uploaded bytes with AES-256-GCM at rest, issue a 256-bit bearer token valid no longer than seven days, revoke further starts, and verify full source digest before streaming plaintext.
+- `owned-transfer-http.mjs`: localhost-only API for operator-controlled reserve, stream upload, issue, revoke, and status, plus a Bearer-authorized binary download. Keys and operator credentials are never placed in URLs or status results.
+- `scripts/evercraft-ship-local-relay.mjs`: opt-in listener on **127.0.0.1:8798**, requiring separate environment secrets. No GitHub Actions step launches it or sends customer data.
+- `owned-transfer-*.test.mjs`: synthetic state, cipher corruption, expiry, revocation, restart, and HTTP transfer tests. Included in `npm run test:shipping`.
+
+**Important boundaries:** A bearer token grants possession-based access, **not independent recipient identity verification**. A completed HTTP download response is **not** proof that a recipient opened, read or accepted the file. The server never emails, texts, shares a link, charges money, enrolls accounts, contacts customers, makes a public DNS change, or claims real provider delivery. It stores a recipient reference label only. Revocation blocks new starts but cannot recall previously downloaded material or an in-flight response. Local loopback HTTP is not a public transport: any later proxy requires independently approved TLS, authenticated recipient identity, origin checks, disk quota controls, durable receipts, multi-process locking, malware screening, expiry cleanup, logging/privacy review and two-device proof. Treat all of those as **unimplemented**. Never put sensitive customer files through this candidate.
+
+The cross-system ForensiScope parcel bridge is separately proposed in PR #1244, not assumed merged. This candidate can receive a locally hashed original, but **does not yet directly stitch the ForensiScope UI and its 19-piece format to this HTTP uploader**. Production and payments remain HOLD.
