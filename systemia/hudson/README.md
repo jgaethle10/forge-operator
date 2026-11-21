@@ -175,3 +175,10 @@ Sharpened the three sail outlines to avoid a petal silhouette, deepened the hull
 
 ### v11 dedicated film scene
 Broadcast-oriented `?film=1` mode now removes the large full-width readout panel while retaining a small always-readable public replay/scenery disclosure and a small Exit Film control. It is a local display preference, not a streaming publisher; the normal information-rich interactive view is unchanged and all source-admission policies remain in force.
+
+
+## HUDSON Watch v12: Skyward Schooner (November 20, 2026)
+
+A scene-geometry correction, not merely another glow treatment: the compact ship and its glittering three-strand wake now sample the **same displaced water geometry rendered in each frame**. Before v12 the artistically deformed channels could visibly deviate from the ship's immutable canonical route. The hull still points along the *rendered* curve, but its mast/sails counter-rotate to remain skyward in camera space, rather than becoming a sideways needle whenever the river bends vertically. Three independently wind-driven sails have clipped, volumetric cloud layers; dynamic rigging meets the actual masthead projections, and the bow throws small prismatic pressure arcs into the water. Browser frame label remains scenic/source replay, never a claim of live inference.
+
+Constraints: canonical path/tap topology unchanged, source gating and privacy intact, no new external network requests or images, user pause/reduced-motion and hidden-tab stop persist. Max loops remain bounded under the preexisting 30fps budget. Exact release marker `river-current-v12-skyward-schooner` must pass native tests and external public HTTPS canary after owned-host deployment.
