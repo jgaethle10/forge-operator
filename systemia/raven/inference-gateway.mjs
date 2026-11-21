@@ -86,6 +86,23 @@ function geminiText(body) {
   return chunks.join("\n").trim();
 }
 
+// Explicitly choose a format; never silently repair malformed model output.
+function requestedOutputFormat(value) {
+  const format = value == null ? "text" : clean(value, 32).toLowerCase();
+  if (!["text", "json"].includes(format)) throw new Error("raven_inference_output_format_invalid");
+  return format;
+}
+
+function assertJsonObject(text) {
+  let parsed;
+  try { parsed = JSON.parse(text); }
+  catch { throw new Error("raven_inference_json_invalid"); }
+  if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+    throw new Error("raven_inference_json_object_required");
+  }
+  return true;
+}
+
 async function fetchJson(url, init, { fetchImpl = globalThis.fetch, timeoutMs = 120000 } = {}) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
@@ -118,7 +135,7 @@ export function createInferenceEngine({
   if (!PROVIDERS.includes(providerKey)) throw new Error("raven_inference_provider_invalid");
   if (!modelKey) throw new Error("raven_inference_model_required");
 
-  async function inferOllama(input) {
+  async function inferOllama(input, responseFormat) {
     const base = clean(ollamaOrigin, 2000).replace(/\/$/, "");
     const url = new URL(base);
     if (!["127.0.0.1", "localhost", "::1"].includes(url.hostname) || url.protocol !== "http:") {
@@ -131,9 +148,16 @@ export function createInferenceEngine({
         model: modelKey,
         prompt: input,
         stream: false,
+        ...(responseFormat === "json" ? { format: "json" } : {}),
       }),
     }, { fetchImpl, timeoutMs });
-    const text = clean(body?.response);
+    const rawText = typeof body?.response === "string" ? body.response : "";
+    // Structured responses must be checked byte-faithfully, not silently
+    // normalized by clean(), which replaces control characters.
+    if (responseFormat === "json" && Buffer.byteLength(rawText, "utf8") > 50000) {
+      throw new Error("raven_inference_json_too_large");
+    }
+    const text = responseFormat === "json" ? rawText.trim() : clean(rawText);
     if (!response.ok || !text) {
       throw new Error(clean(body?.error || ("ollama_http_" + response.status), 2000));
     }
@@ -340,20 +364,27 @@ export function createInferenceEngine({
         raw_credential_returned: false,
       };
     },
-    async infer({ request_id, role, input }) {
+    async infer({ request_id, role, input, response_format = "text" }) {
       const requestId = clean(request_id, 260);
       const roleKey = clean(role, 120);
       const prompt = clean(input, 50000);
       if (!requestId) throw new Error("inference_request_id_required");
       if (!roleKey) throw new Error("inference_role_required");
       if (!prompt) throw new Error("inference_input_required");
+      const outputFormat = requestedOutputFormat(response_format);
+      // v1 enables structured-output enforcement only for local Ollama.
+      // Hosted inference keeps its existing text contract unchanged.
+      if (outputFormat === "json" && providerKey !== "ollama") {
+        throw new Error("raven_inference_json_provider_not_supported");
+      }
 
       const startedAt = now().toISOString();
       const result = providerKey === "ollama"
-        ? await inferOllama(prompt)
+        ? await inferOllama(prompt, outputFormat)
         : providerKey === "gemini"
           ? await inferGemini(prompt)
           : await inferOpenAI(prompt);
+      if (outputFormat === "json") assertJsonObject(result.text);
       const completedAt = now().toISOString();
       const receiptCore = {
         schema: "evercraft.raven.provider-inference-receipt.v1",
@@ -365,6 +396,8 @@ export function createInferenceEngine({
         credential_ref: result.credential_ref,
         prompt_sha256: sha256(prompt),
         output_sha256: sha256(result.text),
+        output_format: outputFormat,
+        structured_output_validated: outputFormat === "json",
         started_at: startedAt,
         completed_at: completedAt,
         base44_used: false,
@@ -376,6 +409,8 @@ export function createInferenceEngine({
         text: result.text,
         provider: result.provider,
         model: result.model,
+        output_format: outputFormat,
+        structured_output_validated: outputFormat === "json",
         provider_receipt: sha256(JSON.stringify(receiptCore)),
         started_at: startedAt,
         completed_at: completedAt,
@@ -466,6 +501,7 @@ export async function startRavenInferenceGateway({
           request_id: body.request_id,
           role: body.role,
           input: body.input,
+          response_format: body.response_format,
         });
         return json(res, 200, {
           ...result,

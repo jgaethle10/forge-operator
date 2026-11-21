@@ -1,0 +1,27 @@
+name: Raven Local JSON Contract
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/raven/inference-gateway.mjs'
+      - 'systemia/raven/inference-gateway.test.mjs'
+      - 'systemia/raven/inference-json-contract.test.mjs'
+      - '.github/workflows/raven-local-json-contract.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  synthetic-output-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check syntax
+        run: node --check systemia/raven/inference-gateway.mjs
+      - name: Run existing and structured-output gateway tests
+        run: node --test systemia/raven/inference-gateway.test.mjs systemia/raven/inference-json-contract.test.mjs
