@@ -1,0 +1,27 @@
+name: Evercraft Connect
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/connect/**'
+      - '.github/workflows/evercraft-connect.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  connect-kernel:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run Evercraft Connect focused tests
+        run: node --test systemia/connect/*.test.mjs
