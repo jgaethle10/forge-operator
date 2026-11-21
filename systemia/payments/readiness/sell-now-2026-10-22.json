@@ -1,0 +1,332 @@
+{
+  "schema": "evercraft.payments.sell-now-readiness-snapshot.v1",
+  "snapshot_date": "2026-10-22",
+  "source": "Evercraft Fabric read-only discovery; live Stripe product/price inventory; independent Fabric health and offer-page fetch",
+  "authority": "Systemia > Evercraft Payments > Raven Nexus > Stripe (settlement only)",
+  "record_type": "evidence_snapshot_not_runtime_authorization",
+  "live_fabric": {
+    "capability_count": 53,
+    "sell_now_count": 18,
+    "checkout_purchase_intent_configured": false,
+    "checkout_direct_offer_ops_configured": false,
+    "checkout_operational_state": "held_owned_payment_endpoint_unconfigured",
+    "deployment_receipt_bound": false,
+    "source_release_ref": "75bc082051b90a9bc9886bbebe84235c4f64089e"
+  },
+  "reconciliation": {
+    "sell_now_count": 18,
+    "exact_provider_price_candidates": 9,
+    "no_exact_provider_price_candidate": 9,
+    "verified_canonical_paid_orders": 0,
+    "verified_sell_now_checkout_urls": 0
+  },
+  "rules": [
+    "All 18 offers need individual exact SKU, merchant, fulfillment and readiness checks before promotion.",
+    "Observed product/price existence is not a checkout, payment, entitlement or delivery.",
+    "Forge and Systemia are distinct merchants: no cross-account price reuse or identical-price substitutions.",
+    "RIVET remains under separate ownership/governance hold until explicit clearance.",
+    "ChatGPT plugin remains nontransactional for digital offers; no upsell or purchase funnel through plugin.",
+    "No Base44-owned payment dependency; private Raven credentials never enter public repository or chat.",
+    "Human confirmation and Systemia/Passport/Execution Gate authorization precede any consequential provider action.",
+    "Historical GET 200 buyer pages and hosted Payment Links for other products do not establish these eighteen can be purchased."
+  ],
+  "entries": [
+    {
+      "public_id": "aliev-site-opportunity-snapshot-v1",
+      "offer_name": "AliEV Qualified Opportunity Pack",
+      "entry_price_usd": 250,
+      "currency": "usd",
+      "provider_candidate": {
+        "merchant": "Systemia Forge",
+        "product_id": "prod_VJWu8XTpTxBeVF",
+        "price_id": "price_1UItqPGwYKEDY4zS7ggG3dj1",
+        "provider_price_read_verified": true,
+        "checkout_verified": false,
+        "authoritative_evercraft_order_verified": false
+      },
+      "required_preflight": "human_qualification",
+      "verified_live_checkout_url": null,
+      "canonical_order_verified": false,
+      "settlement_verified": false,
+      "fulfillment_verified": false,
+      "release_state": "held_checkout_unverified"
+    },
+    {
+      "public_id": "audit-center-website-audit-machine-v1",
+      "offer_name": "Website Quick Win Audit",
+      "entry_price_usd": 49,
+      "currency": "usd",
+      "provider_candidate": {
+        "merchant": "Evercraft Media & Technologies",
+        "product_id": "prod_VU2tG3AzIa9WRl",
+        "price_id": "price_1UT4ndRp1HqokPkVtnLVhmoj",
+        "provider_price_read_verified": true,
+        "checkout_verified": false,
+        "authoritative_evercraft_order_verified": false
+      },
+      "required_preflight": "bounded_service",
+      "verified_live_checkout_url": null,
+      "canonical_order_verified": false,
+      "settlement_verified": false,
+      "fulfillment_verified": false,
+      "release_state": "held_checkout_unverified"
+    },
+    {
+      "public_id": "career-command-interview-practice-machine-v1",
+      "offer_name": "Career Command Interview Sprint",
+      "entry_price_usd": 19,
+      "currency": "usd",
+      "provider_candidate": null,
+      "required_preflight": "new_product_price_and_entitlement_gate",
+      "verified_live_checkout_url": null,
+      "canonical_order_verified": false,
+      "settlement_verified": false,
+      "fulfillment_verified": false,
+      "release_state": "held_checkout_unverified"
+    },
+    {
+      "public_id": "deck-capital-fit-sprint-machine-v1",
+      "offer_name": "Deck Capital Fit Sprint",
+      "entry_price_usd": 49,
+      "currency": "usd",
+      "provider_candidate": null,
+      "required_preflight": "limited_capacity_founder_review",
+      "verified_live_checkout_url": null,
+      "canonical_order_verified": false,
+      "settlement_verified": false,
+      "fulfillment_verified": false,
+      "release_state": "held_checkout_unverified"
+    },
+    {
+      "public_id": "earthworks-site-autonomy-study-v1",
+      "offer_name": "EarthWorks Site Autonomy Study",
+      "entry_price_usd": 5000,
+      "currency": "usd",
+      "provider_candidate": null,
+      "required_preflight": "qualification_and_site_safety_review",
+      "verified_live_checkout_url": null,
+      "canonical_order_verified": false,
+      "settlement_verified": false,
+      "fulfillment_verified": false,
+      "release_state": "held_checkout_unverified"
+    },
+    {
+      "public_id": "eventwave-paid-promotion-v1",
+      "offer_name": "EventWave Event Boost",
+      "entry_price_usd": 49,
+      "currency": "usd",
+      "provider_candidate": {
+        "merchant": "Systemia Forge",
+        "product_id": "prod_VRGm6XmzoSUFFW",
+        "price_id": "price_1UQOFDGwYKEDY4zSL0AoNIy2",
+        "provider_price_read_verified": true,
+        "checkout_verified": false,
+        "authoritative_evercraft_order_verified": false
+      },
+      "required_preflight": "fulfillment_inventory_review",
+      "verified_live_checkout_url": null,
+      "canonical_order_verified": false,
+      "settlement_verified": false,
+      "fulfillment_verified": false,
+      "release_state": "held_checkout_unverified"
+    },
+    {
+      "public_id": "faie-signal-brief-v1",
+      "offer_name": "FAIE Signal Brief",
+      "entry_price_usd": 250,
+      "currency": "usd",
+      "provider_candidate": null,
+      "required_preflight": "scoped_human_evidence_review",
+      "verified_live_checkout_url": null,
+      "canonical_order_verified": false,
+      "settlement_verified": false,
+      "fulfillment_verified": false,
+      "release_state": "held_checkout_unverified"
+    },
+    {
+      "public_id": "findmypart-paid-hunt-v1",
+      "offer_name": "FindMyPart Quick Hunt",
+      "entry_price_usd": 19,
+      "currency": "usd",
+      "provider_candidate": {
+        "merchant": "Evercraft Media & Technologies",
+        "product_id": "prod_VU2tqBJNIGIhic",
+        "price_id": "price_1UT4nfRp1HqokPkVo3j6glgj",
+        "provider_price_read_verified": true,
+        "checkout_verified": false,
+        "authoritative_evercraft_order_verified": false
+      },
+      "required_preflight": "bounded_service",
+      "verified_live_checkout_url": null,
+      "canonical_order_verified": false,
+      "settlement_verified": false,
+      "fulfillment_verified": false,
+      "release_state": "held_checkout_unverified"
+    },
+    {
+      "public_id": "foundry-app-escape-audit-v1",
+      "offer_name": "Foundry App Escape Audit",
+      "entry_price_usd": 500,
+      "currency": "usd",
+      "provider_candidate": null,
+      "required_preflight": "manual_qualification",
+      "verified_live_checkout_url": null,
+      "canonical_order_verified": false,
+      "settlement_verified": false,
+      "fulfillment_verified": false,
+      "release_state": "held_checkout_unverified"
+    },
+    {
+      "public_id": "ibmi-rescue-v1",
+      "offer_name": "IBM i Estate X-Ray",
+      "entry_price_usd": 250,
+      "currency": "usd",
+      "provider_candidate": {
+        "merchant": "Systemia Forge",
+        "product_id": "prod_VKQCelJU38Ez7f",
+        "price_id": "price_1UJlMCGwYKEDY4zSLNcP62lb",
+        "provider_price_read_verified": true,
+        "checkout_verified": false,
+        "authoritative_evercraft_order_verified": false
+      },
+      "required_preflight": "qualified_reviewer_required",
+      "verified_live_checkout_url": null,
+      "canonical_order_verified": false,
+      "settlement_verified": false,
+      "fulfillment_verified": false,
+      "release_state": "held_checkout_unverified"
+    },
+    {
+      "public_id": "legacy-rescue-lab-v1",
+      "offer_name": "Legacy Rescue Scan",
+      "entry_price_usd": 299,
+      "currency": "usd",
+      "provider_candidate": {
+        "merchant": "Systemia Forge",
+        "product_id": "prod_VRngQzIER4e96y",
+        "price_id": "price_1UQu4eGwYKEDY4zS0LI08oUe",
+        "provider_price_read_verified": true,
+        "checkout_verified": false,
+        "authoritative_evercraft_order_verified": false
+      },
+      "required_preflight": "human_review",
+      "verified_live_checkout_url": null,
+      "canonical_order_verified": false,
+      "settlement_verified": false,
+      "fulfillment_verified": false,
+      "release_state": "held_checkout_unverified"
+    },
+    {
+      "public_id": "raven-nexus-business-setup-v1",
+      "offer_name": "Raven Business Systems Map",
+      "entry_price_usd": 500,
+      "currency": "usd",
+      "provider_candidate": null,
+      "required_preflight": "manual_security_scope",
+      "verified_live_checkout_url": null,
+      "canonical_order_verified": false,
+      "settlement_verified": false,
+      "fulfillment_verified": false,
+      "release_state": "held_checkout_unverified"
+    },
+    {
+      "public_id": "raven-nexus-home-setup-v1",
+      "offer_name": "Raven Home Stability Map",
+      "entry_price_usd": 199,
+      "currency": "usd",
+      "provider_candidate": null,
+      "required_preflight": "manual_privacy_scope",
+      "verified_live_checkout_url": null,
+      "canonical_order_verified": false,
+      "settlement_verified": false,
+      "fulfillment_verified": false,
+      "release_state": "held_checkout_unverified"
+    },
+    {
+      "public_id": "rivet-site-underwriting-v1",
+      "offer_name": "RIVET Preliminary Site Opportunity Report",
+      "entry_price_usd": 299,
+      "currency": "usd",
+      "provider_candidate": null,
+      "required_preflight": "governance_hold_do_not_auto_release",
+      "verified_live_checkout_url": null,
+      "canonical_order_verified": false,
+      "settlement_verified": false,
+      "fulfillment_verified": false,
+      "release_state": "held_checkout_unverified"
+    },
+    {
+      "public_id": "roasted-text-pressure-test-machine-v1",
+      "offer_name": "ROASTED Single Roast",
+      "entry_price_usd": 0.99,
+      "currency": "usd",
+      "provider_candidate": {
+        "merchant": "Systemia",
+        "product_id": "prod_V4dPHXoAvoMOmy",
+        "price_id": "price_1U4U8vK4iDjqpECVnJIUutl2",
+        "provider_price_read_verified": true,
+        "checkout_verified": false,
+        "authoritative_evercraft_order_verified": false
+      },
+      "required_preflight": "moderation_and_delivery_gate",
+      "verified_live_checkout_url": null,
+      "canonical_order_verified": false,
+      "settlement_verified": false,
+      "fulfillment_verified": false,
+      "release_state": "held_checkout_unverified"
+    },
+    {
+      "public_id": "site-survive-rapid-audit-v1",
+      "offer_name": "Site-Survive Rapid Audit",
+      "entry_price_usd": 250,
+      "currency": "usd",
+      "provider_candidate": {
+        "merchant": "Systemia Forge",
+        "product_id": "prod_VRGgYka1p4BeCi",
+        "price_id": "price_1UQO8sGwYKEDY4zSVYJ7sSOH",
+        "provider_price_read_verified": true,
+        "checkout_verified": false,
+        "authoritative_evercraft_order_verified": false
+      },
+      "required_preflight": "human_review",
+      "verified_live_checkout_url": null,
+      "canonical_order_verified": false,
+      "settlement_verified": false,
+      "fulfillment_verified": false,
+      "release_state": "held_checkout_unverified"
+    },
+    {
+      "public_id": "website-launch-service-v1",
+      "offer_name": "Evercraft Website Launch Service",
+      "entry_price_usd": 500,
+      "currency": "usd",
+      "provider_candidate": null,
+      "required_preflight": "design_scope_approval",
+      "verified_live_checkout_url": null,
+      "canonical_order_verified": false,
+      "settlement_verified": false,
+      "fulfillment_verified": false,
+      "release_state": "held_checkout_unverified"
+    },
+    {
+      "public_id": "workflow-foundry-xray-v1",
+      "offer_name": "Workflow X-Ray",
+      "entry_price_usd": 250,
+      "currency": "usd",
+      "provider_candidate": {
+        "merchant": "Systemia Forge",
+        "product_id": "prod_VOpijCr16Kg1cb",
+        "price_id": "price_1UO22vGwYKEDY4zS6A7aAhW7",
+        "provider_price_read_verified": true,
+        "checkout_verified": false,
+        "authoritative_evercraft_order_verified": false
+      },
+      "required_preflight": "human_review",
+      "verified_live_checkout_url": null,
+      "canonical_order_verified": false,
+      "settlement_verified": false,
+      "fulfillment_verified": false,
+      "release_state": "held_checkout_unverified"
+    }
+  ]
+}
