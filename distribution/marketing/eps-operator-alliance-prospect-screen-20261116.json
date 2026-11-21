@@ -1,0 +1,343 @@
+{
+  "schema": "evercraft.eps.operator-alliance.research.v1",
+  "as_of": "2026-11-16",
+  "status": "10_RESEARCHED_0_OUTREACH_FROM_THIS_PUSH",
+  "product": "EPS Operator Alliance, extension of existing Evercraft Partners PR #2123",
+  "warnings": [
+    "These businesses have NOT been shown financially distressed or interested in joining EPS",
+    "No partner insurance, registration, equipment, sales capacity or financial position verified",
+    "No operator may borrow EPS registration or acquire EPS territory rights from a web inquiry",
+    "No franchise/trademark rights or revenue percentage fees before qualified legal review",
+    "No customer PII, unconsented outreach, unsanctioned mailing or recruitment rewards"
+  ],
+  "candidates": [
+    {
+      "name": "First Choice Multi-Cleaning Services LLC",
+      "where": "Yakima, Kittitas, Benton, Franklin counties, WA",
+      "fit": "commercial cleaning, deep clean, yard cleanup",
+      "website": "https://www.firstchoicemulticleaning.com/",
+      "email": "info@firstchoiceserv.com",
+      "emailSource": "https://www.firstchoicemulticleaning.com/",
+      "angle": "optional multi-county cleaning/turnover overflow and workflow pilot",
+      "priority": 1,
+      "prior_gmail_exact_name_or_address_match": 0,
+      "proposed_status": "research_only_not_contacted",
+      "next": "individualized permissioned inquiry only after owner, legal and insurance review"
+    },
+    {
+      "name": "Exterior Experts, LLC",
+      "where": "Yakima, Klickitat, Kittitas, Benton counties, WA",
+      "fit": "pressure washing, painting, handyman work",
+      "website": "https://www.yakimacountyhandyman.com/",
+      "email": "ericsoto@exteriorexperts.website",
+      "emailSource": "https://www.yakimacountyhandyman.com/contact",
+      "angle": "property-preparation overflow or mutual referrals",
+      "priority": 2,
+      "prior_gmail_exact_name_or_address_match": 0,
+      "proposed_status": "research_only_not_contacted",
+      "next": "individualized permissioned inquiry only after owner, legal and insurance review"
+    },
+    {
+      "name": "Abel's and Sons Lawn Services LLC",
+      "where": "Yakima County, WA",
+      "fit": "yard cleanups, sod, landscaping",
+      "website": "https://www.abelsandsonslawnservices.com/",
+      "email": null,
+      "emailSource": null,
+      "angle": "local cleanup/landscape reset leads after independent verification",
+      "priority": 3,
+      "prior_gmail_exact_name_or_address_match": 0,
+      "proposed_status": "research_only_not_contacted",
+      "next": "individualized permissioned inquiry only after owner, legal and insurance review"
+    },
+    {
+      "name": "Allende's Lawn Care & Landscaping",
+      "where": "Pasco/Richland/Kennewick, WA",
+      "fit": "seasonal yard cleanup, mowing, aeration",
+      "website": "https://allendeslawncares.com/",
+      "email": null,
+      "emailSource": "https://allendeslawncares.com/contact-us",
+      "angle": "local Tri-Cities property-manager referrals",
+      "priority": 4,
+      "prior_gmail_exact_name_or_address_match": 0,
+      "proposed_status": "research_only_not_contacted",
+      "next": "individualized permissioned inquiry only after owner, legal and insurance review"
+    },
+    {
+      "name": "Columbia Property Maintenance",
+      "where": "Tri-Cities, WA",
+      "fit": "commercial maintenance, asphalt, sweeping, snow",
+      "website": "https://www.cpm-css.com/",
+      "email": null,
+      "emailSource": "https://www.cpm-css.com/",
+      "angle": "possible specialist commercial cross-referrals, no acquisition assumption",
+      "priority": 5,
+      "prior_gmail_exact_name_or_address_match": 0,
+      "proposed_status": "research_only_not_contacted",
+      "next": "individualized permissioned inquiry only after owner, legal and insurance review"
+    },
+    {
+      "name": "Sagebrush Construction LLC",
+      "where": "Tri-Cities / Yakima / surrounding Washington communities",
+      "fit": "excavation, land clearing, utilities, demolition, septic, snow removal",
+      "website": "https://sagebrush-construction.com/",
+      "contact_url": "https://sagebrush-construction.com/contact/",
+      "email": null,
+      "source_urls": [
+        "https://sagebrush-construction.com/",
+        "https://sagebrush-construction.com/contact/",
+        "https://sagebrush-construction.com/about/"
+      ],
+      "unique_public_signal": "Company site explicitly describes itself as local family-run and advertises BIG JOBS. SMALL TEAM.; public job gallery shows skid-steer equipment and work locations.",
+      "angle": "Separate-company, permitted nonhazardous site-prep/cleanup project coordination and owner-approved field-service workflow diagnostic; software subscriptions or referral volume not promised.",
+      "equipment_evidence": "Website shows skid-steer operator and excavation project images, not an audited inventory",
+      "source_verified_status": "official company website read; independent contractor registration not yet verified",
+      "contact_history_screen": "Exact name searched Gmail Nov 16 2026, zero results",
+      "priority": 6,
+      "prior_gmail_exact_name_or_address_match": 0,
+      "proposed_status": "research_only_not_contacted",
+      "next": "Owner approved outreach through legitimate business channel after exact-contact recheck, no claims of verified distress or income"
+    },
+    {
+      "name": "White Arrow Land Works",
+      "where": "Richland / Tri-Cities / Yakima Valley Washington",
+      "fit": "excavation, drainage, land clearing, debris hauling, site grading, agricultural and orchard maintenance",
+      "website": "https://walandworks.com/",
+      "contact_url": "https://walandworks.com/contact-us",
+      "email": "sales@walandworks.com",
+      "source_urls": [
+        "https://walandworks.com/about/",
+        "https://walandworks.com/contact-us"
+      ],
+      "unique_public_signal": "Company describes veteran-owned land-management business and equipment with direct owner involvement, plus company-posted license and service areas.",
+      "angle": "Potential vineyard/orchard land-clearing and site-work partner with separately authorized projects; compare scope/quote intake using Workflow X-Ray.",
+      "equipment_evidence": "Company lists excavation equipment capacity on website; not independently audited",
+      "source_verified_status": "company-published contractor license claim, not independently authenticated in current L&I tool",
+      "contact_history_screen": "Exact name and sales mailbox searched Gmail Nov 16 2026, zero results",
+      "priority": 7,
+      "prior_gmail_exact_name_or_address_match": 0,
+      "proposed_status": "research_only_not_contacted",
+      "next": "Owner approved outreach through legitimate business channel after exact-contact recheck, no claims of verified distress or income",
+      "public_record_address": "28605 Dallas Rd, Richland, WA 99352, USA",
+      "public_record_address_source": "https://govtribe.com/vendors/white-arrow-land-works-llc-242c8",
+      "address_note": "SAM-derived vendor profile location, not confirmed customer-facing yard; differing public aggregators conflict on SAM status, do not assert current SAM eligibility"
+    },
+    {
+      "name": "J&M Landscape & Earthworks",
+      "where": "Richland / Franklin and Benton counties / Tri-Cities Washington",
+      "fit": "site work, grading, trenching, land clearing, retaining walls, landscaping, snow removal",
+      "website": "https://www.jmlandscapeandearthworks.com/",
+      "contact_url": "https://www.jmlandscapeandearthworks.com/",
+      "email": "jmlandscapeoffice@gmail.com",
+      "source_urls": [
+        "https://www.jmlandscapeandearthworks.com/",
+        "https://www.jmlandscapeandearthworks.com/about"
+      ],
+      "unique_public_signal": "Website says family-owned and owner-operated; lists small-loader landscape projects and official business email.",
+      "angle": "Genuine optional CRM/intake-to-quote process conversation and project referrals, no assumption website form fails or customers are missing.",
+      "equipment_evidence": "Owner site client testimonial references small loader; not a full audited equipment list",
+      "source_verified_status": "company statement licensed and insured, government status unverified",
+      "contact_history_screen": "Exact name and published email searched Gmail Nov 16 2026, zero results",
+      "priority": 8,
+      "prior_gmail_exact_name_or_address_match": 0,
+      "proposed_status": "research_only_not_contacted",
+      "next": "Owner approved outreach through legitimate business channel after exact-contact recheck, no claims of verified distress or income",
+      "public_record_address": "1463 Rimrock Ave, Richland, WA 99352, USA",
+      "public_record_address_source": "https://safer.fmcsa.dot.gov/query.asp?query_param=USDOT&query_string=4541748&query_type=queryCarrierSnapshot",
+      "address_note": "FMCSA carrier-snapshot registered address, not verified public walk-in location; USDOT status/operating authority not evidence of valid contracting license"
+    },
+    {
+      "name": "Calvert Excavating Inc",
+      "where": "Selah / Yakima and Kittitas counties Washington",
+      "fit": "backhoes, excavators, water truck, road grader, bulldozers, roller; excavation, septic, utilities, hauling",
+      "website": "https://www.calvertexcavating.com/",
+      "contact_url": "https://www.calvertexcavating.com/",
+      "email": null,
+      "source_urls": [
+        "https://www.calvertexcavating.com/",
+        "https://secure.lni.wa.gov/verify/Detail.aspx?LIC=CALVEEI966LC"
+      ],
+      "unique_public_signal": "Website identifies founder Chris Calvert and lists specific owned/operated equipment classes. Washington L&I government record displays construction contractor Active and meets current requirements, license CALVEEI966LC, expiration Sep 10, 2028 in indexed government page.",
+      "angle": "Heavy-equipment separately contracted project partner for jobs needing specialized licensed excavation; perhaps referral exchange, not a generic sell-software pitch.",
+      "equipment_evidence": "Owner-reported website equipment list; specific fleet items uninspected",
+      "source_verified_status": "Washington L&I official listing indexed Active; must re-verify immediately before any agreement, dispatch or marketing",
+      "contact_history_screen": "Exact name searched Gmail Nov 16 2026, zero results",
+      "priority": 9,
+      "prior_gmail_exact_name_or_address_match": 0,
+      "proposed_status": "research_only_not_contacted",
+      "next": "Owner approved outreach through legitimate business channel after exact-contact recheck, no claims of verified distress or income",
+      "public_record_address": "7580 N Wenas Rd, Selah, WA 98942, USA",
+      "public_record_address_source": "https://secure.lni.wa.gov/verify/Detail.aspx?LIC=CALVEEI966LC",
+      "address_note": "WA L&I official indexed location and active general-contractor snapshot, subject to current verification"
+    },
+    {
+      "name": "Atkins Landscaping",
+      "where": "Yakima / Kittitas counties Washington",
+      "fit": "landscape installation, maintenance, hardscaping, snow removal, seasonal cleanup, irrigation",
+      "website": "https://www.atkinslandscaping.net/",
+      "contact_url": "https://www.atkinslandscaping.net/contact-us",
+      "email": "chad@atkinslandscaping.net",
+      "source_urls": [
+        "https://www.atkinslandscaping.net/about-us",
+        "https://www.atkinslandscaping.net/contact-us"
+      ],
+      "unique_public_signal": "Company says Chad Atkins and sons run the family business, with multiple foremen and crews, and company-published operator address and contractor identifier.",
+      "angle": "Peer-to-peer overflow referral/optional one-workflow diagnosis where multiple crews and projects create handoffs; no assertion the company needs new lead flow.",
+      "equipment_evidence": "Multiple crew/foremen on company site; physical fleet types not audited",
+      "source_verified_status": "company-published registration number, government status unverified",
+      "contact_history_screen": "Exact name and founder-published email searched Gmail Nov 16 2026, zero results",
+      "priority": 10,
+      "prior_gmail_exact_name_or_address_match": 0,
+      "proposed_status": "research_only_not_contacted",
+      "next": "Owner approved outreach through legitimate business channel after exact-contact recheck, no claims of verified distress or income",
+      "public_record_address": "492 McLaughlin Rd, Yakima, WA 98908, USA",
+      "public_record_address_source": "web business search business profile; company contact lists operator phone + official email",
+      "address_note": "Business locator may differ from mailing address, confirm actual job or public meeting site"
+    },
+    {
+      "name": "Alpha Pro Exteriors",
+      "where": "Pasco / Kennewick / Richland and Tri-Cities Washington",
+      "fit": "roofing, roof repairs, gutters, siding, storm damage, commercial roofing",
+      "website": "https://www.alphaproexteriors.com/",
+      "contact_url": "https://www.alphaproexteriors.com/free-roof-inspection",
+      "email": "oscar.s@alpharoof1.com",
+      "source_urls": [
+        "https://www.hbatc.com/",
+        "https://web.hbatc.com/directory/results/results.aspx?affcode=Tri+Cities+Chapter",
+        "https://www.alphaproexteriors.com/",
+        "https://nextdoor.com/pages/alpha-pro-exteriors-pasco-wa/"
+      ],
+      "unique_public_signal": "Tri-Cities HBA listed company as new member Nov 9, 2026, with Oscar Suarez as its listed contact. Company-owned website describes an established roof/siding repair/install crew and claims hundreds of satisfied customers. New HBA membership is evidence of networking, not financial stress or willingness to partner.",
+      "angle": "Mutual nonexclusive referrals between distinct trades for permitted property refresh and roofing/exterior projects; inspect intake handoff as a separate service only if they express interest.",
+      "equipment_evidence": "Company website claims crews and roofing capabilities; no independently audited equipment count",
+      "source_verified_status": "HBA new-member record + company site; contractor registration, insurance and specific roofing classification not yet independently verified",
+      "contact_history_screen": "Exact company and listed email searched Gmail Nov 16 2026, zero results",
+      "priority": 11,
+      "prior_gmail_exact_name_or_address_match": 0,
+      "proposed_status": "research_only_not_contacted",
+      "next": "Hold for owner-approved precise fit question, not a rushed cold blast",
+      "public_record_address": "7009 Valley View Pl, Pasco, WA 99301, USA",
+      "public_record_address_source": "https://www.alphaproexteriors.com/",
+      "address_note": "Published business location; no confirmation operator is interested"
+    }
+  ],
+  "excluded_duplicate_outreach": [
+    {
+      "name": "ServiceMaster 1st Choice",
+      "status": "EPS overflow email already sent Nov 15; wait for response"
+    },
+    {
+      "name": "SERVPRO Gig Harbor",
+      "status": "EPS overflow email already sent Nov 15; wait for response"
+    },
+    {
+      "name": "Josh DeLuna / BBSI",
+      "status": "existing warm BBSI relationship requests Nov 19 meeting; different track"
+    },
+    {
+      "name": "Circle H",
+      "status": "spring 2027 hold"
+    },
+    {
+      "name": "RIVET",
+      "status": "fully paid and closed founder report"
+    }
+  ],
+  "release_gates": [
+    "confirm current WA contractor registration and role",
+    "confirm EPS GL policy with insurer; only support case found",
+    "confirm candidate separate contractor registration, insurance, workers comp, equipment, safety",
+    "written project/legal terms and brand limitations",
+    "verify provider contact and cross-check sent/draft at moment of outreach",
+    "no paid brand network or fees before franchise review",
+    "buyer consent and verified quote/contract/order before marking sale"
+  ],
+  "acquisition_hypothesis": "Separate-brand field service operators with documented equipment and crew capacity, not financially stressed businesses by assumption; first identify a real operational pain or permitted customer/project mutual benefit. Avoid generic promises of lead flow or AI platforms.",
+  "deployment_status": "Operator Alliance remains DRAFT PR #2123 and noindex; not publicly launched",
+  "product_truth": [
+    {
+      "public_id": "workflow-foundry-xray-v1",
+      "name": "Evercraft Workflow X-Ray",
+      "commercial_state": "sell_now",
+      "pricing": "$250 one-time scoped diagnostic",
+      "start_url": "https://fabric.systemiacommandcenters.com/offers/workflow-xray",
+      "limitation": "Human-reviewed bounded analysis, not automated job dispatch, integrations, or guarantee of new work"
+    },
+    {
+      "public_id": "eps-estimate-engine-machine-v1",
+      "name": "EPS Estimate Intelligence",
+      "commercial_state": "contractor_beta",
+      "pricing": "No approved public self-service subscription or unit price",
+      "start_url": null,
+      "limitation": "Read-only preview and verify, no rights to current paid commercial customer workspace assumed"
+    },
+    {
+      "public_id": "product:contractor-cloud",
+      "name": "Evercraft Contractor Cloud",
+      "commercial_state": "discovery_only",
+      "pricing": null,
+      "start_url": null,
+      "limitation": "No demonstrated live operator entitlement or commercial SaaS checkout"
+    }
+  ],
+  "duplicates_excluded_from_fresh_candidates": [
+    {
+      "name": "Joe's Yard Service",
+      "status": "ALREADY_CONTACTED",
+      "evidence": "Gmail SENT subject 'Yakima contractor beta for Joe's Yard Service' Aug 20 2026 plus earlier website outreach, exclude from repeat pitch until distinct context or human initiated reply"
+    }
+  ],
+  "primary_qualifying_questions": [
+    "Which counties and approved trades does your own registered business serve?",
+    "Which equipment classes and crew capacity do you control or lease and may use safely?",
+    "Do you welcome subcontracted work, referrals, a software diagnostic, or none?",
+    "Where do quotes or follow-ups currently stall, if anywhere?",
+    "Who contracts with and collects customer payment, and do you prefer separate branding?",
+    "Any required contractor license, GL, workers comp or truck permits for offered scope?"
+  ],
+  "source_channels": [
+    {
+      "id": "cwhba",
+      "name": "Central Washington Home Builders Association public member directory",
+      "url": "https://memberships.cwhba.org/directory",
+      "scope": "Yakima/Kittitas/Chelan/Douglas etc",
+      "public_verified": "Member directory with role, trade and area filters",
+      "use": "Discover trade-specialty firms, research own websites, run contact-dedupe, request voluntary 1:1 partner discussions",
+      "status": "RESEARCH_ONLY",
+      "memberships_or_solicitation_authorized": false
+    },
+    {
+      "id": "hbatc",
+      "name": "Home Builders Association of Tri-Cities",
+      "url": "https://www.hbatc.com/",
+      "scope": "Benton/Franklin/Walla Walla area",
+      "public_verified": "Public site lists new member names and dated recent additions",
+      "use": "Prioritize recently joined companies demonstrating professional networking interest; do not infer distress or scrape/spam",
+      "status": "RESEARCH_ONLY",
+      "memberships_or_solicitation_authorized": false
+    },
+    {
+      "id": "walp",
+      "name": "Washington Association of Landscape Professionals",
+      "url": "https://www.walp.org/membership/",
+      "scope": "Statewide Washington landscape providers",
+      "public_verified": "Paid contractor membership starting at $350/year for revenue up to $250k as published, subject to change",
+      "use": "Potential larger industry referral lane after real pilot conversion, no membership spend authorized",
+      "status": "DEFER_PAID_MEMBERSHIP",
+      "memberships_or_solicitation_authorized": false
+    }
+  ],
+  "pipeline_metrics": {
+    "researched_prospects": 11,
+    "known_previously_approached_excluded": [
+      "Joe's Yard Service",
+      "ServiceMaster 1st Choice",
+      "SERVPRO Gig Harbor"
+    ],
+    "new_direct_outreach_sent": 0,
+    "partner_replies_confirmed": 0,
+    "operator_contracts_signed": 0,
+    "customer_jobs_settled": 0
+  },
+  "geographic_caveat": "Public record addresses are used only for preliminary geography, not proof of equipment storage, public visitor premises, or a contractual service territory."
+}
