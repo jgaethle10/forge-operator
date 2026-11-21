@@ -1,0 +1,19 @@
+[Unit]
+Description=Evercraft Demand Command private API (canary)
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=%h/forge-operator/sites/demand-command/backend
+EnvironmentFile=%h/.config/evercraft/demand-command.env
+ExecStart=/usr/bin/python3 %h/forge-operator/sites/demand-command/backend/server.py
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=%h/.local/state/evercraft
+
+[Install]
+WantedBy=default.target
