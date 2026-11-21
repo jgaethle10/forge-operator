@@ -1,0 +1,39 @@
+name: ON ALERT | Alternate Archival Video Acquisition
+on:
+  push:
+    branches:
+      - production/on-alert-documentary-20261105
+    paths:
+      - .github/workflows/on-alert-alt-acquire.yml
+      - productions/on-alert/acquire_youtube_research_fallback.py
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  acquire:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install video retrieval and probe tools
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y ffmpeg
+          python3 -m pip install --break-system-packages yt-dlp
+      - name: Try alternate historically-sourced film transfers (no repeated retries)
+        id: archive
+        continue-on-error: true
+        run: python3 productions/on-alert/acquire_youtube_research_fallback.py
+      - name: Preserve exact transfer status or acquired video for editorial review
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: on-alert-alt-source-review
+          path: out/on-alert-alt-research/
+          retention-days: 7
+          if-no-files-found: warn
+      - name: Mark unavailable without inventing a download
+        if: steps.archive.outcome != 'success'
+        run: |
+          echo "Alternate film retrieval unavailable; inspect report artifact."
+          exit 1
