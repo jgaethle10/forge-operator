@@ -186,3 +186,7 @@ Constraints: canonical path/tap topology unchanged, source gating and privacy in
 
 ### Phone contrast acceptance refinement
 Chromium 390×844 visual QA found sails still blending into the strongest water channels. Bounded responsive ship size grows slightly within 3.15× screen-edge clearance, and a local transparent dark atmospheric mask provides readable separation without a rigid outline or opaque poster. The crescent hull receives a depth-offset shadow and the bow casts a short optical streak. All remain first-party procedural Canvas shapes with deterministic time functions.
+
+
+### Confluence interiors: optical weather
+All seven junctions now have independently phased low-cost swirling transparent cloud pockets, two incomplete luminous internal star-stream arcs and 18 bounded deterministic star motes each. The central HUDSON confluence has five cloud plumes, other junctions three, all clipped to the existing optical lens. These are entirely illustrative and never actual mission activity or cognition.
