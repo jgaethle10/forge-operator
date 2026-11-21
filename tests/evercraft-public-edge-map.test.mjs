@@ -20,12 +20,13 @@ test('public edge mapper is credential-free and scoped to Fabric ports',()=>{
   assert.doesNotMatch(src,/password|token|secret/i);
 });
 
-test('public edge mapper supports owned NAT traversal protocols',()=>{
+test('resident map uses owner-verifiable UPnP and skips unverified NAT-PMP/PCP mutation',()=>{
   assert.match(src,/UPnP-IGD/);
-  assert.match(src,/NAT-PMP/);
-  assert.match(src,/PCP/);
+  assert.match(src,/GetSpecificPortMappingEntry/);
   assert.match(src,/AddPortMapping/);
-  assert.match(src,/5351/);
+  assert.match(src,/unverified_fallbacks_skipped=\['NAT-PMP','PCP'\]/);
+  assert.match(src,/verified_upnp_readback_required/);
+  assert.ok(src.indexOf("out.unverified_fallbacks_skipped")<src.indexOf("const natpmp = await natPmpMap"));
 });
 
 
@@ -43,9 +44,8 @@ test('router mapper parses under the repository Node runtime',()=>{
   assert.equal(checked.status, 0, checked.stderr || checked.stdout);
 });
 
-test('web mapper does not abort on Crostini self-reflection failure',()=>{
+test('web mapper does not abort on advisory Crostini self-reflection failure',()=>{
   assert.doesNotMatch(src,/process\.exit\(3\)/);
   assert.match(src,/await upnpMap/);
-  assert.match(src,/await natPmpMap/);
-  assert.match(src,/await pcpMap/);
+  assert.match(src,/host_forward_preflight\.advisory=true/);
 });

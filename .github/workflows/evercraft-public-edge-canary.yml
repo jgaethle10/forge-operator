@@ -44,8 +44,8 @@ jobs:
             "note": "Universal Fabric and specialist edge are separate trust surfaces; no fallback origin is permitted."
           }
           JSON
-            echo "SPECIALIST_ORIGIN is not configured. Holding specialist-edge verification without probing the universal Fabric edge."
-            exit 0
+            echo "::error::SPECIALIST_ORIGIN missing: specialist HTTPS/MCP was NOT verified. This external canary must fail closed."
+            exit 1
           fi
 
       - name: Prepare receipt
@@ -304,6 +304,7 @@ jobs:
           git push origin HEAD:main
 
       - name: Upload external canary receipts
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: evercraft-public-edge-canary
