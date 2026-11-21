@@ -58,6 +58,47 @@ failure domain. Admit an externally witnessed customer edge with recovery
 and rollback, otherwise hold public DNS instead of promising uptime.
 A spare machine on the same internet connection is not true off-site HA.
 
+## Physical Penguin/NextGen field preflight (read-only)
+
+A passing GitHub Actions runner is not evidence that Client 001 has been
+staged or served by Node 001. The operator's next physical-machine action
+is **observation only**. This does not restart Caddy, rewrite DNS, alter a
+live `current` pointer, generate trust certificates or contact the client:
+
+```bash
+cd "$HOME/.local/share/evercraft/forge-operator"
+node scripts/client001-field-preflight.mjs
+```
+
+Run this from a local checkout containing the merged field-preflight
+release. It emits a redacted JSON receipt with the canonical HTML
+SHA-256, the on-node digest-release state, symlink/tamper signals,
+`caddy` and `evercraft-fabric` service observations where available,
+and explicit **HOLD_PUBLIC_PROMOTION** gates. It does not print
+private network topology or change any runtime state. In a checkout
+that lacks this script, update through the existing Evercraft-approved
+Fabric update workflow after verifying local modifications, rather
+than overwriting a potentially dirty operator workspace.
+
+When and only when a local operator authorizes **staging**, the existing
+`scripts/stage-client001-owned-edge.sh` writes the canonical page
+into a versioned release at
+`/srv/evercraft/client001/releases/<source-sha256>/index.html`.
+The new staging implementation refuses symlink ancestors and digest
+tampering, checks complete copy equality, and moves a temporary
+sibling into place without overwriting an existing release. Staging
+may require an authorized administrator to prepare the directory.
+It does **not** create `current`, import Caddy routes, open an
+external listener, modify a service, or publish a domain.
+
+After any staging, rerun the read-only preflight to verify the actual
+physical node. A green staged release is still not proof of live web
+ingress, HTTPS, DNS ownership, recovery, or Juan's signoff.
+
+**Do not** use the private `.evercraft` lab certificate or synthetic
+localhost DNS mapping on a public/customer browser. Client 001's
+public `.com` remains a separate, registrar-controlled path.
+
 ## Staging without public deployment
 
 1. Inspect canonical source/asset rights and the exact client release ref.

@@ -6,6 +6,8 @@ on:
       - 'scripts/stage-client001-owned-edge.sh'
       - 'scripts/client001-domain-rdap.mjs'
       - 'tests/client001-owned-edge.test.mjs'
+      - 'tests/client001-field-preflight.test.mjs'
+      - 'scripts/client001-field-preflight.mjs'
       - '.github/workflows/client001-owned-static-edge.yml'
       - 'public/clients/on-the-go/review/index.html'
   push:
@@ -14,6 +16,8 @@ on:
       - 'infra/evercraft-edge/client001-on-the-go/**'
       - 'scripts/stage-client001-owned-edge.sh'
       - 'tests/client001-owned-edge.test.mjs'
+      - 'tests/client001-field-preflight.test.mjs'
+      - 'scripts/client001-field-preflight.mjs'
       - '.github/workflows/client001-owned-static-edge.yml'
       - 'public/clients/on-the-go/review/index.html'
   workflow_dispatch:
@@ -29,7 +33,9 @@ jobs:
         with:
           node-version: '22'
       - name: Enforce client-owned hostname and no deployment side effects
-        run: node --test tests/client001-owned-edge.test.mjs
+        run: |
+          node --check scripts/client001-field-preflight.mjs
+          node --test tests/client001-owned-edge.test.mjs tests/client001-field-preflight.test.mjs
       - name: Parse candidate Caddy host with real Caddy, no DNS or public connection
         run: |
           set -euo pipefail
@@ -69,6 +75,35 @@ jobs:
             "/srv/evercraft/client001/releases/$SOURCE_SHA/index.html"
           bash scripts/stage-client001-owned-edge.sh
           test ! -e /srv/evercraft/client001/current
+          # A descendant path under a symlinked ancestor must never be accepted.
+          ln -s "$RUNNER_TEMP" /srv/evercraft/client001/releases/reject-ancestor
+          if EVERCRAFT_CLIENT001_RELEASE_ROOT=/srv/evercraft/client001/releases/reject-ancestor/child \
+            bash scripts/stage-client001-owned-edge.sh; then
+            echo 'FAIL: symlinked ancestor accepted' >&2
+            exit 1
+          fi
+          rm /srv/evercraft/client001/releases/reject-ancestor
+          # Tampered existing release directory must fail, not get overwritten.
+          printf 'do not accept tampering' > "/srv/evercraft/client001/releases/$SOURCE_SHA/unexpected.txt"
+          if bash scripts/stage-client001-owned-edge.sh; then
+            echo 'FAIL: unexpected digest directory content accepted' >&2
+            exit 1
+          fi
+          rm "/srv/evercraft/client001/releases/$SOURCE_SHA/unexpected.txt"
+          bash scripts/stage-client001-owned-edge.sh
+          node scripts/client001-field-preflight.mjs > "$RUNNER_TEMP/client001-field-preflight.json"
+          node --input-type=module <<'NODE'
+          import assert from 'node:assert/strict';
+          import fs from 'node:fs';
+          const data=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/client001-field-preflight.json','utf8'));
+          assert.equal(data.status,'HOLD_PUBLIC_PROMOTION');
+          assert.equal(data.release_staged,true);
+          assert.equal(data.staged_digest_verified,true);
+          assert.equal(data.public_deploy_performed,false);
+          assert.equal(data.public_dns_changed,false);
+          assert.equal(data.customer_release_authorized,false);
+          console.log('CLIENT001_FIELD_PREFLIGHT_PASS_STAGED_ONLY');
+          NODE
           if EVERCRAFT_CLIENT001_RELEASE_ROOT="$RUNNER_TEMP/forbidden" bash scripts/stage-client001-owned-edge.sh; then
             echo 'FAIL: staging outside owned release root accepted' >&2
             exit 1
@@ -85,5 +120,6 @@ jobs:
           path: |
             ${{ runner.temp }}/client001-caddy-adapted.json
             ${{ runner.temp }}/client001-domain-rdap.json
+            ${{ runner.temp }}/client001-field-preflight.json
           if-no-files-found: warn
           retention-days: 7
