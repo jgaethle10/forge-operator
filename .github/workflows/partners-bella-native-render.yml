@@ -1,0 +1,32 @@
+name: Evercraft Partners Bella Native Voice 5 Render
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/partners-bella-native-render.yml'
+      - 'systemia/creative/partners-bella-native-render.py'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  bella-native:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Configure voice phoneme fallback
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq espeak-ng
+      - name: Install open-weight voice engine
+        run: python -m pip install --disable-pip-version-check 'kokoro>=0.9.4,<1' 'soundfile>=0.12,<1' 'numpy>=1.26,<3'
+      - name: Render original narration with af_bella
+        run: python systemia/creative/partners-bella-native-render.py
+      - name: Store operator-review original vocal take with receipt
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: evercraft-partners-bella-original-vocal
+          path: artifacts/evercraft-partners-bella
+          if-no-files-found: warn
+          retention-days: 30
