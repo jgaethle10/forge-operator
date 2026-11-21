@@ -67,6 +67,7 @@ export function assessFreshness(opportunity, now = new Date(), freshnessMs = DEF
   const maxAge = freshnessMs[opportunity.category] ?? freshnessMs.other;
 
   if (!Number.isFinite(observedMs)) return { fresh: false, reason: 'missing_observed_at', age_ms: null };
+  if (observedMs > nowMs) return { fresh: false, reason: 'future_observation', age_ms: null };
   if (Number.isFinite(expiresMs) && nowMs > expiresMs) return { fresh: false, reason: 'expired', age_ms: nowMs - observedMs };
   if (nowMs - observedMs > maxAge) return { fresh: false, reason: 'stale', age_ms: nowMs - observedMs };
   return { fresh: true, reason: 'fresh', age_ms: Math.max(0, nowMs - observedMs) };
