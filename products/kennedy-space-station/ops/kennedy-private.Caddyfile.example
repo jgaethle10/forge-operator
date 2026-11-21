@@ -1,0 +1,25 @@
+# STAGED REFERENCE ONLY. Do not install or reload until owner host, DNS, TLS,
+# Caddy version >= 2.8, credentials and private access have been confirmed.
+# KSS runs on loopback at 127.0.0.1:8811 and does not have customer accounts.
+#
+# Required Caddy process environment:
+#   KENNEDY_DOMAIN=<owned-hostname>
+#   KENNEDY_OPERATOR_USER=<dedicated-user>
+#   KENNEDY_PASSWORD_BCRYPT=<hash from interactive 'caddy hash-password'>
+#
+# These variables must not be committed or printed by diagnostics.
+
+{$KENNEDY_DOMAIN} {
+    encode zstd gzip
+    basic_auth {
+        {$KENNEDY_OPERATOR_USER} {$KENNEDY_PASSWORD_BCRYPT}
+    }
+    header {
+        Strict-Transport-Security "max-age=31536000"
+        X-Content-Type-Options "nosniff"
+        Referrer-Policy "no-referrer"
+        X-Frame-Options "DENY"
+        Cache-Control "no-store"
+    }
+    reverse_proxy 127.0.0.1:8811
+}

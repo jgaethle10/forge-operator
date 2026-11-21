@@ -1,0 +1,33 @@
+# OPERATOR-ONLY STAGING TEMPLATE. No install performed.
+# Replace the placeholders using the actual owned machine inventory.
+# Require a dedicated nonprivileged service account with access only to the
+# Site Planner and Kennedy data directory, and real managed backups.
+#
+# This is not a multi-tenant customer SaaS.
+[Unit]
+Description=Evercraft Kennedy Space Station (Private Operator Preview)
+After=network.target
+
+[Service]
+Type=simple
+User=EVERCRAFT_SERVICE_USER
+Group=EVERCRAFT_SERVICE_GROUP
+WorkingDirectory=/ABSOLUTE/OWNED/REPO/products/kennedy-space-station
+ExecStart=/usr/bin/python3 /ABSOLUTE/OWNED/REPO/products/kennedy-space-station/server.py
+Environment=EVERCRAFT_SITE_HOST=127.0.0.1
+Environment=KENNEDY_PORT=8811
+Environment=EVERCRAFT_SITE_DATA=/ABSOLUTE/OWNED/DATA/site-planner
+Environment=KENNEDY_DATA=/ABSOLUTE/OWNED/DATA/kennedy
+Environment=PYTHONDONTWRITEBYTECODE=1
+UMask=0077
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/ABSOLUTE/OWNED/DATA/site-planner /ABSOLUTE/OWNED/DATA/kennedy
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+
+[Install]
+WantedBy=multi-user.target

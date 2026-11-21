@@ -1,0 +1,205 @@
+name: Kennedy Space Station private shell checks
+on:
+  push:
+    paths:
+      - "products/kennedy-space-station/**"
+      - "products/site-planner/**"
+      - ".github/workflows/kennedy-space-station-shell.yml"
+  pull_request:
+    paths:
+      - "products/kennedy-space-station/**"
+      - "products/site-planner/**"
+      - ".github/workflows/kennedy-space-station-shell.yml"
+permissions:
+  contents: read
+jobs:
+  private-shell-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Check Kennedy kernel imports
+        run: |
+          python3 -m py_compile \
+            products/kennedy-space-station/server.py \
+            products/kennedy-space-station/spatial.py \
+            products/kennedy-space-station/raster_registration.py \
+            products/kennedy-space-station/aerial_vault.py \
+            products/kennedy-space-station/test_aerial_vault.py \
+            products/kennedy-space-station/test_aerial_http.py \
+            products/kennedy-space-station/test_private_review_http.py \
+            products/kennedy-space-station/generate_private_review_proof.py \
+            products/kennedy-space-station/sheet_compiler.py \
+            products/kennedy-space-station/test_shell.py \
+            products/kennedy-space-station/test_spatial.py \
+            products/kennedy-space-station/test_sheet_compiler.py
+      - name: Real loopback HTTP, provenance and synthetic raster regression tests
+        run: python3 -m unittest discover -s products/kennedy-space-station -p "test_*.py" -v
+      - name: Install PDF raster QA tools on isolated GitHub runner
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y poppler-utils
+      - name: Produce and rasterize deterministic two-sheet synthetic PDF
+        run: |
+          set -euo pipefail
+          OUT=/tmp/kss-sheet-proof
+          python3 products/kennedy-space-station/generate_synthetic_sheets.py --output-dir "$OUT"
+          command -v pdfinfo
+          command -v pdftoppm
+          pdfinfo "$OUT/kennedy-synthetic-s0-a0.pdf" > "$OUT/pdfinfo.txt"
+          pdftoppm -f 1 -l 2 -r 72 -png "$OUT/kennedy-synthetic-s0-a0.pdf" "$OUT/page" >/dev/null 2>&1
+          python3 - "$OUT" <<'PY'
+          import json,sys,hashlib
+          from pathlib import Path
+          from struct import unpack
+          root=Path(sys.argv[1])
+          info=(root/"pdfinfo.txt").read_text()
+          assert any(line.split(':',1)[-1].strip()=='2' for line in info.splitlines() if line.startswith("Pages:")),info
+          pages=sorted(root.glob("page-*.png"))
+          assert len(pages)==2,[p.name for p in pages]
+          for page in pages:
+              b=page.read_bytes()
+              assert b[:8]==bytes.fromhex("89504e470d0a1a0a")
+              w,h=unpack(">II",b[16:24])
+              assert w>=2000 and h>=1000,(page.name,w,h)
+              assert len(b)>20000,(page.name,len(b))
+          assert hashlib.sha256(pages[0].read_bytes()).digest()!=hashlib.sha256(pages[1].read_bytes()).digest()
+          receipt=json.loads((root/"source-qa-receipt.json").read_text())
+          assert receipt["pages"]==2 and not receipt["customer_release_authorized"]
+          assert hashlib.sha256((root/"kennedy-synthetic-s0-a0.pdf").read_bytes()).hexdigest()==receipt["pdf_sha256"]
+          print("PASS: two rendered source-bound synthetic sheets and integrity receipt")
+          print("HOLD: human visual QA, real source rights and georeferencing")
+          PY
+      - name: Independently sample real rendered pixels and create QA receipt
+        run: |
+          set -euo pipefail
+          OUT=/tmp/kss-sheet-proof
+          pdftoppm -f 1 -l 2 -r 72 "$OUT/kennedy-synthetic-s0-a0.pdf" "$OUT/qa" >/dev/null 2>&1
+          python3 products/kennedy-space-station/verify_rendered_sheets.py "$OUT"
+          rm "$OUT/qa-1.ppm" "$OUT/qa-2.ppm"
+      - name: Generate and inspect private source-vault review PDF proof
+        run: |
+          set -euo pipefail
+          OUT=/tmp/kss-sheet-proof
+          python3 products/kennedy-space-station/generate_private_review_proof.py --output-dir "$OUT"
+          pdfinfo "$OUT/kennedy-private-review-synthetic.pdf" > "$OUT/private-review-pdfinfo.txt"
+          pdftoppm -f 1 -l 2 -r 72 -png "$OUT/kennedy-private-review-synthetic.pdf" "$OUT/private-review-page" >/dev/null 2>&1
+          mkdir -p "$OUT/private-review-pixel-check"
+          pdftoppm -f 1 -l 2 -r 72 "$OUT/kennedy-private-review-synthetic.pdf" "$OUT/private-review-pixel-check/qa" >/dev/null 2>&1
+          python3 products/kennedy-space-station/verify_rendered_sheets.py "$OUT/private-review-pixel-check"
+          cp "$OUT/private-review-pixel-check/render-qa-receipt.json" "$OUT/private-review-render-qa-receipt.json"
+          rm -rf "$OUT/private-review-pixel-check"
+          python3 - "$OUT" <<'PY'
+          from pathlib import Path
+          import json,hashlib,sys
+          out=Path(sys.argv[1])
+          meta=json.loads((out/"private-source-review-qa-receipt.json").read_text())
+          pdf=(out/"kennedy-private-review-synthetic.pdf").read_bytes()
+          info=(out/"private-review-pdfinfo.txt").read_text()
+          pages=sorted(out.glob("private-review-page-*.png"))
+          assert len(pages)==2
+          assert any(s.startswith("Pages:") and s.split(":")[1].strip()=="2" for s in info.splitlines())
+          assert hashlib.sha256(pdf).hexdigest()==meta["pdf_sha256"]
+          assert b"PRIVATE SOURCE REVIEW" in pdf and b"NOT FOR EXTERNAL DELIVERY" in pdf
+          assert meta["pages"]==2 and meta["external_release_authorized"] is False
+          assert hashlib.sha256(pages[0].read_bytes()).hexdigest()!=hashlib.sha256(pages[1].read_bytes()).hexdigest()
+          print("PASS: private source-vault two-page PDF independently raster-QA verified")
+          print("HOLD: customer delivery, source rights, north/CRS and survey accuracy")
+          PY
+      - name: Upload synthetic PDF, source raster inputs, and page renders
+        uses: actions/upload-artifact@v4
+        with:
+          name: kennedy-synthetic-s0-a0-proof
+          path: /tmp/kss-sheet-proof/
+          if-no-files-found: error
+          retention-days: 14
+      - name: Verify private aerial canvas alignment, rotations, and skew
+        run: node products/kennedy-space-station/test_overlay_math.mjs
+      - name: Validate embedded private studio JavaScript syntax
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          import subprocess
+          for source in ("index.html","studio.html","aerial.html"):
+              data=Path("products/kennedy-space-station",source).read_text()
+              scripts=re.findall(r"<script>(.*?)</script>",data,flags=re.S)
+              assert scripts,source
+              for i,script in enumerate(scripts):
+                  path=Path("/tmp",f"kennedy-{source}-{i}.js")
+                  path.write_text(script)
+                  subprocess.run(["node","--check",str(path)],check=True)
+          PY
+      - name: Validate private host template safety (offline)
+        run: |
+          python3 - <<'PY'
+          import importlib.util
+          from pathlib import Path
+          import os
+          path=Path("products/kennedy-space-station/ops/private_gateway_preflight.py")
+          spec=importlib.util.spec_from_file_location("kss_private_gateway_preflight",path)
+          module=importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(module)
+          assert module.CADDY.exists() and module.SERVICE.exists()
+          for name in ("KENNEDY_DOMAIN","KENNEDY_OPERATOR_USER","KENNEDY_PASSWORD_BCRYPT"):
+              os.environ.pop(name,None)
+          assert module.preflight()==2
+          PY
+      - name: Playable Kennedy Discovery World offline interactions
+        run: node products/kennedy-space-station/test_explore_ui.mjs
+      - name: Public homepage security and isolation gate
+        run: python3 products/kennedy-space-station/verify_public_home.py
+
+  discovery-world-preview:
+    name: Playable Discovery World and phone visual proof
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify public-only source and actions
+        run: |
+          python3 products/kennedy-space-station/verify_public_home.py
+          node products/kennedy-space-station/test_explore_ui.mjs
+      - name: Render actual Kennedy desktop and phone screenshots headlessly
+        run: |
+          set -euo pipefail
+          PREVIEW=/tmp/kennedy-discovery-preview
+          mkdir -p "$PREVIEW"
+          cp products/kennedy-space-station/public/explore.html "$PREVIEW/explore.html"
+          cp products/kennedy-space-station/public/index.html "$PREVIEW/index.html"
+          cp products/kennedy-space-station/public/favicon.svg "$PREVIEW/favicon.svg"
+          BROWSER="$(command -v google-chrome || command -v chromium || command -v chromium-browser || true)"
+          if [ -z "$BROWSER" ]; then
+            echo "HOLD: no headless Chrome available for actual viewport QA"
+            exit 1
+          fi
+          URL="file://$PWD/products/kennedy-space-station/public/explore.html?still=1"
+          timeout 40s "$BROWSER" --headless --no-sandbox --disable-dev-shm-usage --disable-gpu --hide-scrollbars --window-size=1400,1100 --virtual-time-budget=1800 --screenshot="$PREVIEW/desktop-preview.png" "$URL" 2>"$PREVIEW/chrome-desktop.log"
+          timeout 40s "$BROWSER" --headless --no-sandbox --disable-dev-shm-usage --disable-gpu --hide-scrollbars --window-size=390,900 --virtual-time-budget=1800 --screenshot="$PREVIEW/phone-preview.png" "$URL" 2>"$PREVIEW/chrome-phone.log"
+          python3 - "$PREVIEW" <<'PY'
+          import struct,sys
+          from pathlib import Path
+          out=Path(sys.argv[1])
+          for name,minwidth in (("desktop-preview.png",1000),("phone-preview.png",350)):
+              payload=(out/name).read_bytes()
+              assert payload.startswith(b"\x89PNG\r\n\x1a\n"),name
+              w,h=struct.unpack(">II",payload[16:24])
+              assert w>=minwidth and h>=750 and len(payload)>35000,(name,w,h,len(payload))
+              print(name,w,h,len(payload),"bytes: headless browser rendered")
+          print("NOTE: screenshots show visual browser rendering; manual iPhone QA remains required")
+          PY
+      - name: Package Kennedy interactive HTML and rendered screenshots
+        uses: actions/upload-artifact@v4
+        with:
+          name: kennedy-discovery-world-standalone-html
+          path: |
+            /tmp/kennedy-discovery-preview/explore.html
+            /tmp/kennedy-discovery-preview/index.html
+            /tmp/kennedy-discovery-preview/favicon.svg
+            /tmp/kennedy-discovery-preview/desktop-preview.png
+            /tmp/kennedy-discovery-preview/phone-preview.png
+          if-no-files-found: error
+          retention-days: 14
