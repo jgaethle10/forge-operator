@@ -111,6 +111,7 @@ try{
     ['I need help finding a discontinued hydraulic valve that I cannot locate through normal suppliers.','findmypart-paid-hunt-v1'],
     ['Can someone evaluate whether my commercial property is a good place for EV chargers?','aliev-site-opportunity-snapshot-v1'],
     ['My local business website gets traffic but almost nobody contacts us. What can audit it?','audit-center-website-audit-machine-v1'],
+    ['We run an IBM i AS400 legacy system and need migration discovery and repair options.','ibmi-rescue-v1'],
   ];
   let id=10;
   for(const [intent,expectedId] of cases){
