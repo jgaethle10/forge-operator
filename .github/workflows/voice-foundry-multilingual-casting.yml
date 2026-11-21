@@ -1,0 +1,82 @@
+name: Voice Foundry | Multilingual Casting Room (private)
+on:
+  push:
+    branches: [feature/bella-actor-lab-20261026]
+    paths:
+      - 'systemia/media-studio/voice-foundry-multilingual-casting.py'
+      - 'systemia/media-studio/test_voice_foundry_multilingual_casting.py'
+      - '.github/workflows/voice-foundry-multilingual-casting.yml'
+  pull_request:
+    paths:
+      - 'systemia/media-studio/voice-foundry-multilingual-casting.py'
+      - 'systemia/media-studio/test_voice_foundry_multilingual_casting.py'
+      - '.github/workflows/voice-foundry-multilingual-casting.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  private-real-voice-casting:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 50
+    env:
+      HF_HUB_DISABLE_TELEMETRY: '1'
+      TOKENIZERS_PARALLELISM: 'false'
+      PYTHONUNBUFFERED: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Preflight eight voices and test no-bespoke-voice claims
+        run: |
+          python systemia/media-studio/voice-foundry-multilingual-casting.py --verify-only
+          python -m unittest discover -s systemia/media-studio -p test_voice_foundry_multilingual_casting.py -v
+      - name: Install original Kokoro runtime and audio codec
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq espeak-ng libsndfile1 ffmpeg
+          python -m pip install --disable-pip-version-check 'kokoro==0.9.4' 'soundfile>=0.12,<1.0'
+      - name: Render real native English Spanish and Brazilian Portuguese speech
+        run: |
+          python systemia/media-studio/voice-foundry-multilingual-casting.py \
+            --output voice-foundry-casting-review
+      - name: Independently validate original WAVs MP3s and review holds
+        run: |
+          python - <<'PY'
+          import hashlib,json,pathlib,wave
+          root=pathlib.Path('voice-foundry-casting-review')
+          data=json.loads((root/'evidence.json').read_text(encoding='utf8'))
+          assert data['schema']=='evercraft.voice-foundry.multilingual-audition.v1'
+          assert data['engine']=='Kokoro-82M'
+          assert data['kokoroLibraryVersion']=='0.9.4'
+          assert data['protectedLegacyBellaVoice']=='af_bella'
+          for x in ('productionReady','humanListeningApproved',
+                    'nativeSpeakerPronunciationApproved','publicReleaseAuthorized',
+                    'independentCommercialRightsAudit'):
+              assert data[x] is False,x
+          assert data['allVoiceIdentitiesAlreadyPresentInModel'] is True
+          assert len(data['cast'])==8
+          assert len(set(x['voiceId'] for x in data['cast']))==8
+          assert set(x['language'] for x in data['cast'])=={'en-US','en-GB','es-ES','pt-BR'}
+          for item in data['cast']:
+              assert item['voiceId'][0]==item['languageCode']
+              assert item['nativeModel'] and item['stockVoicePack']
+              assert not item['trainedCustomVoice'] and not item['nativePronunciationReviewed']
+              assert item['durationSec']>7
+              assert item['chunkCount']>=1
+              assert item['scriptSha256']==hashlib.sha256(item['script'].encode('utf8')).hexdigest()
+              for name,h in ((item['wav'],item['wavSha256']),(item['mp3'],item['mp3Sha256'])):
+                  f=root/name
+                  assert f.is_file() and hashlib.sha256(f.read_bytes()).hexdigest()==h
+              with wave.open(str(root/item['wav']),'rb') as w:
+                  assert (w.getnchannels(),w.getsampwidth(),w.getframerate())==(1,2,24000)
+                  assert 7<w.getnframes()/24000<40
+          assert (root/'index.html').read_text(encoding='utf8').count('<audio controls')==8
+          print('PASS: 8 authentic voice-pack WAV/MP3 auditions; Spanish and Portuguese source; Bella not modified')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-voice-foundry-eight-private-multilingual-auditions
+          path: voice-foundry-casting-review/
+          retention-days: 7
+          if-no-files-found: error

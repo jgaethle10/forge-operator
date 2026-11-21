@@ -1,0 +1,37 @@
+name: Voice Foundry | Bella Expressive Engine Guardrails
+on:
+  push:
+    branches: [feature/bella-actor-lab-20261026]
+    paths:
+      - 'systemia/media-studio/voice-bella-expressive-chatterbox.py'
+      - 'systemia/media-studio/test_voice_bella_expressive_chatterbox.py'
+      - '.github/workflows/voice-bella-expressive-preflight.yml'
+  pull_request:
+    paths:
+      - 'systemia/media-studio/voice-bella-expressive-chatterbox.py'
+      - 'systemia/media-studio/test_voice_bella_expressive_chatterbox.py'
+      - '.github/workflows/voice-bella-expressive-preflight.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  no-reference-no-generation:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Exercise real PCM reference authorization and model-free tests
+        run: |
+          python systemia/media-studio/voice-bella-expressive-chatterbox.py --verify-only
+          python -m unittest discover -s systemia/media-studio -p 'test_voice_bella_expressive_chatterbox.py' -v
+          python -m compileall -q systemia/media-studio/voice-bella-expressive-chatterbox.py
+      - name: Confirm no voice samples were synthesized or bundled in CI
+        run: |
+          if find . -type f \( -name '*.wav' -o -name '*.mp3' \) -path '*bella-expressive*' | grep -q .; then
+            echo "ERROR: private voice audio unexpectedly included in safe preflight workflow"
+            exit 1
+          fi
+          echo "PASS: authorization guardrails checked; no neural weights downloaded, no Bella voice cloned"

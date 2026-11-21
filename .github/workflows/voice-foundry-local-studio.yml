@@ -1,0 +1,48 @@
+name: Voice Foundry | Owned Local Studio UI and Security
+on:
+  push:
+    branches: [feature/bella-actor-lab-20261026]
+    paths:
+      - 'systemia/media-studio/voice-foundry-local-studio.py'
+      - 'systemia/media-studio/test_voice_foundry_local_studio.py'
+      - '.github/workflows/voice-foundry-local-studio.yml'
+  pull_request:
+    paths:
+      - 'systemia/media-studio/voice-foundry-local-studio.py'
+      - 'systemia/media-studio/test_voice_foundry_local_studio.py'
+      - '.github/workflows/voice-foundry-local-studio.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  local-studio-protocol:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 9
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Offline localhost HTTP, security and artifact contract tests
+        run: |
+          python systemia/media-studio/voice-foundry-local-studio.py --check-only
+          python -m unittest discover -s systemia/media-studio -p test_voice_foundry_local_studio.py -v
+          python -m compileall -q systemia/media-studio/voice-foundry-local-studio.py
+      - name: Assert no public or customer release paths from prototype
+        run: |
+          python - <<'PY'
+          import importlib.util,pathlib,json
+          root=pathlib.Path('systemia/media-studio')
+          file=root/'voice-foundry-local-studio.py'
+          spec=importlib.util.spec_from_file_location('studio',file)
+          mod=importlib.util.module_from_spec(spec);spec.loader.exec_module(mod)
+          assert mod.validate_host('127.0.0.1')=='127.0.0.1'
+          for host in ('0.0.0.0','::1','192.168.0.5','example.com'):
+              try: mod.validate_host(host)
+              except ValueError: pass
+              else: raise AssertionError('Rejected network bind accepted: '+host)
+          roster=mod.workstation.catalog()
+          assert len(roster)==12 and 'af_bella' not in roster
+          assert all(v['releasedForEvercraft'] is False for v in roster.values())
+          print('PASS: exactly 12 unapproved voice profiles, protected Bella, local-only prototype')
+          PY

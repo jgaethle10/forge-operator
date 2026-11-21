@@ -1,0 +1,34 @@
+name: Voice Foundry | Bella Native Phoneme Frame QA
+on:
+  push:
+    branches: [feature/bella-actor-lab-20261026]
+    paths:
+      - 'systemia/media-studio/voice-bella-native-phoneme-frame-audit.py'
+      - 'systemia/media-studio/test_voice_bella_native_phoneme_frame_audit.py'
+      - '.github/workflows/voice-bella-native-phoneme-frame-audit.yml'
+  pull_request:
+    paths:
+      - 'systemia/media-studio/voice-bella-native-phoneme-frame-audit.py'
+      - 'systemia/media-studio/test_voice_bella_native_phoneme_frame_audit.py'
+      - '.github/workflows/voice-bella-native-phoneme-frame-audit.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verified-frames:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Inspect exact symbol/frame alignment with non-private synthetic fixtures
+        run: |
+          python -m unittest discover -s systemia/media-studio \
+            -p test_voice_bella_native_phoneme_frame_audit.py -v
+          python -m compileall -q systemia/media-studio/voice-bella-native-phoneme-frame-audit.py
+      - name: Confirm private Bella speech is not bundled into this test
+        run: |
+          test ! -d bella-native-duration-private
+          echo 'PASS: synthetic fixtures only, model-free CI, no release'

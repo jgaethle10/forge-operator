@@ -1,0 +1,76 @@
+name: Voice Foundry | Bella Meaningful Endings (private)
+on:
+  push:
+    branches: [feature/bella-actor-lab-20261026]
+    paths:
+      - 'systemia/media-studio/voice-bella-meaningful-endings.py'
+      - 'systemia/media-studio/test_voice_bella_meaningful_endings.py'
+      - '.github/workflows/voice-bella-meaningful-endings.yml'
+  pull_request:
+    paths:
+      - 'systemia/media-studio/voice-bella-meaningful-endings.py'
+      - 'systemia/media-studio/test_voice_bella_meaningful_endings.py'
+      - '.github/workflows/voice-bella-meaningful-endings.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  native-semantics-test:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Validate exact unchanged prefix, revision semantics and review gates
+        run: |
+          python systemia/media-studio/voice-bella-meaningful-endings.py --verify-only
+          python -m unittest discover -s systemia/media-studio -p test_voice_bella_meaningful_endings.py -v
+      - name: Install original Kokoro V05 and MP3 preview encoder
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq espeak-ng libsndfile1 ffmpeg
+          python -m pip install --disable-pip-version-check 'kokoro==0.9.4' 'soundfile>=0.12,<1.0'
+      - name: Render original Bella and meaningful-ending revised Bella with unchanged voice
+        env:
+          HF_HUB_DISABLE_TELEMETRY: '1'
+        run: |
+          python systemia/media-studio/voice-bella-meaningful-endings.py \
+            --output bella-semantic-endings-private
+      - name: Verify actual WAV/MP3 and honest private review boundaries
+        run: |
+          python - <<'PY'
+          import hashlib,json,pathlib,wave
+          root=pathlib.Path('bella-semantic-endings-private')
+          d=json.loads((root/'evidence.json').read_text())
+          assert d['schema']=='evercraft.bella.semantic-endings-private.v1'
+          assert d['voiceId']=='af_bella' and d['kokoroVersion']=='0.9.4'
+          assert d['sameSourceVoice'] and d['sameSeed'] and d['sameModelSpeed']
+          assert d['sameOpeningWords'] and d['closingWordsIntentionallyRewritten']
+          for k in ('humanQualityApproved','productionApproved',
+                    'commercialRightsIndependentlyVerified','phonemeOverridesApplied',
+                    'timeStretchingApplied','voiceCloningPerformed'):
+              assert d[k] is False,k
+          assert d['blindConditionMap']=={'A':'meaningful_endings','B':'original'}
+          assert set(d['source'])=={'original','meaningful_endings'}
+          for key,x in d['source'].items():
+              wav=root/x['wav']
+              mp3=root/x['reviewMp3']
+              assert hashlib.sha256(wav.read_bytes()).hexdigest()==x['wavSha256']
+              assert hashlib.sha256(mp3.read_bytes()).hexdigest()==x['reviewMp3Sha256']
+              with wave.open(str(wav),'rb') as f:
+                  assert (f.getnchannels(),f.getsampwidth(),f.getframerate())==(1,2,24000)
+                  assert 10<f.getnframes()/24000<25
+              assert x['exactWordCoverage'] and x['nativeTimingUsable']
+              assert len(x['words'])==x['wordCount']
+          assert d['source']['original']['phonemesSha256']=='b609c9bb842a59167dd2eb0319d3e9cabfce0ccdc56a060ef71e456581dac70d'
+          assert (root/'index.html').read_text().count('<audio preload=')==2
+          print('PASS: actual native Bella contrast, authentic WAV/MP3 hashes, private review')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: bella-meaningful-endings-two-private-native-takes
+          path: bella-semantic-endings-private/
+          retention-days: 7
+          if-no-files-found: error

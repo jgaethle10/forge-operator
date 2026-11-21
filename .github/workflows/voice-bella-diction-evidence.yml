@@ -1,0 +1,43 @@
+name: Voice Foundry | Bella Diction Evidence Gate
+on:
+  push:
+    branches: [feature/bella-actor-lab-20261026]
+    paths:
+      - 'systemia/media-studio/voice-bella-diction-audit.py'
+      - 'systemia/media-studio/voice-bella-asr-diction.py'
+      - 'systemia/media-studio/test_voice_bella_diction_audit.py'
+      - 'systemia/media-studio/test_voice_bella_asr_diction.py'
+      - '.github/workflows/voice-bella-diction-evidence.yml'
+  pull_request:
+    paths:
+      - 'systemia/media-studio/voice-bella-diction-audit.py'
+      - 'systemia/media-studio/voice-bella-asr-diction.py'
+      - 'systemia/media-studio/test_voice_bella_diction_audit.py'
+      - 'systemia/media-studio/test_voice_bella_asr_diction.py'
+      - '.github/workflows/voice-bella-diction-evidence.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  synthetic-fixture-evidence:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install offline acoustic dependencies (no ASR weights, no private audio)
+        run: python -m pip install --disable-pip-version-check 'numpy>=1.24,<3' 'praat-parselmouth>=0.4,<1'
+      - name: Prove SHA-fidelity, word alignment refusal, and review-only gates
+        run: |
+          python -m unittest discover -s systemia/media-studio -p 'test_voice_bella_diction_audit.py' -v
+          python -m unittest discover -s systemia/media-studio -p 'test_voice_bella_asr_diction.py' -v
+          python -m compileall -q \
+            systemia/media-studio/voice-bella-diction-audit.py \
+            systemia/media-studio/voice-bella-asr-diction.py
+      - name: Confirm no voice files or model weights were published by this audit
+        run: |
+          test ! -e bella-diction-source.wav
+          test ! -e bella-diction-source.mp3
+          echo 'PASS: Fixture-only QA. Word-level issues still require actual ASR and listening.'

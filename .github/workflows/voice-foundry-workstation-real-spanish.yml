@@ -1,0 +1,80 @@
+name: Voice Foundry | Real Workstation Spanish Script Smoke (private)
+on:
+  push:
+    branches: [feature/bella-actor-lab-20261026]
+    paths:
+      - 'systemia/media-studio/voice-foundry-workstation.py'
+      - '.github/workflows/voice-foundry-workstation-real-spanish.yml'
+  pull_request:
+    paths:
+      - 'systemia/media-studio/voice-foundry-workstation.py'
+      - '.github/workflows/voice-foundry-workstation-real-spanish.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  script-to-real-native-audio:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 38
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Check proper registered Spanish voice, Bella excluded
+        run: |
+          python systemia/media-studio/voice-foundry-workstation.py --list-voices > /tmp/voices.json
+          python - <<'PY'
+          import json
+          roster=json.load(open('/tmp/voices.json'))
+          assert roster['ef_dora']['language']=='es-ES'
+          assert 'af_bella' not in roster
+          print('PASS: validated original Spanish voice pack, Bella held')
+          PY
+      - name: Install Kokoro and native media encoder on isolated runner
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq espeak-ng libsndfile1 ffmpeg
+          python -m pip install --disable-pip-version-check 'kokoro==0.9.4' 'soundfile>=0.12,<1.0'
+      - name: Write an original Spanish script through the workstation file interface
+        run: |
+          cat > /tmp/evercraft-spanish-voice-smoke.txt <<'TEXT'
+          La tecnología debería ayudarte a avanzar sin complicarte el día. En Evercraft creamos herramientas prácticas, con información clara y decisiones responsables. Cada idea merece una voz que inspire confianza. Ese es nuestro compromiso.
+          TEXT
+          python systemia/media-studio/voice-foundry-workstation.py \
+            --voice ef_dora \
+            --text-file /tmp/evercraft-spanish-voice-smoke.txt \
+            --output voice-foundry-private-workstation-smoke
+      - name: Validate native audio, original script identity and no release
+        run: |
+          python - <<'PY'
+          import hashlib,json,pathlib,wave
+          root=pathlib.Path('voice-foundry-private-workstation-smoke')
+          receipt=json.loads((root/'evidence.json').read_text(encoding='utf8'))
+          assert receipt['schema']=='evercraft.voice-foundry.workstation-private-render.v1'
+          assert receipt['voiceInput']=='ef_dora'
+          assert receipt['resolvedProfile']['language']=='es-ES'
+          assert receipt['resolvedProfile']['kind']=='publishedStockPack'
+          assert receipt['genuineNativeSynthesis']
+          assert receipt['bellaOriginalMasterUntouched']
+          assert all(receipt[k] is False for k in (
+              'humanPronunciationApproved','textRightsVerified',
+              'commercialRightsIndependentlyVerified','productionReady',
+              'releaseAuthorized','trainedCustomVoice','humanVoiceCloned'))
+          source=pathlib.Path('/tmp/evercraft-spanish-voice-smoke.txt')
+          assert receipt['sourceTextFileSha256']==hashlib.sha256(source.read_bytes()).hexdigest()
+          for name,hashkey in [('native.wav','nativeWavSha256'),('preview.mp3','previewMp3Sha256')]:
+              file=root/name
+              assert file.is_file()
+              assert hashlib.sha256(file.read_bytes()).hexdigest()==receipt[hashkey]
+          with wave.open(str(root/'native.wav'),'rb') as w:
+              assert (w.getnchannels(),w.getsampwidth(),w.getframerate())==(1,2,24000)
+              assert 4<w.getnframes()/24000<90
+          print('PASS: actual Spanish script-to-voice WAV and MP3, unreleased')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: voice-foundry-private-script-to-spanish-real-audio
+          path: voice-foundry-private-workstation-smoke/
+          retention-days: 7
+          if-no-files-found: error

@@ -1,0 +1,36 @@
+name: Voice Foundry | Private iPhone Review Export
+on:
+  push:
+    branches: [feature/bella-actor-lab-20261026]
+    paths:
+      - 'systemia/media-studio/voice-foundry-mobile-review-export.py'
+      - 'systemia/media-studio/test_voice_foundry_mobile_review_export.py'
+      - '.github/workflows/voice-foundry-mobile-review-export.yml'
+  pull_request:
+    paths:
+      - 'systemia/media-studio/voice-foundry-mobile-review-export.py'
+      - 'systemia/media-studio/test_voice_foundry_mobile_review_export.py'
+      - '.github/workflows/voice-foundry-mobile-review-export.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-verified-mobile-video:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install local FFmpeg and DejaVu font for H264/AAC only
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg fonts-dejavu-core
+      - name: Check source SHA, review holds and actually encode mobile MP4
+        run: |
+          python -m unittest discover -s systemia/media-studio -p test_voice_foundry_mobile_review_export.py -v
+      - name: Verify Bella production not touched and no audio uploaded
+        run: |
+          test ! -d public-voice-files
+          echo 'PASS: synthetic fixtures only; no real voice publish; original Bella unaffected'

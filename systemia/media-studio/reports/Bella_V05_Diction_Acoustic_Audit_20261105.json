@@ -1,0 +1,716 @@
+{
+  "schema": "evercraft.bella.diction-audit.v1",
+  "outputStatus": "PRIVATE_DIAGNOSTIC_UNREVIEWED",
+  "originalVoice": "af_bella",
+  "automatedWrongWordStressDetermined": false,
+  "automatedVowelLengthErrorDetermined": false,
+  "asrTranscriptInvented": false,
+  "humanApproved": false,
+  "productionReady": false,
+  "sources": [
+    {
+      "sourceName": "dry-native/original-native.wav",
+      "sourceSha256": "6079571cab0a5740e62174089dc55ada0e194c7305b0d61dfe03a9a087823410",
+      "script": "You know that moment when everything begins to make sense? The noise falls away... the next step becomes clear, and suddenly, you can see where this could go. That's what we're building at Evercraft: something worth paying attention to. Something you'll want to come back to.",
+      "durationSec": 16.175,
+      "archiveSha256": "3ebcbbc6f70247badf0082ace576c341b5c647574e7039d21e5230a62d30579e",
+      "sourceSchema": "evercraft.bella.magnetic-presence-audition.v1",
+      "acoustics": {
+        "peak": 0.50455,
+        "rmsDbfs": -23.83,
+        "activeFraction": 0.683,
+        "pitchBackend": "praat_ac_75_500hz",
+        "longQuietIntervals": [
+          {
+            "startSec": 0.0,
+            "endSec": 0.42,
+            "durationSec": 0.42
+          },
+          {
+            "startSec": 3.1,
+            "endSec": 3.6,
+            "durationSec": 0.5
+          },
+          {
+            "startSec": 5.01,
+            "endSec": 5.48,
+            "durationSec": 0.47
+          },
+          {
+            "startSec": 6.94,
+            "endSec": 7.39,
+            "durationSec": 0.45
+          },
+          {
+            "startSec": 9.57,
+            "endSec": 9.93,
+            "durationSec": 0.36
+          },
+          {
+            "startSec": 11.59,
+            "endSec": 12.0,
+            "durationSec": 0.41
+          },
+          {
+            "startSec": 13.72,
+            "endSec": 14.04,
+            "durationSec": 0.32
+          },
+          {
+            "startSec": 15.64,
+            "endSec": 16.17,
+            "durationSec": 0.53
+          }
+        ],
+        "sustainedVoicedCandidates": [
+          {
+            "startSec": 7.63,
+            "endSec": 8.16,
+            "durationSec": 0.53,
+            "medianPitchHz": 262.4,
+            "pitchP90toP10Semitones": 5.25
+          },
+          {
+            "startSec": 14.32,
+            "endSec": 14.85,
+            "durationSec": 0.53,
+            "medianPitchHz": 223.6,
+            "pitchP90toP10Semitones": 5.31
+          },
+          {
+            "startSec": 10.48,
+            "endSec": 10.97,
+            "durationSec": 0.49,
+            "medianPitchHz": 177.4,
+            "pitchP90toP10Semitones": 4.88
+          },
+          {
+            "startSec": 3.6,
+            "endSec": 4.08,
+            "durationSec": 0.48,
+            "medianPitchHz": 219.3,
+            "pitchP90toP10Semitones": 2.8
+          },
+          {
+            "startSec": 8.44,
+            "endSec": 8.92,
+            "durationSec": 0.48,
+            "medianPitchHz": 223.6,
+            "pitchP90toP10Semitones": 3.88
+          },
+          {
+            "startSec": 12.07,
+            "endSec": 12.52,
+            "durationSec": 0.45,
+            "medianPitchHz": 249.4,
+            "pitchP90toP10Semitones": 3.78
+          },
+          {
+            "startSec": 0.42,
+            "endSec": 0.82,
+            "durationSec": 0.4,
+            "medianPitchHz": 232.8,
+            "pitchP90toP10Semitones": 2.26
+          },
+          {
+            "startSec": 0.89,
+            "endSec": 1.25,
+            "durationSec": 0.36,
+            "medianPitchHz": 203.1,
+            "pitchP90toP10Semitones": 3.59
+          },
+          {
+            "startSec": 4.55,
+            "endSec": 4.87,
+            "durationSec": 0.32,
+            "medianPitchHz": 174.6,
+            "pitchP90toP10Semitones": 13.04
+          },
+          {
+            "startSec": 12.68,
+            "endSec": 12.99,
+            "durationSec": 0.31,
+            "medianPitchHz": 220.1,
+            "pitchP90toP10Semitones": 2.71
+          }
+        ],
+        "voicedCandidatesAreVowels": false,
+        "sampleRate": 24000
+      },
+      "wordAlignmentStatus": "UNAVAILABLE_NO_AUTHENTIC_TIMESTAMPS",
+      "humanReviewRequested": [
+        "diction",
+        "vowel_naturalness",
+        "semantic_emphasis",
+        "phrase_endings",
+        "bella_identity"
+      ]
+    },
+    {
+      "sourceName": "dry-native/original-patient.wav",
+      "sourceSha256": "06770308a21069445fe87759fbff06cfc74d7d655c6e2ba04717732a33ed818c",
+      "script": "You know that moment when everything begins to make sense? The noise falls away... the next step becomes clear, and suddenly, you can see where this could go. That's what we're building at Evercraft: something worth paying attention to. Something you'll want to come back to.",
+      "durationSec": 16.35,
+      "archiveSha256": "3ebcbbc6f70247badf0082ace576c341b5c647574e7039d21e5230a62d30579e",
+      "sourceSchema": "evercraft.bella.magnetic-presence-audition.v1",
+      "acoustics": {
+        "peak": 0.49112,
+        "rmsDbfs": -23.81,
+        "activeFraction": 0.682,
+        "pitchBackend": "praat_ac_75_500hz",
+        "longQuietIntervals": [
+          {
+            "startSec": 0.0,
+            "endSec": 0.43,
+            "durationSec": 0.43
+          },
+          {
+            "startSec": 3.13,
+            "endSec": 3.62,
+            "durationSec": 0.49
+          },
+          {
+            "startSec": 5.03,
+            "endSec": 5.53,
+            "durationSec": 0.5
+          },
+          {
+            "startSec": 7.0,
+            "endSec": 7.44,
+            "durationSec": 0.44
+          },
+          {
+            "startSec": 9.62,
+            "endSec": 9.98,
+            "durationSec": 0.36
+          },
+          {
+            "startSec": 11.66,
+            "endSec": 12.07,
+            "durationSec": 0.41
+          },
+          {
+            "startSec": 13.87,
+            "endSec": 14.21,
+            "durationSec": 0.34
+          },
+          {
+            "startSec": 15.81,
+            "endSec": 16.35,
+            "durationSec": 0.54
+          }
+        ],
+        "sustainedVoicedCandidates": [
+          {
+            "startSec": 14.49,
+            "endSec": 15.03,
+            "durationSec": 0.54,
+            "medianPitchHz": 222.9,
+            "pitchP90toP10Semitones": 5.32
+          },
+          {
+            "startSec": 7.68,
+            "endSec": 8.21,
+            "durationSec": 0.53,
+            "medianPitchHz": 262.6,
+            "pitchP90toP10Semitones": 5.16
+          },
+          {
+            "startSec": 10.52,
+            "endSec": 11.02,
+            "durationSec": 0.5,
+            "medianPitchHz": 185.1,
+            "pitchP90toP10Semitones": 4.8
+          },
+          {
+            "startSec": 3.62,
+            "endSec": 4.1,
+            "durationSec": 0.48,
+            "medianPitchHz": 218.4,
+            "pitchP90toP10Semitones": 2.81
+          },
+          {
+            "startSec": 8.49,
+            "endSec": 8.97,
+            "durationSec": 0.48,
+            "medianPitchHz": 224.1,
+            "pitchP90toP10Semitones": 3.8
+          },
+          {
+            "startSec": 0.43,
+            "endSec": 0.85,
+            "durationSec": 0.42,
+            "medianPitchHz": 231.8,
+            "pitchP90toP10Semitones": 2.6
+          },
+          {
+            "startSec": 4.57,
+            "endSec": 4.92,
+            "durationSec": 0.35,
+            "medianPitchHz": 182.1,
+            "pitchP90toP10Semitones": 13.58
+          },
+          {
+            "startSec": 12.28,
+            "endSec": 12.62,
+            "durationSec": 0.34,
+            "medianPitchHz": 243.5,
+            "pitchP90toP10Semitones": 4.71
+          },
+          {
+            "startSec": 0.92,
+            "endSec": 1.25,
+            "durationSec": 0.33,
+            "medianPitchHz": 202.6,
+            "pitchP90toP10Semitones": 3.67
+          },
+          {
+            "startSec": 12.78,
+            "endSec": 13.11,
+            "durationSec": 0.33,
+            "medianPitchHz": 219.0,
+            "pitchP90toP10Semitones": 2.9
+          }
+        ],
+        "voicedCandidatesAreVowels": false,
+        "sampleRate": 24000
+      },
+      "wordAlignmentStatus": "UNAVAILABLE_NO_AUTHENTIC_TIMESTAMPS",
+      "humanReviewRequested": [
+        "diction",
+        "vowel_naturalness",
+        "semantic_emphasis",
+        "phrase_endings",
+        "bella_identity"
+      ]
+    },
+    {
+      "sourceName": "dry-native/connected-native.wav",
+      "sourceSha256": "3d5c505a740d9099fe4a9b95c7fe0dd80b21646efc461b3b0eb5ff8d3583d2da",
+      "script": "You know that moment when everything begins to make sense? The noise falls away... the next step becomes clear, and suddenly, you can see where this could go. That's what we're building at Evercraft: something worth paying attention to. Something you'll want to come back to.",
+      "durationSec": 16.025,
+      "archiveSha256": "3ebcbbc6f70247badf0082ace576c341b5c647574e7039d21e5230a62d30579e",
+      "sourceSchema": "evercraft.bella.magnetic-presence-audition.v1",
+      "acoustics": {
+        "peak": 0.50174,
+        "rmsDbfs": -23.81,
+        "activeFraction": 0.688,
+        "pitchBackend": "praat_ac_75_500hz",
+        "longQuietIntervals": [
+          {
+            "startSec": 0.0,
+            "endSec": 0.42,
+            "durationSec": 0.42
+          },
+          {
+            "startSec": 3.08,
+            "endSec": 3.52,
+            "durationSec": 0.44
+          },
+          {
+            "startSec": 4.83,
+            "endSec": 5.36,
+            "durationSec": 0.53
+          },
+          {
+            "startSec": 6.8,
+            "endSec": 7.07,
+            "durationSec": 0.27
+          },
+          {
+            "startSec": 9.24,
+            "endSec": 9.81,
+            "durationSec": 0.57
+          },
+          {
+            "startSec": 11.49,
+            "endSec": 11.78,
+            "durationSec": 0.29
+          },
+          {
+            "startSec": 13.54,
+            "endSec": 13.91,
+            "durationSec": 0.37
+          },
+          {
+            "startSec": 15.49,
+            "endSec": 16.02,
+            "durationSec": 0.53
+          }
+        ],
+        "sustainedVoicedCandidates": [
+          {
+            "startSec": 7.31,
+            "endSec": 7.86,
+            "durationSec": 0.55,
+            "medianPitchHz": 227.7,
+            "pitchP90toP10Semitones": 4.77
+          },
+          {
+            "startSec": 14.19,
+            "endSec": 14.73,
+            "durationSec": 0.54,
+            "medianPitchHz": 229.9,
+            "pitchP90toP10Semitones": 6.06
+          },
+          {
+            "startSec": 10.38,
+            "endSec": 10.87,
+            "durationSec": 0.49,
+            "medianPitchHz": 180.8,
+            "pitchP90toP10Semitones": 4.85
+          },
+          {
+            "startSec": 3.52,
+            "endSec": 3.97,
+            "durationSec": 0.45,
+            "medianPitchHz": 224.6,
+            "pitchP90toP10Semitones": 1.91
+          },
+          {
+            "startSec": 11.84,
+            "endSec": 12.29,
+            "durationSec": 0.45,
+            "medianPitchHz": 246.7,
+            "pitchP90toP10Semitones": 3.17
+          },
+          {
+            "startSec": 0.42,
+            "endSec": 0.82,
+            "durationSec": 0.4,
+            "medianPitchHz": 237.1,
+            "pitchP90toP10Semitones": 2.56
+          },
+          {
+            "startSec": 8.14,
+            "endSec": 8.53,
+            "durationSec": 0.39,
+            "medianPitchHz": 214.6,
+            "pitchP90toP10Semitones": 3.24
+          },
+          {
+            "startSec": 0.9,
+            "endSec": 1.25,
+            "durationSec": 0.35,
+            "medianPitchHz": 207.6,
+            "pitchP90toP10Semitones": 3.02
+          },
+          {
+            "startSec": 12.46,
+            "endSec": 12.79,
+            "durationSec": 0.33,
+            "medianPitchHz": 217.8,
+            "pitchP90toP10Semitones": 3.09
+          },
+          {
+            "startSec": 6.49,
+            "endSec": 6.8,
+            "durationSec": 0.31,
+            "medianPitchHz": 167.7,
+            "pitchP90toP10Semitones": 15.08
+          },
+          {
+            "startSec": 4.38,
+            "endSec": 4.68,
+            "durationSec": 0.3,
+            "medianPitchHz": 192.4,
+            "pitchP90toP10Semitones": 2.61
+          }
+        ],
+        "voicedCandidatesAreVowels": false,
+        "sampleRate": 24000
+      },
+      "wordAlignmentStatus": "UNAVAILABLE_NO_AUTHENTIC_TIMESTAMPS",
+      "humanReviewRequested": [
+        "diction",
+        "vowel_naturalness",
+        "semantic_emphasis",
+        "phrase_endings",
+        "bella_identity"
+      ]
+    },
+    {
+      "sourceName": "dry-native/connected-patient.wav",
+      "sourceSha256": "85489c1ca81b460953d7e6d97555d077f1bd25416e8f35428c251e7eee5ad0bc",
+      "script": "You know that moment when everything begins to make sense? The noise falls away... the next step becomes clear, and suddenly, you can see where this could go. That's what we're building at Evercraft: something worth paying attention to. Something you'll want to come back to.",
+      "durationSec": 16.35,
+      "archiveSha256": "3ebcbbc6f70247badf0082ace576c341b5c647574e7039d21e5230a62d30579e",
+      "sourceSchema": "evercraft.bella.magnetic-presence-audition.v1",
+      "acoustics": {
+        "peak": 0.50891,
+        "rmsDbfs": -23.79,
+        "activeFraction": 0.688,
+        "pitchBackend": "praat_ac_75_500hz",
+        "longQuietIntervals": [
+          {
+            "startSec": 0.0,
+            "endSec": 0.43,
+            "durationSec": 0.43
+          },
+          {
+            "startSec": 3.11,
+            "endSec": 3.54,
+            "durationSec": 0.43
+          },
+          {
+            "startSec": 4.94,
+            "endSec": 5.46,
+            "durationSec": 0.52
+          },
+          {
+            "startSec": 6.93,
+            "endSec": 7.21,
+            "durationSec": 0.28
+          },
+          {
+            "startSec": 9.42,
+            "endSec": 10.01,
+            "durationSec": 0.59
+          },
+          {
+            "startSec": 11.71,
+            "endSec": 12.0,
+            "durationSec": 0.29
+          },
+          {
+            "startSec": 13.78,
+            "endSec": 14.16,
+            "durationSec": 0.38
+          },
+          {
+            "startSec": 15.79,
+            "endSec": 16.35,
+            "durationSec": 0.56
+          }
+        ],
+        "sustainedVoicedCandidates": [
+          {
+            "startSec": 7.46,
+            "endSec": 8.01,
+            "durationSec": 0.55,
+            "medianPitchHz": 226.3,
+            "pitchP90toP10Semitones": 5.1
+          },
+          {
+            "startSec": 14.44,
+            "endSec": 14.98,
+            "durationSec": 0.54,
+            "medianPitchHz": 225.5,
+            "pitchP90toP10Semitones": 5.91
+          },
+          {
+            "startSec": 10.58,
+            "endSec": 11.1,
+            "durationSec": 0.52,
+            "medianPitchHz": 177.9,
+            "pitchP90toP10Semitones": 4.92
+          },
+          {
+            "startSec": 3.54,
+            "endSec": 4.0,
+            "durationSec": 0.46,
+            "medianPitchHz": 226.1,
+            "pitchP90toP10Semitones": 1.91
+          },
+          {
+            "startSec": 0.43,
+            "endSec": 0.85,
+            "durationSec": 0.42,
+            "medianPitchHz": 234.5,
+            "pitchP90toP10Semitones": 2.88
+          },
+          {
+            "startSec": 8.29,
+            "endSec": 8.68,
+            "durationSec": 0.39,
+            "medianPitchHz": 213.7,
+            "pitchP90toP10Semitones": 3.11
+          },
+          {
+            "startSec": 0.92,
+            "endSec": 1.27,
+            "durationSec": 0.35,
+            "medianPitchHz": 207.8,
+            "pitchP90toP10Semitones": 3.09
+          },
+          {
+            "startSec": 12.68,
+            "endSec": 13.01,
+            "durationSec": 0.33,
+            "medianPitchHz": 218.5,
+            "pitchP90toP10Semitones": 3.11
+          },
+          {
+            "startSec": 4.47,
+            "endSec": 4.79,
+            "durationSec": 0.32,
+            "medianPitchHz": 189.2,
+            "pitchP90toP10Semitones": 2.87
+          },
+          {
+            "startSec": 12.19,
+            "endSec": 12.51,
+            "durationSec": 0.32,
+            "medianPitchHz": 244.2,
+            "pitchP90toP10Semitones": 3.73
+          },
+          {
+            "startSec": 6.62,
+            "endSec": 6.93,
+            "durationSec": 0.31,
+            "medianPitchHz": 173.3,
+            "pitchP90toP10Semitones": 14.05
+          }
+        ],
+        "voicedCandidatesAreVowels": false,
+        "sampleRate": 24000
+      },
+      "wordAlignmentStatus": "UNAVAILABLE_NO_AUTHENTIC_TIMESTAMPS",
+      "humanReviewRequested": [
+        "diction",
+        "vowel_naturalness",
+        "semantic_emphasis",
+        "phrase_endings",
+        "bella_identity"
+      ]
+    },
+    {
+      "sourceName": "original-dry/continuous.wav",
+      "sourceSha256": "5e422addd3e49ae790625f51fb5b85a610ca59b5198b0c1a4671f298359cf788",
+      "script": "You know that moment when everything begins to make sense. The noise falls away. The next step becomes clear. And suddenly, you can see where this could go. That's what we're building at Evercraft. Something worth paying attention to. Something you'll want to come back to.",
+      "durationSec": 16.175,
+      "archiveSha256": "db2a5ee992a5ade5e283a9930f92598b43420274b175683a6b2c5b068f5108df",
+      "sourceSchema": "evercraft.voice.bella.scene-continuity.v1",
+      "acoustics": {
+        "peak": 0.50403,
+        "rmsDbfs": -23.83,
+        "activeFraction": 0.683,
+        "pitchBackend": "praat_ac_75_500hz",
+        "longQuietIntervals": [
+          {
+            "startSec": 0.0,
+            "endSec": 0.42,
+            "durationSec": 0.42
+          },
+          {
+            "startSec": 3.1,
+            "endSec": 3.6,
+            "durationSec": 0.5
+          },
+          {
+            "startSec": 5.01,
+            "endSec": 5.48,
+            "durationSec": 0.47
+          },
+          {
+            "startSec": 6.94,
+            "endSec": 7.39,
+            "durationSec": 0.45
+          },
+          {
+            "startSec": 9.57,
+            "endSec": 9.93,
+            "durationSec": 0.36
+          },
+          {
+            "startSec": 11.59,
+            "endSec": 12.0,
+            "durationSec": 0.41
+          },
+          {
+            "startSec": 13.72,
+            "endSec": 14.04,
+            "durationSec": 0.32
+          },
+          {
+            "startSec": 15.64,
+            "endSec": 16.17,
+            "durationSec": 0.53
+          }
+        ],
+        "sustainedVoicedCandidates": [
+          {
+            "startSec": 7.63,
+            "endSec": 8.16,
+            "durationSec": 0.53,
+            "medianPitchHz": 262.2,
+            "pitchP90toP10Semitones": 5.24
+          },
+          {
+            "startSec": 14.32,
+            "endSec": 14.85,
+            "durationSec": 0.53,
+            "medianPitchHz": 223.7,
+            "pitchP90toP10Semitones": 5.31
+          },
+          {
+            "startSec": 10.48,
+            "endSec": 10.97,
+            "durationSec": 0.49,
+            "medianPitchHz": 177.4,
+            "pitchP90toP10Semitones": 4.87
+          },
+          {
+            "startSec": 3.6,
+            "endSec": 4.08,
+            "durationSec": 0.48,
+            "medianPitchHz": 219.3,
+            "pitchP90toP10Semitones": 2.8
+          },
+          {
+            "startSec": 8.44,
+            "endSec": 8.92,
+            "durationSec": 0.48,
+            "medianPitchHz": 223.6,
+            "pitchP90toP10Semitones": 3.87
+          },
+          {
+            "startSec": 12.07,
+            "endSec": 12.52,
+            "durationSec": 0.45,
+            "medianPitchHz": 249.5,
+            "pitchP90toP10Semitones": 3.78
+          },
+          {
+            "startSec": 0.42,
+            "endSec": 0.82,
+            "durationSec": 0.4,
+            "medianPitchHz": 232.8,
+            "pitchP90toP10Semitones": 2.25
+          },
+          {
+            "startSec": 0.89,
+            "endSec": 1.25,
+            "durationSec": 0.36,
+            "medianPitchHz": 203.1,
+            "pitchP90toP10Semitones": 3.59
+          },
+          {
+            "startSec": 4.55,
+            "endSec": 4.87,
+            "durationSec": 0.32,
+            "medianPitchHz": 174.6,
+            "pitchP90toP10Semitones": 13.03
+          },
+          {
+            "startSec": 12.68,
+            "endSec": 12.99,
+            "durationSec": 0.31,
+            "medianPitchHz": 220.1,
+            "pitchP90toP10Semitones": 2.72
+          }
+        ],
+        "voicedCandidatesAreVowels": false,
+        "sampleRate": 24000
+      },
+      "wordAlignmentStatus": "UNAVAILABLE_NO_AUTHENTIC_TIMESTAMPS",
+      "humanReviewRequested": [
+        "diction",
+        "vowel_naturalness",
+        "semantic_emphasis",
+        "phrase_endings",
+        "bella_identity"
+      ]
+    }
+  ]
+}

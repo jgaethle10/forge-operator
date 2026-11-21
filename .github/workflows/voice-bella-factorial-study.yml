@@ -1,0 +1,103 @@
+name: Voice Foundry | Bella Factorial Performance (private review)
+on:
+  push:
+    branches: [feature/bella-actor-lab-20261026]
+    paths:
+      - 'systemia/media-studio/voice-bella-factorial-study.py'
+      - 'systemia/media-studio/voice-bella-mobile-export.py'
+      - 'systemia/media-studio/test_voice_bella_mobile_export.py'
+      - 'systemia/media-studio/test_voice_bella_factorial.py'
+      - 'systemia/media-studio/voice-bella-actor-lab.py'
+      - '.github/workflows/voice-bella-factorial-study.yml'
+  pull_request:
+    paths:
+      - 'systemia/media-studio/voice-bella-factorial-study.py'
+      - 'systemia/media-studio/voice-bella-mobile-export.py'
+      - 'systemia/media-studio/test_voice_bella_mobile_export.py'
+      - 'systemia/media-studio/test_voice_bella_factorial.py'
+      - 'systemia/media-studio/voice-bella-actor-lab.py'
+      - '.github/workflows/voice-bella-factorial-study.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  factorial-audition:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Run no-model design, script and local-review tests
+        run: |
+          python systemia/media-studio/voice-bella-factorial-study.py --verify-only
+          python -m unittest discover -s systemia/media-studio -p test_voice_bella_factorial.py -v
+          python -m unittest discover -s systemia/media-studio -p test_voice_bella_actor_lab.py -v
+          python -m unittest discover -s systemia/media-studio -p test_voice_bella_mobile_export.py -v
+      - name: Install original Kokoro Bella synthesizer
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq espeak-ng libsndfile1 ffmpeg
+          python -m pip install --disable-pip-version-check 'kokoro==0.9.4' 'soundfile>=0.12,<1.0'
+      - name: Produce eight authentic Bella study recordings
+        env:
+          HF_HUB_DISABLE_TELEMETRY: '1'
+        run: python systemia/media-studio/voice-bella-factorial-study.py bella-factorial-audition
+      - name: Independently verify original audio bytes and review holds
+        run: |
+          python - <<'PY'
+          import hashlib,json,pathlib,wave
+          root=pathlib.Path('bella-factorial-audition')
+          r=json.loads((root/'evidence.json').read_text())
+          assert r['voiceId']=='af_bella' and r['kokoroVersion']=='0.9.4'
+          assert r['nativeVoiceUnchanged'] and r['sameSpokenWordsWithinEachContext']
+          for no in ['cloning','phonemeOverrides','pitchEffects','masteringApplied',
+                     'founderListeningApproved','commercialRightsVerified',
+                     'clientApproved','publishReady','modelCheckpointPinned']:
+              assert r[no] is False, no
+          assert len(r['contexts'])==2
+          for label, records in r['contexts'].items():
+              assert len(records)==4 and len({x['factorialCell'] for x in records})==4
+              assert len({x['wavSha256'] for x in records})==4
+              assert (root/label/'index.html').is_file()
+              for x in records:
+                  file=root/label/x['wav']
+                  assert hashlib.sha256(file.read_bytes()).hexdigest()==x['wavSha256']
+                  with wave.open(str(file),'rb') as audio:
+                      assert audio.getframerate()==24000 and audio.getnchannels()==1
+                      assert audio.getsampwidth()==2 and 10<=audio.getnframes()/24000<=34
+          print('PASS: 8 unique original Bella audio files; real PCM/hash/timing evidence; release held')
+          PY
+      - name: Export original-take-derived phone reels with verified source hashes
+        run: |
+          python systemia/media-studio/voice-bella-mobile-export.py \
+            --source bella-factorial-audition \
+            --output bella-factorial-mobile-review
+          python - <<'PY'
+          import hashlib, json, pathlib
+          root = pathlib.Path('bella-factorial-mobile-review')
+          evidence = json.loads((root/'evidence.json').read_text())
+          assert evidence['voiceId']=='af_bella' and evidence['reviewOnly']
+          assert not evidence['publishReady'] and not evidence['masteringApplied']
+          assert len(evidence['reels'])==2
+          for context in ('brand','story'):
+              r=evidence['reels'][context]
+              assert len(r['takes'])==4 and r['durationSec']>60
+              file=root/r['file']
+              assert file.is_file()
+              assert hashlib.sha256(file.read_bytes()).hexdigest()==r['sha256']
+          print('PASS: 2 verified MP3 reels, 8 source-bound takes, private review only')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: bella-factorial-phone-mp3-review
+          path: bella-factorial-mobile-review/
+          retention-days: 7
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        with:
+          name: bella-factorial-eight-takes-blind-review
+          path: bella-factorial-audition/
+          retention-days: 7
+          if-no-files-found: error

@@ -1,0 +1,75 @@
+name: Voice Foundry | Original Synthetic Character Blends (private)
+on:
+  push:
+    branches: [feature/bella-actor-lab-20261026]
+    paths:
+      - 'systemia/media-studio/voice-foundry-original-character-recipes.py'
+      - 'systemia/media-studio/voice-foundry-multilingual-casting.py'
+      - 'systemia/media-studio/test_voice_foundry_original_character_recipes.py'
+      - '.github/workflows/voice-foundry-original-character-blends.yml'
+  pull_request:
+    paths:
+      - 'systemia/media-studio/voice-foundry-original-character-recipes.py'
+      - 'systemia/media-studio/voice-foundry-multilingual-casting.py'
+      - 'systemia/media-studio/test_voice_foundry_original_character_recipes.py'
+      - '.github/workflows/voice-foundry-original-character-blends.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  real-stock-pack-blending:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Test matching languages and protect original Bella
+        run: |
+          python systemia/media-studio/voice-foundry-original-character-recipes.py --verify-only
+          python -m unittest discover -s systemia/media-studio -p test_voice_foundry_original_character_recipes.py -v
+      - name: Install native owned inference dependencies and encoding
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq espeak-ng libsndfile1 ffmpeg
+          python -m pip install --disable-pip-version-check 'kokoro==0.9.4' 'soundfile>=0.12,<1.0'
+      - name: Synthesize genuine synthetic character blends, not human voice clones
+        env:
+          HF_HUB_DISABLE_TELEMETRY: '1'
+        run: |
+          python systemia/media-studio/voice-foundry-original-character-recipes.py \
+            --output voice-foundry-original-synthetic-private
+      - name: Check four unique renders, receipts, and release prohibitions
+        run: |
+          python - <<'PY'
+          import hashlib,json,pathlib,wave
+          root=pathlib.Path('voice-foundry-original-synthetic-private')
+          r=json.loads((root/'evidence.json').read_text())
+          assert r['schema']=='evercraft.voice-foundry.synthetic-blend.v1'
+          assert r['model']=='Kokoro-82M' and r['version']=='0.9.4'
+          assert r['bellaOriginalV05Untouched']
+          for k in ('humanQualityApproved','nativeSpeakerApproved',
+                    'commercialPermissionIndependentlyVerified','productionReady','releaseAuthorized'):
+              assert r[k] is False,k
+          assert len(r['characters'])==4
+          assert set(x['character'] for x in r['characters'])=={'ember','granite','brisa','rio'}
+          for x in r['characters']:
+              assert x['native'] and x['sourcePackCount']==2 and x['newCharacterIsNotNewTrainedModel']
+              assert not x['voiceClone'] and x['preservedBella']
+              assert len(x['blendedPackTensorSha256'])==64
+              assert all(v[0]==x['languageCode'] for v in x['sources'])
+              for filename,h in ((x['wav'],x['wavSha256']),(x['mp3'],x['mp3Sha256'])):
+                  p=root/filename
+                  assert p.exists() and hashlib.sha256(p.read_bytes()).hexdigest()==h
+              with wave.open(str(root/x['wav']),'rb') as w:
+                  assert (w.getnchannels(),w.getsampwidth(),w.getframerate())==(1,2,24000)
+                  assert 7<w.getnframes()/24000<40
+          print('PASS: 4 distinct rendered derived voice profiles, no Bella master touched')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-four-derived-original-character-voices-private
+          path: voice-foundry-original-synthetic-private/
+          retention-days: 7
+          if-no-files-found: error

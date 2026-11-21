@@ -1,0 +1,59 @@
+name: Voice Foundry | Bella Lexical Stress Frontend (no audio)
+on:
+  push:
+    branches: [feature/bella-actor-lab-20261026]
+    paths:
+      - 'systemia/media-studio/voice-bella-g2p-inspection.py'
+      - 'systemia/media-studio/test_voice_bella_g2p_inspection.py'
+      - '.github/workflows/voice-bella-g2p-inspection.yml'
+  pull_request:
+    paths:
+      - 'systemia/media-studio/voice-bella-g2p-inspection.py'
+      - 'systemia/media-studio/test_voice_bella_g2p_inspection.py'
+      - '.github/workflows/voice-bella-g2p-inspection.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  lexical-inspection:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Verify no-model evidence logic
+        run: |
+          python -m unittest discover -s systemia/media-studio -p 'test_voice_bella_g2p_inspection.py' -v
+          python -m compileall -q systemia/media-studio/voice-bella-g2p-inspection.py
+      - name: Install original Kokoro G2P packages (not weights)
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq espeak-ng
+          python -m pip install --disable-pip-version-check 'kokoro==0.9.4'
+      - name: Inspect exact Bella script using Kokoro front end without neural inference
+        env:
+          HF_HUB_DISABLE_TELEMETRY: '1'
+        run: |
+          mkdir -p bella-g2p-review
+          python systemia/media-studio/voice-bella-g2p-inspection.py --output bella-g2p-review/evidence.json
+          python - <<'PY'
+          import json,pathlib,hashlib
+          path=pathlib.Path('bella-g2p-review/evidence.json')
+          data=json.loads(path.read_text())
+          assert data['voiceId']=='af_bella' and data['chunks']
+          assert data['modelGenerationDisabled'] and not data['neuralInferencePerformed']
+          assert not data['audioGenerated'] and not data['phonemeDurationModelRun']
+          assert not data['releaseAuthorized'] and not data['tokenAudioTimingAvailable']
+          assert data['status']=='PHONEME_FRONTEND_DIAGNOSTIC_REVIEW_ONLY'
+          assert not any(x['phonemesSha256']=='' for x in data['chunks'])
+          print('PASS: native English phonemes, no model inference or private recording')
+          PY
+      - name: Preserve phoneme/stress diagnostics only, no audio
+        uses: actions/upload-artifact@v4
+        with:
+          name: bella-kokoro-native-g2p-stress-private-review
+          path: bella-g2p-review/evidence.json
+          retention-days: 7
+          if-no-files-found: error
