@@ -1,0 +1,199 @@
+{
+  "schema": "evercraft.fallen.client-commercial-direction.v1",
+  "id": "humanfilter-launch-rc3",
+  "brand": {
+    "name": "Evercraft HumanFilter",
+    "sourceRefs": [
+      "products/humanfilter/extension/manifest.json",
+      "products/humanfilter/extension/popup.html"
+    ]
+  },
+  "audience": "desktop social media users who want more control over AI disclosures and optional topics in their feeds",
+  "goal": "Demonstrate actual HumanFilter filtering in a real captured browser before inviting honest free beta testers; no invented platforms, people or AI authorship claims",
+  "offer": {
+    "text": "Free early-access desktop browser beta (v0.1.4)",
+    "confirmed": true,
+    "evidenceRefs": [
+      "products/humanfilter/extension/manifest.json",
+      "github-actions:40440401321"
+    ]
+  },
+  "cta": {
+    "text": "FREE DESKTOP BETA • EARLY TESTERS WANTED",
+    "confirmed": true
+  },
+  "aspectRatio": "9:16",
+  "durationSec": 30,
+  "sourceAssets": [],
+  "music": {
+    "brief": "Original authored score, minimal tactile rhythmic pulse against a controlled tech motif; rhythmic silence during activation, subtle harmonic lift at actual reveal, resolute but not bombastic finish. Must have distinct score and effects stems, proof of rights and owner listening signoff. No reused Relay or Quick Lube score, no stock trailer impacts."
+  },
+  "beats": [
+    {
+      "id": "hook-real-scroll",
+      "role": "hook",
+      "durationSec": 4,
+      "subject": "real person seated at a desktop computer in an actual working environment, seeing the feed",
+      "subjectVisibleAtStart": true,
+      "physicalAction": "Open on an original live-action over-the-shoulder shot of a person scrolling a desktop social feed in a real room. Human body, hand, physical monitor and feed are recognizable in the first second. A post with a verifiable AI disclosure must be shown; blur unrelated personal information.",
+      "camera": "Source-first environmental wide revealing the person and monitor; cut into a tight physical over-shoulder shot while preserving display readability",
+      "visual": {
+        "prompt": "MISSING - acquire newly filmed consented human/desktop plate at real location. No film-ready source exists yet. Desktop rather than phone because the extension is not an iOS Chrome app. Real AI-labeled post must be separately verified.",
+        "sourceRefs": [
+          "source-required:real-browser-ai-disclosure"
+        ]
+      },
+      "narration": {
+        "text": "The feed keeps moving. You get a say.",
+        "intention": "Bella: intimate and curious, genuinely noticing a problem, never performative",
+        "emphasis": [
+          "you"
+        ],
+        "pauseAfterMs": 150
+      },
+      "musicIntensity": 0.17,
+      "musicTransition": "Cut on scroll movement; not a title splash"
+    },
+    {
+      "id": "proof-native-filter",
+      "role": "proof",
+      "durationSec": 8,
+      "subject": "actual HumanFilter popup and labeled post being softened by installed extension",
+      "physicalAction": "From the physical human computer interaction, match-cut to a clean native screen capture. Installed HumanFilter Balanced mode toggles and an actually AI-labeled item softens; adjacent normal post remains unaffected.",
+      "camera": "Physical screen-to-pixel match cut with no fake UI: show a recognizable mouse movement, true popup, then hold one readable before/after result",
+      "visual": {
+        "prompt": "ACQUIRE NEW verified actual Chromium extension recording using v0.1.4 installed on supported browser; show before, control toggle, filter result and intact adjacent human content. Captured original pixels, not re-painted interface. Do not claim a universal AI detector.",
+        "sourceRefs": [
+          "source-required:real-installed-humanfilter-balance-proof",
+          "products/humanfilter/extension/content.js",
+          "github-actions:40440401321"
+        ]
+      },
+      "proofRefs": [
+        "github-actions:40440401321"
+      ],
+      "narration": {
+        "text": "HumanFilter helps soften posts with recognizable AI disclosures, right in your browser.",
+        "intention": "clear, earned confidence, grounded in the visible proof",
+        "pauseBeforeMs": 50
+      },
+      "musicIntensity": 0.38
+    },
+    {
+      "id": "choices-strict",
+      "role": "body",
+      "durationSec": 7,
+      "subject": "authentic HumanFilter Strict toggle and custom keyword controls",
+      "physicalAction": "Cut back to user's hand and physical screen for context, then show a legitimate recording of real Strict and custom-keyword controls. Demonstrate a visibly matched topic, rather than a vague floating feature card.",
+      "camera": "Motivated moving insert of hand on trackpad before a legible native extension popup, one change per shot with breathing room",
+      "visual": {
+        "prompt": "ACQUIRE NEW real browser capture of actual popup 'Balanced/Strict' and keyword field, with one verified resultant feed change and no fake detections. Preserve original UI legibility at phone size.",
+        "sourceRefs": [
+          "source-required:real-installed-humanfilter-strict-keyword-proof",
+          "products/humanfilter/extension/popup.html"
+        ]
+      },
+      "narration": {
+        "text": "Go stricter. Add your own keywords. Make it yours.",
+        "intention": "slightly more energy with short conversational pauses",
+        "emphasis": [
+          "yours"
+        ],
+        "pauseBeforeMs": 100,
+        "pauseAfterMs": 150
+      },
+      "musicIntensity": 0.62
+    },
+    {
+      "id": "show-once",
+      "role": "body",
+      "durationSec": 5,
+      "subject": "authentic HumanFilter Show once button restoring a covered item",
+      "physicalAction": "One real Show once click restores the covered card, followed immediately by a genuine person calmly resuming scrolling. Prove restoration, not disappearance magic.",
+      "camera": "Hold the actual reveal long enough for viewers to understand; match the reveal into a tactile human reaction shot; no theatrical zoom",
+      "visual": {
+        "prompt": "ACQUIRE NEW actual product video proof of Show once on a real/carefully disclosed controlled sample, legible to a mobile audience. If live site isn't available label as controlled demonstration.",
+        "sourceRefs": [
+          "source-required:show-once-authentic-product-capture",
+          "products/humanfilter/extension/content.js"
+        ]
+      },
+      "narration": {
+        "text": "Want it back? One click.",
+        "intention": "warm and lightly playful, let the product action carry the payoff",
+        "pauseAfterMs": 200
+      },
+      "musicIntensity": 0.43,
+      "musicTransition": "Cut on actual card restoration, one small tactile confirmation sound"
+    },
+    {
+      "id": "cta-brand",
+      "role": "cta",
+      "durationSec": 6,
+      "subject": "human in the physical environment plus actual HumanFilter desktop interface",
+      "physicalAction": "Close on a newly filmed real human at their desktop with a clean, truly rendered HumanFilter interface visible, then a restrained branded CTA. No white text-only screen occupying all six seconds.",
+      "camera": "Real camera holds the human/product hero with clean natural depth; a minimal Evercraft/HumanFilter identity appears only after physical proof.",
+      "visual": {
+        "prompt": "ACQUIRE NEW 6-sec source-first product hero plate using actual HumanFilter UI plus approved Evercraft logo; keep any additional type below 12 words and legible on 9:16 phone preview.",
+        "sourceRefs": [
+          "source-required:humanfilter-original-hero-plate",
+          "products/humanfilter/extension/popup.html"
+        ]
+      },
+      "narration": {
+        "text": "HumanFilter. Keep the feed yours. Try the free beta.",
+        "intention": "Bella: warm certainty and gentle final smile; land ‘yours’ with confidence",
+        "pauseBeforeMs": 250
+      },
+      "screenText": "FREE DESKTOP BETA • EARLY TESTERS WANTED",
+      "musicIntensity": 0.48,
+      "musicTransition": "Resolved original 4-note motif and clean tail; no generic cinematic boom"
+    }
+  ],
+  "productionPolicy": {
+    "status": "assets_missing_by_design",
+    "rejectedPriorCuts": [
+      "HumanFilter_Evercraft_28s_Narrated_1080x1920.mp4",
+      "HumanFilter_RC2_18s_Cinematic_Review.mp4"
+    ],
+    "forbidden": [
+      "recycled footage from RC1/RC2",
+      "fake Facebook/YouTube/Reddit logos or fabricated real-world AI labeling",
+      "robotic voice",
+      "title-card montage",
+      "unverified claims of AI authorship detection",
+      "automatic publication"
+    ],
+    "humanApprovals": [
+      "owner approves real capture, Bella voice, score and final color",
+      "multi-device full video audition",
+      "Fallen commercial audio and shot-quality QC",
+      "explicit publish approval"
+    ],
+    "referenceBenchmark": {
+      "referenceLengthSec": 30,
+      "format": "vertical",
+      "v17LowActivityFraction": 0.336,
+      "currentControlledFeedLowActivityFraction": 0.838,
+      "currentControlledPopupLowActivityFraction": 0.95,
+      "qualitativeRisk": "RC3 captured product demo is useful proof footage but too static to be the hero commercial",
+      "notAnAutoPassCriterion": true,
+      "minimumNewShoot": "New actual human using desktop: wide/context, hands/interaction, face/reaction, product proof; source files, rights, QA required"
+    }
+  },
+  "referenceStandard": {
+    "source": "Owner-supplied On The Go Mobile Quick Lube V17 Still Vans First Test Review (2)",
+    "privateSourceSha256": "1a30e3ff9103434d6d29b679175e152efc22914a786f7ed13f5e634cebb20255",
+    "referenceOnly": true,
+    "neverEmbedReferenceFootageOrBranding": true,
+    "referenceCharacteristics": [
+      "Open on a tangible environment and immediately establish the human problem, not a title card",
+      "Show a real person, the real product, real work and observable proof in motivated cuts",
+      "Alternate environment, action, product details and human face to avoid a static interface montage",
+      "Reserve the logo/CTA for a clean end card after proving the service",
+      "Make text short and secondary to picture: the image must carry the claim"
+    ],
+    "mediaStatus": "private owner reference - not provided as licensable HumanFilter source",
+    "visualMotionNote": "V17 image-change review is a quality reference, not a universal motion threshold"
+  }
+}

@@ -1,0 +1,56 @@
+name: HumanFilter RC3 • Original Kokoro Bella voice audition
+on:
+  push:
+    branches: ["humanfilter-fallen-rc3-*"]
+    paths:
+      - "products/humanfilter/commercial/render_kokoro_vo.py"
+      - ".github/workflows/humanfilter-rc3-bella-voice.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  real_voice_render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install Kokoro local CPU inference
+        run: |
+          python -m pip install -q 'numpy<3' soundfile scipy 'kokoro-onnx>=0.4'
+      - name: Fetch independently licensed model and named voice weights
+        run: |
+          mkdir -p /tmp/hf-models
+          curl --fail --location --retry 3 --connect-timeout 25 --max-time 360 \
+            --output /tmp/hf-models/kokoro-v1.0.int8.onnx \
+            https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.1/kokoro-v1.0.int8.onnx
+          curl --fail --location --retry 3 --connect-timeout 25 --max-time 180 \
+            --output /tmp/hf-models/voices-v1.0.bin \
+            https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.1/voices-v1.0.bin
+          test "$(stat -c %s /tmp/hf-models/kokoro-v1.0.int8.onnx)" -gt 50000000
+          test "$(stat -c %s /tmp/hf-models/voices-v1.0.bin)" -gt 5000000
+          sha256sum /tmp/hf-models/* | sed -E 's|/tmp/hf-models/||'
+      - name: Render actual new af_bella voice for five beats
+        run: python -u products/humanfilter/commercial/render_kokoro_vo.py
+      - name: Validate voice source and no fake approval
+        run: |
+          python - <<'PY'
+          import json,hashlib,pathlib,wave
+          root=pathlib.Path('artifacts/humanfilter-rc3/voice')
+          a=json.loads((root/'narration-receipt.json').read_text())
+          assert len(a['narration'])==5 and a['commercial_release_approved'] is False
+          assert a['user_custom_Bella_fingerprint_verified'] is False
+          wav=root/'humanfilter_kokoro_af_bella_30s.wav'
+          assert hashlib.sha256(wav.read_bytes()).hexdigest()==a['master_sha256']
+          with wave.open(str(wav)) as f:
+            assert f.getframerate()==48000 and f.getnframes()==48000*30
+          print('ORIGINAL_BELLA_VOICE_TEST_PASSED',wav.stat().st_size)
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: humanfilter-rc3-new-kokoro-af-bella-voice
+          path: artifacts/humanfilter-rc3/voice/
+          if-no-files-found: warn

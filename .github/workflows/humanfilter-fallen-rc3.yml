@@ -1,0 +1,77 @@
+name: HumanFilter RC3 • Fallen/Saban creative preproduction
+
+on:
+  push:
+    branches: ["humanfilter-fallen-rc3-*"]
+    paths:
+      - "products/humanfilter/commercial/**"
+      - ".github/workflows/humanfilter-fallen-rc3.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  saban-creative-review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify Fallen creative-director regression tests
+        run: node --test systemia/media-studio/commercial-creative-direction.test.mjs
+      - name: Compile source-first HumanFilter RC3 into Saban jobs
+        run: |
+          mkdir -p artifacts/humanfilter-rc3
+          node systemia/media-studio/commercial-creative-direction.mjs products/humanfilter/commercial/RC3_CREATIVE_DIRECTION.json artifacts/humanfilter-rc3/creative-direction-report.json
+          node --input-type=module - <<'JS'
+          import fs from 'node:fs';
+          const d=JSON.parse(fs.readFileSync('artifacts/humanfilter-rc3/creative-direction-report.json','utf8'));
+          if(d.status!=='ready_for_director_review'||d.blockers.length||d.shotPlan.length!==5||d.durationSec!==30) throw Error('Creative direction rejected');
+          if(!d.warnings.every(x=>x.startsWith('new_visual_requires_generation_or_acquisition:'))||d.warnings.length!==5) throw Error('Missing acquisition warnings not explicit for all five shots');
+          if(d.creativeJobs.length!==5) throw Error('Missing Saban inventory');
+          fs.writeFileSync('artifacts/humanfilter-rc3/saban-creative-inventory.json',JSON.stringify({jobs:d.creativeJobs},null,2)+'\n');
+          console.log('CREATIVE_PLAN_OK: 5 beats, 30 seconds, all 5 real media plates missing');
+          JS
+      - name: Execute bounded owned Saban Creative Council (14 roles x 5 beats)
+        run: |
+          node systemia/saban/multiplier.mjs --software fallen-creative-council --inventory artifacts/humanfilter-rc3/saban-creative-inventory.json --agents 70 --workers 4 --execute --reconcile --state artifacts/humanfilter-rc3/saban-state.json
+          cp artifacts/saban-multiplier/fallen-creative-council-latest.json artifacts/humanfilter-rc3/saban-council-reconciliation.json
+      - name: Fail-closed production admission and evidence receipts
+        run: |
+          python - <<'PY'
+          import pathlib,json,hashlib
+          root=pathlib.Path('artifacts/humanfilter-rc3')
+          direction=json.loads((root/'creative-direction-report.json').read_text())
+          receipt=json.loads((root/'saban-council-reconciliation.json').read_text())
+          assert receipt.get('mode')=='execute_and_reconcile', 'Saban was not actually invoked'
+          assert receipt.get('logical_agents')==70, 'Saban role coverage incomplete'
+          assert receipt.get('reconciliation',{}).get('shot_count')==5, 'Saban shot coverage incomplete'
+          state=receipt.get('result_summary',{}).get('statuses',{})
+          assert state.get('completed')==70, 'Not all 70 Saban creative roles completed: '+str(state)
+          missing=[s['beatId'] for s in direction['shotPlan'] if s['visualNeed']=='unresolved_coverage']
+          assert len(missing)==5, 'Unverified footage was invented/approved'
+          gate={'schema':'evercraft.humanfilter.fallen-rc3-source-gate.v1',
+                'status':'BLOCKED_FOR_PRODUCTION',
+                'creative_direction':'ready_for_director_review',
+                'saban_creative_notes':70,
+                'source_plates_missing':missing,
+                'bella_recorded_and_owner_approved':False,
+                'original_score_stems_approved':False,
+                'shot_tournament_based_on_actual_images':False,
+                'actual_video_rendered':False,
+                'publication_authorized':False,
+                'rejected_footage_reused':False,
+                'reason':'Source footage, Bella voice, original music, and picture approval have not been supplied'}
+          (root/'production-release-gate.json').write_text(json.dumps(gate,indent=2)+'\n')
+          print(json.dumps(gate,indent=2))
+          PY
+      - name: Store creative direction and bounded Saban receipts (NOT MEDIA)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: humanfilter-rc3-saban-fallen-creative-receipts
+          path: artifacts/humanfilter-rc3/
+          if-no-files-found: warn

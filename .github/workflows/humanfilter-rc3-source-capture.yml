@@ -1,0 +1,106 @@
+name: HumanFilter RC3 • New authentic product-footage capture
+
+on:
+  push:
+    branches: ["humanfilter-fallen-rc3-*"]
+    paths:
+      - "products/humanfilter/commercial/capture_authentic_extension.py"
+      - ".github/workflows/humanfilter-rc3-source-capture.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  original-product-source-plates:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Checkout owned Fallen/RC3 production scripts
+        uses: actions/checkout@v4
+      - name: Checkout pinned, previously validated HumanFilter extension source
+        uses: actions/checkout@v4
+        with:
+          ref: 2b16ae75f9abf4041e2ea20261f63fa5d58465b7
+          path: humanfilter-extension
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install Chromium for real extension capture
+        run: |
+          python -m pip install 'playwright==1.55.0'
+          python -m playwright install --with-deps chromium
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg
+          ffmpeg -hide_banner -version | head -n 1
+      - name: Record original real-extension browser source plates
+        env:
+          HF_EXTENSION_DIR: ${{ github.workspace }}/humanfilter-extension/products/humanfilter/extension
+          HF_CAPTURE_OUT: ${{ github.workspace }}/artifacts/humanfilter-rc3/captured
+        run: python products/humanfilter/commercial/capture_authentic_extension.py
+      - name: Verify captured source footage and QA receipts
+        run: |
+          python - <<'PY'
+          import pathlib, json, subprocess, hashlib
+          root=pathlib.Path('artifacts/humanfilter-rc3/captured')
+          r=json.loads((root/'source-capture-receipt.json').read_text())
+          assert r['footage_type']=='CONTROLLED_DEMONSTRATION_NOT_LIVE_SOCIAL_FEED'
+          assert r['approved_for_publish'] is False
+          assert r['real_extension_installed'] and r['native_controls_used']
+          assert len(r['test_actions'])==4 and all(row['passed'] for row in r['test_actions'])
+          assert {x['name'] for x in r['assets']}=={'authentic-extension-feed.mp4','authentic-extension-popup.mp4'}
+          for item in r['assets']:
+              p=root/item['name']
+              assert p.stat().st_size>18000, item
+              assert hashlib.sha256(p.read_bytes()).hexdigest()==item['sha256'],item
+              data=json.loads(subprocess.check_output(['ffprobe','-v','quiet','-print_format','json','-show_streams','-show_format',str(p)]))
+              vids=[s for s in data['streams'] if s['codec_type']=='video']
+              assert len(vids)==1 and vids[0]['codec_name']=='h264'
+              assert int(vids[0]['width'])==1080 and int(vids[0]['height'])==1920
+              assert float(data['format']['duration'])>3.0
+              print('CAPTURE_PLATE_VERIFIED',p.name,p.stat().st_size,float(data['format']['duration']))
+          print('Real browser recorded with genuine shipped extension; fixtures and limitations explicitly labeled.')
+          PY
+      - name: Flag source plates that are too static to carry a finished commercial
+        if: success()
+        run: |
+          python products/humanfilter/commercial/visual_motion_audit.py \
+            artifacts/humanfilter-rc3/captured/authentic-extension-feed.mp4 \
+            artifacts/humanfilter-rc3/captured/authentic-extension-popup.mp4 \
+            --out artifacts/humanfilter-rc3/captured/visual-motion-review.json
+          python - <<'PY'
+          import pathlib,json
+          p=pathlib.Path('artifacts/humanfilter-rc3/captured/visual-motion-review.json')
+          rows=json.loads(p.read_text())['reports']
+          assert len(rows)==2
+          assert all(x['boundaries']['no_publish_authority'] for x in rows)
+          print('Visual motion measured. Flagged footage needs human review; no auto-publish.')
+          PY
+      - name: Create editorial proof selects from only the verified actual extension pixels
+        if: success()
+        run: |
+          python products/humanfilter/commercial/produce_proof_selects.py \
+            --capture-dir artifacts/humanfilter-rc3/captured \
+            --out artifacts/humanfilter-rc3/captured/shot-selects
+          python - <<'PY'
+          import json,pathlib,hashlib
+          folder=pathlib.Path('artifacts/humanfilter-rc3/captured/shot-selects')
+          r=json.loads((folder/'selects-provenance.json').read_text())
+          assert r['status']=='EDITOR_SELECTS_ONLY_NOT_A_COMMERCIAL'
+          assert r['actual_extension_verified'] and r['samples_are_fictional']
+          assert r['publication_authority'] is False
+          assert len(r['clips'])==6
+          for row in r['clips']:
+              p=folder/row['file']
+              assert p.is_file()
+              assert hashlib.sha256(p.read_bytes()).hexdigest()==row['sha256']
+              assert row['publish_authority'] is False
+          print('Six cropped authentic editing assets checked. Still no commercial master or publication authority.')
+          PY
+      - name: Upload original product footage (NOT finished commercial)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: humanfilter-rc3-actual-extension-source-capture
+          path: artifacts/humanfilter-rc3/captured/
+          if-no-files-found: warn
