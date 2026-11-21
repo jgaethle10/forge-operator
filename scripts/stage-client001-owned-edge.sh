@@ -59,7 +59,7 @@ else
   # Write to a temporary sibling and move without clobbering an existing digest.
   # A failed or interrupted copy cannot create a half-written release.
   temp="$(mktemp -d "$ROOT/.client001-stage.XXXXXXXX")"
-  cleanup(){ [[ -n "${temp:-}" && -d "$temp" ]] && rm -rf -- "$temp"; }
+  cleanup(){ if [[ -n "${temp:-}" && -d "$temp" ]]; then rm -rf -- "$temp"; fi; return 0; }
   trap cleanup EXIT
   install -m 0644 "$SRC" "$temp/index.html"
   cmp -- "$SRC" "$temp/index.html"
