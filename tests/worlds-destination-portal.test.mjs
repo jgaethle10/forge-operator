@@ -7,7 +7,7 @@ const root=path.resolve(import.meta.dirname,'..');
 const registry=JSON.parse(fs.readFileSync(path.join(root,'public/worlds/destinations.v1.json'),'utf8'));
 test('Portal validates actual canonical destinations',()=>{
  const destinations=validateDestinationRegistry(registry);
- assert.equal(destinations.length,6);
+ assert.equal(destinations.length,7);
  for(const item of destinations)assert.equal(portalHref(item.path),item.path);
 });
 test('Portal route guard refuses offsite and malformed routes',()=>{
@@ -18,9 +18,10 @@ test('Portal route guard refuses offsite and malformed routes',()=>{
 test('Portal can search and filter registry without changing source data',()=>{
  const worlds=validateDestinationRegistry(registry);
  assert.ok(filterDestinations(worlds,'seattle').some(w=>w.id==='seattle-sky'));
+ assert.ok(filterDestinations(worlds,'yakima','history').some(w=>w.id==='yakima-history-walk'));
  assert.ok(filterDestinations(worlds,'flight','flight').length>=2);
  assert.equal(filterDestinations(worlds,'underground','flight').length,0);
- assert.equal(worlds.length,6);
+ assert.equal(worlds.length,7);
 });
 test('Gateway owns a fallback when its registry cannot load',()=>{
  const html=fs.readFileSync(path.join(root,'public/worlds/gateway/index.html'),'utf8');
