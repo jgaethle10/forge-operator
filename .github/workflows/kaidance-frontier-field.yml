@@ -21,6 +21,10 @@ on:
       - 'systemia/organism/kaidance-frontier-proof.mjs'
       - 'systemia/organism/kaidance-frontier-cycle.mjs'
       - 'systemia/organism/kaidance-company-heartbeat*.mjs'
+      - 'systemia/organism/kaidance-goal-advance.mjs'
+      - 'tests/kaidance-goal-advance.test.mjs'
+      - 'systemia/organism/kaidance-goal-advance.mjs'
+      - 'tests/kaidance-goal-advance.test.mjs'
       - 'systemia/organism/kaidance-company-heartbeat.workflow.json'
       - 'systemia/payments/kaidance-offer-*.mjs'
       - 'systemia/payments/kaidance-stripe-readonly.mjs'
@@ -139,7 +143,7 @@ jobs:
         run: node systemia/organism/medical-registry-observation-ledger.test.mjs
 
       - name: Validate KAIDANCE company heartbeat safety and truthful progress
-        run: node --test tests/kaidance-company-heartbeat.test.mjs
+        run: node --test tests/kaidance-company-heartbeat.test.mjs tests/kaidance-goal-advance.test.mjs
 
       - name: Reconcile Evercraft company portfolio on KAIDANCE heartbeat
         run: node systemia/organism/kaidance-company-heartbeat-runner.mjs --out artifacts/kaidance-company-heartbeat --prove-worlds
@@ -180,6 +184,8 @@ jobs:
             artifacts/kaidance-company-heartbeat/latest.json
             artifacts/kaidance-company-heartbeat/mission-snapshot.json
             artifacts/kaidance-company-heartbeat/queue.json
+            artifacts/kaidance-company-heartbeat/goal-dispatch.json
+            artifacts/kaidance-company-heartbeat/goal-mission-snapshot.json
             artifacts/kaidance-frontier/latest.json
             artifacts/kaidance-frontier/receipts.jsonl
             artifacts/kaidance-frontier/runtime/receipts.jsonl
