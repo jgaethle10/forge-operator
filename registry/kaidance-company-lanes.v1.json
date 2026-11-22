@@ -39,7 +39,8 @@
       ],
       "services": [
         "portfolio-sentinel",
-        "legacy-rescue-opportunity-watch"
+        "legacy-rescue-opportunity-watch",
+        "kaidance-offer-checkout"
       ],
       "priority": 1
     },
