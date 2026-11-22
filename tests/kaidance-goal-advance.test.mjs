@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import {spawnSync} from 'node:child_process';
 import {createGoalState,admitGoalPlan} from '../systemia/organism/goal-runtime.mjs';
 import {createGoalStateFile,readGoalState} from '../systemia/organism/goal-store.mjs';
 import {runCompanyHeartbeat} from '../systemia/organism/kaidance-company-heartbeat-runner.mjs';
@@ -93,4 +94,24 @@ test('goal source must remain owner-private and outside repository checkout',asy
    ()=>advanceAdmittedCompanyGoal({goalFile:file,companyReport:report,sourceRoot:'.',now:NOW}),
    /private_goal_file_mode_0600_required/);
  });
+});
+
+
+test('restored same-tick state without latest report holds cleanly instead of crashing',()=>{
+ const dir=fs.mkdtempSync(path.join(os.tmpdir(),'kaidance-restored-tick-'));
+ try{
+  const now=new Date();
+  runCompanyHeartbeat({root:'.',outDir:dir,now,proveWorlds:false});
+  fs.unlinkSync(path.join(dir,'latest.json'));
+  fs.unlinkSync(path.join(dir,'mission-snapshot.json'));
+  const child=spawnSync(process.execPath,[
+   'systemia/organism/kaidance-company-heartbeat-runner.mjs',
+   '--out',dir
+  ],{cwd:process.cwd(),encoding:'utf8',timeout:15000});
+  assert.equal(child.status,0,child.stderr+' '+child.stdout);
+  const beat=JSON.parse(fs.readFileSync(path.join(dir,'goal-dispatch.json'),'utf8'));
+  assert.equal(beat.executed,false);
+  assert.equal(beat.reason,'private_goal_not_configured');
+  assert.equal(fs.existsSync(path.join(dir,'latest.json')),false);
+ }finally{fs.rmSync(dir,{recursive:true,force:true})}
 });
