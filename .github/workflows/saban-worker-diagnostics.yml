@@ -1,0 +1,31 @@
+name: Saban Worker Diagnostic Trace
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/saban/work-state.mjs'
+      - 'systemia/saban/work-trace.mjs'
+      - 'systemia/saban/work-trace.test.mjs'
+      - '.github/workflows/saban-worker-diagnostics.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  trace-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check syntax
+        run: |
+          node --check systemia/saban/work-trace.mjs
+          node --check systemia/saban/work-state.mjs
+      - name: Run trace and existing Saban kernel proofs
+        run: |
+          node --test systemia/saban/work-trace.test.mjs
+          node systemia/saban/kernel-proof.mjs
