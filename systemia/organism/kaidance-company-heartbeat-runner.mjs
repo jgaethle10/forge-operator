@@ -88,10 +88,12 @@ export function runCompanyHeartbeat({
   ],
   no_remote_work_dispatched:true,no_code_changes_made:true};
  fs.mkdirSync(out,{recursive:true,mode:0o700});
- atomicJson(statePath,planned.state);
+ // Commit the cycle watermark LAST. An interrupted write must be retryable
+ // without falsely reporting a completed tick with missing evidence receipts.
  atomicJson(path.join(out,'latest.json'),report);
  atomicJson(path.join(out,'queue.json'),queue);
  atomicJson(path.join(out,'mission-snapshot.json'),planned.snapshot);
+ atomicJson(statePath,planned.state);
  return {duplicate:false,tick,executed:true,report,queue,
   mission_snapshot:planned.snapshot,receipt_ref:sha(JSON.stringify(planned.snapshot))};
 }
