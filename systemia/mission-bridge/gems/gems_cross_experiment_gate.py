@@ -8,6 +8,7 @@ import argparse
 import hashlib
 import json
 import math
+import re
 from pathlib import Path
 
 SCHEMA_004 = "evercraft.gems.hard-negative-full-area-ablation.v1"
@@ -97,9 +98,22 @@ def verify(a, b, sha004, sha005):
                        ("heldout_mapped_fault_pixels", "heldout_fault_pixels"),
                        ("full_scoreable_pixels", "full_area_scoreable_pixels")):
             require(fa.get(ka) == fb.get(kb), "fold_geography_mismatch_" + ka)
-        for key in ("positive_count", "sampled_negative_count"):
+        for key in ("positive_count", "eligible_negative_count",
+                    "sampled_negative_count", "buffer_pixels"):
             require(fa["baseline_training"][key] == fb["training"][key],
                     "fold_training_population_mismatch_" + key)
+        # Equal counts and equal aggregate DTI do NOT prove identical pixels.
+        # Reject older receipts that omit this evidence; require canonical
+        # ordered little-endian i8 flattened-index SHA256 from both scripts.
+        digest4 = fa.get("baseline_training_indices_sha256")
+        digest5 = fb.get("baseline_training_indices_sha256")
+        require(isinstance(digest4, str) and
+                re.fullmatch(r"[0-9a-f]{64}", digest4) is not None and
+                isinstance(digest5, str) and
+                re.fullmatch(r"[0-9a-f]{64}", digest5) is not None,
+                "baseline_training_fingerprint_missing_or_malformed")
+        require(digest4 == digest5,
+                "baseline_training_pixel_identity_mismatch")
         aa, bb = verify_measure(fa["baseline"]), verify_measure(fb["baseline_34"])
         require(fa["baseline"]["northern_positive_predictions"] ==
                 fb["baseline_34"]["selected_northern_pixels"],
@@ -122,17 +136,16 @@ def verify(a, b, sha004, sha005):
     for key in ("dti", "tp", "fp", "fn"):
         require(close(baseline004[key], baseline005[key]),
                 "pooled_baseline_mismatch_" + key)
-    require(close(a["full_area_gain"], hard["dti"] - baseline004["dti"]) if
-            hard["dti"] >= baseline004["dti"] else
-            math.isclose(float(a["full_area_gain"]),
-                         hard["dti"] - baseline004["dti"], abs_tol=1e-8),
-            "gems004_delta_mismatch")
-    require(math.isclose(float(a["hard_mining_gain_over_distance_control"]),
-                         hard["dti"] - control["dti"], abs_tol=1e-8),
-            "gems004_control_delta_mismatch")
-    require(math.isclose(float(b["full_area_dti_difference"]),
-                         directional["dti"] - baseline005["dti"], abs_tol=1e-8),
-            "gems005_delta_mismatch")
+    for reported, actual, reason in (
+        (a["full_area_gain"], hard["dti"] - baseline004["dti"],
+         "gems004_delta_mismatch"),
+        (a["hard_mining_gain_over_distance_control"],
+         hard["dti"] - control["dti"], "gems004_control_delta_mismatch"),
+        (b["full_area_dti_difference"],
+         directional["dti"] - baseline005["dti"], "gems005_delta_mismatch")):
+        require(type(reported) in (int, float) and math.isfinite(reported)
+                and math.isclose(reported, actual, rel_tol=1e-10, abs_tol=1e-8),
+                reason)
 
     return {
         "schema": OUTPUT_SCHEMA,
@@ -141,6 +154,7 @@ def verify(a, b, sha004, sha005):
         "official_input_sha256_verified_by_experiments": a["input_manifest"],
         "original_model_sha256": a["source_sha256"],
         "same_source_grid_folds_samples_and_baseline": True,
+        "all_three_folds_exact_ordered_training_pixels_sha256_matched": True,
         "baseline_known_fault_proxy_dti": baseline004["dti"],
         "hard_negative_proxy_dti": hard["dti"],
         "distance_matched_random_proxy_dti": control["dti"],
