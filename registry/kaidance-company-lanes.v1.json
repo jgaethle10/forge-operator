@@ -1,0 +1,122 @@
+{
+  "schema": "evercraft.kaidance.company-lanes.v1",
+  "heartbeat_seconds": 300,
+  "admission_policy": "existing_systemia_authority_only",
+  "automatic_production_mutations": false,
+  "lanes": [
+    {
+      "lane_key": "worlds",
+      "description": "Evercraft Worlds, Flightworks, Yakima Timewalk and Mossmere",
+      "mode": "bounded_source_proof",
+      "cadence_seconds": 300,
+      "products": [],
+      "source_files": [
+        "public/worlds/destinations.v1.json",
+        "public/worlds/wayfinder-core.mjs",
+        "public/worlds/gateway/index.html",
+        "public/worlds/flight/index.html",
+        "public/worlds/hidden-world/yakima-walk/index.html"
+      ],
+      "proof_tests": [
+        "tests/worlds-destinations.test.mjs",
+        "tests/worlds-destination-portal.test.mjs",
+        "tests/worlds-wayfinder-navigation.test.mjs",
+        "tests/worlds-navigation-public-readback.test.mjs"
+      ],
+      "proof_expiry_seconds": 3600,
+      "priority": 1
+    },
+    {
+      "lane_key": "revenue",
+      "description": "Customer acquisition, owned checkout, opportunity and sales workflows",
+      "mode": "observe_existing_workflows",
+      "cadence_seconds": 300,
+      "products": [
+        "opportunity-fabric",
+        "systemia-portfolio-sentinel",
+        "payflow",
+        "systemia-website-audit"
+      ],
+      "services": [
+        "portfolio-sentinel",
+        "legacy-rescue-opportunity-watch"
+      ],
+      "priority": 1
+    },
+    {
+      "lane_key": "commercial-studio",
+      "description": "Fallen production, Evercraft Clip, ForensiScope and delivery",
+      "mode": "observe_existing_workflows",
+      "cadence_seconds": 300,
+      "products": [
+        "fallen-sessions",
+        "evercraft-clip",
+        "forensiscope"
+      ],
+      "services": [
+        "evercraft-social-continuity-watch",
+        "work-saban-clip-delivery-watch"
+      ],
+      "priority": 2
+    },
+    {
+      "lane_key": "science-research",
+      "description": "Scientific exploration, Aiden's Lab and public evidence",
+      "mode": "observe_existing_workflows",
+      "cadence_seconds": 300,
+      "products": [
+        "evercraft-physics-atlas",
+        "evercraft-global-health-atlas",
+        "evercraft-cosmos-atlas",
+        "game-fabric"
+      ],
+      "services": [
+        "sentinel-life-safety-watch"
+      ],
+      "priority": 2
+    },
+    {
+      "lane_key": "energy-infrastructure",
+      "description": "AliEV, infrastructure intelligence and site planning",
+      "mode": "observe_existing_workflows",
+      "cadence_seconds": 300,
+      "products": [
+        "aliev",
+        "evermaps"
+      ],
+      "services": [
+        "aliev-owned-source"
+      ],
+      "priority": 2
+    },
+    {
+      "lane_key": "education-network",
+      "description": "Infinite Classroom, communications and sovereign education",
+      "mode": "observe_existing_workflows",
+      "cadence_seconds": 300,
+      "products": [
+        "infinite-classroom",
+        "evercraft-network",
+        "systemia-university"
+      ],
+      "services": [],
+      "priority": 2
+    },
+    {
+      "lane_key": "systemia-core",
+      "description": "Saban, Raven, distributed compute and execution authority",
+      "mode": "observe_existing_workflows",
+      "cadence_seconds": 300,
+      "products": [
+        "raven-nexus",
+        "evercraft-home"
+      ],
+      "services": [
+        "raven-private-runtime",
+        "raven-inference-gateway",
+        "competition-control-plane"
+      ],
+      "priority": 1
+    }
+  ]
+}

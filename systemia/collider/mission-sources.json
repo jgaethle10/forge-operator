@@ -48,6 +48,12 @@
       "path": "../../artifacts/sentinel-live-canary/mission-snapshot.json",
       "required": false,
       "stale_after_seconds": 1200
+    },
+    {
+      "source_key": "kaidance-company-heartbeat",
+      "path": "../../artifacts/kaidance-company-heartbeat/mission-snapshot.json",
+      "required": false,
+      "stale_after_seconds": 900
     }
   ]
 }

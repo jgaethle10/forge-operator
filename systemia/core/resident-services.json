@@ -2,6 +2,20 @@
   "schema": "evercraft.systemia.resident-supervisor-config.v1",
   "services": [
     {
+      "service_key": "kaidance-company-heartbeat",
+      "mode": "cycle",
+      "manifest": "systemia/organism/kaidance-company-heartbeat.workflow.json",
+      "executable": "systemia/organism/kaidance-company-heartbeat-runner.mjs",
+      "cadence_seconds": 300,
+      "optional_when_unconfigured": true,
+      "static_args": [
+        "--prove-worlds"
+      ],
+      "env_args": {
+        "--out": "SYSTEMIA_COMPANY_HEARTBEAT_OUT_DIR"
+      }
+    },
+    {
       "service_key": "portfolio-sentinel",
       "mode": "cycle",
       "manifest": "systemia/organism/portfolio-sentinel.workflow.json",
