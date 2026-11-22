@@ -252,7 +252,32 @@
       "first_comment_link_rate": "report live relevant Journal link eligible denominator, not invented",
       "source_and_correction_compliance": "must pass preflight"
     },
-    "provider_receipts": []
+    "provider_receipts": [],
+    "esan_sports_beat": {
+      "status": "FOUNDER_SCOPE_DIRECTIVE_SOURCE_CONTROL_ONLY_NO_VERIFIED_HARBOR_ACK",
+      "policy_path": "docs/sports/ESAN-WORLDWIDE-COVERAGE-CONTRACT-20261122.md",
+      "scope": "ALL_SPORTS_ALL_GEOGRAPHIES_ALL_LEVELS",
+      "region_bias": "NO_YAKIMA_OR_PNW_DEFAULT_FILTER",
+      "coverage_examples": [
+        "international",
+        "professional",
+        "college",
+        "high_school_public_safe",
+        "youth_consent_safe",
+        "amateur",
+        "adaptive",
+        "grassroots",
+        "emerging"
+      ],
+      "ranking_policy": "REQUIRE_NAMED_RANKING_SYSTEM_AS_OF_DATE_SCOPE_VALUE_AND_SOURCE; NO_BARE_RANK_IF_MULTIPLE_SYSTEMS_DIFFER",
+      "score_policy": "VERIFY_FINAL_OR_LIVE_PERIODS_AND_OVERTIME_AGAINST_SOURCE",
+      "privacy_and_rights": "REUSE_EXISTING_SYSTEMIA_HARBOR_GATES; DO_NOT_COPY_BROADCAST_FOOTAGE_OR_PRIVATE_MINOR_INFO",
+      "page_id_last_known": "513781131811732",
+      "page_id_use": "HISTORICAL_HINT_ONLY; REQUIRE_CURRENT_PROVIDER_READBACK",
+      "publication_route": "EXISTING_SYSTEMIA_APPROVED_PACKAGE_TO_HARBOR_VALIDATION_TO_PROVIDER_READBACK",
+      "kaidance_transport_verified": false,
+      "activation_verified": false
+    }
   },
   "publishing_truth": {
     "sourced_publication_receipts_generated_by_plan": 0,
