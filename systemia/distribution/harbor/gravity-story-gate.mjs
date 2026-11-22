@@ -40,6 +40,19 @@ function safePublicUrl(value, {ownedJournal = false} = {}) {
   } catch { return false; }
 }
 
+// A newsroom homepage cannot stand in for a missing, article-specific permalink.
+function isGenericJournalHome(value) {
+  if (!isText(value)) return false;
+  try {
+    const u = new URL(value.trim());
+    return u.protocol === 'https:' &&
+      u.hostname === 'fabric.systemiacommandcenters.com' &&
+      /^\/journal\/?$/.test(u.pathname);
+  } catch { return false; }
+}
+const PENDING_ARTICLE_PROMISE = /\b(?:filed for release|article link will be added|link will be added in (?:the )?comments|once (?:it|the article) is live)\b/i;
+const ARTICLE_SPECIFIC_LANGUAGE = /\b(?:full edition|journal article|the article link|read the article)\b/i;
+
 export function assessHarborGravityStory(story, context = {}) {
   if (story?.schema !== HARBOR_STORY_SCHEMA) throw new Error('gravity_story_schema_invalid');
   const blockers = [];
@@ -113,6 +126,23 @@ export function assessHarborGravityStory(story, context = {}) {
   // No Journal/comment path is allowed to silently authorize the Page post.
   const journal = story.journal || {};
   const journalLive = journal.state === 'JOURNAL_LIVE' && safePublicUrl(journal.canonical_url, {ownedJournal: true}) && context.journal?.urlReadback === journal.canonical_url && context.journal?.editorialAccepted === true;
+  // Journal-branded social posts cannot advertise an unserved article.
+  // A source-first dispatch remains possible during an editorial backlog, but
+  // only when the actual post links to an independently checked original source.
+  const isJournalPage = page?.current_name === 'Evercraft Journal';
+  if (isJournalPage) {
+    add(!PENDING_ARTICLE_PROMISE.test(text || ''), 'journal_unreleased_article_promise_forbidden');
+    if (!journalLive) {
+      add(!ARTICLE_SPECIFIC_LANGUAGE.test(text || ''), 'journal_article_claim_requires_live_permalink');
+      const sourceLinks = evidence.map(e => e?.source_url).filter(isText);
+      add(sourceLinks.some(url => text?.includes(url) || link === url),
+        'journal_pending_post_must_link_verified_original_source');
+    }
+    const urlsInText = isText(text) ? [...text.matchAll(/https:\/\/[^\s<>"']+/gi)].map(m => m[0].replace(/[),.;!?]+$/, '')) : [];
+    add(!([link, ...urlsInText].some(isGenericJournalHome) && ARTICLE_SPECIFIC_LANGUAGE.test(text || '')),
+      'journal_homepage_cannot_replace_article_permalink');
+  }
+
   const comment = story.first_comment || {};
   const providerPostId = context.providerPostId;
   const published = context.publishedPostReceipt || {};
