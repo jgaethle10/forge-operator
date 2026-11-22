@@ -64,6 +64,7 @@ export async function advanceAdmittedCompanyGoal({
  const file=privateGoalFile(goalFile,sourceRoot);
  const state=await readGoalState(file);
  if(!state.mission_key||!state.goal_key||!Array.isArray(state.tasks))throw Error('invalid_admitted_goal_state');
+ if(state.status==='complete')return {...hold('goal_complete',state.goal_key),completed_goal:true};
  const ready=refreshGoal(state,now).next_work_keys;
  const work=state.tasks.find(x=>ready.includes(x.work_key)&&
   x.work_type===WORK_TYPE&&x.status==='pending'&&x.attempt===0&&
@@ -105,7 +106,7 @@ export function goalBeatMissionSnapshot(beat,now=new Date()){
   })).digest('hex'),
   observed_at:new Date(now).toISOString(),
   counts:{scanned:beat?.configured?1:0,changed:succeeded?1:0,
-   admitted:attempted?1:0,held:!succeeded&&beat?.configured?1:0},
+   admitted:attempted?1:0,held:!succeeded&&beat?.configured&&!beat?.completed_goal?1:0},
   evidence_refs:succeeded?beat.evidence_refs:[],
  };
 }
