@@ -35,15 +35,21 @@ physical node attestation or the absence of a second scheduler.
   binding, with the two named services healthy.
 - At least two separate successful `cycle.completed` receipts **for each**
   of `kaidance-company-heartbeat` and `kaidance-worlds-saban-review`.
-  Receipt hashes must match. Cycles must be separated by at least two minutes
-  and at most one hour, with the newest no older than fifteen minutes.
-- Company `latest.json` and state must agree on a five-minute tick.
+  Receipt hashes must match, and the supervisor's last-completed timestamp
+  must agree with the latest receipt (within 60 seconds). Cycles must be
+  separated by at least two minutes and at most one hour, with the newest
+  no older than fifteen minutes.
+- Company `latest.json` and state must agree on a five-minute tick **and**
+  that tick must be the actual UTC bucket of the claimed observation time.
 - Current Saban `latest.json` must match its completed private goal file,
   registered World Engine review work identity, source fingerprint, persisted
-  receipt and zero external mutations.
-- The existing mission-publisher private ledger must show an accepted ingress
-  receipt for the **exact** current Worlds mission snapshot, rather than an
-  unsent snapshot or a synthetic hold.
+  receipt, attempt number, checkpoint, and zero external mutations.
+- The Worlds mission snapshot must be recomputable from the current stored
+  Systemia goal revision, source fingerprint and this cycle's actual review
+  disposition. The existing mission-publisher private ledger must record an
+  ingress acknowledgment for that **exact** snapshot, rather than an unsent
+  snapshot or a synthetic hold. This checks local acknowledgment evidence,
+  not independent authenticated Yard or public-origin delivery.
 - All input files must be private (mode 0600), outside the public source
   checkout, and not symlinks. Missing/stale/invalid evidence yields a HOLD.
 
@@ -51,7 +57,9 @@ physical node attestation or the absence of a second scheduler.
 state**, not an assertion this script deployed the service or independently
 attested the hardware. CI tests use synthetic fixtures, not owner-host data.
 Only actual owner-host execution plus independent node/deployment checks can
-prove production activation. The script exits nonzero on every HOLD.
+prove production activation. Local receipt hashes are unkeyed integrity checks,
+not identity signatures; an independent live publisher/yard attestation remains
+its own acceptance gate. The script exits nonzero on every HOLD.
 
 ## Tests
 
