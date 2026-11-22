@@ -1,0 +1,47 @@
+name: Pacific V27 Private Connected Bella Full Performance
+on:
+  push:
+    branches: [studio/pacific-v26-opening-20261120]
+    paths:
+      - systemia/media-studio/pacific-v27-full-bella-music.py
+      - .github/workflows/pacific-v27-full-bella-music.yml
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  performance:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - name: Prepare Evercraft owned speech runtime
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq espeak-ng libsndfile1 ffmpeg
+          python -m pip install --disable-pip-version-check 'kokoro==0.9.4' 'soundfile>=0.12,<1.0'
+      - name: Generate full connected Bella and CC0 original score
+        env: {HF_HUB_DISABLE_TELEMETRY: "1"}
+        run: python systemia/media-studio/pacific-v27-full-bella-music.py
+      - name: Audit generated private audio
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json,hashlib,wave
+          p=Path('pacific-v27-private-voice-and-music')
+          data=json.loads((p/'receipt.json').read_text())
+          assert len(data['takes'])==2 and data['voice']=='af_bella'
+          for row in data['takes']:
+              f=p/row['file']
+              assert hashlib.sha256(f.read_bytes()).hexdigest()==row['sha256']
+              with wave.open(str(f),'rb') as a:
+                  assert a.getframerate()==24000 and a.getnchannels()==1
+                  assert 15<a.getnframes()/24000<29
+          print('Voice-only private audio checks PASS.')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pacific-v27-private-full-bella
+          path: pacific-v27-private-voice-and-music/
+          retention-days: 7
+          if-no-files-found: error
