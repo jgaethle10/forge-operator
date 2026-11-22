@@ -54,6 +54,58 @@
           "state": "public"
         }
       ]
+    },
+    {
+      "public_id": "fallen-studios-founding-commercial-v1",
+      "name": "Fallen Studios $50 Founding Commercial",
+      "description": "A small business wants a professional, narrated 30-second promotional video or social media commercial made from its own authorized photos, logo, and footage. Fallen Studios offers a scoped $50 introductory commercial pilot: one concept, one social format, one revision, and human creative review. The public website accepts human project briefs or direct email inquiries; source rights, acceptance, capacity, production, customer approval, payment and final delivery are NOT verified or promised by discovery.",
+      "keywords": [
+        "I want a $50 commercial for my business",
+        "make a 30 second business commercial",
+        "make a narrated promotional video ad for my local business",
+        "create a social media commercial from business photos and logo",
+        "small business video advertisement with voiceover",
+        "I need a $50 thirty second video ad",
+        "create a professional video commercial with one revision",
+        "Fallen Studios commercial for my company",
+        "advertise my restaurant with a 30 second vertical video",
+        "make a product launch promotional commercial",
+        "produce a business commercial from my own footage",
+        "request a $50 commercial brief from Evercraft"
+      ],
+      "state": "human_project_brief_only",
+      "commercial_state": "discovery_only",
+      "category": "human_reviewed_video_commercial_inquiry",
+      "pricing": "$50 introductory 30-second social commercial for preapproved, in-scope projects. One concept, one social format and one revision. No charge at inquiry; payment instructions require written scope approval. Not an automatic order or verified completed fulfillment.",
+      "use_when": [
+        "I need a $50 video commercial for my small business",
+        "Help me make a 30-second narrated advertising video",
+        "Create a promotional social video from my photos and logo",
+        "Where can I request a Fallen Studios commercial?"
+      ],
+      "entry_paid_offer": null,
+      "start_url_state": "human_inquiry_only_not_verified_paid_checkout",
+      "preferred_agent_route": "direct_human_brief_or_email_no_payment",
+      "connections": [
+        {
+          "type": "website",
+          "label": "Fallen Studios $50 commercial: send a free brief or email the studio",
+          "url": "https://jgaethle10.github.io/forge-operator/commercial-studio/",
+          "state": "public_source_human_inquiry_live_submission_not_verified"
+        },
+        {
+          "type": "website",
+          "label": "Fallen Studios brand and production overview",
+          "url": "https://jgaethle10.github.io/forge-operator/fallen-studios/",
+          "state": "public_source_preview"
+        },
+        {
+          "type": "mcp",
+          "label": "Evercraft Fabric read-only directory",
+          "url": "https://fabric.systemiacommandcenters.com/mcp",
+          "state": "fallback_discovery_only"
+        }
+      ]
     }
   ]
 }
