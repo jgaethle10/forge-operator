@@ -1,9 +1,12 @@
 """Fail-closed receipt-comparability tests. All data here are synthetic."""
 import copy
+import hashlib
 import json
 import tempfile
 import unittest
 from pathlib import Path
+
+import numpy as np
 from unittest.mock import patch
 
 import gems_cross_experiment_gate as gate
@@ -65,6 +68,8 @@ def pair():
     }
     for index in range(3):
         base = measure(4 + index, 60 + index, 30)
+        indices = np.arange(index*600, (index+1)*600, dtype="<i8")
+        selected_fingerprint = hashlib.sha256(indices.tobytes()).hexdigest()
         control = measure(4 + index, 55 + index, 30)
         hard = measure(4 + index, 45 + index, 30)
         directional = measure(5 + index, 51 + index, 29)
@@ -73,7 +78,10 @@ def pair():
             "heldout_mapped_fault_pixels": 50,
             "full_scoreable_pixels": 100000,
             "baseline_training": {"positive_count": 100,
-                                  "sampled_negative_count": 500},
+                                  "eligible_negative_count": 100000,
+                                  "sampled_negative_count": 500,
+                                  "buffer_pixels": 0},
+            "baseline_training_indices_sha256": selected_fingerprint,
             "baseline": copy.deepcopy(base),
             "distance_matched_random": control,
             "hard_mined": hard
@@ -83,7 +91,10 @@ def pair():
             "heldout_fault_pixels": 50,
             "full_area_scoreable_pixels": 100000,
             "training": {"positive_count": 100,
-                         "sampled_negative_count": 500},
+                         "eligible_negative_count": 100000,
+                         "sampled_negative_count": 500,
+                         "buffer_pixels": 0},
+            "baseline_training_indices_sha256": selected_fingerprint,
             "baseline_34": copy.deepcopy(base),
             "directional_38": directional
         })
@@ -120,10 +131,42 @@ class CrossExperimentTests(unittest.TestCase):
         a, b = pair()
         result = self.check(a, b)
         self.assertTrue(result["same_source_grid_folds_samples_and_baseline"])
+        self.assertTrue(result["all_three_folds_exact_ordered_training_pixels_sha256_matched"])
         self.assertEqual(result["hard_fold_wins_vs_distance_control"], 3)
         self.assertEqual(result["directional_fold_wins_vs_baseline"], 3)
         self.assertFalse(result["independent_new_fault_confirmation"])
         self.assertFalse(result["automatic_selection_or_submission_allowed"])
+
+    def test_equal_counts_and_equal_scores_are_insufficient_for_pixel_identity(self):
+        a, b = pair()
+        # Only training-pixel identity changed. Every score/size stays identical.
+        b["fold_ledger"][1]["baseline_training_indices_sha256"] = "f" * 64
+        with self.assertRaisesRegex(ValueError, "baseline_training_pixel_identity_mismatch"):
+            self.check(a, b)
+
+    def test_missing_or_malformed_training_fingerprint_fails_closed(self):
+        for invalid in (None, "", "A" * 64, "x" * 64, "a" * 63):
+            with self.subTest(invalid=invalid):
+                a, b = pair()
+                b["fold_ledger"][0]["baseline_training_indices_sha256"] = invalid
+                with self.assertRaisesRegex(ValueError,
+                        "baseline_training_fingerprint_missing_or_malformed"):
+                    self.check(a, b)
+        a, b = pair()
+        del a["fold_ledger"][0]["baseline_training_indices_sha256"]
+        with self.assertRaisesRegex(ValueError,
+                "baseline_training_fingerprint_missing_or_malformed"):
+            self.check(a, b)
+
+    def test_rejects_negative_delta_tampering_without_arithmetic_exception(self):
+        a, b = pair()
+        a["full_area_gain"] = -0.2
+        with self.assertRaisesRegex(ValueError, "gems004_delta_mismatch"):
+            self.check(a, b)
+        a, b = pair()
+        b["full_area_dti_difference"] = float("nan")
+        with self.assertRaisesRegex(ValueError, "gems005_delta_mismatch"):
+            self.check(a, b)
 
     def test_fails_if_baseline_differs_despite_positive_proxy_uplift(self):
         a, b = pair()
