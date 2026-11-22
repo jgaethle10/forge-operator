@@ -271,3 +271,24 @@ The control in `gems/gems_004_hard_negative_ablation.py` now matches **exactly t
 **This is coarse distance-bin matching, not exact real-valued distance matching**. If mining still appears helpful, examine per-bin score/training frequencies and independent fold outcomes; unseen true faults may be mislabeled in all negative samples. The revised `test_gems_004_hard_negative_ablation.py` directly tests equal per-bin populations, duplicate/fold exclusion guards, deterministic selection, and end-to-end three-model HGB replay on synthetic data.
 
 This methodological fix invalidates a purported hard-mining gain from any prior, unmatched-control GEMS-004 execution; compare only results from the updated code, pinned in the evidence receipt. It does not establish any new real-data result, and no new candidate or DrivenData submission is authorized by this update.
+
+### GEMS-004 / GEMS-005 cross-experiment baseline equivalence gate (Nov 21)
+
+**Do not compare an apparent GEMS-004 hard-negative gain with GEMS-005 directional-feature gain until their independently recorded 34-feature baseline is demonstrably the same experiment.** Their scripts should use the same exact GeoDAWN SHA-pinned files, archived GEMS-001 code, grid, connected-fault folds, seed, training sample counts, scoreable geography and 300m padded DTI proxy scoring. The GEMS-005 southern crop was corrected to match GEMS-004's zero-padded proximity-kernel evaluation, with synthetic regression coverage. A difference in baselines makes direct cross-experiment ranking invalid.
+
+`gems/gems_cross_experiment_gate.py` consumes the existing **private** GEMS-004 and GEMS-005 complete run-a JSON receipts, recomputes each weighted full-area and corridor proxy from all three fold TP/FP/FN components, matches per-fold baseline weighted terms and northern positive footprint, verifies common source/geometry, and rejects altered deltas, mismatched inputs, differing folds, hidden-score claims or submission/promotion flags. It does not retrain, infer new labels, download rasters, create a GeoTIFF, or contact DrivenData.
+
+After both isolated authorized original-data replays have actually completed:
+
+```bash
+cd systemia/mission-bridge/gems
+python3 -m unittest -v test_gems_cross_experiment_gate.py
+python3 gems_cross_experiment_gate.py \
+  --gems004 /PRIVATE/gems004/run-a/hard-negative-full-area.json \
+  --gems005 /PRIVATE/gems005/run-a/directional-full-area-ablation.json \
+  --receipt /PRIVATE/NEW/gems-cross-experiment-verification.json
+```
+
+The report is write-once. It includes the exact input-receipt SHA256 hashes, shared original-model digest, baseline and alternative mapped-fault proxy DTI, per-fold improvement counts and explicit `independent_new_fault_confirmation=false` / `automatic_selection_or_submission_allowed=false`. Matching baselines is necessary for fair comparison, **not** sufficient evidence of improved official score or generalization. Both experiments currently use reused *mapped-fault development* folds, not unseen hidden newly mapped faults. Refuse to generate a promotional claim or use another competition submission slot on that basis alone. Keep GEMS-001 selected.
+
+The CI regression suite uses entirely fabricated receipt terms and tests happy path, tampering, unsafe state flags, score arithmetic, fold geometry, source digests, and write-once behavior. A green test suite is **not** a real-data GEMS-004 or GEMS-005 result.
