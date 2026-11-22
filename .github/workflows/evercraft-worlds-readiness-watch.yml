@@ -6,6 +6,8 @@ on:
   pull_request:
     paths:
       - 'scripts/audit-worlds-owned-readiness.mjs'
+      - 'scripts/probe-worlds-navigation-public.mjs'
+      - 'tests/worlds-navigation-public-readback.test.mjs'
       - 'tests/worlds-owned-readiness.test.mjs'
       - '.github/workflows/evercraft-worlds-readiness-watch.yml'
   workflow_dispatch:
@@ -14,6 +16,12 @@ on:
   push:
     branches: [main]
     paths:
+      - 'public/worlds/gateway/**'
+      - 'public/worlds/destinations.v1.json'
+      - 'public/worlds/wayfinder*.mjs'
+      - 'public/worlds/world-portal.mjs'
+      - 'public/worlds/flight/index.html'
+      - 'public/worlds/index.html'
       - 'public/worlds/heritage/**'
       - 'public/worlds/hidden-world/**'
       - 'systemia/worlds/worlds-vault-runtime.mjs'
@@ -21,6 +29,8 @@ on:
       - 'scripts/probe-worlds-heritage-public.mjs'
       - 'scripts/probe-hidden-world-public.mjs'
       - 'scripts/audit-worlds-owned-readiness.mjs'
+      - 'scripts/probe-worlds-navigation-public.mjs'
+      - 'tests/worlds-navigation-public-readback.test.mjs'
       - 'tests/worlds-owned-readiness.test.mjs'
       - '.github/workflows/evercraft-worlds-readiness-watch.yml'
 
@@ -46,6 +56,8 @@ jobs:
         run: |
           node --check scripts/audit-worlds-owned-readiness.mjs
           node --test tests/worlds-owned-readiness.test.mjs
+          node --check scripts/probe-worlds-navigation-public.mjs
+          node --test tests/worlds-navigation-public-readback.test.mjs
       - name: Probe configured owned HTTPS origin (no writes)
         if: github.event_name != 'pull_request'
         shell: bash
@@ -86,4 +98,36 @@ jobs:
         with:
           name: evercraft-worlds-owned-readiness
           path: artifacts/worlds-readiness/read-only.json
+          if-no-files-found: warn
+
+  navigation-release-readback:
+    # Report the current public deployment independently of the source PR gates.
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    env:
+      WORLDS_ORIGIN: ${{ vars.EVERCRAFT_WORLDS_PUBLIC_ORIGIN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Read-only SHA-256 comparison between main source and public Worlds navigation
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/worlds-navigation-public
+          if [ -z "${WORLDS_ORIGIN}" ]; then
+            printf '%s\n' '{"schema":"evercraft.worlds.navigation-readback.v1","verified":false,"read_only":true,"reason":"origin_not_configured"}' > artifacts/worlds-navigation-public/receipt.json
+            cat artifacts/worlds-navigation-public/receipt.json
+            echo '::warning title=Worlds public navigation unverified::Owned HTTPS origin not configured'
+          else
+            node scripts/probe-worlds-navigation-public.mjs "${WORLDS_ORIGIN}" | tee artifacts/worlds-navigation-public/receipt.json
+          fi
+      - name: Preserve navigation readback receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-worlds-navigation-readback
+          path: artifacts/worlds-navigation-public/receipt.json
           if-no-files-found: warn
