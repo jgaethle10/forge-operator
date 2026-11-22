@@ -14,6 +14,7 @@ export function listHeartbeatOffers(config,legacy=null){
  }
  for(const row of config.offers){
   if(!KEY.test(row.offer_key)||seen.has(row.offer_key)||!merchants[row.merchant]||
+   !merchants[row.merchant].offer_promotion_allowed||
    !Number.isSafeInteger(row.amount_cents)||row.amount_cents<=0||row.currency!=='usd'||
    !/^plink_[A-Za-z0-9]+$/.test(row.payment_link_id)||!/^price_[A-Za-z0-9]+$/.test(row.price_id)||
    !/^prod_[A-Za-z0-9]+$/.test(row.product_id)||
@@ -57,6 +58,17 @@ function matchLink(offer,account){
  const l=account.links.find(x=>x.id===offer.payment_link_id);
  if(!l)return {state:'missing_pinned_payment_link',provider_link:null};
  if(l.active!==true)return {state:'hold_payment_link_inactive',provider_link:l};
+ // The founder's fixed-price policy is a seller route constraint, not a
+ // declaration about the business's separate legal obligations to remit tax.
+ // Managed Payments can require automatic tax and must never be silently
+ // converted, substituted or promoted as a no-added-tax route.
+ if(l.managed_payments_enabled!==false)
+  return {state:'hold_managed_payments_not_fixed_price',provider_link:l};
+ if(l.automatic_tax_enabled!==false)
+  return {state:'hold_automatic_tax_not_disabled',provider_link:l};
+ if(l.optional_items_count!==0||l.shipping_options_count!==0||
+    l.allow_promotion_codes!==false)
+  return {state:'hold_checkout_has_variable_total',provider_link:l};
  if(l.after_completion?.type!=='hosted_confirmation'||isRetired(JSON.stringify(l.after_completion)))
   return {state:'hold_redirect_not_attested',provider_link:l};
  if(!httpsStripe(l.url)||l.url!==offer.checkout_url)return {state:'hold_checkout_url_mismatch',provider_link:l};
@@ -95,6 +107,8 @@ export function reconcileKaidanceOfferLinks({
    holds.push({offer_key:offerKey,placement_key:placementKey,reason:result.state});
    if(result.state==='missing_pinned_payment_link'||result.state==='hold_payment_link_inactive')
     actions.push({dedupe_key:dedupeKey,offer_key:offerKey,action:'reconcile_or_create_exact_sku_link',authority:'existing_stripe_adapter_and_signed_scope_required'});
+   if(['hold_managed_payments_not_fixed_price','hold_automatic_tax_not_disabled','hold_checkout_has_variable_total'].includes(result.state))
+    actions.push({dedupe_key:dedupeKey,offer_key:offerKey,action:'review_exact_no_extra_tax_checkout',authority:'owner_tax_and_sku_review_required',no_automatic_provider_write:true});
    continue;
   }
   placements.push({offer_key:offerKey,placement_key:placementKey,campaign_id:String(event.campaign_id||''),
@@ -111,6 +125,7 @@ export function reconcileKaidanceOfferLinks({
   requested_offers:incoming.length,known_exact_price_offers:offers.length,
   accounts_fresh_and_pinned:snap.size,placements,holds,actions,
   clip_publications_executed:0,stripe_mutations_executed:0,new_links_created:0,
-  payment_received_verified:false,all_external_effects_require_existing_authority:true,
+  payment_received_verified:false,no_additional_automatic_tax_required:true,
+  tax_obligation_reviewed_by_this_cycle:false,all_external_effects_require_existing_authority:true,
   contract_note:'Provider readback authorizes link matching only. A claimed Clip promotion does not itself establish publisher permission; downstream Clip must independently verify its signed publish permit.'};
 }
