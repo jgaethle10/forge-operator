@@ -149,7 +149,7 @@ test('archives expired durable reporting without presenting it as a live edition
   assert.doesNotMatch(indexHtml, /Live edition (?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)/i);
   assert.match(indexHtml, /Archive/i);
   assert.match(indexHtml, /Archived reporting, not a live update/);
-  assert.match(indexHtml, /class="archive-intro"/);
+  assert.match(indexHtml, /class="reading-section archive-section"/);
   assert.match(indexHtml, /id="desk-systems"/);
   assert.doesNotMatch(indexHtml, /href="\.\/feed\.xml">RSS<\/a>/);
 
@@ -343,7 +343,7 @@ test('editorial hero uses only an explicitly rights-verified source photo', () =
     publicOrigin: 'https://journal.test.evercraft.local'
   });
   const indexHtml = fs.readFileSync(path.join(outDir, 'index.html'), 'utf8');
-  assert.match(indexHtml, /class="feature-photo"/);
+  assert.match(indexHtml, /class="feature-media feature-photo"/);
   assert.match(indexHtml, /https:\/\/example\.com\/official-field-photo\.jpg/);
   assert.match(indexHtml, /Documented field photograph/);
 });
