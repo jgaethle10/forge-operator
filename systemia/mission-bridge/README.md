@@ -340,3 +340,41 @@ The cross-experiment evidence gate now checks, for **each fold, variant and both
 Both existing isolated scientific runners (`execute_hard_negative_ablation.sh` and `execute_directional_ablation.sh`) now run those **same single-experiment checks before writing a decision summary**, including when the owner runs only `hard` (the lowest-cost recommended first execution). A mismatch is a hard stop and preserves existing evidence for investigation, **not** a result to reinterpret, suppress or auto-promote. The diagnostics measure **known-fault proxy FP geography**, not proof that an off-corridor prediction is geologically false; undiscovered true faults might exist there. Do not import outside labels or assume the official hidden DTI increased.
 
 No competition candidate or scored upload is performed by this gate, and GEMS-001 remains the selected official scored entry.
+
+### GEMS-004 original data recovery and owner-local execution (Nov 22)
+
+The original GeoDAWN organizer files and preserved GEMS-001 model archive were used in an earlier isolated research workspace, but neither was mounted in the subsequent ChatGPT runtime. The original owner archive's path remains unverified. The selected competition entry does not depend on this new recovery step.
+
+A **third-party, non-official static data mirror** exposes three GeoTIFF files with **published SHA-256 digests matching our preexisting organizer input receipts**:
+https://huggingface.co/datasets/fabricioslv/gems-prize-geodawn/tree/main .
+This proves the mirror **advertises** the expected exact versions, not that a download was performed or independently hash-verified in this session. Its license label is `other`; for competition-use provenance, rely on the original organizer rules and identical byte hashes, not on the mirror's self-reported licensing. Do not publish raw competition data or put it in GitHub.
+
+**New fail-closed launcher** `gems/recover_and_run_gems004.sh` performs exactly one owner-local GEMS-004 experiment ONLY if:
+1. An existing private directory and the **original preserved GEMS-001 submission ZIP** already exist.
+2. Before any data download, the archived `run.py` bytes pass the original pinned SHA-256 `db07aef8eb3edaa78efdc704d867cc8c2cf12ae1c8d17152fd0280238c92ca8b`.
+3. All three competition GeoTIFF files match the **exact existing organizer SHA-256 digests**, expected EPSG:32611 3292×3730 / 19-band grid, aligned masks, and original feature band order.
+4. Output is a brand-new private directory outside the repository and dataset. Run-repeat is not enabled. On Linux with less than 4 GiB available RAM, the launcher refuses to train.
+5. In opt-in mirror mode only, missing files are fetched by HTTPS to private temporary files (bounded size), hashed, and moved into place **only if hashes exactly match**. No remote compute executes; all subsequent model fitting is local. No download happens without the explicit flag.
+
+Run **only in an approved memory-sufficient isolated CPU workspace, preferably NextGen or the prior private research workspace, not memory-constrained Penguin production**. If source files already exist:
+
+```bash
+bash systemia/mission-bridge/gems/recover_and_run_gems004.sh \
+  /PRIVATE/official-geodawn/data \
+  /PRIVATE/gems_001_verified_submission.zip \
+  /PRIVATE/NEW/gems004-evidence
+```
+
+If the three raster files are missing **but the actual pinned original ZIP is present**, add `--fetch-verified-mirror`. This is not official portal authentication and must not be mistaken for participant submission permission:
+
+```bash
+bash systemia/mission-bridge/gems/recover_and_run_gems004.sh \
+  /PRIVATE/official-geodawn/data \
+  /PRIVATE/gems_001_verified_submission.zip \
+  /PRIVATE/NEW/gems004-evidence \
+  --fetch-verified-mirror
+```
+
+The `execute_gems_research_bundle.sh hard` stage still runs the previously CI-tested three-fold hard-mining vs distance-bin-matched control and writes full-area FP/TP/FN private proxy evidence, never an official score or new GeoTIFF. A green **synthetic** CI test of this launcher proves only that missing/unverified model archives cannot trigger a download or training. The owner must inspect the real run receipt before any potential challenge submission, and GEMS-001 #330339, public DTI 0.0552 remains selected.
+
+**No assertion is made that public data downloading, private model ZIP recovery, actual GEMS-004 training, private Saban dispatch, or any competition action completed from this ChatGPT turn.**
