@@ -66,6 +66,12 @@
       "path": "../../artifacts/kaidance-worlds-saban-review/mission-snapshot.json",
       "required": false,
       "stale_after_seconds": 900
+    },
+    {
+      "source_key": "kaidance-source-candidate",
+      "path": "../../artifacts/kaidance-source-candidate/mission-snapshot.json",
+      "required": false,
+      "stale_after_seconds": 900
     }
   ]
 }
