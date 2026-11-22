@@ -6,6 +6,7 @@ import { pathToFileURL } from 'node:url';
 import { renderCfbRankingPoster } from '../graphics-command/ranking-poster-renderer.mjs';
 import { renderJournalHome } from './journal-home-design.mjs';
 import { journalArticleCss } from './journal-article-design.mjs';
+import { renderJournalArchivePage, renderJournalAboutPage } from './journal-reader-pages.mjs';
 
 const clean = (value) => String(value ?? '').trim();
 const unique = (values = []) => [...new Set(values.map(clean).filter(Boolean))];
@@ -466,6 +467,12 @@ export function publishJournalStories(inputStories, {
     receipts.push(receipt);
   }
 
+  // Discovery pages only materialize stories which passed the existing publisher gates.
+  // This is not a shortcut for editorial candidates or Harbor-local manuscripts.
+  fs.mkdirSync(path.join(outDir, 'archive'), { recursive: true });
+  fs.mkdirSync(path.join(outDir, 'about'), { recursive: true });
+  fs.writeFileSync(path.join(outDir, 'archive', 'index.html'), renderJournalArchivePage(stories, archivedStories, origin));
+  fs.writeFileSync(path.join(outDir, 'about', 'index.html'), renderJournalAboutPage(origin));
   fs.writeFileSync(path.join(outDir, 'index.html'), renderJournalHome(stories, archivedStories));
   fs.writeFileSync(path.join(outDir, 'index.json'), JSON.stringify({
     schema: 'evercraft.journal.index.v1',
