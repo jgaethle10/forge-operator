@@ -15,7 +15,7 @@ test('searchable archive shows only supplied approved records with accurate stat
   assert.match(html,/id="journal-desk"/);
   assert.match(html,/aria-live="polite"/);
   assert.match(html,/No matching stories in the published record/);
-  assert.match(html,/href="https:\/\/journal\.test\.evercraft\.local\/archive\/" /);
+  assert.match(html,/href="https:\/\/journal\.test\.evercraft\.local\/archive\/"/);
   assert.equal((html.match(/\sdata-journal-entry(?=\s|>)/g)||[]).length,2);
 });
 test('archive-only and empty result rendering does not claim current articles',()=>{
@@ -38,7 +38,7 @@ test('reader standards page explains publication, photo and uncertainty boundari
   const html=renderJournalAboutPage(origin);
   assert.match(html,/Curiosity deserves evidence/);
   assert.match(html,/Separate reporting from distribution/);
-  assert.match(html,/Article.*?not/);
-  assert.match(html,/href="https:\/\/journal\.test\.evercraft\.local\/about\/" /);
+  assert.match(html,/A draft, automated preflight/);
+  assert.match(html,/href="https:\/\/journal\.test\.evercraft\.local\/about\/"/);
   assert.match(html,/href="\.\.\/archive\/"/);
 });
