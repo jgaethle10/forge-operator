@@ -8,6 +8,7 @@ import {createHash,randomBytes} from 'node:crypto';
 import {worldsSabanSourceFingerprint} from './kaidance-worlds-saban-review.mjs';
 import {planMossmereSourceRepair,SOURCE_PATH,TEST_PATH} from './kaidance-source-patch-recipe.mjs';
 import {createGoalState,admitGoalPlan,authorizeGoalWork} from './goal-runtime.mjs';
+import {verifyGoalHumanApproval} from './goal-human-approval.mjs';
 import {createGoalStateFile,mutateGoalState,readGoalState} from './goal-store.mjs';
 import {createCapabilityRegistry} from './capability-runtime.mjs';
 import {executePersistedGoalWork} from './goal-durable-dispatch.mjs';
@@ -156,6 +157,11 @@ export async function runSignedDraftPrPublisher({
  const repo=path.resolve(root||''),out=path.resolve(privateDir||'');
  if(!root||!privateDir||!path.isAbsolute(out)||out===repo||
     out.startsWith(repo+path.sep))throw Error('kaidance_pr_private_operator_directory_required');
+ if(fs.existsSync(out)){
+  const st=fs.lstatSync(out);
+  if(!st.isDirectory()||st.isSymbolicLink()||(st.mode&0o077)!==0)
+   throw Error('kaidance_pr_private_operator_directory_untrusted');
+ }else fs.mkdirSync(out,{recursive:true,mode:0o700});
  if(fs.existsSync(path.join(out,'submission-intent.json'))||
     fs.existsSync(path.join(out,'provider-readback.json')))
   throw Error('kaidance_pr_previous_attempt_requires_manual_reconciliation');
@@ -176,6 +182,10 @@ export async function runSignedDraftPrPublisher({
   throw Error('kaidance_pr_signed_exact_patch_digest_required');
  const publicKey=privateFile(trustKeyFile,repo);
  const trusted={'systemia-human-gate-v1':publicKey};
+ // Verify the exact candidate digest and scoped owner signature BEFORE
+ // creating durable state or accessing the GitHub credential.
+ verifyGoalHumanApproval({approval:permit,state:desired,workKey:WORK,
+  trustedPublicKeys:trusted,now});
  const token=privateFile(tokenFile,repo);
  const api=createPinnedGitHubClient({token,fetchFn});
  const goalPath=path.join(out,'goal-state.json');
