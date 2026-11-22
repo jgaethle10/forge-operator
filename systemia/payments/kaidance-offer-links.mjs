@@ -6,7 +6,7 @@ const sha=v=>'sha256:'+createHash('sha256').update(String(v)).digest('hex');
 const httpsStripe=u=>{try{const x=new URL(u);return x.protocol==='https:'&&x.hostname==='buy.stripe.com'&&!x.username&&!x.password&&!x.search&&!x.hash&&x.pathname.length>2}catch{return false}};
 const isRetired=u=>/base44(?:\\.|%2e)(?:app|com|ai)/i.test(String(u||''));
 const safeTime=(value,now,maxMs)=>{const n=Date.parse(value);return Number.isFinite(n)&&n<=now+60000&&n>=now-maxMs};
-function assertBindings(config,legacy){
+export function listHeartbeatOffers(config,legacy=null){
  if(config?.schema!=='evercraft.payments.heartbeat-offer-bindings.v1'||!Array.isArray(config.offers))throw Error('offer_binding_schema_invalid');
  const merchants=config.merchant_accounts||{},items=[],seen=new Set();
  for(const [alias,m] of Object.entries(merchants)){
@@ -70,7 +70,7 @@ function matchLink(offer,account){
 export function reconcileKaidanceOfferLinks({
  bindings,legacy=null,promotions=null,provider=null,now=new Date()
 }={}){
- const offers=assertBindings(bindings,legacy),at=new Date(now),nowMs=at.getTime();
+ const offers=listHeartbeatOffers(bindings,legacy),at=new Date(now),nowMs=at.getTime();
  if(!Number.isFinite(nowMs))throw Error('invalid_checkout_heartbeat_clock');
  const snap=validateProviderReadbacks(provider,bindings.merchant_accounts,nowMs,
   (bindings.rules?.provider_readback_max_seconds||600)*1000);
