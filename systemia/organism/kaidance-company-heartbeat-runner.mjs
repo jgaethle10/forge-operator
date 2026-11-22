@@ -8,6 +8,8 @@ import {fileURLToPath} from 'node:url';
 import {randomBytes,createHash} from 'node:crypto';
 import {spawnSync} from 'node:child_process';
 import {planCompanyHeartbeat,validateCompanyLanes} from './kaidance-company-heartbeat.mjs';
+import {sourceFingerprint} from './kaidance-source-fingerprint.mjs';
+export {sourceFingerprint};
 const sourceRoot=path.resolve(fileURLToPath(new URL('../../',import.meta.url)));
 const sha=value=>'sha256:'+createHash('sha256').update(value).digest('hex');
 function readJson(file){return JSON.parse(fs.readFileSync(file,'utf8'))}
@@ -18,16 +20,6 @@ function atomicJson(file,value){
  const temp=file+'.'+process.pid+'.'+randomBytes(5).toString('hex')+'.tmp';
  try{fs.writeFileSync(temp,JSON.stringify(value,null,2)+'\n',{flag:'wx',mode:0o600});fs.renameSync(temp,file)}
  finally{if(fs.existsSync(temp))fs.unlinkSync(temp)}
-}
-export function sourceFingerprint(root,files){
- const hash=createHash('sha256');
- for(const file of [...files].sort()){
-  if(!/^(?:public\/worlds|tests)\/[a-z0-9./-]+$/.test(file)||file.includes('..'))throw Error('untrusted_company_source_path');
-  const full=path.join(root,file);
-  if(fs.lstatSync(full).isSymbolicLink())throw Error('company_source_symlink_refused');
-  hash.update(file+'\0');hash.update(fs.readFileSync(full));hash.update('\0');
- }
- return 'sha256:'+hash.digest('hex');
 }
 function countWorkflowManifests(root,max=30000){
  let files=0,count=0;
