@@ -100,7 +100,7 @@ test('one-cycle, repeated-timestamp and tampered receipts never certify continui
      const {receipt_hash,...body}=row;row.receipt_hash=sha(body);
     }
    }
-   if(change==='tampered')rows[0].exit_code=1;
+   if(change==='tampered')rows[1].exit_code=1;
    fs.writeFileSync(path.join(paths.supervisor,'receipts.jsonl'),
     rows.map(x=>JSON.stringify(x)).join('\n')+'\n',{mode:0o600});
    const out=inspectOwnedKaidance(args);
