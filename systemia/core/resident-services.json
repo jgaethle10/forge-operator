@@ -28,6 +28,9 @@
       ],
       "env_args": {
         "--out": "SYSTEMIA_COMPANY_HEARTBEAT_OUT_DIR"
+      },
+      "optional_env_args": {
+        "--goal-file": "SYSTEMIA_KAIDANCE_GOAL_STATE_FILE"
       }
     },
     {
