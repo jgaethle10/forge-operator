@@ -19,7 +19,7 @@ const timestamp=(s,now)=>{
    current-t>MAX_AGE)BAD('missing_or_stale_timestamp');
  return t;
 };
-function privateFile(file,root){
+function privateFile(file,root,{allowAppendLog=false}={}){
  if(typeof file!=='string'||!path.isAbsolute(file))BAD('private_absolute_path_required');
  const target=path.resolve(file),source=fs.realpathSync(root);
  if(target===source||target.startsWith(source+path.sep))BAD('private_state_inside_source_checkout');
@@ -27,14 +27,28 @@ function privateFile(file,root){
     fs.realpathSync(path.dirname(target))!==path.dirname(target))BAD('private_symlink_refused');
  const stat=fs.lstatSync(target);
  if(!stat.isFile()||stat.isSymbolicLink()||(stat.mode&0o077)!==0)BAD('private_state_mode_0600_required');
- if(stat.size>2*1024*1024)BAD('private_state_file_too_large');
+ if(!allowAppendLog&&stat.size>2*1024*1024)BAD('private_state_file_too_large');
  return target;
 }
 function json(file,root){
  return JSON.parse(fs.readFileSync(privateFile(file,root),'utf8'));
 }
 function verifyCycleReceipts(file,root,service,now){
- const lines=fs.readFileSync(privateFile(file,root),'utf8').trim().split('\n');
+ const target=privateFile(file,root,{allowAppendLog:true});
+ // Resident JSONL is append-only and may grow for months. Read a bounded tail,
+ // not the entire lifetime ledger, and skip a truncated first line.
+ const fd=fs.openSync(target,'r');
+ let chunk,start=0;
+ try{
+  const size=fs.fstatSync(fd).size;
+  const length=Math.min(size,2*1024*1024);
+  start=size-length;
+  const bytes=Buffer.alloc(length);
+  fs.readSync(fd,bytes,0,length,start);
+  chunk=bytes.toString('utf8');
+ }finally{fs.closeSync(fd)}
+ if(start>0)chunk=chunk.slice(chunk.indexOf('\n')+1);
+ const lines=chunk.trim().split('\n');
  const verified=[];
  for(const line of lines){
   let v;try{v=JSON.parse(line)}catch{BAD('supervisor_receipt_line_invalid')}
