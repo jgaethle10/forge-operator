@@ -1,0 +1,38 @@
+{
+  "schema": "evercraft.systemia.workflow-manifest.v1",
+  "workflow_key": "kaidance-offer-checkout",
+  "mission_key": "evercraft-kaidance-revenue-link-reconciliation-2026-11",
+  "runtime": "systemia-core-resident+kaidance-collider",
+  "collider_compatible": true,
+  "cadence_seconds": 300,
+  "material_change_only": true,
+  "entrypoint": "systemia/payments/kaidance-checkout-cycle.mjs",
+  "proof": "tests/kaidance-offer-checkout.test.mjs",
+  "outputs": {
+    "cycle_report": "artifacts/kaidance-offer-checkout/latest.json",
+    "mission_snapshot": "artifacts/kaidance-offer-checkout/mission-snapshot.json",
+    "action_queue": "artifacts/kaidance-offer-checkout/actions.json"
+  },
+  "authority": {
+    "read_exact_stripe_links": "configured_private_key_read_only",
+    "match_approved_skus": "source_catalog_and_provider_readback_required",
+    "write_stripe_links": false,
+    "change_prices": false,
+    "create_payment_links": false,
+    "post_social": false,
+    "payment_fulfillment": false
+  },
+  "failure_semantics": {
+    "missing_clip_receipt": "hold_no_active_campaign",
+    "missing_authenticated_stripe_key": "hold_provider_readback_unavailable",
+    "cross_account_link": "hold",
+    "price_drift": "hold",
+    "no_matching_sku": "queue_for_review",
+    "deactivated_or_missing_link": "queue_exact_link_reconciliation"
+  },
+  "claims": {
+    "links_selected_for_proven_promotions": "candidate_only",
+    "downstream_publishing_authority_not_granted": true,
+    "actual_sales_not_inferred": true
+  }
+}
