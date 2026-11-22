@@ -27,6 +27,9 @@ test('verifies receipt, canonical identity, machine evidence and ranking visuals
   assert.equal(result.verified,true);
   assert.equal(result.live_story_count,1);
   assert.equal(result.verified_reader_assets,1);
+  assert.equal(result.verified_discovery_pages,2);
+  assert.match(fs.readFileSync(path.join(outDir,'archive','index.html'),'utf8'), /id="journal-search"/);
+  assert.match(fs.readFileSync(path.join(outDir,'about','index.html'),'utf8'), /Curiosity deserves evidence/);
   assert.match(result.stories[0].ranking_run_id,/^cfbpi:/);
 });
 
@@ -49,4 +52,15 @@ test('rejects a tampered read-aloud asset rather than serving an unsigned script
   const asset=path.join(outDir,'assets','listen.js');
   fs.appendFileSync(asset,'/* unapproved change */');
   assert.throws(()=>verifyJournalBuild({root:outDir,expectedOrigin:origin}),/reader_asset_hash_mismatch/);
+});
+
+test('rejects missing or tampered reader discovery pages',()=>{
+  const outDir=build();
+  fs.rmSync(path.join(outDir,'archive','index.html'));
+  assert.throws(()=>verifyJournalBuild({root:outDir,expectedOrigin:origin}),/journal_verify_archive_page_missing/);
+  fs.writeFileSync(path.join(outDir,'archive','index.html'),'<html>Fake archive</html>');
+  assert.throws(()=>verifyJournalBuild({root:outDir,expectedOrigin:origin}),/journal_verify_archive_discovery_invalid/);
+  const fixed=build();
+  fs.writeFileSync(path.join(fixed,'about','index.html'),'<html>Fake standards</html>');
+  assert.throws(()=>verifyJournalBuild({root:fixed,expectedOrigin:origin}),/journal_verify_editorial_standards_invalid/);
 });

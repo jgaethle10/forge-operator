@@ -6,6 +6,7 @@ import { pathToFileURL } from 'node:url';
 import { renderCfbRankingPoster } from '../graphics-command/ranking-poster-renderer.mjs';
 import { renderJournalHome } from './journal-home-design.mjs';
 import { journalArticleCss } from './journal-article-design.mjs';
+import { renderJournalArchivePage, renderJournalAboutPage } from './journal-reader-pages.mjs';
 
 const clean = (value) => String(value ?? '').trim();
 const unique = (values = []) => [...new Set(values.map(clean).filter(Boolean))];
@@ -276,7 +277,7 @@ ${journalArticleCss}
 <a class="skip-link" href="#article-body">Skip to article text</a>
 <header class="journal-site-header"><div class="site-header-inner">
   <a class="site-mark" href="../" aria-label="Evercraft Journal home"><span class="site-seal" aria-hidden="true">E</span><span><span class="site-name">Evercraft <em>Journal</em></span><span class="site-tagline">Reporting / Evidence / Discovery</span></span></a>
-  <nav class="site-links" aria-label="Journal navigation"><a href="../">Home</a><a href="../#archive">Archive</a><a href="../#desks">Desks</a></nav>
+  <nav class="site-links" aria-label="Journal navigation"><a href="../">Home</a><a href="../#archive">Archive</a><a href="../about/">Standards</a></nav>
 </div></header>
 <main class="journal-main" id="main">
 <article class="journal-article">
@@ -466,6 +467,12 @@ export function publishJournalStories(inputStories, {
     receipts.push(receipt);
   }
 
+  // Discovery pages only materialize stories which passed the existing publisher gates.
+  // This is not a shortcut for editorial candidates or Harbor-local manuscripts.
+  fs.mkdirSync(path.join(outDir, 'archive'), { recursive: true });
+  fs.mkdirSync(path.join(outDir, 'about'), { recursive: true });
+  fs.writeFileSync(path.join(outDir, 'archive', 'index.html'), renderJournalArchivePage(stories, archivedStories, origin));
+  fs.writeFileSync(path.join(outDir, 'about', 'index.html'), renderJournalAboutPage(origin));
   fs.writeFileSync(path.join(outDir, 'index.html'), renderJournalHome(stories, archivedStories));
   fs.writeFileSync(path.join(outDir, 'index.json'), JSON.stringify({
     schema: 'evercraft.journal.index.v1',
