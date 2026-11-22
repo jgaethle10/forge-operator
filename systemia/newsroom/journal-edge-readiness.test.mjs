@@ -24,6 +24,8 @@ function fixture({live=false,stale=false}={}){
     fetched.push(url);
     if(url===origin+'/')return response(200,'<title>Evercraft Journal</title>','text/html');
     if(url===origin+'/index.json')return response(200,index,'application/json');
+    if(url===origin+'/archive/')return response(200,'<title>Evercraft Journal Archive</title><input id="journal-search"><select id="journal-desk"></select><a href="../'+slug+'/">Open article</a>','text/html');
+    if(url===origin+'/about/')return response(200,'<title>Evercraft Journal Standards</title><h1>Curiosity deserves evidence.</h1><p>Separate reporting from distribution</p>','text/html');
     if(url===canonical_url)return response(200,article,'text/html');
     if(url===origin+'/receipts/'+slug+'.json')return response(200,receipt,'application/json');
     return response(404,{error:'not_found'},'application/json');
@@ -44,7 +46,10 @@ test('archive only is explicitly degraded even when web route, identity and dige
   assert.equal(result.current_edition_verified,false);
   assert.equal(result.newsroom_active,false);
   assert.equal(result.error,'journal_live_edition_missing');
-  assert.equal(fetched.length,4);
+  assert.equal(fetched.length,6);
+  assert.equal(result.reader_pages_verified,true);
+  assert.equal(result.checks.archive_discovery,true);
+  assert.equal(result.checks.editorial_standards,true);
 });
 test('approved current edition with matching receipt and unexpired evidence is verified',async()=>{
   const {fetchImpl}=fixture({live:true});
@@ -105,4 +110,21 @@ test('live and archive cannot reuse the same identity',()=>{
   const item=fixture({live:true});
   item.index.archive.push({...item.index.stories[0],state:'archived'});
   assert.throws(()=>classifyJournalEdition(item.index,{now}),/duplicate_story/);
+});
+
+test('live article cannot mask a missing archive or an empty standards page',async()=>{
+  const item=fixture({live:true});
+  const missing=await probeJournalOwnedEdge({origin,now,fetchImpl:async url=>url===origin+'/archive/'?response(404,'missing','text/html'):item.fetchImpl(url)});
+  assert.equal(missing.state,'unavailable');
+  assert.equal(missing.current_edition_verified,false);
+  assert.match(missing.error,/journal_edge_http_404/);
+  const blank=await probeJournalOwnedEdge({origin,now,fetchImpl:async url=>url===origin+'/about/'?response(200,'<html></html>','text/html'):item.fetchImpl(url)});
+  assert.equal(blank.state,'unavailable');
+  assert.match(blank.error,/editorial_standards_missing/);
+});
+test('live archive must link the exact recorded article slug',async()=>{
+  const item=fixture();
+  const mismatch=await probeJournalOwnedEdge({origin,now,fetchImpl:async url=>url===origin+'/archive/'?response(200,'<input id="journal-search"><select id="journal-desk"></select><a href="../wrong-story/">Wrong</a>','text/html'):item.fetchImpl(url)});
+  assert.equal(mismatch.state,'unavailable');
+  assert.match(mismatch.error,/archive_story_link_missing/);
 });
