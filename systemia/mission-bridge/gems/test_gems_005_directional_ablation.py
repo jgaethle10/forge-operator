@@ -62,6 +62,13 @@ class DirectionalAblationTests(unittest.TestCase):
                 first=x.execute(root,root/"first")
                 second=x.execute(root,root/"second")
                 self.assertEqual(len(first["fold_ledger"]),3)
+                self.assertTrue(all(
+                    isinstance(row.get("baseline_training_indices_sha256"),str)
+                    and len(row["baseline_training_indices_sha256"])==64
+                    for row in first["fold_ledger"]))
+                self.assertEqual(
+                    [row["baseline_training_indices_sha256"] for row in first["fold_ledger"]],
+                    [row["baseline_training_indices_sha256"] for row in second["fold_ledger"]])
                 self.assertEqual(first["original_feature_count"],34)
                 self.assertEqual(first["augmented_feature_count"],38)
                 self.assertTrue(first["identical_training_samples_and_positive_labels"])
