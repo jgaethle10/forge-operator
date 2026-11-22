@@ -40,6 +40,23 @@ export function verifyJournalBuild({root='public/journal',expectedOrigin}={}){
   if(!fs.existsSync(path.join(outRoot,'index.html'))) throw new Error('journal_verify_index_html_missing');
   if(!fs.existsSync(path.join(outRoot,'feed.xml'))) throw new Error('journal_verify_feed_missing');
   if(!fs.existsSync(path.join(outRoot,'llms.txt'))) throw new Error('journal_verify_llms_missing');
+  // Keep reader-facing discovery and editorial standards as first-class
+  // portable release surfaces. They must use this build's approved story set.
+  const archivePage=path.join(outRoot,'archive','index.html');
+  const aboutPage=path.join(outRoot,'about','index.html');
+  if(!fs.existsSync(archivePage)) throw new Error('journal_verify_archive_page_missing');
+  if(!fs.existsSync(aboutPage)) throw new Error('journal_verify_about_page_missing');
+  const archiveHtml=fs.readFileSync(archivePage,'utf8');
+  const aboutHtml=fs.readFileSync(aboutPage,'utf8');
+  if(!archiveHtml.includes('<link rel="canonical" href="'+origin+'/archive/">')||
+     !archiveHtml.includes('id="journal-search"')||
+     !archiveHtml.includes('id="journal-desk"'))
+    throw new Error('journal_verify_archive_discovery_invalid');
+  if(!aboutHtml.includes('<link rel="canonical" href="'+origin+'/about/">')||
+     !aboutHtml.includes('Curiosity deserves evidence.')||
+     !aboutHtml.includes('Separate reporting from distribution'))
+    throw new Error('journal_verify_editorial_standards_invalid');
+
   const readerAssets=Array.isArray(index.reader_assets)?index.reader_assets:[];
   for(const asset of readerAssets){
     if(asset.relative_path!=='assets/listen.js'||!/^[a-f0-9]{64}$/.test(String(asset.sha256||''))) throw new Error('journal_verify_reader_asset_receipt_invalid');
@@ -50,6 +67,14 @@ export function verifyJournalBuild({root='public/journal',expectedOrigin}={}){
 
   const current=Array.isArray(index.stories)?index.stories:[];
   const archived=Array.isArray(index.archive)?index.archive:[];
+  const archiveLinks=[...current,...archived];
+  if((archiveHtml.match(/data-journal-entry/g)||[]).length!==archiveLinks.length)
+    throw new Error('journal_verify_archive_story_count_mismatch');
+  for(const entry of archiveLinks){
+    if(!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(clean(entry.slug))||
+       !archiveHtml.includes('href="../'+encodeURIComponent(entry.slug)+'/">'))
+      throw new Error('journal_verify_archive_story_link_missing:'+clean(entry.slug));
+  }
   if(Boolean(index.live_edition)!==Boolean(current.length)) throw new Error('journal_verify_live_edition_mismatch');
 
   const verified=[];
@@ -138,6 +163,7 @@ export function verifyJournalBuild({root='public/journal',expectedOrigin}={}){
     live_story_count:current.length,
     archived_story_count:archived.length,
     verified_reader_assets:readerAssets.length,
+    verified_discovery_pages:2,
     stories:verified,
   };
 }
