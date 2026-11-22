@@ -43,7 +43,7 @@
       "price_id": "price_1UcF2D5rgRECaZMDEz4rR5VW",
       "product_id": "prod_VdW4DsNwvteF4f",
       "payment_link_id": "plink_1UcF345rgRECaZMDssa3Q87v",
-      "checkout_url": null,
+      "checkout_url": "https://buy.stripe.com/bJe28kfD885M9SP49n0Jq07",
       "mode": "payment",
       "scope_confirmation_required": true,
       "source": "live_stripe_read_2026-11-21"
