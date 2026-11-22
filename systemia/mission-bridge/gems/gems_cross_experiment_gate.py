@@ -48,6 +48,23 @@ def verify_measure(measure):
 def validate_pooled(report, choice, pooled_key, corridor_key):
     folds = report["fold_ledger"]
     measures = [verify_measure(row[choice]) for row in folds]
+    for row, measure in zip(folds, measures):
+        # Every model on a fold scores the SAME known held-out fault pixels.
+        # DTI probability mass may move between TP/FN, but cannot invent or
+        # remove ground-truth positives. Corridor contains the entire holdout.
+        held = row.get("heldout_mapped_fault_pixels",
+                       row.get("heldout_fault_pixels"))
+        require(type(held) is int and held > 0, "heldout_fault_count_invalid")
+        full = measure["full_terms"]
+        corridor = measure["corridor_terms"]
+        for zone, terms in (("full", full), ("corridor", corridor)):
+            require(close(terms["tp"] + terms["fn"], held),
+                    "heldout_truth_conservation_failed_" + choice + "_" + zone)
+        require(close(full["tp"], corridor["tp"]) and
+                close(full["fn"], corridor["fn"]),
+                "heldout_truth_region_mismatch_" + choice)
+        require(full["fp"] + 1e-8 >= corridor["fp"],
+                "off_corridor_fp_negative_" + choice)
     for zone, key in (("full", pooled_key), ("corridor", corridor_key)):
         totals = {k: sum(number(m[zone + "_terms"][k]) for m in measures)
                   for k in ("tp", "fp", "fn")}
@@ -136,6 +153,20 @@ def verify(a, b, sha004, sha005):
     for key in ("dti", "tp", "fp", "fn"):
         require(close(baseline004[key], baseline005[key]),
                 "pooled_baseline_mismatch_" + key)
+    # The full-area region is the consequential evaluation, not the 1.5km
+    # corridor. Quantify additional weighted false-positive mass outside it.
+    off_corridor_fp = {}
+    for label, report, choice in (
+        ("baseline", a, "baseline"),
+        ("distance_matched_random", a, "distance_matched_random"),
+        ("hard_negative", a, "hard_mined"),
+        ("directional", b, "directional_38")):
+        outside = sum(
+            row[choice]["full_terms"]["fp"] -
+            row[choice]["corridor_terms"]["fp"]
+            for row in report["fold_ledger"])
+        require(outside >= -1e-8, "off_corridor_fp_pooled_negative")
+        off_corridor_fp[label] = max(0., outside)
     for reported, actual, reason in (
         (a["full_area_gain"], hard["dti"] - baseline004["dti"],
          "gems004_delta_mismatch"),
@@ -161,6 +192,8 @@ def verify(a, b, sha004, sha005):
         "directional_proxy_dti": directional["dti"],
         "hard_minus_distance_control": hard["dti"] - control["dti"],
         "directional_minus_baseline": directional["dti"] - baseline004["dti"],
+        "weighted_fp_outside_heldout_1_5km_corridors": off_corridor_fp,
+        "fault_truth_conservation_verified_all_variants_and_regions": True,
         "hard_fold_wins_vs_distance_control": sum(
             r["hard_mined"]["full_dti"] > r["distance_matched_random"]["full_dti"]
             for r in la),
