@@ -6,7 +6,7 @@ import {fileURLToPath} from "node:url";
 const ORIGIN="https://jgaethle10.github.io/forge-operator/";
 export const routes=[
  {name:"fallen_studios_public_home",path:"fallen-studios/",markers:["Fallen Studios | Original commercials by Evercraft","Your story deserves","../commercial-studio/#inquire"]},
- {name:"existing_commercial_inquiry",path:"commercial-studio/",markers:["$50 Small Business Commercial","id=\"studio-request\"","api/commercial-studio/inquiry"]}
+ {name:"existing_commercial_inquiry",path:"commercial-studio/",markers:["A <em>$50 commercial</em> for your small business.","id=\"studio-request\"","api/commercial-studio/inquiry","id=\"studio-email-hero\""]}
 ];
 export function evaluate({status,finalUrl,body},route){
  const issues=[];
