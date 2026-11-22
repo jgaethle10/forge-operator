@@ -23,6 +23,7 @@ test('current story gets accurate edition state without duplicate false archive 
   assert.match(html, /id="latest-title"/);
   assert.match(html, /id="lead-title"/);
   assert.doesNotMatch(html, /No current live edition/);
+  assert.doesNotMatch(html, /href="#archive"/);
 });
 test('story titles, captions and desk names are HTML-escaped', () => {
   const html = renderJournalHome([{
