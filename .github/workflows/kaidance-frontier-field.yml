@@ -24,6 +24,9 @@ on:
       - 'systemia/organism/kaidance-company-heartbeat.workflow.json'
       - 'systemia/payments/kaidance-offer-*.mjs'
       - 'systemia/payments/kaidance-stripe-readonly.mjs'
+      - 'systemia/payments/kaidance-stripe-inventory.mjs'
+      - 'systemia/clip/kaidance-checkout-intake.mjs'
+      - 'tests/kaidance-stripe-inventory-clip-intake.test.mjs'
       - 'systemia/payments/kaidance-checkout-cycle.mjs'
       - 'systemia/payments/kaidance-offer-checkout.workflow.json'
       - 'registry/kaidance-payment-offer-bindings.v1.json'
@@ -55,6 +58,9 @@ on:
       - 'systemia/organism/kaidance-company-heartbeat.workflow.json'
       - 'systemia/payments/kaidance-offer-*.mjs'
       - 'systemia/payments/kaidance-stripe-readonly.mjs'
+      - 'systemia/payments/kaidance-stripe-inventory.mjs'
+      - 'systemia/clip/kaidance-checkout-intake.mjs'
+      - 'tests/kaidance-stripe-inventory-clip-intake.test.mjs'
       - 'systemia/payments/kaidance-checkout-cycle.mjs'
       - 'systemia/payments/kaidance-offer-checkout.workflow.json'
       - 'registry/kaidance-payment-offer-bindings.v1.json'
@@ -141,6 +147,9 @@ jobs:
       - name: Validate KAIDANCE exact-price Stripe link routing and account isolation
         run: node --test tests/kaidance-offer-checkout.test.mjs
 
+      - name: Verify five-merchant Stripe inventory, no-auto-tax routing, and Clip source intake
+        run: node --test tests/kaidance-stripe-inventory-clip-intake.test.mjs
+
       - name: Reconcile this heartbeat's promoted offers with provider-backed checkout candidates
         run: node systemia/payments/kaidance-checkout-cycle.mjs --out artifacts/kaidance-offer-checkout
 
@@ -164,6 +173,7 @@ jobs:
         with:
           name: kaidance-frontier-receipts
           path: |
+            artifacts/kaidance-offer-checkout/inventory.json
             artifacts/kaidance-offer-checkout/latest.json
             artifacts/kaidance-offer-checkout/actions.json
             artifacts/kaidance-offer-checkout/mission-snapshot.json
