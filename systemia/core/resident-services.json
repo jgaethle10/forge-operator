@@ -2,6 +2,17 @@
   "schema": "evercraft.systemia.resident-supervisor-config.v1",
   "services": [
     {
+      "service_key": "kaidance-worlds-saban-review",
+      "mode": "cycle",
+      "manifest": "systemia/organism/kaidance-worlds-saban-review.workflow.json",
+      "executable": "systemia/organism/kaidance-worlds-saban-runner.mjs",
+      "cadence_seconds": 300,
+      "optional_when_unconfigured": true,
+      "env_args": {
+        "--out": "SYSTEMIA_KAIDANCE_SABAN_WORLD_REVIEW_OUT_DIR"
+      }
+    },
+    {
       "service_key": "kaidance-offer-checkout",
       "mode": "cycle",
       "manifest": "systemia/payments/kaidance-offer-checkout.workflow.json",
