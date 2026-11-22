@@ -64,7 +64,7 @@ export async function probeJournalOwnedEdge({
   const observedAt=now.toISOString();
   const output={
     schema:SCHEMA,observed_at:observedAt,origin:null,
-    state:'unavailable', transport_verified:false, archive_verified:false,
+    state:'unavailable', transport_verified:false, archive_verified:false, reader_pages_verified:false,
     current_edition_verified:false, newsroom_active:false,
     current_count:0,archived_count:0,checks:{},
   };
@@ -87,6 +87,27 @@ export async function probeJournalOwnedEdge({
       output.error='journal_edge_no_approved_stories';
       return output;
     }
+    // A premium Journal release includes its public discovery and standards
+    // surfaces. A source merge cannot claim public availability without both.
+    const archiveResponse=await get(fetchImpl,publicOrigin+'/archive/');
+    const archiveHtml=await archiveResponse.text();
+    const standardsResponse=await get(fetchImpl,publicOrigin+'/about/');
+    const standardsHtml=await standardsResponse.text();
+    if(!/^text\/html/i.test(archiveResponse.headers.get('content-type')||'') ||
+       !archiveHtml.includes('id="journal-search"') ||
+       !archiveHtml.includes('id="journal-desk"'))
+      throw new Error('journal_edge_archive_discovery_missing');
+    if(!/^text\/html/i.test(standardsResponse.headers.get('content-type')||'') ||
+       !standardsHtml.includes('Curiosity deserves evidence.') ||
+       !standardsHtml.includes('Separate reporting from distribution'))
+      throw new Error('journal_edge_editorial_standards_missing');
+    for(const published of [...index.stories,...index.archive]){
+      if(!archiveHtml.includes('href="../'+encodeURIComponent(published.slug)+'/">'))
+        throw new Error('journal_edge_archive_story_link_missing:'+published.slug);
+    }
+    output.checks.archive_discovery=true;
+    output.checks.editorial_standards=true;
+    output.reader_pages_verified=true;
     const entry=state.candidate;
     const expectedUrl=publicOrigin+'/'+entry.slug+'/';
     if (entry.canonical_url!==expectedUrl) throw new Error('journal_edge_canonical_origin_mismatch');
