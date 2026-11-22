@@ -13,6 +13,9 @@ Write as an accountable institution that actually builds, observes, researches a
 - **Visual art direction (November 21 founder update):** For new editorial Page graphics, read [`HARBOR-VISUAL-EDITORIAL-DIRECTION-20261121.md`](HARBOR-VISUAL-EDITORIAL-DIRECTION-20261121.md). Prefer the authentic story, documentary evidence or a focused original visualization over another brand-colored headline rectangle. Keep it restrained, specific, legible on a phone, and honestly labeled. This is a visual-quality amendment, not authorization to manufacture news imagery, pause all posting, or bypass existing gates.
 - Record actual independent team/editorial/visual QA where required. Never assert 'team reviewed' if no specialist actually reviewed the exact publication version.
 
+### ESAN sports franchise (2026-11-22 founder direction)
+ESAN is **worldwide, all-sports coverage**, not a local/PNW sports feed. Harbor must use the existing Page authorization and publishing workflow, with explicit source-backed poll/ranking labels when AP, CFP, Coaches, league tables or other systems differ. The full candidate, geography, youth-privacy, score and rights rules are in [ESAN's worldwide coverage contract](../sports/ESAN-WORLDWIDE-COVERAGE-CONTRACT-20261122.md). This is a source-policy update, not proof Harbor has ingested it or permission for a new post.
+
 ## 2. The four distinct communication surfaces
 
 ### A. Evercraft Journal / substantive investigations
