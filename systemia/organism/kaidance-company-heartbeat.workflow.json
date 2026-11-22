@@ -1,0 +1,32 @@
+{
+  "schema": "evercraft.systemia.workflow-manifest.v1",
+  "workflow_key": "kaidance-company-heartbeat",
+  "mission_key": "evercraft-one-company-heartbeat-2026-11",
+  "runtime": "systemia-core-resident+kaidance-collider",
+  "collider_compatible": true,
+  "cadence_seconds": 300,
+  "material_change_only": true,
+  "entrypoint": "systemia/organism/kaidance-company-heartbeat-runner.mjs",
+  "proof": "tests/kaidance-company-heartbeat.test.mjs",
+  "outputs": {
+    "cycle_report": "artifacts/kaidance-company-heartbeat/latest.json",
+    "mission_snapshot": "artifacts/kaidance-company-heartbeat/mission-snapshot.json",
+    "queue": "artifacts/kaidance-company-heartbeat/queue.json"
+  },
+  "authority": {
+    "inventory_read": "autonomous",
+    "source_conformance_tests": "bounded_allowlist",
+    "source_edit": false,
+    "code_generation": false,
+    "production_mutation": false,
+    "payment": false,
+    "outreach": false,
+    "private_customer_data": false
+  },
+  "claims": {
+    "all_public_products_inventoried": true,
+    "all_products_have_workers": false,
+    "all_projects_developed_every_tick": false,
+    "github_cron_guaranteed": false
+  }
+}
