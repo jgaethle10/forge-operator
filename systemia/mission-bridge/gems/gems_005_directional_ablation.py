@@ -2,7 +2,7 @@
 """GEMS-005: same-label, same-fold 34 vs 38 feature HGB comparison.
 Uses SHA-pinned official GeoDAWN 19-band TIFF. No submission or promotion.
 """
-import argparse,json,time
+import argparse,hashlib,json,time
 from pathlib import Path
 import numpy as np,rasterio
 from sklearn.ensemble import HistGradientBoostingClassifier
@@ -73,6 +73,9 @@ def execute(data,evidence):
         challenge=measure(reference,challenge_model,augmented,north_flat,north,truth,full,corridor,known)
         del baseline_model,challenge_model
         ledger.append({"fold":int(fold),"training":counts,
+            # Ordered flattened indices must be identical to GEMS-004 pilot.
+            "baseline_training_indices_sha256":hashlib.sha256(
+                np.asarray(indices,dtype="<i8").tobytes()).hexdigest(),
             "training_positive_count":int(labels[indices].sum()),
             "heldout_component_count":int(len(ids)),
             "heldout_fault_pixels":int(truth.sum()),
