@@ -1,6 +1,7 @@
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
+import { appendWorkTrace } from './work-trace.mjs';
 
 function nowIso(now = Date.now()) {
   return new Date(now).toISOString();
@@ -34,6 +35,7 @@ export function createWorkState({ softwareId, assignments, leaseSeconds = 300, m
       created_at: nowIso(createdAt),
       updated_at: nowIso(createdAt)
     };
+    appendWorkTrace(jobs[jobId], { event: 'queued', at: createdAt });
   }
 
   return {
@@ -58,6 +60,10 @@ export function expireLeases(state, now = Date.now()) {
     };
     job.lease = null;
     job.updated_at = nowIso(now);
+    appendWorkTrace(job, {
+      event: job.state === 'queued' ? 'lease_expired_queued' : 'lease_expired_dead_letter',
+      at: now, reason: 'lease_expired'
+    });
     changed = true;
   }
   if (changed) state.updated_at = nowIso(now);
@@ -88,6 +94,7 @@ export function leaseNext(state, { workerId, now = Date.now(), leaseSeconds = nu
     expires_at: nowIso(now + ttl * 1000)
   };
   job.updated_at = nowIso(now);
+  appendWorkTrace(job, { event: 'leased', at: now });
   state.updated_at = nowIso(now);
   return structuredClone(job);
 }
@@ -119,6 +126,7 @@ export function checkpoint(state, { jobId, workerId, data, now = Date.now() }) {
     data: data ?? null
   };
   job.updated_at = nowIso(now);
+  appendWorkTrace(job, { event: 'checkpointed', at: now });
   state.updated_at = nowIso(now);
   return structuredClone(job);
 }
@@ -136,6 +144,7 @@ export function complete(state, { jobId, workerId, result, metrics = null, now =
   job.error = null;
   job.lease = null;
   job.updated_at = nowIso(now);
+  appendWorkTrace(job, { event: 'completed', at: now });
   state.updated_at = nowIso(now);
   return structuredClone(job);
 }
@@ -155,6 +164,10 @@ export function fail(state, { jobId, workerId, error, retry = true, now = Date.n
   };
   job.lease = null;
   job.updated_at = nowIso(now);
+  appendWorkTrace(job, {
+    event: canRetry ? 'retry_queued' : 'failed_dead_letter',
+    at: now, reason: job.error.code,
+  });
   state.updated_at = nowIso(now);
   return structuredClone(job);
 }
