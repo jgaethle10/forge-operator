@@ -4,11 +4,31 @@
   "merchant_accounts": {
     "evercraft-llc": {
       "stripe_account_id": "acct_1U0wDm5rgRECaZMD",
-      "livemode": true
+      "livemode": true,
+      "offer_promotion_allowed": true
     },
     "systemia": {
       "stripe_account_id": "acct_1U4GEoK4iDjqpECV",
-      "livemode": true
+      "livemode": true,
+      "offer_promotion_allowed": true
+    },
+    "evercraft-media-legacy": {
+      "stripe_account_id": "acct_1USpJsRp1HqokPkV",
+      "livemode": true,
+      "offer_promotion_allowed": false,
+      "role": "read_only_inventory"
+    },
+    "evercraft-media": {
+      "stripe_account_id": "acct_1SW3PuENz5p202JY",
+      "livemode": true,
+      "offer_promotion_allowed": false,
+      "role": "read_only_inventory"
+    },
+    "systemia-forge": {
+      "stripe_account_id": "acct_1U4GXUGwYKEDY4zS",
+      "livemode": true,
+      "offer_promotion_allowed": false,
+      "role": "read_only_inventory_and_separate_project_isolation"
     }
   },
   "rules": {
@@ -17,7 +37,12 @@
     "unknown_offers": "hold",
     "dynamic_price_change": "forbidden_without_new_exact_price_offer_revision",
     "auto_duplicate_links": "forbidden",
-    "external_publish_requires_existing_clip_authority": true
+    "external_publish_requires_existing_clip_authority": true,
+    "no_additional_automatic_tax": true,
+    "managed_payments_tax_locked_policy": "hold_not_auto_convert",
+    "tax_enabled_link_policy": "hold_not_promote",
+    "no_extra_tax_invoice_and_legal_obligations": "separate_owner_review",
+    "discovery_scan_budget": 300
   },
   "offers": [
     {
@@ -33,7 +58,9 @@
       "mode": "payment",
       "scope_confirmation_required": true,
       "source": "live_stripe_read_2026-11-21",
-      "currency": "usd"
+      "currency": "usd",
+      "automatic_tax_required_enabled": false,
+      "managed_payments_required_enabled": false
     },
     {
       "offer_key": "systemia.website_audit_quick_win_49.v1",
@@ -48,7 +75,9 @@
       "mode": "payment",
       "scope_confirmation_required": true,
       "source": "live_stripe_read_2026-11-21",
-      "currency": "usd"
+      "currency": "usd",
+      "automatic_tax_required_enabled": false,
+      "managed_payments_required_enabled": false
     }
   ],
   "legacy_systemia_source": "public/mesh/checkout-ready/verified-links.json",
@@ -56,5 +85,6 @@
   "promotion_input_schema": "evercraft.clip.verified-offer-beat.v1",
   "private_stripe_readback_schema": "evercraft.payments.stripe-link-readback.v1",
   "payments_owner": "Evercraft Payments",
-  "release_policy": "source_registry_not_live_promotion_authority"
+  "release_policy": "source_registry_not_live_promotion_authority",
+  "clip_source_queue": "distribution/marketing/evercraft-services-clip-20261110.review.json"
 }
