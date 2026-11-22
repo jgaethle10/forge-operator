@@ -80,6 +80,20 @@
       ],
       "worldState": "isolated",
       "description": "Aircraft design and flight range"
+    },
+    {
+      "id": "yakima-history-walk",
+      "name": "Yakima History Walk",
+      "category": "history",
+      "status": "explore",
+      "path": "/worlds/hidden-world/yakima-walk/",
+      "capabilities": [
+        "walk",
+        "historical_research",
+        "period_exploration"
+      ],
+      "worldState": "isolated",
+      "description": "Walk a stylized historical Yakima street based on documented architecture and archival sources; not surveyed geometry."
     }
   ],
   "integration": {
