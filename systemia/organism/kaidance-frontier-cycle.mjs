@@ -91,6 +91,12 @@ fs.writeFileSync(configPath, JSON.stringify({
       stale_after_seconds: 900
     },
     {
+      source_key: 'kaidance-worlds-saban-review',
+      path: '../kaidance-worlds-saban-review/mission-snapshot.json',
+      required: false,
+      stale_after_seconds: 900
+    },
+    {
       source_key: 'kaidance-offer-checkout',
       path: '../kaidance-offer-checkout/mission-snapshot.json',
       required: false,
