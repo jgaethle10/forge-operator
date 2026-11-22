@@ -81,7 +81,12 @@ export function inspectOwnedKaidance({
  const checks={};const reasons=[];
  function check(name,fn){
   try{checks[name]={ok:true,...fn()}}
-  catch(e){checks[name]={ok:false,reason:String(e?.message||'unverified').slice(0,100)};reasons.push(name)}
+  catch(e){
+   const code=String(e?.code||'');
+   const reason=['ENOENT','EACCES','EPERM','ENOTDIR','ELOOP'].includes(code)
+    ?'private_evidence_unavailable':String(e?.message||'unverified').slice(0,100);
+   checks[name]={ok:false,reason};reasons.push(name);
+  }
  }
  let health,review,snapshot;
  check('resident_supervisor',()=>{
@@ -172,7 +177,8 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
   if(result.status!=='resident_evidence_verified')process.exitCode=2;
  }catch(e){
   console.log(JSON.stringify({schema:'evercraft.kaidance.owned-resident-readback.v1',
-   status:'hold',reason:String(e?.message||e).slice(0,100)}));
+   status:'hold',reason:['ENOENT','EACCES','EPERM','ENOTDIR','ELOOP'].includes(String(e?.code||''))
+    ?'private_evidence_unavailable':String(e?.message||e).slice(0,100)}));
   process.exitCode=2;
  }
 }
