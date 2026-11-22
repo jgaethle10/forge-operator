@@ -170,6 +170,13 @@ class HardNegativeTests(unittest.TestCase):
                 a=hard.execute(base,base/"first")
                 b=hard.execute(base,base/"second")
                 self.assertEqual(len(a["fold_ledger"]),3)
+                self.assertTrue(all(
+                    isinstance(row.get("baseline_training_indices_sha256"),str)
+                    and len(row["baseline_training_indices_sha256"])==64
+                    for row in a["fold_ledger"]))
+                self.assertEqual(
+                    [row["baseline_training_indices_sha256"] for row in a["fold_ledger"]],
+                    [row["baseline_training_indices_sha256"] for row in b["fold_ledger"]])
                 self.assertTrue(all(r["hard_negative_training"]["final_mined_negatives"]>0
                     for r in a["fold_ledger"]))
                 self.assertTrue(all(r["distance_matched_control_training"][
