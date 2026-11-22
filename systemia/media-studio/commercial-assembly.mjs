@@ -117,6 +117,9 @@ export function compileApprovedCommercial(input){
     if(!row)throw new Error('commercial_voice_take_missing:'+cue.sceneId);
     if(!sameText(cue.text,row.scriptText))throw new Error('commercial_voice_script_mismatch:'+cue.sceneId);
     if(!clean(row.voiceProfileId))throw new Error('commercial_voice_identity_unlocked:'+cue.sceneId);
+    // Client-specific voice lock: an arbitrary named voice is not an approved substitute.
+    if(clean(input.requiredVoiceProfileId) && clean(row.voiceProfileId)!==clean(input.requiredVoiceProfileId))
+      throw new Error('commercial_required_voice_profile_mismatch:'+cue.sceneId);
     const observed=audio(row,'voice-'+cue.sceneId);
     const offset=Number(row.offsetSec??0),used=Number(row.durationSec??observed);
     if(!Number.isFinite(offset)||offset<0||!Number.isFinite(used)||used<=0||
