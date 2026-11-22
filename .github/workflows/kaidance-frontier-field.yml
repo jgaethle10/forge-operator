@@ -24,6 +24,8 @@ on:
       - 'systemia/organism/kaidance-company-heartbeat.workflow.json'
       - 'systemia/organism/kaidance-worlds-saban-*.mjs'
       - 'tests/kaidance-worlds-saban-review.test.mjs'
+      - 'systemia/organism/kaidance-owned-readback.mjs'
+      - 'tests/kaidance-owned-readback.test.mjs'
       - 'systemia/payments/kaidance-offer-*.mjs'
       - 'systemia/payments/kaidance-stripe-readonly.mjs'
       - 'systemia/payments/kaidance-stripe-inventory.mjs'
@@ -60,6 +62,8 @@ on:
       - 'systemia/organism/kaidance-company-heartbeat.workflow.json'
       - 'systemia/organism/kaidance-worlds-saban-*.mjs'
       - 'tests/kaidance-worlds-saban-review.test.mjs'
+      - 'systemia/organism/kaidance-owned-readback.mjs'
+      - 'tests/kaidance-owned-readback.test.mjs'
       - 'systemia/payments/kaidance-offer-*.mjs'
       - 'systemia/payments/kaidance-stripe-readonly.mjs'
       - 'systemia/payments/kaidance-stripe-inventory.mjs'
@@ -154,6 +158,9 @@ jobs:
 
       - name: Advance one read-only Mossmere World Engine goal through existing Saban
         run: node systemia/organism/kaidance-worlds-saban-runner.mjs --out artifacts/kaidance-worlds-saban-review
+
+      - name: Validate owned KAIDANCE resident two-cycle, goal and publisher readback contract
+        run: node --test tests/kaidance-owned-readback.test.mjs
 
       - name: Validate KAIDANCE exact-price Stripe link routing and account isolation
         run: node --test tests/kaidance-offer-checkout.test.mjs
