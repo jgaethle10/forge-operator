@@ -27,6 +27,19 @@ test('inhabitants change goals and dialogue when user changes their world',()=>{
  assert.ok(a.every(x=>Number.isFinite(x.renderZ)&&Math.abs(x.renderX)<=17));
  assert.throws(()=>agentActivity(w,'stranger'),/Unknown/);
 });
+test('inhabitant coordinates reject non-finite and out-of-bounds saved values',()=>{
+ for(const field of ['x','z']){
+  for(const value of [NaN,Infinity,-Infinity,17.01,-17.01]){
+   const world=initialWorld();
+   world.agents[0][field]=value;
+   assert.throws(()=>validateWorld(world),/Invalid inhabitant data/);
+  }
+ }
+ const storageObject=storage(),tampered=initialWorld();
+ tampered.agents[1].x=18;
+ storageObject.setItem(STORAGE_KEY,JSON.stringify(tampered));
+ assert.deepEqual(loadWorld(storageObject),initialWorld());
+});
 test('import rejects malicious or unbounded agent memories',()=>{
  const w=initialWorld();w.agents[0].memories=['X'.repeat(161)];
  assert.throws(()=>validateWorld(w),/Invalid inhabitant/);

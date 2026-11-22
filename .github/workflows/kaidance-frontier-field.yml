@@ -24,6 +24,10 @@ on:
       - 'systemia/organism/kaidance-company-heartbeat.workflow.json'
       - 'systemia/organism/kaidance-worlds-saban-*.mjs'
       - 'tests/kaidance-worlds-saban-review.test.mjs'
+      - 'systemia/organism/kaidance-source-patch-*.mjs'
+      - 'tests/kaidance-source-patch-candidate.test.mjs'
+      - 'public/worlds/world-core.mjs'
+      - 'tests/world-core.test.mjs'
       - 'systemia/organism/kaidance-owned-readback.mjs'
       - 'tests/kaidance-owned-readback.test.mjs'
       - 'systemia/payments/kaidance-offer-*.mjs'
@@ -62,6 +66,10 @@ on:
       - 'systemia/organism/kaidance-company-heartbeat.workflow.json'
       - 'systemia/organism/kaidance-worlds-saban-*.mjs'
       - 'tests/kaidance-worlds-saban-review.test.mjs'
+      - 'systemia/organism/kaidance-source-patch-*.mjs'
+      - 'tests/kaidance-source-patch-candidate.test.mjs'
+      - 'public/worlds/world-core.mjs'
+      - 'tests/world-core.test.mjs'
       - 'systemia/organism/kaidance-owned-readback.mjs'
       - 'tests/kaidance-owned-readback.test.mjs'
       - 'systemia/payments/kaidance-offer-*.mjs'
@@ -108,6 +116,7 @@ jobs:
             artifacts/kaidance-frontier/runtime/state.json
             artifacts/kaidance-company-heartbeat/state.json
             artifacts/kaidance-worlds-saban-review/goals/
+            artifacts/kaidance-source-candidate/state.json
             artifacts/medical-evidence-triage/state.json
             artifacts/medical-registered-trials/history/state.json
           key: kaidance-frontier-state-${{ runner.os }}-${{ github.run_id }}
@@ -156,6 +165,12 @@ jobs:
       - name: Verify durable Systemia goal and actual registered Saban World Engine assignment
         run: node --test tests/kaidance-worlds-saban-review.test.mjs
 
+      - name: Prove deterministic source repair red-green, bounded files and zero GitHub writes
+        run: node --test tests/kaidance-source-patch-candidate.test.mjs
+
+      - name: Validate Mossmere World Engine source and repaired coordinate inputs
+        run: node --test tests/world-core.test.mjs tests/world-bridge.test.mjs
+
       - name: Advance one read-only Mossmere World Engine goal through existing Saban
         run: node systemia/organism/kaidance-worlds-saban-runner.mjs --out artifacts/kaidance-worlds-saban-review
 
@@ -182,6 +197,7 @@ jobs:
             artifacts/kaidance-frontier/runtime/state.json
             artifacts/kaidance-company-heartbeat/state.json
             artifacts/kaidance-worlds-saban-review/goals/
+            artifacts/kaidance-source-candidate/state.json
             artifacts/medical-evidence-triage/state.json
             artifacts/medical-registered-trials/history/state.json
           key: kaidance-frontier-state-${{ runner.os }}-${{ github.run_id }}
@@ -192,6 +208,9 @@ jobs:
         with:
           name: kaidance-frontier-receipts
           path: |
+            artifacts/kaidance-source-candidate/candidate.json
+            artifacts/kaidance-source-candidate/latest.json
+            artifacts/kaidance-source-candidate/mission-snapshot.json
             artifacts/kaidance-worlds-saban-review/latest.json
             artifacts/kaidance-worlds-saban-review/mission-snapshot.json
             artifacts/kaidance-offer-checkout/inventory.json

@@ -26,7 +26,7 @@ export function validateWorld(world){
  if(!world.player||!Number.isFinite(world.player.x)||!Number.isFinite(world.player.z)||!Number.isFinite(world.player.yaw))throw Error('Invalid player');
  if(!Array.isArray(world.agents)||world.agents.length!==3)throw Error('Invalid agents');
  const expected=['pip','momo','lumi'];
- for(let i=0;i<3;i++){const a=world.agents[i];if(!a||a.id!==expected[i]||typeof a.name!=='string'||a.name.length>40||!Array.isArray(a.memories)||a.memories.length>8||a.memories.some(m=>typeof m!=='string'||m.length>160))throw Error('Invalid inhabitant data');}
+ for(let i=0;i<3;i++){const a=world.agents[i];if(!a||a.id!==expected[i]||typeof a.name!=='string'||a.name.length>40||!Number.isFinite(a.x)||!Number.isFinite(a.z)||Math.abs(a.x)>17||Math.abs(a.z)>17||!Array.isArray(a.memories)||a.memories.length>8||a.memories.some(m=>typeof m!=='string'||m.length>160))throw Error('Invalid inhabitant data');}
  return world;
 }
 export function loadWorld(storage){try{const item=storage.getItem(STORAGE_KEY);return item?validateWorld(JSON.parse(item)):initialWorld();}catch{return initialWorld();}}
