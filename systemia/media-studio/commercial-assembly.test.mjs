@@ -89,6 +89,16 @@ test('rejects false audio rights, tampered voice, wrong script and unlocked iden
   fs.appendFileSync(input.approvedAudio.voices[0].path,'tampered');
   assert.throws(()=>compileApprovedCommercial(input),/hash_mismatch/);
 });
+test('Bella-locked commercial refuses any substitute narrator before rendering',t=>{
+  const {input}=specimen(t);
+  input.requiredVoiceProfileId='af_bella';
+  assert.throws(()=>compileApprovedCommercial(input),/commercial_required_voice_profile_mismatch/);
+  input.approvedAudio.voices.forEach(row=>{row.voiceProfileId='af_bella';});
+  assert.doesNotThrow(()=>compileApprovedCommercial(input));
+  input.approvedAudio.voices[1].voiceProfileId='generic-tts';
+  assert.throws(()=>compileApprovedCommercial(input),/commercial_required_voice_profile_mismatch/);
+});
+
 test('missing or unapproved music, SFX, and captions cannot masquerade as customer-ready',t=>{
   const {input}=specimen(t);
   const originalSfx=input.approvedAudio.sfx[0];
