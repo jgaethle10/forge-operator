@@ -277,7 +277,7 @@ ${journalArticleCss}
 <a class="skip-link" href="#article-body">Skip to article text</a>
 <header class="journal-site-header"><div class="site-header-inner">
   <a class="site-mark" href="../" aria-label="Evercraft Journal home"><span class="site-seal" aria-hidden="true">E</span><span><span class="site-name">Evercraft <em>Journal</em></span><span class="site-tagline">Reporting / Evidence / Discovery</span></span></a>
-  <nav class="site-links" aria-label="Journal navigation"><a href="../">Home</a><a href="../#archive">Archive</a><a href="../#desks">Desks</a></nav>
+  <nav class="site-links" aria-label="Journal navigation"><a href="../">Home</a><a href="../#archive">Archive</a><a href="../about/">Standards</a></nav>
 </div></header>
 <main class="journal-main" id="main">
 <article class="journal-article">
