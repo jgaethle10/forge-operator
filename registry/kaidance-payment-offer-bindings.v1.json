@@ -1,0 +1,58 @@
+{
+  "schema": "evercraft.payments.heartbeat-offer-bindings.v1",
+  "currency": "usd",
+  "merchant_accounts": {
+    "evercraft-llc": {
+      "stripe_account_id": "acct_1U0wDm5rgRECaZMD",
+      "livemode": true
+    },
+    "systemia": {
+      "stripe_account_id": "acct_1U4GEoK4iDjqpECV",
+      "livemode": true
+    }
+  },
+  "rules": {
+    "provider_readback_max_seconds": 600,
+    "promotion_max_seconds": 900,
+    "unknown_offers": "hold",
+    "dynamic_price_change": "forbidden_without_new_exact_price_offer_revision",
+    "auto_duplicate_links": "forbidden",
+    "external_publish_requires_existing_clip_authority": true
+  },
+  "offers": [
+    {
+      "offer_key": "evercraft.commercial.founding-30s.50.v1",
+      "slug": "founding-commercial-30s",
+      "name": "Founding Commercial · 30-second vertical video",
+      "merchant": "evercraft-llc",
+      "amount_cents": 5000,
+      "price_id": "price_1Ucsny5rgRECaZMD359WcltA",
+      "product_id": "prod_VeB8pBBfAQHv5B",
+      "payment_link_id": "plink_1Ucspt5rgRECaZMDrHsAtflv",
+      "checkout_url": "https://buy.stripe.com/aFafZa4Yu5XE0ifdJX0Jq08",
+      "mode": "payment",
+      "scope_confirmation_required": true,
+      "source": "live_stripe_read_2026-11-21"
+    },
+    {
+      "offer_key": "systemia.website_audit_quick_win_49.v1",
+      "slug": "website-audit-quick-win",
+      "name": "Website Audit · Quick Win",
+      "merchant": "evercraft-llc",
+      "amount_cents": 4900,
+      "price_id": "price_1UcF2D5rgRECaZMDEz4rR5VW",
+      "product_id": "prod_VdW4DsNwvteF4f",
+      "payment_link_id": "plink_1UcF345rgRECaZMDssa3Q87v",
+      "checkout_url": null,
+      "mode": "payment",
+      "scope_confirmation_required": true,
+      "source": "live_stripe_read_2026-11-21"
+    }
+  ],
+  "legacy_systemia_source": "public/mesh/checkout-ready/verified-links.json",
+  "legacy_rule": "read_only_named_exact_price_and_fresh_provider_check_required",
+  "promotion_input_schema": "evercraft.clip.verified-offer-beat.v1",
+  "private_stripe_readback_schema": "evercraft.payments.stripe-link-readback.v1",
+  "payments_owner": "Evercraft Payments",
+  "release_policy": "source_registry_not_live_promotion_authority"
+}
