@@ -292,3 +292,33 @@ python3 gems_cross_experiment_gate.py \
 The report is write-once. It includes the exact input-receipt SHA256 hashes, shared original-model digest, baseline and alternative mapped-fault proxy DTI, per-fold improvement counts and explicit `independent_new_fault_confirmation=false` / `automatic_selection_or_submission_allowed=false`. Matching baselines is necessary for fair comparison, **not** sufficient evidence of improved official score or generalization. Both experiments currently use reused *mapped-fault development* folds, not unseen hidden newly mapped faults. Refuse to generate a promotional claim or use another competition submission slot on that basis alone. Keep GEMS-001 selected.
 
 The CI regression suite uses entirely fabricated receipt terms and tests happy path, tampering, unsafe state flags, score arithmetic, fold geometry, source digests, and write-once behavior. A green test suite is **not** a real-data GEMS-004 or GEMS-005 result.
+
+### GEMS one-command authorized offline research handoff (Nov 21 PT)
+
+`gems/execute_gems_research_bundle.sh` now offers one consistent operational entrypoint to the already existing GEMS-004, GEMS-005 and cross-experiment parity gates. This is a convenience for an **already authorized, isolated free/owned local CPU workspace**, not a ChatGPT connector or automatic Saban dispatch. Source data must already be accessible in that workspace. It does **not** download data, use a paid provider, create a candidate GeoTIFF, invoke DrivenData, choose a final prize entry, or touch Fabric/Penguin production.
+
+The launcher preflights all three original SHA-pinned organizer rasters, their exact grid/19-band semantics and the preserved original `run.py` SHA256 **before** creating the write-once private output folder. It refuses missing/linked/modified inputs, invalid mode, output collisions, output inside source/repo, and repeated GEMS runs. Each scientific runner still performs its own input and model checks; a failure prevents the final summary. No unattended execution is scheduled.
+
+Start with the **single hypothesis** intended to address the observed false-positive excess:
+
+```bash
+bash systemia/mission-bridge/gems/execute_gems_research_bundle.sh \
+  hard \
+  /PRIVATE/official-geodawn/data \
+  /PRIVATE/gems_001_verified_submission.zip \
+  /PRIVATE/new-gems004-evidence
+```
+
+Only if a second experiment is justified and the workspace has adequate free RAM/CPU, use `directional` in a separate new directory; `both` is an **explicit opt-in** to run *both* scientific experiments sequentially and then the cross-experiment parity gate, also into a fresh output directory:
+
+```bash
+bash systemia/mission-bridge/gems/execute_gems_research_bundle.sh \
+  both \
+  /PRIVATE/official-geodawn/data \
+  /PRIVATE/gems_001_verified_submission.zip \
+  /PRIVATE/new-gems004-gems005-comparison
+```
+
+A completed `both` run writes `cross-experiment-verification.json` and a private `handoff-summary.json` with explicit `scored_submission_made=false` and `automatic_promotion_allowed=false`. The GEMS-004 and GEMS-005 full fold ledgers remain private. A partial or failed output is **not** a completed study and must not be silently resumed or overwritten. CI exercises the launcher against fake inputs to prove fail-closed behavior; it never runs real organizer rasters.
+
+**New Nov 21 organizer science clarification:** the expert panel may add *verified* fault candidates not present in the unchanged USGS/INGENIOUS set, including those on other published maps; probabilities feed the published scoring metric, while panel selection methodology remains undisclosed. Source: https://community.drivendata.org/t/final-prize-round-how-will-the-expert-panel-use-submitted-predictions/11611 . This does **not** provide hidden new-fault truth or license any external geological map for training. If validation shows only known-map proxy improvement, do not infer final-round uplift or spend an official submission slot. The established GEMS-001 official 0.0552 scored entry remains selected.
