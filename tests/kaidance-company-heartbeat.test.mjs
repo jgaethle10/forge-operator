@@ -58,7 +58,7 @@ test('Company source fingerprint is deterministic and rejects missing or unsafe 
  const f=lanes.lanes.find(x=>x.lane_key==='worlds').source_files;
  assert.match(sourceFingerprint('.',f),/^sha256:[a-f0-9]{64}$/);
  assert.equal(sourceFingerprint('.',f),sourceFingerprint('.',[...f].reverse()));
- assert.throws(()=>sourceFingerprint('.',['../private/secret']));
+ assert.throws(()=>sourceFingerprint('.', ['../private/secret']));
  assert.throws(()=>sourceFingerprint('.',['public/worlds/missing-file']));
 });
 test('Runner writes local private receipts; no worker, deployment, or code write is implied',()=>{
