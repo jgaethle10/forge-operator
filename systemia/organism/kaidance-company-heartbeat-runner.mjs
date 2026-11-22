@@ -29,7 +29,7 @@ export function sourceFingerprint(root,files){
  }
  return 'sha256:'+hash.digest('hex');
 }
-function countWorkflowManifests(root,max=3000){
+function countWorkflowManifests(root,max=30000){
  let files=0,count=0;
  function walk(dir,depth=0){
   if(depth>7)return;
