@@ -3,7 +3,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 const API='https://api.stripe.com';
-function privateKeyFile(filename,repoRoot=''){
+export function privateKeyFile(filename,repoRoot=''){
  if(typeof filename!=='string'||!path.isAbsolute(filename)||!fs.existsSync(filename))throw Error('stripe_key_file_missing');
  const resolved=path.resolve(filename);
  if(repoRoot&&(resolved===repoRoot||resolved.startsWith(repoRoot+path.sep)))throw Error('stripe_key_must_not_reside_in_source_tree');
@@ -13,7 +13,7 @@ function privateKeyFile(filename,repoRoot=''){
  if(!/^(?:sk|rk)_live_[A-Za-z0-9]+$/.test(value))throw Error('stripe_live_key_required');
  return value;
 }
-async function stripeGet(endpoint,key,fetchFn){
+export async function stripeGet(endpoint,key,fetchFn){
  const response=await fetchFn(API+endpoint,{
   method:'GET',redirect:'error',cache:'no-store',signal:AbortSignal.timeout(9000),
   headers:{Authorization:'Bearer '+key,Accept:'application/json'}
@@ -40,6 +40,11 @@ export async function readOfferStripeLinks({bindings,offerCatalog=bindings?.offe
      const items=await stripeGet('/v1/payment_links/'+encodeURIComponent(offer.payment_link_id)+'/line_items?limit=100',key,fetchFn);
      if(link.id!==offer.payment_link_id||items.has_more!==false||!Array.isArray(items.data))continue;
      rows.push({id:link.id,active:link.active===true,url:link.url,
+      automatic_tax_enabled:link.automatic_tax?.enabled,
+      managed_payments_enabled:link.managed_payments?.enabled,
+      allow_promotion_codes:link.allow_promotion_codes,
+      optional_items_count:Array.isArray(link.optional_items)?link.optional_items.length:null,
+      shipping_options_count:Array.isArray(link.shipping_options)?link.shipping_options.length:null,
       after_completion:link.after_completion||null,
       line_items_complete:true,line_items:items.data.map(item=>({
        price_id:typeof item.price==='object'?item.price.id:null,
