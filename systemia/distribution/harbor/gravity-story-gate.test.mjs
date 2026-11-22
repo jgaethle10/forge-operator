@@ -21,6 +21,42 @@ const context = () => ({
   publishedKeys:[],
 });
 function codes(s,c){return assessHarborGravityStory(s,c).blockers;}
+test('Journal Page holds Rockies-style filed-for-release copy and generic homepage promises',()=>{
+  const s=story(),c=context();
+  c.approvedPages[0].current_name='Evercraft Journal';
+  c.approvedPages[0].approved_name='Evercraft Journal';
+  s.post.message="THE ROCKIES. The full edition has been filed for release on the Evercraft Journal site, and the article link will be added in the comments once it is live.";
+  s.post.link="https://fabric.systemiacommandcenters.com/journal/";
+  const result=assessHarborGravityStory(s,c);
+  assert.equal(result.status,'HOLD');
+  assert.ok(result.blockers.includes('journal_unreleased_article_promise_forbidden'));
+  assert.ok(result.blockers.includes('journal_article_claim_requires_live_permalink'));
+  assert.ok(result.blockers.includes('journal_pending_post_must_link_verified_original_source'));
+  assert.ok(result.blockers.includes('journal_homepage_cannot_replace_article_permalink'));
+  assert.equal(result.first_comment_candidate,null);
+});
+test('Journal Page may run a real source-first brief without promising a nonexistent article',()=>{
+  const s=story(),c=context();
+  c.approvedPages[0].current_name='Evercraft Journal';
+  c.approvedPages[0].approved_name='Evercraft Journal';
+  assert.deepEqual(codes(s,c),[],'the existing exact primary-source URL suffices for an ordinary pending-Journal dispatch');
+  s.post.link=undefined;
+  assert.ok(codes(s,c).includes('journal_pending_post_must_link_verified_original_source'));
+  s.post.message += ' Primary record: '+source;
+  assert.deepEqual(codes(s,c),[],'a direct original-source link in the approved copy is sufficient');
+});
+test('Journal Page exact verified live article is not mistaken for homepage placeholder',()=>{
+  const s=story(),c=context(),article='https://fabric.systemiacommandcenters.com/journal/approved-test-article/';
+  c.approvedPages[0].current_name='Evercraft Journal';
+  c.approvedPages[0].approved_name='Evercraft Journal';
+  c.journal={urlReadback:article,editorialAccepted:true};
+  s.journal={state:'JOURNAL_LIVE',canonical_url:article};
+  s.post.message='Read the full edition at the original verified Journal article, with sources and updates.';
+  s.post.link=article;
+  assert.deepEqual(codes(s,c),[]);
+  assert.equal(assessHarborGravityStory(s,c).journal_state,'VERIFIED_LIVE');
+});
+
 test('valid approved science story yields a local Facebook job only, no provider action',()=>{
   const result=assessHarborGravityStory(story(),context());
   assert.equal(result.status,'READY_FOR_AUTHORIZED_OPERATOR_REVIEW');
