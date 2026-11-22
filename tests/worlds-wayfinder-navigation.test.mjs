@@ -27,11 +27,15 @@ test('Wayfinder lists registered destinations without carrying identity or state
  assert.equal(registry.integration.personalDataTransferred,false);
 });
 test('Each targeted playable world includes the isolated Wayfinder',()=>{
- for(const file of ['public/worlds/index.html','public/worlds/flight/index.html','public/worlds/hidden-world/yakima-walk/index.html']){
+ for(const file of ['public/worlds/index.html','public/worlds/hidden-world/yakima-walk/index.html']){
   const source=readFileSync(file,'utf8');
   assert.match(source,/<script type="module" src="\/worlds\/wayfinder\.mjs"><\/script>/,file);
   assert.equal(source.split('src="/worlds/wayfinder.mjs"').length-1,1,file);
  }
+ const flight=readFileSync('public/worlds/flight/index.html','utf8');
+ assert.match(flight,/class="aaar-worlds-nav"/);
+ assert.match(flight,/href="\\/worlds\\/hidden-world\\/yakima-walk\\/"/);
+ assert.doesNotMatch(flight,/<script\\b[^>]*\\bsrc=/i);
  const source=readFileSync('public/worlds/wayfinder.mjs','utf8');
  assert.match(source,/attachShadow\(\{mode:'open'\}\)/);
  assert.match(source,/credentials:'same-origin'/);
