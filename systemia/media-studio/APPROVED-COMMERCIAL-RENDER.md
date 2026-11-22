@@ -72,6 +72,8 @@ Both modes fail on missing rights declarations, missing or changed file bytes, w
       }
     }
 
+For a client that requires a specific established voice, include `"requiredVoiceProfileId": "af_bella"` at the assembly top level. The approved voice rows must all carry exactly that ID or compilation fails with `commercial_required_voice_profile_mismatch`. This guards the voice identity declaration; it is **not** independent proof that the referenced WAV was actually produced with that model or received human listening approval. No substitute TTS is permitted for a Bella-locked job.
+
 Supply exactly one selected narration take per voiced scene, with the exact corresponding script. Provide a full-length score and exactly one matched sound effect for every scheduled sound spotting cue. All referenced inputs must exist on the execution host. The score target is currently -16 LUFS with a -1.5 dBTP requested limiter, subject to actual final measured commercial QC. Some content may fail QC and require remixing.
 
 ## Critical limitations
