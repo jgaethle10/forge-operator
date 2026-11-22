@@ -67,12 +67,12 @@ def pair():
         "fold_ledger": []
     }
     for index in range(3):
-        base = measure(4 + index, 60 + index, 30)
+        base = measure(4 + index, 60 + index, 50 - (4 + index))
         indices = np.arange(index*600, (index+1)*600, dtype="<i8")
         selected_fingerprint = hashlib.sha256(indices.tobytes()).hexdigest()
-        control = measure(4 + index, 55 + index, 30)
-        hard = measure(4 + index, 45 + index, 30)
-        directional = measure(5 + index, 51 + index, 29)
+        control = measure(4 + index, 55 + index, 50 - (4 + index))
+        hard = measure(4 + index, 45 + index, 50 - (4 + index))
+        directional = measure(5 + index, 51 + index, 50 - (5 + index))
         a["fold_ledger"].append({
             "fold": index, "heldout_connected_segments": 5,
             "heldout_mapped_fault_pixels": 50,
@@ -132,6 +132,12 @@ class CrossExperimentTests(unittest.TestCase):
         result = self.check(a, b)
         self.assertTrue(result["same_source_grid_folds_samples_and_baseline"])
         self.assertTrue(result["all_three_folds_exact_ordered_training_pixels_sha256_matched"])
+        self.assertTrue(result["fault_truth_conservation_verified_all_variants_and_regions"])
+        self.assertEqual(
+            set(result["weighted_fp_outside_heldout_1_5km_corridors"]),
+            {"baseline","distance_matched_random","hard_negative","directional"})
+        self.assertGreater(
+            result["weighted_fp_outside_heldout_1_5km_corridors"]["baseline"], 0)
         self.assertEqual(result["hard_fold_wins_vs_distance_control"], 3)
         self.assertEqual(result["directional_fold_wins_vs_baseline"], 3)
         self.assertFalse(result["independent_new_fault_confirmation"])
@@ -166,6 +172,32 @@ class CrossExperimentTests(unittest.TestCase):
         a, b = pair()
         b["full_area_dti_difference"] = float("nan")
         with self.assertRaisesRegex(ValueError, "gems005_delta_mismatch"):
+            self.check(a, b)
+
+    def test_refuses_false_fault_detections_created_from_nothing(self):
+        a, b = pair()
+        # A fraudulently higher TP without the necessary corresponding lower FN
+        # must fail even if the attacker recalculates the DTI consistently.
+        row = a["fold_ledger"][0]["hard_mined"]
+        row["full_terms"]["tp"] += 3.
+        row["full_dti"] = gate.metric(row["full_terms"])
+        with self.assertRaisesRegex(ValueError,
+                "heldout_truth_conservation_failed_hard_mined_full"):
+            self.check(a, b)
+
+    def test_refuses_geography_dependent_truth_or_negative_off_corridor_fp(self):
+        a, b = pair()
+        row = b["fold_ledger"][1]["directional_38"]
+        row["corridor_terms"]["tp"] -= 1.
+        row["corridor_terms"]["fn"] += 1.
+        row["corridor_dti"] = gate.metric(row["corridor_terms"])
+        with self.assertRaisesRegex(ValueError, "heldout_truth_region_mismatch"):
+            self.check(a, b)
+        a, b = pair()
+        row = a["fold_ledger"][0]["distance_matched_random"]
+        row["corridor_terms"]["fp"] = row["full_terms"]["fp"] + 10.
+        row["corridor_dti"] = gate.metric(row["corridor_terms"])
+        with self.assertRaisesRegex(ValueError, "off_corridor_fp_negative"):
             self.check(a, b)
 
     def test_fails_if_baseline_differs_despite_positive_proxy_uplift(self):
