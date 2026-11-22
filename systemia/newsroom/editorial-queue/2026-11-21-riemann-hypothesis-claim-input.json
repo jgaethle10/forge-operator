@@ -1,0 +1,290 @@
+{
+  "schema": "evercraft.journal.claim-evidence-input.v1",
+  "story_id": "journal:2026-11-21:riemann-lean-mathlib-certification",
+  "preparation_date": "2026-11-21",
+  "release_state": "candidate_only_not_approved",
+  "artifact": {
+    "artifact_id": "journal:2026-11-21:riemann-lean-mathlib-certification",
+    "kind": "scientific_editorial_candidate",
+    "publisher": "Evercraft Journal",
+    "url": "https://leanprover-community.github.io/blog/posts/riemann-hypothesis/",
+    "original_text": "Harbor-submitted November 21 Riemann Hypothesis reporting; corrected working copy in editorial-queue/2026-11-21-riemann-hypothesis-certified.md. Not a live publication."
+  },
+  "sources": [
+    {
+      "source_id": "alpoge-announcement",
+      "publisher": "Levent Alpöge",
+      "title": "Remark: claimed proof of the Riemann Hypothesis with Claude",
+      "published_at": "2026-11-20",
+      "url": "https://alpo.ge/remark.pdf",
+      "authority": "author_first_person_announcement",
+      "primary": true,
+      "notes": "Author's claim, mechanism framing, 17-million-line Lean delivery; not independent verification."
+    },
+    {
+      "source_id": "lean-mathlib-joint",
+      "publisher": "Lean and Mathlib communities",
+      "title": "Lean verification of the Riemann Hypothesis",
+      "published_at": "2026-11-21",
+      "url": "https://leanprover-community.github.io/blog/posts/riemann-hypothesis/",
+      "authority": "formal_proof_community_certification",
+      "primary": true,
+      "notes": "Community certification of exact statement and formal proof, endorsed by Lean FRO and Mathlib Initiative."
+    },
+    {
+      "source_id": "mit-sutherland",
+      "publisher": "Andrew Sutherland, Massachusetts Institute of Technology",
+      "title": "Verification files for the Lean proof of the Riemann Hypothesis",
+      "published_at": "2026-11-21",
+      "url": "https://math.mit.edu/~drew/grh/",
+      "authority": "independent_verification_logs",
+      "primary": true,
+      "notes": "As of 2026-11-22 04:35 UTC (Nov 21 8:35 p.m. PT), running-vs-passed table and scope; can update."
+    },
+    {
+      "source_id": "clay-rh",
+      "publisher": "Clay Mathematics Institute",
+      "title": "Riemann Hypothesis",
+      "url": "https://www.claymath.org/millennium/riemann-hypothesis/",
+      "authority": "official_prize_problem_status",
+      "primary": true,
+      "notes": "Still labeled unsolved as read during 2026-11-21 editorial review; does not refute separate formal community certification."
+    },
+    {
+      "source_id": "clay-rules",
+      "publisher": "Clay Mathematics Institute",
+      "title": "Rules for the Millennium Prize Problems",
+      "url": "https://www.claymath.org/millennium-problems/rules/",
+      "authority": "official_prize_rules",
+      "primary": true,
+      "notes": "Qualifying outlet, 2-year period, general acceptance."
+    },
+    {
+      "source_id": "waterloo-rubinstein",
+      "publisher": "Michael Rubinstein, University of Waterloo",
+      "title": "Alpöge/Claude proof of the Generalized Riemann Hypothesis",
+      "published_at": "2026-11-21",
+      "url": "https://www.math.uwaterloo.ca/~mrubinst/alpoge_claude_grh/",
+      "authority": "independent_math_verification_and_working_exposition",
+      "primary": true,
+      "notes": "164-page partial working guide exists; inequality (M) taken from Lean, not independently proved in guide."
+    },
+    {
+      "source_id": "openai-quasi-rh",
+      "publisher": "OpenAI",
+      "title": "The Quasi-Riemann Hypothesis: A Zero-Free Half-Plane Re(s)>7/8",
+      "published_at": "2026-09-30",
+      "url": "https://github.com/openai/math/tree/main/preprints/The-Quasi-Riemann-Hypothesis-September-30-2026",
+      "authority": "original_research_preprint",
+      "primary": true,
+      "notes": "Distinct OpenAI result, not proof of full Riemann hypothesis."
+    },
+    {
+      "source_id": "nature-contemporary",
+      "publisher": "Nature",
+      "title": "Mathematicians astounded by AI and human-written proofs of iconic Riemann hypothesis",
+      "published_at": "2026-11-21",
+      "url": "https://www.nature.com/articles/d41586-026-03812-7",
+      "authority": "independent_science_reporting",
+      "primary": false,
+      "notes": "Context and conditional expert reactions; exact attributed quotes in Harbor draft still require line-level quote audit."
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "e:author-claim",
+      "summary": "On November 20, Levent Alpöge personally announced a purported proof discovered with Claude and published a Lean archive, describing RH and GRH and the theta-lift approach.",
+      "evidence_state": "reported",
+      "source_refs": [
+        "alpoge-announcement"
+      ],
+      "supports": true,
+      "time_period": "November 20, 2026",
+      "method": "Author's original note",
+      "confidence": 0.99
+    },
+    {
+      "evidence_id": "e:certification",
+      "summary": "Joint Lean/Mathlib November 21 statement explicitly certifies the precise Mathlib RiemannHypothesis statement and the Lean proof, based on compilation, exact statement matching and independent proof checkers.",
+      "evidence_state": "reported",
+      "source_refs": [
+        "lean-mathlib-joint"
+      ],
+      "supports": true,
+      "time_period": "November 21, 2026",
+      "method": "Community declaration and technical explanation",
+      "confidence": 0.99
+    },
+    {
+      "evidence_id": "e:check-count",
+      "summary": "MIT verification table reports all 175,187 modules compiled with zero errors, only standard axioms required, multiple independent checker successes, with two full export runs listed pending as of 04:35 UTC November 22.",
+      "evidence_state": "reported",
+      "source_refs": [
+        "mit-sutherland",
+        "lean-mathlib-joint"
+      ],
+      "supports": true,
+      "time_period": "Snapshot at 2026-11-22T04:35:00Z",
+      "method": "Published verification logs; does not claim assistant independently ran a 17-million-line proof",
+      "confidence": 0.99
+    },
+    {
+      "evidence_id": "e:scope",
+      "summary": "MIT lists proof scope: RH for the Riemann zeta function plus GRH for Dirichlet character L-functions; not all Dedekind, Hecke or general automorphic L-functions.",
+      "evidence_state": "reported",
+      "source_refs": [
+        "mit-sutherland"
+      ],
+      "supports": true,
+      "time_period": "November 21, 2026",
+      "method": "Published formal theorem statements",
+      "confidence": 0.99
+    },
+    {
+      "evidence_id": "e:clay-status",
+      "summary": "Clay's official Riemann Hypothesis page remains labeled 'Unsolved' even while Lean/Mathlib separately announce formal certification.",
+      "evidence_state": "reported",
+      "source_refs": [
+        "clay-rh",
+        "lean-mathlib-joint"
+      ],
+      "supports": true,
+      "time_period": "As read November 21, 2026",
+      "method": "Official institutional status readback",
+      "confidence": 0.99
+    },
+    {
+      "evidence_id": "e:clay-rules",
+      "summary": "Official Clay prize rules require publication in a qualifying outlet, at least two years since publication, and general acceptance by the mathematical community.",
+      "evidence_state": "reported",
+      "source_refs": [
+        "clay-rules"
+      ],
+      "supports": true,
+      "method": "Official prize policy",
+      "confidence": 0.99
+    },
+    {
+      "evidence_id": "e:human-draft",
+      "summary": "Michael Rubinstein posted a 164-page working human-readable guide dated November 21; it explicitly takes central inequality (M) from the Lean development and remains incomplete as a standalone proof.",
+      "evidence_state": "reported",
+      "source_refs": [
+        "waterloo-rubinstein"
+      ],
+      "supports": true,
+      "time_period": "November 21, 2026",
+      "method": "Researcher's own reading guide description",
+      "confidence": 0.99
+    },
+    {
+      "evidence_id": "e:other-ai",
+      "summary": "OpenAI authored a September 30 preprint describing a separate claimed zero-free half-plane Re(s)>7/8.",
+      "evidence_state": "reported",
+      "source_refs": [
+        "openai-quasi-rh"
+      ],
+      "supports": true,
+      "time_period": "September 30, 2026",
+      "method": "Original preprint listing",
+      "confidence": 0.98
+    }
+  ],
+  "claims": [
+    {
+      "claim_id": "c:claimed-approach",
+      "claim": "On November 20, 2026 Levent Alpöge announced that he and Claude found a proof of the Riemann Hypothesis and released it as a Lean archive.",
+      "claim_type": "descriptive",
+      "supporting_evidence_refs": [
+        "e:author-claim"
+      ],
+      "attributed_to": "Levent Alpöge"
+    },
+    {
+      "claim_id": "c:community-certified",
+      "claim": "On November 21, the Lean and Mathlib communities publicly certified the Lean proof and its exact formal statement as correct.",
+      "claim_type": "descriptive",
+      "supporting_evidence_refs": [
+        "e:certification"
+      ],
+      "attributed_to": "Lean and Mathlib communities",
+      "open_questions": [
+        "The certification is about a formal proof; not equivalent to Clay adjudication or human understanding."
+      ]
+    },
+    {
+      "claim_id": "c:mit-checks",
+      "claim": "MIT's dated check record reports compilation of 175,187 modules without errors and independent proof checker acceptance, with two full export verification runs still in progress at the 04:35 UTC November 22 snapshot.",
+      "claim_type": "descriptive",
+      "supporting_evidence_refs": [
+        "e:check-count"
+      ],
+      "attributed_to": "Andrew Sutherland (MIT)",
+      "time_period": "2026-11-22 04:35 UTC snapshot"
+    },
+    {
+      "claim_id": "c:scope-bounded",
+      "claim": "The verified formal claims cover RH and GRH for Dirichlet L-functions, not every form of extended Riemann hypothesis for other L-functions.",
+      "claim_type": "descriptive",
+      "supporting_evidence_refs": [
+        "e:scope"
+      ],
+      "attributed_to": "MIT theorem inventory"
+    },
+    {
+      "claim_id": "c:clay-still-unsolved",
+      "claim": "Clay's website still labels the Riemann Hypothesis unsolved as of the November 21 source check.",
+      "claim_type": "descriptive",
+      "supporting_evidence_refs": [
+        "e:clay-status"
+      ],
+      "attributed_to": "Clay Mathematics Institute"
+    },
+    {
+      "claim_id": "c:clay-rules",
+      "claim": "Under Clay's prize rules, at least two years must pass after qualifying publication and general acceptance is required before prize consideration.",
+      "claim_type": "descriptive",
+      "supporting_evidence_refs": [
+        "e:clay-rules"
+      ],
+      "attributed_to": "Clay Mathematics Institute"
+    },
+    {
+      "claim_id": "c:human-164pages",
+      "claim": "A University of Waterloo researcher posted a partial 164-page reading guide on November 21 that explicitly takes a central mathematical inequality from the Lean proof.",
+      "claim_type": "descriptive",
+      "supporting_evidence_refs": [
+        "e:human-draft"
+      ],
+      "attributed_to": "Michael Rubinstein, University of Waterloo"
+    },
+    {
+      "claim_id": "c:openai-separate",
+      "claim": "OpenAI's separate quasi-Riemann preprint is dated September 30 and treats a zero-free region beyond Re(s)>7/8, not the full RH.",
+      "claim_type": "descriptive",
+      "supporting_evidence_refs": [
+        "e:other-ai"
+      ],
+      "attributed_to": "OpenAI preprint"
+    }
+  ],
+  "unresolved": [
+    "Harbor's draft is explicitly founder-edit pending. Do not infer approval from source verification or the founder's broad request to publish.",
+    "Obtain attributable independent mathematical editorial review of exact version and scientific meaning, score 10/10 only on actual reviewer receipt.",
+    "Recheck Andrew Sutherland's verification page at release time; two jobs were still marked running at the 2026-11-22T04:35:00Z snapshot.",
+    "Verify all verbatim expert quotations against their exact primary interviews or published articles; Scientific American and Science text were not available for independent line-by-line readback in this session.",
+    "Clay's institutional status and Lean/Mathlib's formal certification must be separately labeled, not collapsed into 'official $1 million prize awarded'.",
+    "Review graphics/captions, rights, actual mobile article layout and Fallen production acceptance; the draft currently provides no accepted visual asset.",
+    "Secure real signed Systemia publication authority and an independently verified public article receipt before any Harbor Facebook Journal permalink.",
+    "Harbor-local Rockies Edition 002 and 003 manuscripts remain untransferred; those cannot be published by naming their file paths in GitHub issue comments."
+  ],
+  "required_next_gates": [
+    "independent_editorial_10_of_10",
+    "exact_quote_and_scientific_scope_review",
+    "source_link_freshness_recheck",
+    "visual_provenance_and_rights_review",
+    "fallen_production_review",
+    "systemia_signed_publication_release",
+    "owned_journal_article_build_and_public_origin_canary",
+    "clip_destination_authorization_and_provider_receipts"
+  ]
+}
