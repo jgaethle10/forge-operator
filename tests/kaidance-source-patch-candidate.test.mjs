@@ -5,7 +5,7 @@ import os from 'node:os';
 import path from 'node:path';
 import {worldsSabanSourceFingerprint} from '../systemia/organism/kaidance-worlds-saban-review.mjs';
 import {runKaidanceSourceRepairCandidate} from '../systemia/organism/kaidance-source-patch-candidate.mjs';
-import {REPAIR_ID,PRECONDITION,REPLACEMENT,planMossmereSourceRepair} from '../systemia/organism/kaidance-source-patch-recipe.mjs';
+import {REPAIR_ID,PRECONDITION,REPLACEMENT,REGRESSION,planMossmereSourceRepair} from '../systemia/organism/kaidance-source-patch-recipe.mjs';
 
 const now=new Date('2026-11-22T16:00:00.000Z');
 const sourceFiles=[
@@ -22,9 +22,15 @@ function fixture({vulnerable=true}={}){
   const dest=path.join(root,rel);
   fs.mkdirSync(path.dirname(dest),{recursive:true});
   let content=fs.readFileSync(rel,'utf8');
-  if(rel==='public/worlds/world-core.mjs'&&vulnerable){
+  if(vulnerable&&rel==='public/worlds/world-core.mjs'){
    assert.ok(content.includes(REPLACEMENT));
    content=content.replace(REPLACEMENT,PRECONDITION);
+  }
+  // Simulate the real *pre-repair* source pair for a verified red/green
+  // regression, even after the repair and test have landed on main.
+  if(vulnerable&&rel==='tests/world-core.test.mjs'){
+   assert.ok(content.includes(REGRESSION));
+   content=content.replace(REGRESSION,'');
   }
   fs.writeFileSync(dest,content,{mode:0o600});
  }
