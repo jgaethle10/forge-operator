@@ -102,10 +102,23 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
  try{
   const outDir=opt('--out')||process.env.SYSTEMIA_COMPANY_HEARTBEAT_OUT_DIR||path.join(sourceRoot,'artifacts/kaidance-company-heartbeat');
   const result=runCompanyHeartbeat({outDir,proveWorlds:process.argv.includes('--prove-worlds')});
+  // The optional private Systemia goal is advanced by the SAME existing
+  // heartbeat invocation. Even if the source tick is duplicate, a crashed
+  // post-source dispatch can reconcile its durable goal state without replay.
+  const {advanceAdmittedCompanyGoal,goalBeatMissionSnapshot}=
+   await import('./kaidance-goal-advance.mjs');
+  const goalFile=opt('--goal-file')||process.env.SYSTEMIA_KAIDANCE_GOAL_STATE_FILE||'';
+  const beat=await advanceAdmittedCompanyGoal({goalFile,
+   companyReport:result.report||readJson(path.join(outDir,'latest.json')),
+   sourceRoot});
+  atomicJson(path.join(outDir,'goal-dispatch.json'),beat);
+  atomicJson(path.join(outDir,'goal-mission-snapshot.json'),goalBeatMissionSnapshot(beat));
   console.log(JSON.stringify({schema:'evercraft.kaidance.company-heartbeat-cli.v1',ok:true,
    duplicate:result.duplicate,source_proof:result.report?.proof?.status||null,
    public_products_observed:result.report?.company_portfolio?.public_products||null,
-   worker_launches:0,production_mutations:0,
+   admitted_goal_work_executed:beat.executed,admitted_goal_work_completed:beat.ok,
+   goal_hold:beat.ok?null:beat.reason,
+   worker_launches:beat.executed?1:0,production_mutations:0,
    output_directory:'configured_private_runtime_or_ci_artifacts'}));
   if(result.report?.proof?.status==='failed')process.exitCode=1;
  }catch(e){console.error(JSON.stringify({schema:'evercraft.kaidance.company-heartbeat-cli.v1',ok:false,
