@@ -102,3 +102,32 @@ test('isolated fixture catalogs never acquire the live source product graph',()=
     assert.equal(loadFabricCatalogFromRepository({catalogPath:target}).length,0);
   }finally{fs.rmSync(dir,{recursive:true,force:true});}
 });
+
+test('a buyer asking for a $50 narrated 30-second business commercial reaches Fallen Studios, not Clip',async()=>{
+  const catalog=loadFabricCatalogFromRepository();
+  const id='fallen-studios-founding-commercial-v1';
+  const studio=catalog.find(x=>x.public_id===id);
+  assert.ok(studio,'missing dedicated small-business $50 commercial discovery');
+  for(const query of [
+    'I want a $50 commercial for my business from my photos and logo',
+    'Make a narrated 30 second promotional video ad for my local business',
+    'Can Fallen Studios create a social media commercial with one revision?',
+  ]){
+    const ranked=matchFabricCapabilities(query,catalog,{limit:5});
+    assert.equal(ranked[0]?.public_id,id,'wrong commercial routing for '+query);
+  }
+  assert.equal(studio.commercial_state,'discovery_only');
+  assert.equal(studio.entry_paid_offer,null);
+  assert.equal(studio.human_offer_url,null);
+  assert.ok(studio.connections.some(x=>x.type==='website'&&x.url==='https://jgaethle10.github.io/forge-operator/commercial-studio/'));
+  assert.ok(studio.connections.every(x=>!x.url.includes('base44')));
+  const result=await executeFabricDirectoryRpc({
+    jsonrpc:'2.0',id:54,method:'tools/call',
+    params:{name:'get_evercraft_connection_options',arguments:{public_id:id}}
+  },catalog);
+  const detail=result.result.structuredContent;
+  assert.equal(detail.buyer_checkout_available,false);
+  assert.equal(detail.external_action_taken,false);
+  assert.equal(detail.human_offer_url,null);
+  assert.ok(detail.connections.some(x=>x.url==='https://jgaethle10.github.io/forge-operator/commercial-studio/'));
+});
