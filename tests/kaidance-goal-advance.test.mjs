@@ -41,6 +41,9 @@ test('existing KAIDANCE proof advances one admitted task with persisted attempt 
   assert.deepEqual(snapshot.counts,{scanned:1,changed:1,admitted:1,held:0});
   const again=await advanceAdmittedCompanyGoal({goalFile:file,companyReport:report,sourceRoot:'.',now:NOW});
   assert.equal(again.executed,false);
+  assert.equal(again.reason,'goal_complete');
+  assert.deepEqual(goalBeatMissionSnapshot(again,NOW).counts,
+   {scanned:1,changed:0,admitted:0,held:0});
   assert.equal((await readGoalState(file)).tasks[0].attempt,1);
  });
 });
