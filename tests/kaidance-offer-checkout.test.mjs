@@ -19,6 +19,8 @@ function promo(offer=founding,placements=['facebook-evercraft']){
  }))};
 }
 function link(offer){return {id:offer.payment_link_id,active:true,url:offer.checkout_url,
+ automatic_tax_enabled:false,managed_payments_enabled:false,
+ allow_promotion_codes:false,optional_items_count:0,shipping_options_count:0,
  after_completion:{type:'hosted_confirmation'},line_items_complete:true,
  line_items:[{price_id:offer.price_id,product_id:offer.product_id,unit_amount:offer.amount_cents,
   currency:'usd',type:'one_time',quantity:1}]};}
@@ -57,7 +59,10 @@ test('Mismatched account, stale readback, wrong SKU or redirect never routes buy
   (()=>{const p=provider();p.accounts[0].observed_at='2026-11-21T20:00:00Z';return p})(),
   (()=>{const p=provider();p.accounts[0].links[0].line_items[0].unit_amount=200;return p})(),
   (()=>{const p=provider();p.accounts[0].links[0].after_completion={type:'redirect',redirect:{url:'https://retired.base44.app/order'}};return p})(),
-  (()=>{const p=provider();p.accounts[0].links[0].url='https://buy.stripe.com/wrong';return p})()
+  (()=>{const p=provider();p.accounts[0].links[0].url='https://buy.stripe.com/wrong';return p})(),
+  (()=>{const p=provider();p.accounts[0].links[0].automatic_tax_enabled=true;return p})(),
+  (()=>{const p=provider();p.accounts[0].links[0].managed_payments_enabled=true;return p})(),
+  (()=>{const p=provider();p.accounts[0].links[0].optional_items_count=1;return p})()
  ];
  for(const snapshot of scenarios){
   const r=reconcileKaidanceOfferLinks({bindings,legacy,promotions:promo(),provider:snapshot,now:when});
@@ -94,13 +99,18 @@ test('Owner-private read-only Stripe adapter pins merchant, SKU and price line i
    if(route.endsWith('/line_items'))return {ok:true,json:async()=>({has_more:false,data:[{
     quantity:1,price:{id:founding.price_id,product:founding.product_id,unit_amount:5000,currency:'usd',type:'one_time'}
    }]})};
-   return {ok:true,json:async()=>({id:founding.payment_link_id,active:true,url:founding.checkout_url,after_completion:{type:'hosted_confirmation'}})};
+   return {ok:true,json:async()=>({id:founding.payment_link_id,active:true,url:founding.checkout_url,
+    automatic_tax:{enabled:false},managed_payments:{enabled:false},
+    allow_promotion_codes:false,optional_items:[],shipping_options:[],
+    after_completion:{type:'hosted_confirmation'}})};
   };
   const r=await readOfferStripeLinks({bindings,offerCatalog:[founding],
    credentialPaths:{'evercraft-llc':file},fetchFn,now:when,repoRoot:process.cwd()});
   assert.equal(r.accounts.length,1);
   assert.equal(r.accounts[0].account_id,bindings.merchant_accounts['evercraft-llc'].stripe_account_id);
   assert.equal(r.accounts[0].links[0].line_items[0].unit_amount,5000);
+  assert.equal(r.accounts[0].links[0].automatic_tax_enabled,false);
+  assert.equal(r.accounts[0].links[0].managed_payments_enabled,false);
   assert.equal(calls.length,3);
   assert.ok(calls.every(x=>x.method==='GET'&&x.url.startsWith('https://api.stripe.com/')));
   assert.equal(JSON.stringify(r).includes('rk_live_'),false);
