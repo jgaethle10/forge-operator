@@ -86,6 +86,18 @@ test('publishes an approved source-grounded story with receipts and machine surf
   const articleHtml = fs.readFileSync(path.join(outDir, 'owned-journal-test', 'index.html'), 'utf8');
   assert.match(articleHtml, /https:\/\/journal\.test\.evercraft\.local\/owned-journal-test\//);
   assert.match(articleHtml, /id="article-body"/);
+  assert.match(articleHtml, /class="journal-site-header"/);
+  assert.match(articleHtml, /aria-label="Evercraft Journal home"/);
+  assert.match(articleHtml, /href="\.\.\/"/);
+  assert.match(articleHtml, /class="reading-room"/);
+  assert.match(articleHtml, /class="reading-layout"/);
+  assert.match(articleHtml, /class="reading-main"/);
+  assert.match(articleHtml, /class="article-issue"/);
+  assert.match(articleHtml, /Permanent link:/);
+  assert.match(articleHtml, /rel="bookmark"/);
+  assert.match(articleHtml, /@media\(max-width:600px\)/);
+  assert.match(articleHtml, /@media print/);
+  assert.match(articleHtml, /Skip to article text/);
   assert.match(articleHtml, /id="story-section-1"/);
   assert.match(articleHtml, /aria-label="In this article"/);
   assert.match(articleHtml, /id="play"/);
@@ -156,6 +168,7 @@ test('archives expired durable reporting without presenting it as a live edition
   const articleHtml = fs.readFileSync(path.join(outDir, 'owned-journal-test', 'index.html'), 'utf8');
   assert.match(articleHtml, /Archived analysis/i);
   assert.match(articleHtml, /not part of the current live edition/i);
+  assert.match(articleHtml, /class="archive-banner"/);
 
   const index = JSON.parse(fs.readFileSync(path.join(outDir, 'index.json'), 'utf8'));
   assert.equal(index.live_edition, false);

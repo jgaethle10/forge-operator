@@ -5,6 +5,7 @@ import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { renderCfbRankingPoster } from '../graphics-command/ranking-poster-renderer.mjs';
 import { renderJournalHome } from './journal-home-design.mjs';
+import { journalArticleCss } from './journal-article-design.mjs';
 
 const clean = (value) => String(value ?? '').trim();
 const unique = (values = []) => [...new Set(values.map(clean).filter(Boolean))];
@@ -267,32 +268,32 @@ function renderArticle(story, publicOrigin, { archived = false, rankingHeroUrl =
 ${image ? `<meta property="og:image" content="${image}">` : ''}
 <script type="application/ld+json">${JSON.stringify(jsonLd).replaceAll('<', '\\u003c')}</script>
 <style>
-:root{color-scheme:dark;--bg:#080b0b;--panel:#101515;--text:#f5f5f2;--muted:#b7bdc5;--gold:#b79a56;--ice:#4fb8ff}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.68}
-a{color:var(--ice)}header,main,footer{width:min(920px,calc(100% - 36px));margin:auto}
-header{padding:28px 0 16px;border-bottom:1px solid #222b2b}.brand{font-weight:800;letter-spacing:.08em;text-transform:uppercase}.brand span{color:var(--gold)}
-main{padding:52px 0 80px}.kicker{color:var(--ice);font-size:.86rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase}.meta{color:var(--muted);margin-top:12px}
-h1{font-size:clamp(2.4rem,7vw,5rem);line-height:1.02;letter-spacing:-.045em;margin:.2em 0}.dek{font-size:clamp(1.1rem,2.4vw,1.45rem);color:#d8dddd;max-width:760px}
-.hero{margin:36px 0}.hero img{display:block;width:100%;border-radius:16px}.hero figcaption{color:var(--muted);font-size:.88rem;margin-top:9px}
-.ranking-surface{margin:38px 0}.ranking-heading{display:flex;align-items:end;justify-content:space-between;gap:18px;border-bottom:1px solid #2b3535;padding-bottom:14px}.ranking-heading h2,.ranking-heading p{margin:0}.ranking-heading p{color:var(--muted);max-width:520px;text-align:right}.ranking-list{list-style:none;padding:0;margin:0}.ranking-row{display:grid;grid-template-columns:64px minmax(0,1fr) 58px 92px 112px;gap:12px;align-items:center;padding:16px 0;border-bottom:1px solid #1f2929}.ranking-rank{font-size:1.12rem;font-weight:900;color:var(--gold)}.ranking-team{min-width:0;display:flex;flex-direction:column}.ranking-team strong{font-size:1.05rem;white-space:normal}.ranking-team span,.ranking-score span,.ranking-confidence span{color:var(--muted);font-size:.74rem;text-transform:uppercase;letter-spacing:.06em}.ranking-move{font-weight:800;text-align:center}.ranking-score,.ranking-confidence{display:flex;flex-direction:column;align-items:flex-end}.ranking-score strong,.ranking-confidence strong{font-variant-numeric:tabular-nums}
-@media(max-width:640px){.ranking-heading{display:block}.ranking-heading p{text-align:left;margin-top:6px}.ranking-row{grid-template-columns:48px minmax(0,1fr) 48px}.ranking-score,.ranking-confidence{grid-column:2;align-items:flex-start;display:inline-flex;flex-direction:row;gap:8px}.ranking-confidence{margin-top:-8px}.ranking-move{grid-column:3;grid-row:1 / span 3}.ranking-team strong{font-size:1rem}}
-section{margin:42px 0}h2{font-size:1.65rem;letter-spacing:-.02em}p{font-size:1.08rem}.article-toc{border-top:1px solid #2b3535;border-bottom:1px solid #2b3535;margin:40px 0;padding:18px 0}.article-toc strong{color:var(--gold);text-transform:uppercase;font-size:.8rem;letter-spacing:.12em}.article-toc ol{padding-left:23px;columns:2;column-gap:28px}.article-toc li{break-inside:avoid;margin:8px 0}.article-toc a{color:#c6e6de}.read-aloud{margin:35px 0;padding:20px 24px;border:1px solid #395e58;background:#101e20;border-radius:10px}.read-aloud h2{font-family:Georgia,serif;font-weight:normal;margin:0;font-size:1.5rem}.read-aloud p{color:#b1c0bd;margin:7px 0;font-size:.85rem}.listen-controls{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-top:14px}.listen-controls button,.listen-controls select{background:#19332f;color:#eaf4ed;border:1px solid #456e65;border-radius:4px;min-height:44px;padding:9px 13px;font:inherit}.listen-controls button:first-child{background:#96daca;color:#0b241e;font-weight:700}.listen-controls button:disabled{opacity:.45;cursor:not-allowed}.listen-controls label{margin-left:auto;color:#b1c0bd;font-size:.8rem}.article-body{font-family:Georgia,"Times New Roman",serif;font-size:1.13rem;line-height:1.8}.article-body p{font-size:inherit}.article-body section{scroll-margin-top:24px}.read-aloud button:focus-visible,.read-aloud select:focus-visible{outline:2px solid #96daca;outline-offset:3px}@media(max-width:640px){.article-toc ol{columns:1}.read-aloud{padding:16px}.listen-controls label{margin-left:0}}.evidence-box{border:1px solid #2b3535;background:var(--panel);padding:22px 24px;border-radius:14px;margin:40px 0}
-.sources{border-top:1px solid #263030;padding-top:24px}.source-publisher{color:var(--muted)}footer{padding:28px 0 50px;color:var(--muted);border-top:1px solid #222b2b}
+${journalArticleCss}
 </style>
 <script defer src="../assets/listen.js"></script>
 </head>
 <body>
-<header><div class="brand">Evercraft <span>Journal</span></div></header>
-<main>
-<article>
+<a class="skip-link" href="#article-body">Skip to article text</a>
+<header class="journal-site-header"><div class="site-header-inner">
+  <a class="site-mark" href="../" aria-label="Evercraft Journal home"><span class="site-seal" aria-hidden="true">E</span><span><span class="site-name">Evercraft <em>Journal</em></span><span class="site-tagline">Reporting / Evidence / Discovery</span></span></a>
+  <nav class="site-links" aria-label="Journal navigation"><a href="../">Home</a><a href="../#archive">Archive</a><a href="../#desks">Desks</a></nav>
+</div></header>
+<main class="journal-main" id="main">
+<article class="journal-article">
+<div class="article-cover">
+<div class="article-issue">THE PERMANENT RECORD <span aria-hidden="true">/</span> EVERCRAFT JOURNAL</div>
 <div class="kicker">${archived ? 'Archive · ' : ''}${escapeHtml(story.desk)} · ${escapeHtml(story.story_type || 'Analysis')}</div>
-${archived ? '<aside class="evidence-box"><strong>Archived analysis.</strong> This story remains available for durable reporting and source history, but its live freshness window has expired. It is not part of the current live edition.</aside>' : ''}
+${archived ? '<aside class="archive-banner"><strong>Archived analysis.</strong> This story remains available for durable reporting and source history, but its live freshness window has expired. It is not part of the current live edition.</aside>' : ''}
 <h1>${escapeHtml(story.title)}</h1>
 <p class="dek">${description}</p>
-<p class="meta">Published ${escapeHtml(new Date(story.published_at).toLocaleString('en-US',{timeZone:'America/Los_Angeles',dateStyle:'long',timeStyle:'short'}))} PT · ${readingMinutes} min read · Evidence state: ${escapeHtml(story.evidence_state || 'source-grounded')}</p>
+<p class="meta"><strong>Published ${escapeHtml(new Date(story.published_at).toLocaleString('en-US',{timeZone:'America/Los_Angeles',dateStyle:'long',timeStyle:'short'}))} PT</strong><span aria-hidden="true">•</span>${readingMinutes} min read<span aria-hidden="true">•</span>Evidence state: ${escapeHtml(story.evidence_state || 'source-grounded')}</p>
+<div class="cover-bar" aria-hidden="true"></div>
+</div>
 ${heroHtml}
 ${rankingHtml}
+<div class="reading-room"><div class="reading-layout">
 <nav class="article-toc" aria-label="In this article"><strong>In this article</strong><ol>${tocHtml}</ol></nav>
+<div class="reading-main">
 <aside class="read-aloud" aria-label="Listen to this article">
   <div><h2>Listen to this article</h2><p>Device-generated narration. Available when your browser supports speech synthesis.</p></div>
   <div class="listen-controls">
@@ -305,10 +306,14 @@ ${rankingHtml}
 </aside>
 <div id="article-body" class="article-body">${sections}</div>
 ${uncertaintyHtml}
-<section class="sources"><h2>Sources and evidence</h2><ol>${renderSourceList(story)}</ol></section>
+<section class="sources" id="sources"><h2>Sources and evidence</h2><ol>${renderSourceList(story)}</ol></section>
+<p class="article-permalink">Permanent link: <a href="${canonical}" rel="bookmark">${canonical}</a></p>
+</div></div>
+<div class="article-outro"><p>Good questions deserve a permanent record.</p><a href="../">Explore more reporting ↗</a></div>
+</div>
 </article>
 </main>
-<footer>Evercraft Journal · Source-grounded reporting, analysis and education.</footer>
+<footer class="journal-footer"><div class="journal-footer-inner"><div><strong>Evercraft Journal</strong><p>Independent, source-grounded reporting. Published dates, evidence states and uncertainty remain visible.</p></div><div><p>Owned by Evercraft. Always ask one more question.</p></div></div></footer>
 </body>
 </html>`;
 }
