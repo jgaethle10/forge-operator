@@ -60,6 +60,12 @@
       "path": "../../artifacts/kaidance-offer-checkout/mission-snapshot.json",
       "required": false,
       "stale_after_seconds": 900
+    },
+    {
+      "source_key": "kaidance-worlds-saban-review",
+      "path": "../../artifacts/kaidance-worlds-saban-review/mission-snapshot.json",
+      "required": false,
+      "stale_after_seconds": 900
     }
   ]
 }

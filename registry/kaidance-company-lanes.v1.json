@@ -24,7 +24,10 @@
         "tests/worlds-navigation-public-readback.test.mjs"
       ],
       "proof_expiry_seconds": 3600,
-      "priority": 1
+      "priority": 1,
+      "services": [
+        "kaidance-worlds-saban-review"
+      ]
     },
     {
       "lane_key": "revenue",

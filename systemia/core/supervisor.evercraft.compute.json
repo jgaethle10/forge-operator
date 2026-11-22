@@ -20,6 +20,7 @@
     "source_tree_writable": false
   },
   "supervised_workflows": [
+    "kaidance-worlds-saban-review",
     "kaidance-offer-checkout",
     "kaidance-company-heartbeat",
     "portfolio-sentinel",
@@ -108,6 +109,7 @@
     "work_saban_clip_facebook_requires_current_passport_grant_and_verified_page_credential",
     "work_saban_delivery_watch_registered_read_only_without_social_credentials",
     "kaidance_company_heartbeat_optional_until_private_state_binding_present",
-    "kaidance_offer_checkout_private_merchant_credentials_optional_and_read_only"
+    "kaidance_offer_checkout_private_merchant_credentials_optional_and_read_only",
+    "kaidance_worlds_saban_requires_private_durable_goal_storage_and_single_owned_scheduler"
   ]
 }

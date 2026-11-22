@@ -22,6 +22,8 @@ on:
       - 'systemia/organism/kaidance-frontier-cycle.mjs'
       - 'systemia/organism/kaidance-company-heartbeat*.mjs'
       - 'systemia/organism/kaidance-company-heartbeat.workflow.json'
+      - 'systemia/organism/kaidance-worlds-saban-*.mjs'
+      - 'tests/kaidance-worlds-saban-review.test.mjs'
       - 'systemia/payments/kaidance-offer-*.mjs'
       - 'systemia/payments/kaidance-stripe-readonly.mjs'
       - 'systemia/payments/kaidance-stripe-inventory.mjs'
@@ -56,6 +58,8 @@ on:
       - 'systemia/organism/kaidance-frontier-cycle.mjs'
       - 'systemia/organism/kaidance-company-heartbeat*.mjs'
       - 'systemia/organism/kaidance-company-heartbeat.workflow.json'
+      - 'systemia/organism/kaidance-worlds-saban-*.mjs'
+      - 'tests/kaidance-worlds-saban-review.test.mjs'
       - 'systemia/payments/kaidance-offer-*.mjs'
       - 'systemia/payments/kaidance-stripe-readonly.mjs'
       - 'systemia/payments/kaidance-stripe-inventory.mjs'
@@ -99,6 +103,7 @@ jobs:
           path: |
             artifacts/kaidance-frontier/runtime/state.json
             artifacts/kaidance-company-heartbeat/state.json
+            artifacts/kaidance-worlds-saban-review/goals/
             artifacts/medical-evidence-triage/state.json
             artifacts/medical-registered-trials/history/state.json
           key: kaidance-frontier-state-${{ runner.os }}-${{ github.run_id }}
@@ -144,6 +149,12 @@ jobs:
       - name: Reconcile Evercraft company portfolio on KAIDANCE heartbeat
         run: node systemia/organism/kaidance-company-heartbeat-runner.mjs --out artifacts/kaidance-company-heartbeat --prove-worlds
 
+      - name: Verify durable Systemia goal and actual registered Saban World Engine assignment
+        run: node --test tests/kaidance-worlds-saban-review.test.mjs
+
+      - name: Advance one read-only Mossmere World Engine goal through existing Saban
+        run: node systemia/organism/kaidance-worlds-saban-runner.mjs --out artifacts/kaidance-worlds-saban-review
+
       - name: Validate KAIDANCE exact-price Stripe link routing and account isolation
         run: node --test tests/kaidance-offer-checkout.test.mjs
 
@@ -163,6 +174,7 @@ jobs:
           path: |
             artifacts/kaidance-frontier/runtime/state.json
             artifacts/kaidance-company-heartbeat/state.json
+            artifacts/kaidance-worlds-saban-review/goals/
             artifacts/medical-evidence-triage/state.json
             artifacts/medical-registered-trials/history/state.json
           key: kaidance-frontier-state-${{ runner.os }}-${{ github.run_id }}
@@ -173,6 +185,8 @@ jobs:
         with:
           name: kaidance-frontier-receipts
           path: |
+            artifacts/kaidance-worlds-saban-review/latest.json
+            artifacts/kaidance-worlds-saban-review/mission-snapshot.json
             artifacts/kaidance-offer-checkout/inventory.json
             artifacts/kaidance-offer-checkout/latest.json
             artifacts/kaidance-offer-checkout/actions.json
