@@ -88,7 +88,7 @@ test('publishes an approved source-grounded story with receipts and machine surf
   assert.match(articleHtml, /id="article-body"/);
   assert.match(articleHtml, /class="journal-site-header"/);
   assert.match(articleHtml, /aria-label="Evercraft Journal home"/);
-  assert.match(articleHtml, /href="\.\."\//);
+  assert.match(articleHtml, /href="\.\.\/"/);
   assert.match(articleHtml, /class="reading-room"/);
   assert.match(articleHtml, /class="reading-layout"/);
   assert.match(articleHtml, /class="reading-main"/);
