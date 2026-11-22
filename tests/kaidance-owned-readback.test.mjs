@@ -142,3 +142,19 @@ test('world-readable private evidence cannot qualify as owned continuity',()=>{
   assert.equal(r.checks.resident_supervisor.reason,'private_state_mode_0600_required');
  });
 });
+
+
+test('large long-lived supervisor journal checks only recent valid receipt tail',()=>{
+ runWithFixture(({args,paths,receipts})=>{
+  const filler={schema:'evercraft.systemia.resident-supervisor-receipt.v1',
+   type:'resident.started',service_key:'unrelated',at:'2026-11-01T00:00:00.000Z'};
+  const old={...filler,receipt_hash:sha(filler)};
+  const history=(JSON.stringify(old)+'\n').repeat(15000);
+  assert.ok(Buffer.byteLength(history)>2*1024*1024);
+  const file=path.join(paths.supervisor,'receipts.jsonl');
+  fs.writeFileSync(file,history+receipts.map(x=>JSON.stringify(x)).join('\n')+'\n',{mode:0o600});
+  const result=inspectOwnedKaidance(args);
+  assert.equal(result.status,'resident_evidence_verified');
+  assert.equal(result.checks['kaidance-worlds-saban-review'].completed_cycles_evidenced,2);
+ });
+});
