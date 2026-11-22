@@ -7,6 +7,8 @@ import {randomBytes,createHash} from 'node:crypto';
 import {fileURLToPath} from 'node:url';
 import {reconcileKaidanceOfferLinks,listHeartbeatOffers} from './kaidance-offer-links.mjs';
 import {readOfferStripeLinks} from './kaidance-stripe-readonly.mjs';
+import {discoverKaidanceStripeInventory} from './kaidance-stripe-inventory.mjs';
+import {inspectClipCheckoutCampaign} from '../clip/kaidance-checkout-intake.mjs';
 const SOURCE=path.resolve(fileURLToPath(new URL('../../',import.meta.url)));
 const hash=v=>'sha256:'+createHash('sha256').update(String(v)).digest('hex');
 const parseFile=(filename)=>JSON.parse(fs.readFileSync(filename,'utf8'));
@@ -33,6 +35,14 @@ export async function runOfferLinkHeartbeat({root=SOURCE,outDir,now=new Date(),p
  const bindings=parseFile(path.join(base,'registry/kaidance-payment-offer-bindings.v1.json'));
  const legacy=parseFile(path.join(base,bindings.legacy_systemia_source));
  const catalog=listHeartbeatOffers(bindings,legacy);
+ // The actual owned Clip service queue is a source of *intended offers*, not
+ // proof of any authorized or already-published campaign.
+ const clipQueuePath=String(bindings.clip_source_queue||'');
+ if(!/^distribution\/marketing\/[a-z0-9.-]+\.review\.json$/.test(clipQueuePath))
+  throw Error('kaidance_clip_source_path_not_allowlisted');
+ const clipIntake=inspectClipCheckoutCampaign({
+  queue:parseFile(path.join(base,clipQueuePath)),catalog,now:at
+ });
  const promotions=promotionFile?privateJson(promotionFile):null;
  const credentials=stripeCredentialsFile?privateJson(stripeCredentialsFile):null;
  if(credentials&&(
@@ -45,6 +55,11 @@ export async function runOfferLinkHeartbeat({root=SOURCE,outDir,now=new Date(),p
   Date.parse(promotions.observed_at)<=at.getTime()+60000&&
   Array.isArray(promotions.offers)&&promotions.offers.length>0;
  let provider={schema:'evercraft.payments.stripe-link-readback.v1',accounts:[]};
+ // Account-wide discovery is read-only and does not depend on an actively
+ // publishing campaign. Five-minute inventory never creates a Stripe Link.
+ const inventory=await discoverKaidanceStripeInventory({
+  bindings,credentialPaths:credentials?.key_files||{},repoRoot:base,fetchFn,now:at
+ });
  if(fresh&&credentials){
   const selected=new Set(promotions.offers.map(p=>catalog.find(x=>x.offer_key===p.offer_key)?.merchant).filter(Boolean));
   const paths=Object.fromEntries(Object.entries(credentials.key_files).filter(([merchant])=>selected.has(merchant)));
@@ -56,12 +71,28 @@ export async function runOfferLinkHeartbeat({root=SOURCE,outDir,now=new Date(),p
   result.holds.length?'held_exact_link_review':
   result.placements.length?'exact_link_candidates_verified':'no_matchable_current_offers';
  const output={...result,readiness,
+  clip_source_intake:{source_campaign_id:clipIntake.source_campaign_id,
+   source_entries:clipIntake.source_entries,
+   selected_exact_source_offers:clipIntake.selected_exact_source_offers,
+   rows:clipIntake.rows},
+  stripe_inventory:{account_slots:inventory.account_slots,
+   accounts_observed:inventory.accounts_observed,
+   full_merchant_coverage_verified:inventory.full_merchant_coverage_verified,
+   active_links_from_complete_accounts:inventory.active_links_from_complete_accounts,
+   active_auto_tax_on_from_complete_accounts:inventory.active_auto_tax_on_from_complete_accounts,
+   active_auto_tax_off_from_complete_accounts:inventory.active_auto_tax_off_from_complete_accounts,
+   no_auto_tax_hosted_candidates_from_complete_accounts:inventory.no_auto_tax_hosted_candidates_from_complete_accounts},
+  true_tax_obligations_determined:false,
+  changes_to_stripe_tax_settings:0,
   private_provider_readback_attempted:fresh&&Boolean(credentials),
   sensitive_provider_data_exported:false,
   campaign_receipt_independently_authenticated:false};
  const actions={schema:'evercraft.payments.kaidance-heartbeat-actions.v1',
   observed_at:at.toISOString(),candidate_count:result.actions.length,
   actions:result.actions,proposed_checkout_placements:result.placements,
+  clip_source_candidates:clipIntake.rows.map(row=>({entry_ref:row.entry_ref,
+   selected_offer_key:row.selected_offer_key,review_state:row.review_state,
+   authority:'existing_clip_authorized_publisher_only'})),
   provider_write_authorized:false,publisher_write_authorized:false,
   customer_charges:0,link_creations:0};
  // Optional KAIDANCE mission source. No fabricated production progression:
@@ -75,10 +106,13 @@ export async function runOfferLinkHeartbeat({root=SOURCE,outDir,now=new Date(),p
    'source:systemia/payments/kaidance-offer-links.mjs']};
  // Snapshot must respect Collider's changed<=scanned and disposition<=changed.
  snapshot.counts.scanned=Math.max(snapshot.counts.scanned,changed);
+ writePrivate(path.join(out,'inventory.json'),inventory);
  writePrivate(path.join(out,'latest.json'),output);
  writePrivate(path.join(out,'actions.json'),actions);
  writePrivate(path.join(out,'mission-snapshot.json'),snapshot);
  return {readiness,requested_offers:result.requested_offers,
+  clip_source_entries:clipIntake.source_entries,
+  inventory_accounts_observed:inventory.accounts_observed,
   matches:result.placements.length,holds:result.holds.length,
   provider_reads_attempted:fresh&&Boolean(credentials),provider_mutations:0,
   publication_actions:0};
