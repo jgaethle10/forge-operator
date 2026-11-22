@@ -260,6 +260,10 @@ def execute(data,evidence):
             "full_scoreable_pixels":int(full.sum()),
             "corridor_scoreable_pixels":int(corridor.sum()),
             "baseline_training":pilot_counts,
+            # Canonical flattened, ordered positive+negative training indices;
+            # <i8 keeps the SHA portable across CPU platforms.
+            "baseline_training_indices_sha256":hashlib.sha256(
+                np.asarray(pilot_indices,dtype="<i8").tobytes()).hexdigest(),
             "hard_negative_training":hard_receipt,
             "distance_matched_control_training":control_receipt,
             "baseline":baseline,"distance_matched_random":dist_control,
