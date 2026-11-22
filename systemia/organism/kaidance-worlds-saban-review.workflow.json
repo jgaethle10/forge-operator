@@ -23,7 +23,10 @@
   "outputs": {
     "goal_store": "artifacts/kaidance-worlds-saban-review/goals/",
     "latest": "artifacts/kaidance-worlds-saban-review/latest.json",
-    "mission_snapshot": "artifacts/kaidance-worlds-saban-review/mission-snapshot.json"
+    "mission_snapshot": "artifacts/kaidance-worlds-saban-review/mission-snapshot.json",
+    "source_candidate": "artifacts/kaidance-source-candidate/latest.json",
+    "source_candidate_proof": "artifacts/kaidance-source-candidate/candidate.json",
+    "source_candidate_snapshot": "artifacts/kaidance-source-candidate/mission-snapshot.json"
   },
   "authority": {
     "readonly_review": true,
@@ -35,7 +38,9 @@
     "payment": false,
     "publication": false,
     "customer_contact": false,
-    "private_customer_data": false
+    "private_customer_data": false,
+    "source_candidate_readonly_scratch_proof": true,
+    "github_pr_creation": false
   },
   "truth_limits": {
     "single_architect_assignment_only": true,
@@ -44,6 +49,7 @@
     "physical_nodeseed_run_not_asserted": true,
     "automatic_code_generation_not_enabled": true,
     "five_minute_scheduler_best_effort": true,
-    "durable_goals_required_for_cross_beat_dedupe": true
+    "durable_goals_required_for_cross_beat_dedupe": true,
+    "deterministic_first_repair_recipe_only": true
   }
 }
