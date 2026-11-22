@@ -26,6 +26,8 @@ on:
       - 'tests/kaidance-worlds-saban-review.test.mjs'
       - 'systemia/organism/kaidance-source-patch-*.mjs'
       - 'tests/kaidance-source-patch-candidate.test.mjs'
+      - 'systemia/organism/kaidance-signed-draft-pr*.mjs'
+      - 'tests/kaidance-signed-draft-pr.test.mjs'
       - 'public/worlds/world-core.mjs'
       - 'tests/world-core.test.mjs'
       - 'systemia/organism/kaidance-owned-readback.mjs'
@@ -68,6 +70,8 @@ on:
       - 'tests/kaidance-worlds-saban-review.test.mjs'
       - 'systemia/organism/kaidance-source-patch-*.mjs'
       - 'tests/kaidance-source-patch-candidate.test.mjs'
+      - 'systemia/organism/kaidance-signed-draft-pr*.mjs'
+      - 'tests/kaidance-signed-draft-pr.test.mjs'
       - 'public/worlds/world-core.mjs'
       - 'tests/world-core.test.mjs'
       - 'systemia/organism/kaidance-owned-readback.mjs'
@@ -167,6 +171,9 @@ jobs:
 
       - name: Prove deterministic source repair red-green, bounded files and zero GitHub writes
         run: node --test tests/kaidance-source-patch-candidate.test.mjs
+
+      - name: Test signed draft PR branch scope, exact file hashes and no-replay without GitHub writes
+        run: node --test tests/kaidance-signed-draft-pr.test.mjs
 
       - name: Validate Mossmere World Engine source and repaired coordinate inputs
         run: node --test tests/world-core.test.mjs tests/world-bridge.test.mjs
