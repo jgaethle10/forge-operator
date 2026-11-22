@@ -110,7 +110,8 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
    public_products_observed:result.report?.company_portfolio?.public_products||null,
    admitted_goal_work_executed:beat.executed,admitted_goal_work_completed:beat.ok,
    goal_hold:beat.ok?null:beat.reason,
-   worker_launches:beat.executed?1:0,production_mutations:0,
+   read_only_goal_tasks_executed:beat.executed?1:0,
+   worker_launches:0,production_mutations:0,
    output_directory:'configured_private_runtime_or_ci_artifacts'}));
   if(result.report?.proof?.status==='failed')process.exitCode=1;
  }catch(e){console.error(JSON.stringify({schema:'evercraft.kaidance.company-heartbeat-cli.v1',ok:false,
