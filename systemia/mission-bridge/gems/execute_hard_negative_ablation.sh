@@ -46,6 +46,14 @@ from pathlib import Path
 import sys,json
 out=Path(sys.argv[1])
 a=json.loads((out/"run-a/hard-negative-full-area.json").read_text())
+# Validate real weighted full-area/corridor TP/FP/FN, heldout truth conservation,
+# and nonnegative off-corridor FP even when only GEMS-004 runs.
+from gems_cross_experiment_gate import validate_pooled
+validate_pooled(a,"baseline","full_area_baseline","corridor_baseline")
+validate_pooled(a,"distance_matched_random",
+    "full_area_distance_matched_random_control",
+    "corridor_distance_matched_random")
+validate_pooled(a,"hard_mined","full_area_hard_negative","corridor_hard_negative")
 rep=(out/"run-b/hard-negative-full-area.json").exists()
 if rep:
     b=json.loads((out/"run-b/hard-negative-full-area.json").read_text())
