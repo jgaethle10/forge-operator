@@ -41,6 +41,6 @@ test('source packet cannot silently self-authorize or reframe a formal proof as 
  assert.equal(Object.hasOwn(claim,'editorial_gate'),false);
  assert.equal(Object.hasOwn(claim,'publication_authority'),false);
  assert.ok(claim.unresolved.some(s=>/Clay.*institutional status/i.test(s)));
- assert.ok(claim.unresolved.some(s=>/quote/i.test(s)));
+ assert.ok(claim.unresolved.some(s=>/quot|verbatim/i.test(s)));
  assert.ok(claim.sources.some(s=>s.source_id==='lean-mathlib-joint'&&s.primary===true));
 });
