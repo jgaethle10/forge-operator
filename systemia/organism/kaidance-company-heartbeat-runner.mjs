@@ -101,7 +101,10 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
    await import('./kaidance-goal-advance.mjs');
   const goalFile=opt('--goal-file')||process.env.SYSTEMIA_KAIDANCE_GOAL_STATE_FILE||'';
   const beat=await advanceAdmittedCompanyGoal({goalFile,
-   companyReport:result.report||readJson(path.join(outDir,'latest.json')),
+   // Restored tick state may outlive ephemeral CI artifacts. Missing proof
+   // must HOLD the admitted goal, never fabricate source evidence or replay.
+   companyReport:result.report||(fs.existsSync(path.join(outDir,'latest.json'))
+    ?readJson(path.join(outDir,'latest.json')):null),
    sourceRoot});
   atomicJson(path.join(outDir,'goal-dispatch.json'),beat);
   atomicJson(path.join(outDir,'goal-mission-snapshot.json'),goalBeatMissionSnapshot(beat));
