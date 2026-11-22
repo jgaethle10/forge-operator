@@ -11,7 +11,7 @@ import {readGoalState} from './goal-store.mjs';
 import {refreshGoal} from './goal-runtime.mjs';
 import {createCapabilityRegistry} from './capability-runtime.mjs';
 import {executePersistedGoalWork} from './goal-durable-dispatch.mjs';
-import {sourceFingerprint} from './kaidance-company-heartbeat-runner.mjs';
+import {sourceFingerprint} from './kaidance-source-fingerprint.mjs';
 
 const WORK_TYPE='worlds-source-proof';
 const PROOF_MAX_AGE_MS=15*60*1000;
