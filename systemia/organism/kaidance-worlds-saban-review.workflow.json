@@ -1,0 +1,49 @@
+{
+  "schema": "evercraft.systemia.workflow-manifest.v1",
+  "workflow_key": "kaidance-worlds-saban-review",
+  "mission_key": "evercraft-worlds-source-development",
+  "runtime": "systemia-core-resident+kaidance-collider",
+  "collider_compatible": true,
+  "cadence_seconds": 300,
+  "material_change_only": true,
+  "entrypoint": "systemia/organism/kaidance-worlds-saban-runner.mjs",
+  "proof": "tests/kaidance-worlds-saban-review.test.mjs",
+  "source_registry": "systemia/saban/multiplication-registry.json",
+  "saban_registered_software": "world-engine-review",
+  "saban_work_type": "worlds_source_architecture_review",
+  "assignment_role": "engine_architect",
+  "actual_worker_kind": "same_process_registered_read_only_assignment",
+  "source_fingerprint_files": [
+    "public/worlds/world-core.mjs",
+    "public/worlds/world-bridge.mjs",
+    "systemia/world-engine/saban-adapter.mjs",
+    "systemia/saban/registered-worker.mjs",
+    "systemia/saban/multiplication-registry.json"
+  ],
+  "outputs": {
+    "goal_store": "artifacts/kaidance-worlds-saban-review/goals/",
+    "latest": "artifacts/kaidance-worlds-saban-review/latest.json",
+    "mission_snapshot": "artifacts/kaidance-worlds-saban-review/mission-snapshot.json"
+  },
+  "authority": {
+    "readonly_review": true,
+    "systemia_goal_checkpoint_required": true,
+    "saban_capacity_admission_required": true,
+    "remote_execution": false,
+    "code_changes": false,
+    "production_mutation": false,
+    "payment": false,
+    "publication": false,
+    "customer_contact": false,
+    "private_customer_data": false
+  },
+  "truth_limits": {
+    "single_architect_assignment_only": true,
+    "worlds_environment": "source_owned_mossmere_world_builder",
+    "actual_worlds_site_deployed_not_asserted": true,
+    "physical_nodeseed_run_not_asserted": true,
+    "automatic_code_generation_not_enabled": true,
+    "five_minute_scheduler_best_effort": true,
+    "durable_goals_required_for_cross_beat_dedupe": true
+  }
+}
