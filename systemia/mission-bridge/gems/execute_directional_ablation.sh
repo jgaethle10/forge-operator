@@ -40,6 +40,10 @@ python3 - "$output" <<'PY'
 import json,sys
 from pathlib import Path
 dest=Path(sys.argv[1]);r=json.loads((dest/'run-a/directional-full-area-ablation.json').read_text())
+# Same conservation and off-corridor score audit on the solo GEMS-005 path.
+from gems_cross_experiment_gate import validate_pooled
+validate_pooled(r,'baseline_34','full_area_original_34','corridor_original_34')
+validate_pooled(r,'directional_38','full_area_directional_38','corridor_directional_38')
 assert r['submission_made'] is False and r['automatic_promotion_allowed'] is False
 base=r['full_area_original_34'];test=r['full_area_directional_38']
 result={'schema':'evercraft.gems.directional-decision-gate.v1',
