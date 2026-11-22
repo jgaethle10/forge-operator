@@ -1963,4 +1963,31 @@ try{
  document.getElementById('designFromStart')?.addEventListener('click',open);
 })();
 </script><div id="scriptBlocked" style="position:fixed;z-index:999;left:10px;right:10px;bottom:10px;padding:10px 12px;border-radius:9px;background:#0b1f2eec;color:#edf8f7;border:1px solid #ffb78f;font:600 12px/1.5 system-ui;pointer-events:none">If Start Flying never responds, this in-app HTML preview may block JavaScript. The real AAAR flight page needs to open in Safari from our owned HTTPS site.</div>
-<script>document.getElementById('scriptBlocked')?.remove();</script></body></html>
+<script>document.getElementById('scriptBlocked')?.remove();</script>
+
+<!-- Worlds navigation remains inline to preserve the standalone AAAR cockpit contract. -->
+<style id="aaar-worlds-nav-style">
+.aaar-worlds-nav{position:fixed;right:12px;bottom:calc(132px + env(safe-area-inset-bottom));z-index:9100;max-width:calc(100vw - 24px);font:12px/1.5 system-ui,-apple-system,Segoe UI,sans-serif;color:#eaffff}
+.aaar-worlds-nav summary{margin-left:auto;display:table;list-style:none;cursor:pointer;border:1px solid #c8ead08a;background:#092838ed;color:#fff4d6;border-radius:999px;padding:10px 14px;font-weight:850;box-shadow:0 5px 23px #010e1bbd;touch-action:manipulation}
+.aaar-worlds-nav summary::-webkit-details-marker{display:none}
+.aaar-worlds-nav nav{position:absolute;right:0;bottom:calc(100% + 10px);width:min(322px,calc(100vw - 24px));max-height:min(57dvh,480px);overflow-y:auto;overscroll-behavior:contain;background:#061c2af5;border:1px solid #7fb9bc80;border-radius:13px;padding:15px;box-shadow:0 15px 50px #000a;backdrop-filter:blur(17px)}
+.aaar-worlds-nav h2{font-size:12px;letter-spacing:.13em;color:#f4d8ab;margin:0 0 8px}
+.aaar-worlds-nav p{font-size:11px;line-height:1.6;color:#b8d0dc;margin:8px 0}
+.aaar-worlds-nav a{display:block;color:#effbfa;background:#113547;border:1px solid #ffffff31;border-radius:7px;padding:10px 11px;text-decoration:none;font-weight:800;margin:7px 0}
+.aaar-worlds-nav a:focus-visible,.aaar-worlds-nav summary:focus-visible{outline:3px solid #ffd89d;outline-offset:3px}
+.aaar-worlds-nav a:hover{border-color:#f4d8ab}
+.aaar-worlds-nav small{display:block;color:#b5cbd4;font-size:10px;line-height:1.5;margin-top:10px}
+@media(max-width:750px){.aaar-worlds-nav{bottom:calc(169px + env(safe-area-inset-bottom))}.aaar-worlds-nav summary{padding:9px 12px}}
+</style>
+<details class="aaar-worlds-nav" aria-label="Evercraft Worlds destinations">
+<summary>✦ Worlds</summary>
+<nav aria-label="Explore Evercraft Worlds">
+<h2>EXPLORE BEYOND THE SKY</h2>
+<p>Flightworks is an independent cockpit. Choose another Evercraft World to visit.</p>
+<a href="/worlds/hidden-world/yakima-walk/">Next stop: Yakima History Walk ↗</a>
+<a href="/worlds/">Visit Mossmere ↗</a>
+<a href="/worlds/gateway/">See all Worlds destinations ↗</a>
+<small>These links open separate experiences. No flight state, personal information, or progress is transferred.</small>
+</nav>
+</details>
+</body></html>
