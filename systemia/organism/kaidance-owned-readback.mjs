@@ -12,7 +12,7 @@ const SOURCE_ROOT=fileURLToPath(new URL('../../',import.meta.url));
 const hash=value=>'sha256:'+createHash('sha256').update(value).digest('hex');
 const TYPES=['kaidance-company-heartbeat','kaidance-worlds-saban-review'];
 const MAX_AGE=15*60*1000;
-const BAD=(reason)=>{throw Error(reason)};
+const BAD=(reason)=>{const error=new Error(reason);error.code='KAIDANCE_READBACK_HOLD';throw error};
 const timestamp=(s,now)=>{
  const t=Date.parse(s), current=new Date(now).getTime();
  if(!Number.isFinite(t)||!Number.isFinite(current)||t>current+60000||
@@ -82,9 +82,9 @@ export function inspectOwnedKaidance({
  function check(name,fn){
   try{checks[name]={ok:true,...fn()}}
   catch(e){
-   const code=String(e?.code||'');
-   const reason=['ENOENT','EACCES','EPERM','ENOTDIR','ELOOP'].includes(code)
-    ?'private_evidence_unavailable':String(e?.message||'unverified').slice(0,100);
+   // Never echo JSON parser excerpts, raw OS paths, tokens or private records.
+   const reason=e?.code==='KAIDANCE_READBACK_HOLD'
+    ?String(e.message).slice(0,100):'private_evidence_unavailable_or_invalid';
    checks[name]={ok:false,reason};reasons.push(name);
   }
  }
@@ -177,8 +177,8 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
   if(result.status!=='resident_evidence_verified')process.exitCode=2;
  }catch(e){
   console.log(JSON.stringify({schema:'evercraft.kaidance.owned-resident-readback.v1',
-   status:'hold',reason:['ENOENT','EACCES','EPERM','ENOTDIR','ELOOP'].includes(String(e?.code||''))
-    ?'private_evidence_unavailable':String(e?.message||e).slice(0,100)}));
+   status:'hold',reason:e?.code==='KAIDANCE_READBACK_HOLD'
+    ?String(e.message).slice(0,100):'private_evidence_unavailable_or_invalid'}));
   process.exitCode=2;
  }
 }
