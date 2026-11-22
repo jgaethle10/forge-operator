@@ -118,6 +118,7 @@ jobs:
           python -m unittest -v test_gems_005_directional_features.py
           python -m unittest -v test_gems_005_directional_ablation.py
           python -m unittest -v test_gems_cross_experiment_gate.py
+          python -m unittest -v test_gems_cross_pipeline_integration.py
           python -m unittest -v test_gems_research_bundle.py
           python -m unittest -v test_gems_003_exploratory_overlay.py
           python -m unittest -v test_verify_official_input_hashes.py
