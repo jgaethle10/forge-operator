@@ -66,7 +66,8 @@ function verifyCycleReceipts(file,root,service,now){
     latest.at-prior.at<120000||latest.at-prior.at>3600000)
   BAD('distinct_spaced_resident_cycles_not_verified');
  timestamp(new Date(latest.at).toISOString(),now);
- return {completed_cycles_evidenced:verified.length,latest_receipt_hash:latest.receipt_hash};
+ return {completed_cycles_evidenced:verified.length,latest_receipt_hash:latest.receipt_hash,
+  latest_at:new Date(latest.at).toISOString()};
 }
 function cycleHealth(health,service){
  const rows=health.services||[];
@@ -102,7 +103,7 @@ export function inspectOwnedKaidance({
    checks[name]={ok:false,reason};reasons.push(name);
   }
  }
- let health,review,snapshot;
+ let health,review,snapshot,goal;
  check('resident_supervisor',()=>{
   health=json(path.join(supervisorDir,'health.json'),root);
   if(health.schema!=='evercraft.systemia.resident-supervisor-health.v1'||health.running!==true)
@@ -117,8 +118,11 @@ export function inspectOwnedKaidance({
  for(const service of TYPES){
   check(service,()=>{
    if(!health)BAD('supervisor_health_unavailable');
-   cycleHealth(health,service);
+   const row=cycleHealth(health,service);
    const receipts=verifyCycleReceipts(path.join(supervisorDir,'receipts.jsonl'),root,service,now);
+   const completed=Date.parse(row.last_completed_at);
+   if(!Number.isFinite(completed)||Math.abs(completed-Date.parse(receipts.latest_at))>60000)
+    BAD('supervisor_health_cycle_receipt_mismatch');
    return receipts;
   });
  }
@@ -126,7 +130,9 @@ export function inspectOwnedKaidance({
   const r=json(path.join(companyDir,'latest.json'),root);
   if(r.schema!=='evercraft.kaidance.company-heartbeat.v1'||r.heartbeat_seconds!==300)
    BAD('company_heartbeat_receipt_invalid');
-  timestamp(r.observed_at,now);
+  const observed=timestamp(r.observed_at,now);
+  if(!Number.isSafeInteger(r.tick)||r.tick!==Math.floor(observed/300000))
+   BAD('company_observation_tick_inconsistent');
   const state=json(path.join(companyDir,'state.json'),root);
   if(state.schema!=='evercraft.kaidance.company-heartbeat-state.v1'||
     state.tick!==r.tick)BAD('company_heartbeat_state_mismatch');
@@ -144,18 +150,29 @@ export function inspectOwnedKaidance({
   if(actual!==review.source_fingerprint)BAD('worlds_source_fingerprint_changed');
   if(!/^mossmere-engine-review-[a-f0-9]{24}$/.test(review.goal_key||''))
    BAD('worlds_goal_identity_invalid');
-  const goal=json(path.join(worldsDir,'goals',review.goal_key+'.json'),root);
+  goal=json(path.join(worldsDir,'goals',review.goal_key+'.json'),root);
   const task=goal.tasks?.[0];
   if(goal.schema!=='evercraft.goal.state.v1'||goal.mission_key!=='evercraft-worlds-source-development'||
-    goal.goal_key!==review.goal_key||goal.status!=='complete'||goal.tasks.length!==1||
+    goal.goal_key!==review.goal_key||goal.status!=='complete'||
+    !Number.isSafeInteger(goal.revision)||goal.revision<2||goal.tasks?.length!==1||
     task.work_key!=='worlds-mossmere-source-architect-review'||task.status!=='complete'||
-    task.attempt<1||task.recovery_hold||!goal.context_refs?.includes(actual)||
+    task.attempt<1||task.attempt!==review.attempt||task.recovery_hold||
+    review.goal_checkpoint_present!==true||!goal.context_refs?.includes(actual)||
     !task.receipt_refs?.length||!task.receipt_refs.every(x=>review.receipt_refs.includes(x)))
     BAD('worlds_persisted_goal_mismatch');
   return {completed_goal:true,source_fingerprint_verified:true,attempt:task.attempt};
  });
  check('mission_publisher',()=>{
+  if(!review||!goal)BAD('current_worlds_goal_evidence_unavailable');
   snapshot=normalizeSnapshot(json(path.join(worldsDir,'mission-snapshot.json'),root));
+  const changed=review.new_verified_source_review_this_cycle===true?1:0;
+  const expectedRef=hash(JSON.stringify({fingerprint:review.source_fingerprint,
+   goal:review.goal_key,revision:goal.revision,status:goal.status,changed,held:0}));
+  if(snapshot.snapshot_ref!==expectedRef||snapshot.counts.scanned!==1||
+    snapshot.counts.changed!==changed||snapshot.counts.admitted!==changed||
+    snapshot.counts.held!==0)
+   BAD('saban_snapshot_does_not_match_persisted_goal');
+  timestamp(snapshot.observed_at,now);
   const ledger=json(publisherLedger,root);
   if(ledger.schema!=='evercraft.systemia.mission-publisher-ledger.v1'||!ledger.deployment_id)
    BAD('mission_publisher_ledger_invalid');
@@ -166,7 +183,9 @@ export function inspectOwnedKaidance({
     record.snapshot_hash!==hash(JSON.stringify(snapshot))||
     !/^sha256:[a-f0-9]{64}$/.test(record.ingress_receipt_hash||''))
     BAD('current_saban_snapshot_not_accepted_by_publisher');
-  return {snapshot_matched:true,publisher_ingress_receipt_verified:true};
+  // This is a private publisher-ledger acknowledgment, not independently
+  // authenticated delivery or public projection evidence.
+  return {snapshot_matched:true,publisher_ledger_ingress_recorded:true};
  });
  return {
   schema:'evercraft.kaidance.owned-resident-readback.v1',
