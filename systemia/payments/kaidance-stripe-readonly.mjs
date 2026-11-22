@@ -10,7 +10,7 @@ function privateKeyFile(filename,repoRoot=''){
  const stat=fs.lstatSync(resolved);
  if(!stat.isFile()||stat.isSymbolicLink()||(stat.mode&0o077)!==0)throw Error('stripe_key_file_not_private');
  const value=fs.readFileSync(resolved,'utf8').trim();
- if(!/^sk_(?:live|test)_[A-Za-z0-9]+$/.test(value)||!value.startsWith('sk_live_'))throw Error('stripe_live_key_required');
+ if(!/^(?:sk|rk)_live_[A-Za-z0-9]+$/.test(value))throw Error('stripe_live_key_required');
  return value;
 }
 async function stripeGet(endpoint,key,fetchFn){
@@ -21,7 +21,7 @@ async function stripeGet(endpoint,key,fetchFn){
  if(!response.ok)throw Error('stripe_read_failed_'+response.status);
  return response.json();
 }
-export async function readOfferStripeLinks({bindings,credentialPaths={},repoRoot='',fetchFn=fetch,now=new Date()}={}){
+export async function readOfferStripeLinks({bindings,offerCatalog=bindings?.offers||[],credentialPaths={},repoRoot='',fetchFn=fetch,now=new Date()}={}){
  const accounts=[];
  for(const [merchant,pin] of Object.entries(bindings.merchant_accounts||{})){
   const filename=credentialPaths[merchant];
@@ -31,7 +31,7 @@ export async function readOfferStripeLinks({bindings,credentialPaths={},repoRoot
   try{
    const account=await stripeGet('/v1/account',key,fetchFn);
    if(account?.id!==pin.stripe_account_id||pin.livemode!==true)continue;
-   const offers=bindings.offers.filter(x=>x.merchant===merchant);
+   const offers=offerCatalog.filter(x=>x.merchant===merchant);
    const rows=[];
    for(const offer of offers){
     let link;
