@@ -68,7 +68,7 @@ export function verifyJournalBuild({root='public/journal',expectedOrigin}={}){
   const current=Array.isArray(index.stories)?index.stories:[];
   const archived=Array.isArray(index.archive)?index.archive:[];
   const archiveLinks=[...current,...archived];
-  if((archiveHtml.match(/data-journal-entry/g)||[]).length!==archiveLinks.length)
+  if((archiveHtml.match(/\sdata-journal-entry(?=\s|>)/g)||[]).length!==archiveLinks.length)
     throw new Error('journal_verify_archive_story_count_mismatch');
   for(const entry of archiveLinks){
     if(!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(clean(entry.slug))||
