@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { renderCfbRankingPoster } from '../graphics-command/ranking-poster-renderer.mjs';
+import { renderJournalHome } from './journal-home-design.mjs';
 
 const clean = (value) => String(value ?? '').trim();
 const unique = (values = []) => [...new Set(values.map(clean).filter(Boolean))];
@@ -312,115 +313,6 @@ ${uncertaintyHtml}
 </html>`;
 }
 
-function renderIndex(stories, archivedStories = []) {
-  const all = [...stories, ...archivedStories];
-  const latest = stories[0] || null;
-  const featured = latest || archivedStories[0] || null;
-  const isFeaturedArchived = Boolean(!latest && featured);
-  const desks = [...new Set(all.map((story) => String(story.desk || '').trim()).filter(Boolean))].sort((a,b) => a.localeCompare(b));
-  const anchor = (desk) => 'desk-' + desk.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
-  const date = (story) => escapeHtml(new Date(story.published_at).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric', timeZone: 'UTC' }));
-  const storyLink = (story) => './' + encodeURIComponent(story.slug) + '/';
-  const card = (story, archived) => `<article class="story">
-    <div class="story-label">${archived ? '<span class="archived">Archive</span>' : '<span class="current">Current edition</span>'} <span>${escapeHtml(story.desk)}</span></div>
-    <h3><a href="${storyLink(story)}">${escapeHtml(story.title)}</a></h3>
-    <p>${escapeHtml(story.dek)}</p>
-    <div class="story-date"><time datetime="${escapeHtml(story.published_at)}">${date(story)}</time></div>
-  </article>`;
-  const deskLinks = desks.map((desk) => `<a href="#${anchor(desk)}">${escapeHtml(desk)}</a>`).join('');
-  const heroPhoto = featured?.hero_visual?.url
-    ? `<div class="feature-photo"><img src="${escapeHtml(featured.hero_visual.url)}" alt="${escapeHtml(featured.hero_visual.alt || featured.title)}" fetchpriority="high" decoding="async"><p>${escapeHtml(featured.hero_visual.caption || '')}</p></div>`
-    : '';
-  const lead = featured ? `<section class="lead" id="lead" aria-labelledby="lead-title">
-    <div class="feature-copy">
-      <p class="eyebrow">${isFeaturedArchived ? 'From the archive' : 'The lead story'} <span class="dot">·</span> ${escapeHtml(featured.desk)}</p>
-      <h2 id="lead-title"><a href="${storyLink(featured)}">${escapeHtml(featured.title)}</a></h2>
-      <p class="feature-dek">${escapeHtml(featured.dek)}</p>
-      <div class="feature-meta"><time datetime="${escapeHtml(featured.published_at)}">${date(featured)}</time>${isFeaturedArchived ? ' · Archived reporting, not a live update' : ''}</div>
-      <a class="read-link" href="${storyLink(featured)}">Read the story <span aria-hidden="true">↗</span></a>
-    </div>
-    ${heroPhoto}
-  </section>` : '';
-  const liveSection = stories.length ? `<section class="section" id="latest" aria-labelledby="latest-title">
-    <div class="section-head"><p class="eyebrow">Current edition</p><h2 id="latest-title">Latest reporting</h2><p>Fresh work, with its evidence and limitations visible.</p></div>
-    <div class="story-grid">${stories.map((story)=>card(story,false)).join('\n')}</div>
-  </section>` : `<section class="edition-notice" id="latest" aria-label="Edition status">
-    <strong>No current live edition</strong>
-    <p>The latest approved stories have moved into the archive. We keep them available without presenting older reporting as breaking news.</p>
-  </section>`;
-  const categorySections = desks.map((desk) => {
-    const members = all.filter((story) => story.desk === desk);
-    return `<section class="section desk-section" id="${anchor(desk)}" aria-labelledby="${anchor(desk)}-title">
-      <div class="section-head"><p class="eyebrow">Explore a desk</p><h2 id="${anchor(desk)}-title">${escapeHtml(desk)}</h2></div>
-      <div class="story-grid">${members.map((story)=>card(story,archivedStories.includes(story))).join('\n')}</div>
-    </section>`;
-  }).join('\n');
-  const archive = archivedStories.length ? `<section class="archive-intro" id="archive" aria-labelledby="archive-title">
-    <p class="eyebrow">The record stays open</p><h2 id="archive-title">Stories worth keeping</h2>
-    <p>${archivedStories.length} archived ${archivedStories.length === 1 ? 'story' : 'stories'} in this owned edition. Every archived article is dated and clearly distinguished from current reporting.</p>
-    <a href="#desks">Browse the archive by desk <span aria-hidden="true">↓</span></a>
-  </section>` : '';
-  const css = `
-:root{color-scheme:dark;--paper:#0a1013;--white:#0e1619;--ink:#edf2ee;--muted:#adbfbc;--rule:#294041;--accent:#e2bb82;--blue:#96daca}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.62;overflow-x:hidden}
-a{color:inherit;text-decoration:none}a:hover{color:var(--blue)}a:focus-visible{outline:3px solid #2879a1;outline-offset:5px;border-radius:2px}
-img{max-width:100%;height:auto}.skip{position:absolute;left:-999px;top:8px;padding:8px;background:var(--blue);color:#0a1013;z-index:5}.skip:focus{left:8px}
-.shell{max-width:1180px;width:calc(100% - 48px);margin:0 auto}.tiny{font-size:.76rem;letter-spacing:.105em;text-transform:uppercase;font-weight:750}
-.topline{background:#0e1619;color:#d5e8e1;border-bottom:1px solid #243f40}.topline .shell{display:flex;justify-content:space-between;gap:12px;align-items:center;min-height:36px;font-size:.75rem;letter-spacing:.08em;text-transform:uppercase}
-.brand{padding:24px 0 22px;border-bottom:1px solid var(--rule);display:flex;flex-direction:column;align-items:center;text-align:center}
-.brand h1{font-family:Georgia,"Times New Roman",serif;font-weight:700;letter-spacing:-.065em;font-size:clamp(2.7rem,7.5vw,6.3rem);line-height:1;margin:0}
-.brand p{max-width:650px;color:var(--muted);font-size:.92rem;line-height:1.55;margin:12px 0 0}.brand::after{content:'';width:64px;height:2px;background:var(--accent);margin-top:19px}
-.nav{display:flex;align-items:center;justify-content:center;gap:20px;flex-wrap:wrap;padding:13px 0;border-bottom:3px double var(--ink);font-weight:650;font-size:.83rem}
-.nav a{white-space:nowrap}.nav .archive-link{color:var(--blue)}
-.lead{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.8fr);gap:clamp(24px,5vw,65px);align-items:center;padding:44px 0 52px;border-bottom:1px solid var(--rule)}
-.lead:not(:has(.feature-photo)){grid-template-columns:minmax(0,1fr) 0.65fr}
-.lead:not(:has(.feature-photo))::after{content:"EJ";font-family:Georgia,"Times New Roman",serif;font-size:clamp(8rem,18vw,18rem);letter-spacing:-.11em;line-height:1;text-align:center;color:#20383a;pointer-events:none;user-select:none}
-.eyebrow{text-transform:uppercase;letter-spacing:.13em;font-size:.76rem;font-weight:800;color:var(--accent);margin:0 0 11px}.dot{color:var(--muted);padding:0 3px}
-.feature-copy h2{font-family:Georgia,"Times New Roman",serif;font-size:clamp(2.5rem,5.3vw,5rem);letter-spacing:-.052em;font-weight:600;line-height:1.06;margin:0 0 20px}
-.feature-dek{font-size:clamp(1rem,1.8vw,1.21rem);line-height:1.6;color:var(--muted);margin:0 0 20px;max-width:620px}
-.feature-meta,.story-date{color:var(--muted);font-size:.82rem}.read-link{display:inline-block;margin-top:23px;font-weight:800;border-bottom:2px solid var(--accent);padding-bottom:5px}
-.feature-photo img{width:100%;max-height:520px;object-fit:cover;display:block}.feature-photo p{color:var(--muted);font-size:.75rem;margin:8px 0 0}
-.edition-notice{background:#142428;border-left:3px solid var(--accent);margin:26px 0;padding:18px 22px;color:var(--ink)}.edition-notice strong{font-family:Georgia,serif;font-size:1.3rem}.edition-notice p{margin:5px 0 0;color:var(--muted);font-size:.93rem}
-.section{padding:45px 0 35px;border-top:1px solid var(--rule)}.section-head{margin-bottom:24px}.section-head h2,.archive-intro h2{font-family:Georgia,"Times New Roman",serif;font-size:clamp(2rem,4vw,3rem);letter-spacing:-.045em;font-weight:500;line-height:1.06;margin:0}.section-head>p:last-child{color:var(--muted);margin:9px 0 0}
-.story-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px}.story{min-width:0;padding-top:16px;border-top:2px solid var(--ink)}
-.story-label{display:flex;gap:9px;flex-wrap:wrap;align-items:center;text-transform:uppercase;letter-spacing:.08em;font-size:.7rem;font-weight:800;color:var(--blue)}.story-label .archived{color:#e2bb82}.story-label .current{color:#96daca}
-.story h3{font-family:Georgia,"Times New Roman",serif;font-size:clamp(1.4rem,2.1vw,1.75rem);font-weight:600;line-height:1.2;letter-spacing:-.025em;margin:12px 0 10px}
-.story p{color:var(--muted);line-height:1.6;font-size:.95rem;margin:0 0 13px}
-.archive-intro{border-top:3px double var(--ink);border-bottom:1px solid var(--rule);background:#111f22;padding:36px 42px;margin:20px 0 0}
-.archive-intro>p:not(.eyebrow){color:var(--muted);max-width:650px;margin:15px 0}.archive-intro>a{color:var(--blue);font-weight:750;text-decoration:underline;text-underline-offset:3px}
-footer{background:#0e1619;color:#eaf1f1;margin-top:55px;padding:30px 0;font-size:.9rem}footer p{margin:4px 0;color:#bbc9ca}footer strong{font-family:Georgia,serif;font-size:1.3rem}
-@media(max-width:800px){.lead{grid-template-columns:1fr;gap:28px}.lead:not(:has(.feature-photo)){grid-template-columns:1fr}.lead:not(:has(.feature-photo))::after{display:none}.story-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:550px){.shell{width:calc(100% - 30px)}.topline .shell{font-size:.63rem}.brand{padding:22px 0}.brand h1{font-size:clamp(2.6rem,11vw,4rem)}.nav{justify-content:flex-start;gap:15px;overflow-x:auto;flex-wrap:nowrap;padding:12px 3px;scrollbar-width:thin}.lead{padding:28px 0 34px}.feature-copy h2{font-size:clamp(2.45rem,10vw,3.65rem)}.story-grid{grid-template-columns:1fr;gap:25px}.section{padding:32px 0}.archive-intro{padding:27px 20px}}
-@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}`;
-  return `<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Evercraft Journal | News, Discovery &amp; Ideas Worth Exploring</title>
-<meta name="description" content="Independent, source-grounded reporting on science, engineering, hidden history, public systems and the world around us.">
-<meta property="og:site_name" content="Evercraft Journal">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Evercraft Journal">
-<meta property="og:description" content="News that moves. Ideas that become things.">
-<style>${css}</style>
-</head>
-<body>
-<a class="skip" href="#main">Skip to stories</a>
-<div class="topline"><div class="shell"><span>Evercraft Journal</span><span>Reporting · Discovery · Evidence</span></div></div>
-<header class="brand shell"><h1>Evercraft Journal</h1><p>News that moves. Ideas that become things. The world, the systems underneath it, and the stories worth understanding.</p></header>
-<nav class="nav shell" aria-label="Journal sections"><a href="#lead">Featured</a>${stories.length ? '<a href="#latest">Latest</a>' : ''}${deskLinks}${archivedStories.length ? '<a class="archive-link" href="#archive">Archive</a>' : ''}${stories.length ? '<a href="./feed.xml">RSS</a>' : ''}</nav>
-<main class="shell" id="main">
-${lead}
-${liveSection}
-${archive}
-<div id="desks">${categorySections}</div>
-</main>
-<footer><div class="shell"><strong>Evercraft Journal</strong><p>We distinguish what is observed, reported, modeled and inferred. Older stories remain dated and discoverable.</p></div></footer>
-</body>
-</html>`;
-}
-
 function renderFeed(stories, publicOrigin) {
   const origin = normalizeJournalOrigin(publicOrigin);
   const items = stories.slice(0, 50).map((story) => `<item><title>${escapeXml(story.title)}</title><link>${escapeXml(storyUrl(origin, story.slug))}</link><guid>${escapeXml(storyUrl(origin, story.slug))}</guid><pubDate>${new Date(story.published_at).toUTCString()}</pubDate><description>${escapeXml(story.dek)}</description></item>`).join('');
@@ -569,7 +461,7 @@ export function publishJournalStories(inputStories, {
     receipts.push(receipt);
   }
 
-  fs.writeFileSync(path.join(outDir, 'index.html'), renderIndex(stories, archivedStories));
+  fs.writeFileSync(path.join(outDir, 'index.html'), renderJournalHome(stories, archivedStories));
   fs.writeFileSync(path.join(outDir, 'index.json'), JSON.stringify({
     schema: 'evercraft.journal.index.v1',
     generated_at: now.toISOString(),
