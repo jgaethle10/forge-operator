@@ -38,3 +38,50 @@ Required before enabling any new autonomous code-building adapter:
 - Product onboarding should include **unpublished research and internal projects**, not just the public 69-product index. The current coverage count is explicitly a **partial company inventory**, not proof all Evercraft work is connected.
 
 Target: a heartbeat that knows what changed, which job moved, what actually shipped and what needs a next bounded action, without an ungoverned five-minute churn machine.
+
+
+## Admitted-goal bridge: optional on the existing resident service
+
+The existing 300-second kaidance-company-heartbeat service now accepts
+--goal-file from SYSTEMIA_KAIDANCE_GOAL_STATE_FILE. This is NOT a new scheduler.
+Only an already-admitted Systemia goal state file can supply work, so public
+product inventory is never converted into automatic execution authority.
+
+Initial bounded work type: worlds-source-proof. It checks the current Worlds
+source fingerprint against a newly executed successful company heartbeat
+Worlds test no older than fifteen minutes. If exactly one task is dependency
+ready, not gated, and not previously attempted, the preexisting durable goal
+dispatcher persists its execution checkpoint BEFORE invoking the adapter.
+A successful read-only task receives an evidence reference and terminal goal
+state. Another heartbeat cannot rerun the already completed work. Missing
+proof, stale sources, paid/provider work and unapproved tasks fail closed.
+
+The bridge creates goal-dispatch.json and goal-mission-snapshot.json inside
+the existing heartbeat output directory, and the existing frontier mission
+fabric consumes that snapshot as an optional source. A completed read-only
+goal task is NOT autonomous engineering, deployment, payment, publication,
+live Saban execution or a customer outcome.
+
+### Owner runtime activation
+
+1. Verify the existing Systemia Core resident supervisor/service state on the
+   admitted owned node. GitHub Actions does not deploy Penguin/NextGen.
+2. Use the existing Systemia goal-cli to admit an exact private goal plan.
+   The goal file must be outside the repository checkout and mode 0600.
+   Never commit the goal ledger, private provider credentials or approval keys.
+3. Provision SYSTEMIA_COMPANY_HEARTBEAT_OUT_DIR as private durable storage
+   and SYSTEMIA_KAIDANCE_GOAL_STATE_FILE in the private supervisor environment.
+   Retain the SINGLE existing Kaidance resident service and its 300s cadence.
+4. Check consecutive resident invocations and the goal ledger's revision,
+   attempt, task state and receipt references. Configure the existing private
+   resident mission publisher to ingest the optional admitted-goal snapshot
+   from the same private output directory. Source CI is not owned runtime.
+5. Future state-changing Saban, code-writing, Clip and Payments adapters
+   require their own explicit capability admission, signed approval where
+   necessary, independent outcome verification and no uncertain replay.
+
+Test gate:
+node --test tests/kaidance-company-heartbeat.test.mjs tests/kaidance-goal-advance.test.mjs
+
+No private goal file or resident deployment is provisioned by this source
+change. The default CI receipt is an explicit private_goal_not_configured hold.
