@@ -2,6 +2,21 @@
   "schema": "evercraft.systemia.resident-supervisor-config.v1",
   "services": [
     {
+      "service_key": "kaidance-offer-checkout",
+      "mode": "cycle",
+      "manifest": "systemia/payments/kaidance-offer-checkout.workflow.json",
+      "executable": "systemia/payments/kaidance-checkout-cycle.mjs",
+      "cadence_seconds": 300,
+      "optional_when_unconfigured": true,
+      "env_args": {
+        "--out": "SYSTEMIA_KAIDANCE_CHECKOUT_OUT_DIR"
+      },
+      "optional_env_args": {
+        "--promotion-file": "SYSTEMIA_CLIP_PROMOTION_RECEIPT_FILE",
+        "--stripe-credentials-file": "SYSTEMIA_STRIPE_MERCHANT_KEY_FILES"
+      }
+    },
+    {
       "service_key": "kaidance-company-heartbeat",
       "mode": "cycle",
       "manifest": "systemia/organism/kaidance-company-heartbeat.workflow.json",

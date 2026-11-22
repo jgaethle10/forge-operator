@@ -54,6 +54,12 @@
       "path": "../../artifacts/kaidance-company-heartbeat/mission-snapshot.json",
       "required": false,
       "stale_after_seconds": 900
+    },
+    {
+      "source_key": "kaidance-offer-checkout",
+      "path": "../../artifacts/kaidance-offer-checkout/mission-snapshot.json",
+      "required": false,
+      "stale_after_seconds": 900
     }
   ]
 }
