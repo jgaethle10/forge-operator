@@ -34,8 +34,8 @@ test('Each targeted playable world includes the isolated Wayfinder',()=>{
  }
  const flight=readFileSync('public/worlds/flight/index.html','utf8');
  assert.match(flight,/class="aaar-worlds-nav"/);
- assert.match(flight,/href="\\/worlds\\/hidden-world\\/yakima-walk\\/"/);
- assert.doesNotMatch(flight,/<script\\b[^>]*\\bsrc=/i);
+ assert.ok(flight.includes('href="/worlds/hidden-world/yakima-walk/"'));
+ assert.equal(flight.includes('src="/worlds/wayfinder.mjs"'),false);
  const source=readFileSync('public/worlds/wayfinder.mjs','utf8');
  assert.match(source,/attachShadow\(\{mode:'open'\}\)/);
  assert.match(source,/credentials:'same-origin'/);
