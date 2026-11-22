@@ -22,6 +22,8 @@ if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(firstStory.slug))
 const articlePath = path.join(root, firstStory.slug, 'index.html');
 if (!fs.existsSync(articlePath)) throw new Error('journal_visual_qa_article_missing');
 const articleHtml = fs.readFileSync(articlePath, 'utf8');
+const archiveHtml = fs.readFileSync(path.join(root,'archive','index.html'),'utf8');
+const standardsHtml = fs.readFileSync(path.join(root,'about','index.html'),'utf8');
 if (!articleHtml.includes('id="article-body"') || !articleHtml.includes('id="play"'))
   throw new Error('journal_visual_qa_article_reader_missing');
 fs.mkdirSync(out, { recursive: true });
@@ -114,12 +116,22 @@ const articleExpression = '(() => {' +
   'return {width:innerWidth,height:innerHeight,documentWidth:document.documentElement.scrollWidth,horizontalOverflow:document.documentElement.scrollWidth>innerWidth+1,mobileLayout:matchMedia("(max-width:550px)").matches,readerVisible:visible(reader),tocVisible:visible(toc),sourcesVisible:visible(sources),listenPresent:!!listen,brokenAnchors:broken};' +
   '})()';
 
+const discoveryExpression = '(() => {' +
+  'const root=document.querySelector(".index-panel, .about-main");' +
+  'const search=document.getElementById("journal-search");' +
+  'const standards=document.querySelector(".about-rules");' +
+  'const visible=e=>!!(e&&e.getClientRects().length&&getComputedStyle(e).visibility!=="hidden");' +
+  'return {width:innerWidth,height:innerHeight,documentWidth:document.documentElement.scrollWidth,horizontalOverflow:document.documentElement.scrollWidth>innerWidth+1,mobileLayout:matchMedia("(max-width:600px)").matches,readerVisible:visible(root),searchVisible:visible(search),standardsVisible:visible(standards),brokenAnchors:[]};' +
+  '})()';
+
 async function run() {
   await openDevTools();
   const results = [];
   const surfaces = [
     { name: 'home', document: html },
-    { name: 'article', document: articleHtml }
+    { name: 'article', document: articleHtml },
+    { name: 'archive', document: archiveHtml },
+    { name: 'standards', document: standardsHtml }
   ];
   for (const surface of surfaces) {
     for (const viewport of [{ name: 'phone', width: 390, height: 844 }, { name: 'desktop', width: 1440, height: 900 }]) {
@@ -136,7 +148,7 @@ async function run() {
         awaitPromise: true
       });
       const evaluation = await command('Runtime.evaluate', {
-        expression: surface.name === 'home' ? expression : articleExpression,
+        expression: surface.name === 'home' ? expression : surface.name === 'article' ? articleExpression : discoveryExpression,
         returnByValue: true
       });
       if (evaluation.exceptionDetails) throw new Error('journal_visual_qa_js_error:' + surface.name);
@@ -146,7 +158,11 @@ async function run() {
         metrics.mobileLayout === (viewport.name === 'phone') && !metrics.horizontalOverflow && metrics.brokenAnchors.length === 0;
       const surfacePass = surface.name === 'home'
         ? metrics?.navVisible && metrics?.leadVisible && (index.live_edition !== false || metrics.archiveNotice)
-        : metrics?.readerVisible && metrics?.tocVisible && metrics?.sourcesVisible && metrics?.listenPresent;
+        : surface.name === 'article'
+          ? metrics?.readerVisible && metrics?.tocVisible && metrics?.sourcesVisible && metrics?.listenPresent
+          : surface.name === 'archive'
+            ? metrics?.readerVisible && metrics?.searchVisible
+            : metrics?.readerVisible && metrics?.standardsVisible;
       if (!sharedPass || !surfacePass) {
         throw new Error('journal_visual_qa_viewport_failure:' + surface.name + ':' + viewport.name + ':' + JSON.stringify(metrics));
       }
