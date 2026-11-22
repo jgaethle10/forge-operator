@@ -20,6 +20,10 @@ on:
       - 'systemia/organism/medical-abstract-evidence*.mjs'
       - 'systemia/organism/kaidance-frontier-proof.mjs'
       - 'systemia/organism/kaidance-frontier-cycle.mjs'
+      - 'systemia/organism/kaidance-company-heartbeat*.mjs'
+      - 'systemia/organism/kaidance-company-heartbeat.workflow.json'
+      - 'registry/kaidance-company-lanes.v1.json'
+      - 'tests/kaidance-company-heartbeat.test.mjs'
       - 'systemia/collider/**'
       - 'registry/**'
       - 'public/.well-known/evercraft-products.json'
@@ -41,6 +45,10 @@ on:
       - 'systemia/organism/medical-workflow-continuity.test.mjs'
       - 'systemia/organism/kaidance-frontier-proof.mjs'
       - 'systemia/organism/kaidance-frontier-cycle.mjs'
+      - 'systemia/organism/kaidance-company-heartbeat*.mjs'
+      - 'systemia/organism/kaidance-company-heartbeat.workflow.json'
+      - 'registry/kaidance-company-lanes.v1.json'
+      - 'tests/kaidance-company-heartbeat.test.mjs'
       - 'systemia/collider/**'
       - 'registry/**'
       - 'public/.well-known/evercraft-products.json'
@@ -72,6 +80,7 @@ jobs:
         with:
           path: |
             artifacts/kaidance-frontier/runtime/state.json
+            artifacts/kaidance-company-heartbeat/state.json
             artifacts/medical-evidence-triage/state.json
             artifacts/medical-registered-trials/history/state.json
           key: kaidance-frontier-state-${{ runner.os }}-${{ github.run_id }}
@@ -111,6 +120,12 @@ jobs:
       - name: Prove longitudinal ClinicalTrials.gov observation ledger
         run: node systemia/organism/medical-registry-observation-ledger.test.mjs
 
+      - name: Validate KAIDANCE company heartbeat safety and truthful progress
+        run: node --test tests/kaidance-company-heartbeat.test.mjs
+
+      - name: Reconcile Evercraft company portfolio on KAIDANCE heartbeat
+        run: node systemia/organism/kaidance-company-heartbeat-runner.mjs --out artifacts/kaidance-company-heartbeat --prove-worlds
+
       - name: Run live KAIDANCE frontier field cycle
         run: node systemia/organism/kaidance-frontier-cycle.mjs
 
@@ -120,6 +135,7 @@ jobs:
         with:
           path: |
             artifacts/kaidance-frontier/runtime/state.json
+            artifacts/kaidance-company-heartbeat/state.json
             artifacts/medical-evidence-triage/state.json
             artifacts/medical-registered-trials/history/state.json
           key: kaidance-frontier-state-${{ runner.os }}-${{ github.run_id }}
@@ -130,6 +146,9 @@ jobs:
         with:
           name: kaidance-frontier-receipts
           path: |
+            artifacts/kaidance-company-heartbeat/latest.json
+            artifacts/kaidance-company-heartbeat/mission-snapshot.json
+            artifacts/kaidance-company-heartbeat/queue.json
             artifacts/kaidance-frontier/latest.json
             artifacts/kaidance-frontier/receipts.jsonl
             artifacts/kaidance-frontier/runtime/receipts.jsonl
