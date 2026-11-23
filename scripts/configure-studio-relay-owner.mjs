@@ -168,7 +168,8 @@ function status(data){
     ...data,
     secret_values_exposed:false,
     buyer_submissions_created:0,
-    notification_intents_sent:0,
+    direct_notification_intents_sent_by_setup:0,
+    background_dispatchers_may_send_existing_legitimate_alerts:true,
     payments_initiated:false
   },null,2));
 }
