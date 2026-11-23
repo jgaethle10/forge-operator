@@ -36,3 +36,22 @@ The public GET/OPTIONS canary verifies site availability, cross-origin request p
 - Record owner review and customer reply through Interaction Ledger without duplicate same-day messages. Do not emit unsolicited replies or automatic payment links.
 
 Safe failure semantics: **NO CONFIG → QUEUED**, **PROVIDER ERROR → QUEUED**, **RELAY INBOXED → RECEIPT**. None of these imply new money.
+
+
+## Private owner-local intake status (no Relay credentials required)
+
+On Penguin, run as the ordinary runtime user who owns the private Studio directory:
+
+```bash
+node scripts/studio-owner-intake-status.mjs
+```
+
+This is a **read-only, local-only** diagnostic. It prints aggregate counts and newest inquiry time, never customer names, emails, company names, brief text, or Relay credentials. It validates private file permissions and fails closed on malformed ledgers, duplicate references, or suspicious alert files. It does not send notifications, repair missing alerts, mark inquiries reviewed, or authorize payment.
+
+- `inquiries_total`: durable first-party inquiries
+- `awaiting_relay_dispatch`: private non-PII alerts waiting for Relay
+- `relay_inbox_accepted`: durable Relay inbox acceptance receipts, **not** human reads
+- `alert_recovery_needed`: inquiry with neither pending alert nor acceptance receipt
+- `duplicate_pending_and_accepted`: an alert has both a queued file and an acceptance receipt; review before any retry
+
+**Important:** This utility does not inspect the running Fabric process environment. Zero inquiries do not prove Relay is configured. Privately verify an existing authorized owner principal, owned Notification Fabric endpoint, and protected ingest token, without exposing values or making up an identity. No synthetic leads or emails.
