@@ -118,3 +118,32 @@ export function eventWorkPackages(assessment) {
     authorized_to_dispatch: false,
   }));
 }
+
+/**
+ * Read-only adapter for the EXISTING owned Demand Desk /api/systemia/queue.
+ * A pipeline stage or "verified" marketing signal is NOT venue or event approval.
+ * The trusted owner runtime must separately establish the queue's provenance.
+ */
+export function assessEventFromDemandQueue(queue, opportunityId, options = {}) {
+  const id = text(opportunityId);
+  if (!id) throw Error('opportunity_id_required');
+  if (queue?.schema !== 1 || queue?.kind !== 'evercraft.demand-desk.queue' ||
+      !Number.isInteger(queue.revision) || queue.revision < 0 ||
+      !Array.isArray(queue.opportunities)) {
+    throw Error('demand_queue_contract_invalid');
+  }
+  const records = queue.opportunities.filter(row => row?.id === id);
+  if (records.length !== 1) throw Error('demand_opportunity_missing_or_duplicate');
+  const record = records[0];
+  if (['Won', 'Closed', 'Lost'].includes(record.status)) {
+    throw Error('demand_opportunity_not_open');
+  }
+  const packet = assessEventFeasibility({ ...options, opportunity_id: id });
+  return {
+    ...packet,
+    demand_queue_revision: queue.revision,
+    demand_stage_observed: text(record.status) || 'unknown',
+    demand_verified_claim: record.verified === true,
+    demand_stage_is_not_event_approval: true,
+  };
+}
