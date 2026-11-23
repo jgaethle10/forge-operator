@@ -29,6 +29,10 @@ Exceptional effects like open flame, skyward laser beams, drones or attachments 
 
 No path in this source module grants venue approval, publishes a public event, dispatches an agent, contacts a partner, starts a test, collects charitable donations or opens ticketing. Qualified on-site engineering and site-specific authorizations remain external gates.
 
+## Read-only Demand adapter (present in source)
+
+`assessEventFromDemandQueue(queue, opportunityId, options)` consumes the exact existing `GET /api/systemia/queue` envelope, requiring `schema: 1`, `kind: evercraft.demand-desk.queue`, integer revision and exactly one currently open opportunity ID. It passes that ID to the same event feasibility evaluator. It records a *claimed* Demand stage and verification flag for context but **never translates "Replied", "Won", "verified" or any sales classification into venue or regulatory approval**. It refuses missing, duplicate and closed opportunity records. It neither mutates Demand's workspace nor fetches a queue by itself; an authorized owned runtime supplies the queue and establishes its origin independently.
+
 ## Testing and scope
 
 ```sh
@@ -41,7 +45,7 @@ The test suite covers all three scenarios, missing source documents, contradicto
 
 ## Next engineering integration
 
-- Authorized private owner import from the existing Demand Desk `/api/systemia/queue` with provenance and revision; no public prospect metadata or brittle scraping.
+- Connect the **already-written read-only Demand queue adapter** to an authorized owned private poller with request provenance and revision controls; source-code adapter is not an actual running poller. No public prospect metadata or brittle scraping.
 - Owner review/approval UI inside the existing Demand/EveryStage experience; validate recipient authority before exposing private notes.
 - Privileged separate evidence verifier, with actual signature/issuer/provenance checks, is required before any action-capable workflow. **Do not alter the constant deny flags in this module as a shortcut.**
 - Replace the static source-only work packets with accepted Opportunity Fabric sourcing/formation only after appropriate human approval and authenticated runtime receipt.
