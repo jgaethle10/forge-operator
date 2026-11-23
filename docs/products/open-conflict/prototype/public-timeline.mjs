@@ -44,11 +44,8 @@ export function projectPublicTimeline(records, ledgerEntries, {asOf} = {}) {
       verified_at_utc:record.verified_at_utc ?? null,
       published_at_utc:record.published_at_utc,
       sources:record.sources.map(safeSource),
-      corrections:Array.isArray(record.corrections) ? record.corrections.map(c=>({
-        at:c.at ?? null,reason:c.reason ?? null
-      })) : []
+      corrections:Array.isArray(record.corrections) ? record.corrections : []
     });
   }
-  events.sort((a,b)=>Date.parse(b.published_at_utc)-Date.parse(a.published_at_utc));
-  return {status:"offline_snapshot",generated_at_utc:asOf ?? null,events,withheld};
+  return { events, withheld };
 }
