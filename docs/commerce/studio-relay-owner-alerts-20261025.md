@@ -94,3 +94,26 @@ The dedicated Node service uses systemd `Type=simple`, which can report started 
 The installer now performs a bounded 24-attempt, 0.5-second loopback health poll after systemd activation, checking the service remains active. It does not restart or overwrite an existing installation. **Never rerun `--apply` on a host where the root-only env file and unit already exist.** Keep these credentials and private inbox storage unchanged.
 
 The next identity gate is distinct: Evercraft Home's public owner-claim manifest declares subject reference `user:jesse`, but **that manifest alone is not proof the private Home owner account is bootstrapped or an authorized Relay inbox/session exists**. Verify actual owner bootstrap state and privately bound subject before configuring `EVERCRAFT_STUDIO_RELAY_OWNER_PRINCIPAL`; do not infer an inbox simply because Relay health is 200. The customer inbox remains empty until a real opt-in submission.
+
+
+## Bind an already-claimed Evercraft Home owner to private Studio alerts
+
+Verified Penguin evidence from 2026-11-22: Home loopback health reports `healthy=true`, `auth_mode=passport`, `owner_bootstrapped=true`, and `owner_claim_available=false`. Protected Home configuration matches the committed owner subject `user:jesse`. The existing Relay on `127.0.0.1:3921` is healthy and its protected ingest credential and owned URL match; private Fabric Studio owner binding remains absent.
+
+Operator-only, **read-only by default**:
+
+```bash
+sudo node scripts/configure-studio-relay-owner.mjs --check
+```
+
+This validates a *claimed* local Home owner (not only a manifest), root-only Home and Relay configuration, the same non-root account running the private Relay and Fabric services, authenticated read-only Relay `/api/notifications/metrics` ledger verification, Fabric health and absence of conflicting legacy variables. Outputs only boolean/operational status, not names, credentials or customer content. If an existing owner binding is present, verifies it rather than overwriting.
+
+An owner may explicitly activate after reviewing the preflight:
+
+```bash
+sudo node scripts/configure-studio-relay-owner.mjs --apply
+```
+
+Only the new root-only `/etc/evercraft/studio-relay.env` (mode 0600) and `40-studio-relay.conf` systemd drop-in are created. They contain the actual owner principal from claimed Home, the **already-running** private Relay's local address and its **existing** ingest token. The original `/etc/evercraft/fabric.env` is neither edited nor replaced, and neither Relay's credentials nor service are regenerated. `evercraft-fabric.service` is restarted once and a bounded readback requires the same source release, same capability count, healthy Fabric and the three exact protected environment values in the running Fabric process. On failure the script attempts to remove only its own two newly created files and restore Fabric, reporting if rollback needs operator investigation. No synthetic buyer inquiry, direct setup notification intent or checkout is sent. **Attention:** The existing Fabric runtime also shares `EVERCRAFT_STUDIO_RELAY_OWNER_PRINCIPAL` with Website Audit and Closeout dispatchers; enabling it can start delivery of their already-queued genuine internal alerts. Relay dedupe and private receipts still apply. The operator must review this shared-routing behavior before `--apply`, and must not mistake an internal Relay notice for customer email.
+
+Important: `--apply` never overwrites existing binding files, never rotates the Relay token and must not be re-run to resolve an unexpected hold. Concurrent Fabric updater runs trigger a hold; do not override it. A healthy configured dispatcher only means future real leads can enter private Relay. Durable inbox receipt, owner viewing a notification, customer reply and payment must be proven separately.

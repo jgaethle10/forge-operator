@@ -5,6 +5,8 @@ on:
       - 'scripts/studio-public-intake-canary.mjs'
       - 'scripts/studio-owner-intake-status.mjs'
       - 'tests/studio-owner-intake-status.test.mjs'
+      - 'scripts/configure-studio-relay-owner.mjs'
+      - 'tests/studio-relay-owner-private-binding.test.mjs'
       - 'scripts/studio-discovery-live-canary.mjs'
       - 'tests/studio-discovery-live-canary.test.mjs'
       - 'systemia/mcp/fabric-catalog-supplements.json'
@@ -19,6 +21,8 @@ on:
       - 'scripts/studio-public-intake-canary.mjs'
       - 'scripts/studio-owner-intake-status.mjs'
       - 'tests/studio-owner-intake-status.test.mjs'
+      - 'scripts/configure-studio-relay-owner.mjs'
+      - 'tests/studio-relay-owner-private-binding.test.mjs'
       - 'scripts/studio-discovery-live-canary.mjs'
       - 'tests/studio-discovery-live-canary.test.mjs'
       - 'systemia/mcp/fabric-catalog-supplements.json'
@@ -47,6 +51,8 @@ jobs:
         run: node --test tests/studio-discovery-live-canary.test.mjs
       - name: Test private operator status never exposes a buyer or mutates records
         run: node --test tests/studio-owner-intake-status.test.mjs
+      - name: Prove Studio Relay binding is owner-authorized and never publishes credentials
+        run: node --test tests/studio-relay-owner-private-binding.test.mjs
       - name: Inspect public form and live preflight without sending a lead
         id: external
         continue-on-error: true
