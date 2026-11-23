@@ -4,6 +4,7 @@ on:
     paths:
       - "research/infrastructure-watch/release/**"
       - "research/infrastructure-watch/tests/test_aiw_public_beta_bundle.py"
+      - "research/infrastructure-watch/release/aiw_external_https_check.py"
       - ".github/workflows/aiw-public-beta-package.yml"
 permissions:
   contents: read
@@ -99,3 +100,11 @@ jobs:
           assert 'https://render.com' not in p
           assert 'http://127.0.0.1' in p
           PY
+  external-public-https-readiness:
+    name: Outside-in DNS, TLS, branded page and static data
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check public site from GitHub runner, not Penguin LAN
+        run: python3 research/infrastructure-watch/release/aiw_external_https_check.py
