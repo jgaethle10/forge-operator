@@ -71,6 +71,10 @@ test('NextGen tunnel refuses unpinned SSH and only forwards private Demand port'
   assert.match(tunnel,/EXPECTED_FINGERPRINT='SHA256:NVPAF3rqN9wjkR10o0EvB7aI\/PBFaYj17dfDYvI\+\+Ck'/);
   assert.match(tunnel,/--verify/);
   assert.match(tunnel,/--install/);
+  assert.match(tunnel,/for attempt in 1 2 3 4/);
+  assert.match(tunnel,/\$SCAN" -T 25 -p 8222 -t ed25519/);
+  assert.match(tunnel,/if \[\[ "\$RECEIVED" != "\$EXPECTED_FINGERPRINT" \]\]/);
+  assert.match(tunnel,/Multiple SSH host keys or invalid response/);
   assert.match(tunnel,/StrictHostKeyChecking=yes/);
   assert.match(tunnel,/UserKnownHostsFile=\$KNOWN/);
   assert.match(tunnel,/ExitOnForwardFailure=yes/);
