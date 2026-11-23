@@ -41,3 +41,14 @@ test('bootstrap uses a private, pinned Express install outside canonical Forge',
  assert.match(source,/PRIVATE_EXPRESS_DEPENDENCY_PRESENT=/);
  assert.doesNotMatch(source,/npm install --prefix "\$REPO"/);
 });
+
+
+test('systemd Type=simple startup uses bounded health polling, no forced restarts or secret logs',()=>{
+ assert.match(source,/for \(\(attempt=1; attempt<=24; attempt\+\+\)\); do/);
+ assert.match(source,/systemctl is-active --quiet evercraft-notification-fabric\.service/);
+ assert.match(source,/curl -fsS --max-time 2 -o \/dev\/null/);
+ assert.match(source,/sleep 0\.5/);
+ assert.match(source,/RELAY_READY=true/);
+ assert.match(source,/health did not become ready after bounded retries/);
+ assert.doesNotMatch(source,/systemctl restart evercraft-notification-fabric\.service/);
+});
