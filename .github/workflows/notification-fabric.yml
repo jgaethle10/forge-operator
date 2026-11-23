@@ -8,6 +8,8 @@ on:
     paths:
       - "systemia/notification-fabric/**"
       - "tests/notification-fabric-resident-loopback.test.mjs"
+      - "tests/notification-fabric-resident-installer.test.mjs"
+      - "scripts/install-notification-relay-loopback.sh"
       - "systemia/signal-fabric/**"
       - "public/evercraft-push-sw.js"
       - ".github/workflows/notification-fabric.yml"
@@ -15,6 +17,8 @@ on:
     paths:
       - "systemia/notification-fabric/**"
       - "tests/notification-fabric-resident-loopback.test.mjs"
+      - "tests/notification-fabric-resident-installer.test.mjs"
+      - "scripts/install-notification-relay-loopback.sh"
       - "systemia/signal-fabric/**"
       - "public/evercraft-push-sw.js"
       - ".github/workflows/notification-fabric.yml"
@@ -48,6 +52,11 @@ jobs:
 
       - name: Prove authenticated loopback Relay and private durable inbox
         run: node --test tests/notification-fabric-resident-loopback.test.mjs
+
+      - name: Verify guarded Relay installer contract
+        run: |
+          bash -n scripts/install-notification-relay-loopback.sh
+          node --test tests/notification-fabric-resident-installer.test.mjs
 
       - name: Syntax-check runtime modules
         run: |
