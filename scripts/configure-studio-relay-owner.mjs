@@ -66,10 +66,10 @@ export function renderBinding(binding){
 }
 export const dropInText='[Service]\nEnvironmentFile='+STUDIO_ENV+'\n';
 
-function safeFile(filename,uid=0){
+function safeFile(filename,uid=0,maximumMode=0o600){
   const stat=fs.lstatSync(filename);
   if(!stat.isFile()||stat.isSymbolicLink()||stat.nlink!==1||
-     stat.uid!==uid||(stat.mode&0o077)!==0)
+     stat.uid!==uid||((stat.mode&0o777)&~maximumMode)!==0)
     throw Error('UNSAFE_PRIVATE_CONFIGURATION_HOLD');
   return fs.readFileSync(filename,'utf8');
 }
@@ -82,6 +82,14 @@ function run(name,args){
 }
 function serviceValue(name,property){
   return run('systemctl',['show',name,'-p',property,'--value']);
+}
+function parseProcessEnv(buffer){
+  const out=new Map();
+  for(const row of buffer.split('\0')){
+    const ix=row.indexOf('=');
+    if(ix>0)out.set(row.slice(0,ix),row.slice(ix+1));
+  }
+  return out;
 }
 function sameSecret(a,b){
   if(!a||!b)return false;
@@ -135,8 +143,8 @@ async function awaitFabric(release,capabilities,expectedBindingValue){
       if(expectedBindingValue){
         const pid=Number(serviceValue(FABRIC_SERVICE,'MainPID'));
         if(!Number.isSafeInteger(pid)||pid<1)throw Error('missing_pid');
-        const actual=parsePrivateEnv(
-          fs.readFileSync('/proc/'+pid+'/environ','utf8').replaceAll('\0','\n'));
+        const actual=parseProcessEnv(
+          fs.readFileSync('/proc/'+pid+'/environ','utf8'));
         if(actual.get('EVERCRAFT_STUDIO_RELAY_OWNER_PRINCIPAL')!==expectedBindingValue.principal||
            actual.get('EVERCRAFT_NOTIFICATION_BASE_URL')!==expectedBindingValue.base||
            !sameSecret(actual.get('EVERCRAFT_NOTIFICATION_INGEST_TOKEN'),expectedBindingValue.token))
@@ -151,7 +159,8 @@ async function awaitFabric(release,capabilities,expectedBindingValue){
 function putPrivate(filename,text,mode){
   const fd=fs.openSync(filename,'wx',mode);
   try{fs.writeFileSync(fd,text,'utf8');fs.fchmodSync(fd,mode);fs.fchownSync(fd,0,0)}
-  finally{fs.closeSync(fd)}
+  catch(error){fs.closeSync(fd);fs.unlinkSync(filename);throw error}
+  fs.closeSync(fd);
 }
 function status(data){
   console.log(JSON.stringify({
@@ -177,7 +186,7 @@ export async function main(args=process.argv.slice(2)){
     let configured=false;
     if(presentEnv){
       if(safeFile(STUDIO_ENV)!==renderBinding(p.binding)||
-         safeFile(DROP_IN)!==dropInText)
+         safeFile(DROP_IN,0,0o644)!==dropInText)
          throw Error('EXISTING_BINDING_MISMATCH_HOLD');
       configured=await awaitFabric(p.release,p.capabilities,p.binding);
     }
