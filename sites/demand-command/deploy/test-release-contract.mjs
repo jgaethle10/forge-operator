@@ -73,9 +73,9 @@ test('NextGen tunnel refuses unpinned SSH and only forwards private Demand port'
   assert.match(tunnel,/--install/);
   assert.match(tunnel,/for attempt in 1 2 3 4/);
   assert.match(tunnel,/\$SCAN" -T 25 -p 8222 -t ed25519/);
-  assert.match(tunnel,/validate_ssh_keyscan\\.py/);
+  assert.match(tunnel,/validate_ssh_keyscan\.py/);
   assert.match(tunnel,/SCAN_VALIDATED=true/);
-  assert.match(tunnel,/if \\[\\[ "\\$RESULT" -ne 3 \\]\\]/);
+  assert.match(tunnel,/if \[\[ "\$RESULT" -ne 3 \]\]/);
   assert.match(tunnel,/SSH keyscan contained unexpected or conflicting identity data/);
   assert.match(tunnel,/StrictHostKeyChecking=yes/);
   assert.match(tunnel,/UserKnownHostsFile=\$KNOWN/);
