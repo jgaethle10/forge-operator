@@ -110,7 +110,12 @@ jobs:
           import assert from 'node:assert/strict';
           const base=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/client001-composed.adapted.json','utf8'));
           const stdin=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/client001-composed-stdin.adapted.json','utf8'));
-          assert.deepEqual(stdin,base);
+          // Caddy includes the input filename in adapted source metadata.
+          // That path changes with stdin, but must not change route behavior.
+          const canonical=x=>JSON.parse(JSON.stringify(x)
+            .replaceAll('/dev/stdin','<input>')
+            .replaceAll('/etc/caddy/Caddyfile','<input>'));
+          assert.deepEqual(canonical(stdin),canonical(base));
           console.log('CADDY_READ_ONLY_STDIN_ADAPTER_PASS');
           NODE
           node --input-type=module <<'NODE'
