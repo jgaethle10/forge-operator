@@ -57,6 +57,23 @@ class ValidateKeyscanTests(unittest.TestCase):
         with self.assertRaises(InvalidKeyscan):
             canonicalize(self.record(value, address="[192.168.88.4]:8222"), self.host, fp)
 
+    def test_failure_diagnostic_reports_host_without_key_material(self):
+        value, fp = example_key()
+        with self.assertRaises(InvalidKeyscan) as caught:
+            canonicalize(self.record(value, address="[192.168.88.4]:8222"), self.host, fp)
+        message = str(caught.exception)
+        self.assertIn("unexpected host token", message)
+        self.assertIn("[192.168.88.4]:8222", message)
+        self.assertNotIn(value, message)
+
+    def test_failure_diagnostic_reports_unexpected_fields_without_key_material(self):
+        value, fp = example_key()
+        with self.assertRaises(InvalidKeyscan) as caught:
+            canonicalize(self.record(value) + "bad unexpected record with fields\n", self.host, fp)
+        message = str(caught.exception)
+        self.assertIn("unexpected field count", message)
+        self.assertNotIn(value, message)
+
     def test_reject_wrong_algorithm(self):
         value, fp = example_key()
         with self.assertRaises(InvalidKeyscan):
