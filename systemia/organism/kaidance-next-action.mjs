@@ -13,9 +13,9 @@ const SOURCE={
  candidate:{file:'kaidance-source-candidate/latest.json',
   schema:'evercraft.kaidance.code-improvement-beat.v1'},
  candidateProof:{file:'kaidance-source-candidate/candidate.json',
-  schema:'evercraft.kaidance.source-repair-candidate.v1'},
+  schema:'evercraft.kaidance.source-repair-candidate.v1',timestamp_required:false},
  checkout:{file:'kaidance-offer-checkout/latest.json',
-  schema:'evercraft.payments.kaidance-offer-link-reconciliation.v1'},
+  schema:'evercraft.kaidance.offer-checkout-heartbeat.v1'},
  checkoutActions:{file:'kaidance-offer-checkout/actions.json',
   schema:'evercraft.payments.kaidance-heartbeat-actions.v1'}
 };
@@ -34,9 +34,11 @@ function readSource(base,entry,now){
      s.size>MAX_BYTES)return {status:STATUS.invalid,reason:'untrusted_receipt_file'};
   const data=JSON.parse(fs.readFileSync(file,'utf8'));
   if(data?.schema!==entry.schema)return {status:STATUS.invalid,reason:'schema_mismatch'};
-  const age=new Date(now).getTime()-Date.parse(data.observed_at);
-  if(!Number.isFinite(age)||age< -60000||age>MAX_AGE_MS)
-   return {status:STATUS.stale,reason:'receipt_not_current'};
+  if(entry.timestamp_required!==false){
+   const age=new Date(now).getTime()-Date.parse(data.observed_at);
+   if(!Number.isFinite(age)||age< -60000||age>MAX_AGE_MS)
+    return {status:STATUS.stale,reason:'receipt_not_current'};
+  }
   return {status:STATUS.fresh,data};
  }catch(e){
   if(e?.code==='ENOENT')return {status:STATUS.missing,reason:'receipt_missing'};
