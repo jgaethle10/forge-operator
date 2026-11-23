@@ -85,3 +85,12 @@ The guarded installer must not require `node_modules` inside the canonical Forge
 Updated behavior: read-only `--check` reports whether npm and the private dependency directory are available, without running npm. Explicit `--apply` installs **only pinned `express@4.21.2`** and its required dependencies into owner-private `/var/lib/evercraft/notification-relay-deps`, with package scripts disabled. The standalone Node service loads Express from that private path and fails closed if an explicit dependency root is missing, unsafe or at the wrong version. The installer does not run `npm install` in Forge or change any tracked files. Installing a dependency library on the owned host is distinct from moving application runtime to a third-party service.
 
 If npm is unavailable, isolated installation fails safely and does not configure Studio alerts. If npm reports network or dependency issues, do not bypass private storage/credential checks, publish port 3921, or start the full Forge `server.ts` to work around it. Source CI tests the same private-prefix dependency layout.
+
+
+### Relay resident startup check
+
+The dedicated Node service uses systemd `Type=simple`, which can report started before its loopback HTTP listener is ready. On 2026-11-22 the first activation installed the Express dependency, enabled the service, then received an immediate connection refusal on port 3921. The owner later verified `ActiveState=active`, `SubState=running`, `NRestarts=0`, listener `127.0.0.1:3921`, `/api/notifications/health` HTTP 200, and separately healthy Fabric release `f93210a61e...` with 125 capabilities. This was a **readiness race**, not a failure or lost customer lead.
+
+The installer now performs a bounded 24-attempt, 0.5-second loopback health poll after systemd activation, checking the service remains active. It does not restart or overwrite an existing installation. **Never rerun `--apply` on a host where the root-only env file and unit already exist.** Keep these credentials and private inbox storage unchanged.
+
+The next identity gate is distinct: Evercraft Home's public owner-claim manifest declares subject reference `user:jesse`, but **that manifest alone is not proof the private Home owner account is bootstrapped or an authorized Relay inbox/session exists**. Verify actual owner bootstrap state and privately bound subject before configuring `EVERCRAFT_STUDIO_RELAY_OWNER_PRINCIPAL`; do not infer an inbox simply because Relay health is 200. The customer inbox remains empty until a real opt-in submission.
