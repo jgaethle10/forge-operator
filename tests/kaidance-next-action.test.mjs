@@ -144,3 +144,15 @@ test('untrusted source symlink produces reconciliation hold, not a customer acti
   assert.equal(r.report.execution_performed,false);
  }finally{fs.rmSync(base,{recursive:true,force:true})}
 });
+
+test('unrecognized output directory never scans unrelated sibling merchant data',()=>{
+ const base=fs.mkdtempSync(path.join(os.tmpdir(),'evercraft-kaidance-unnamed-root-'));
+ try{
+  privateWrite(path.join(base,'kaidance-offer-checkout','latest.json'),checkout);
+  privateWrite(path.join(base,'kaidance-offer-checkout','actions.json'),checkoutActions);
+  const result=writeKaidanceNextAction({outDir:path.join(base,'misc-workdir'),
+   companyReport,companyQueue,now});
+  assert.equal(result.report.current_next_action.work_key,'product:aliev:adapter-admission');
+  assert.equal(result.report.source_status.checkout,'missing');
+ }finally{fs.rmSync(base,{recursive:true,force:true})}
+});
