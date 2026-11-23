@@ -23,6 +23,7 @@ jobs:
           bash -n sites/demand-command/deploy/inspect-penguin-ssh-readiness.sh
           bash -n sites/demand-command/deploy/install-penguin-demand-relay.sh
           node --test sites/demand-command/deploy/test-release-contract.mjs
+          python3 -m unittest discover -s sites/demand-command/deploy -p 'test_validate_ssh_keyscan.py' -v
       - name: Verify private API and source adapters on synthetic data
         working-directory: sites/demand-command/backend
         run: |
