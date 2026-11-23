@@ -1,0 +1,59 @@
+name: Fallen Source Licensed Music Retrieval (Private Review)
+on:
+  push:
+    branches: [production/fallen-exotic-bella-audition-20261123]
+    paths: ['.github/workflows/fallen-source-licensed-score.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  review-score:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Locate genuine licensed music without customer data
+        run: |
+          python - <<'PY'
+          import urllib.request,re,json,os,html,hashlib
+          from pathlib import Path
+          root=Path('licensed-score-candidates');root.mkdir()
+          source='https://mixkit.co/free-stock-music/rock-and-roll/'
+          req=urllib.request.Request(source,headers={'User-Agent':'Mozilla/5.0'})
+          raw=urllib.request.urlopen(req,timeout=25).read().decode('utf8','replace')
+          names=['Yo Chucky','Salty and Sweet']
+          lines=[]
+          for name in names:
+            found=list(re.finditer(re.escape(name),raw,re.I))
+            excerpts=[raw[max(0,m.start()-350):m.end()+2500] for m in found[:8]]
+            id_matches=[]
+            for x in excerpts:
+              id_matches+=re.findall(r'(?:data-id|track-id|music-id|id)[=:]?[\\\\" ]+(\\d{2,6})',x)
+            lines.append({'name':name,'found':len(found),'candidate_ids':list(dict.fromkeys(id_matches))[:20],
+                          'excerpts':[re.sub(r'\\s+',' ',html.unescape(x))[:650] for x in excerpts[:2]]})
+          links=sorted(set(re.findall(r'https?[^\\\\"\'<> ]+\\.mp3[^\\\\"\'<> ]*',raw,re.I)))
+          for link in links[:40]:
+            print('MP3_REFERENCE',link[:250])
+          for obj in lines:print('TRACK_CONTEXT',json.dumps(obj))
+          (root/'discovery.json').write_text(json.dumps({'url':source,'tracks':lines,'assetLinks':links[:100]},indent=2))
+          # only download directly linked official Mixkit audio URLs
+          count=0
+          for link in links:
+            if not (link.startswith('https://assets.mixkit.co/') and '/music/' in link):continue
+            try:
+              audio=urllib.request.urlopen(link,timeout=30).read()
+            except Exception as e:
+              print('DOWNLOAD_BLOCKED',str(e)[:180]);continue
+            if not audio[:3]==b'ID3' and not audio[:2]==b'\\xff\\xfb':continue
+            path=root/f'official-mixkit-{count}.mp3';path.write_bytes(audio)
+            print('DOWNLOAD_OK',path,hashlib.sha256(audio).hexdigest(),len(audio))
+            count+=1
+            if count>=6:break
+          print('OFFICIAL_TRACK_COUNT',count)
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: fallen-licensed-music-source-inspection
+          path: licensed-score-candidates/
+          retention-days: 2
+          if-no-files-found: error
