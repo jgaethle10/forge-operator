@@ -96,6 +96,23 @@ jobs:
               caddy:2 caddy adapt --config /etc/caddy/Caddyfile --adapter caddyfile \
               > "$RUNNER_TEMP/$name.adapted.json"
           done
+          # Exercise the exact stdin-only Caddy adapter mode used by the
+          # physical-node read-only rehearsal, still in an isolated CI container.
+          cat "$RUNNER_TEMP/client001-composed.Caddyfile" |
+            docker run --rm --network none -i \
+              --env EVERCRAFT_PUBLIC_HOST=fabric.systemiacommandcenters.invalid \
+              --env EVERCRAFT_ACME_EMAIL=ops@example.invalid \
+              --env CLIENT001_DOMAIN=onthegoquicklube.invalid \
+              caddy:2 caddy adapt --config /dev/stdin --adapter caddyfile \
+              > "$RUNNER_TEMP/client001-composed-stdin.adapted.json"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import assert from 'node:assert/strict';
+          const base=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/client001-composed.adapted.json','utf8'));
+          const stdin=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/client001-composed-stdin.adapted.json','utf8'));
+          assert.deepEqual(stdin,base);
+          console.log('CADDY_READ_ONLY_STDIN_ADAPTER_PASS');
+          NODE
           node --input-type=module <<'NODE'
           import fs from 'node:fs';
           import path from 'node:path';
@@ -174,5 +191,6 @@ jobs:
             ${{ runner.temp }}/client001-field-preflight.json
             ${{ runner.temp }}/fabric-existing.adapted.json
             ${{ runner.temp }}/client001-composed.adapted.json
+            ${{ runner.temp }}/client001-composed-stdin.adapted.json
           if-no-files-found: warn
           retention-days: 7
