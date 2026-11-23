@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { assessEventFeasibility, eventWorkPackages, EVENT_SCENARIOS } from './event-coordination.mjs';
+import { assessEventFeasibility, eventWorkPackages, EVENT_SCENARIOS, assessEventFromDemandQueue } from './event-coordination.mjs';
 
 const caseId = 'synthetic:heritage-event-001';
 const assess = options => assessEventFeasibility({ opportunity_id: caseId, ...options });
@@ -88,8 +88,7 @@ test('invalid variants and features fail closed', () => {
   assert.throws(() => assess({ evidence: [] }), /evidence_object_required/);
 });
 
-test('Demand Desk queue adapter preserves source stage without granting event approvals', async () => {
-  const { assessEventFromDemandQueue } = await import('./event-coordination.mjs');
+test('Demand Desk queue adapter preserves source stage without granting event approvals', () => {
   const queue = {
     schema: 1, kind: 'evercraft.demand-desk.queue', revision: 7,
     opportunities: [{ id: caseId, status: 'Replied', verified: true }],
@@ -102,8 +101,7 @@ test('Demand Desk queue adapter preserves source stage without granting event ap
   assert.equal(result.external_contact_authorized, false);
 });
 
-test('Demand Desk adapter rejects absent/duplicate/closed or malformed queue entries', async () => {
-  const { assessEventFromDemandQueue } = await import('./event-coordination.mjs');
+test('Demand Desk adapter rejects absent/duplicate/closed or malformed queue entries', () => {
   const queue = {
     schema: 1, kind: 'evercraft.demand-desk.queue', revision: 1,
     opportunities: [{ id: caseId, status: 'Qualified' }],
