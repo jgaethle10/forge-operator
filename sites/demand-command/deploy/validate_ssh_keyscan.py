@@ -20,6 +20,11 @@ class InvalidKeyscan(Exception):
     pass
 
 
+class NoHostKeyReceived(InvalidKeyscan):
+    """No actual SSH key record in scan; caller may retry the connection."""
+    pass
+
+
 def canonicalize(scan: str, ipv4: str, expected_fingerprint: str) -> tuple[str, int]:
     ip = ipaddress.IPv4Address(ipv4)
     if not ip.is_private or ip in ipaddress.ip_network("100.64.0.0/10"):
@@ -27,12 +32,23 @@ def canonicalize(scan: str, ipv4: str, expected_fingerprint: str) -> tuple[str, 
     label = f"[{ip}]:8222"
     lines = scan.splitlines()
     if not lines:
-        raise InvalidKeyscan("No SSH host key received")
+        raise NoHostKeyReceived("No SSH host key received")
     if len(lines) > 32 or len(scan) > 8192:
         raise InvalidKeyscan("Excessive SSH keyscan output")
 
+    # ssh-keyscan sometimes writes informational '# host port SSH-2.0...' banner
+    # comments into stdout. Such lines are not known_hosts records. Ignore ONLY
+    # blanks/comments; validate every remaining key record and its pinned digest.
+    key_rows = [
+        (row_number, line)
+        for row_number, line in enumerate(lines, start=1)
+        if line.strip() and not line.lstrip().startswith("#")
+    ]
+    if not key_rows:
+        raise NoHostKeyReceived("No SSH host key record after scan comments")
+
     observed_blob: str | None = None
-    for row_number, line in enumerate(lines, start=1):
+    for row_number, line in key_rows:
         fields = line.strip().split()
         # Diagnostics are limited to public protocol metadata: line number,
         # field count, host token and key algorithm. Never print key bytes.
@@ -72,7 +88,7 @@ def canonicalize(scan: str, ipv4: str, expected_fingerprint: str) -> tuple[str, 
         observed_blob = blob_text
 
     assert observed_blob is not None
-    return f"{label} ssh-ed25519 {observed_blob}", len(lines)
+    return f"{label} ssh-ed25519 {observed_blob}", len(key_rows)
 
 
 def main() -> int:
@@ -85,6 +101,8 @@ def main() -> int:
         if not data:
             return 3  # Retryable: no public host-key response.
         canonical, count = canonicalize(data.decode("ascii", errors="strict"), host, fingerprint)
+    except NoHostKeyReceived:
+        return 3  # Retryable: comments arrived, but no actual host key.
     except (InvalidKeyscan, ValueError, UnicodeError, OSError) as exc:
         print(f"SSH keyscan rejected: {exc}", file=sys.stderr)
         return 4  # Non-retryable: malformed, conflicting or untrusted response.
