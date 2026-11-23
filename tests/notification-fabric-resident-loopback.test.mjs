@@ -82,3 +82,18 @@ test('invalid listening port is rejected',async t=>{
    ()=>startNotificationRelayResident({dataDir:root,port:70000,ingestToken:TOKEN}),
    /RELAY_LOOPBACK_PORT_INVALID/);
 });
+
+
+test('configured isolated Express root fails closed on missing or unsafe dependencies',async t=>{
+ const root=privateRoot(t),deps=path.join(root,'isolated');
+ fs.mkdirSync(deps,{mode:0o700});
+ await assert.rejects(
+   ()=>startNotificationRelayResident({
+     dataDir:root,port:0,ingestToken:TOKEN,expressRoot:deps
+   }),/ENOENT|RELAY_EXPRESS_NOT_INSTALLED/);
+ fs.chmodSync(deps,0o755);
+ await assert.rejects(
+   ()=>startNotificationRelayResident({
+     dataDir:root,port:0,ingestToken:TOKEN,expressRoot:deps
+   }),/RELAY_DEPENDENCY_ROOT_SAFETY_HOLD/);
+});
