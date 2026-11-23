@@ -72,36 +72,43 @@ local_app || { echo 'Demand Command local 18896 identity not healthy. Do not ins
 [[ ! -L "$ROOT" && ! -L "$KNOWN" && ! -L "$UNITDIR" && ! -L "$UNIT" ]] ||
   { echo 'Symlink in state/config path: hold for manual review' >&2; exit 2; }
 
+VALIDATOR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)/validate_ssh_keyscan.py"
+[[ -f "$VALIDATOR" && ! -L "$VALIDATOR" ]] || {
+  echo 'Pinned SSH keyscan validator missing or symlinked: refusing tunnel install.' >&2
+  exit 2
+}
 TEMP="$(mktemp)"
-trap 'rm -f "$TEMP"' EXIT
-# ChromeOS/Crostini forwarding can accept TCP and delay an SSH key exchange.
-# Each response remains UNTRUSTED until compared to the independent Penguin fingerprint.
-# Retry only when no single key arrived; never retry through a key mismatch.
-LINES=0
+NORMAL="$(mktemp)"
+trap 'rm -f "$TEMP" "$NORMAL"' EXIT
+# ssh-keyscan stdout is UNTRUSTED. A scan may contain more than one identical
+# host-key record; every record must match the pinned Penguin ED25519 identity.
+# A malformed, conflicting or unexpected record is immediately fatal.
+SCAN_VALIDATED=false
 for attempt in 1 2 3 4; do
   : > "$TEMP"
+  : > "$NORMAL"
   "$SCAN" -T 25 -p 8222 -t ed25519 "$LAN_IP" > "$TEMP" 2>/dev/null || true
-  LINES="$(wc -l < "$TEMP")"
-  if [[ "$LINES" -eq 1 ]]; then
-    RECEIVED="$("$KEYGEN" -lf "$TEMP" -E sha256 | awk '{print $2}')"
-    if [[ "$RECEIVED" != "$EXPECTED_FINGERPRINT" ]]; then
-      echo 'SSH host fingerprint MISMATCH. Possible wrong device or interception. No tunnel installed.' >&2
-      exit 2
-    fi
+  if "$PYTHON" "$VALIDATOR" "$LAN_IP" "$EXPECTED_FINGERPRINT" "$TEMP" > "$NORMAL"; then
+    # The normalizer emits exactly one canonical known_hosts line.
+    cp "$NORMAL" "$TEMP"
+    RECEIVED="$EXPECTED_FINGERPRINT"
+    SCAN_VALIDATED=true
     echo "PASS: Verified the dedicated Penguin SSH fingerprint (attempt $attempt)."
     break
-  fi
-  if [[ "$LINES" -ne 0 ]]; then
-    echo 'Multiple SSH host keys or invalid response from LAN:8222; refusing to proceed.' >&2
-    exit 2
+  else
+    RESULT=$?
+    if [[ "$RESULT" -ne 3 ]]; then
+      echo 'SSH keyscan contained unexpected or conflicting identity data. NO TUNNEL CREATED.' >&2
+      exit 2
+    fi
   fi
   if [[ "$attempt" -lt 4 ]]; then
-    echo "SSH key exchange did not finish on attempt $attempt; retrying the same pinned identity..."
+    echo "No complete SSH host key on attempt $attempt; retrying the same pinned identity..."
     sleep 2
   fi
 done
-[[ "$LINES" -eq 1 ]] || {
-  echo 'No single SSH ED25519 host key received; NO TUNNEL CREATED.' >&2
+if [[ "$SCAN_VALIDATED" != true ]]; then
+  echo 'No verified SSH ED25519 host key received; NO TUNNEL CREATED.' >&2
   "$PYTHON" - "$LAN_IP" <<'PY'
 import socket, sys
 host = sys.argv[1]
@@ -118,7 +125,7 @@ except OSError as exc:
 PY
   echo 'Do not weaken host checking, open the household WAN, or start default SSH to bypass this.' >&2
   exit 2
-}
+fi
 echo "PASS: LAN SSH host fingerprint exactly matches dedicated Penguin key ($RECEIVED)."
 if [[ "$MODE" == --verify ]]; then
   echo 'No tunnel, service, DNS, or Caddy configuration was changed.'
