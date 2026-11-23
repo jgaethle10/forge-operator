@@ -38,7 +38,10 @@ export function inspectStudioOwnerIntake({directory=DEFAULT_DIR,uid=process.getu
   const ledger=path.join(directory,'inquiries.ndjson');
   const ids=new Set();
   let latest=null;
-  if(fs.existsSync(ledger)){
+  let ledgerPresent=false;
+  try{fs.lstatSync(ledger);ledgerPresent=true}
+  catch(e){if(e?.code!=='ENOENT')throw e}
+  if(ledgerPresent){
     const stat=privateObject(ledger,'file',uid);
     if(stat.size>16*1024*1024)throw Error('STUDIO_PRIVATE_LEDGER_TOO_LARGE_HOLD');
     const lines=fs.readFileSync(ledger,'utf8').split('\n').filter(Boolean);
