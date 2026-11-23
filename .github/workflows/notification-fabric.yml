@@ -47,16 +47,18 @@ jobs:
       - name: Run focused Relay suite
         run: node --test systemia/notification-fabric/notification-fabric.test.mjs
 
-      - name: Install only existing Express dependency into isolated CI directory
+      - name: Install only pinned Express into private isolated CI directory
         run: |
           set -euo pipefail
           mkdir -p "$RUNNER_TEMP/relay-deps"
-          npm install --prefix "$RUNNER_TEMP/relay-deps" --no-save --package-lock=false --ignore-scripts --no-audit --no-fund express@4.21.2
+          chmod 0700 "$RUNNER_TEMP/relay-deps"
+          npm install --prefix "$RUNNER_TEMP/relay-deps" --no-save --package-lock=true --ignore-scripts --no-audit --no-fund express@4.21.2
           test -d "$RUNNER_TEMP/relay-deps/node_modules/express"
           test ! -e node_modules
-          ln -s "$RUNNER_TEMP/relay-deps/node_modules" node_modules
 
-      - name: Prove authenticated loopback Relay and private durable inbox
+      - name: Prove authenticated loopback Relay with isolated private dependency root
+        env:
+          EVERCRAFT_NOTIFICATION_EXPRESS_ROOT: ${{ runner.temp }}/relay-deps
         run: node --test tests/notification-fabric-resident-loopback.test.mjs
 
       - name: Verify guarded Relay installer contract

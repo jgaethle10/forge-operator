@@ -30,3 +30,14 @@ test('private Relay is never publicly bound and reuses original API',()=>{
  assert.match(runtime,/RELAY_PRIVATE_STORE_SAFETY_HOLD/);
  assert.doesNotMatch(runtime,/listen\(.*'0\.0\.0\.0'/);
 });
+
+
+test('bootstrap uses a private, pinned Express install outside canonical Forge',()=>{
+ assert.match(source,/DEPS="\/var\/lib\/evercraft\/notification-relay-deps"/);
+ assert.match(source,/runuser -u "\$OWNER" -- "\$NPM" install/);
+ assert.match(source,/--prefix "\$DEPS" --no-save --package-lock=true --ignore-scripts/);
+ assert.match(source,/express@4\.21\.2/);
+ assert.match(source,/EVERCRAFT_NOTIFICATION_EXPRESS_ROOT/);
+ assert.match(source,/PRIVATE_EXPRESS_DEPENDENCY_PRESENT=/);
+ assert.doesNotMatch(source,/npm install --prefix "\$REPO"/);
+});

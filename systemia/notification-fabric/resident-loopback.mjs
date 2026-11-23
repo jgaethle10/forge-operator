@@ -4,13 +4,33 @@
 // Secrets are supplied by a protected systemd EnvironmentFile, never source.
 import fs from 'node:fs';
 import path from 'node:path';
-import express from 'express';
+import {createRequire} from 'node:module';
 import {fileURLToPath} from 'node:url';
 import {registerNotificationFabricRoutes} from './http.mjs';
 
 const HOST='127.0.0.1';
 const DEFAULT_PORT=3921;
 const DEFAULT_DIR='/var/lib/evercraft/notification-fabric';
+
+function loadExistingExpress(dependencyRoot){
+  // An explicit isolated dependency root must not fall back to checkout or global code.
+  if(!dependencyRoot)return createRequire(import.meta.url)('express');
+  if(typeof dependencyRoot!=='string'||!path.isAbsolute(dependencyRoot))
+    throw Error('RELAY_DEPENDENCY_ROOT_INVALID');
+  const root=path.resolve(dependencyRoot);
+  const st=fs.lstatSync(root);
+  if(!st.isDirectory()||st.isSymbolicLink()||
+     fs.realpathSync(root)!==root||(st.mode&0o077)!==0||
+     (typeof process.getuid==='function'&&st.uid!==process.getuid()))
+    throw Error('RELAY_DEPENDENCY_ROOT_SAFETY_HOLD');
+  const packageFile=path.join(root,'node_modules','express','package.json');
+  const pkg=fs.lstatSync(packageFile);
+  if(!pkg.isFile()||pkg.isSymbolicLink())throw Error('RELAY_EXPRESS_NOT_INSTALLED');
+  const meta=JSON.parse(fs.readFileSync(packageFile,'utf8'));
+  if(meta.name!=='express'||meta.version!=='4.21.2')
+    throw Error('RELAY_EXPRESS_VERSION_HOLD');
+  return createRequire(path.join(root,'entrypoint.cjs'))('express');
+}
 
 function privateStore(dir){
   if(typeof dir!=='string'||!path.isAbsolute(dir))throw Error('RELAY_PRIVATE_STORE_PATH_REQUIRED');
@@ -31,12 +51,14 @@ export async function startNotificationRelayResident({
   sessionSecret=process.env.EVERCRAFT_NOTIFICATION_SESSION_SECRET||'',
   receiptSecret=process.env.EVERCRAFT_NOTIFICATION_RECEIPT_SECRET||'',
   allowedOrigins=process.env.EVERCRAFT_NOTIFICATION_ALLOWED_ORIGINS||'',
+  expressRoot=process.env.EVERCRAFT_NOTIFICATION_EXPRESS_ROOT||'',
 }={}){
   if(!Number.isInteger(port)||port<0||port>65535)
     throw Error('RELAY_LOOPBACK_PORT_INVALID');
   if(typeof ingestToken!=='string'||!/^[-_A-Za-z0-9]{40,256}$/.test(ingestToken))
     throw Error('RELAY_INGEST_CREDENTIAL_MISSING_OR_WEAK');
   const root=privateStore(dataDir);
+  const express=loadExistingExpress(expressRoot);
   const app=express();
   app.disable('x-powered-by');
   app.disable('etag');
