@@ -55,3 +55,24 @@ This is a **read-only, local-only** diagnostic. It prints aggregate counts and n
 - `duplicate_pending_and_accepted`: an alert has both a queued file and an acceptance receipt; review before any retry
 
 **Important:** This utility does not inspect the running Fabric process environment. Zero inquiries do not prove Relay is configured. Privately verify an existing authorized owner principal, owned Notification Fabric endpoint, and protected ingest token, without exposing values or making up an identity. No synthetic leads or emails.
+
+
+## Penguin Notification Fabric resident: staged activation
+
+The full Forge `server.ts` registers Notification Fabric but is not a resident Penguin service. Keep the working Fabric runtime on port 8787 untouched. A dedicated **first-party, loopback-only adapter** can host the same `registerNotificationFabricRoutes` on port 3921 without publishing any extra internet ingress.
+
+Read-only prerequisite check after source rollout:
+
+```bash
+scripts/install-notification-relay-loopback.sh --check
+```
+
+Explicit owner-authorized standalone activation (requires existing Express dependency and root permission):
+
+```bash
+sudo bash scripts/install-notification-relay-loopback.sh --apply
+```
+
+This installs `evercraft-notification-fabric.service`, which binds only `127.0.0.1:3921` and persists a private mode-0700 inbox under `/var/lib/evercraft/notification-fabric`. Strong ingest, session, and receipt secrets are generated on the owned host and saved only to root-owned `/etc/evercraft/notification-fabric.env` (0600); no token is printed or committed. Any preexisting service or configuration is held for manual review. It does not edit `/etc/evercraft/fabric.env`, restart Fabric, supply a Studio recipient, send any notification, or expose browser push. A successful local health check proves the **Relay listener**, not Studio notification delivery.
+
+**Second, separate authorization gate:** choose and verify the existing owner Relay principal, and wire the protected host-only Relay settings (`EVERCRAFT_NOTIFICATION_BASE_URL`, `EVERCRAFT_NOTIFICATION_INGEST_TOKEN`, `EVERCRAFT_STUDIO_RELAY_OWNER_PRINCIPAL`) into `evercraft-fabric.service` using an owner-reviewed private systemd environment file. Do not guess an identity, paste secrets into a terminal transcript, log credentials, create a second Relay store, or append insecure duplicate variables to an existing environment file. Only when a real opted-in buyer has submitted an inquiry should its accepted reference be used to verify outbox -> durable Relay inbox -> operator acknowledgement. Relay inbox acceptance is **not** human notification or payment.

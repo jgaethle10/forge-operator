@@ -1,0 +1,32 @@
+import fs from 'node:fs';
+import test from 'node:test';
+import assert from 'node:assert/strict';
+
+const source=fs.readFileSync('scripts/install-notification-relay-loopback.sh','utf8');
+const runtime=fs.readFileSync('systemia/notification-fabric/resident-loopback.mjs','utf8');
+
+test('Relay installation requires explicit operator apply and preserves existing configuration',()=>{
+ assert.match(source,/MODE=check/);
+ assert.match(source,/--apply/);
+ assert.match(source,/existing Relay configuration or unit requires review; refusing overwrite/);
+ assert.match(source,/if \[\[ -e "\$ENV_FILE" \|\| -e "\$UNIT_FILE" \]\]/);
+ assert.match(source,/HOLD: --apply requires root/);
+ assert.match(source,/READ_ONLY=YES/);
+});
+test('Relay stores credentials in root-only file and does not touch running Fabric or notifications',()=>{
+ assert.match(source,/fs\.openSync\(file,'wx',0o600\)/);
+ assert.match(source,/crypto\.randomBytes\(32\)/);
+ assert.match(source,/chmodSync\(file,0o600\)/);
+ assert.match(source,/EnvironmentFile=\$ENV_FILE/);
+ assert.doesNotMatch(source,/systemctl restart evercraft-fabric/);
+ assert.doesNotMatch(source,/systemctl start evercraft-fabric/);
+ assert.doesNotMatch(source,/curl -X POST/);
+ assert.match(source,/STUDIO_DISPATCH=NOT_WIRED/);
+});
+test('private Relay is never publicly bound and reuses original API',()=>{
+ assert.match(runtime,/const HOST='127\.0\.0\.1'/);
+ assert.match(runtime,/registerNotificationFabricRoutes\(app,/);
+ assert.match(runtime,/RELAY_INGEST_CREDENTIAL_MISSING_OR_WEAK/);
+ assert.match(runtime,/RELAY_PRIVATE_STORE_SAFETY_HOLD/);
+ assert.doesNotMatch(runtime,/listen\(.*'0\.0\.0\.0'/);
+});

@@ -7,12 +7,18 @@ on:
       - feat/evercraft-relay-v2
     paths:
       - "systemia/notification-fabric/**"
+      - "tests/notification-fabric-resident-loopback.test.mjs"
+      - "tests/notification-fabric-resident-installer.test.mjs"
+      - "scripts/install-notification-relay-loopback.sh"
       - "systemia/signal-fabric/**"
       - "public/evercraft-push-sw.js"
       - ".github/workflows/notification-fabric.yml"
   pull_request:
     paths:
       - "systemia/notification-fabric/**"
+      - "tests/notification-fabric-resident-loopback.test.mjs"
+      - "tests/notification-fabric-resident-installer.test.mjs"
+      - "scripts/install-notification-relay-loopback.sh"
       - "systemia/signal-fabric/**"
       - "public/evercraft-push-sw.js"
       - ".github/workflows/notification-fabric.yml"
@@ -41,6 +47,23 @@ jobs:
       - name: Run focused Relay suite
         run: node --test systemia/notification-fabric/notification-fabric.test.mjs
 
+      - name: Install only existing Express dependency into isolated CI directory
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/relay-deps"
+          npm install --prefix "$RUNNER_TEMP/relay-deps" --no-save --package-lock=false --ignore-scripts --no-audit --no-fund express@4.21.2
+          test -d "$RUNNER_TEMP/relay-deps/node_modules/express"
+          test ! -e node_modules
+          ln -s "$RUNNER_TEMP/relay-deps/node_modules" node_modules
+
+      - name: Prove authenticated loopback Relay and private durable inbox
+        run: node --test tests/notification-fabric-resident-loopback.test.mjs
+
+      - name: Verify guarded Relay installer contract
+        run: |
+          bash -n scripts/install-notification-relay-loopback.sh
+          node --test tests/notification-fabric-resident-installer.test.mjs
+
       - name: Syntax-check runtime modules
         run: |
           node --check systemia/notification-fabric/fabric.mjs
@@ -49,3 +72,4 @@ jobs:
           node --check systemia/notification-fabric/realtime-hub.mjs
           node --check systemia/notification-fabric/session-token.mjs
           node --check systemia/notification-fabric/web-push.mjs
+          node --check systemia/notification-fabric/resident-loopback.mjs
