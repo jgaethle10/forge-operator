@@ -74,9 +74,32 @@ local_app || { echo 'Demand Command local 18896 identity not healthy. Do not ins
 
 TEMP="$(mktemp)"
 trap 'rm -f "$TEMP"' EXIT
-# ssh-keyscan is untrusted input. Pin the fingerprint observed on Penguin.
-"$SCAN" -T 6 -p 8222 -t ed25519 "$LAN_IP" > "$TEMP" 2>/dev/null || true
-LINES="$(wc -l < "$TEMP")"
+# ChromeOS/Crostini forwarding can accept TCP and delay an SSH key exchange.
+# Each response remains UNTRUSTED until compared to the independent Penguin fingerprint.
+# Retry only when no single key arrived; never retry through a key mismatch.
+LINES=0
+for attempt in 1 2 3 4; do
+  : > "$TEMP"
+  "$SCAN" -T 25 -p 8222 -t ed25519 "$LAN_IP" > "$TEMP" 2>/dev/null || true
+  LINES="$(wc -l < "$TEMP")"
+  if [[ "$LINES" -eq 1 ]]; then
+    RECEIVED="$("$KEYGEN" -lf "$TEMP" -E sha256 | awk '{print $2}')"
+    if [[ "$RECEIVED" != "$EXPECTED_FINGERPRINT" ]]; then
+      echo 'SSH host fingerprint MISMATCH. Possible wrong device or interception. No tunnel installed.' >&2
+      exit 2
+    fi
+    echo "PASS: Verified the dedicated Penguin SSH fingerprint (attempt $attempt)."
+    break
+  fi
+  if [[ "$LINES" -ne 0 ]]; then
+    echo 'Multiple SSH host keys or invalid response from LAN:8222; refusing to proceed.' >&2
+    exit 2
+  fi
+  if [[ "$attempt" -lt 4 ]]; then
+    echo "SSH key exchange did not finish on attempt $attempt; retrying the same pinned identity..."
+    sleep 2
+  fi
+done
 [[ "$LINES" -eq 1 ]] || {
   echo 'No single SSH ED25519 host key received; NO TUNNEL CREATED.' >&2
   "$PYTHON" - "$LAN_IP" <<'PY'
@@ -96,11 +119,6 @@ PY
   echo 'Do not weaken host checking, open the household WAN, or start default SSH to bypass this.' >&2
   exit 2
 }
-RECEIVED="$("$KEYGEN" -lf "$TEMP" -E sha256 | awk '{print $2}')"
-if [[ "$RECEIVED" != "$EXPECTED_FINGERPRINT" ]]; then
-  echo 'SSH host fingerprint MISMATCH. Possible wrong device or interception. No tunnel installed.' >&2
-  exit 2
-fi
 echo "PASS: LAN SSH host fingerprint exactly matches dedicated Penguin key ($RECEIVED)."
 if [[ "$MODE" == --verify ]]; then
   echo 'No tunnel, service, DNS, or Caddy configuration was changed.'
