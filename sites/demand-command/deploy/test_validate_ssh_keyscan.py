@@ -42,23 +42,23 @@ class ValidateKeyscanTests(unittest.TestCase):
 
     def test_accept_openssh_banner_comment_then_correct_key(self):
         value, fp = example_key()
-        banner = "# 192.168.88.3:8222 SSH-2.0-OpenSSH_9.2p1 Debian-2+deb12u7\\n"
+        banner = "# 192.168.88.3:8222 SSH-2.0-OpenSSH_9.2p1 Debian-2+deb12u7\n"
         output, count = canonicalize(banner + self.record(value), self.host, fp)
         self.assertEqual(output, self.record(value).strip())
         self.assertEqual(count, 1)
 
     def test_accept_banner_comments_and_duplicate_matching_keys(self):
         value, fp = example_key()
-        comment = "# 192.168.88.3:8222 SSH-2.0-OpenSSH_9.2p1 Debian-2+deb12u7\\n"
+        comment = "# 192.168.88.3:8222 SSH-2.0-OpenSSH_9.2p1 Debian-2+deb12u7\n"
         output, count = canonicalize(
-            comment + self.record(value) + "\\n" + comment + self.record(value),
+            comment + self.record(value) + "\n" + comment + self.record(value),
             self.host, fp,
         )
         self.assertEqual(output, self.record(value).strip())
         self.assertEqual(count, 2)
 
     def test_comments_only_are_retryable_and_never_a_valid_key(self):
-        comment = "# 192.168.88.3:8222 SSH-2.0-OpenSSH_9.2p1 Debian-2+deb12u7\\n"
+        comment = "# 192.168.88.3:8222 SSH-2.0-OpenSSH_9.2p1 Debian-2+deb12u7\n"
         _, fp = example_key()
         with self.assertRaises(NoHostKeyReceived):
             canonicalize(comment, self.host, fp)
@@ -66,7 +66,7 @@ class ValidateKeyscanTests(unittest.TestCase):
     def test_comment_does_not_allow_untrusted_key_record(self):
         good, fp = example_key()
         bad, _ = example_key(1)
-        comment = "# 192.168.88.3:8222 SSH-2.0-OpenSSH_9.2p1\\n"
+        comment = "# 192.168.88.3:8222 SSH-2.0-OpenSSH_9.2p1\n"
         with self.assertRaisesRegex(InvalidKeyscan, "MISMATCH"):
             canonicalize(comment + self.record(bad), self.host, fp)
         with self.assertRaisesRegex(InvalidKeyscan, "MISMATCH"):
@@ -76,7 +76,7 @@ class ValidateKeyscanTests(unittest.TestCase):
         helper = pathlib.Path(__file__).with_name("validate_ssh_keyscan.py")
         _, fp = example_key()
         with tempfile.NamedTemporaryFile() as f:
-            f.write(b"# 192.168.88.3:8222 SSH-2.0-OpenSSH_9.2p1\\n")
+            f.write(b"# 192.168.88.3:8222 SSH-2.0-OpenSSH_9.2p1\n")
             f.flush()
             r = subprocess.run([sys.executable, str(helper), self.host, fp, f.name],
                                capture_output=True, text=True)
