@@ -8,6 +8,9 @@ on:
       - 'tests/provision-website-audit-owned-intake.test.mjs'
       - 'scripts/rescue-fabric-journal-edge.sh'
       - 'scripts/classify-fabric-checkout-dirt.mjs'
+      - 'package.json'
+      - 'scripts/verify-fabric-journal-build-isolated.mjs'
+      - 'tests/fabric-journal-test-isolation.test.mjs'
       - 'scripts/install-fabric-owned-edge.sh'
       - 'scripts/install-fabric-router-map-resident.sh'
       - 'scripts/evercraft-public-edge-map.mjs'
@@ -26,6 +29,9 @@ on:
       - 'tests/provision-website-audit-owned-intake.test.mjs'
       - 'scripts/rescue-fabric-journal-edge.sh'
       - 'scripts/classify-fabric-checkout-dirt.mjs'
+      - 'package.json'
+      - 'scripts/verify-fabric-journal-build-isolated.mjs'
+      - 'tests/fabric-journal-test-isolation.test.mjs'
       - 'scripts/install-fabric-owned-edge.sh'
       - 'scripts/install-fabric-router-map-resident.sh'
       - 'scripts/evercraft-public-edge-map.mjs'
@@ -51,6 +57,8 @@ jobs:
           node-version: '22'
       - name: Prove owned edge install/update contract
         run: node --test tests/fabric-owned-edge-installer.test.mjs tests/fabric-checkout-dirt.test.mjs tests/fabric-journal-rescue.test.mjs
+      - name: Prove Fabric tests do not regenerate tracked Journal output
+        run: node --test tests/fabric-journal-test-isolation.test.mjs
       - name: Prove private Website Audit intake cannot silently become payment-ready
         run: node --test tests/provision-website-audit-owned-intake.test.mjs
       - name: Prove ingress diagnosis and bounded recovery policy
