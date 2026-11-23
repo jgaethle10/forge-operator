@@ -7,6 +7,8 @@ on:
       - 'scripts/client001-domain-rdap.mjs'
       - 'tests/client001-owned-edge.test.mjs'
       - 'tests/client001-field-preflight.test.mjs'
+      - 'tests/client001-caddy-coexistence.test.mjs'
+      - 'scripts/client001-caddy-coexistence.mjs'
       - 'scripts/client001-field-preflight.mjs'
       - '.github/workflows/client001-owned-static-edge.yml'
       - 'public/clients/on-the-go/review/index.html'
@@ -17,6 +19,8 @@ on:
       - 'scripts/stage-client001-owned-edge.sh'
       - 'tests/client001-owned-edge.test.mjs'
       - 'tests/client001-field-preflight.test.mjs'
+      - 'tests/client001-caddy-coexistence.test.mjs'
+      - 'scripts/client001-caddy-coexistence.mjs'
       - 'scripts/client001-field-preflight.mjs'
       - '.github/workflows/client001-owned-static-edge.yml'
       - 'public/clients/on-the-go/review/index.html'
@@ -35,7 +39,8 @@ jobs:
       - name: Enforce client-owned hostname and no deployment side effects
         run: |
           node --check scripts/client001-field-preflight.mjs
-          node --test tests/client001-owned-edge.test.mjs tests/client001-field-preflight.test.mjs
+          node --check scripts/client001-caddy-coexistence.mjs
+          node --test tests/client001-owned-edge.test.mjs tests/client001-field-preflight.test.mjs tests/client001-caddy-coexistence.test.mjs
       - name: Parse candidate Caddy host with real Caddy, no DNS or public connection
         run: |
           set -euo pipefail
@@ -62,6 +67,74 @@ jobs:
           assert.ok(strings.some(s=>/User-agent:\s*\*\n\s*Disallow:\s*\//.test(s)),'robots response must contain a real newline');
           assert.doesNotMatch(compact,/reverse_proxy|github\.io|onrender\.com/);
           console.log('CADDY_ADAPT_PASS: invalid test hostname only, no public TLS or DNS');
+          NODE
+      - name: Rehearse coexistence with exact Fabric installer Caddyfile in offline container
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          import {composeCandidate} from './scripts/client001-caddy-coexistence.mjs';
+          const installer=fs.readFileSync('scripts/install-fabric-owned-edge.sh','utf8');
+          const found=installer.match(/sudo tee \/etc\/evercraft\/Caddyfile >\/dev\/null <<'EOF'\n([\s\S]*?)\nEOF/);
+          if(!found)throw Error('cannot_find_canonical_installer_caddyfile');
+          const base=found[1]+'\n';
+          const fragment=fs.readFileSync('infra/evercraft-edge/client001-on-the-go/Caddyfile.example','utf8');
+          const combined=composeCandidate(base,fragment);
+          const dir=process.env.RUNNER_TEMP;
+          fs.writeFileSync(path.join(dir,'fabric-existing.Caddyfile'),base,{mode:0o600});
+          fs.writeFileSync(path.join(dir,'client001-composed.Caddyfile'),combined,{mode:0o600});
+          if(!combined.startsWith(base))throw Error('existing_caddyfile_modified');
+          console.log('BASE_CONFIG_PREFIX_UNCHANGED; synthesized additional hostname only');
+          NODE
+          for name in fabric-existing client001-composed; do
+            docker run --rm --network none \
+              --env EVERCRAFT_PUBLIC_HOST=fabric.systemiacommandcenters.invalid \
+              --env EVERCRAFT_ACME_EMAIL=ops@example.invalid \
+              --env CLIENT001_DOMAIN=onthegoquicklube.invalid \
+              -v "$RUNNER_TEMP/$name.Caddyfile:/etc/caddy/Caddyfile:ro" \
+              caddy:2 caddy adapt --config /etc/caddy/Caddyfile --adapter caddyfile \
+              > "$RUNNER_TEMP/$name.adapted.json"
+          done
+          # Exercise the exact stdin-only Caddy adapter mode used by the
+          # physical-node read-only rehearsal, still in an isolated CI container.
+          cat "$RUNNER_TEMP/client001-composed.Caddyfile" |
+            docker run --rm --network none -i \
+              --env EVERCRAFT_PUBLIC_HOST=fabric.systemiacommandcenters.invalid \
+              --env EVERCRAFT_ACME_EMAIL=ops@example.invalid \
+              --env CLIENT001_DOMAIN=onthegoquicklube.invalid \
+              caddy:2 caddy adapt --config /dev/stdin --adapter caddyfile \
+              > "$RUNNER_TEMP/client001-composed-stdin.adapted.json"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import assert from 'node:assert/strict';
+          const base=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/client001-composed.adapted.json','utf8'));
+          const stdin=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/client001-composed-stdin.adapted.json','utf8'));
+          // Caddy includes the input filename in adapted source metadata.
+          // That path changes with stdin, but must not change route behavior.
+          const canonical=x=>JSON.parse(JSON.stringify(x)
+            .replaceAll('/dev/stdin','<input>')
+            .replaceAll('/etc/caddy/Caddyfile','<input>'));
+          assert.deepEqual(canonical(stdin),canonical(base));
+          console.log('CADDY_READ_ONLY_STDIN_ADAPTER_PASS');
+          NODE
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          import assert from 'node:assert/strict';
+          import {assertCoexistence} from './scripts/client001-caddy-coexistence.mjs';
+          const dir=process.env.RUNNER_TEMP;
+          const read=name=>JSON.parse(fs.readFileSync(path.join(dir,name+'.adapted.json'),'utf8'));
+          const verdict=assertCoexistence(read('fabric-existing'),read('client001-composed'),
+            {fabricHost:'fabric.systemiacommandcenters.invalid'});
+          assert.equal(verdict.original_host_routes_preserved,true);
+          assert.deepEqual(verdict.added_hosts,['onthegoquicklube.invalid','www.onthegoquicklube.invalid']);
+          console.log(JSON.stringify({schema:'evercraft.client001.caddy-coexistence-ci.v1',
+            state:'PASS_SOURCE_ONLY',host_preservation:verdict.original_host_routes_preserved,
+            original_host_route_count:verdict.original_host_route_count,
+            added_synthetic_hosts:verdict.added_hosts,real_public_domain_tested:false,
+            physical_caddyfile_modified:false,service_reloaded:false,
+            public_deploy_performed:false}));
           NODE
       - name: Test immutable release staging on disposable CI host
         run: |
@@ -121,5 +194,8 @@ jobs:
             ${{ runner.temp }}/client001-caddy-adapted.json
             ${{ runner.temp }}/client001-domain-rdap.json
             ${{ runner.temp }}/client001-field-preflight.json
+            ${{ runner.temp }}/fabric-existing.adapted.json
+            ${{ runner.temp }}/client001-composed.adapted.json
+            ${{ runner.temp }}/client001-composed-stdin.adapted.json
           if-no-files-found: warn
           retention-days: 7

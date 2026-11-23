@@ -99,6 +99,50 @@ ingress, HTTPS, DNS ownership, recovery, or Juan's signoff.
 localhost DNS mapping on a public/customer browser. Client 001's
 public `.com` remains a separate, registrar-controlled path.
 
+## Shared Caddy coexistence rehearsal (source only, read-only)
+
+Now that Penguin has **physically staged** the exact canonical Client 001
+SHA-256 release and shown active Fabric plus Caddy on Linux ports
+`8787`, `18080` and `8443`, the next integration gate is testing
+**the operator's existing** `/etc/evercraft/Caddyfile` before any new
+hostname. Generic `caddy.service=inactive` is intentional; the actual
+resident service is `evercraft-public-edge.service`.
+
+```bash
+cd "$HOME/.local/share/evercraft/forge-operator"
+node scripts/client001-caddy-coexistence.mjs
+```
+
+This read-only script checks the on-node staged source digest, reads the
+real Caddyfile and the limited nonsecret
+`/etc/evercraft/public-edge.env` hostname/contact settings, and invokes
+`/usr/bin/caddy adapt` twice using **in-memory stdin**, once for the
+unchanged resident configuration and once for a synthetic
+`onthegoquicklube.invalid` additional site. It never performs a Caddy
+reload, edits a service/file, links `current`, listens on a new port,
+issues a certificate, changes public DNS or configures the browser.
+An existing Client 001 site in the Caddyfile fails closed and must be
+manually reconciled. The output is a **redacted receipt**, not a copy of
+the actual edge config or its environment.
+
+A `PASS_SOURCE_COMPOSITION_ONLY` means real Caddy can parse both inputs
+and the original host-matched route handlers are preserved by the adapter.
+It is *not* a real site deployment or proof that a public customer
+domain/certificate is authorized. `HOLD_REHEARSAL_INCOMPLETE` is a
+blocker to investigate, not permission to overwrite the existing
+configuration. If the live Caddyfile contains imports or extra
+environment variables not covered by the minimal edge env,
+the rehearsal may hold pending a private, carefully scoped operator
+inspection. Never paste secrets or entire live configuration into chat.
+
+The independently verified Fabric external canary confirms point-in-time
+public 80/443 reachability and trusted TLS, but its aggregate status may
+fail on unrelated Journal content. Do not interpret a Journal failure as
+proof that the Caddy edge or Client 001 is down. Client 001 remains
+**unpublished** until exact-domain rights, Juan signoff, authorized
+current release pointer, independent external site/browser QA and
+recovery/rollback evidence are all present.
+
 ## Staging without public deployment
 
 1. Inspect canonical source/asset rights and the exact client release ref.
