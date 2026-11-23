@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Evercraft Demand Desk</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f5f6f8;color:#192333;font:16px/1.48 system-ui,sans-serif}button,input,textarea,select{font:inherit}button{cursor:pointer}button,a,input,textarea,select{outline-offset:3px}a{color:#124cb4}button{border:1px solid #cbd3df;border-radius:7px;padding:.52rem .8rem;background:white;color:#192333}button:hover{background:#e9eff9}.primary{background:#174cbd;color:white;border-color:#174cbd}.primary:hover{background:#133c93}.shell{display:grid;grid-template-columns:250px 1fr;min-height:100vh}aside{background:#111c30;color:#fff;padding:1.5rem 1rem}.brand{font-weight:800;letter-spacing:.13em;font-size:.84rem;color:#a0baff}.brand strong{display:block;color:white;letter-spacing:0;font-size:1.35rem;margin-top:.35rem}nav{display:grid;gap:.35rem;margin:2rem 0}nav button{display:flex;justify-content:space-between;text-align:left;background:transparent;color:#d8e3f9;border-color:transparent;font-size:.91rem}nav button:hover,nav button[aria-current=true]{background:#263b62;color:white}aside small{color:#b5c4df}main{width:100%;max-width:1500px;padding:clamp(1rem,3vw,3rem);min-width:0}h1,h2,h3,p{margin-top:0}h1{font-size:clamp(2rem,4vw,3rem);letter-spacing:-.05em;margin-bottom:.2rem}h2{font-size:1.25rem}header,.bar{display:flex;justify-content:space-between;align-items:center;gap:.75rem;flex-wrap:wrap}.muted{color:#526176}.hero{background:#e8efff;border:1px solid #d2ddf5;border-radius:12px;padding:1.2rem;margin:1.3rem 0}.hero p{margin-bottom:.45rem}.stats,.cards,.fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:.75rem}.stat,.card,.pane{background:white;border:1px solid #dce2eb;border-radius:10px;padding:1rem}.stat b{display:block;font-size:1.55rem}.stat span{font-size:.9rem;color:#526176}.pane{margin-top:1rem}.scroller{overflow:auto}table{border-collapse:collapse;width:100%;min-width:720px}th,td{text-align:left;padding:.65rem;border-bottom:1px solid #e5eaf1;vertical-align:top}th{font-size:.88rem;color:#536277}td button{font-weight:650}.pill{display:inline-block;border-radius:20px;background:#edf1f7;padding:.22rem .56rem;font-size:.85rem}.verified{background:#dcf5e7;color:#12633e}input,textarea,select{width:100%;border:1px solid #aebacc;border-radius:6px;padding:.5rem;background:#fff;color:inherit}input[type=checkbox]{width:auto}.bar input{width:auto;max-width:100%}label{display:grid;gap:.3rem;font-weight:600;font-size:.91rem}textarea{min-height:5rem;resize:vertical}.wide{grid-column:1/-1}.toolbar{display:flex;flex-wrap:wrap;gap:.5rem}.empty{padding:2rem 0;color:#526176}dialog{width:min(920px,96vw);max-height:92vh;border:1px solid #c8d3e4;border-radius:14px;padding:0;color:inherit}dialog::backdrop{background:#101b30a8}.editor{padding:1.2rem}.section{border:0;border-top:1px solid #dce2eb;margin:1rem 0;padding:1rem 0 0;width:100%;min-width:0}.section legend{font-weight:750;padding-right:.6rem}.history{padding-left:1.3rem}.history li{margin-bottom:.8rem}.history pre{font:inherit;white-space:pre-wrap;overflow-wrap:anywhere;background:#f4f6fa;padding:.6rem}.status{min-height:1.5rem;margin:.7rem 0;color:#254b75}.error{color:#952e2e}.card p{margin-bottom:.65rem}.card h3{margin-bottom:.4rem}.actions{position:sticky;bottom:0;background:white;padding:.65rem 0;border-top:1px solid #e3e8f0}@media(max-width:760px){.shell{display:block}aside{padding:1rem}nav{display:flex;overflow:auto;margin:.8rem 0 .4rem}nav button{white-space:nowrap;gap:.5rem}aside small{display:none}}
+</style>
+<div class="shell"><aside><div class="brand">EVERCRAFT<strong>Demand Desk</strong></div><nav id="nav" aria-label="Opportunity views"></nav><small id="storage">Saved in this browser</small></aside><main>
+<header><div><h1 id="title">Opportunity desk</h1><div class="muted" id="subtitle">Turn verified demand into a specific offer.</div></div><button class="primary" id="new">New opportunity</button></header>
+<div id="hero" class="hero"></div><div class="stats" id="stats"></div>
+<section id="pipeline" class="pane"><div class="bar"><h2>Opportunities</h2><div class="toolbar"><input type="search" id="search" aria-label="Search opportunities" placeholder="Search opportunities"><button id="compare">Compare selected</button></div></div><div id="results"></div></section>
+<section id="library" class="pane" hidden><div class="bar"><h2>Offer patterns</h2><button id="newPattern">New pattern</button></div><div class="cards" id="patterns"></div></section>
+<div class="pane"><div class="toolbar"><button id="export">Export workspace</button><button id="import">Import workspace</button><button id="queue">Export Systemia queue</button><input type="file" id="file" accept=".json,application/json" hidden></div><div id="notice" class="status" role="status"></div></div>
+</main></div>
+<dialog id="editor"><div class="editor"><div class="bar"><h2 id="editorTitle"></h2><button type="button" data-close="editor">Close</button></div><form id="record"></form><div id="recordMessage" class="status" role="status"></div></div></dialog>
+<dialog id="comparison"><div class="editor"><div class="bar"><h2>Compare opportunities</h2><button data-close="comparison">Close</button></div><div id="compareBody" class="scroller"></div></div></dialog>
+<dialog id="patternDialog"><div class="editor"><div class="bar"><h2>Offer pattern</h2><button data-close="patternDialog">Close</button></div><form id="patternForm"></form></div></dialog>
+<script>
+'use strict';
+const $=id=>document.getElementById(id);
+const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid=()=>globalThis.crypto?.randomUUID?.()??Date.now().toString(36)+Math.random().toString(36).slice(2);
+const products=['Evercraft Payments','Work Saban','Evercraft Research','ForensiScope','Evercraft Commercial Studio / Fallen Studios','EV site planning and reports','Qualified-lead systems','Other Evercraft-owned tool'];
+const kinds=['Lead','Direct paid work','Product offer'];
+const stages=['Researching','Qualified','Offer ready','Contacted','Replied','In negotiation','Won','Closed','Lost'];
+const terminal=['Won','Closed','Lost'];
+const views=['Opportunity desk','Qualified leads','Direct paid work','Product offers','Known problems','Closed or lost','Offer library'];
+const starters=[
+['Checkout setup','Evercraft Payments','Assess the current checkout and define a payment-link setup around one real purchase flow.'],
+['Backlog pilot','Work Saban','Scope one recurring task with a clear input, deliverable, and review step.'],
+['Decision brief','Evercraft Research','Deliver a source-linked brief for one decision with a defined deadline.'],
+['Media review','ForensiScope','Scope a transcript or evidence timeline around the media and review question.'],
+['Short commercial','Evercraft Commercial Studio / Fallen Studios','Propose a 30-second commercial around a specific service, event, or offer.'],
+['EV site screening','EV site planning and reports','Scope a site report around the property, parking, access, and available utility information.'],
+['Lead qualification pilot','Qualified-lead systems','Define buyer criteria and test them against a small batch of evidenced signals.']
+].map(([name,product,scope],i)=>({id:'starter-'+i,name,product,scope,notes:''}));
+const groups=[
+['Business and buyer',[['business','Business','text',true],['buyer','Buyer name'],['role','Buyer role'],['contact','Contact or channel'],['website','Business website','url'],['owner','Opportunity owner']]],
+['Research and demand',[['pain','Specific pain point','area',true],['signal','Source message or signal','area'],['source','Source URL','url'],['verifiedOn','Date verified','date'],['research','Business research and buyer-specific observations','area'],['kind','Opportunity type',kinds],['status','Status',stages],['verified','Source checked and demand verified','check']]],
+['Offer and outreach',[['product','Matching Evercraft capability',products],['pattern','Reusable offer pattern','patterns'],['offer','Tailored offer, scope, and terms','area'],['draft','Personalized outreach draft','area'],['value','Estimated value (USD)','number'],['deadline','Buyer deadline','date']]],
+['Follow-up and outcome',[['next','Next action'],['due','Next follow-up','date'],['outcome','Outcome or loss reason','area']]]];
+const fields=groups.flatMap(([,list])=>list);
+const logTypes=['Sent','Reply','Objection','Note'];
+const blank=()=>({schema:1,records:[],patterns:starters});
+const storageKey='evercraft-demand-desk-v1';
+let state=blank(),view=0,editing=null,patternEditing=null,selected=new Set();
+function valid(data){
+ return data?.schema===1&&Array.isArray(data.records)&&Array.isArray(data.patterns)&&
+ data.records.every(r=>typeof r?.id==='string'&&typeof r.business==='string'&&kinds.includes(r.kind)&&stages.includes(r.status)&&Array.isArray(r.events)&&r.events.every(e=>logTypes.includes(e?.type)&&typeof e.body==='string'))&&
+ data.patterns.every(p=>typeof p?.id==='string'&&typeof p.name==='string'&&products.includes(p.product)&&typeof p.scope==='string')&&
+ new Set(data.records.map(r=>r.id)).size===data.records.length&&new Set(data.patterns.map(p=>p.id)).size===data.patterns.length;
+}
+try{const saved=JSON.parse(localStorage.getItem(storageKey));if(valid(saved))state=saved;}catch{ $('notice').textContent='Browser storage could not be read.'; }
+function save(data){
+ try{localStorage.setItem(storageKey,JSON.stringify(data));state=data;return true;}
+ catch{$('notice').textContent='Browser storage is unavailable or full.';return false;}
+}
+const today=()=>{const d=new Date();return new Date(d-d.getTimezoneOffset()*60000).toISOString().slice(0,10);};
+const verified=r=>r.verified&&r.verifiedOn&&r.signal?.trim();
+const active=r=>!terminal.includes(r.status);
+const action=r=>r.next||(terminal.includes(r.status)?'Review outcome':!verified(r)?'Verify the source':!r.buyer||!r.research?'Research the buyer':!r.offer?'Define the offer':!r.draft?'Write personalized outreach':!r.events.some(e=>e.type==='Sent')?'Review outreach draft':'Review replies and set follow-up');
+const deadline=r=>[r.due,r.deadline].filter(Boolean).sort()[0]||'9999-12-31';
+const rank=(a,b)=>Number(deadline(a)>today())-Number(deadline(b)>today())||Number(!!verified(b))-Number(!!verified(a))||deadline(a).localeCompare(deadline(b))||Number(b.value||0)-Number(a.value||0);
+const money=n=>n?new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:2}).format(n):'—';
+function inView(r,i){
+ return [true,active(r)&&!!verified(r)&&r.status!=='Researching',active(r)&&r.kind===kinds[1],active(r)&&r.kind===kinds[2],active(r)&&!!r.pain&&(!verified(r)||r.status==='Researching'),!active(r)][i];
+}
+function render(){
+ $('title').textContent=views[view];$('pipeline').hidden=view===6;$('library').hidden=view!==6;
+ $('nav').innerHTML=views.map((name,i)=>'<button data-view="'+i+'" aria-current="'+(i===view)+'">'+name+(i>0&&i<6?'<span>'+state.records.filter(r=>inView(r,i)).length+'</span>':'')+'</button>').join('');
+ const open=state.records.filter(active).sort(rank),top=open[0];
+ $('hero').innerHTML='<h2>Next to push</h2>'+(top?'<p><strong>'+esc(top.business)+'</strong> · '+esc(action(top))+'</p><button data-record="'+esc(top.id)+'">Open opportunity</button>':'<p>Capture a business and its source signal to start building the queue.</p>');
+ $('stats').innerHTML=[['Open opportunities',open.length],['Verified demand',open.filter(verified).length],['Due now',open.filter(r=>deadline(r)<=today()).length],['Won',state.records.filter(r=>r.status==='Won').length]].map(([label,value])=>'<div class="stat"><b>'+value+'</b><span>'+label+'</span></div>').join('');
+ const q=$('search').value.trim().toLowerCase();
+ const rows=state.records.filter(r=>inView(r,view)&&[r.business,r.buyer,r.pain,r.product,r.status,r.research,r.signal].join(' ').toLowerCase().includes(q)).sort(rank);
+ $('compare').textContent='Compare selected'+(selected.size?' ('+selected.size+')':'');$('compare').disabled=selected.size<2;
+ $('results').innerHTML=rows.length?'<div class="scroller"><table><thead><tr><th>Compare</th><th>Business / buyer</th><th>Demand / offer</th><th>Status</th><th>Next action</th><th>Value</th></tr></thead><tbody>'+rows.map(r=>'<tr><td><input type="checkbox" data-select="'+esc(r.id)+'" aria-label="Compare '+esc(r.business)+'" '+(selected.has(r.id)?'checked':'')+'></td><td><button data-record="'+esc(r.id)+'">'+esc(r.business)+'</button><div class="muted">'+esc(r.buyer||'Buyer unknown')+'</div></td><td>'+esc(r.pain)+'<div class="muted">'+esc(r.product||'Offer unmatched')+'</div></td><td><span class="pill '+(verified(r)?'verified':'')+'">'+esc(r.status)+'</span><div class="muted">'+(verified(r)?'Verified':'Needs verification')+'</div></td><td>'+esc(action(r))+'<div class="muted">'+esc(r.due||'')+'</div></td><td>'+money(r.value)+'</td></tr>').join('')+'</tbody></table></div>':'<p class="empty">'+(q?'No matching opportunities.':'No opportunities in this view yet.')+'</p>';
+ $('patterns').innerHTML=state.patterns.map(p=>{const linked=state.records.filter(r=>r.pattern===p.id);return '<article class="card"><span class="pill">'+esc(p.product)+'</span><h3>'+esc(p.name)+'</h3><p>'+esc(p.scope)+'</p>'+(p.notes?'<p>'+esc(p.notes)+'</p>':'')+'<p class="muted">'+linked.filter(r=>r.status==='Won').length+' won / '+linked.length+' used</p><div class="toolbar"><button data-use="'+esc(p.id)+'">Use pattern</button><button data-pattern="'+esc(p.id)+'">Edit</button></div></article>';}).join('');
+}
+function options(items,value){return items.map(([key,label])=>'<option value="'+esc(key)+'" '+(key===value?'selected':'')+'>'+esc(label)+'</option>').join('');}
+function control([name,label,type='text',required=false],obj){
+ const value=obj[name]??'', attrs='name="'+name+'" '+(required?'required':'');
+ let input;
+ if(Array.isArray(type)||type==='patterns'){
+  const list=type==='patterns'?state.patterns.map(p=>[p.id,p.name]):type.map(x=>[x,x]);
+  input='<select '+attrs+'>'+options([['','Select…'],...list],value)+'</select>';
+ }else if(type==='area')input='<textarea '+attrs+'>'+esc(value)+'</textarea>';
+ else if(type==='check')input='<input type="checkbox" '+attrs+' '+(value?'checked':'')+'>';
+ else input='<input type="'+type+'" '+attrs+' value="'+esc(value)+'" '+(type==='number'?'min="0" step=".01"':'')+'>';
+ return '<label class="'+(type==='area'?'wide':'')+'">'+esc(label)+input+'</label>';
+}
+function openRecord(id,preset){
+ const current=state.records.find(r=>r.id===id);
+ editing=current?.id??null;
+ const r=current??{kind:kinds[0],status:stages[0],events:[],...preset};
+ $('editorTitle').textContent=current?r.business:'New opportunity';
+ $('recordMessage').textContent='';
+ const links=[['Business website',r.website],['Source',r.source]].flatMap(([label,url])=>/^https?:\/\//i.test(url||'')?['<a target="_blank" rel="noopener noreferrer" href="'+esc(url)+'">'+label+'</a>']:[]);
+ $('record').innerHTML=groups.map(([title,list])=>'<fieldset class="section"><legend>'+title+'</legend><div class="fields">'+list.map(field=>control(field,r)).join('')+'</div>'+
+ (title==='Research and demand'?'<p class="muted">Record where the buyer expressed the problem and what makes it timely.</p><div class="toolbar">'+links.join('')+'</div>':'')+
+ (title==='Offer and outreach'?'<div class="toolbar"><button type="button" id="applyPattern">Use pattern as offer starting point</button><button type="button" id="compose">Start personalized draft</button></div>':'')+'</fieldset>').join('')+
+ '<fieldset class="section"><legend>Outreach history</legend><ol class="history">'+r.events.map(e=>'<li><strong>'+esc(e.type)+'</strong> · '+esc(e.at)+' '+esc(e.channel)+' '+esc(e.recipient)+'<div>'+esc(e.subject)+'</div><pre>'+esc(e.body)+'</pre></li>').join('')+'</ol>'+
+ '<div class="fields">'+control(['eventType','Log entry',logTypes],{})+control(['eventAt','Date and time','datetime-local'],{})+control(['eventChannel','Channel'],{})+control(['eventRecipient','Recipient or sender'],{})+control(['eventSubject','Exact subject'],{})+control(['eventBody','Exact message, reply, or objection','area'],{})+'</div></fieldset>'+
+ '<div class="toolbar actions"><button class="primary" type="submit">Save opportunity</button><button type="button" id="copyDraft">Copy draft</button><button type="button" id="useDraft">Copy draft into sent log</button></div>';
+ const f=$('record').elements;
+ $('applyPattern').onclick=()=>{const p=state.patterns.find(x=>x.id===f.pattern.value);if(!p)return recordMessage('Choose an offer pattern first.');if(f.offer.value&&!confirm('Replace the current offer with this pattern?'))return;f.product.value=p.product;f.offer.value=p.scope;};
+ $('compose').onclick=()=>{
+  if(!f.verified.checked||![f.verifiedOn,f.signal,f.business,f.buyer,f.role,f.research,f.pain,f.offer].every(x=>x.value.trim()))return recordMessage('Verify the source and add a named buyer, their role, a specific observation, the pain point, and a tailored offer.');
+  if(f.draft.value&&!confirm('Replace the current draft?'))return;
+  f.draft.value='Hi '+f.buyer.value.trim().split(/\s+/)[0]+',\n\n'+f.research.value.trim()+'\n\n'+f.offer.value.trim()+'\n\nWould it be useful if I sent over a short scope for '+f.business.value.trim()+'?\n\nJesse\nEvercraft';
+  recordMessage('Review the wording and make sure it reads naturally for this buyer.');
+ };
+ $('copyDraft').onclick=async()=>{try{if(!f.draft.value.trim())return recordMessage('Write a draft first.');await navigator.clipboard.writeText(f.draft.value);recordMessage('Draft copied.');}catch{f.draft.select();recordMessage('Select and copy the draft from the text box.');}};
+ $('useDraft').onclick=()=>{if(!f.draft.value.trim())return recordMessage('Write a draft first.');if(f.eventBody.value&&!confirm('Replace the unsaved log text with the draft?'))return;f.eventType.value='Sent';f.eventBody.value=f.draft.value;f.eventRecipient.value=f.contact.value||f.buyer.value;recordMessage('Enter the actual send time and channel, then confirm the exact wording before saving.');};
+ $('editor').showModal();
+}
+function recordMessage(message){$('recordMessage').textContent=message;}
+$('record').onsubmit=e=>{
+ e.preventDefault();const f=e.currentTarget.elements,previous=state.records.find(r=>r.id===editing);
+ const r={id:previous?.id??uid(),events:[...(previous?.events||[])],updated:new Date().toISOString()};
+ fields.forEach(([key,,type])=>r[key]=type==='check'?f[key].checked:f[key].value.trim());
+ if(!r.business||!r.pain||!r.kind||!r.status)return recordMessage('Enter the business, pain point, type, and status.');
+ if(r.verified&&(!r.verifiedOn||!r.signal||r.verifiedOn>today()))return recordMessage('Verified demand needs the source signal and a verification date through today.');
+ if(['Qualified','Offer ready'].includes(r.status)&&!verified(r))return recordMessage('Verify the demand before qualifying this opportunity.');
+ if(terminal.includes(r.status)&&!r.outcome)return recordMessage('Add the outcome or loss reason.');
+ const hasEntry=['eventType','eventAt','eventChannel','eventRecipient','eventSubject','eventBody'].some(k=>f[k].value.trim());
+ if(hasEntry){
+  if(!f.eventType.value||!f.eventBody.value.trim())return recordMessage('Choose a log type and enter the message.');
+  if(f.eventType.value==='Sent'&&![f.eventAt,f.eventChannel,f.eventRecipient].every(x=>x.value.trim()))return recordMessage('A sent record needs the actual date, time, channel, and recipient.');
+  const at=f.eventAt.value?new Date(f.eventAt.value).toISOString():new Date().toISOString();
+  if(f.eventType.value==='Sent'&&Date.parse(at)>Date.now())return recordMessage('Use the time the message was actually sent.');
+  r.events.push({id:uid(),type:f.eventType.value,at,channel:f.eventChannel.value,recipient:f.eventRecipient.value,subject:f.eventSubject.value,body:f.eventBody.value});
+ }
+ if(save({...state,records:previous?state.records.map(x=>x.id===r.id?r:x):[...state.records,r]})){$('editor').close();render();$('notice').textContent='Opportunity saved.';}else recordMessage('Save failed. Your edits are still in this form.');
+};
+function openPattern(id){
+ const p=state.patterns.find(x=>x.id===id)??{};patternEditing=p.id??null;
+ $('patternForm').innerHTML='<div class="fields">'+[['name','Pattern name','text',true],['product','Capability',products,true],['scope','Offer scope','area',true],['notes','When it works and what to personalize','area']].map(x=>control(x,p)).join('')+'</div><p><button class="primary">Save pattern</button></p>';
+ $('patternDialog').showModal();
+}
+$('patternForm').onsubmit=e=>{
+ e.preventDefault();const f=e.currentTarget.elements;
+ const p={id:patternEditing??uid(),name:f.name.value.trim(),product:f.product.value,scope:f.scope.value.trim(),notes:f.notes.value.trim()};
+ if(!p.name||!p.scope||!p.product)return;
+ if(save({...state,patterns:patternEditing?state.patterns.map(x=>x.id===p.id?p:x):[...state.patterns,p]})){$('patternDialog').close();render();}
+};
+$('compare').onclick=()=>{
+ const rows=state.records.filter(r=>selected.has(r.id)).sort(rank);
+ const columns=[['Buyer',r=>r.buyer],['Pain',r=>r.pain],['Demand',r=>verified(r)?'Verified':'Needs verification'],['Source',r=>r.signal],['Offer',r=>r.offer],['Status',r=>r.status],['Deadline',r=>r.deadline],['Next action',action],['Follow-up',r=>r.due],['Value',r=>money(r.value)],['Outcome',r=>r.outcome]];
+ $('compareBody').innerHTML='<table><thead><tr><th>Field</th>'+rows.map(r=>'<th>'+esc(r.business)+'</th>').join('')+'</tr></thead><tbody>'+columns.map(([label,get])=>'<tr><th scope="row">'+label+'</th>'+rows.map(r=>'<td>'+esc(get(r)||'—')+'</td>').join('')+'</tr>').join('')+'</tbody></table>';
+ $('comparison').showModal();
+};
+function download(name,data){
+ const url=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
+ const a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+$('export').onclick=()=>download('evercraft-demand-desk.json',state);
+$('queue').onclick=()=>download('evercraft-systemia-queue.json',{schema:1,kind:'evercraft.demand-desk.queue',generatedAt:new Date().toISOString(),opportunities:state.records.filter(active).sort(rank).map(r=>({id:r.id,business:r.business,owner:r.owner,product:r.product,status:r.status,verified:!!verified(r),action:action(r),followUp:r.due,deadline:r.deadline}))});
+$('import').onclick=()=>$('file').click();
+$('file').onchange=async e=>{
+ try{
+  const file=e.target.files[0];if(!file)return;
+  const data=JSON.parse(await file.text());
+  if(!valid(data))throw Error('This file is not a valid Demand Desk export.');
+  if((state.records.length||state.patterns.some(p=>!p.id.startsWith('starter-')))&&!confirm('Replace this workspace with the imported backup?'))return;
+  if(save(data)){selected.clear();render();$('notice').textContent='Workspace imported.';}
+ }catch(error){$('notice').textContent=error.message;}finally{e.target.value='';}
+};
+$('search').oninput=render;
+$('new').onclick=()=>openRecord(null,view===2?{kind:kinds[1]}:view===3?{kind:kinds[2]}:{});
+$('newPattern').onclick=()=>openPattern(null);
+document.addEventListener('click',e=>{
+ const b=e.target.closest('button');if(!b)return;
+ const d=b.dataset;
+ if(d.view!==undefined){view=Number(d.view);render();}
+ if(d.close)$(d.close).close();
+ if(d.record)openRecord(d.record);
+ if(d.pattern)openPattern(d.pattern);
+ if(d.use){const p=state.patterns.find(x=>x.id===d.use);openRecord(null,{kind:kinds[2],pattern:p.id,product:p.product,offer:p.scope});}
+});
+document.addEventListener('change',e=>{const id=e.target.dataset.select;if(id){if(e.target.checked)selected.add(id);else selected.delete(id);$('compare').disabled=selected.size<2;$('compare').textContent='Compare selected'+(selected.size?' ('+selected.size+')':'');}});
+render();
+</script></html>
