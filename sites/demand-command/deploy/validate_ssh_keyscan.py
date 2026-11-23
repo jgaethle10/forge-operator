@@ -32,10 +32,25 @@ def canonicalize(scan: str, ipv4: str, expected_fingerprint: str) -> tuple[str, 
         raise InvalidKeyscan("Excessive SSH keyscan output")
 
     observed_blob: str | None = None
-    for line in lines:
+    for row_number, line in enumerate(lines, start=1):
         fields = line.strip().split()
-        if len(fields) != 3 or fields[0] != label or fields[1] != "ssh-ed25519":
-            raise InvalidKeyscan("Unexpected SSH host, port, key type or keyscan record")
+        # Diagnostics are limited to public protocol metadata: line number,
+        # field count, host token and key algorithm. Never print key bytes.
+        if len(fields) != 3:
+            token = fields[0] if fields else "<empty>"
+            raise InvalidKeyscan(
+                f"Line {row_number}: unexpected field count {len(fields)} "
+                f"(host token={token[:120]!r})"
+            )
+        if fields[0] != label:
+            raise InvalidKeyscan(
+                f"Line {row_number}: unexpected host token {fields[0][:120]!r}, "
+                f"expected {label!r}"
+            )
+        if fields[1] != "ssh-ed25519":
+            raise InvalidKeyscan(
+                f"Line {row_number}: unexpected algorithm {fields[1][:80]!r}"
+            )
         blob_text = fields[2]
         try:
             blob = base64.b64decode(blob_text, validate=True)
