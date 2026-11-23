@@ -73,6 +73,12 @@ test('Runner writes local private receipts; no worker, deployment, or code write
   assert.equal(latest.advancement.code_changes,0);
   assert.equal(queue.execution_authorized,false);
   assert.equal(snapshot.counts.admitted,0);
+  const nextAction=JSON.parse(fs.readFileSync(path.join(dir,'next-action.json'),'utf8'));
+  const nextSnapshot=JSON.parse(fs.readFileSync(path.join(dir,'next-action-mission-snapshot.json'),'utf8'));
+  assert.equal(nextAction.schema,'evercraft.kaidance.next-action.v1');
+  assert.equal(nextAction.execution_performed,false);
+  assert.equal(nextSnapshot.counts.admitted,0);
+  assert.equal(fs.statSync(path.join(dir,'next-action-state.json')).mode&0o777,0o600);
   assert.equal(fs.statSync(path.join(dir,'state.json')).mode&0o777,0o600);
   assert.equal(runCompanyHeartbeat({root:'.',outDir:dir,now,proveWorlds:true}).duplicate,true);
   const next=runCompanyHeartbeat({root:'.',outDir:dir,now:new Date(now.getTime()+300000),
@@ -83,4 +89,35 @@ test('Runner writes local private receipts; no worker, deployment, or code write
   assert.equal(next.report.advancement.autonomous_development_workers_launched,0);
   assert.equal(next.mission_snapshot.counts.admitted,0);
  }finally{fs.rmSync(dir,{recursive:true,force:true})}
+});
+
+
+test('company heartbeat surfaces a verified existing checkout handoff, without performing it',()=>{
+ const root=fs.mkdtempSync(path.join(os.tmpdir(),'kaidance-next-action-integration-'));
+ const out=path.join(root,'kaidance-company-heartbeat');
+ const offer=path.join(root,'kaidance-offer-checkout');
+ const at=new Date('2026-11-22T23:00:00.000Z');
+ function save(file,value){
+  fs.mkdirSync(path.dirname(file),{recursive:true,mode:0o700});
+  fs.writeFileSync(file,JSON.stringify(value)+'\n',{mode:0o600});
+ }
+ try{
+  save(path.join(offer,'latest.json'),{
+   schema:'evercraft.kaidance.offer-checkout-heartbeat.v1',
+   observed_at:at.toISOString(),readiness:'exact_link_candidates_verified',
+   changes_to_stripe_tax_settings:0,sensitive_provider_data_exported:false});
+  save(path.join(offer,'actions.json'),{
+   schema:'evercraft.payments.kaidance-heartbeat-actions.v1',
+   observed_at:at.toISOString(),candidate_count:1,actions:[{kind:'review'}],
+   proposed_checkout_placements:[{offer_key:'approved-product'}],
+   provider_write_authorized:false,publisher_write_authorized:false});
+  const result=runCompanyHeartbeat({root:'.',outDir:out,now:at});
+  assert.equal(result.next_action.current_next_action.work_key,'checkout:verified-candidates');
+  assert.equal(result.next_action.execution_performed,false);
+  assert.equal(result.next_action.checkout_mutations,0);
+  const next=JSON.parse(fs.readFileSync(path.join(out,'next-action.json'),'utf8'));
+  assert.equal(next.decision_ref,result.next_action.decision_ref);
+  assert.equal(JSON.parse(fs.readFileSync(
+    path.join(out,'next-action-mission-snapshot.json'),'utf8')).counts.admitted,0);
+ }finally{fs.rmSync(root,{recursive:true,force:true})}
 });
