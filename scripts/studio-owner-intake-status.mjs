@@ -11,7 +11,7 @@ const ALERT_FILE=/^(EC-STUDIO-[A-F0-9]{20})\.json$/;
 
 function privateObject(filename,kind,uid){
   const stat=fs.lstatSync(filename);
-  if(stat.isSymbolicLink()||stat.nlink!==1||
+  if(stat.isSymbolicLink()||(kind==='file'&&stat.nlink!==1)||
      (stat.mode&0o077)!==0||
      (kind==='directory'?!stat.isDirectory():!stat.isFile())||
      stat.uid!==uid)
