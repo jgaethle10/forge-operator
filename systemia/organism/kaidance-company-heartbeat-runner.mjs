@@ -8,6 +8,7 @@ import {fileURLToPath} from 'node:url';
 import {randomBytes,createHash} from 'node:crypto';
 import {spawnSync} from 'node:child_process';
 import {planCompanyHeartbeat,validateCompanyLanes} from './kaidance-company-heartbeat.mjs';
+import {writeKaidanceNextAction} from './kaidance-next-action.mjs';
 const sourceRoot=path.resolve(fileURLToPath(new URL('../../',import.meta.url)));
 const sha=value=>'sha256:'+createHash('sha256').update(value).digest('hex');
 function readJson(file){return JSON.parse(fs.readFileSync(file,'utf8'))}
@@ -93,9 +94,13 @@ export function runCompanyHeartbeat({
  atomicJson(path.join(out,'latest.json'),report);
  atomicJson(path.join(out,'queue.json'),queue);
  atomicJson(path.join(out,'mission-snapshot.json'),planned.snapshot);
+ // Read-only next-step reconciliation uses already-written prior/sibling
+ // receipts. No external effects or second scheduler. State watermark stays last.
+ const next=writeKaidanceNextAction({outDir:out,companyReport:report,companyQueue:queue,now});
  atomicJson(statePath,planned.state);
  return {duplicate:false,tick,executed:true,report,queue,
-  mission_snapshot:planned.snapshot,receipt_ref:sha(JSON.stringify(planned.snapshot))};
+  next_action:next.report,mission_snapshot:planned.snapshot,
+  receipt_ref:sha(JSON.stringify(planned.snapshot))};
 }
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)){
  const opt=name=>{const i=process.argv.indexOf(name);return i>=0?process.argv[i+1]:''};
@@ -105,6 +110,8 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
   console.log(JSON.stringify({schema:'evercraft.kaidance.company-heartbeat-cli.v1',ok:true,
    duplicate:result.duplicate,source_proof:result.report?.proof?.status||null,
    public_products_observed:result.report?.company_portfolio?.public_products||null,
+   next_action_key:result.next_action?.current_next_action?.work_key||null,
+   next_action_execution_authorized:false,
    worker_launches:0,production_mutations:0,
    output_directory:'configured_private_runtime_or_ci_artifacts'}));
   if(result.report?.proof?.status==='failed')process.exitCode=1;
