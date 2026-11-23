@@ -27,3 +27,24 @@ test("a retraction after snapshot still prevents export",()=>{
  const result=projectPublicTimeline([record],l.entries(),{asOf:"2026-11-15T10:03:30Z"});
  assert.equal(result.events.length,0);
 });
+test("issue #2251: Revenue Games reconcile Gmail contact receipts with Grok/Harbor pipeline before new outreach", () => {
+ const l = new EvidenceLedger();
+ for(const [type,at] of ["ingested","reviewed","approved"].map((type,i)=>[type,ts[i]]))
+   l.append({event_id:"gmail-receipt-2251",type,at,actor:"revenue-pipeline"});
+ const record={
+   id:"gmail-receipt-2251",
+   category:"diplomacy",
+   status:"corroborated",
+   headline:"Revenue Games Contact Receipt Reconciled",
+   summary:"Gmail contact receipts reconciled with Grok/Harbor pipeline before new outreach.",
+   region:"Global",
+   reported_at_utc:ts[0],
+   published_at_utc:"2026-11-15T10:03:00Z",
+   sources:[{publisher:"HarborPipeline",url:"https://example.org/receipt",published_at_utc:ts[0],claim_type:"official"}],
+   safety_review:{approved:true}
+ };
+ const result = projectPublicTimeline([record], l.entries());
+ assert.equal(result.events.length, 1);
+ assert.equal(result.events[0].id, "gmail-receipt-2251");
+ assert.equal(result.withheld.length, 0);
+});
