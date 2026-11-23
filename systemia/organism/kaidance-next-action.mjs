@@ -210,8 +210,12 @@ export function writeKaidanceNextAction({
 }={}){
  if(!outDir||!path.isAbsolute(outDir))throw Error('kaidance_next_action_absolute_output_required');
  const dir=path.resolve(outDir),parent=path.dirname(dir),sources={};
+ // Only the canonical sibling layout is a valid source root. A random
+ // temporary output path must not inspect unrelated adjacent private files.
+ const expectedLayout=path.basename(dir)==='kaidance-company-heartbeat';
  for(const [name,entry] of Object.entries(SOURCE)){
-  sources[name]=readSource(parent,entry,now);
+  sources[name]=expectedLayout?readSource(parent,entry,now):
+   {status:STATUS.missing,reason:'canonical_sibling_layout_not_configured'};
  }
  const stateFile=path.join(dir,'next-action-state.json');
  let previous=null;
