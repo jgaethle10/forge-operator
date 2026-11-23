@@ -7,12 +7,14 @@ on:
       - feat/evercraft-relay-v2
     paths:
       - "systemia/notification-fabric/**"
+      - "tests/notification-fabric-resident-loopback.test.mjs"
       - "systemia/signal-fabric/**"
       - "public/evercraft-push-sw.js"
       - ".github/workflows/notification-fabric.yml"
   pull_request:
     paths:
       - "systemia/notification-fabric/**"
+      - "tests/notification-fabric-resident-loopback.test.mjs"
       - "systemia/signal-fabric/**"
       - "public/evercraft-push-sw.js"
       - ".github/workflows/notification-fabric.yml"
@@ -41,6 +43,12 @@ jobs:
       - name: Run focused Relay suite
         run: node --test systemia/notification-fabric/notification-fabric.test.mjs
 
+      - name: Install existing Express dependency for the isolated resident proof
+        run: npm ci --ignore-scripts --no-audit --no-fund
+
+      - name: Prove authenticated loopback Relay and private durable inbox
+        run: node --test tests/notification-fabric-resident-loopback.test.mjs
+
       - name: Syntax-check runtime modules
         run: |
           node --check systemia/notification-fabric/fabric.mjs
@@ -49,3 +57,4 @@ jobs:
           node --check systemia/notification-fabric/realtime-hub.mjs
           node --check systemia/notification-fabric/session-token.mjs
           node --check systemia/notification-fabric/web-push.mjs
+          node --check systemia/notification-fabric/resident-loopback.mjs
