@@ -161,8 +161,25 @@ chmod 0644 "$UNIT_FILE"
 
 systemctl daemon-reload
 systemctl enable --now evercraft-notification-fabric.service
-if ! curl -fsS --max-time 8 -o /dev/null "http://127.0.0.1:$PORT/api/notifications/health"; then
-  echo "HOLD: private Relay service did not pass health readback" >&2
+
+# systemctl starts Type=simple before the Node listener has bound loopback.
+# Poll boundedly instead of treating the initial connection refusal as
+# an installation failure. Never echo private environment values.
+RELAY_READY=false
+for ((attempt=1; attempt<=24; attempt++)); do
+  if ! systemctl is-active --quiet evercraft-notification-fabric.service; then
+    echo "HOLD: private Relay service left active state during startup" >&2
+    exit 9
+  fi
+  if curl -fsS --max-time 2 -o /dev/null \
+       "http://127.0.0.1:$PORT/api/notifications/health" 2>/dev/null; then
+    RELAY_READY=true
+    break
+  fi
+  sleep 0.5
+done
+if [[ "$RELAY_READY" != true ]]; then
+  echo "HOLD: private Relay health did not become ready after bounded retries" >&2
   exit 9
 fi
 echo "PRIVATE_RELAY_HEALTH=PASS"
