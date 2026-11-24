@@ -68,13 +68,13 @@ export function renderReigniteReadinessHtml(snapshot=makeReigniteReadinessSnapsh
    group.checks.map(check=>'<details><summary><span>'+escapeHtml(label(check.id))+'</span><span class="status">'+escapeHtml(check.status==='missing'?'Evidence needed':check.status.replaceAll('_',' '))+'</span></summary>'+
      '<div class="detail"><p>'+escapeHtml(check.question)+'</p><p><strong>Responsible reviewer:</strong> '+escapeHtml(check.owner)+'</p>'+
      '<p class="note">This item has not been independently approved. Only a qualified, authorized review can establish actual readiness.</p></div></details>').join('\n')+'</section>').join('\n');
- return String.raw\`<!doctype html>
+ return String.raw`<!doctype html>
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow,noarchive">
 <meta name="description" content="REIGNITE organizer preview generated from fail-closed event feasibility checks. Not a live permit or event approval.">
 <meta name="theme-color" content="#121819">
-<title>\${title}</title>
+<title>${title}</title>
 <style>
 :root{color-scheme:dark;--bg:#11191b;--panel:#1d282c;--line:#465458;--text:#f6f1e9;--muted:#bbc8ca;--coral:#ff8154;--gold:#f3d195}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.58 system-ui,-apple-system,Segoe UI,sans-serif}
@@ -102,15 +102,15 @@ footer{border-top:1px solid var(--line);padding:30px 0 45px;font-size:12px;color
 <h1>Make it <span>happen.</span><br>Make it safe.</h1>
 <p class="lead">One clear path from a creative idea to a reviewable event. Here's what we still need to establish before any launch claims.</p>
 <p class="muted">This preview was generated from Evercraft's Events feasibility rules with <strong>no authenticated museum/permit evidence imported</strong>. It does not show real-time progress or approvals.</p>
-<div class="snapshot"><div class="metric"><strong>\${snapshot.total_checks}</strong><small>Review areas</small></div><div class="metric"><strong>\${snapshot.missing}</strong><small>Missing evidence in this preview</small></div><div class="metric"><strong>0</strong><small>Verified approvals represented</small></div></div>
+<div class="snapshot"><div class="metric"><strong>${snapshot.total_checks}</strong><small>Review areas</small></div><div class="metric"><strong>${snapshot.missing}</strong><small>Missing evidence in this preview</small></div><div class="metric"><strong>0</strong><small>Verified approvals represented</small></div></div>
 </div></header>
 <main id="main" class="wrap"><section aria-labelledby="nextHeading">
 <div class="eyebrow">First things first</div><h2 class="section-title" id="nextHeading">The next five decisions to unlock.</h2>
 <p class="intro">The venue, permitted hours and preservation constraints lead. Remaining experiences are optional until qualified reviewers confirm they fit.</p>
-<div class="actions">\${next}</div></section>
+<div class="actions">${next}</div></section>
 <section aria-labelledby="requirementsHeading"><div class="eyebrow">All review areas</div><h2 class="section-title" id="requirementsHeading">Everything behind the scenes.</h2>
-<p class="intro">Tap any requirement to see its purpose and responsible reviewer. Every item starts as an evidence request, not a confirmed permit.</p>\${groups}</section>
+<p class="intro">Tap any requirement to see its purpose and responsible reviewer. Every item starts as an evidence request, not a confirmed permit.</p>${groups}</section>
 <div class="readiness-limit"><strong>Planning is not permission.</strong><p>No real tickets, paid bookings, artist invitations, fundraising, occupancy, performance, sound-hour extension, or museum use are authorized by this page. The current Hangar B floor plan and exterior parcel boundaries remain unverified.</p></div>
 </main><footer><div class="wrap">REIGNITE / EVERCRAFT EVENTS · GENERATED FROM CANONICAL FEASIBILITY RULES · NO CUSTOMER DATA OR ACTIVE FORMS · <a href="../">Back to festival concept</a></div></footer>
-</body></html>\`;
+</body></html>`;
 }
