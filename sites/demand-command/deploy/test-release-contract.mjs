@@ -17,8 +17,8 @@ test('installer is explicit, user-scoped, loopback and never touches public edge
 });
 test('public edge is an inert placeholder requiring two auth gates and reverse tunnel', () => {
   assert.match(edge,/demand\.systemiacommandcenters\.com/);
-  assert.match(edge,/^    basicauth \\{$/m);
-  assert.doesNotMatch(edge,/^    basic_auth \\{$/m);
+  assert.match(edge,/^    basicauth \{$/m);
+  assert.doesNotMatch(edge,/^    basic_auth \{$/m);
   assert.match(edge,/REPLACE_WITH_LOCAL_CADDY_BCRYPT_HASH/);
   assert.match(edge,/reverse_proxy 127\.0\.0\.1:18897/);
   assert.match(edge,/Cache-Control "private, no-store"/);
