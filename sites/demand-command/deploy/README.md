@@ -1,5 +1,11 @@
 # Demand Command: resident app and owned HTTPS address
 
+## November 24 external edge receipt
+
+The owner reported that the Penguin release completed, trusted localhost TLS passed, and the live edge service stayed active. A follow-up HTTPS probe from the remote work environment through its configured egress returned HTTP 401 with TLS verification result 0 for `/`, `/console.html`, `/api/heartbeat`, `/api/revenue-desk-review`, and `/api/opportunities`. The environment's direct DNS path was unavailable, so the receipt applies to the external egress route tested.
+
+The owner console is at https://demand.systemiacommandcenters.com/. The remaining acceptance check is an authenticated owner login and a fresh Revenue Desk review response. This probe used no credentials and made no writes. Continue with the existing Demand Command and Revenue Desk queue on NextGen. The standalone Demand Desk in PR #2534 is a separate prototype and is not required for this rollout.
+
 **Target (NOT LIVE until independently verified):** `https://demand.systemiacommandcenters.com/`
 
 **Source authority:** GitHub `jgaethle10/forge-operator` branch `feature/demand-command-site-20261118`, draft PR #2261. **Mission authority:** Systemia. **Runtime:** existing Evercraft-owned NextGen + Chromebook/Penguin public edge. No Base44, Wix, GitHub Pages, rented SaaS runtime, or third-party proxy/tunnel.
