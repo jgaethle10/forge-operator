@@ -38,7 +38,7 @@ test('visible direct-email fallback is accessible before optional intake and nev
 });
 
 
-test('unverified $50 Stripe checkout is not advertised or embedded in structured data',()=>{
+test('verified $50 merchant link stays scoped and no public pay-now shortcut is advertised',()=>{
  assert.doesNotMatch(html,/4gM5kEd6K40d7ju86w4AU0e/);
  const linkedData=html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)?.[1];
  assert.ok(linkedData);
