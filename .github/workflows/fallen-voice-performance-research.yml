@@ -1,0 +1,64 @@
+name: Fallen Dos Equis Original Performance Research (No Audio Export)
+on:
+  push:
+    branches: [production/fallen-original-mature-narrator-audition-20261124]
+    paths: ['.github/workflows/fallen-voice-performance-research.yml']
+permissions: {contents: read}
+jobs:
+  research:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Retrieve publicly accessible historic commercial for analysis only
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/performance-reference voice-performance-research
+          curl -fLsS --retry 2 --max-time 35 \
+            'https://d3npuic909260z.cloudfront.net/001/223/630/7c5H.mp4' \
+            -o /tmp/performance-reference/old_commercial.mp4
+          test "$(stat -c %s /tmp/performance-reference/old_commercial.mp4)" -gt 100000
+          ffprobe -v error -show_entries format=duration,size:stream=codec_type,codec_name,sample_rate \
+            -of json /tmp/performance-reference/old_commercial.mp4 \
+            > voice-performance-research/source-technical.json
+          ffmpeg -hide_banner -nostdin -loglevel error -y \
+            -i /tmp/performance-reference/old_commercial.mp4 -vn -ac 1 -ar 16000 \
+            /tmp/performance-reference/reference_audio.wav
+      - name: Analyze source speech rhythm, level and pauses without exporting copyrighted media
+        run: |
+          python - <<'PY'
+          import wave,json,math,array,pathlib,subprocess,statistics
+          p='/tmp/performance-reference/reference_audio.wav'
+          with wave.open(p,'rb') as w:
+              sr=w.getframerate();n=w.getnframes()
+              a=array.array('h');a.frombytes(w.readframes(n))
+          # 20ms frames, simple relative dBFS energy distribution
+          frame=int(sr*.02)
+          rms=[]
+          for j in range(0,len(a)-frame,frame):
+              window=a[j:j+frame]
+              rms.append(math.sqrt(sum(float(x)*x for x in window)/len(window))/32768.)
+          peak=max(rms)
+          active=[v for v in rms if v>peak*.2]
+          # source has music and SFX; segmentation is approximate, never claim speech-only
+          quiet=[v<=peak*.075 for v in rms]
+          spans=[];k=0
+          while k<len(quiet):
+              if quiet[k]:
+                  st=k
+                  while k<len(quiet) and quiet[k]:k+=1
+                  if k-st>=13:spans.append([round(st*.02,2),round(k*.02,2)])
+              else:k+=1
+          receipt=dict(schema='evercraft.fallen.reference-structure-research.v1',sourceUrl='https://d3npuic909260z.cloudfront.net/001/223/630/7c5H.mp4',
+            researchOnly=True,audioExported=False,speakerIsolated=False,musicAndSfxPresent=True,
+            durationSeconds=round(n/sr,2),shortTermRmsMean=round(statistics.mean(rms),5),
+            shortTermRmsPeak=round(peak,5),possibleQuietIntervals=spans[:30],
+            interpretationLimit='This is mixed commercial audio, not a direct profile of an identifiable actor. Use general pacing and recording dynamics only. Do not clone/reference human voice.')
+          pathlib.Path('voice-performance-research/rhythm-notes.json').write_text(json.dumps(receipt,indent=2)+'\n')
+          print(json.dumps(receipt,indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: fallen-reference-performance-structure-only
+          path: voice-performance-research/*.json
+          retention-days: 3
+          if-no-files-found: error
