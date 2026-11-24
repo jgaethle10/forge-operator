@@ -25,6 +25,23 @@ On a site-only branch, `/reignite/organizer/` disables its readiness link until 
 
 The unified test starts a local static HTTP server and checks real same-origin routes and the organizer's transition from disabled to valid readiness action. It checks byte identity against canonical safety rules and all authorization-denied flags. Existing layout HTTP integration tests cover invited editor proposal, privacy, CSRF, consent, rejection, owner review, and logout. CI runs on GitHub's native Node runner, without provisioning any new paid infrastructure.
 
+## Owner-only evidence and next-action desk
+
+The existing owner-local, loopback-bound REIGNITE layout service now also exposes two protected organizer routes:
+
+- `GET /api/owner/readiness` returns five prioritized next actions and all **25** canonical event gates. Only a valid owner key can access it. No unauthenticated or invited-editor access; it is never copied into the public static organizer preview.
+- `POST /api/owner/evidence` logs a referenced source to `readiness-evidence.json` (private mode 0600) with strict optimistic revision checks. Only a valid owner key with matching same-origin POST may append a report. It does **not** accept files or private source contents.
+
+Owner UI: after connecting with the owner key at the protected `/reignite/layout/` workspace, the first private panel shows the five actual blockers plus a simple `Record a source reference` form. Pick a canonical gate, supply an official HTTPS URL **without query strings, credentials or fragments**, or a reference like `private-ledger:museum/record-001` pointing to an existing, separately controlled artifact, choose what it *reports*, and add a meaningful note. A successful submission returns a receipt and updated owner-only statuses. No source material is automatically fetched, sent, uploaded or exposed to contributors.
+
+**Evidence is NOT authorization.** The original Events assessor marks cited source reports `submitted_unverified`; the user cannot turn any gate to 'approved'. Reports of unsafe/denied/not permitted states create **sticky holds** until an independently authorized qualified review and explicit future resolution mechanism is engineered. Later optimistic notes cannot erase a reported hold. The service never releases event/ticket/charitable/music/venue permission; all remain false.
+
+Legacy owner-local workspaces missing `readiness-evidence.json` safely initialize an empty private desk upon serving; they do not infer old evidence from emails, public news or draft design geometry. Subsequent source submissions are append-only and revisioned, never replacements.
+
+Tests: `node --test tests/reignite-evidence.test.mjs` runs a real local HTTP server and checks 25 initial requirements, only-owner access, cross-origin denial, stale revision refusal, permanent hazard holds, private on-disk permissions, safe reference validation, and immutable history. It is included in the existing native REIGNITE CI workflow. Do not create duplicate checklist storage or an unauthenticated public API.
+
+**Current limitation:** no independent engineer/museum/permit authority review system, signed reports, uploads, or real outside evidence is connected. This private evidence desk is a way to organize documents once properly received, **not a certification pipeline**. Real remote identity, Passport/Interaction Ledger, TLS, storage durability/backup and browser usability must be verified before production release.
+
 ## Actual production release holds
 
 - Current museum-authorized venue/airfield access and legally valid event rights absent. No event date, booking, artist visa clearance, contracts, charity beneficiary agreement, parking, noise schedule, ticketing or public announcement authority.
