@@ -1,0 +1,36 @@
+name: Pacific V35 Verify Legacy Native Bella Transcript
+on:
+  push:
+    branches: [studio/pacific-v35-explicit-brand-introduction-20261123]
+    paths:
+      - systemia/media-studio/pacific-v35-audit-old-source.py
+      - .github/workflows/pacific-v35-audit-old-source.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  audit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - name: Download ONLY previously generated owned native Bella V28 audio
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p source-v28
+          gh run download 45057974086 --repo jgaethle10/forge-operator -n pacific-v28-founder-cadence-private -D source-v28
+          test -f source-v28/reference_cadence.wav
+      - name: Install independent transcription runtime
+        run: python -m pip install --disable-pip-version-check faster-whisper==1.2.1
+      - name: Audit exactly what Bella actually said in original source
+        run: python systemia/media-studio/pacific-v35-audit-old-source.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pacific-v35-prior-native-transcript-private
+          path: pacific-v35-old-source-audit/
+          retention-days: 7
+          if-no-files-found: error
