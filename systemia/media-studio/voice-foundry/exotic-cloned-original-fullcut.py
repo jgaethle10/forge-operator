@@ -13,7 +13,7 @@ assert ref.exists() and ref.suffix==".wav"
 ref_text=({"original_a":"Ricky grows extraordinary peppers. Exotic Chiles brings the fire.",
            "grounded_a2":"Ricky grows his own exotic peppers. He smokes them, grinds them, and brings that fire to his famous guacamole. Exotic Chiles."})[lane]
 expected=({"original_a":"da929c9628dd294ba781e3b494a35c5f960fb2222037592a8b57f2e0726a0590",
-"grounded_a2":"82f6a5c883200965afed3cabd5e95e8a7d22f1ced88f081a37c830c381c1b8854"})[lane]
+"grounded_a2":"2366e4f4f54ff6e8b2d909b691d47357b7dcda1f58483194cbb3727628a48a9c"})[lane]
 actual=hashlib.sha256(ref.read_bytes()).hexdigest()
 if actual!=expected:raise RuntimeError("Synthetic voice reference hash mismatch: "+actual)
 CUES=[
