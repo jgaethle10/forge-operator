@@ -34,6 +34,21 @@ HASH = "$2a$14$" + "a" * 53
 
 
 class CandidateTests(unittest.TestCase):
+    def test_password_pair_validates_without_disclosing_credentials(self):
+        secret = "unique-and-long-2026-privately-chosen"
+        stage.validate_password_pair(secret, secret)
+        cases = [
+            (secret, secret + "-different", "did not match"),
+            ("very-short", "very-short", "shorter than"),
+            (secret + "\n", secret + "\n", "newline"),
+        ]
+        for first, second, reason in cases:
+            with self.assertRaises(ValueError) as raised:
+                stage.validate_password_pair(first, second)
+            self.assertIn(reason, str(raised.exception))
+            self.assertNotIn(secret, str(raised.exception))
+            self.assertNotIn(first, str(raised.exception))
+
     def test_candidate_preserves_current_config_byte_for_byte_as_prefix(self):
         new = stage.stage_text(EXISTING, TEMPLATE, HASH)
         self.assertTrue(new.startswith(EXISTING))
