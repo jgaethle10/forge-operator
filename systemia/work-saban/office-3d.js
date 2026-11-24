@@ -447,8 +447,11 @@
       ? roster[Number(event.id.slice('synthetic-'.length))]?.id
       : known.has(event.id)?event.id:null;
     if(!role)return;
+    // Late/replayed lifecycle notifications must not erase completed or failed evidence.
+    if((state[role]==='verified'||state[role]==='failed')&&event.state!=='failed')return;
     if(event.state==='requested'||event.state==='admitted'||event.state==='provisioned'){
-      state[role]='proposed';
+      if(state[role]==='idle'||state[role]==='proposed')state[role]='proposed';
+      else return;
     }else if(event.state==='running'){
       state[role]='running';
     }else if(event.state==='verified'){
