@@ -8,6 +8,7 @@ import { setTimeout as sleep } from 'node:timers/promises';
 import {
   SCHEMA,createSeedPlan,normalizeCandidate,calculateDiff,makeProposal,decideProposal
 } from '../systemia/events/reignite-layout-engine.mjs';
+import {createQuickSuggestion,IDEAS,PLACES} from '../public/reignite/layout/quick-idea.mjs';
 
 test('historic envelope backed by museum reference, not a fabricated venue plan',()=>{
  const plan=createSeedPlan();
@@ -80,6 +81,30 @@ test('stale review cannot overwrite someone else; rejection preserves revision',
  assert.throws(()=>decideProposal(base,rejected.proposal,{decision:'reject',reviewer_ref:'Evercraft owner',review_note:'Repeated decision'}),/proposal_not_pending/);
 });
 
+
+test('one-minute contributor idea needs no geometry or engineering knowledge',()=>{
+ const base=createSeedPlan();
+ const suggestion=createQuickSuggestion(base,{
+   kind:'art',name:'Community photography wall',
+   place:'unsure',description:'A gallery of multigenerational Hangar B family photographs.'
+ },'zone-abcdef1234567890');
+ assert.equal(suggestion.zone.name,'Community photography wall');
+ assert.equal(suggestion.zone.category,'visual_art');
+ assert.equal(suggestion.zone.stage,'needs_site_survey');
+ assert.equal(suggestion.zone.capacity,null);
+ assert.equal(suggestion.zone.source_ref,'');
+ assert.equal(suggestion.zone.map,'campus');
+ assert.match(suggestion.zone.notes,/marker is only a placement suggestion/);
+ assert.equal(base.zones.length+1,suggestion.candidate.zones.length);
+ assert.equal(suggestion.candidate.event_approved,undefined);
+ assert.deepEqual(normalizeCandidate(base,suggestion.candidate).zones,suggestion.candidate.zones);
+ assert(suggestion.reason.length>=12);
+ assert.throws(()=>createQuickSuggestion(base,{kind:'art',name:'Short',place:'interior',description:'too short'},'zone-abcdef1234567890'),/short_description_required/);
+ assert.throws(()=>createQuickSuggestion(base,{kind:'fake',name:'A real name',place:'interior',description:'This would be an idea'},'zone-abcdef1234567890'),/choose_kind_and_place/);
+ assert.equal(Object.keys(IDEAS).length,7);
+ assert.equal(Object.keys(PLACES).length,3);
+});
+
 test('web UI is editable but truthful about the missing current survey and unlaunched review service',()=>{
  const page=readFileSync(new URL('../public/reignite/layout/index.html',import.meta.url),'utf8');
  const js=readFileSync(new URL('../public/reignite/layout/app.js',import.meta.url),'utf8');
@@ -89,6 +114,13 @@ test('web UI is editable but truthful about the missing current survey and unlau
  assert.match(page,/not a real survey/);
  assert.match(page,/Submit for owner review/);
  assert.match(page,/Private editor \/ owner key/);
+ assert.match(page,/What would you love to bring\?/);
+ assert.match(page,/id="quickIdeaForm"/);
+ assert.match(page,/id="quickSend"/);
+ assert.match(page,/Show advanced layout tools/);
+ assert.match(js,/createQuickSuggestion/);
+ assert.match(js,/quickExport/);
+ assert.match(css,/body:not\(\.advanced-open\)/);
  assert.match(js,/\/api\/proposals/);
  assert.match(js,/\/api\/review\//);
  assert.match(js,/Local concept mode/);
@@ -128,6 +160,9 @@ test('owner-run loopback HTTP: invited edits -> owner review -> planning revisio
     },...(payload?{body:JSON.stringify(payload)}:{})});
     return {status:res.status,data:await res.json()};
   };
+  const moduleResponse=await fetch(base+'/quick-idea.mjs');
+  assert.equal(moduleResponse.status,200,'guided suggestion module must be served for authenticated browser');
+  assert.match(await moduleResponse.text(),/export function createQuickSuggestion/);
   assert.equal((await call('invalid-key','/api/plan')).status,401);
   assert.equal((await call(editor,'/api/reviews')).status,403);
   const first=await call(editor,'/api/plan');
