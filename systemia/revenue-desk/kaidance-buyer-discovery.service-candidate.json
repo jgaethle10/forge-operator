@@ -1,0 +1,11 @@
+{
+  "service_key": "kaidance-buyer-discovery",
+  "mode": "cycle",
+  "manifest": "systemia/revenue-desk/kaidance-buyer-discovery.workflow.json",
+  "executable": "systemia/revenue-desk/buyer-discovery-runner.mjs",
+  "cadence_seconds": 3600,
+  "optional_when_unconfigured": true,
+  "env_args": {
+    "--directory": "SYSTEMIA_KAIDANCE_BUYER_DISCOVERY_DIR"
+  }
+}
