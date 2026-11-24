@@ -176,3 +176,44 @@ device grants, which remain unproven absent globally.
 A future physical canary still requires a separate, independently
 trusted route/grant evidence source, reviewed rollback and one-time
 operator authorization. The physical `--run` mode stays HARD DISABLED.
+
+
+## 2026-11-23: 77 verified checks; local Caddy admin route witness staged
+
+The founder ran the pinned socket acceptance release
+`4376797f76f47eaac85983f844d43ea4b106f567` and obtained
+**22/22 PASS**, with four new socket-witness tests plus 18 passing
+regressions. The installed historical Compute rehearsal proved a single
+NodeSeed-PID-owned IPv4 loopback broker TCP listener and restored the
+original listener set on teardown; the six-phase structural, DNS and
+journal validation remained green. Production NodeSeed and dispatch
+unit states were unchanged. Cumulative distinct verified: **77/77**
+across separate runs.
+
+The next staged sensor `penguin-caddy-broker-target-witness.mjs`
+is strictly read-only. It validates that an active Caddy admin endpoint
+`127.0.0.1:2019` is owned by the `caddy.service` MainPID before
+reading `GET /config/` twice. It inspects the *active Caddy JSON*
+in memory without echoing, persisting or logging its contents and checks
+for the candidate broker port anywhere in that JSON. A matched port,
+changed config, unknown PID, missing admin endpoint, oversized/malformed
+response, or insufficient evidence is a HOLD. It does not restart Caddy.
+
+Only the existing historical broker port 8797 is permitted from the
+diagnostic CLI; this is a baseline audit of a previously assigned port,
+not a probe of the future ephemeral canary port. Programmatic checks
+can examine an explicitly supplied candidate port later with their
+own trusted collection context.
+
+**New pure tests and the live diagnostic are staged, not yet verified
+on Penguin.** The running Caddy admin API might be disabled or bound
+differently, which is an evidence HOLD, not cause to change Caddy.
+
+CRITICAL BOUNDARY: an active Caddy config does not cover other
+independent local proxies, outbound tunnels, NAT/UPnP mappings, DNS
+targets, or external route providers. Even a clean local Caddy result
+sets `external_route_absence_proven:false` and leaves
+`public_route_created:null`. No historical grant contents are read,
+and zero authority elsewhere has not been verified. Physical `--run`
+remains hard-disabled until separate, complete evidence and explicit
+one-time authorization.
