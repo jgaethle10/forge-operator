@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="description" content="REIGNITE collaborative site planning: a provisional Hangar B planning canvas with editable zones and owner-reviewed suggestions.">
+<meta name="theme-color" content="#101619">
+<title>REIGNITE | Collaborative layout studio</title>
+<link rel="stylesheet" href="./app.css">
+<script type="module" src="./app.js"></script>
+</head><body>
+<a class="skip" href="#main">Skip to workspace</a>
+<div class="banner"><strong>PLANNING DRAFT, NOT AN APPROVED SITE MAP.</strong> The historic building envelope is documented; current interior layout, roof repair zones, exits, property boundaries and event areas are NOT verified.</div>
+<header><div class="wrap head"><div><a class="back" href="../">← REIGNITE</a><h1>LAYOUT <span>STUDIO.</span></h1><p>Propose. Compare. Review. Never confuse a concept with permission.</p></div><div class="status" id="connectionStatus" role="status">Local concept mode · no live submission</div></div></header>
+<main id="main" class="wrap">
+<section class="connect" aria-labelledby="connectTitle">
+<div><h2 id="connectTitle">Collaborative planning</h2><p>Explore locally without an account. To submit edits for review, connect using an invitation issued by the Evercraft project owner. Keys stay in this browser tab's memory, not local storage.</p></div>
+<div class="connect-fields"><label for="accessKey">Private editor / owner key</label><div class="control-row"><input type="password" id="accessKey" autocomplete="off" placeholder="Paste your private invite key" aria-describedby="keyHelp"><button id="connectBtn">Connect</button><button id="disconnectBtn" class="secondary">Disconnect</button></div><small id="keyHelp">The site preview cannot submit until the Evercraft-owned review service is running and reachable on this origin.</small></div>
+</section>
+<div class="main-grid">
+<section class="canvas-panel" aria-labelledby="planHeading">
+<div class="canvas-head"><div><div class="overline">Facility planning · annotated concepts</div><h2 id="planHeading">Hangar B layout</h2><p class="sub">Shell: ~1,072 ft × 296 ft (published historic dimensions). Zone locations are proposed, NOT surveyed.</p></div><div class="revision" id="revisionTag">Revision 0 · local</div></div>
+<div class="toolbar">
+<div class="tab-group" role="group" aria-label="Plan view"><button type="button" id="interiorTab" class="active" aria-pressed="true">Inside hangar</button><button type="button" id="campusTab" aria-pressed="false">Outside concept</button></div>
+<button id="addZone" class="small" type="button">+ New zone</button><button id="resetDraft" class="small secondary" type="button">Reset draft</button>
+</div>
+<div class="map-wrap">
+<svg id="planSvg" viewBox="0 0 1000 440" role="img" aria-labelledby="mapTitle mapDesc" tabindex="0">
+<title id="mapTitle">Editable REIGNITE zone planning map</title>
+<desc id="mapDesc">Provisional layout with editable rectangular activity zones. Select, drag or resize a zone. This is not a real survey, occupancy plan, fire exit map or event approval.</desc>
+<g id="mapWorld"></g></svg>
+</div>
+<div class="map-foot"><span>Drag a zone to move · drag its square corner to resize · keyboard arrows move selected zone</span><span><strong>Not georeferenced.</strong> No egress, utilities, door or hazard locations verified.</span></div>
+<details class="references"><summary>Documented features vs. missing drawings</summary><p>The Tillamook Air Museum lists Hangar B as approximately <strong>1,072 ft long × 296 ft wide</strong>. A historic National Register nomination describes <strong>51 timber arch ribs</strong>. These are historic references, not a current working floor plan. <a href="https://www.tillamookair.com/hangar-b/" target="_blank" rel="noopener noreferrer">Museum history ↗</a> and <a href="https://npgallery.nps.gov/GetAsset/d362271a-ce09-4f8b-9694-04233705f21e" target="_blank" rel="noopener noreferrer">NPS historical nomination ↗</a>.</p><p>Unverified and deliberately unmapped: current aircraft/exhibits, entry and exit geometry, fire routes, roof repairs, load-bearing zones, utilities, road access, permitted outdoor footprint, parking, airport security and room measurements. A zone placed here does not reserve or authorize that location.</p><label for="localOverlay">Temporary local plan-image overlay</label><input id="localOverlay" type="file" accept="image/png,image/jpeg,image/webp"><label for="overlayOpacity">Image opacity</label><input type="range" id="overlayOpacity" min="0" max="100" value="45"><button id="clearOverlay" type="button" class="small secondary">Remove overlay</button><p class="sub">Your image is viewed only in this tab, is not transmitted, and is not a calibrated survey overlay. Share licensed/current drawings only through an authorized private source channel.</p></details>
+<div class="canvas-subheading"><h3>Zones in this view</h3><span id="zoneCount"></span></div><div class="zone-list" id="zoneList" aria-live="polite"></div>
+</section>
+<aside class="side-stack">
+<section class="panel" aria-labelledby="editorTitle"><div class="overline">Selected zone</div><h2 id="editorTitle">Zone editor</h2><p class="sub" id="zoneHint">Select a zone or add a new one to propose changes.</p>
+<form id="zoneForm" autocomplete="off">
+<div class="field-row"><label>Zone name<input name="name" maxlength="100" required></label><label>Type<select name="category"></select></label></div>
+<div class="field-row"><label>View<select name="map"><option value="interior">Inside hangar</option><option value="campus">Outside concept</option></select></label><label>Planning state<select name="stage"><option value="idea">Idea</option><option value="needs_site_survey">Needs survey</option><option value="blocked">Blocked</option><option value="reviewed_for_planning">Reviewed for planning (not approved)</option></select></label></div>
+<div class="field-row"><label>Proposed lead<input name="owner" maxlength="100" placeholder="Unassigned"></label><label>Proposed capacity<input name="capacity" inputmode="numeric" type="number" min="0" max="100000" placeholder="Unknown"></label></div>
+<div class="field-row"><label>X position (% of concept canvas)<input name="x" type="number" min="0" max="97" step=".5"></label><label>Y position (%)<input name="y" type="number" min="0" max="96" step=".5"></label></div>
+<div class="field-row"><label>Width (%)<input name="w" type="number" min="3" max="100" step=".5"></label><label>Height (%)<input name="h" type="number" min="4" max="100" step=".5"></label></div>
+<label>Evidence reference (not proof of permission)<input name="source_ref" maxlength="420" placeholder="URL or private source ID, if available"></label>
+<label>Constraints / notes<textarea name="notes" rows="4" maxlength="1600" placeholder="Proposed activity, equipment, sound, accessibility, power, safety dependencies..."></textarea></label>
+<div class="control-row"><button type="submit">Update zone draft</button><button type="button" class="danger secondary" id="removeZone">Remove zone from draft</button></div>
+</form></section>
+<section class="panel" aria-labelledby="reviewHeading"><div class="overline">One proposal, one review decision</div><h2 id="reviewHeading">Submit suggestions</h2><p class="sub">Edits are local until submitted. Invited collaborators can submit proposals; only the owner can merge them into the planning revision. Neither action authorizes an event.</p>
+<div class="diff" id="diffBox">No draft changes.</div>
+<label for="reason">Why should this layout change?</label><textarea id="reason" rows="3" maxlength="900" placeholder="Explain your idea and why the zone should move or change..."></textarea>
+<div class="control-row"><button id="submitProposal" type="button">Submit for owner review</button><button id="downloadDraft" class="secondary" type="button">Export proposal JSON</button></div>
+<label class="file-label" for="importProposal">Import a previously exported draft JSON</label><input id="importProposal" type="file" accept=".json,application/json">
+<p class="feedback" id="submissionResult" role="status"></p>
+</section>
+<section class="panel" id="ownerPanel" hidden aria-labelledby="ownerHeading"><div class="overline">Owner authority</div><h2 id="ownerHeading">Review inbox</h2><p class="sub">Inspect change diffs before approving for planning. A merge does not signify museum authorization, engineering acceptance or permitted occupancy.</p><button id="refreshReviews" class="small secondary" type="button">Refresh proposals</button><div id="reviews"></div></section>
+</aside>
+</div>
+<section class="missing" aria-labelledby="missingHeading"><div class="overline">What we still need from the venue</div><h2 id="missingHeading">Current drawings before actual assignments.</h2><div id="missingList" class="missing-grid"></div><p>Detailed staffing and equipment assignments can begin as proposals today. Final zone geometry must be reconciled against museum-authorized as-builts, repairs, exits, accessibility and a qualified structural/acoustic review. Do not use this map for public wayfinding or emergency operations.</p></section>
+</main>
+<footer><div class="wrap">REIGNITE / EVERCRAFT EVENTS · PRIVATE PLANNING CONCEPT · NOT A VENUE MAP, SAFETY CERTIFICATION OR CONFIRMED FESTIVAL. <a href="../">Back to the main concept</a></div></footer>
+</body></html>
