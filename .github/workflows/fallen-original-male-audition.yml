@@ -1,0 +1,49 @@
+name: Fallen Original Mature Narrator Audition (Private)
+on:
+  push:
+    branches: [production/fallen-original-mature-narrator-audition-20261124]
+    paths:
+      - systemia/media-studio/voice-foundry/exotic-original-male-audition.py
+      - .github/workflows/fallen-original-male-audition.yml
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  original-narrator:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.11' }
+      - name: Preflight public creative scripts and distinct voices
+        run: python systemia/media-studio/voice-foundry/exotic-original-male-audition.py --verify-only
+      - name: Install native Kokoro production dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq espeak-ng libsndfile1
+          python -m pip install --disable-pip-version-check 'kokoro==0.9.4' 'soundfile>=0.12,<1.0'
+      - name: Generate five ORIGINAL non-celebrity voices
+        env: {HF_HUB_DISABLE_TELEMETRY: '1'}
+        run: python systemia/media-studio/voice-foundry/exotic-original-male-audition.py original-narrator-private
+      - name: Verify real audio integrity and non-approval receipt
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import soundfile as sf,json,hashlib
+          root=Path('original-narrator-private')
+          d=json.loads((root/'receipt.json').read_text())
+          assert len(d['samples'])==5
+          assert not d['claims']['customerReleaseApproved']
+          for row in d['samples']:
+              p=root/row['file']
+              assert p.read_bytes()[:4]==b'RIFF'
+              assert hashlib.sha256(p.read_bytes()).hexdigest()==row['sha256']
+              assert sf.info(p).samplerate==24000
+          print('PASS: five genuine, hash-verified audition WAVs')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: fallen-original-male-voice-auditions-review-only
+          path: original-narrator-private/
+          retention-days: 3
+          if-no-files-found: error
