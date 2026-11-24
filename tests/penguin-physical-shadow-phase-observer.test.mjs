@@ -114,6 +114,7 @@ test('broker authority, identity, missing listener, DNS failures and drift all f
     x=>{x.brokerHealth=null},
     x=>{x.inventory.broker_listeners=[]},
     x=>{x.inventory.owner_tcp_ports=[1053,42420,44677]},
+    x=>{x.inventory.owner_tcp_ports=null},
     x=>{x.inventory.unclassified_tcp_listener_ports=[59999]},
     x=>{x.provenance.udp_1053_owned_by_nodeseed=false},
     x=>{x.healthAfter.instance_id='edge_dns_ffffffffffffffff'},
