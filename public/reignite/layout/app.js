@@ -5,7 +5,7 @@ const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const copy=v=>JSON.parse(JSON.stringify(v));
 const categories={performance:'#f38c64',visual_art:'#baa6e7',heritage:'#dbbc75',quiet:'#7dbfaf',participation:'#80b7df',food:'#e7bd74',circulation:'#aeb8bb',operations:'#a6c78f',protected:'#e9a4ab'};
 const frame={interior:{x:74,y:94,w:852,h:235},campus:{x:36,y:48,w:928,h:355}};
-const state={base:null,draft:null,selected:null,view:'interior',token:null,role:null,actor:null,drag:null,overlay:null,opacity:.45,reviews:[],quickPending:null};
+const state={base:null,draft:null,selected:null,view:'interior',token:null,csrf:null,authMode:null,role:null,actor:null,drag:null,overlay:null,opacity:.45,reviews:[],quickPending:null};
 const clamp=(v,min,max)=>Math.max(min,Math.min(max,v));
 const find=id=>state.draft?.zones.find(z=>z.id===id);
 const msg=text=>$('submissionResult').textContent=text;
@@ -23,7 +23,7 @@ function changed(){
  return result;
 }
 function displayStatus(){
- const connected=Boolean(state.token&&state.role);
+ const connected=Boolean(state.role&&(state.token||state.authMode==='cookie'));
  $('connectionStatus').textContent=connected?'Connected: '+state.actor+' ('+state.role+') · planning only':'Local concept mode · no live submission';
  $('connectionStatus').classList.toggle('connected',connected);
  $('ownerPanel').hidden=state.role!=='owner';
@@ -166,16 +166,43 @@ $('removeZone').addEventListener('click',()=>{
  state.selected=null;render();
 });
 async function api(url,method='GET',payload){
- if(!state.token)throw Error('Invitation-based private review service not connected.');
+ if(!state.token&&state.authMode!=='cookie')
+   throw Error('Private contributor workspace is not connected.');
  const endpoint=url.startsWith('/api/')?'.'+url:url;
- const res=await fetch(endpoint,{method,headers:{'x-reignite-key':state.token,...(payload?{'content-type':'application/json'}:{})},cache:'no-store',...(payload?{body:JSON.stringify(payload)}:{})});
+ const headers={...(payload?{'content-type':'application/json'}:{})};
+ if(state.token)headers['x-reignite-key']=state.token;
+ if(state.authMode==='cookie'&&method!=='GET')headers['x-reignite-csrf']=state.csrf;
+ const res=await fetch(endpoint,{
+   method,headers,credentials:'same-origin',cache:'no-store',
+   ...(payload?{body:JSON.stringify(payload)}:{})
+ });
  const data=await res.json();
  if(!res.ok)throw Error(data.error||'HTTP '+res.status);
  return data;
 }
+async function restoreCookieSession(){
+ try{
+  const response=await fetch('./api/session',{credentials:'same-origin',cache:'no-store'});
+  if(!response.ok)return false;
+  const session=await response.json();
+  if(!session.authenticated||session.role!=='editor'||session.auth_mode!=='cookie'||
+     typeof session.csrf_token!=='string')return false;
+  state.authMode='cookie';state.csrf=session.csrf_token;state.token=null;
+  const data=await api('/api/plan');
+  if(data.role!=='editor')throw Error('Expected editor-only invitation');
+  state.role=data.role;state.actor=data.actor;state.base=data.plan;
+  state.draft=copy(data.plan);state.selected=null;state.view='interior';
+  displayStatus();render();await loadMyIdeas();
+  quickMessage('Welcome back, '+state.actor+'. Your private ideas and review status are ready.');
+  return true;
+ }catch{
+  state.authMode=null;state.csrf=null;state.role=null;state.actor=null;
+  displayStatus();return false;
+ }
+}
 $('connectBtn').addEventListener('click',async()=>{
  const key=$('accessKey').value.trim();if(!key){msg('Enter an owner or invited editor key.');return}
- state.token=key;
+ state.token=key;state.authMode='key';state.csrf=null;
  try{
   const oldDraft=state.draft&&copy(state.draft);
   const oldRevision=state.base?.revision;
@@ -190,11 +217,18 @@ $('connectBtn').addEventListener('click',async()=>{
   displayStatus();render();msg('Connected to owner-operated review service. Your edits still require review.');
   await loadMyIdeas();
   if(state.role==='owner')await loadReviews();
- }catch(e){state.token=null;state.role=null;state.actor=null;displayStatus();msg('Connection HOLD: '+e.message+'. Local editing and JSON export remain available.')}
+ }catch(e){state.token=null;state.authMode=null;state.csrf=null;state.role=null;state.actor=null;displayStatus();msg('Connection HOLD: '+e.message+'. Local editing and JSON export remain available.')}
 });
-$('disconnectBtn').addEventListener('click',()=>{
- state.token=null;state.role=null;state.actor=null;state.reviews=[];
- displayStatus();msg('Disconnected. Your local draft is still visible; submissions are disabled.');
+$('disconnectBtn').addEventListener('click',async()=>{
+ let warning='';
+ if(state.authMode==='cookie'){
+   try{await api('/api/session/logout','POST',{})}
+   catch(err){warning='The server could not confirm sign-out: '+err.message+
+     '. Close the tab and ask the owner to revoke the invitation if needed. '}
+ }
+ state.token=null;state.csrf=null;state.authMode=null;state.role=null;
+ state.actor=null;state.reviews=[];
+ displayStatus();msg(warning||'Signed out of this workspace. Local draft still visible.');
 });
 $('submitProposal').addEventListener('click',async()=>{
  if(!changed().length){msg('No edits to submit.');return}
@@ -389,29 +423,29 @@ function takeInviteFromFragment(){
 }
 async function joinViaOneUseLink(grant){
  if(grant==='invalid'){
-  quickMessage('This invitation link is malformed. Ask the event organizer for a new private link.');
+  quickMessage('This invitation link is malformed. Ask the organizer for a new private link.');
   return;
  }
  quickMessage('Opening your private contributor workspace...');
  try{
   const response=await fetch('./api/invite/redeem',{
-   method:'POST',cache:'no-store',
-   headers:{'content-type':'application/json'},
-   body:JSON.stringify({grant})
+   method:'POST',cache:'no-store',credentials:'same-origin',
+   headers:{'content-type':'application/json'},body:JSON.stringify({grant})
   });
   const result=await response.json();
-  if(!response.ok)throw Error(result.error||'One-use invitation could not be redeemed.');
-  if(result.scope!=='propose_and_read_own'||typeof result.session_key!=='string')
-    throw Error('Invitation did not grant a valid contributor session.');
-  state.token=result.session_key;
+  if(!response.ok)throw Error(result.error||'The one-use invitation could not be redeemed.');
+  if(result.scope!=='propose_and_read_own'||result.session_mode!=='cookie'||
+     typeof result.csrf_token!=='string')
+    throw Error('Invitation did not grant a valid protected editor session.');
+  state.token=null;state.authMode='cookie';state.csrf=result.csrf_token;
   const workspace=await api('/api/plan');
   if(workspace.role!=='editor')throw Error('One-tap invitation cannot grant owner access.');
   state.role=workspace.role;state.actor=workspace.actor;state.base=workspace.plan;
   state.draft=copy(workspace.plan);state.selected=null;state.view='interior';
   displayStatus();render();await loadMyIdeas();
-  quickMessage('You are connected as '+state.actor+'. Share an idea above, or check your private status below. No account setup needed.');
+  quickMessage('You are connected as '+state.actor+'. You can return to this tab or refresh without losing your session.');
  }catch(err){
-  state.token=null;state.role=null;state.actor=null;
+  state.token=null;state.authMode=null;state.csrf=null;state.role=null;state.actor=null;
   displayStatus();
   quickMessage('Invitation unavailable: '+err.message+' A fresh private link may be needed. You can still explore the map.');
  }
@@ -439,6 +473,7 @@ async function start(){
   state.base=await response.json();state.draft=copy(state.base);render();displayStatus();
   $('missingList').innerHTML=state.base.survey_missing.map(x=>'<div class="missing-item">'+esc(x)+'</div>').join('');
   if(inviteGrant)await joinViaOneUseLink(inviteGrant);
+  else await restoreCookieSession();
  }catch(e){msg('Unable to load source map: '+e.message)}
 }
 start();
