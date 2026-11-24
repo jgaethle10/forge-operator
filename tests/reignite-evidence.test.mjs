@@ -90,6 +90,25 @@ test('private references, exact revisions and careful notes are required',()=>{
  assert.throws(()=>addOwnerEvidence(d,payload(),{recordedAt:'bad'}),/recorded_time_invalid/);
 });
 
+
+test('simplified owner-only browser view remains hidden without owner authorization',()=>{
+ const html=readFileSync(new URL('../public/reignite/layout/index.html',import.meta.url),'utf8');
+ const js=readFileSync(new URL('../public/reignite/layout/app.js',import.meta.url),'utf8');
+ const css=readFileSync(new URL('../public/reignite/layout/app.css',import.meta.url),'utf8');
+ assert.match(html,/id="ownerReadinessPanel"[^>]*hidden/);
+ assert.match(html,/id="ownerEvidenceForm"/);
+ assert.match(html,/Record a source reference or reported concern/);
+ assert.match(html,/ZERO independently approved|Nothing recorded here grants permission/);
+ assert.match(js,/\$\('ownerReadinessPanel'\)\.hidden=state\.role!=='owner'/);
+ assert.match(js,/api\/owner\/readiness/);
+ assert.match(js,/api\/owner\/evidence/);
+ assert.match(js,/state\.evidenceRevision/);
+ assert.match(js,/showOwnerReadiness\(result\.readiness\)/);
+ assert.match(css,/\.owner-actions/);
+ assert.match(css,/@media\(max-width:700px\)/);
+ assert.doesNotMatch(js,/localStorage|sessionStorage/);
+});
+
 test('private localhost HTTP enforces owner-only source intake, bounded revisions and server storage',async()=>{
  const dir=mkdtempSync(join(tmpdir(),'reignite-evidence-test-'));
  const file=new URL('../systemia/events/reignite-layout-server.mjs',import.meta.url);
