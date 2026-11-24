@@ -120,6 +120,10 @@ test('web UI is editable but truthful about the missing current survey and unlau
  assert.match(page,/Show advanced layout tools/);
  assert.match(js,/createQuickSuggestion/);
  assert.match(js,/quickExport/);
+ assert.match(js,/state\.quickPending/);
+ assert.match(js,/Send my preview for review/);
+ assert.match(js,/submitQuickCandidate\(state\.draft,state\.quickPending\.reason\)/);
+ assert.match(js,/state\.draft=unsent\?oldDraft:copy\(data\.plan\)/);
  assert.match(css,/body:not\(\.advanced-open\)/);
  assert.match(js,/\/api\/proposals/);
  assert.match(js,/\/api\/review\//);
