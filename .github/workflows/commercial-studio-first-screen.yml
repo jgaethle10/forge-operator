@@ -5,6 +5,10 @@ on:
       - 'public/commercial-studio/index.html'
       - 'tests/commercial-studio-pain-first-hero.test.mjs'
       - 'tests/studio-buyer-email-fallback.test.mjs'
+      - 'public/audience-sites/creative-studio/index.html'
+      - 'public/audience-sites/creative-studio/commission-handoff.mjs'
+      - 'public/studio-brief-handoff.mjs'
+      - 'tests/ad-story-studio-handoff.test.mjs'
       - '.github/workflows/commercial-studio-first-screen.yml'
   push:
     branches: [main]
@@ -12,6 +16,10 @@ on:
       - 'public/commercial-studio/index.html'
       - 'tests/commercial-studio-pain-first-hero.test.mjs'
       - 'tests/studio-buyer-email-fallback.test.mjs'
+      - 'public/audience-sites/creative-studio/index.html'
+      - 'public/audience-sites/creative-studio/commission-handoff.mjs'
+      - 'public/studio-brief-handoff.mjs'
+      - 'tests/ad-story-studio-handoff.test.mjs'
       - '.github/workflows/commercial-studio-first-screen.yml'
   workflow_dispatch:
 permissions:
@@ -24,4 +32,5 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - run: node --test tests/commercial-studio-pain-first-hero.test.mjs tests/studio-buyer-email-fallback.test.mjs
+      - run: node --check public/audience-sites/creative-studio/commission-handoff.mjs
+      - run: node --test tests/commercial-studio-pain-first-hero.test.mjs tests/studio-buyer-email-fallback.test.mjs tests/ad-story-studio-handoff.test.mjs tests/fallen-studios-one-prompt.test.mjs
