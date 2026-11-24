@@ -1,0 +1,27 @@
+{
+  "schema": "evercraft.systemia.workflow-manifest.v1",
+  "workflow_key": "kaidance-buyer-discovery",
+  "mission_key": "kaidance-research-to-revenue",
+  "runtime": "systemia-core-resident",
+  "collider_compatible": false,
+  "cadence_seconds": 3600,
+  "material_change_only": false,
+  "entrypoint": "systemia/revenue-desk/buyer-discovery-runner.mjs",
+  "proof": "systemia/revenue-desk/buyer-discovery-checkpoint.test.mjs",
+  "outputs": {
+    "private_checkpoint": "configured private discovery directory/checkpoint.json"
+  },
+  "authority": {
+    "public_research": "bounded_registered_sources",
+    "private_checkpoint_write": true,
+    "crm_write": false,
+    "outreach": false,
+    "payment": false,
+    "production_mutation": false
+  },
+  "claims": {
+    "qualified_buyers": false,
+    "delivery": false,
+    "revenue": false
+  }
+}
