@@ -1,9 +1,44 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { makeReigniteReadinessSnapshot, renderReigniteReadinessHtml } from './reignite-readiness-page.mjs';
 import { assessEventFeasibility, eventWorkPackages, EVENT_SCENARIOS, assessEventFromDemandQueue, assessReigniteConcept, REIGNITE_CONCEPT_FEATURES, eventNextActions } from './event-coordination.mjs';
 
 const caseId = 'synthetic:heritage-event-001';
 const assess = options => assessEventFeasibility({ opportunity_id: caseId, ...options });
+
+
+test('generated organizer preview is derived from same fail-closed source and checked into public source',()=>{
+ const snapshot=makeReigniteReadinessSnapshot();
+ assert.equal(snapshot.basis,'source_only_initial_review_not_live');
+ assert.equal(snapshot.total_checks,25);
+ assert.equal(snapshot.missing,25);
+ assert.equal(snapshot.no_current_site_survey,true);
+ assert.equal(snapshot.no_approved_music_hours,true);
+ assert.equal(snapshot.no_live_evidence_connection,true);
+ assert.equal(snapshot.event_approved,false);
+ assert.equal(snapshot.ticket_sales_authorized,false);
+ assert.equal(snapshot.charitable_collection_authorized,false);
+ assert.equal(snapshot.external_contact_authorized,false);
+ assert.equal(snapshot.performance_or_testing_authorized,false);
+ assert.equal(snapshot.next_actions.length,5);
+ assert.equal(snapshot.next_actions[0].requirement,'venue_authority');
+ assert.equal(snapshot.next_actions[1].requirement,'jurisdiction_and_event_hours');
+ assert.equal(snapshot.all_checks.flatMap(g=>g.checks).length,snapshot.total_checks);
+ const page=renderReigniteReadinessHtml(snapshot);
+ const saved=readFileSync(new URL('../../public/reignite/readiness/index.html',import.meta.url),'utf8');
+ assert.equal(saved,page,'Readiness HTML must match the canonical event generator; regenerate when feasibility rules change');
+ assert.match(page,/SOURCE-ONLY PLANNING PREVIEW/);
+ assert.match(page,/NOT LIVE STATUS/);
+ assert.match(page,/noindex,nofollow,noarchive/);
+ assert.match(page,/No real tickets/);
+ assert.match(page,/art exhibition/i);
+ assert.match(page,/international performers/i);
+ assert.match(page,/jurisdiction and event hours/i);
+ assert.doesNotMatch(page,/<form\b|<script\b|https:\/\/.*\.js/);
+ assert.equal((page.match(/<details>/g)||[]).length,snapshot.total_checks);
+ assert.throws(()=>renderReigniteReadinessHtml({...snapshot,event_approved:true}),/readiness_render_refused/);
+});
 
 test('REIGNITE is one-call, review-first with a clear five-action owner dashboard',()=>{
  const packet=assessReigniteConcept();
