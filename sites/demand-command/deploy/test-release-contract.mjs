@@ -5,6 +5,16 @@ const read = name => fs.readFileSync(new URL(name, import.meta.url),'utf8');
 const unit=read('./install-nextgen-resident.sh');
 const edge=read('./Caddyfile.demand.example');
 const readme=read('./README.md');
+test('public console keeps Caddy Basic auth and Demand token in separate headers', () => {
+  const frontend=fs.readFileSync(new URL('../backend/console.html', import.meta.url),'utf8');
+  const backend=fs.readFileSync(new URL('../backend/server.py', import.meta.url),'utf8');
+  assert.match(frontend,/credentials:'same-origin'/);
+  assert.match(frontend,/'X-Evercraft-Demand-Token':token/);
+  assert.doesNotMatch(frontend,/'Authorization':'Bearer '/);
+  assert.match(backend,/self\.headers\.get\('X-Evercraft-Demand-Token'/);
+  assert.match(backend,/if bearer\.startswith\('Bearer '\)/);
+});
+
 test('installer is explicit, user-scoped, loopback and never touches public edge', () => {
   assert.match(unit,/--install/);
   assert.match(unit,/systemctl --user/);
