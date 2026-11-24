@@ -217,3 +217,45 @@ sets `external_route_absence_proven:false` and leaves
 and zero authority elsewhere has not been verified. Physical `--run`
 remains hard-disabled until separate, complete evidence and explicit
 one-time authorization.
+
+
+## 2026-11-23: 83 verified tests; correct the live Caddy unit assumption
+
+The founder ran pinned commit `2357809410decb09eafadd4f9e960ef4be9ea928`.
+Six new local Caddy routing tests **PASS**; cumulative distinct checks
+now **83/83** across prior sessions. The live CLI audit returned
+`caddy_main_pid_unverified` and `HOLD (3)`. Protected NodeSeed,
+historical broker, and Saban timer states were unchanged. The live
+Caddy route was **not inspected**; the HOLD is not evidence of exposure.
+
+Repo deployment source `scripts/install-fabric-owned-edge.sh` explicitly
+disables `caddy.service` and runs Caddy under
+`evercraft-public-edge.service`, with `admin off` in
+`/etc/evercraft/Caddyfile`. The earlier active-admin API witness was
+therefore built for a default Caddy installation and is *not appropriate*
+for this Evercraft-owned edge. Never enable the admin API, start the
+default Caddy unit or restart the live edge just to satisfy that witness.
+
+New read-only `penguin-owned-edge-launch-witness.mjs` is staged to
+inspect the actual `evercraft-public-edge.service` MainPID, expected
+Caddy executable and `--config /etc/evercraft/Caddyfile` process argv
+without printing them, ownership of the live 8443/18080 socket, source
+file integrity and age relative to process start, and a narrow lexical
+scan for historical broker port 8797 in the local launch Caddyfile.
+It checks process/source stability while inspecting and reports
+whether the launch file includes `admin off` and `import`. It never
+prints source content or environment, starts a service, exposes a
+token or sends a network request.
+
+A passing launch/source witness **is not active-Caddy-config attestation**:
+the admin API is disabled; imported files, runtime extensions, outbound
+tunnels, other proxies, router NAT and provider bindings remain outside
+this check. The witness sets
+`active_caddy_config_attested:false`, `route_absence_proven:false`,
+`historical_authority_absence_proven:false`, and
+`physical_broker_activation_authorized:false`.
+
+Its **six new tests and live read-only observation are staged but not
+yet founder-run**. Do not count as green until Penguin outputs.
+
+The physical `--run` remains HARD DISABLED.
