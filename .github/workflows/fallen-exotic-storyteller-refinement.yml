@@ -1,0 +1,50 @@
+name: Fallen Exotic Chiles Original Storyteller Refinement
+on:
+  push:
+    branches: [production/fallen-original-mature-narrator-audition-20261124]
+    paths: ['.github/workflows/fallen-exotic-storyteller-refinement.yml']
+permissions: { contents: read }
+jobs:
+  refine:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - name: Download official CPU VoiceDesign and source models
+        run: |
+          python -m pip install --disable-pip-version-check huggingface_hub soundfile numpy
+          curl -fLsS --retry 3 'https://github.com/CrispStrobe/CrispASR/releases/latest/download/crispasr-linux-x86_64.tar.gz' -o /tmp/crispasr-cpu.tar.gz
+          mkdir -p /tmp/crispasr-dist /tmp/voice-model
+          tar -xzf /tmp/crispasr-cpu.tar.gz -C /tmp/crispasr-dist
+          BIN="$(find /tmp/crispasr-dist -type f -name crispasr | head -n 1)"
+          test -n "$BIN"
+          install -m 755 "$BIN" /tmp/crispasr_voice
+          LIB_DIRS="$(find /tmp/crispasr-dist -type f -name '*.so*' -printf '%h\n' | sort -u | paste -sd ':' -)"
+          printf 'LD_LIBRARY_PATH=%s\n' "$LIB_DIRS" >> "$GITHUB_ENV"
+          LD_LIBRARY_PATH="$LIB_DIRS" ldd /tmp/crispasr_voice | tee /tmp/crispasr-deps.txt
+          ! grep -q 'not found' /tmp/crispasr-deps.txt
+          hf download cstr/qwen3-tts-1.7b-voicedesign-GGUF qwen3-tts-12hz-1.7b-voicedesign-q8_0.gguf --local-dir /tmp/voice-model
+          hf download cstr/qwen3-tts-tokenizer-12hz-GGUF qwen3-tts-tokenizer-12hz.gguf --local-dir /tmp/voice-model
+      - uses: actions/checkout@v4
+      - name: Render 3 shorter A-inspired ORIGINAL audition variants
+        env:
+          OMP_NUM_THREADS: '4'
+        run: python systemia/media-studio/voice-foundry/exotic-original-storyteller-refinement.py
+      - name: Validate exact WAV hashes, model intent, and receipt
+        run: |
+          python - <<'PY'
+          import json,hashlib,pathlib,wave
+          root=pathlib.Path('exotic-storyteller-refinement')
+          record=json.loads((root/'receipt.json').read_text())
+          assert len(record['takes'])==3 and not record['humanApproved'] and not record['customerDeliveryAuthorized']
+          for x in record['takes']:
+              f=root/x['file']
+              with wave.open(str(f),'rb') as w: assert w.getnframes()>0 and w.getframerate()>=16000
+              assert hashlib.sha256(f.read_bytes()).hexdigest()==x['sha256']
+          print('PASS three original source-verified auditions')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: fallen-exotic-storyteller-refinement-review-only
+          path: exotic-storyteller-refinement/
+          retention-days: 3
+          if-no-files-found: error
