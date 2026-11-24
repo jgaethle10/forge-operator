@@ -7,6 +7,7 @@ export const EVENT_SCENARIOS = Object.freeze({
   indoor_headphone: 'Indoor headphone music + quiet heritage exhibit',
   outdoor_separate: 'Outdoor independently supported stage + quiet heritage exhibit',
   heritage_only: 'Guided heritage experience / filmed fundraiser',
+  hybrid_silent_zone: 'Outdoor main stage + limited indoor headphone dance zone + heritage exhibits',
 });
 
 const GATES = Object.freeze([
@@ -35,6 +36,16 @@ const EXTRA = Object.freeze({
   ],
   heritage_only: [
     { id: 'filming_and_exhibits', owner: 'museum curator', question: 'Filming, exhibit use and visitor access permitted' },
+  ],
+  hybrid_silent_zone: [
+    { id: 'outdoor_ground_and_wind', owner: 'qualified staging engineer', question: 'Outdoor staging ground bearing, independent supports, wind/weather and power safety assessed' },
+    { id: 'outdoor_transmission', owner: 'acoustical consultant', question: 'Outdoor music sound and ground-borne vibration propagation toward historic structure evaluated' },
+    { id: 'silent_zone_footprint', owner: 'museum / fire authority', question: 'Approved indoor location, emergency routes, attendee caps and crowd distribution identified from real site plans' },
+    { id: 'headphone_comms', owner: 'production / safety lead', question: 'Headphone listening dose, volume limiting and immediate accessible emergency interruption demonstrated' },
+    { id: 'silent_zone_vibration', owner: 'historic structural engineer', question: 'Potential dancing, stamping and synchronized crowd forces transmitted via floor/foundations assessed' },
+    { id: 'artifact_protection', owner: 'museum curator', question: 'Exhibits, vulnerable historic fabric and active roof-repair areas separated from dance and equipment zones' },
+    { id: 'temporary_dome_review', owner: 'fire authority / event structural lead', question: 'If an optional freestanding visual dome is used: membrane/fire classification, egress, ventilation, anchorage and emergency lighting reviewed' },
+    { id: 'visual_effects_review', owner: 'museum / airport / event production', question: 'Freestanding fixtures, cabling, light sensitivity and airport-directed light spill reviewed; no unapproved rigging' },
   ],
 });
 
