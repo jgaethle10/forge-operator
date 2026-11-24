@@ -18,6 +18,12 @@ jobs:
           BIN="$(find /tmp/crispasr-dist -type f -name crispasr | head -n 1)"
           test -n "$BIN"
           install -m 755 "$BIN" /tmp/crispasr_voice
+          # The official CLI tarball is a relocatable binary + shared-runtime bundle.
+          # Include the bundled library directories, not just the copied executable.
+          LIB_DIRS="$(find /tmp/crispasr-dist -type f -name '*.so*' -printf '%h\n' | sort -u | paste -sd ':' -)"
+          printf 'LD_LIBRARY_PATH=%s\n' "$LIB_DIRS" >> "$GITHUB_ENV"
+          LD_LIBRARY_PATH="$LIB_DIRS" ldd /tmp/crispasr_voice | tee /tmp/crispasr-dependencies.txt
+          if grep -q 'not found' /tmp/crispasr-dependencies.txt; then exit 5; fi
           sha256sum /tmp/crispasr_voice /tmp/crispasr-cpu.tar.gz
       - name: Download Apache-licensed VoiceDesign GGUF and codec weights
         run: |
