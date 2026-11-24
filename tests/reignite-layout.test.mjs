@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { spawn, execFileSync } from 'node:child_process';
+import { spawn, spawnSync, execFileSync } from 'node:child_process';
 import { setTimeout as sleep } from 'node:timers/promises';
 import {
   SCHEMA,createSeedPlan,normalizeCandidate,calculateDiff,makeProposal,decideProposal
@@ -156,3 +156,16 @@ test('owner-run loopback HTTP: invited edits -> owner review -> planning revisio
  }
 });
 function fileURL(url){return new URL(url).pathname}
+
+test('explicit remote browser origin cannot be insecure or supplied with a path',()=>{
+ const server=new URL('../systemia/events/reignite-layout-server.mjs',import.meta.url);
+ const probe=origin=>spawnSync(process.execPath,[fileURL(server),'init'],{
+  env:{...process.env,REIGNITE_LAYOUT_PUBLIC_ORIGIN:origin},
+  encoding:'utf8'
+ });
+ for(const origin of ['http://event.example','https://event.example/unsafe','https://user:pass@event.example','https://event.example/?token=bad']){
+  const output=probe(origin);
+  assert.notEqual(output.status,0);
+  assert.match(output.stderr,/public_origin_must_be_exact_https_origin/);
+ }
+});
