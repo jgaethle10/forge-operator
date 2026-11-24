@@ -29,6 +29,10 @@ function resolveClientOrigin(){
 }
 const clientOrigin=resolveClientOrigin();
 const clientHost=new URL(clientOrigin).host;
+const cookieName=clientOrigin===origin?'reignite_editor':'__Secure-reignite_editor';
+const cookiePath=clientOrigin===origin?'/':'/reignite/layout/';
+const cookieSecure=clientOrigin!==origin;
+const sessionSeconds=12*3600;
 const publicDir=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../../public/reignite/layout');
 const MAX_BYTES=128*1024;
 const json=(value)=>JSON.stringify(value,null,2)+'\n';
@@ -49,6 +53,15 @@ function privateWrite(file,data){
  fs.renameSync(tmp,file);
 }
 const token=()=>randomBytes(32).toString('base64url');
+function sessionCookie(value,maxAge=sessionSeconds){
+ return cookieName+'='+value+'; Path='+cookiePath+'; Max-Age='+maxAge+'; HttpOnly; SameSite=Strict'+(cookieSecure?'; Secure':'');
+}
+function extractCookie(header){
+ if(typeof header!=='string')return null;
+ const value=header.split(';').map(part=>part.trim()).find(part=>part.startsWith(cookieName+'='));
+ const candidate=value?.slice(cookieName.length+1);
+ return candidate&&/^[A-Za-z0-9_-]{43}$/.test(candidate)?candidate:null;
+}
 function cli(){
  const action=process.argv[2];
  if(action==='init'){
@@ -116,26 +129,39 @@ function serve(){
  process.once('SIGTERM',()=>{release();process.exit(0)});
  process.once('SIGINT',()=>{release();process.exit(0)});
  process.once('exit',release);
- function identify(raw){
-   if(typeof raw!=='string'||raw.length<32||raw.length>256)return null;
-   // Reload private credentials each request, including revocations or newly invited editors.
-   const currentAuth=privateRead(authPath);
-   const candidate=hash(raw);
-   if(secureCompare(candidate,currentAuth.owner_hash))return {role:'owner',label:'Evercraft owner',id:'owner'};
-   for(const invite of currentAuth.invites)
-     if(!invite.revoked&&secureCompare(candidate,invite.hash))
-       return {role:'editor',label:invite.label,id:invite.id};
-   const now=Date.now();
-   for(const session of currentAuth.sessions||[]){
-     const invite=currentAuth.invites.find(i=>i.id===session.invite_id);
-     if(invite&&!invite.revoked&&session.expires_at_ms>now&&
-        secureCompare(candidate,session.hash))
-       return {role:'editor',label:invite.label,id:invite.id};
+ function identify(raw,cookie){
+   const authNow=privateRead(authPath),now=Date.now();
+   if(typeof raw==='string'&&raw.length>=32&&raw.length<=256){
+     const candidate=hash(raw);
+     if(secureCompare(candidate,authNow.owner_hash))
+       return {role:'owner',label:'Evercraft owner',id:'owner',auth_kind:'key'};
+     for(const invite of authNow.invites){
+       if(!invite.revoked&&secureCompare(candidate,invite.hash))
+         return {role:'editor',label:invite.label,id:invite.id,auth_kind:'key'};
+     }
+     for(const session of authNow.sessions||[]){
+       const invite=authNow.invites.find(i=>i.id===session.invite_id);
+       if(!session.revoked&&invite&&!invite.revoked&&session.expires_at_ms>now&&
+          secureCompare(candidate,session.hash))
+         return {role:'editor',label:invite.label,id:invite.id,auth_kind:'key'};
+     }
+   }
+   if(cookie){
+     const candidate=hash(cookie);
+     for(const session of authNow.sessions||[]){
+       if(!session.cookie_hash||session.revoked||session.expires_at_ms<=now)continue;
+       const invite=authNow.invites.find(i=>i.id===session.invite_id);
+       if(invite&&!invite.revoked&&secureCompare(candidate,session.cookie_hash)){
+         return {role:'editor',label:invite.label,id:invite.id,auth_kind:'cookie',
+           session_id:session.id,csrf_token:session.csrf_token,
+           session_expires_at_ms:session.expires_at_ms};
+       }
+     }
    }
    return null;
  }
- function send(res,code,data){
-   res.writeHead(code,{'Content-Type':'application/json; charset=utf-8'});
+ function send(res,code,data,extraHeaders={}){
+   res.writeHead(code,{'Content-Type':'application/json; charset=utf-8',...extraHeaders});
    res.end(JSON.stringify(data));
  }
  async function body(req){
@@ -187,25 +213,31 @@ function serve(){
        const invite=authNow.invites.find(i=>i.grant_hash&&secureCompare(candidate,i.grant_hash));
        if(!invite||invite.revoked||invite.redeemed_at||invite.grant_expires_at_ms<=now)
          return send(res,410,{error:'invite_not_available_or_already_used'});
-       const key=token(),expires_at_ms=now+12*3600000;
+       const secret=token(),csrf=token(),expires_at_ms=now+sessionSeconds*1000;
        authNow.sessions??=[];
        authNow.sessions.push({
          id:'session-'+randomBytes(8).toString('hex'),
-         invite_id:invite.id,hash:hash(key),expires_at_ms,
+         invite_id:invite.id,cookie_hash:hash(secret),csrf_token:csrf,expires_at_ms,
          created_at:new Date(now).toISOString()
        });
        invite.redeemed_at=new Date(now).toISOString();
        invite.grant_hash=null;
        privateWrite(authPath,authNow);
        return send(res,200,{
-         schema:'evercraft.reignite.invited-editor-session.v1',
-         session_key:key,scope:'propose_and_read_own',expires_at:new Date(expires_at_ms).toISOString(),
+         schema:'evercraft.reignite.invited-editor-session.v2',
+         session_mode:'cookie',csrf_token:csrf,scope:'propose_and_read_own',
+         expires_at:new Date(expires_at_ms).toISOString(),
          event_approved:false,venue_authorized:false
-       });
+       },{'Set-Cookie':sessionCookie(secret)});
      }catch(e){return send(res,e.http||422,{error:e.message})}
    }
-   const who=identify(req.headers['x-reignite-key']);
-   if(!who)return send(res,401,{error:'valid_owner_or_invite_key_required'});
+   const who=identify(req.headers['x-reignite-key'],extractCookie(req.headers.cookie));
+   if(!who)return send(res,401,{error:'valid_owner_or_invite_session_required'});
+   if(req.method==='GET'&&url==='/api/session')
+     return send(res,200,{authenticated:true,role:who.role,actor:who.label,
+       auth_mode:who.auth_kind,csrf_token:who.auth_kind==='cookie'?who.csrf_token:null,
+       expires_at:who.auth_kind==='cookie'?new Date(who.session_expires_at_ms).toISOString():null,
+       event_approved:false,venue_authorized:false});
    if(req.method==='GET'&&url==='/api/plan')
      return send(res,200,{plan:db.plan,role:who.role,actor:who.label,pending_count:who.role==='owner'?db.proposals.filter(p=>p.status==='pending').length:undefined});
    if(req.method==='GET'&&url==='/api/mine')
@@ -218,6 +250,17 @@ function serve(){
    }
    if(req.method==='POST'&&req.headers.origin!==clientOrigin)
      return send(res,403,{error:'same_origin_post_required'});
+   if(req.method==='POST'&&who.auth_kind==='cookie'&&
+      !secureCompare(req.headers['x-reignite-csrf'],who.csrf_token))
+     return send(res,403,{error:'csrf_token_required'});
+   if(req.method==='POST'&&url==='/api/session/logout'){
+     if(who.auth_kind!=='cookie')return send(res,403,{error:'cookie_session_required'});
+     const data=privateRead(authPath);
+     const session=(data.sessions||[]).find(item=>item.id===who.session_id);
+     if(!session||session.revoked)return send(res,401,{error:'session_already_revoked'});
+     session.revoked=true;privateWrite(authPath,data);
+     return send(res,200,{signed_out:true},{'Set-Cookie':sessionCookie('',0)});
+   }
    if(req.method==='POST'&&url==='/api/proposals'){
      if(db.proposals.filter(p=>p.status==='pending').length>=100)return send(res,429,{error:'review_queue_full'});
      const current=quotas.get(who.id)||{at:Date.now(),count:0};
