@@ -1,0 +1,64 @@
+name: Tiled Customs Native Bella Signoff Audition
+on:
+  pull_request:
+    paths: ['.github/workflows/tiled-customs-signoff-audition.yml']
+permissions:
+  contents: read
+jobs:
+  voice-audition:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install native offline-capable Kokoro voice runtime
+        run: python -m pip install --disable-pip-version-check 'kokoro-onnx' 'soundfile' 'numpy'
+      - name: Retrieve same official Kokoro checkpoint used for preceding Tile Works Bella scene
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/tiled-customs
+          curl -fL --retry 2 --connect-timeout 20 --max-time 420 \
+            'https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.1/kokoro-v1.0.onnx' \
+            -o /tmp/tiled-customs/kokoro-v1.0.onnx
+          curl -fL --retry 2 --connect-timeout 20 --max-time 180 \
+            'https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.1/voices-v1.0.bin' \
+            -o /tmp/tiled-customs/voices-v1.0.bin
+          test "$(stat -c%s /tmp/tiled-customs/kokoro-v1.0.onnx)" -gt 100000000
+          test "$(stat -c%s /tmp/tiled-customs/voices-v1.0.bin)" -gt 10000
+      - name: Record the requested full native af_bella brand + tagline as one expressive phrase
+        run: |
+          python - <<'PY'
+          import json,hashlib,pathlib,numpy as np,soundfile as sf
+          from kokoro_onnx import Kokoro
+          out=pathlib.Path('/tmp/tiled-customs')
+          kokoro=Kokoro(str(out/'kokoro-v1.0.onnx'),str(out/'voices-v1.0.bin'))
+          variants=[
+            ('brand_then_tagline','Tiled Customs. Look closer.',0.96),
+            ('brand_pause_tagline','Tiled Customs... Look closer.',0.97),
+          ]
+          notes=[]
+          for name,line,speed in variants:
+            samples,sr=kokoro.create(line,voice='af_bella',speed=speed,lang='en-us')
+            a=np.asarray(samples,dtype=np.float32)
+            if sr!=24000 or len(a)<10000 or np.max(np.abs(a))>=1 or not np.isfinite(a).all():
+              raise RuntimeError('INVALID_NATIVE_BELLA_SIGNOFF')
+            fn=out/(name+'.wav')
+            sf.write(fn,a,sr,subtype='PCM_24')
+            notes.append({'file':fn.name,'spoken_line':line,'speed':speed,
+             'duration_sec':len(a)/sr,'sha256':hashlib.sha256(fn.read_bytes()).hexdigest()})
+          (out/'receipt.json').write_text(json.dumps({'voice':'af_bella','engine':'kokoro-onnx','model':'kokoro-v1.0.onnx',
+            'model_sha256':hashlib.sha256((out/'kokoro-v1.0.onnx').read_bytes()).hexdigest(),
+            'voices_sha256':hashlib.sha256((out/'voices-v1.0.bin').read_bytes()).hexdigest(),
+            'variants':notes,'status':'PRIVATE_CLIENT_AUDITION_UNREVIEWED','publish_authorized':False},indent=2)+'\n')
+          print(json.dumps(notes,indent=2))
+          PY
+          mkdir -p artifacts/tiled-customs
+          cp /tmp/tiled-customs/brand_then_tagline.wav /tmp/tiled-customs/brand_pause_tagline.wav /tmp/tiled-customs/receipt.json artifacts/tiled-customs/
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tiled-customs-native-bella-brand-signoff
+          path: artifacts/tiled-customs/
+          retention-days: 1
+          if-no-files-found: error
