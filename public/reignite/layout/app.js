@@ -8,6 +8,8 @@ const frame={interior:{x:74,y:94,w:852,h:235},campus:{x:36,y:48,w:928,h:355}};
 const state={base:null,draft:null,selected:null,view:'interior',token:null,csrf:null,authMode:null,role:null,actor:null,drag:null,overlay:null,opacity:.45,reviews:[],quickPending:null,evidenceRevision:null};
 const clamp=(v,min,max)=>Math.max(min,Math.min(max,v));
 const find=id=>state.draft?.zones.find(z=>z.id===id);
+const hasReviewAccess=()=>Boolean(state.role&&(state.token||
+  (state.authMode==='cookie'&&typeof state.csrf==='string'&&state.csrf.length>=32)));
 const msg=text=>$('submissionResult').textContent=text;
 function changed(){
  if(!state.base||!state.draft)return [];
@@ -23,7 +25,7 @@ function changed(){
  return result;
 }
 function displayStatus(){
- const connected=Boolean(state.role&&(state.token||state.authMode==='cookie'));
+ const connected=hasReviewAccess();
  $('connectionStatus').textContent=connected?'Connected: '+state.actor+' ('+state.role+') · planning only':'Local concept mode · no live submission';
  $('connectionStatus').classList.toggle('connected',connected);
  $('ownerPanel').hidden=state.role!=='owner';
@@ -241,7 +243,7 @@ $('submitProposal').addEventListener('click',async()=>{
  if(!changed().length){msg('No edits to submit.');return}
  const reason=$('reason').value.trim();
  if(reason.length<12){msg('Explain your changes (minimum 12 characters).');return}
- if(!state.token){msg('No review service connected. Export JSON and transfer through a trusted private channel.');return}
+ if(!hasReviewAccess()){msg('No review service connected. Export JSON and transfer through a trusted private channel.');return}
  try{
   const data=await api('/api/proposals','POST',{base_revision:state.base.revision,candidate:state.draft,reason});
   msg('Submitted '+data.proposal_id+' for owner review. NOT approved or applied.');
@@ -307,7 +309,7 @@ function renderMyIdeas(items){
  }).join('');
 }
 async function loadMyIdeas(){
- if(!state.token||!state.role)return;
+ if(!hasReviewAccess())return;
  try{
   const result=await api('/api/mine');
   renderMyIdeas(result.items);
@@ -444,7 +446,7 @@ $('quickIdeaForm').addEventListener('submit',async event=>{
  button.disabled=true;
  try{
   if(hasPending){
-   if(!state.token){
+   if(!hasReviewAccess()){
     quickMessage('Your preview is saved in this tab. Connect with your invitation to send it, or download your draft.');
     return;
    }
@@ -460,7 +462,7 @@ $('quickIdeaForm').addEventListener('submit',async event=>{
   };
   const id='zone-'+(globalThis.crypto?.randomUUID?.()||String(Date.now())+'00000000').replaceAll('-','').slice(0,24);
   const result=createQuickSuggestion(state.base,fields,id);
-  if(state.token){
+  if(hasReviewAccess()){
    await submitQuickCandidate(result.candidate,result.reason);
   }else{
    state.draft=result.candidate;
