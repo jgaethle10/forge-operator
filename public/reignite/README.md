@@ -5,7 +5,7 @@ This is an **Evercraft-owned static website concept**, not a live event announce
 ## Features shipped in source
 
 - Mobile-first editorial festival landing page, entirely self-contained HTML/CSS with semantic sections, skip navigation, visible focus styling, responsive layouts, and reduced-motion preferences.
-- Global artist invitation **concept** with categories for music, art, photography, and community participation; no actual applications open, no personal information collected.
+- Global artist invitation **concept** with categories for music, art, photography, and community participation; no applications open. A nonbinding **mailto** link opens the visitor's own email client using the already-public Evercraft contact address from `public/contact/index.html`. The site itself collects no personal information and cannot send messages or book performers.
 - Planning menu for outdoor stage, acoustic visual dome, sensory-reset lounge, Take the Decks, karaoke, photography/art, food and silent auction.
 - Preservation-first story, four-stage readiness roadmap, current status FAQ, and links to official museum resources.
 - Clear independent status and non-affiliation disclosure; no specific event date, lineup, capacity, venue license, sound hours or donations represented as confirmed.
