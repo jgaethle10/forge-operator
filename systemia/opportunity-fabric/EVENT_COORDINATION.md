@@ -15,17 +15,37 @@ This is a reusable **source-only event feasibility planner**, not a separate Saa
 
 ## Software contract
 
-`assessEventFeasibility({ opportunity_id, scenario, evidence, features })` is pure and deterministic for identical inputs, except that it never creates timestamps or idempotency identifiers. It returns a review packet: required gates, evidence state and open work. Three scenarios are supported:
+`assessEventFeasibility({ opportunity_id, scenario, evidence, features })` is pure and deterministic for identical inputs, except that it never creates timestamps or idempotency identifiers. It returns a review packet: required gates, evidence state and open work. Four scenarios are supported:
 
 - `indoor_headphone`: constrained museum-approved headphone experience, pending structural/crowd/egress review
 - `outdoor_separate`: separately supported outdoor performance and quiet indoor heritage component, pending sound propagation, weather, airfield and site suitability
 - `heritage_only`: quiet exhibit and filmed heritage fundraiser, still pending occupancy/engineering constraints
+- `hybrid_silent_zone`: independent outdoor music stage plus a small, **museum-approved** headphone-based dance zone inside Hangar B and quiet heritage activity elsewhere. This is not a soundproof dome and does not establish a safe visitor count, egress plan, or reduced floor vibration.
 
 `eventWorkPackages(packet)` maps the requirements into *unassigned, unauthorized* scoped package candidates using stable IDs `opportunity_id:gate_id`. This allows a future explicit adapter into the already existing protected multi-party Opportunity Fabric after identity, agreement, rights, sourcing and Passport gates are independently met. It does NOT create those records in production.
 
 `evidence` is keyed by gate ID with a private, authorized `source_ref`, an `observed_at` timestamp, and optional `finding`. Missing entries are `missing`; supplied references are `submitted_unverified`; an unsafe/declined/denied finding is a **stop for qualified review**. A self-asserted `approved` finding is deliberately never authoritative. Avoid personal identifiers, email addresses, client documents or arbitrary note bodies in GitHub.
 
 Exceptional effects like open flame, skyward laser beams, drones or attachments to historic fabric add their own mandatory review requirement and are **not included in the default concept**.
+
+### Hangar B special concept: THE SILENT HANGAR
+
+The indoor music is delivered over individually controlled headphones, not high-power amplified speakers or subwoofers. A freestanding visual enclosure/dome is **optional** and adds the `freestanding_visual_dome` feature gate. Do not promise soundproofing, measured attenuation, isolation or a safe event footprint without qualified site-specific work. A smaller audience only reduces risk if site loads, pathways and vibration transmission actually support that conclusion.
+
+**Separate engineering dependencies:**
+
+- **Airborne sound:** headphones can substantially reduce amplified airborne music indoors; there will still be conversation, singing, footfalls, visual equipment hum, outdoor main-stage transmission and local sound spill.
+- **Structure-borne forces:** rhythmic dancing/jumping/stamping, crowd density, floor/slab condition, resonance, ground/foundation transmission, temporary structure anchors and independent cabling must be assessed. No inference that the slab is independent of timber arch foundations.
+- **Hearing and emergency safety:** volume-limited headphone system with suitable user guidance, independently tested distribution/interference/latency, an immediate mute-and-message/broadcast interruption mechanism backed by visible alarm cues, accessible communication for those not wearing headphones, and headcount/flow monitoring. WHO recommends device sound exposure features and volume limits: https://www.who.int/news-room/questions-and-answers/item/deafness-and-hearing-loss-safe-listening/
+- **Museum activities around dance zone:** quiet approved aircraft/history exhibits, preservation donor display, family archive/story collection, art and educational booths. Keep exhibits, restricted roof-repair areas, emergency routes, visitor circulation and preservation-sensitive zones clear.
+- **Optional visual dome:** only a free-standing temporary enclosure if approved by the museum, event structural engineer and fire authority for occupancy, ventilation, temporary construction material/flame resistance, egress and emergency communication; a fabric/inflatable dome is **not** effective soundproofing by default.
+- **Outdoors:** only approved stage/food vendor footprint and weather/ground/power, airport/aviation lighting, outdoor noise/vibration transmission. Exterior sound cannot be assumed disconnected from historic structure.
+- **Participant experience:** idea of multiple music channels in one headphone zone is a concept, not vendor equipment verification. No ticketing, capacity, schedule or equipment purchase.
+
+**Authoritative feasibility sequence:** museum-authorized zones and current repair drawings → historic structural PE evaluation of indoor dance loads and external source coupling → acoustical consultant outdoor + indoor survey → fire/AHJ occupancy and temporary structures → headphone safety/interruption demonstration → qualified production review and contracts → written approvals. Stop or redesign if any professional review excludes the proposed usage.
+
+Treat the above as a *concept review packet*, not a certified engineering analysis, vendor contract or legally approved event.
+
 
 No path in this source module grants venue approval, publishes a public event, dispatches an agent, contacts a partner, starts a test, collects charitable donations or opens ticketing. Qualified on-site engineering and site-specific authorizations remain external gates.
 
