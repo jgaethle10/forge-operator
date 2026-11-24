@@ -20,6 +20,7 @@ const GATES = Object.freeze([
   { id: 'fire_life_safety', owner: 'fire authority / event producer', question: 'Fire protection, egress and emergency communications reviewed' },
   { id: 'access_and_airfield', owner: 'property owner / airport authority', question: 'Vehicle, ADA, parking and airport operating restrictions reviewed' },
   { id: 'insurance_and_permits', owner: 'producer / insurer / permitting authorities', question: 'Applicable licenses, permits, insurance and contractors identified' },
+  { id: 'jurisdiction_and_event_hours', owner: 'venue / city or county permitting authority / producer', question: 'Exact site parcel jurisdiction, applicable festival and dance rules, enforceable amplified-sound hours, exceptions and clear-out deadlines verified in writing before scheduling' },
   { id: 'charitable_agreement', owner: 'museum / organizer / counsel', question: 'Written stewardship of proceeds and charitable claims agreed' },
   { id: 'production_plan', owner: 'qualified production partner', question: 'Crew, independent rigging, power, vendors and run of show planned' },
   { id: 'weather_and_emergency', owner: 'event producer', question: 'Weather cancellation, crowd safety and emergency plan reviewed' },
@@ -49,6 +50,15 @@ const EXTRA = Object.freeze({
 });
 
 const FEATURE_GATES = Object.freeze({
+  international_performers: { id: 'international_performers', owner: 'artist liaison / qualified immigration counsel', question: 'Performer eligibility, travel, work authorization, contracts and financial responsibilities verified; a visitor classification or unpaid performance alone is not permission to work' },
+  acoustic_dome_performance: { id: 'acoustic_dome_performance', owner: 'venue / event production / acoustical lead', question: 'Indoor acoustic session footprint, safe levels, museum exhibits, accessible emergency communication and qualified fire/structural checks reviewed; dome is not assumed soundproof' },
+  quiet_wing: { id: 'quiet_wing', owner: 'accessibility and safety lead / venue', question: 'Quiet reset area has truly separated noise, accessible seating and egress, fire-safe material, water/spill controls and protection of artifacts' },
+  guest_dj: { id: 'guest_dj', owner: 'production / host / licensing lead', question: 'Guest DJ turn-taking, hearing/sound limits, electrical and trip safety, supervision, accessibility and public music rights established' },
+  karaoke: { id: 'karaoke', owner: 'production / venue / music licensing lead', question: 'Karaoke sound footprint, neighboring uses, microphones/lyrics rights, host rotation, electrical safety and operating hours authorized' },
+  art_exhibition: { id: 'art_exhibition', owner: 'curator / artist liaison', question: 'Freestanding exhibits, original artist consent, copyright/license, display custody and museum artifact/egress protections agreed' },
+  photography_contest: { id: 'photography_contest', owner: 'photo curator / contest operator', question: 'Contest rules, judging, ownership, photo rights, identifiable-person consent, display permissions and possible awards reviewed before accepting submissions' },
+  food_contest: { id: 'food_contest', owner: 'Tillamook health authority / licensed food coordinator', question: 'Food vendor license requirements, health approval, tasting and allergy safeguards, waste, power, water, fire and outdoor location verified before food offerings' },
+  silent_auction: { id: 'silent_auction', owner: 'museum beneficiary / organizer / legal reviewer', question: 'Written beneficiary and monetary terms, donor/consignor rights, item custody, bid rules, tax/charity statements and payment handling established before bids or collections' },
   freestanding_visual_dome: { id: 'freestanding_visual_dome', owner: 'fire authority / qualified event structural lead', question: 'Separate dome occupancy, fire classification/material, egress, ventilation, wind/anchorage and emergency lighting reviewed' },
   open_flame: { id: 'open_flame', owner: 'museum / fire authority', question: 'Separate written flame-effects and heritage safety approval' },
   aerial_laser: { id: 'aerial_laser', owner: 'airport / aviation authority', question: 'Separate aviation-safe laser/beam review' },
