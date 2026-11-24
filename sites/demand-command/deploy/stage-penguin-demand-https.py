@@ -49,6 +49,16 @@ def stage_text(existing: str, template: str, hashed: str) -> str:
     return existing + "\n" + template.replace(PLACEHOLDER, hashed).rstrip() + "\n"
 
 
+def validate_password_pair(first: str, second: str) -> None:
+    """Report only safe password validity reasons, never contents or length."""
+    if first != second:
+        raise ValueError("The two password entries did not match. Re-enter the same password twice")
+    if len(first) < 20:
+        raise ValueError("Password was shorter than the required 20 characters")
+    if "\\n" in first or "\\r" in first:
+        raise ValueError("Password must not contain a newline or carriage return")
+
+
 def regular_root_file(path: Path) -> None:
     info = path.lstat()
     if not stat.S_ISREG(info.st_mode) or info.st_uid != 0:
@@ -128,8 +138,7 @@ def main() -> int:
         print("Staging owner-only Caddy Basic auth. Password is never sent to chat or GitHub.")
         p1 = getpass.getpass("New owner Basic-auth password (at least 20 characters): ")
         p2 = getpass.getpass("Confirm owner Basic-auth password: ")
-        if p1 != p2 or len(p1) < 20:
-            raise ValueError("Password mismatch or fewer than 20 characters")
+        validate_password_pair(p1, p2)
         # The plaintext goes through stdin ONLY, never the process argv or logs.
         digest = subprocess.run(
             ["caddy", "hash-password", "--algorithm", "bcrypt"],
@@ -171,8 +180,13 @@ def main() -> int:
         print("DNS, the existing live Caddyfile and the running edge remain UNCHANGED.")
         print("PUBLIC HTTPS REMAINS HELD pending IONOS DNS and protected rollout.")
         return 0
-    except (ValueError, UnicodeError, OSError, subprocess.CalledProcessError) as exc:
-        # Do not echo subprocess stderr, passwords, hashes or candidate contents.
+    except ValueError as exc:
+        # All ValueErrors originate in our fixed, non-secret preflight or format checks.
+        # Explain the exact category to avoid needless re-entering of credentials.
+        print(f"STOP: {exc}. No live edge changed.", file=sys.stderr)
+        return 2
+    except (UnicodeError, OSError, subprocess.CalledProcessError) as exc:
+        # Never echo process stderr, plaintext passwords, hashes or edge environment.
         print(f"STOP: staging prerequisite failed ({exc.__class__.__name__}). No live edge changed.", file=sys.stderr)
         return 2
 
