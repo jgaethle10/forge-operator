@@ -2,6 +2,11 @@
 /**
  * Read-only local Caddy admin-config witness for a potential broker endpoint.
  *
+ * ONLY for installations with the default caddy.service and an enabled
+ * loopback Caddy admin API. Evercraft's owned Fabric edge deliberately uses
+ * evercraft-public-edge.service with admin off; use the separate read-only
+ * penguin-owned-edge-launch-witness.mjs for that actual launch topology.
+ *
  * Caddy admin exposes the active Caddy JSON config (not just a file on disk).
  * This sensor never prints or persists that config. Only GET /config/ is used.
  *
