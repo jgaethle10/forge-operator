@@ -122,9 +122,9 @@ test('hybrid silent zone gates outdoor stage and indoor headphone crowd separate
   for (const id of [
     'outdoor_ground_and_wind','outdoor_transmission','silent_zone_footprint',
     'headphone_comms','silent_zone_vibration','artifact_protection',
-    'temporary_dome_review','visual_effects_review',
+    'visual_effects_review',
   ]) assert(byId.has(id), 'missing hybrid gate: '+id);
-  assert.equal(result.checks.length, 20);
+  assert.equal(result.checks.length, 19);
   assert.equal(result.event_approved, false);
   assert.equal(result.performance_or_testing_authorized, false);
   assert.equal(result.ticket_sales_authorized, false);
@@ -152,4 +152,13 @@ test('hybrid unsafe crowd findings trigger stop instead of permission', () => {
   }});
   assert.equal(result.stage,'hold_pending_qualified_review');
   assert(result.next_work.some(work => work.requirement==='silent_zone_vibration' && work.priority==='stop_and_review'));
+});
+
+test('freestanding visual dome creates an additional gate only when selected', () => {
+  const plain = assess({ scenario: 'hybrid_silent_zone' });
+  const dome = assess({ scenario: 'hybrid_silent_zone', features: ['freestanding_visual_dome'] });
+  assert.equal(plain.checks.some(x => x.id === 'freestanding_visual_dome'), false);
+  assert.equal(dome.checks.length, plain.checks.length + 1);
+  assert.equal(dome.checks.some(x => x.id === 'freestanding_visual_dome'), true);
+  assert.equal(dome.event_approved, false);
 });
