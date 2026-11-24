@@ -1,0 +1,48 @@
+name: Fallen Exotic Chiles Spanish Narration Auditions (Private)
+on:
+  push:
+    branches: [production/exotic-chiles-spanish-voice-20261124]
+    paths:
+      - systemia/media-studio/voice-foundry/exotic_chiles_spanish.py
+      - .github/workflows/fallen-exotic-chiles-spanish-voice.yml
+  workflow_dispatch:
+permissions: { contents: read }
+jobs:
+  spanish-auditions:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Verify public Spanish narration script
+        run: python systemia/media-studio/voice-foundry/exotic_chiles_spanish.py --verify-only
+      - name: Install native Kokoro Spanish voice runtime
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq espeak-ng libsndfile1
+          python -m pip install --disable-pip-version-check 'kokoro==0.9.4' 'soundfile>=0.12,<1.0'
+      - name: Generate genuine Spanish-native ef_dora WAVs
+        env: {HF_HUB_DISABLE_TELEMETRY: '1'}
+        run: python systemia/media-studio/voice-foundry/exotic_chiles_spanish.py private-spanish-auditions
+      - name: Verify all WAV files and language identity
+        run: |
+          python - <<'PY'
+          import json,hashlib,pathlib,soundfile as sf
+          root=pathlib.Path('private-spanish-auditions')
+          r=json.loads((root/'evidence.json').read_text())
+          assert r['voiceId']=='ef_dora' and r['language']=='es'
+          assert len(r['auditions'])==8
+          for item in r['auditions']:
+              p=root/item['filename']; assert p.read_bytes()[:4]==b'RIFF'
+              assert hashlib.sha256(p.read_bytes()).hexdigest()==item['sha256']
+              assert sf.info(p).samplerate==24000
+          print('PASS: 8 real native Spanish WAVs')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: exotic-chiles-spanish-native-auditions-private
+          path: private-spanish-auditions/
+          retention-days: 3
+          if-no-files-found: error
