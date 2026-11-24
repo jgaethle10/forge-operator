@@ -1,0 +1,11 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {ingest,searchBurials} from './registry.mjs';
+const approval={source_id:'synthetic',rights_status:'approved',review_ref:'fixture-only'};
+const row={source_record_id:'1',state:'WA',kind:'burial',cemetery:'Synthetic cemetery',name:'Example Person',location_precision:'cemetery_only',retrieved_at:'2026-11-23T00:00:00Z'};
+test('normalizes and searches with state filter',()=>{const r=ingest([row],approval);assert.equal(searchBurials(r.records,{name:'person',state:'WA'}).length,1);assert.equal(searchBurials(r.records,{name:'person',state:'OR'}).length,0);assert.equal(r.receipt.live_coverage_verified,false)});
+test('requires rights review',()=>assert.throws(()=>ingest([row],{})));
+test('deduplicates identical records',()=>assert.equal(ingest([row,row],approval).receipt.unique_count,1));
+test('rejects conflicts',()=>assert.throws(()=>ingest([row,{...row,name:'Another'}],approval)));
+test('rejects false grave coordinates',()=>assert.throws(()=>ingest([{...row,coordinates:[-120,46]}],approval)));
+test('requires survey reference',()=>assert.throws(()=>ingest([{...row,location_precision:'surveyed_grave_coordinate',coordinates:[-120,46]}],approval)));
+test('rejects invalid state',()=>assert.throws(()=>ingest([{...row,state:'ZZ'}],approval)));
+test('cemetery records are not burial hits',()=>assert.equal(searchBurials(ingest([{...row,kind:'cemetery'}],approval).records,{name:'Example'}).length,0));
