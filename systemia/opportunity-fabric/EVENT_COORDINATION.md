@@ -71,6 +71,22 @@ eventNextActions sorts reported safety/legal holds first, distinguishes missing 
 
 This source-only profile is not a deployed live readiness dashboard. No current as-built site survey or museum/Port agreement has been received by this module. The site editor in draft PR #2553 remains separate until authenticated source provenance and role/access controls have been independently verified.
 
+## One-page organizer readiness preview
+
+The existing source-only Events engine now generates a small, **unindexed and strictly read-only** organizer webpage at `public/reignite/readiness/index.html`. It presents the first five priorities and all current review areas grouped into simple, expandable sections. It is generated from `assessReigniteConcept()` and `eventNextActions()`; no duplicate rule list, external runtime, account, CRM, booking, payment or server endpoint is introduced.
+
+**Source controls:**
+
+    node systemia/opportunity-fabric/reignite-readiness-build.mjs --check
+    node systemia/opportunity-fabric/reignite-readiness-build.mjs --write
+    node --test systemia/opportunity-fabric/event-coordination.test.mjs
+
+`--write` changes the local generated HTML only. It never publishes or sends anything. The check and tests ensure the page matches the exact canonical gates and cannot render an event-approval, ticketing, outbound-contact or fundraising authorization. The page intentionally starts with all 25 current review areas as *missing evidence from this source snapshot* and prominently says it is **not live**. That does not imply museum, Port or other stakeholders have done nothing: no authenticated external/partner evidence is imported.
+
+Priority order is written venue permission, actual jurisdiction and lawful music/dance hours, current structural condition, site boundaries/permitted use, and qualified structural review, unless an actual reported safety hold preempts them. An organizer can review this page without reading technical source, but they cannot use it as a real-time permit dashboard, externally authorized operating schedule or certified floor plan.
+
+**Integration boundary:** this static page is in the Events feasibility draft PR #2548. The broader REIGNITE site and collaborative layout studio are in the separate draft PR #2553. Only link and publish them together after both PRs have passed review and landed on the same authorized, Evercraft-controlled release. A link on an unmerged branch would be a dead end; a merged artifact still needs an independently permitted production launch.
+
 ## Read-only Demand adapter (present in source)
 
 `assessEventFromDemandQueue(queue, opportunityId, options)` consumes the exact existing `GET /api/systemia/queue` envelope, requiring `schema: 1`, `kind: evercraft.demand-desk.queue`, integer revision and exactly one currently open opportunity ID. It passes that ID to the same event feasibility evaluator. It records a *claimed* Demand stage and verification flag for context but **never translates "Replied", "Won", "verified" or any sales classification into venue or regulatory approval**. It refuses missing, duplicate and closed opportunity records. It neither mutates Demand's workspace nor fetches a queue by itself; an authorized owned runtime supplies the queue and establishes its origin independently.
