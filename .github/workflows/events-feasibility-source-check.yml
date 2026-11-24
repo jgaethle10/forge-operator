@@ -7,6 +7,7 @@ on:
       - 'systemia/opportunity-fabric/event-coordination.test.mjs'
       - 'systemia/opportunity-fabric/reignite-readiness-*.mjs'
       - 'public/reignite/readiness/**'
+      - 'tests/reignite-unified.test.mjs'
       - '.github/workflows/events-feasibility-source-check.yml'
   workflow_dispatch:
 
@@ -25,6 +26,6 @@ jobs:
         with:
           node-version: 22
       - name: Prove event safety and no unintended venue authority
-        run: node --test systemia/opportunity-fabric/event-coordination.test.mjs
+        run: node --test systemia/opportunity-fabric/event-coordination.test.mjs tests/reignite-unified.test.mjs
       - name: Verify organizer readiness preview from canonical gates
         run: node systemia/opportunity-fabric/reignite-readiness-build.mjs --check
