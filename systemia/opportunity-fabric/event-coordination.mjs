@@ -124,6 +124,55 @@ export function assessEventFeasibility(input = {}) {
   };
 }
 
+
+/**
+ * Flagship REIGNITE planning profile. Selecting an idea makes its review gates
+ * visible; it does NOT enable a location, book a performer, permit a program,
+ * establish sound hours, or collect donations.
+ */
+export const REIGNITE_CONCEPT_FEATURES = Object.freeze([
+  'freestanding_visual_dome','acoustic_dome_performance','quiet_wing',
+  'guest_dj','karaoke','art_exhibition','photography_contest','food_contest',
+  'silent_auction','international_performers'
+]);
+
+export function assessReigniteConcept({evidence={},scenario='outdoor_separate'}={}) {
+  return assessEventFeasibility({
+    opportunity_id:'reignite:hangar-b',
+    scenario,evidence,
+    features:REIGNITE_CONCEPT_FEATURES
+  });
+}
+
+/**
+ * A straightforward owner-facing summary from the canonical gate model.
+ * This is a prompt for evidence gathering, never a release decision.
+ */
+export function eventNextActions(assessment,{limit=5}={}) {
+  if(assessment?.schema!=='evercraft.events.feasibility-review.v1')
+    throw Error('assessment_required');
+  if(!Number.isInteger(limit)||limit<1||limit>30)throw Error('invalid_action_limit');
+  const holds=assessment.next_work.filter(x=>x.priority==='stop_and_review');
+  const others=assessment.next_work.filter(x=>x.priority!=='stop_and_review');
+  const pending=holds.concat(others);
+  return {
+    schema:'evercraft.events.next-actions.v1',
+    opportunity_id:assessment.opportunity_id,
+    headline:holds.length?
+      'Stop and resolve a reported concern with qualified reviewers':
+      'Confirm the real venue, sound hours and safety requirements before announcing REIGNITE',
+    total_requirements:assessment.checks.length,
+    evidence_missing:assessment.checks.filter(x=>x.status==='missing').length,
+    evidence_submitted_unverified:assessment.checks.filter(x=>x.status==='submitted_unverified').length,
+    reported_holds:holds.length,
+    next:pending.slice(0,limit),
+    next_action_count:pending.length,
+    event_approved:false,
+    ticket_sales_authorized:false,
+    notes:'Only an evidence collection summary. Approved venue footprint and qualified release decisions remain external.'
+  };
+}
+
 export function eventWorkPackages(assessment) {
   if (assessment?.schema !== 'evercraft.events.feasibility-review.v1') throw Error('assessment_required');
   return assessment.checks.map(check => ({
