@@ -1,0 +1,38 @@
+name: Evercraft Network P0 admission and transport
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/network/transport-router.mjs'
+      - 'systemia/network/transport-diversity-proof.mjs'
+      - 'systemia/network/continuity-kernel.mjs'
+      - 'systemia/network/continuity-kernel-proof.mjs'
+      - '.github/workflows/network-p0-admission-transport.yml'
+  push:
+    branches:
+      - 'fix/evercraft-network-p0-*'
+    paths:
+      - 'systemia/network/transport-router.mjs'
+      - 'systemia/network/transport-diversity-proof.mjs'
+      - 'systemia/network/continuity-kernel.mjs'
+      - 'systemia/network/continuity-kernel-proof.mjs'
+      - '.github/workflows/network-p0-admission-transport.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  contracts:
+    name: Network fail-closed P0 proofs
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Reject unbounded and unverified transports
+        run: node systemia/network/transport-diversity-proof.mjs
+      - name: Reject fabricated free resources and forged priorities
+        run: node systemia/network/continuity-kernel-proof.mjs
