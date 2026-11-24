@@ -47,7 +47,10 @@ test('unverified $50 Stripe checkout is not advertised or embedded in structured
  assert.equal(offer.url,'https://jgaethle10.github.io/forge-operator/commercial-studio/#inquire');
  assert.match(html,/Already approved a project\? Request payment instructions/);
  assert.match(html,/Email for verified payment instructions/);
- assert.match(html,/temporarily held pending verification against our payment account/);
+ assert.match(html,/existing \$50 founding-commercial payment link has been verified as active in Evercraft LLC's live Stripe account/);
+ assert.match(html,/We provide payment instructions only after confirming your approved project scope and schedule/);
+ assert.doesNotMatch(html,/temporarily held pending verification against our payment account/);
+ assert.doesNotMatch(html,/https:\/\/buy\.stripe\.com\/aFafZa4Yu5XE0ifdJX0Jq08/,'customer-facing checkout still requires individualized scope and approval');
  assert.match(html,/No payment or booking happens on this page/);
  assert.match(html,/Do not pay through a forwarded or unverified checkout URL/);
 });
