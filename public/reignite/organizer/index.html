@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="theme-color" content="#11191c">
+<meta name="referrer" content="no-referrer">
+<meta name="description" content="REIGNITE organizer home. Two clear, guarded planning actions. Source-only concept and no event authorization.">
+<title>REIGNITE | Organizer home</title>
+<style>
+:root{color-scheme:dark;--bg:#11191c;--panel:#1c282d;--line:#43565e;--text:#f6f4ee;--muted:#bdcdd0;--accent:#ff855d;--gold:#f4cc93}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif}
+a{color:#bfe0e7}a:hover{color:var(--gold)}a:focus-visible{outline:3px solid var(--gold);outline-offset:4px}.skip{position:absolute;top:-100px;left:12px;background:#fff;color:#141414;padding:12px}.skip:focus{top:10px}
+.wrap{width:min(950px,calc(100% - 38px));margin:auto}.notice{background:#e7d3b7;color:#201e1a;text-align:center;font-size:12px;font-weight:850;padding:11px 14px}
+header{background:radial-gradient(circle at 87% 17%,#5d382b,transparent 42%),#192429;padding:70px 0 66px;border-bottom:1px solid #4b585a}.back{display:inline-block;font-size:12px;text-transform:uppercase;letter-spacing:.15em;text-decoration:none;font-weight:800;margin-bottom:33px}
+.kicker{font-size:11px;color:var(--gold);letter-spacing:.2em;text-transform:uppercase;font-weight:900}
+h1{font-size:clamp(49px,8vw,94px);letter-spacing:-.08em;line-height:1;margin:15px 0 20px}h1 span{color:var(--accent)}h2{font-size:clamp(26px,4vw,41px);letter-spacing:-.055em;line-height:1.15;margin:0 0 10px}p{margin-top:0}.intro{font-size:18px;max-width:680px;color:#d7e3e4}.sub{color:var(--muted);font-size:14px;line-height:1.7}
+main{padding:50px 0 100px}.cardset{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:28px 0 45px}.card{background:var(--panel);border:1px solid var(--line);padding:30px 28px;border-radius:11px;min-height:265px;display:flex;flex-direction:column}.card:first-child{border-color:#e27b53}.count{font-weight:900;color:var(--accent);font-size:27px;line-height:1}.card h2{margin:21px 0 11px}.card p{font-size:14px;color:#c4d1d3}.card a{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;margin-top:auto;min-height:48px;padding:12px 16px;font-size:13px;font-weight:850;letter-spacing:.03em;background:var(--accent);color:#141a1d;border-radius:6px}.card a:hover{background:#ffc4a9;color:#141a1d}.card a[aria-disabled="true"]{pointer-events:none;background:#465358;color:#dde2e2}.card .state{margin-top:11px;font-size:11px;color:var(--muted)}.card .state[role="status"]{min-height:18px}
+.actions{border:1px solid var(--line);border-radius:10px;padding:25px;background:#162025}.actions h2{font-size:23px}.actions ul{padding-left:21px;margin-bottom:0;color:#c5d1d5;font-size:14px}.actions li{margin:8px 0}
+.warning{border-left:3px solid var(--accent);background:#2b2826;padding:19px 22px;margin-top:30px}.warning strong{font-size:16px}.warning p{font-size:13px;color:#e1cfba;margin:6px 0 0}
+footer{border-top:1px solid var(--line);color:var(--muted);font-size:12px;padding:25px 0 50px}
+@media(max-width:640px){header{padding:40px 0}.cardset{grid-template-columns:1fr}.card{min-height:0}.actions{padding:19px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+<script type="module" src="./app.js"></script>
+</head><body>
+<a class="skip" href="#main">Skip to organizer actions</a>
+<div class="notice">INDEPENDENT REIGNITE CONCEPT · SOURCE PREVIEW ONLY · NO APPROVED EVENT</div>
+<header><div class="wrap"><a class="back" href="../">← Festival concept</a><div class="kicker">REIGNITE · Organizer home</div>
+<h1>One thing <span>at a time.</span></h1>
+<p class="intro">There are hundreds of moving parts behind this festival. You shouldn't have to see all of them. Start with the next decision or the proposed facility layout.</p>
+<p class="sub">This page has no login, private permit records or live event status. The protected layout editor handles its own authentication; event readiness is generated separately from the canonical Events rules.</p>
+</div></header>
+<main id="main" class="wrap">
+<div class="kicker">What do you need to do?</div>
+<section class="cardset" aria-label="Organizer choices">
+<article class="card"><div class="count">01</div><h2>Review the next blocker</h2>
+<p>See what the festival needs before any announcements, bookings or fundraising. The readiness preview is derived from our existing safety review rules.</p>
+<a id="readinessLink" href="../readiness/" aria-disabled="true" tabindex="-1">Checking availability…</a>
+<div id="readinessStatus" class="state" role="status" aria-live="polite">Readiness preview not yet verified on this release.</div>
+</article>
+<article class="card"><div class="count">02</div><h2>Review the facility layout</h2>
+<p>Explore proposed zones, view contributor ideas and review changes. Current hangar and campus boundaries are not a survey or approved event footprint.</p>
+<a href="../layout/">Open layout and suggestions</a>
+<div class="state">Invited submissions and owner review require the separately authorized private service.</div>
+</article>
+</section>
+<section class="actions" aria-labelledby="howHeading"><h2 id="howHeading">The organizing flow is deliberately simple</h2>
+<ul>
+<li><strong>Venue and permits first:</strong> confirm actual authority, current damage/repairs, lawful sound hours and safe footprint.</li>
+<li><strong>Collect ideas second:</strong> contributors suggest experiences and tentative spaces without handling technical event paperwork.</li>
+<li><strong>Review before publishing:</strong> owner-reviewed planning changes never count as museum, engineering or regulatory approval.</li>
+</ul></section>
+<div class="warning"><strong>No hidden launch button.</strong><p>REIGNITE does not yet have confirmed dates, venue permission, approved zones, signed artists, ticketing, authorized fundraiser, or a deployed remote contributor service. This organizer home only navigates source-reviewed planning tools.</p></div>
+</main>
+<footer><div class="wrap">REIGNITE / EVERCRAFT EVENTS · OWNED-SOURCE DESIGN · <a href="../">Return to festival concept</a></div></footer>
+</body></html>
