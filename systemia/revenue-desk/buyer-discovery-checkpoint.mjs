@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {randomUUID} from 'node:crypto';
 import {runDiscovery,sourceRegistry} from './buyer-discovery-cycle.mjs';
+import {planBuyerResearch} from './buyer-research-plan.mjs';
 const schema='evercraft.kaidance.discovery-checkpoint.v1';
 export async function checkpointCycle({directory,sources=sourceRegistry(),now=new Date()}={}){
  if(typeof directory!=='string'||!path.isAbsolute(directory))throw Error('absolute_private_directory_required');
@@ -37,6 +38,10 @@ export async function checkpointCycle({directory,sources=sourceRegistry(),now=ne
   if(map.size>20000)throw Error('checkpoint_capacity_review_required');
   const receipt={schema:'evercraft.kaidance.discovery-checkpoint-receipt.v1',observed_at:cycle.observed_at,sources:cycle.sources,new_candidates:added,reobserved_candidates:reobserved,retained_candidates:map.size,qualified_count:0,send_performed:false,crm_write_performed:false};
   const next={schema,cycles:prior.cycles+1,last_cycle_at:cycle.observed_at,records:[...map.values()],receipt};
+  next.research_plan=planBuyerResearch(next,{now});
+  receipt.research_jobs_planned=next.research_plan.jobs.length;
+  receipt.research_jobs_eligible=next.research_plan.eligible_for_research;
+  receipt.research_dispatch_performed=false;
   tmp=path.join(directory,'.checkpoint-'+randomUUID());
   const body=JSON.stringify(next);
   if(Buffer.byteLength(body)>16000000)throw Error('checkpoint_capacity_review_required');
