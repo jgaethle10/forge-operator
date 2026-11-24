@@ -1,0 +1,85 @@
+name: Fallen Exotic Voice-Locked Full Commercial Two-Lane Audition
+on:
+  push:
+    branches: [production/fallen-original-mature-narrator-audition-20261124]
+    paths:
+      - 'systemia/media-studio/voice-foundry/exotic-cloned-original-fullcut.py'
+      - '.github/workflows/fallen-exotic-voice-lock-fullcut.yml'
+permissions:
+  contents: read
+  actions: read
+jobs:
+  voice-lock:
+    name: 'Original synthetic voice: ${{ matrix.lane }}'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        lane: [original_a, grounded_a2]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Retrieve official VoiceDesign cloning runtime and 1.7B Base weights
+        run: |
+          python -m pip install --disable-pip-version-check huggingface_hub numpy soundfile
+          curl -fLsS --retry 3 'https://github.com/CrispStrobe/CrispASR/releases/latest/download/crispasr-linux-x86_64.tar.gz' -o /tmp/crispasr-cpu.tar.gz
+          mkdir -p /tmp/crispasr-dist /tmp/voice-model
+          tar -xzf /tmp/crispasr-cpu.tar.gz -C /tmp/crispasr-dist
+          BIN="$(find /tmp/crispasr-dist -type f -name crispasr | head -n 1)"
+          test -n "$BIN"
+          install -m 755 "$BIN" /tmp/crispasr_voice
+          LIB_DIRS="$(find /tmp/crispasr-dist -type f -name '*.so*' -printf '%h\n' | sort -u | paste -sd ':' -)"
+          printf 'LD_LIBRARY_PATH=%s\n' "$LIB_DIRS" >> "$GITHUB_ENV"
+          LD_LIBRARY_PATH="$LIB_DIRS" ldd /tmp/crispasr_voice | tee /tmp/crispasr-deps.txt
+          ! grep -q 'not found' /tmp/crispasr-deps.txt
+          hf download cstr/qwen3-tts-1.7b-base-GGUF qwen3-tts-12hz-1.7b-base-q8_0.gguf --local-dir /tmp/voice-model
+          hf download cstr/qwen3-tts-tokenizer-12hz-GGUF qwen3-tts-tokenizer-12hz.gguf --local-dir /tmp/voice-model
+      - name: Retrieve source-verified ORIGINAL synthetic voice artifact privately
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          LANE: ${{ matrix.lane }}
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/private-original-reference
+          if [ "$LANE" = original_a ]; then
+            ARTIFACT=14959321223
+            FILE=01_weathered_storyteller.wav
+          else
+            ARTIFACT=14960633388
+            FILE=a2_grounded.wav
+          fi
+          curl --fail --location --silent --show-error \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/artifacts/${ARTIFACT}/zip" \
+            -o /tmp/reference.zip
+          unzip -q /tmp/reference.zip "$FILE" -d /tmp/private-original-reference
+          test -s "/tmp/private-original-reference/$FILE"
+          printf 'VOICE_REFERENCE_PATH=/tmp/private-original-reference/%s\n' "$FILE" >> "$GITHUB_ENV"
+          printf 'VOICE_LANE=%s\n' "$LANE" >> "$GITHUB_ENV"
+      - name: Synthesize same-person voice across original 30-second commercial cues
+        env:
+          OMP_NUM_THREADS: '4'
+        run: python systemia/media-studio/voice-foundry/exotic-cloned-original-fullcut.py
+      - name: Verify the four real WAVs and the no-release evidence
+        env:
+          LANE: ${{ matrix.lane }}
+        run: |
+          python - <<'PY'
+          import os,hashlib,pathlib,json,wave
+          root=pathlib.Path('voice-locked-'+os.environ['LANE'])
+          d=json.loads((root/'receipt.json').read_text())
+          assert len(d['cues'])==4 and d['referenceIsSyntheticOriginal']
+          assert d['finalCommercialReleaseAuthorized'] is False
+          for r in d['cues']:
+            wav=root/r['file']
+            with wave.open(str(wav),'rb') as w: assert w.getnframes()>0
+            assert hashlib.sha256(wav.read_bytes()).hexdigest()==r['sha256']
+          print("PASS four real reference-locked WAVs")
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: fallen-original-voice-locked-${{ matrix.lane }}
+          path: voice-locked-${{ matrix.lane }}/
+          retention-days: 3
+          if-no-files-found: error
