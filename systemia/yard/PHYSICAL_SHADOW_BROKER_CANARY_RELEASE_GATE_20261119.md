@@ -113,3 +113,27 @@ NodeSeed identities before requesting capacity or a lease.
 **These latest tests are staged but not yet user-run.** They strengthen
 the synthetic rollback proof; they do **not** change the physical
 `--run` hard-disable or create production authorization.
+
+## 2026-11-23: verified release evidence and next source-backed phase probe
+
+The founder ran the pinned permanent-home-directory source archive at
+`56d98add3ea44e167f238e8dd041761c1ee06560`; all **22/22 release,
+journal, crash recovery, broker isolation and installed historical Compute
+coexistence tests PASS**. This adds seven previously unverified tests;
+**63/63 cumulative distinct tests** are now user-verified across separate
+runs. The protected systemd states were unchanged.
+
+The new read-only `penguin-physical-shadow-phase-observer.mjs` is designed
+to collect real NodeSeed identity, PID-owned TCP ports, source/UDP provenance,
+authoritative Edge DNS TXT response, stable DNS health, and the known
+historical systemd states, with optional health for exactly one zero-authority
+temporary broker. The CLI accepts only `--before` and prints sanitized
+read-only status; no physical broker is created or authorized. Its additional
+five tests and the live `--before` observation remain **NOT YET RUN**.
+
+**Still missing:** a separate trusted proof that no new public route was
+created and no historical grant was imported. The observer deliberately
+sets both fields to null rather than falsely reporting `false`.
+Its observations can therefore never themselves satisfy the existing
+full physical acceptance validator. The exact JS bytes loaded in memory
+also remain unproven. Do not weaken either boundary for a green result.
