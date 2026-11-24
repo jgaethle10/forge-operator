@@ -21,6 +21,7 @@ function fixture(){
       service:'evercraft-edge-dns',
       workload_class:'systemia.evercraft-edge-dns.v1',
       instance_id:'edge_dns_0123456789abcdef',
+      snapshot_sha256:'sha256:'+'f'.repeat(64),
       dns_tcp_port:1053,
       health_http_port:44677,
       authoritative:true,recursive:false,
@@ -145,4 +146,21 @@ test('missing observation records cannot be accepted or trigger actions',()=>{
   assert.equal(r.manual_reconciliation_required,true);
   assert.equal(r.broker_activation_authorized,false);
   assert.equal(r.remote_device_enrollment_authorized,false);
+});
+
+
+test('unchanged DNS instance but changed or missing DNS snapshot hash is HOLD',()=>{
+  const edits=[
+    v=>{v.before.dns.snapshot_sha256=null},
+    v=>{v.during.dns.snapshot_sha256='sha256:'+'0'.repeat(64)},
+    v=>{v.after.dns.snapshot_sha256='sha256:'+'1'.repeat(64)},
+    v=>{v.after.dns.snapshot_sha256='malformed'},
+  ];
+  for(const edit of edits){
+    const v=fixture();edit(v);
+    const r=evaluate(v);
+    assert.equal(r.accepted,false,JSON.stringify(r));
+    assert.equal(r.manual_reconciliation_required,true);
+    assert.equal(r.broker_activation_authorized,false);
+  }
 });
