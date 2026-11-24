@@ -17,6 +17,8 @@ import {inspectLiveResidents} from '../../scripts/inspect-penguin-nodeseed-resid
 import {inspectLiveLaunchProvenance} from '../../scripts/inspect-penguin-nodeseed-launch-provenance.mjs';
 import {probeUdp} from '../../infra/evercraft-edge/dns/probe.mjs';
 import {validDnsProofName} from './penguin-edge-dns-evidence.mjs';
+import {observeShadowBrokerSocketBinding}
+  from './penguin-shadow-broker-socket-witness.mjs';
 
 const RECEIPT='/var/lib/evercraft/nodeseed/nodeseed-receipt.json';
 const DNS_PORT=1053, NODE_PORT=42420;
@@ -103,7 +105,7 @@ function unitsNormal(units){
  */
 export function interpretPhysicalPhase({
   phase,identity,inventory,provenance,healthBefore,
-  healthAfter,dnsQuery,brokerHealth,protectedUnits,
+  healthAfter,dnsQuery,brokerHealth,protectedUnits,brokerBinding=null,
 }={}){
   const holds=[];
   if(!PHASES.has(phase))holds.push('invalid_phase');
@@ -162,9 +164,13 @@ export function interpretPhysicalPhase({
        brokerPort===dns?.health_http_port||
        !Array.isArray(inventory?.owner_tcp_ports)||
        !inventory.owner_tcp_ports.includes(brokerPort)||
-       !validateBrokerHealth(brokerHealth))
+       !validateBrokerHealth(brokerHealth)||
+       brokerBinding?.verified!==true||
+       brokerBinding?.loopback_only_verified!==true||
+       brokerBinding?.socket_owner_is_live_nodeseed!==true||
+       brokerBinding?.candidate_port!==brokerPort)
       holds.push('new_broker_zero_authority_or_pid_owner_unverified');
-  }else if(brokerHealth!==null)
+  }else if(brokerHealth!==null||brokerBinding!==null)
     holds.push('broker_unexpected_in_dns_only_phase');
 
   return {
@@ -211,6 +217,7 @@ export function interpretPhysicalPhase({
         pending_enrollment_requests:
           brokerHealth.pending_enrollment_requests,
         deployment_receipt_bound:brokerHealth.deployment_receipt_bound,
+        loopback_listener_verified:brokerBinding?.verified===true,
         public_route_created:null,
       }:null,
     },
@@ -249,6 +256,10 @@ export async function observePhysicalPhase({phase='before'}={}){
     await getJson(brokerPort,'/v1/remote/health'):null;
   if(phase==='during'&&!validateBrokerHealth(brokerHealth))
     throw Error('broker_health_not_zero_authority');
+  const brokerBinding=phase==='during'?
+    observeShadowBrokerSocketBinding({brokerPort}):null;
+  if(phase==='during'&&brokerBinding?.verified!==true)
+    throw Error('broker_socket_not_exact_loopback');
   const name=validDnsProofName(healthBefore.receipt_qname);
   if(!name)throw Error('dns_receipt_qname_invalid');
   const dnsQuery=await probeUdp({
@@ -257,7 +268,7 @@ export async function observePhysicalPhase({phase='before'}={}){
   const healthAfter=await getJson(dns.health_http_port,'/health');
   return interpretPhysicalPhase({
     phase,identity,inventory,provenance,healthBefore,
-    healthAfter,dnsQuery,brokerHealth,protectedUnits,
+    healthAfter,dnsQuery,brokerHealth,protectedUnits,brokerBinding,
   });
 }
 
@@ -274,6 +285,9 @@ export function sanitizePhaseResult(result){
       result?.snapshot?.dns_probe?.rcode===0,
     zero_authority_broker_seen:
       result?.phase==='during'&&result?.observed===true,
+    broker_socket_loopback_verified:
+      result?.phase==='during'&&
+      result?.snapshot?.broker?.loopback_listener_verified===true,
     node_id_printed:false,
     fingerprint_printed:false,
     dns_instance_printed:false,
