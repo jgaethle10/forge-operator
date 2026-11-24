@@ -42,6 +42,7 @@ function dnsValid(s){
   return plain(s?.dns)&&s.dns.service==='evercraft-edge-dns'&&
     s.dns.workload_class===DNS&&
     DNS_ID.test(String(s.dns.instance_id||''))&&
+    /^sha256:[a-f0-9]{64}$/i.test(String(s.dns.snapshot_sha256||''))&&
     s.dns.authoritative===true&&s.dns.recursive===false&&
     s.dns.dns_tcp===true&&s.dns.dns_udp===true&&
     s.dns.dns_tcp_port===DNS_PORT&&
@@ -107,6 +108,9 @@ export function evaluatePhysicalShadowCanaryEvidence({
       s.dns.instance_id===before.dns.instance_id&&
       s.dns.health_http_port===before.dns.health_http_port))
       hold.push('existing_dns_replaced_or_rebound');
+    if(![during,after].every(s=>
+      s.dns.snapshot_sha256===before.dns.snapshot_sha256))
+      hold.push('existing_dns_snapshot_changed');
     if(before.resident_services!==1||
        during.resident_services!==2||
        after.resident_services!==1)
