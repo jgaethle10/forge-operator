@@ -55,7 +55,7 @@ def validate_password_pair(first: str, second: str) -> None:
         raise ValueError("The two password entries did not match. Re-enter the same password twice")
     if len(first) < 20:
         raise ValueError("Password was shorter than the required 20 characters")
-    if "\\n" in first or "\\r" in first:
+    if "\n" in first or "\r" in first:
         raise ValueError("Password must not contain a newline or carriage return")
 
 
