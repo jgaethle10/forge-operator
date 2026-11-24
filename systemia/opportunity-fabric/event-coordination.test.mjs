@@ -16,6 +16,8 @@ test('REIGNITE is one-call, review-first with a clear five-action owner dashboar
  const actions=eventNextActions(packet);
  assert.equal(actions.total_requirements,packet.checks.length);
  assert.equal(actions.next.length,5);
+ assert.equal(actions.next[0].requirement,'venue_authority');
+ assert.equal(actions.next[1].requirement,'jurisdiction_and_event_hours');
  assert.equal(actions.reported_holds,0);
  assert.equal(actions.evidence_missing,packet.checks.length);
  assert.equal(actions.event_approved,false);
