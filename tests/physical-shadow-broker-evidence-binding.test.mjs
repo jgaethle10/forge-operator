@@ -42,6 +42,7 @@ function snapshots(){
       service:'remote-capacity-broker',
       instance_id:'remote_broker_0123456789abcdef12345678',
       endpoint:'http://127.0.0.1:50505',
+      loopback_listener_verified:true,
       authorized_devices:0,registered_nodes:0,
       pending_enrollment_requests:0,
       deployment_receipt_bound:false,public_route_created:false,
