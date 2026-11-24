@@ -47,3 +47,23 @@ body.advanced-open #advancedEditor{display:grid}
 .idea-action{grid-column:1/-1;color:#f3e7d4!important;font-size:13px!important;font-weight:700}
 .my-review{grid-column:1/-1;background:#293940;padding:9px 10px;border-radius:6px;color:#dbe7e9!important}
 @media(max-width:670px){.my-ideas{padding:16px 14px}.my-ideas-head{align-items:flex-start;flex-direction:column}.idea-status{grid-template-columns:1fr}.idea-state{text-align:left}}
+
+/* Owner evidence intake. All private controls remain hidden for contributor/preview roles. */
+.owner-evidence{background:#19282c;border:1px solid #6d817f;border-radius:12px;padding:24px;margin:13px 0}
+.owner-head{display:flex;justify-content:space-between;align-items:start;gap:15px}
+.owner-head h2{font-size:29px;letter-spacing:-.045em;margin:8px 0 8px}
+.owner-head p{font-size:13px;color:#c6d3d4;margin:0 0 20px;max-width:750px}
+.owner-metrics{background:#111c20;border:1px solid #526873;padding:13px 15px;border-radius:7px;font-size:13px;font-weight:750;color:#e1ebec;margin:2px 0 18px}
+.owner-actions{list-style:decimal-leading-zero;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:9px;margin:0 0 21px;padding:0;counter-reset:evidence}
+.owner-actions li{background:#111f24;border:1px solid #40545c;border-radius:8px;padding:14px;list-style-position:inside}
+.owner-actions li::marker{color:#ffae86;font-weight:900}
+.owner-actions li strong{display:block;font-size:14px;text-transform:capitalize;color:#fff;margin:5px 0}
+.owner-actions li p{font-size:12px;color:#bdcbcf;line-height:1.6;margin:0 0 8px}
+.owner-actions li small{font-size:11px;color:#f0ccaa}
+.owner-source-form{border-top:1px solid #53636a;padding-top:15px}
+.owner-source-form summary{font-weight:850;cursor:pointer;color:#f8d5b2;margin-bottom:12px}
+.owner-source-form form{max-width:800px}
+.owner-source-form label{display:block;margin:12px 0}
+.owner-source-form select,.owner-source-form input,.owner-source-form textarea{min-height:43px}
+.owner-source-form p.sub{margin:10px 0 2px}
+@media(max-width:700px){.owner-evidence{padding:18px 15px}.owner-head{display:block}.owner-head button{margin-bottom:14px;width:100%}.owner-actions{grid-template-columns:1fr}}
