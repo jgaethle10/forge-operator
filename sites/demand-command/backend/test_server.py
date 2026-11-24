@@ -68,6 +68,39 @@ class HttpTests(unittest.TestCase):
         c.close()
         return status,data
 
+    def test_public_basic_auth_header_can_coexist_with_private_token(self):
+        # The browser preserves its Caddy Basic login while the app token uses
+        # a separate header. The inner API must not accept Basic alone.
+        c = http.client.HTTPConnection('127.0.0.1', self.port, timeout=3)
+        c.request('GET', '/api/heartbeat', headers={
+            'Authorization': 'Basic b3duZXI6b3V0ZXI=',
+            'X-Evercraft-Demand-Token': self.token,
+        })
+        r = c.getresponse()
+        body = json.loads(r.read())
+        self.assertEqual(r.status, 200)
+        self.assertTrue(body['ok'])
+        c.close()
+
+        c = http.client.HTTPConnection('127.0.0.1', self.port, timeout=3)
+        c.request('GET', '/api/heartbeat', headers={
+            'Authorization': 'Basic b3duZXI6b3V0ZXI=',
+        })
+        r = c.getresponse()
+        self.assertEqual(r.status, 401)
+        self.assertEqual(json.loads(r.read())['error'], 'Unauthorized')
+        c.close()
+
+        c = http.client.HTTPConnection('127.0.0.1', self.port, timeout=3)
+        c.request('GET', '/api/opportunities', headers={
+            'Authorization': 'Basic b3duZXI6b3V0ZXI=',
+            'X-Evercraft-Demand-Token': 'invalid',
+        })
+        r = c.getresponse()
+        self.assertEqual(r.status, 401)
+        self.assertEqual(json.loads(r.read())['error'], 'Unauthorized')
+        c.close()
+
     def test_full_lifecycle_and_fail_closed(self):
         self.assertEqual(self.request('GET','/api/opportunities',auth=False)[0],401)
         # UI shell may load, but API data still requires authentication.
