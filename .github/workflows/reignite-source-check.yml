@@ -1,0 +1,26 @@
+name: REIGNITE site source proof
+
+on:
+  pull_request:
+    paths:
+      - 'public/reignite/**'
+      - 'tests/reignite-site.test.mjs'
+      - '.github/workflows/reignite-source-check.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  site-source-proof:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 4
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Test REIGNITE site honesty, access and ownership
+        run: node --test tests/reignite-site.test.mjs
