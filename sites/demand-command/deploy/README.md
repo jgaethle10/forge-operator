@@ -141,6 +141,31 @@ The owner ran `inspect-penguin-public-route.sh` on Penguin, returning:
 
 **Next accepted prerequisites:** identify authoritative DNS provider/nameservers, preserve all existing records, inspect Caddy global `http_port`/`https_port` and additive site semantics, then use a protected local password hash in a reversible staged Caddy candidate. Never reload a live service until candidate validation, DNS authority and rollback are confirmed.
 
+## Caddy candidate staged offline from observed v2.6.2 environment
+
+DNS authority was previously verified by the owner as **IONOS**, with existing `worlds` CNAME pointing to the Fabric hostname. The current Penguin inspection reports `demand` as not resolving. DNS CNAME proposal:
+
+```text
+Type:    CNAME
+Name:    demand
+Target:  fabric.systemiacommandcenters.com
+TTL:     Provider default
+```
+
+Create only in the existing IONOS `systemiacommandcenters.com` zone. **Never change the existing NS delegation, Fabric A, Worlds, MX, TXT, DKIM, SPF, or other email records.** Do not create an A record for the same `demand` host. Verify fresh authority and target before applying; the prior IONOS evidence alone does not grant a live write path.
+
+The additive candidate builder is **non-deploying**. It requires Caddy v2.6.x, the observed global ports (`http_port 18080`, `https_port 8443`) and Worlds site. It reads a new owner password twice from the local TTY; no password appears in argv, GitHub or logs, and `caddy hash-password` receives it over stdin. It then appends the Caddy 2.6 `basicauth` site from the repository template into a root-only 0600 candidate **adjacent to** the existing Caddyfile, and writes an SHA-256 source/candidate receipt. The live config and running services are NEVER touched. Validation is attempted offline using the current edge service's environment only when present, with no configuration reload or DNS changes.
+
+On Penguin:
+
+```bash
+cd "$HOME/evercraft-demand-edge-canary"
+git pull --ff-only
+sudo python3 sites/demand-command/deploy/stage-penguin-demand-https.py --stage
+```
+
+If the script prints a `HOLD`, leave the live edge alone. Never paste private Basic credentials, hashes or the protected candidate into chat. Stage files are `/etc/evercraft/.Caddyfile.demand-candidate` and `/etc/evercraft/.Caddyfile.demand-candidate.receipt`; they are **not deployed**. A separately audited, rollback-safe production apply step is required after DNS is confirmed. Keeping the original config unchanged ensures no disruption to Worlds or Fabric during staging.
+
 ## Step 3: Owned public HTTPS edge + DNS (held pending proof)
 
 Use the separately staged `Caddyfile.demand.example` as an **additional hostname block**, not a replacement for `/etc/evercraft/Caddyfile`. Do not restart the public Fabric edge or overwrite existing routes until a safe backup, Caddy syntax validation and rollback are established.
