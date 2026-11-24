@@ -160,6 +160,7 @@ export function interpretPhysicalPhase({
     if(!Number.isSafeInteger(brokerPort)||brokerPort<=0||
        brokerPort===NODE_PORT||brokerPort===DNS_PORT||
        brokerPort===dns?.health_http_port||
+       !Array.isArray(inventory?.owner_tcp_ports)||
        !inventory.owner_tcp_ports.includes(brokerPort)||
        !validateBrokerHealth(brokerHealth))
       holds.push('new_broker_zero_authority_or_pid_owner_unverified');
