@@ -12,10 +12,25 @@
 <div class="banner"><strong>PLANNING DRAFT, NOT AN APPROVED SITE MAP.</strong> The historic building envelope is documented; current interior layout, roof repair zones, exits, property boundaries and event areas are NOT verified.</div>
 <header><div class="wrap head"><div><a class="back" href="../">← REIGNITE</a><h1>LAYOUT <span>STUDIO.</span></h1><p>Propose. Compare. Review. Never confuse a concept with permission.</p></div><div class="status" id="connectionStatus" role="status">Local concept mode · no live submission</div></div></header>
 <main id="main" class="wrap">
+<section class="quick-start" aria-labelledby="quickStartTitle">
+<div class="quick-head"><div><div class="overline">The easy way in · one-minute idea</div><h2 id="quickStartTitle">What would you love to bring?</h2><p>Three answers. We create the draft zone, sort out the technical details, and route it for review. You don't need to learn the layout editor.</p></div><span class="quick-step">1 IDEA → 1 REVIEW</span></div>
+<form id="quickIdeaForm" class="quick-form" autocomplete="off">
+<label for="quickKind">What kind of experience?<select id="quickKind" name="kind" required></select></label>
+<label for="quickName">What should we call it?<input id="quickName" name="name" required minlength="3" maxlength="100" placeholder="E.g. Coastline photo gallery"></label>
+<label for="quickPlace">Where do you imagine it?<select id="quickPlace" name="place" required></select></label>
+<label for="quickDescription" class="quick-detail">Tell us a little about it<textarea id="quickDescription" name="description" required minlength="12" maxlength="500" rows="2" placeholder="The experience, what you'd need, or what you want visitors to feel..."></textarea></label>
+<div class="quick-action"><button type="submit" id="quickSend">Suggest this experience</button><button id="quickExport" class="secondary" type="button" disabled>Download my suggestion</button></div>
+</form>
+<p id="quickFeedback" class="quick-feedback" role="status">No login required to try an idea. A private invitation is needed to send it into the owner review queue.</p>
+</section>
+<details class="invite-details">
+<summary>Have a team invite? Connect to send suggestions</summary>
 <section class="connect" aria-labelledby="connectTitle">
 <div><h2 id="connectTitle">Collaborative planning</h2><p>Explore locally without an account. To submit edits for review, connect using an invitation issued by the Evercraft project owner. Keys stay in this browser tab's memory, not local storage.</p></div>
 <div class="connect-fields"><label for="accessKey">Private editor / owner key</label><div class="control-row"><input type="password" id="accessKey" autocomplete="off" placeholder="Paste your private invite key" aria-describedby="keyHelp"><button id="connectBtn">Connect</button><button id="disconnectBtn" class="secondary">Disconnect</button></div><small id="keyHelp">The site preview cannot submit until the Evercraft-owned review service is running and reachable on this origin.</small></div>
 </section>
+</details>
+<div class="advanced-bar"><div><strong>Explore the proposed layout</strong><p>Tap a space to see it. Detailed editing is optional.</p></div><button id="advancedToggle" type="button" aria-expanded="false" aria-controls="advancedEditor">Show advanced layout tools</button></div>
 <div class="main-grid">
 <section class="canvas-panel" aria-labelledby="planHeading">
 <div class="canvas-head"><div><div class="overline">Facility planning · annotated concepts</div><h2 id="planHeading">Hangar B layout</h2><p class="sub">Shell: ~1,072 ft × 296 ft (published historic dimensions). Zone locations are proposed, NOT surveyed.</p></div><div class="revision" id="revisionTag">Revision 0 · local</div></div>
@@ -33,7 +48,7 @@
 <details class="references"><summary>Documented features vs. missing drawings</summary><p>The Tillamook Air Museum lists Hangar B as approximately <strong>1,072 ft long × 296 ft wide</strong>. A historic National Register nomination describes <strong>51 timber arch ribs</strong>. These are historic references, not a current working floor plan. <a href="https://www.tillamookair.com/hangar-b/" target="_blank" rel="noopener noreferrer">Museum history ↗</a> and <a href="https://npgallery.nps.gov/GetAsset/d362271a-ce09-4f8b-9694-04233705f21e" target="_blank" rel="noopener noreferrer">NPS historical nomination ↗</a>.</p><p>Unverified and deliberately unmapped: current aircraft/exhibits, entry and exit geometry, fire routes, roof repairs, load-bearing zones, utilities, road access, permitted outdoor footprint, parking, airport security and room measurements. A zone placed here does not reserve or authorize that location.</p><label for="localOverlay">Temporary local plan-image overlay</label><input id="localOverlay" type="file" accept="image/png,image/jpeg,image/webp"><label for="overlayOpacity">Image opacity</label><input type="range" id="overlayOpacity" min="0" max="100" value="45"><button id="clearOverlay" type="button" class="small secondary">Remove overlay</button><p class="sub">Your image is viewed only in this tab, is not transmitted, and is not a calibrated survey overlay. Share licensed/current drawings only through an authorized private source channel.</p></details>
 <div class="canvas-subheading"><h3>Zones in this view</h3><span id="zoneCount"></span></div><div class="zone-list" id="zoneList" aria-live="polite"></div>
 </section>
-<aside class="side-stack">
+<aside class="side-stack" id="advancedEditor">
 <section class="panel" aria-labelledby="editorTitle"><div class="overline">Selected zone</div><h2 id="editorTitle">Zone editor</h2><p class="sub" id="zoneHint">Select a zone or add a new one to propose changes.</p>
 <form id="zoneForm" autocomplete="off">
 <div class="field-row"><label>Zone name<input name="name" maxlength="100" required></label><label>Type<select name="category"></select></label></div>
