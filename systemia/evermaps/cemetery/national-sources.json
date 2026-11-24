@@ -1,0 +1,66 @@
+{
+  "schema": "evercraft.evermaps.cemetery.source-registry.v1",
+  "scope": "United States, 50 states and DC",
+  "mission": "national cemetery registry and local Tahoma field validation",
+  "status": "research candidates; no data imported",
+  "sources": [
+    {
+      "id": "va-graves",
+      "url": "https://www.data.va.gov/dataset/National-Cemetery-Administration-Gravesite-Locator/3u66-fxug",
+      "kind": "burial records",
+      "gate": "verify schema, rights, coverage and published fields"
+    },
+    {
+      "id": "va-cemeteries",
+      "url": "https://catalog.data.gov/dataset/va-cemeteries-address-location-contact-information-burial-space",
+      "kind": "cemetery directory",
+      "gate": "verify download and rights"
+    },
+    {
+      "id": "usgs-archive",
+      "url": "https://www.usgs.gov/us-board-on-geographic-names/domestic-names",
+      "kind": "historical cemetery locations",
+      "gate": "cemetery features removed from active GNIS in 2021; identify archive and vintage"
+    },
+    {
+      "id": "osm",
+      "url": "https://www.openstreetmap.org/copyright",
+      "kind": "cemetery boundaries and paths",
+      "gate": "ODbL attribution and database segregation/compliance review"
+    },
+    {
+      "id": "municipal",
+      "url": "https://catalog.data.gov/",
+      "kind": "local GIS and burial indexes",
+      "gate": "per dataset rights and provenance review"
+    }
+  ],
+  "precision": [
+    "cemetery_only",
+    "section",
+    "plot_identifier",
+    "surveyed_grave_coordinate"
+  ],
+  "requiredEvidence": [
+    "source_id",
+    "source_record_id",
+    "retrieved_at",
+    "rights_status",
+    "location_precision"
+  ],
+  "rules": [
+    "Never use cemetery centroid as grave position",
+    "Never infer a burial from a name match alone",
+    "Missing data is unknown, not zero",
+    "No restricted site scraping or unlicensed bulk imports",
+    "Do not route across private or unverified paths",
+    "No live coverage claims before import receipts"
+  ],
+  "orchestration": {
+    "authority": "Systemia",
+    "workers": "Work Saban",
+    "status": "proposed; admission not verified",
+    "partition": "state/county/source",
+    "dedupe": "source record identity then reviewed cross-source reconciliation"
+  }
+}
