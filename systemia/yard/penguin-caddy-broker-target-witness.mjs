@@ -36,7 +36,9 @@ function iterStrings(value,{maxNodes=60000}={}){
     nodes+=1;
     if(nodes>maxNodes)throw Error('caddy_config_structure_too_large');
     const next=stack.pop();
-    if(typeof next==='string'){result.push(next);continue}
+    if(typeof next==='string'||typeof next==='number'){
+      result.push(String(next));continue
+    }
     if(!next||typeof next!=='object')continue;
     if(Array.isArray(next))stack.push(...next);
     else stack.push(...Object.values(next));
@@ -174,8 +176,18 @@ if(direct){
       console.error(JSON.stringify({
         schema:'evercraft.penguin.caddy-broker-target-witness.v1',
         observed:false,
-        hold_reasons:[String(error?.message||'caddy_observation_failed')
-          .slice(0,100)],
+        // Never echo raw Caddy JSON, parser exceptions, credentials or
+        // user-defined text in an error message.
+        hold_reasons:[[
+          'root_required_for_caddy_pid_audit',
+          'caddy_main_pid_unverified',
+          'caddy_admin_socket_not_owned_by_systemd',
+          'caddy_admin_config_not_available',
+          'caddy_config_too_large',
+          'caddy_admin_body_missing',
+          'caddy_config_not_json_object',
+        ].includes(error?.message)?
+          error.message:'caddy_observation_unverified'],
         external_route_absence_proven:false,
         future_ephemeral_port_checked:false,
         source_config_printed:false,
