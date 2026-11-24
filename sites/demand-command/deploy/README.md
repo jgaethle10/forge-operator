@@ -166,6 +166,26 @@ sudo python3 sites/demand-command/deploy/stage-penguin-demand-https.py --stage
 
 If the script prints a `HOLD`, leave the live edge alone. Never paste private Basic credentials, hashes or the protected candidate into chat. Stage files are `/etc/evercraft/.Caddyfile.demand-candidate` and `/etc/evercraft/.Caddyfile.demand-candidate.receipt`; they are **not deployed**. A separately audited, rollback-safe production apply step is required after DNS is confirmed. Keeping the original config unchanged ensures no disruption to Worlds or Fabric during staging.
 
+## November 23 DNS acceptance and controlled release tool
+
+On Penguin the owner confirmed `getent ahostsv4 demand.systemiacommandcenters.com` resolves to `50.46.190.39`, with `fabric.systemiacommandcenters.com` shown as the canonical target. This is **DNS-resolution evidence only**, not proof of externally trusted HTTPS. The owner previously reported a successful local private tunnel and an offline validated root-only HTTPS candidate.
+
+`release-penguin-demand-https.py` is the only proposed production activation path for this feature. `--check` reads the protected stage receipt, verifies original Caddy SHA, candidate SHA, exact original Caddyfile prefix, private proxy target, Caddy 2.6 `basicauth`, DNS equality, current user/group of the owned public edge service, current service environment and backend HTML identity. It executes offline Caddy candidate validation with that environment, **without changing any files or services**.
+
+```bash
+cd "$HOME/evercraft-demand-edge-canary"
+git pull --ff-only
+sudo python3 sites/demand-command/deploy/release-penguin-demand-https.py --check
+```
+
+If and only if `--check` passes, a separate explicit `--apply` invocation will preserve a protected copy of the original Caddyfile, atomically install the validated candidate with Caddy group read access, and restart **only** `evercraft-public-edge.service`. This short Caddy restart may temporarily interrupt Worlds and Fabric **public HTTPS** traffic; it does not restart their application services. The guarded apply expects trusted local TLS and an unauthenticated HTTP `401` from the new hostname and automatically restores/restarts the original Caddy config on failure. Do not run if zero-downtime is required. It does not log credentials or expose sensitive config. The Caddy admin API may be disabled, so hot reload is not assumed.
+
+```bash
+sudo python3 sites/demand-command/deploy/release-penguin-demand-https.py --apply
+```
+
+A successful local result is **not yet proof of public HTTPS availability**. An off-LAN trusted certificate/401 test and separately authenticated UI/token test remain required. The protected rollback file is not deleted automatically; its custody is part of the release receipt. A fail-closed `HOLD` or `STOP` requires inspection before any further change.
+
 ## Step 3: Owned public HTTPS edge + DNS (held pending proof)
 
 Use the separately staged `Caddyfile.demand.example` as an **additional hostname block**, not a replacement for `/etc/evercraft/Caddyfile`. Do not restart the public Fabric edge or overwrite existing routes until a safe backup, Caddy syntax validation and rollback are established.
