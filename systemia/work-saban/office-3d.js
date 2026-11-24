@@ -452,8 +452,16 @@
     }else if(event.state==='running'){
       state[role]='running';
     }else if(event.state==='verified'){
+      // Secondary executor notifications are not proof of successful work.
+      // Require the same role-bound quality receipt as the streamed work floor.
+      const receipt=event.receipt;
+      const digest=receipt?.result_sha256;
+      if(receipt?.quality_status!=='pass'||
+         typeof digest!=='string'||
+         !/^(?:sha256:)?[a-f0-9]{64}$/i.test(digest)||
+         (receipt.role!==undefined&&receipt.role!==role))return;
       state[role]='verified';
-      receipts[role]='Local executor verification';
+      receipts[role]='Verified receipt '+digest.slice(0,20);
     }else if(event.state==='failed'){
       state[role]='failed';
     }else return;
