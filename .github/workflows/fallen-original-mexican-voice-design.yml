@@ -16,7 +16,7 @@ jobs:
           python -m pip install --disable-pip-version-check huggingface_hub soundfile numpy
       - name: Build open-source Qwen3-TTS VoiceDesign CPU engine
         run: |
-          git clone --depth 1 https://github.com/CrispStrobe/CrispASR.git /tmp/crispasr
+          git clone --depth 1 --recurse-submodules --shallow-submodules https://github.com/CrispStrobe/CrispASR.git /tmp/crispasr
           cmake -S /tmp/crispasr -B /tmp/crispasr/build -G Ninja -DCMAKE_BUILD_TYPE=Release
           cmake --build /tmp/crispasr/build --target crispasr -j 4
           test -x /tmp/crispasr/build/bin/crispasr
