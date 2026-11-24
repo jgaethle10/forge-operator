@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
+import { mkdtempSync, readFileSync, writeFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { spawn, spawnSync, execFileSync } from 'node:child_process';
@@ -184,6 +184,16 @@ test('owner-run loopback HTTP: invited edits -> owner review -> planning revisio
   const secondInvite=execFileSync(process.execPath,[fileURL(file),'invite','Museum reviewer'],{env,encoding:'utf8'});
   const otherEditor=secondInvite.match(/Editor key \(share securely; shown once\): (\S+)/)?.[1];
   assert(otherEditor,'second distinct collaborator');
+  const shared=execFileSync(process.execPath,[fileURL(file),'invite-link','International illustrator','24'],{env,encoding:'utf8'});
+  const oneTapUrl=shared.match(/One-time link[^:]*: (\S+)/)?.[1];
+  const oneTapId=shared.match(/Invite ID: (\S+)/)?.[1];
+  assert(oneTapUrl&&oneTapId,'owner can issue a one-time scoped invitation');
+  const parsed=new URL(oneTapUrl);
+  assert.equal(parsed.origin,'http://127.0.0.1:'+port);
+  assert.equal(parsed.search,'','one-tap grant must never be in a query parameter');
+  assert.match(parsed.hash,/^#join=[A-Za-z0-9_-]{43}$/);
+  const grant=parsed.hash.slice('#join='.length);
+
 
   child=spawn(process.execPath,[fileURL(file),'serve'],{env,stdio:'ignore'});
   const base='http://127.0.0.1:'+port;
@@ -205,6 +215,28 @@ test('owner-run loopback HTTP: invited edits -> owner review -> planning revisio
   assert.equal(moduleResponse.status,200,'guided suggestion module must be served for authenticated browser');
   assert.match(moduleResponse.headers.get('content-type'),/text\/javascript/,'module must use JavaScript MIME for browsers');
   assert.match(await moduleResponse.text(),/export function createQuickSuggestion/);
+
+  // A one-tap invitation is distinct from permanent owner/editor keys.
+  const redeem=async(token,origin=base)=>{
+    const res=await fetch(base+'/api/invite/redeem',{
+      method:'POST',headers:{Origin:origin,'Content-Type':'application/json'},
+      body:JSON.stringify({grant:token})
+    });
+    return {status:res.status,data:await res.json()};
+  };
+  assert.equal((await redeem(grant,'https://untrusted.example')).status,403,
+    'cross-origin request must not consume the invitation');
+  const joined=await redeem(grant);
+  assert.equal(joined.status,200);
+  assert.equal(joined.data.scope,'propose_and_read_own');
+  assert.equal(joined.data.event_approved,false);
+  assert.equal(joined.data.venue_authorized,false);
+  assert.equal((await redeem(grant)).status,410,'invitation must be single-use');
+  const scopedSession=joined.data.session_key;
+  assert.equal((await call(scopedSession,'/api/plan')).data.role,'editor');
+  assert.deepEqual((await call(scopedSession,'/api/mine')).data.items,[]);
+  assert.equal((await call(scopedSession,'/api/reviews')).status,403);
+
   assert.equal((await call('invalid-key','/api/plan')).status,401);
   assert.equal((await call(editor,'/api/reviews')).status,403);
   const first=await call(editor,'/api/plan');
@@ -260,6 +292,11 @@ test('owner-run loopback HTTP: invited edits -> owner review -> planning revisio
   assert.match(otherMine.data.items[0].review_note,/accessibility/);
   assert.equal((await call(editor,'/api/mine')).data.items.length,1);
 
+
+  execFileSync(process.execPath,[fileURL(file),'revoke',oneTapId],{env,encoding:'utf8'});
+  assert.equal((await call(scopedSession,'/api/plan')).status,401,
+    'revoking invite must invalidate redeemed sessions immediately');
+
   execFileSync(process.execPath,[fileURL(file),'revoke',inviteId],{env,encoding:'utf8'});
   assert.equal((await call(editor,'/api/plan')).status,401,'revocations must take effect without server restart');
  }finally{
@@ -268,6 +305,21 @@ test('owner-run loopback HTTP: invited edits -> owner review -> planning revisio
  }
 });
 function fileURL(url){return new URL(url).pathname}
+
+
+test('one-use browser link is consumed and removed before fetch; never grants organizer authority',()=>{
+ const js=readFileSync(new URL('../public/reignite/layout/app.js',import.meta.url),'utf8');
+ const server=readFileSync(new URL('../systemia/events/reignite-layout-server.mjs',import.meta.url),'utf8');
+ assert.match(js,/takeInviteFromFragment/);
+ assert.match(js,/window\.history\.replaceState/);
+ assert.match(js,/\.\/api\/invite\/redeem/);
+ assert.match(js,/workspace\.role!=='editor'/);
+ assert.doesNotMatch(js,/sessionStorage|localStorage|document\.cookie/);
+ assert.match(server,/grant_hash:null|grant_hash:hash\(grant\)/);
+ assert.match(server,/scope:'propose_and_read_own'/);
+ assert.match(server,/redeemed_at/);
+ assert.match(server,/expires_at_ms/);
+});
 
 test('explicit remote browser origin cannot be insecure or supplied with a path',()=>{
  const server=new URL('../systemia/events/reignite-layout-server.mjs',import.meta.url);
