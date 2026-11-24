@@ -167,7 +167,8 @@ $('removeZone').addEventListener('click',()=>{
 });
 async function api(url,method='GET',payload){
  if(!state.token)throw Error('Invitation-based private review service not connected.');
- const res=await fetch(url,{method,headers:{'x-reignite-key':state.token,...(payload?{'content-type':'application/json'}:{})},cache:'no-store',...(payload?{body:JSON.stringify(payload)}:{})});
+ const endpoint=url.startsWith('/api/')?'.'+url:url;
+ const res=await fetch(endpoint,{method,headers:{'x-reignite-key':state.token,...(payload?{'content-type':'application/json'}:{})},cache:'no-store',...(payload?{body:JSON.stringify(payload)}:{})});
  const data=await res.json();
  if(!res.ok)throw Error(data.error||'HTTP '+res.status);
  return data;
@@ -376,7 +377,48 @@ $('quickIdeaForm').addEventListener('submit',async event=>{
  }finally{button.disabled=false}
 });
 
+
+function takeInviteFromFragment(){
+ const fragment=window.location.hash.slice(1);
+ if(!fragment.startsWith('join='))return null;
+ // Strip before any data fetch or user action. Fragments are not sent to the server,
+ // but they should also not remain in the address bar or copied URLs.
+ window.history.replaceState(null,'',window.location.pathname+window.location.search);
+ const grant=fragment.slice(5);
+ return /^[A-Za-z0-9_-]{43}$/.test(grant)?grant:'invalid';
+}
+async function joinViaOneUseLink(grant){
+ if(grant==='invalid'){
+  quickMessage('This invitation link is malformed. Ask the event organizer for a new private link.');
+  return;
+ }
+ quickMessage('Opening your private contributor workspace...');
+ try{
+  const response=await fetch('./api/invite/redeem',{
+   method:'POST',cache:'no-store',
+   headers:{'content-type':'application/json'},
+   body:JSON.stringify({grant})
+  });
+  const result=await response.json();
+  if(!response.ok)throw Error(result.error||'One-use invitation could not be redeemed.');
+  if(result.scope!=='propose_and_read_own'||typeof result.session_key!=='string')
+    throw Error('Invitation did not grant a valid contributor session.');
+  state.token=result.session_key;
+  const workspace=await api('/api/plan');
+  if(workspace.role!=='editor')throw Error('One-tap invitation cannot grant owner access.');
+  state.role=workspace.role;state.actor=workspace.actor;state.base=workspace.plan;
+  state.draft=copy(workspace.plan);state.selected=null;state.view='interior';
+  displayStatus();render();await loadMyIdeas();
+  quickMessage('You are connected as '+state.actor+'. Share an idea above, or check your private status below. No account setup needed.');
+ }catch(err){
+  state.token=null;state.role=null;state.actor=null;
+  displayStatus();
+  quickMessage('Invitation unavailable: '+err.message+' A fresh private link may be needed. You can still explore the map.');
+ }
+}
+
 async function start(){
+ const inviteGrant=takeInviteFromFragment();
  for(const [key,idea] of Object.entries(IDEAS)){
   const option=document.createElement('option');option.value=key;option.textContent=idea.label;
   $('quickKind').append(option);
@@ -396,6 +438,7 @@ async function start(){
   if(!response.ok)throw Error('seed map unavailable');
   state.base=await response.json();state.draft=copy(state.base);render();displayStatus();
   $('missingList').innerHTML=state.base.survey_missing.map(x=>'<div class="missing-item">'+esc(x)+'</div>').join('');
+  if(inviteGrant)await joinViaOneUseLink(inviteGrant);
  }catch(e){msg('Unable to load source map: '+e.message)}
 }
 start();
