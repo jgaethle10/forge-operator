@@ -162,6 +162,7 @@ test('owner-run loopback HTTP: invited edits -> owner review -> planning revisio
   };
   const moduleResponse=await fetch(base+'/quick-idea.mjs');
   assert.equal(moduleResponse.status,200,'guided suggestion module must be served for authenticated browser');
+  assert.match(moduleResponse.headers.get('content-type'),/text\/javascript/,'module must use JavaScript MIME for browsers');
   assert.match(await moduleResponse.text(),/export function createQuickSuggestion/);
   assert.equal((await call('invalid-key','/api/plan')).status,401);
   assert.equal((await call(editor,'/api/reviews')).status,403);
