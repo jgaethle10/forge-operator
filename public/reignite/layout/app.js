@@ -1,3 +1,4 @@
+import { IDEAS, PLACES, createQuickSuggestion } from './quick-idea.mjs';
 /* REIGNITE local-first planning client. No external runtime, cookies or persistent credentials. */
 const $=id=>document.getElementById(id);
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -26,6 +27,7 @@ function displayStatus(){
  $('connectionStatus').textContent=connected?'Connected: '+state.actor+' ('+state.role+') · planning only':'Local concept mode · no live submission';
  $('connectionStatus').classList.toggle('connected',connected);
  $('ownerPanel').hidden=state.role!=='owner';
+ if(state.role==='owner')showAdvanced(true);
  $('revisionTag').textContent='Revision '+(state.base?.revision||0)+(connected?' · owner workspace':' · local preview');
  $('connectBtn').disabled=connected;$('disconnectBtn').disabled=!connected;
 }
@@ -173,6 +175,7 @@ $('connectBtn').addEventListener('click',async()=>{
   const data=await api('/api/plan');
   state.role=data.role;state.actor=data.actor;state.base=data.plan;state.draft=copy(data.plan);
   state.selected=null;state.view='interior';$('accessKey').value='';
+  if(changed().length) $('quickExport').disabled=false;
   displayStatus();render();msg('Connected to owner-operated review service. Your edits still require review.');
   if(state.role==='owner')await loadReviews();
  }catch(e){state.token=null;state.role=null;state.actor=null;displayStatus();msg('Connection HOLD: '+e.message+'. Local editing and JSON export remain available.')}
@@ -261,7 +264,67 @@ $('reviews').addEventListener('click',async e=>{
   msg('Decision recorded: '+result.receipt.action+'. Current revision '+result.new_revision+'. Venue/event approval remains denied.');
  }catch(err){msg('Review HOLD: '+err.message)}
 });
+
+function showAdvanced(enabled) {
+ document.body.classList.toggle('advanced-open',enabled);
+ $('advancedToggle').setAttribute('aria-expanded',String(enabled));
+ $('advancedToggle').textContent=enabled?'Hide advanced tools':'Show advanced layout tools';
+}
+$('advancedToggle').addEventListener('click',()=>showAdvanced(!document.body.classList.contains('advanced-open')));
+function quickMessage(text){$('quickFeedback').textContent=text}
+$('quickExport').addEventListener('click',()=>$('downloadDraft').click());
+$('quickIdeaForm').addEventListener('submit',async event=>{
+ event.preventDefault();
+ if(!state.base){quickMessage('The map is not loaded. Try again after the planning canvas appears.');return}
+ if(changed().length){
+   quickMessage('You already have an unsent layout draft. Download it or reset the draft before starting another idea.');
+   return;
+ }
+ const form=$('quickIdeaForm');
+ const fields={
+   kind:form.elements.kind.value,
+   name:form.elements.name.value,
+   place:form.elements.place.value,
+   description:form.elements.description.value
+ };
+ const id='zone-'+(globalThis.crypto?.randomUUID?.()||String(Date.now())+'00000000').replaceAll('-','').slice(0,24);
+ let candidate;
+ try{candidate=createQuickSuggestion(state.base,fields,id)}catch(err){quickMessage('Please check your idea: '+err.message);return}
+ const button=$('quickSend');
+ button.disabled=true;
+ try{
+  if(state.token){
+   const data=await api('/api/proposals','POST',{
+      base_revision:state.base.revision,
+      candidate:candidate.candidate,reason:candidate.reason
+   });
+   quickMessage('Your idea was sent for review! Reference: '+data.proposal_id+'. It is NOT yet an assigned or approved space.');
+   msg('Proposal received in the owner review queue. No venue activity authorized.');
+   if(state.role==='owner')await loadReviews();
+  }else{
+   state.draft=candidate.candidate;
+   state.view=candidate.zone.map;state.selected=candidate.zone.id;render();
+   $('reason').value=candidate.reason;
+   $('quickExport').disabled=false;
+   quickMessage('Your idea is on the preview map. To send it, open the team-invite section and connect. Or download the draft to share through an approved channel. It is NOT submitted yet.');
+   msg('Local draft ready, no submission to Evercraft occurred.');
+  }
+ }catch(err){
+   quickMessage('Could not send: '+err.message+'. Nothing has been confirmed in the review queue.');
+ }finally{button.disabled=false}
+});
+
 async function start(){
+ for(const [key,idea] of Object.entries(IDEAS)){
+  const option=document.createElement('option');option.value=key;option.textContent=idea.label;
+  $('quickKind').append(option);
+ }
+ for(const [key,place] of Object.entries(PLACES)){
+  const option=document.createElement('option');option.value=key;option.textContent=place.label;
+  $('quickPlace').append(option);
+ }
+ $('quickKind').value='art';$('quickPlace').value='unsure';
+ showAdvanced(false);
  for(const [key] of Object.entries(categories)){
   const opt=document.createElement('option');opt.value=key;opt.textContent=key.replaceAll('_',' ');
   $('zoneForm').elements.category.append(opt);
