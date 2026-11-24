@@ -1,0 +1,47 @@
+name: Fallen Exotic Chiles Original Baritone Full-Cut Auditions
+on:
+  push:
+    branches: [production/fallen-original-mature-narrator-audition-20261124]
+    paths:
+      - 'systemia/media-studio/voice-foundry/exotic-original-baritone-fullcut.py'
+      - '.github/workflows/fallen-original-baritone-fullcut.yml'
+permissions:
+  contents: read
+jobs:
+  fullcut:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.11'}
+      - name: Verify story and non-clone voice identity
+        run: python systemia/media-studio/voice-foundry/exotic-original-baritone-fullcut.py --verify-only
+      - name: Install native voice model via proven Voice Foundry runner
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq espeak-ng libsndfile1
+          python -m pip install --disable-pip-version-check 'kokoro==0.9.4' 'soundfile>=0.12,<1.0'
+      - name: Make 8 original deep/warm male WAVs
+        env: {HF_HUB_DISABLE_TELEMETRY: '1'}
+        run: python systemia/media-studio/voice-foundry/exotic-original-baritone-fullcut.py male-storyteller-cues
+      - name: Source and sound receipt verification
+        run: |
+          python - <<'PY'
+          import hashlib,json,soundfile as sf
+          from pathlib import Path
+          root=Path("male-storyteller-cues");r=json.loads((root/'receipt.json').read_text())
+          assert not r["celebrityOrCharacterClone"] and not r["customerSendApproved"]
+          assert len(r["records"])==8
+          for x in r["records"]:
+              p=root/x['filename'];assert p.read_bytes()[:4]==b'RIFF'
+              assert hashlib.sha256(p.read_bytes()).hexdigest()==x['sha256']
+              assert sf.info(p).samplerate==24000
+          print('PASS: 8 original cue WAVs checked against their evidence')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: fallen-original-fullcut-male-narration-private
+          path: male-storyteller-cues/
+          retention-days: 3
+          if-no-files-found: error
