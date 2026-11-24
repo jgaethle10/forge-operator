@@ -1,3 +1,5 @@
+import { reconcileShadowSalesDelegation } from './shadow-delegated-sales-reconciliation.mjs';
+
 function ratio(numerator, denominator) {
   if (!denominator) return 1;
   return numerator / denominator;
@@ -17,7 +19,8 @@ export function evaluateSwarmQuality({
   plan,
   results = [],
   schedulerSummary = {},
-  reconciliation = null
+  reconciliation = null,
+  shadowSalesEvidence = null
 }) {
   const quality = contract?.quality || {};
   const completed = Number(schedulerSummary?.counts?.completed || 0);
@@ -86,6 +89,37 @@ export function evaluateSwarmQuality({
     });
   }
 
+  // Opt-in only. A worker-provided verdict, narrative, or copied hash cannot
+  // grant independent success. The coordinator reopens the declared artifacts
+  // and reruns deterministic sales arithmetic against the authorized CSV.
+  // This is a local shadow evidence check, NOT signed worker identity.
+  const requiresShadowSalesEvidence = quality.require_shadow_sales_evidence === true;
+  let shadowSalesEvidenceReceipt = null;
+  if (requiresShadowSalesEvidence) {
+    const evidence = reconcileShadowSalesDelegation(shadowSalesEvidence || {});
+    shadowSalesEvidenceReceipt = {
+      schema: evidence.schema,
+      status: evidence.status,
+      reason: evidence.reason,
+      mission_id: evidence.mission_id,
+      source_sha256: evidence.source_sha256,
+      verified_artifacts: evidence.verified_artifacts,
+      deterministic_sales_check_passed: evidence.deterministic_sales_check_passed,
+      independent_worker_identity_verified: false,
+      live_systemia_admission_verified: false,
+      runtime_dispatched: false
+    };
+    if (evidence.status !== 'shadow_artifacts_reconciled' ||
+        evidence.verified_artifacts !== 2 ||
+        evidence.deterministic_sales_check_passed !== true) {
+      failures.push({
+        code: 'shadow_sales_evidence_required',
+        observed: evidence.status,
+        reason: evidence.reason
+      });
+    }
+  }
+
   return {
     schema: 'evercraft.saban.quality-receipt.v1',
     status: failures.length ? 'fail' : 'pass',
@@ -96,6 +130,9 @@ export function evaluateSwarmQuality({
     role_counts: roleCounts,
     missing_roles: missingRoles,
     failures,
-    enforcement: quality.enforcement || 'receipt_only'
+    // An explicitly opted-in proof requirement cannot silently downgrade to
+    // receipt-only on failure. Existing contracts remain unchanged.
+    enforcement: requiresShadowSalesEvidence ? 'fail_execution' : (quality.enforcement || 'receipt_only'),
+    ...(requiresShadowSalesEvidence ? { shadow_sales_evidence: shadowSalesEvidenceReceipt } : {})
   };
 }
