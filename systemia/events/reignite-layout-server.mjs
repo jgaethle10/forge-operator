@@ -10,7 +10,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
 import { fileURLToPath } from 'node:url';
-import { createSeedPlan, makeProposal, decideProposal, digest, secureCompare } from './reignite-layout-engine.mjs';
+import { createSeedPlan, makeProposal, decideProposal, digest, secureCompare, myProposalSummaries } from './reignite-layout-engine.mjs';
 
 const stateDir=path.resolve(process.env.REIGNITE_LAYOUT_STATE ||
  path.join(process.env.XDG_STATE_HOME||path.join(os.homedir(),'.local','state'),'evercraft','reignite-layout'));
@@ -150,6 +150,10 @@ function serve(){
    if(!who)return send(res,401,{error:'valid_owner_or_invite_key_required'});
    if(req.method==='GET'&&url==='/api/plan')
      return send(res,200,{plan:db.plan,role:who.role,actor:who.label,pending_count:who.role==='owner'?db.proposals.filter(p=>p.status==='pending').length:undefined});
+   if(req.method==='GET'&&url==='/api/mine')
+     return send(res,200,{schema:'evercraft.reignite.contributor-status.v1',
+       revision:db.plan.revision,items:myProposalSummaries(db.proposals,who.id,db.plan.revision),
+       event_approved:false,venue_authorized:false});
    if(req.method==='GET'&&url==='/api/reviews'){
      if(who.role!=='owner')return send(res,403,{error:'owner_only'});
      return send(res,200,{proposals:db.proposals.filter(p=>p.status==='pending').slice(-100),revision:db.plan.revision});
@@ -164,7 +168,7 @@ function serve(){
      try{
        const submitted=await body(req);
        const proposal=makeProposal(db.plan,submitted.candidate,{
-         actor_ref:who.label,reason:submitted.reason,base_revision:submitted.base_revision
+         actor_id:who.id,actor_ref:who.label,reason:submitted.reason,base_revision:submitted.base_revision
        });
        persist({...db,proposals:[...db.proposals,proposal]});
        current.count++;quotas.set(who.id,current);
