@@ -39,6 +39,7 @@ function fixture(){
       service:'remote-capacity-broker',
       instance_id:'remote_broker_0123456789abcdef12345678',
       endpoint:'http://127.0.0.1:50505',
+      loopback_listener_verified:true,
       authorized_devices:0,registered_nodes:0,
       pending_enrollment_requests:0,
       deployment_receipt_bound:false,
@@ -103,6 +104,7 @@ test('resident count, unknown listener, non-loopback broker and identity drift f
 
 test('nonzero remote authority, public routing or changed protected service fails',()=>{
   const edits=[
+    v=>{v.during.broker.loopback_listener_verified=false},
     v=>{v.during.broker.authorized_devices=1},
     v=>{v.during.broker.registered_nodes=1},
     v=>{v.during.broker.pending_enrollment_requests=1},
