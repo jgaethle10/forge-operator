@@ -1,5 +1,5 @@
 # Demand Command PRIVATE owner-only HTTPS route. STAGED TEMPLATE ONLY.
-# Append as a separate site block to the existing Penguin /etc/evercraft/Caddyfile
+# Stage as a separate site block next to Penguin's /etc/evercraft/Caddyfile
 # ONLY AFTER reviewing the current edge config, verifying DNS and tunnel, and
 # replacing the placeholder with a true locally generated Caddy bcrypt hash.
 #
@@ -11,13 +11,13 @@
 # Generate on the operator-controlled Chromebook: caddy hash-password
 # Never commit a populated copy of this template.
 #
-# IMPORTANT: If the installed Caddy version supports only the earlier
-# "basicauth" directive, use that name after checking "caddy version" first.
+# Confirmed field Caddy v2.6.2 on Penguin: the correct directive is "basicauth".
+# "basic_auth" is only available from Caddy v2.8.0 onward.
 # The bcrypt hash uses Caddy's local hash-password command.
 
 demand.systemiacommandcenters.com {
     encode gzip
-    basic_auth {
+    basicauth {
         owner REPLACE_WITH_LOCAL_CADDY_BCRYPT_HASH
     }
     reverse_proxy 127.0.0.1:18897 {
