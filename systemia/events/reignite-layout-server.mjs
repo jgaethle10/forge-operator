@@ -55,7 +55,7 @@ function cli(){
    root();
    if(fs.existsSync(authPath)||fs.existsSync(dbPath))throw Error('already_initialized_no_overwrite');
    const secret=token();
-   privateWrite(authPath,{schema:1,owner_hash:hash(secret),invites:[]});
+   privateWrite(authPath,{schema:1,owner_hash:hash(secret),invites:[],sessions:[]});
    privateWrite(dbPath,{schema:1,plan:createSeedPlan(),proposals:[],reviews:[]});
    process.stdout.write('Owner key (store privately; shown once): '+secret+'\n');
    return;
@@ -71,6 +71,25 @@ function cli(){
    process.stdout.write('Invite ID: '+id+'\nEditor key (share securely; shown once): '+secret+'\n');
    return;
  }
+ if(action==='invite-link'){
+   root();
+   const label=String(process.argv[3]||'').trim();
+   const hours=Number(process.argv[4]||24);
+   if(label.length<3||label.length>80)throw Error('invite_label_length_3_to_80_required');
+   if(!Number.isInteger(hours)||hours<1||hours>72)throw Error('invite_link_hours_must_be_1_to_72');
+   const data=privateRead(authPath);
+   const id='editor-'+randomBytes(6).toString('hex'),grant=token();
+   data.invites.push({
+     id,label,hash:null,grant_hash:hash(grant),redeemed_at:null,
+     grant_expires_at_ms:Date.now()+hours*3600000,revoked:false,
+     created_at:new Date().toISOString()
+   });
+   privateWrite(authPath,data);
+   const entryPath=clientOrigin===origin?'/':'/reignite/layout/';
+   process.stdout.write('Invite ID: '+id+'\nOne-time link (share privately, '+hours+'h expiry): '+
+     clientOrigin+entryPath+'#join='+grant+'\n');
+   return;
+ }
  if(action==='revoke'){
    root();
    const id=String(process.argv[3]||'');
@@ -80,7 +99,7 @@ function cli(){
    item.revoked=true;privateWrite(authPath,data);
    process.stdout.write('Revoked '+id+'\n');return;
  }
- throw Error('usage: node reignite-layout-server.mjs init|invite "<name>"|revoke "<id>"|serve');
+ throw Error('usage: node reignite-layout-server.mjs init|invite "<name>"|invite-link "<name>" [hours=24]|revoke "<id>"|serve');
 }
 function serve(){
  root();
@@ -106,6 +125,13 @@ function serve(){
    for(const invite of currentAuth.invites)
      if(!invite.revoked&&secureCompare(candidate,invite.hash))
        return {role:'editor',label:invite.label,id:invite.id};
+   const now=Date.now();
+   for(const session of currentAuth.sessions||[]){
+     const invite=currentAuth.invites.find(i=>i.id===session.invite_id);
+     if(invite&&!invite.revoked&&session.expires_at_ms>now&&
+        secureCompare(candidate,session.hash))
+       return {role:'editor',label:invite.label,id:invite.id};
+   }
    return null;
  }
  function send(res,code,data){
@@ -146,6 +172,38 @@ function serve(){
      catch{return send(res,404,{error:'file_not_found'})}
    }
    if(req.method==='GET'&&url==='/health')return send(res,200,{ok:true,kind:'private-owner-layout',live_event_authorized:false});
+   // One-use invite grant in URL fragment; raw grant never appears in a server URL.
+   // The browser exchanges it through a same-origin JSON POST for a temporary
+   // editor-only session. The owner key cannot be minted by this route.
+   if(req.method==='POST'&&url==='/api/invite/redeem'){
+     if(req.headers.origin!==clientOrigin)
+       return send(res,403,{error:'same_origin_post_required'});
+     try{
+       const submitted=await body(req);
+       const grant=submitted?.grant;
+       if(typeof grant!=='string'||!/^[A-Za-z0-9_-]{43}$/.test(grant))
+         return send(res,422,{error:'grant_invalid'});
+       const authNow=privateRead(authPath),candidate=hash(grant),now=Date.now();
+       const invite=authNow.invites.find(i=>i.grant_hash&&secureCompare(candidate,i.grant_hash));
+       if(!invite||invite.revoked||invite.redeemed_at||invite.grant_expires_at_ms<=now)
+         return send(res,410,{error:'invite_not_available_or_already_used'});
+       const key=token(),expires_at_ms=now+12*3600000;
+       authNow.sessions??=[];
+       authNow.sessions.push({
+         id:'session-'+randomBytes(8).toString('hex'),
+         invite_id:invite.id,hash:hash(key),expires_at_ms,
+         created_at:new Date(now).toISOString()
+       });
+       invite.redeemed_at=new Date(now).toISOString();
+       invite.grant_hash=null;
+       privateWrite(authPath,authNow);
+       return send(res,200,{
+         schema:'evercraft.reignite.invited-editor-session.v1',
+         session_key:key,scope:'propose_and_read_own',expires_at:new Date(expires_at_ms).toISOString(),
+         event_approved:false,venue_authorized:false
+       });
+     }catch(e){return send(res,e.http||422,{error:e.message})}
+   }
    const who=identify(req.headers['x-reignite-key']);
    if(!who)return send(res,401,{error:'valid_owner_or_invite_key_required'});
    if(req.method==='GET'&&url==='/api/plan')
