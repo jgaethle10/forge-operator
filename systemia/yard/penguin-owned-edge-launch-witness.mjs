@@ -52,13 +52,14 @@ function referencesPort(text,port){
 export function evaluateOwnedEdgeLaunch({
   unit,cmdline=[],exe='',sockets='',sourceText,
   sourceRegular=false,sourceMtimeMs=null,startMs=null,
-  brokerPort=8797,
+  pidStable=false,brokerPort=8797,
 }={}){
   const holds=[];
   const pid=unit?.pid;
   if(unit?.active!=='active'||unit?.enabled!=='enabled'||
      unit?.user!=='caddy'||!Number.isSafeInteger(pid)||pid<1)
     holds.push('evercraft_public_edge_unit_not_verified');
+  if(pidStable!==true)holds.push('edge_process_changed_during_observation');
   const processIdentity=explicitConfig(cmdline)&&
     (exe==='/usr/bin/caddy'||exe==='/usr/local/bin/caddy');
   if(!processIdentity)holds.push('caddy_process_config_not_verified');
@@ -128,9 +129,16 @@ export function inspectOwnedEdgeLaunch(){
     encoding:'utf8',timeout:5000,maxBuffer:MAX_SOCKETS,
     stdio:['ignore','pipe','ignore'],
   });
+  const statAfter=fs.lstatSync(SOURCE);
+  const sourceStable=statAfter.isFile()&&!statAfter.isSymbolicLink()&&
+    statAfter.ino===stat.ino&&statAfter.size===stat.size&&
+    statAfter.mtimeMs===stat.mtimeMs;
+  const pidStable=Number(prop('MainPID'))===pid&&
+    prop('ActiveState')==='active'&&sourceStable;
   return evaluateOwnedEdgeLaunch({
-    unit,cmdline,exe,sockets,sourceText,sourceRegular,
-    sourceMtimeMs:stat.mtimeMs,startMs,
+    unit,cmdline,exe,sockets,sourceText,
+    sourceRegular:sourceRegular&&sourceStable,
+    sourceMtimeMs:stat.mtimeMs,startMs,pidStable,
   });
 }
 const direct=process.argv[1]&&
