@@ -68,6 +68,13 @@ function baseline(phase='before'){
     healthAfter:structuredClone(dns),
     dnsQuery:{aa:true,ra:false,rcode:0,answers:1},
     brokerHealth:during?broker:null,
+    brokerBinding:during?{
+      verified:true,
+      loopback_only_verified:true,
+      socket_owner_is_live_nodeseed:true,
+      candidate_port:50505,
+      public_route_absence_proven:false,
+    }:null,
     protectedUnits:{
       nodeseed:{active:'active',enabled:'enabled'},
       broker:{active:'inactive',enabled:'disabled'},
@@ -102,11 +109,16 @@ test('future during-phase capture requires exactly one PID-owned zero-authority 
   assert.equal(good.snapshot.broker.authorized_devices,0);
   assert.equal(good.snapshot.broker.public_route_created,null);
   assert.equal(good.snapshot.broker.endpoint,'http://127.0.0.1:50505');
+  assert.equal(good.snapshot.broker.loopback_listener_verified,true);
+  assert.equal(sanitizePhaseResult(good).broker_socket_loopback_verified,true);
   assert.equal(sanitizePhaseResult(good).zero_authority_broker_seen,true);
 });
 
 test('broker authority, identity, missing listener, DNS failures and drift all fail closed',()=>{
   const changes=[
+    x=>{x.brokerBinding=null},
+    x=>{x.brokerBinding.verified=false},
+    x=>{x.brokerBinding.candidate_port=50404},
     x=>{x.brokerHealth.authorized_devices=1},
     x=>{x.brokerHealth.pending_enrollment_requests=1},
     x=>{x.brokerHealth.deployment_receipt_bound=true},
