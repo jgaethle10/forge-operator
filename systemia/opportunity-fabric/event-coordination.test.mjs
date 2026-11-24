@@ -9,8 +9,8 @@ test('unconfirmed heritage event starts with every external action denied', () =
   const result = assess();
   assert.equal(result.stage, 'discovery_incomplete');
   assert.equal(result.scenario, 'outdoor_separate');
-  assert.equal(result.checks.length, 14);
-  assert.equal(result.next_work.length, 14);
+  assert.equal(result.checks.length, 15);
+  assert.equal(result.next_work.length, 15);
   assert.equal(result.event_approved, false);
   assert.equal(result.ticket_sales_authorized, false);
   assert.equal(result.charitable_collection_authorized, false);
@@ -26,6 +26,58 @@ test('each event format has specific independent evidence requirements', () => {
   assert(!outdoor.includes('headphone_comms') && outdoor.includes('outdoor_transmission'));
   assert(filmed.includes('filming_and_exhibits') && !filmed.includes('outdoor_ground_and_wind'));
   assert.equal(Object.keys(EVENT_SCENARIOS).length, 4);
+});
+
+
+test('site jurisdiction and event noise hours are essential for all scenarios, never guessed',()=>{
+ for(const scenario of Object.keys(EVENT_SCENARIOS)){
+   const result=assess({scenario});
+   const gate=result.checks.find(x=>x.id==='jurisdiction_and_event_hours');
+   assert(gate,'missing sound-jurisdiction gate for '+scenario);
+   assert.equal(gate.status,'missing');
+   assert.match(gate.question,/site parcel jurisdiction/);
+   assert.match(gate.question,/hours/);
+   assert.equal(result.event_approved,false);
+   assert.equal(result.ticket_sales_authorized,false);
+ }
+});
+
+test('international artists and REIGNITE community programs require distinct external reviews',()=>{
+ const features=['international_performers','acoustic_dome_performance','quiet_wing','guest_dj',
+   'karaoke','art_exhibition','photography_contest','food_contest','silent_auction'];
+ const baseline=assess({scenario:'outdoor_separate'});
+ const result=assess({scenario:'outdoor_separate',features});
+ assert.equal(result.checks.length,baseline.checks.length+features.length);
+ for(const feature of features){
+   const gate=result.checks.find(x=>x.id===feature);
+   assert(gate,'missing festival gate '+feature);
+   assert.equal(gate.status,'missing');
+   assert(result.next_work.some(x=>x.requirement===feature && x.priority==='obtain_evidence'));
+ }
+ assert.equal(result.qualified_review_required,true);
+ assert.equal(result.external_contact_authorized,false);
+ assert.equal(result.performance_or_testing_authorized,false);
+ assert.equal(result.charitable_collection_authorized,false);
+ assert.equal(result.ticket_sales_authorized,false);
+ assert.equal(result.event_approved,false);
+ assert.equal(eventWorkPackages(result).length,result.checks.length);
+ assert(eventWorkPackages(result).every(p=>p.authorized_to_dispatch===false));
+});
+
+test('an all-night claim or unverified artist visa never changes permission flags',()=>{
+ const features=['international_performers','karaoke','guest_dj','food_contest','silent_auction'];
+ const all=assess({scenario:'hybrid_silent_zone',features});
+ const evidence=Object.fromEntries(all.checks.map(g=>[g.id,{
+   source_ref:'synthetic:'+g.id,observed_at:'2026-11-24T15:00:00Z',finding:'approved',
+   all_night:true,artist_visa_approved:true,noise_exemption:true
+ }]));
+ const review=assess({scenario:'hybrid_silent_zone',features,evidence});
+ assert.equal(review.stage,'dossier_ready_for_independent_review');
+ assert.equal(review.event_approved,false);
+ assert.equal(review.external_contact_authorized,false);
+ assert.equal(review.charitable_collection_authorized,false);
+ assert.equal(review.performance_or_testing_authorized,false);
+ assert(review.checks.every(g=>g.status==='submitted_unverified'));
 });
 
 test('one source reference without observation is not evidence', () => {
@@ -124,7 +176,7 @@ test('hybrid silent zone gates outdoor stage and indoor headphone crowd separate
     'headphone_comms','silent_zone_vibration','artifact_protection',
     'visual_effects_review',
   ]) assert(byId.has(id), 'missing hybrid gate: '+id);
-  assert.equal(result.checks.length, 19);
+  assert.equal(result.checks.length, 20);
   assert.equal(result.event_approved, false);
   assert.equal(result.performance_or_testing_authorized, false);
   assert.equal(result.ticket_sales_authorized, false);
