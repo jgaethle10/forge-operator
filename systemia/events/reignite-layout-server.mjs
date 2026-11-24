@@ -126,7 +126,8 @@ function serve(){
    privateWrite(dbPath,next);db=next;
  }
  const routes={
-  '/':'index.html','/app.js':'app.js','/app.css':'app.css','/seed.json':'seed.json'
+  '/':'index.html','/app.js':'app.js','/app.css':'app.css',
+  '/quick-idea.mjs':'quick-idea.mjs','/seed.json':'seed.json'
  };
  createServer(async(req,res)=>{
    res.setHeader('X-Content-Type-Options','nosniff');
