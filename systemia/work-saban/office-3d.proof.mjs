@@ -78,6 +78,23 @@ vm.runInNewContext(source,context,{filename:'office-3d.js'});
 const ui=context.window.WorkSaban3D;
 assert(ui);
 assert.equal(ui.getState().analyst,'idle');
+// A secondary local executor status is not itself an auditable receipt.
+ui.consumeExecutorEvent({id:'analyst',state:'verified'});
+assert.equal(ui.getState().analyst,'idle','receiptless executor cannot fabricate verification');
+ui.consumeExecutorEvent({id:'analyst',state:'verified',receipt:{
+  quality_status:'pass',result_sha256:'sha256:not-a-digest'
+}});
+assert.equal(ui.getState().analyst,'idle','malformed evidence cannot pass');
+ui.consumeExecutorEvent({id:'analyst',state:'verified',receipt:{
+  quality_status:'pass',result_sha256:'a'.repeat(64),role:'writer'
+}});
+assert.equal(ui.getState().analyst,'idle','receipt for another specialist is rejected');
+ui.consumeExecutorEvent({id:'analyst',state:'verified',receipt:{
+  quality_status:'pass',result_sha256:'a'.repeat(64),role:'analyst'
+}});
+assert.equal(ui.getState().analyst,'verified','valid role-bound quality receipt is accepted');
+ui.reset();
+assert.equal(ui.getState().analyst,'idle','verification must not survive a reset');
 ui.proposed({team:[{id:'director'},{id:'analyst'},{id:'auditor'}]});
 assert.equal(ui.getState().analyst,'proposed');
 assert.equal(ui.getState().writer,'idle');
