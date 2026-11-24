@@ -37,7 +37,7 @@ This prints a one-time editor key and its invite ID. Give only that editor key t
 
     node systemia/events/reignite-layout-server.mjs serve
 
-It binds only to http://127.0.0.1:8809/ by default, which is **not a remotely accessible public site**. Never directly expose that port. The browser holds the entered key in tab memory only, not cookies or localStorage, and the service requires same-origin, private key, limited request size and a bounded submission queue.
+It binds only to http://127.0.0.1:8809/ by default, which is **not a remotely accessible public site**. Never directly expose that port. For a future explicitly approved Evercraft-owned HTTPS gateway, set REIGNITE_LAYOUT_PUBLIC_ORIGIN to the exact authorized HTTPS origin (scheme + host, no path/query/credentials). The loopback service then validates the public Host and Origin passed by the trusted reverse proxy; insecure origins are rejected. This is only a preparatory capability: do NOT turn it on without a verified TLS proxy, authenticated team access, appropriate Identity/Passport role policy and browser/security testing. The browser holds the entered key in tab memory only, not cookies or localStorage, and the service requires same-origin, private key, limited request size and a bounded submission queue.
 
 To revoke a collaborator locally:
 
