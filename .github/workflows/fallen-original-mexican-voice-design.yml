@@ -1,0 +1,77 @@
+name: Fallen Original Mexican Storyteller VoiceDesign Proof
+on:
+  push:
+    branches: [production/fallen-original-mature-narrator-audition-20261124]
+    paths: ['.github/workflows/fallen-original-mexican-voice-design.yml']
+permissions: { contents: read }
+jobs:
+  audition:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 55
+    steps:
+      - name: Install CPU build dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq cmake ninja-build libopenblas-dev
+          python -m pip install --disable-pip-version-check huggingface_hub soundfile numpy
+      - name: Build open-source Qwen3-TTS VoiceDesign CPU engine
+        run: |
+          git clone --depth 1 https://github.com/CrispStrobe/CrispASR.git /tmp/crispasr
+          cmake -S /tmp/crispasr -B /tmp/crispasr/build -G Ninja -DCMAKE_BUILD_TYPE=Release
+          cmake --build /tmp/crispasr/build --target crispasr -j 4
+          test -x /tmp/crispasr/build/bin/crispasr
+      - name: Download Apache-licensed VoiceDesign GGUF and codec weights
+        run: |
+          mkdir -p /tmp/voice-model
+          hf download cstr/qwen3-tts-1.7b-voicedesign-GGUF qwen3-tts-12hz-1.7b-voicedesign-q8_0.gguf --local-dir /tmp/voice-model
+          hf download cstr/qwen3-tts-tokenizer-12hz-GGUF qwen3-tts-tokenizer-12hz.gguf --local-dir /tmp/voice-model
+          test -s /tmp/voice-model/qwen3-tts-12hz-1.7b-voicedesign-q8_0.gguf
+          test -s /tmp/voice-model/qwen3-tts-tokenizer-12hz.gguf
+      - name: Generate two original non-impersonating mature Mexican-accented English audition lines
+        env:
+          OMP_NUM_THREADS: "4"
+        run: |
+          mkdir -p original-mexican-voicedesign-review
+          timeout 900 /tmp/crispasr/build/bin/crispasr \
+            --backend qwen3-tts-1.7b-voicedesign \
+            -m /tmp/voice-model/qwen3-tts-12hz-1.7b-voicedesign-q8_0.gguf \
+            --codec-model /tmp/voice-model/qwen3-tts-tokenizer-12hz.gguf \
+            --instruct "An original Mexican male storyteller in his late sixties, speaking clear English with a natural Mexican Spanish-influenced accent. Resonant warm low baritone, slightly weathered husky timbre, confident, unhurried, restrained wit and a dry close-microphone studio sound. Never an imitation of a famous speaker." \
+            --tts "Ricky grows extraordinary peppers. Exotic Chiles brings the fire." \
+            --tts-output original-mexican-voicedesign-review/01_weathered_storyteller.wav
+          timeout 900 /tmp/crispasr/build/bin/crispasr \
+            --backend qwen3-tts-1.7b-voicedesign \
+            -m /tmp/voice-model/qwen3-tts-12hz-1.7b-voicedesign-q8_0.gguf \
+            --codec-model /tmp/voice-model/qwen3-tts-tokenizer-12hz.gguf \
+            --instruct "Original mature bilingual Mexican man in his sixties speaking English with an authentic soft Mexican accent, gravelly mellow bass voice, rich chest resonance, charming old-world confidence, expressive natural phrasing with warm pauses, premium close-miked clean commercial recording, no caricature or celebrity resemblance." \
+            --tts "His famous guacamole speaks for itself. Exotic Chiles. Grown. Smoked. Crafted." \
+            --tts-output original-mexican-voicedesign-review/02_warm_storyteller.wav
+      - name: Verify native generated WAV source and make no release claim
+        run: |
+          python - <<'PY'
+          import wave,hashlib,json,pathlib
+          root=pathlib.Path('original-mexican-voicedesign-review')
+          records=[]
+          for f in sorted(root.glob('*.wav')):
+              with wave.open(str(f),'rb') as w:
+                  d=w.getnframes()/w.getframerate()
+                  rate=w.getframerate()
+              if not 1.0<d<25.0:raise RuntimeError('Unexpected duration '+str((f,d)))
+              records.append(dict(file=f.name,sha256=hashlib.sha256(f.read_bytes()).hexdigest(),
+                  durationSeconds=round(d,3),sampleRate=rate))
+          assert len(records)==2
+          root.joinpath('source-receipt.json').write_text(json.dumps(dict(
+              schema='evercraft.fallen.original-voice-design-audition.v1',
+              model='Qwen3-TTS-12Hz-1.7B-VoiceDesign (GGUF Q8_0)',
+              originalNonImitating=True,
+              mexicanRegionalAccentIndependentlyVerified=False,
+              fluentHumanReviewApproved=False,commercialReleaseApproved=False,
+              records=records),indent=2))
+          print('PASS: two real original VoiceDesign WAV auditions',records)
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: fallen-original-mexican-voicedesign-review-only
+          path: original-mexican-voicedesign-review/
+          retention-days: 3
+          if-no-files-found: error
