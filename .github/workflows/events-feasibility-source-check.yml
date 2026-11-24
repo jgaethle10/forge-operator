@@ -1,0 +1,26 @@
+name: Evercraft Events feasibility proof
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/opportunity-fabric/event-coordination.mjs'
+      - 'systemia/opportunity-fabric/event-coordination.test.mjs'
+      - '.github/workflows/events-feasibility-source-check.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  safety-source-proof:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 4
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Prove event safety and no unintended venue authority
+        run: node --test systemia/opportunity-fabric/event-coordination.test.mjs
