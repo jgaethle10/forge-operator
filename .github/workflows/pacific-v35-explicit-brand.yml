@@ -1,0 +1,61 @@
+name: Pacific V35 Explicit Bella Brand Bridge Private
+on:
+  push:
+    branches: [studio/pacific-v35-explicit-brand-introduction-20261123]
+    paths:
+      - systemia/media-studio/pacific-v35-explicit-brand.py
+      - .github/workflows/pacific-v35-explicit-brand.yml
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  render:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - name: Install private native Bella runtime and verification STT
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq espeak-ng libsndfile1
+          python -m pip install --disable-pip-version-check 'kokoro==0.9.4' 'soundfile>=0.12,<1.0' 'faster-whisper==1.2.1'
+      - name: Synthesize brand introduction as standalone spoken line
+        env: {HF_HUB_DISABLE_TELEMETRY: "1"}
+        run: python systemia/media-studio/pacific-v35-explicit-brand.py
+      - name: Independently transcribe generated brand line and fail closed if missing
+        env: {HF_HUB_DISABLE_TELEMETRY: "1"}
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json,hashlib,wave
+          from faster_whisper import WhisperModel
+          out=Path("pacific-v35-explicit-brand-private")
+          data=json.loads((out/"receipt.json").read_text())
+          model=WhisperModel("base.en",device="cpu",compute_type="int8")
+          successful=[]
+          for take in data["takes"]:
+            f=out/take["file"]
+            assert hashlib.sha256(f.read_bytes()).hexdigest()==take["sha256"]
+            with wave.open(str(f),"rb") as w:
+              assert w.getframerate()==24000 and w.getnchannels()==1
+              assert 1.0 <= w.getnframes()/24000 <= 4.5
+            segments,info=model.transcribe(str(f),language="en",beam_size=5,vad_filter=False)
+            transcript=" ".join(s.text.strip() for s in segments).lower()
+            print("VOICE_STT",take["file"],repr(transcript),flush=True)
+            take["stt_transcript"]=transcript
+            take["stt_brand_word_present"]="pacific" in transcript or "pacific" in transcript.replace(" ","")
+            take["stt_help_present"]="help" in transcript
+            if take["stt_brand_word_present"] and take["stt_help_present"]:
+              successful.append(take["file"])
+          data["asr_verified_brands"]=successful
+          data["asr_model"]="faster-whisper base.en"
+          (out/"receipt.json").write_text(json.dumps(data,indent=2)+"\n")
+          if not successful: raise RuntimeError("CRITICAL_BRAND_WORD_NOT_CONFIRMED_BY_ASR")
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pacific-v35-explicit-brand-native-bella-private
+          path: pacific-v35-explicit-brand-private/
+          retention-days: 7
+          if-no-files-found: error
