@@ -172,10 +172,16 @@ $('connectBtn').addEventListener('click',async()=>{
  const key=$('accessKey').value.trim();if(!key){msg('Enter an owner or invited editor key.');return}
  state.token=key;
  try{
+  const oldDraft=state.draft&&copy(state.draft);
+  const oldRevision=state.base?.revision;
+  const unsent=changed().length>0;
   const data=await api('/api/plan');
-  state.role=data.role;state.actor=data.actor;state.base=data.plan;state.draft=copy(data.plan);
+  if(unsent&&oldRevision!==data.plan.revision)
+    throw Error('The master map changed since your draft. Download your suggestion before resetting and reconnecting.');
+  state.role=data.role;state.actor=data.actor;state.base=data.plan;
+  state.draft=unsent?oldDraft:copy(data.plan);
   state.selected=null;state.view='interior';$('accessKey').value='';
-  if(changed().length) $('quickExport').disabled=false;
+  $('quickExport').disabled=!unsent;
   displayStatus();render();msg('Connected to owner-operated review service. Your edits still require review.');
   if(state.role==='owner')await loadReviews();
  }catch(e){state.token=null;state.role=null;state.actor=null;displayStatus();msg('Connection HOLD: '+e.message+'. Local editing and JSON export remain available.')}
