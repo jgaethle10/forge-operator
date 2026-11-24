@@ -44,12 +44,12 @@ const EXTRA = Object.freeze({
     { id: 'headphone_comms', owner: 'production / safety lead', question: 'Headphone listening dose, volume limiting and immediate accessible emergency interruption demonstrated' },
     { id: 'silent_zone_vibration', owner: 'historic structural engineer', question: 'Potential dancing, stamping and synchronized crowd forces transmitted via floor/foundations assessed' },
     { id: 'artifact_protection', owner: 'museum curator', question: 'Exhibits, vulnerable historic fabric and active roof-repair areas separated from dance and equipment zones' },
-    { id: 'temporary_dome_review', owner: 'fire authority / event structural lead', question: 'If an optional freestanding visual dome is used: membrane/fire classification, egress, ventilation, anchorage and emergency lighting reviewed' },
     { id: 'visual_effects_review', owner: 'museum / airport / event production', question: 'Freestanding fixtures, cabling, light sensitivity and airport-directed light spill reviewed; no unapproved rigging' },
   ],
 });
 
 const FEATURE_GATES = Object.freeze({
+  freestanding_visual_dome: { id: 'freestanding_visual_dome', owner: 'fire authority / qualified event structural lead', question: 'Separate dome occupancy, fire classification/material, egress, ventilation, wind/anchorage and emergency lighting reviewed' },
   open_flame: { id: 'open_flame', owner: 'museum / fire authority', question: 'Separate written flame-effects and heritage safety approval' },
   aerial_laser: { id: 'aerial_laser', owner: 'airport / aviation authority', question: 'Separate aviation-safe laser/beam review' },
   drones: { id: 'drones', owner: 'airport / aviation authority', question: 'Separate airspace and property-owner flight permission' },
