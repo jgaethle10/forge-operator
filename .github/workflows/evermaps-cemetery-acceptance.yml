@@ -1,0 +1,26 @@
+name: EverMaps cemetery scoped acceptance
+on:
+  pull_request:
+    paths:
+      - 'systemia/evermaps/cemetery/**'
+      - 'systemia/compute/runtime-node.mjs'
+      - '.github/workflows/evermaps-cemetery-acceptance.yml'
+permissions:
+  contents: read
+jobs:
+  fixture-acceptance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Scoped source syntax
+        run: |
+          node --check systemia/compute/runtime-node.mjs
+          for file in systemia/evermaps/cemetery/*.mjs; do node --check "$file"; done
+      - name: Synthetic acceptance only
+        run: |
+          node --test systemia/evermaps/cemetery/*.test.mjs
+          python3 systemia/evermaps/cemetery/va-ingest-canary.py --self-test
