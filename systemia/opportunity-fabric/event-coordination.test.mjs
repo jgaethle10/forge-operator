@@ -25,7 +25,7 @@ test('each event format has specific independent evidence requirements', () => {
   assert(indoor.includes('headphone_comms') && indoor.includes('crowd_loads'));
   assert(!outdoor.includes('headphone_comms') && outdoor.includes('outdoor_transmission'));
   assert(filmed.includes('filming_and_exhibits') && !filmed.includes('outdoor_ground_and_wind'));
-  assert.equal(Object.keys(EVENT_SCENARIOS).length, 3);
+  assert.equal(Object.keys(EVENT_SCENARIOS).length, 4);
 });
 
 test('one source reference without observation is not evidence', () => {
