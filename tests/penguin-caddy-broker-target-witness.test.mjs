@@ -54,6 +54,17 @@ test('explicit broker target anywhere in active Caddy JSON fails closed',()=>{
       'candidate_port_present_in_active_caddy_config'));
   }
 });
+test('candidate port appearing as a numeric plugin field still fails closed',()=>{
+  const input=fixture();
+  input.config.apps.http.servers.srv0.routes.push({
+    handle:[{handler:'experimental_proxy',target_port:8797}],
+  });
+  const result=evaluate(input);
+  assert.equal(result.observed,false);
+  assert.ok(result.hold_reasons.includes(
+    'candidate_port_present_in_active_caddy_config'));
+});
+
 test('untrusted, missing or changed active Caddy config is always HOLD',()=>{
   const changes=[
     v=>{v.adminOwnerVerified=false},
