@@ -89,9 +89,11 @@ function serve(){
  process.once('exit',release);
  function identify(raw){
    if(typeof raw!=='string'||raw.length<32||raw.length>256)return null;
+   // Reload private credentials each request, including revocations or newly invited editors.
+   const currentAuth=privateRead(authPath);
    const candidate=hash(raw);
-   if(secureCompare(candidate,auth.owner_hash))return {role:'owner',label:'Evercraft owner',id:'owner'};
-   for(const invite of auth.invites)
+   if(secureCompare(candidate,currentAuth.owner_hash))return {role:'owner',label:'Evercraft owner',id:'owner'};
+   for(const invite of currentAuth.invites)
      if(!invite.revoked&&secureCompare(candidate,invite.hash))
        return {role:'editor',label:invite.label,id:invite.id};
    return null;
@@ -139,7 +141,7 @@ function serve(){
      return send(res,200,{plan:db.plan,role:who.role,actor:who.label,pending_count:who.role==='owner'?db.proposals.filter(p=>p.status==='pending').length:undefined});
    if(req.method==='GET'&&url==='/api/reviews'){
      if(who.role!=='owner')return send(res,403,{error:'owner_only'});
-     return send(res,200,{proposals:db.proposals.slice(-100).map(p=>({...p,candidate:undefined})),revision:db.plan.revision});
+     return send(res,200,{proposals:db.proposals.slice(-100),revision:db.plan.revision});
    }
    if(req.method==='POST'&&req.headers.origin!==origin)
      return send(res,403,{error:'same_origin_post_required'});
