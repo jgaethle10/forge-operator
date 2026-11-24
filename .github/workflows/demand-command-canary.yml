@@ -27,6 +27,8 @@ jobs:
           python3 -m unittest discover -s sites/demand-command/deploy -p 'test_stage_penguin_demand_https.py' -v
           python3 -m unittest discover -s sites/demand-command/deploy -p 'test_release_penguin_demand_https.py' -v
           python3 -m py_compile sites/demand-command/deploy/release-penguin-demand-https.py
+          python3 -m unittest discover -s sites/demand-command/deploy -p 'test_rotate_nextgen_demand_token.py' -v
+          python3 -m py_compile sites/demand-command/deploy/rotate-nextgen-demand-token.py
       - name: Verify private API and source adapters on synthetic data
         working-directory: sites/demand-command/backend
         run: |
