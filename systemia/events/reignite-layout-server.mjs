@@ -140,7 +140,7 @@ function serve(){
    const url=req.url?.split('?')[0];
    if(req.method==='GET'&&has(routes,url)){
      const filename=routes[url],file=path.join(publicDir,filename);
-     const type=filename.endsWith('.js')?'text/javascript':filename.endsWith('.css')?'text/css':
+     const type=/\.(mjs|js)$/.test(filename)?'text/javascript':filename.endsWith('.css')?'text/css':
        filename.endsWith('.json')?'application/json':'text/html';
      try{res.writeHead(200,{'Content-Type':type+'; charset=utf-8'});return res.end(fs.readFileSync(file))}
      catch{return send(res,404,{error:'file_not_found'})}
