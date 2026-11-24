@@ -27,6 +27,8 @@ function displayStatus(){
  $('connectionStatus').textContent=connected?'Connected: '+state.actor+' ('+state.role+') · planning only':'Local concept mode · no live submission';
  $('connectionStatus').classList.toggle('connected',connected);
  $('ownerPanel').hidden=state.role!=='owner';
+ $('myIdeasPanel').hidden=!connected;
+ if(!connected)$('myIdeasList').textContent='Connect with a private invitation to see your suggestions.';
  if(state.role==='owner')showAdvanced(true);
  $('revisionTag').textContent='Revision '+(state.base?.revision||0)+(connected?' · owner workspace':' · local preview');
  $('connectBtn').disabled=connected;$('disconnectBtn').disabled=!connected;
@@ -185,6 +187,7 @@ $('connectBtn').addEventListener('click',async()=>{
   state.selected=null;state.view='interior';$('accessKey').value='';
   $('quickExport').disabled=!unsent;
   displayStatus();render();msg('Connected to owner-operated review service. Your edits still require review.');
+  await loadMyIdeas();
   if(state.role==='owner')await loadReviews();
  }catch(e){state.token=null;state.role=null;state.actor=null;displayStatus();msg('Connection HOLD: '+e.message+'. Local editing and JSON export remain available.')}
 });
@@ -201,6 +204,7 @@ $('submitProposal').addEventListener('click',async()=>{
   const data=await api('/api/proposals','POST',{base_revision:state.base.revision,candidate:state.draft,reason});
   msg('Submitted '+data.proposal_id+' for owner review. NOT approved or applied.');
   state.draft=copy(state.base);state.selected=null;$('reason').value='';render();
+  await loadMyIdeas();
   if(state.role==='owner')await loadReviews();
  }catch(e){msg('Submission HOLD: '+e.message+'. No successful submission confirmed.')}
 });
@@ -239,6 +243,38 @@ $('clearOverlay').addEventListener('click',()=>{
  if(state.overlay)URL.revokeObjectURL(state.overlay);state.overlay=null;
  $('localOverlay').value='';mapDraw();
 });
+
+function renderMyIdeas(items){
+ const list=$('myIdeasList');
+ if(!items.length){
+   list.innerHTML='<p class="sub">No submissions yet. Share an idea above and we will track its review here.</p>';
+   return;
+ }
+ const labels={
+   pending:'Waiting for review',merged_for_planning:'Added to planning draft',rejected:'Reviewed: changes requested'
+ };
+ list.innerHTML=items.map(item=>{
+   const status=labels[item.status]||'Unknown status';
+   const note=item.status==='rejected'&&item.review_note?
+      '<p class="my-review"><strong>Reviewer note:</strong> '+esc(item.review_note)+'</p>':'';
+   const when=item.submitted_at?esc(item.submitted_at.slice(0,10)):'Date unavailable';
+   return '<article class="idea-status"><div><h3>'+esc(item.title)+'</h3><p>Submitted '+when+
+     ' · <span class="proposal-id">'+esc(item.proposal_id)+'</span></p></div>'+
+     '<strong class="idea-state '+esc(item.status)+'">'+esc(status)+'</strong>'+
+     '<p class="idea-action">'+esc(item.next_action)+'</p>'+note+'</article>';
+ }).join('');
+}
+async function loadMyIdeas(){
+ if(!state.token||!state.role)return;
+ try{
+  const result=await api('/api/mine');
+  renderMyIdeas(result.items);
+ }catch(err){
+  $('myIdeasList').textContent='Status unavailable: '+err.message+'. No change to your submitted proposals has been assumed.';
+ }
+}
+$('refreshMyIdeas').addEventListener('click',loadMyIdeas);
+
 async function loadReviews(){
  if(state.role!=='owner')return;
  try{state.reviews=(await api('/api/reviews')).proposals;renderReviews()}
@@ -268,7 +304,7 @@ $('reviews').addEventListener('click',async e=>{
  try{
   const result=await api('/api/review/'+encodeURIComponent(p.id),'POST',{decision:action,review_note:note});
   const latest=await api('/api/plan');state.base=latest.plan;state.draft=copy(latest.plan);state.selected=null;
-  displayStatus();render();await loadReviews();
+  displayStatus();render();await loadReviews();await loadMyIdeas();
   msg('Decision recorded: '+result.receipt.action+'. Current revision '+result.new_revision+'. Venue/event approval remains denied.');
  }catch(err){msg('Review HOLD: '+err.message)}
 });
@@ -292,6 +328,7 @@ async function submitQuickCandidate(candidate,reason){
  render();
  quickMessage('Your idea was received for owner review! Reference '+result.proposal_id+'. This does NOT reserve or approve a space.');
  msg('Proposal submitted for owner review. The planning map is unchanged until it is reviewed.');
+ await loadMyIdeas();
  if(state.role==='owner')await loadReviews();
 }
 $('quickIdeaForm').addEventListener('submit',async event=>{
