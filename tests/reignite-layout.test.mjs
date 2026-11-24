@@ -6,7 +6,7 @@ import { join } from 'node:path';
 import { spawn, spawnSync, execFileSync } from 'node:child_process';
 import { setTimeout as sleep } from 'node:timers/promises';
 import {
-  SCHEMA,createSeedPlan,normalizeCandidate,calculateDiff,makeProposal,decideProposal
+  SCHEMA,createSeedPlan,normalizeCandidate,calculateDiff,makeProposal,decideProposal,myProposalSummaries
 } from '../systemia/events/reignite-layout-engine.mjs';
 import {createQuickSuggestion,IDEAS,PLACES} from '../public/reignite/layout/quick-idea.mjs';
 
@@ -105,6 +105,37 @@ test('one-minute contributor idea needs no geometry or engineering knowledge',()
  assert.equal(Object.keys(PLACES).length,3);
 });
 
+
+test('one person sees only their own proposal statuses and plain next actions',()=>{
+ const base=createSeedPlan(),candidate=structuredClone(base);
+ candidate.zones[0].x=.29;
+ const idA='editor-111111111111',idB='editor-222222222222';
+ const first=makeProposal(base,candidate,{
+   actor_id:idA,actor_ref:'Same display name',reason:'Would like this zone moved for a quiet presentation.',base_revision:0
+ });
+ const second=makeProposal(base,candidate,{
+   actor_id:idB,actor_ref:'Same display name',reason:'Different attendee has an unrelated proposal.',base_revision:0
+ });
+ const all=[first,second];
+ const onlyA=myProposalSummaries(all,idA,0);
+ assert.equal(onlyA.length,1);
+ assert.equal(onlyA[0].proposal_id,first.id);
+ assert.match(onlyA[0].next_action,/waiting for owner review/);
+ assert.equal(onlyA[0].event_approved,false);
+ assert(!('candidate' in onlyA[0]));
+ assert(!('actor_ref' in onlyA[0]));
+ assert.equal(myProposalSummaries(all,idB,0)[0].proposal_id,second.id);
+ assert.equal(myProposalSummaries(all,idA,1)[0].outdated,true);
+ const accepted=decideProposal(base,first,{decision:'approve_for_planning',reviewer_ref:'Evercraft owner',review_note:'Added to planning, not permitted'});
+ const merged=myProposalSummaries([accepted.proposal],idA,1)[0];
+ assert.equal(merged.status,'merged_for_planning');
+ assert.match(merged.next_action,/No venue space or performance is booked/);
+ assert.equal(merged.review_note,null);
+ const rejected=decideProposal(base,second,{decision:'reject',reviewer_ref:'Evercraft owner',review_note:'Please clarify the access needs'});
+ assert.equal(myProposalSummaries([rejected.proposal],idB,0)[0].review_note,'Please clarify the access needs');
+ assert.throws(()=>myProposalSummaries(all,'not-an-actor',0),/actor_id_invalid/);
+});
+
 test('web UI is editable but truthful about the missing current survey and unlaunched review service',()=>{
  const page=readFileSync(new URL('../public/reignite/layout/index.html',import.meta.url),'utf8');
  const js=readFileSync(new URL('../public/reignite/layout/app.js',import.meta.url),'utf8');
@@ -148,6 +179,12 @@ test('owner-run loopback HTTP: invited edits -> owner review -> planning revisio
   const editor=invite.match(/Editor key \(share securely; shown once\): (\S+)/)?.[1];
   const inviteId=invite.match(/Invite ID: (\S+)/)?.[1];
   assert(editor&&inviteId,'editor invite token');
+  // Two collaborators may choose the exact same display label.
+  // Their private status feeds must remain isolated by immutable invite ID.
+  const secondInvite=execFileSync(process.execPath,[fileURL(file),'invite','Museum reviewer'],{env,encoding:'utf8'});
+  const otherEditor=secondInvite.match(/Editor key \(share securely; shown once\): (\S+)/)?.[1];
+  assert(otherEditor,'second distinct collaborator');
+
   child=spawn(process.execPath,[fileURL(file),'serve'],{env,stdio:'ignore'});
   const base='http://127.0.0.1:'+port;
   let ready=false;
@@ -176,6 +213,17 @@ test('owner-run loopback HTTP: invited edits -> owner review -> planning revisio
   const submitted=await call(editor,'/api/proposals','POST',{base_revision:0,candidate,reason:'Adjust the concept for a more practical acoustic area.'});
   assert.equal(submitted.status,201);assert.equal(submitted.data.status,'pending');
   assert.equal(submitted.data.event_approved,false);
+  const mineBefore=await call(editor,'/api/mine');
+  assert.equal(mineBefore.status,200);
+  assert.equal(mineBefore.data.items.length,1);
+  assert.equal(mineBefore.data.items[0].status,'pending');
+  assert.equal(mineBefore.data.event_approved,false);
+  assert(!('candidate' in mineBefore.data.items[0]));
+  const someoneElse=await call(otherEditor,'/api/mine');
+  assert.equal(someoneElse.status,200);
+  assert.deepEqual(someoneElse.data.items,[],'identical editor labels must never disclose each other\'s submissions');
+  assert.equal((await call('not-authorized','/api/mine')).status,401);
+
   assert.equal((await call(editor,'/api/proposals','POST',{base_revision:0,candidate,reason:'Another submission'},'https://evil.example')).status,403);
   assert.equal((await call(editor,'/api/plan')).data.plan.revision,0,'Editor submission must not change base');
   const inbox=await call(owner,'/api/reviews');
@@ -186,8 +234,32 @@ test('owner-run loopback HTTP: invited edits -> owner review -> planning revisio
   const merged=await call(owner,'/api/review/'+item.id,'POST',{decision:'approve_for_planning',review_note:'Accepted for provisional planning only'});
   assert.equal(merged.status,200);assert.equal(merged.data.new_revision,1);
   assert.equal(merged.data.receipt.venue_authorized,false);
+  const ownAfter=await call(editor,'/api/mine');
+  assert.equal(ownAfter.data.items.length,1);
+  assert.equal(ownAfter.data.items[0].status,'merged_for_planning');
+  assert.match(ownAfter.data.items[0].next_action,/planning draft only/);
+  assert.equal((await call(otherEditor,'/api/mine')).data.items.length,0);
+
   assert.equal((await call(owner,'/api/plan')).data.plan.zones[0].x,.31);
   assert.equal((await call(owner,'/api/review/'+item.id,'POST',{decision:'approve_for_planning',review_note:'Repeat request'})).status,422);
+
+  // Reviewer feedback is visible to the author but not to other invited contributors.
+  const next=structuredClone((await call(owner,'/api/plan')).data.plan);
+  next.zones[1].y+=.025;
+  const toReject=await call(otherEditor,'/api/proposals','POST',{
+    base_revision:1,candidate:next,reason:'Testing another independent suggestion with owner feedback.'
+  });
+  assert.equal(toReject.status,201);
+  assert.equal((await call(editor,'/api/mine')).data.items.length,1);
+  const rejected=await call(owner,'/api/review/'+toReject.data.proposal_id,'POST',{
+    decision:'reject',review_note:'Please revise for accessibility before considering a placement.'
+  });
+  assert.equal(rejected.status,200);
+  const otherMine=await call(otherEditor,'/api/mine');
+  assert.equal(otherMine.data.items[0].status,'rejected');
+  assert.match(otherMine.data.items[0].review_note,/accessibility/);
+  assert.equal((await call(editor,'/api/mine')).data.items.length,1);
+
   execFileSync(process.execPath,[fileURL(file),'revoke',inviteId],{env,encoding:'utf8'});
   assert.equal((await call(editor,'/api/plan')).status,401,'revocations must take effect without server restart');
  }finally{
