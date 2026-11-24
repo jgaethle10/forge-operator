@@ -24,6 +24,7 @@ function sample(){
       '}',
     ].join('\n'),
     sourceRegular:true,
+    pidStable:true,
     sourceMtimeMs:1700000000000,
     startMs:1700000100000,
     brokerPort:8797,
@@ -51,6 +52,7 @@ test('Caddyfile historical broker route or numeric port requires HOLD',()=>{
 });
 test('wrong unit, PID, process or launch file cannot claim source verification',()=>{
   const changes=[
+    v=>{v.pidStable=false},
     v=>{v.unit.active='inactive'},
     v=>{v.unit.enabled='disabled'},
     v=>{v.unit.user='root'},
