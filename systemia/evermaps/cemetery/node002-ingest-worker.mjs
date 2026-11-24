@@ -40,7 +40,7 @@ export function createCemeteryNodeWorker({nodeId,warehouse,enabled=false,spawn=s
   if(fs.statfsSync(root).bavail*fs.statfsSync(root).bsize<1024**3)throw Error('cemetery_disk_floor');
   if(st.size>=20*1024**3)throw Error('cemetery_database_budget');
   const check=spawn('python3',['-c','import sqlite3,sys; from pathlib import Path; d=sqlite3.connect(Path(sys.argv[1]).as_uri()+"?mode=ro",uri=True); print(d.execute("SELECT cursor FROM checkpoint WHERE id=1").fetchone()[0])',db],{encoding:'utf8',timeout:10000,maxBuffer:4096});
-  if(check.status!==0||!/^\\d+$/.test(check.stdout.trim()))throw Error('cemetery_checkpoint_unverified');
+  if(check.status!==0||!/^[0-9]+$/.test(check.stdout.trim()))throw Error('cemetery_checkpoint_unverified');
   let result={cursor:Number(check.stdout.trim()),rows_imported:0};
   if(operation==='ingest_batch'){
    const p=spawn('python3',[importer,'--out',registry],{encoding:'utf8',timeout:90000,maxBuffer:16384});
