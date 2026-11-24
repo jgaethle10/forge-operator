@@ -21,6 +21,8 @@ test('international interest is explicit and conditional, not a visa or booking 
  assert.match(html,/outside the United States/);
  assert.match(html,/not accepting applications/);
  assert.match(html,/work authorization/);
+ assert.match(html,/mailto:jessegaethle10@gmail.com\?subject=REIGNITE%20creative%20concept%20conversation/);
+ assert.match(html,/no applications, promises of payment, confirmed appearances/);
  assert.match(docs,/International acts/);
 });
 
