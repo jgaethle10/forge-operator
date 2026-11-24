@@ -25,6 +25,8 @@ jobs:
           node --test sites/demand-command/deploy/test-release-contract.mjs
           python3 -m unittest discover -s sites/demand-command/deploy -p 'test_validate_ssh_keyscan.py' -v
           python3 -m unittest discover -s sites/demand-command/deploy -p 'test_stage_penguin_demand_https.py' -v
+          python3 -m unittest discover -s sites/demand-command/deploy -p 'test_release_penguin_demand_https.py' -v
+          python3 -m py_compile sites/demand-command/deploy/release-penguin-demand-https.py
       - name: Verify private API and source adapters on synthetic data
         working-directory: sites/demand-command/backend
         run: |
