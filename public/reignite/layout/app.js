@@ -5,7 +5,7 @@ const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const copy=v=>JSON.parse(JSON.stringify(v));
 const categories={performance:'#f38c64',visual_art:'#baa6e7',heritage:'#dbbc75',quiet:'#7dbfaf',participation:'#80b7df',food:'#e7bd74',circulation:'#aeb8bb',operations:'#a6c78f',protected:'#e9a4ab'};
 const frame={interior:{x:74,y:94,w:852,h:235},campus:{x:36,y:48,w:928,h:355}};
-const state={base:null,draft:null,selected:null,view:'interior',token:null,csrf:null,authMode:null,role:null,actor:null,drag:null,overlay:null,opacity:.45,reviews:[],quickPending:null};
+const state={base:null,draft:null,selected:null,view:'interior',token:null,csrf:null,authMode:null,role:null,actor:null,drag:null,overlay:null,opacity:.45,reviews:[],quickPending:null,evidenceRevision:null};
 const clamp=(v,min,max)=>Math.max(min,Math.min(max,v));
 const find=id=>state.draft?.zones.find(z=>z.id===id);
 const msg=text=>$('submissionResult').textContent=text;
@@ -27,6 +27,13 @@ function displayStatus(){
  $('connectionStatus').textContent=connected?'Connected: '+state.actor+' ('+state.role+') · planning only':'Local concept mode · no live submission';
  $('connectionStatus').classList.toggle('connected',connected);
  $('ownerPanel').hidden=state.role!=='owner';
+ $('ownerReadinessPanel').hidden=state.role!=='owner';
+ if(state.role!=='owner'){
+   state.evidenceRevision=null;
+   $('ownerReadinessActions').textContent='';
+   $('ownerReadinessSummary').textContent='Organizer evidence is private.';
+   $('ownerEvidenceResult').textContent='';
+ }
  $('myIdeasPanel').hidden=!connected;
  if(!connected)$('myIdeasList').textContent='Connect with a private invitation to see your suggestions.';
  if(state.role==='owner')showAdvanced(true);
@@ -216,7 +223,7 @@ $('connectBtn').addEventListener('click',async()=>{
   $('quickExport').disabled=!unsent;
   displayStatus();render();msg('Connected to owner-operated review service. Your edits still require review.');
   await loadMyIdeas();
-  if(state.role==='owner')await loadReviews();
+  if(state.role==='owner'){await loadReviews();await loadOwnerReadiness();}
  }catch(e){state.token=null;state.authMode=null;state.csrf=null;state.role=null;state.actor=null;displayStatus();msg('Connection HOLD: '+e.message+'. Local editing and JSON export remain available.')}
 });
 $('disconnectBtn').addEventListener('click',async()=>{
@@ -309,6 +316,65 @@ async function loadMyIdeas(){
  }
 }
 $('refreshMyIdeas').addEventListener('click',loadMyIdeas);
+
+
+function showOwnerReadiness(data){
+ state.evidenceRevision=data.desk_revision;
+ const summary=data.summary;
+ $('ownerReadinessSummary').textContent=summary.requirements+' requirements · '+
+   summary.missing+' missing references · '+summary.submitted_unverified+
+   ' source references pending independent review · '+summary.reported_holds+
+   ' reported holds · ZERO independently approved by this desk.';
+ const actions=data.next;
+ $('ownerReadinessActions').innerHTML=actions.length?actions.map(x=>
+   '<li><strong>'+esc(x.requirement.replaceAll('_',' '))+'</strong>'+
+   '<p>'+esc(x.question)+'</p><small>Review: '+esc(x.owner)+
+   (x.priority==='stop_and_review'?' · REPORTED HOLD, STOP':' · Obtain source evidence')+
+   '</small></li>'
+ ).join(''):'<li>No source requests listed. External venue, engineering and permit approval are still REQUIRED.</li>';
+ const select=$('ownerEvidenceGate'),chosen=select.value;
+ select.innerHTML=data.gates.map(x=>'<option value="'+esc(x.gate_id)+'">'+
+   esc(x.gate_id.replaceAll('_',' '))+' · '+esc(x.status.replaceAll('_',' '))+
+   '</option>').join('');
+ if(data.gates.some(x=>x.gate_id===chosen))select.value=chosen;
+ else if(actions.length)select.value=actions[0].requirement;
+}
+async function loadOwnerReadiness(){
+ if(state.role!=='owner')return;
+ try{showOwnerReadiness(await api('/api/owner/readiness'))}
+ catch(err){
+   $('ownerReadinessSummary').textContent='READINESS HOLD: '+err.message+
+     '. No current evidence status can be assumed.';
+   state.evidenceRevision=null;
+   $('ownerEvidenceGate').innerHTML='';
+ }
+}
+$('refreshOwnerReadiness').addEventListener('click',loadOwnerReadiness);
+$('ownerEvidenceForm').addEventListener('submit',async event=>{
+ event.preventDefault();
+ if(state.role!=='owner'||state.evidenceRevision===null)return;
+ const form=$('ownerEvidenceForm'),button=$('ownerEvidenceSubmit');
+ button.disabled=true;
+ try{
+  const result=await api('/api/owner/evidence','POST',{
+    base_revision:state.evidenceRevision,
+    gate_id:form.elements.gate_id.value,
+    source_ref:form.elements.source_ref.value.trim(),
+    finding:form.elements.finding.value,
+    note:form.elements.note.value.trim()
+  });
+  showOwnerReadiness(result.readiness);
+  form.elements.source_ref.value='';
+  form.elements.note.value='';
+  form.elements.finding.value='submitted';
+  $('ownerEvidenceResult').textContent='Source reference received: '+
+    result.receipt.id+'. This is NOT an approval. Independent review is still required.';
+ }catch(err){
+  $('ownerEvidenceResult').textContent='RECORD HOLD: '+err.message+
+    '. Nothing was confirmed. Your unsent form remains available.';
+  if(/revision_conflict/.test(err.message))await loadOwnerReadiness();
+ }finally{button.disabled=false}
+});
 
 async function loadReviews(){
  if(state.role!=='owner')return;
