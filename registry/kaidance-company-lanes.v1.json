@@ -121,6 +121,15 @@
         "competition-control-plane"
       ],
       "priority": 1
+    },
+    {
+      "lane_key": "cemetery-atlas",
+      "description": "EverMaps national cemetery research, source rights, burial ingestion and Tahoma validation",
+      "mode": "observe_existing_workflows",
+      "cadence_seconds": 300,
+      "products": [],
+      "services": [],
+      "priority": 2
     }
   ]
 }

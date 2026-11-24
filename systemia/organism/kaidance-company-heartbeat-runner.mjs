@@ -8,6 +8,8 @@ import {fileURLToPath} from 'node:url';
 import {randomBytes,createHash} from 'node:crypto';
 import {spawnSync} from 'node:child_process';
 import {planCompanyHeartbeat,validateCompanyLanes} from './kaidance-company-heartbeat.mjs';
+import {researchCycle} from '../evermaps/cemetery/research-cycle.mjs';
+import {classifyNext} from '../evermaps/cemetery/source-classification.mjs';
 import {writeKaidanceNextAction} from './kaidance-next-action.mjs';
 const sourceRoot=path.resolve(fileURLToPath(new URL('../../',import.meta.url)));
 const sha=value=>'sha256:'+createHash('sha256').update(value).digest('hex');
@@ -107,8 +109,17 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
  try{
   const outDir=opt('--out')||process.env.SYSTEMIA_COMPANY_HEARTBEAT_OUT_DIR||path.join(sourceRoot,'artifacts/kaidance-company-heartbeat');
   const result=runCompanyHeartbeat({outDir,proveWorlds:process.argv.includes('--prove-worlds')});
+  // Explicit owner opt-in only; CI and existing installations default off.
+  let cemetery=null, cemeteryClassification=null;
+  if(process.env.SYSTEMIA_CEMETERY_RESEARCH_OUT_DIR){
+   const target=path.resolve(process.env.SYSTEMIA_CEMETERY_RESEARCH_OUT_DIR);
+   if(target===sourceRoot||target.startsWith(sourceRoot+path.sep)||target===path.resolve(outDir)||path.dirname(target)!==path.dirname(path.resolve(outDir))||path.basename(target)!=='kaidance-cemetery-research')throw Error('cemetery_private_sibling_required');
+   cemetery=await researchCycle({outDir:target});
+   // Classification advances only on a newly committed company tick.
+   if(!result.duplicate) cemeteryClassification=await classifyNext({outDir:target});
+  }
   console.log(JSON.stringify({schema:'evercraft.kaidance.company-heartbeat-cli.v1',ok:true,
-   duplicate:result.duplicate,source_proof:result.report?.proof?.status||null,
+   cemetery_research:cemetery,cemetery_classification:cemeteryClassification,duplicate:result.duplicate,source_proof:result.report?.proof?.status||null,
    public_products_observed:result.report?.company_portfolio?.public_products||null,
    next_action_key:result.next_action?.current_next_action?.work_key||null,
    next_action_execution_authorized:false,
