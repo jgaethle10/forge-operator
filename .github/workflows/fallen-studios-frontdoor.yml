@@ -10,6 +10,7 @@ on:
       - 'systemia/media-studio/customer-director-handoff.test.mjs'
       - 'systemia/evercraft-web/browser-worker/verify-fallen-mobile.mjs'
       - 'tests/fallen-studios-frontdoor.test.mjs'
+      - 'tests/fallen-motion-study.test.mjs'
       - 'tests/fallen-studios-public-canary.test.mjs'
       - 'scripts/probe-fallen-studios-public.mjs'
       - '.github/workflows/fallen-studios-frontdoor.yml'
@@ -24,6 +25,7 @@ on:
       - 'systemia/media-studio/customer-director-handoff.test.mjs'
       - 'systemia/evercraft-web/browser-worker/verify-fallen-mobile.mjs'
       - 'tests/fallen-studios-frontdoor.test.mjs'
+      - 'tests/fallen-motion-study.test.mjs'
       - 'tests/fallen-studios-public-canary.test.mjs'
       - 'scripts/probe-fallen-studios-public.mjs'
       - '.github/workflows/fallen-studios-frontdoor.yml'
@@ -39,7 +41,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - run: node --test tests/fallen-studios-frontdoor.test.mjs tests/fallen-studios-public-canary.test.mjs tests/fallen-studios-one-prompt.test.mjs systemia/media-studio/customer-director-handoff.test.mjs
+      - run: node --test tests/fallen-studios-frontdoor.test.mjs tests/fallen-studios-public-canary.test.mjs tests/fallen-studios-one-prompt.test.mjs tests/fallen-motion-study.test.mjs systemia/media-studio/customer-director-handoff.test.mjs
 
   responsive-browser:
     runs-on: ubuntu-latest
