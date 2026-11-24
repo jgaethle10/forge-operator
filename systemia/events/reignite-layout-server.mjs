@@ -19,6 +19,16 @@ const dbPath=path.join(stateDir,'workspace.json');
 const lockPath=path.join(stateDir,'runtime.lock');
 const host='127.0.0.1',port=Number(process.env.REIGNITE_LAYOUT_PORT||8809);
 const origin='http://'+host+':'+port;
+function resolveClientOrigin(){
+  const candidate=process.env.REIGNITE_LAYOUT_PUBLIC_ORIGIN?.trim();
+  if(!candidate)return origin;
+  let u;try{u=new URL(candidate)}catch{throw Error('public_origin_invalid')}
+  if(u.protocol!=='https:'||u.username||u.password||u.search||u.hash||
+     u.pathname!=='/'||!u.hostname||candidate!==u.origin)throw Error('public_origin_must_be_exact_https_origin');
+  return u.origin;
+}
+const clientOrigin=resolveClientOrigin();
+const clientHost=new URL(clientOrigin).host;
 const publicDir=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../../public/reignite/layout');
 const MAX_BYTES=128*1024;
 const json=(value)=>JSON.stringify(value,null,2)+'\n';
@@ -124,7 +134,7 @@ function serve(){
    res.setHeader('Referrer-Policy','no-referrer');
    res.setHeader('X-Frame-Options','DENY');
    res.setHeader('Content-Security-Policy',"default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' blob: data:; connect-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'");
-   if(req.headers.host!==host+':'+port||(req.headers.origin&&req.headers.origin!==origin))
+   if(req.headers.host!==clientHost||(req.headers.origin&&req.headers.origin!==clientOrigin))
      return send(res,403,{error:'same_origin_required'});
    const url=req.url?.split('?')[0];
    if(req.method==='GET'&&has(routes,url)){
@@ -143,7 +153,7 @@ function serve(){
      if(who.role!=='owner')return send(res,403,{error:'owner_only'});
      return send(res,200,{proposals:db.proposals.filter(p=>p.status==='pending').slice(-100),revision:db.plan.revision});
    }
-   if(req.method==='POST'&&req.headers.origin!==origin)
+   if(req.method==='POST'&&req.headers.origin!==clientOrigin)
      return send(res,403,{error:'same_origin_post_required'});
    if(req.method==='POST'&&url==='/api/proposals'){
      if(db.proposals.filter(p=>p.status==='pending').length>=100)return send(res,429,{error:'review_queue_full'});
@@ -177,7 +187,7 @@ function serve(){
      }catch(e){return send(res,e.http||(/revision_conflict/.test(e.message)?409:422),{error:e.message})}
    }
    return send(res,404,{error:'unknown_route'});
- }).listen(port,host,()=>process.stdout.write('REIGNITE owner-only layout service on '+origin+'\n'));
+ }).listen(port,host,()=>process.stdout.write('REIGNITE private layout service on '+origin+'; allowed browser origin '+clientOrigin+'\n'));
 }
 const has=(o,k)=>Object.prototype.hasOwnProperty.call(o,k);
 try{if(process.argv[2]==='serve')serve();else cli()}
