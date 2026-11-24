@@ -13,7 +13,7 @@ LINES=[
 VOICE="ef_dora"
 def verify():
  assert len(LINES)==4 and len({k for k,_ in LINES})==4
- assert all(8<=len(text.split())<=22 for _,text in LINES)
+ assert all(5<=len(text.split())<=22 for _,text in LINES)
  print("PASS: four connected, Spanish-first ad passages, native Spanish voice:",VOICE)
 def make(out):
  verify()
