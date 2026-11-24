@@ -23,6 +23,13 @@
 </form>
 <p id="quickFeedback" class="quick-feedback" role="status">No login required to try an idea. A private invitation is needed to send it into the owner review queue.</p>
 </section>
+<section id="myIdeasPanel" class="my-ideas" hidden aria-labelledby="myIdeasTitle">
+<div class="my-ideas-head">
+<div><div class="overline">Your personal status, not everyone's inbox</div><h2 id="myIdeasTitle">My ideas and next steps</h2><p>Only the invited contributor can see their own suggestions. Planning decisions are not event bookings or venue approvals.</p></div>
+<button type="button" id="refreshMyIdeas" class="small secondary">Check status</button>
+</div>
+<div id="myIdeasList" aria-live="polite" aria-atomic="false"><p>Connect using a private invitation to see your submissions.</p></div>
+</section>
 <details class="invite-details">
 <summary>Have a team invite? Connect to send suggestions</summary>
 <section class="connect" aria-labelledby="connectTitle">
