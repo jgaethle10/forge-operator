@@ -27,6 +27,7 @@ function snapshots(){
       service:'evercraft-edge-dns',
       workload_class:'systemia.evercraft-edge-dns.v1',
       instance_id:'edge_dns_0123456789abcdef',
+      snapshot_sha256:'sha256:'+'f'.repeat(64),
       dns_tcp_port:1053,health_http_port:44677,
       authoritative:true,recursive:false,dns_tcp:true,dns_udp:true,
     },
