@@ -102,7 +102,7 @@ fi
 systemctl is-active ssh.service || true
 ```
 
-## Step 2: Private NextGen-to-Penguin transport (held pending evidence)
+## Step 2: Private NextGen-to-Penguin transport (field acceptance PASSED November 23)
 
 The public edge runs on Penguin and its proxy cannot see NextGen's `127.0.0.1`: that loopback address means **Penguin itself**. We must establish an Evercraft-operated tunnel instead of pointing a Caddy proxy at the wrong machine.
 
@@ -115,7 +115,7 @@ Penguin tunnel socket: 127.0.0.1:18897 (private)
 Penguin Caddy:         HTTPS demand.systemiacommandcenters.com -> 127.0.0.1:18897
 ```
 
-Use a separate `demandrelay` SSH identity with key-based authentication and a server-side `Match User demandrelay` policy: `AllowTcpForwarding remote`, `GatewayPorts no`, `PermitListen 127.0.0.1:18897`, `PasswordAuthentication no`, `PermitTTY no`, `X11Forwarding no`, `AllowAgentForwarding no`, `ForceCommand /bin/false` if compatible with forward-only sessions. The key must be generated locally and never committed or shared. Verify Penguin SSH host-key fingerprint out-of-band before accepting it. **Do not run an open unauthenticated tunnel or enable blanket SSH forwarding.** This bridge is not provisioned by this PR.
+Use a separate `demandrelay` SSH identity with key-based authentication and a server-side `Match User demandrelay` policy: `AllowTcpForwarding remote`, `GatewayPorts no`, `PermitListen 127.0.0.1:18897`, `PasswordAuthentication no`, `PermitTTY no`, `X11Forwarding no`, `AllowAgentForwarding no`, `ForceCommand /bin/false` if compatible with forward-only sessions. The key must be generated locally and never committed or shared. Verify Penguin SSH host-key fingerprint out-of-band before accepting it. **Do not run an open unauthenticated tunnel or enable blanket SSH forwarding.** This bridge was subsequently provisioned and passed the private Penguin loopback HTML identity test. See PRIVATE-TUNNEL-ACCEPTANCE.md.
 
 Once the restricted account, host key, and SSH listener are independently verified, a supervised NextGen service can use a command equivalent to:
 
@@ -127,6 +127,19 @@ ssh -NT -o BatchMode=yes -o ExitOnForwardFailure=yes \
 ```
 
 This is an **illustrative gated command**, not something to run until the endpoint and identity have been verified.
+
+## November 23, 2026 HTTPS publication preflight: verified field facts
+
+The owner ran `inspect-penguin-public-route.sh` on Penguin, returning:
+- `evercraft-public-edge.service` **active**; `evercraft-fabric.service` **active**.
+- Caddy **v2.6.2**, with `*:8443` (TLS-side internal port) and `*:18080` (HTTP-side internal port) listeners. These do not alone establish external public reachability or trusted TLS for the new hostname.
+- Existing Demand route **not present** in `/etc/evercraft/Caddyfile`; one explicit `worlds.systemiacommandcenters.com` site line observed at line 74 using the owner's conservative grep. Other existing hostname handling may be routed differently and needs inspection before appending.
+- `demand.systemiacommandcenters.com` **does not resolve**. `fabric.systemiacommandcenters.com` resolves to `50.46.190.39` from Penguin; this is a DNS observation, not domain ownership verification.
+- Penguin `127.0.0.1:18897` listens **loopback-only** and HTTP response matches Demand Command's title. See `PRIVATE-TUNNEL-ACCEPTANCE.md`.
+
+**Compatibility correction:** Caddy v2.6.2 recognizes `basicauth`, not `basic_auth` (renamed in v2.8). The staged `Caddyfile.demand.example` now uses `basicauth` and remains **INERT**: no DNS, Caddy, proxy, authentication or TLS configuration was modified on Penguin. Do not paste password hashes into GitHub or chat.
+
+**Next accepted prerequisites:** identify authoritative DNS provider/nameservers, preserve all existing records, inspect Caddy global `http_port`/`https_port` and additive site semantics, then use a protected local password hash in a reversible staged Caddy candidate. Never reload a live service until candidate validation, DNS authority and rollback are confirmed.
 
 ## Step 3: Owned public HTTPS edge + DNS (held pending proof)
 
