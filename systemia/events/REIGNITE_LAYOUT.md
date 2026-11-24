@@ -39,6 +39,22 @@ This prints a one-time editor key and its invite ID. Give only that editor key t
 
 It binds only to http://127.0.0.1:8809/ by default, which is **not a remotely accessible public site**. Never directly expose that port. For a future explicitly approved Evercraft-owned HTTPS gateway, set REIGNITE_LAYOUT_PUBLIC_ORIGIN to the exact authorized HTTPS origin (scheme + host, no path/query/credentials). The loopback service then validates the public Host and Origin passed by the trusted reverse proxy; insecure origins are rejected. This is only a preparatory capability: do NOT turn it on without a verified TLS proxy, authenticated team access, appropriate Identity/Passport role policy and browser/security testing. The browser holds the entered key in tab memory only, not cookies or localStorage, and the service requires same-origin, private key, limited request size and a bounded submission queue.
 
+### One-use, one-tap collaborator invitations (source-tested, not remotely deployed)
+
+The owner can create a temporary single-redemption link rather than asking a participant to copy a long editor key:
+
+    node systemia/events/reignite-layout-server.mjs invite-link "Invited photographer" 24
+
+Expiry is 1–72 hours (default 24). The command prints an invite ID (for revocation) and a one-time link. The random bearer grant appears only after a URL fragment (#join=...), not in query parameters or server logs. On opening the link the browser removes the fragment from its address bar before making a same-origin JSON redemption request. The private owner-operated service consumes the grant and returns a 12-hour editor-only session stored only in tab memory.
+
+The contributor can suggest or submit a provisional idea and check only their own proposal status and any rejection note through the My Ideas and Next Steps panel. Multiple users with the same display name remain separated by immutable invitation IDs. The link NEVER grants access to owner reviews, venue authorization, ticketing, funds or real location assignments.
+
+The owner may revoke the invite ID at any time, immediately invalidating existing redeemed editor sessions. Used, expired or revoked invitation links cannot be redeemed again. Share links only through trusted private channels, never public social posts. NEVER include owner credentials in a contributor link.
+
+**Important UX limit:** Refreshing or closing the tab loses the memory-only 12-hour session. The user then needs a new one-use invitation or another previously issued editor key. Durable production identity sessions with secure HttpOnly cookies and CSRF defenses are NOT implemented.
+
+**Important deployment limit:** A local invitation link points to loopback and works only on the owner's machine. A remote version needs a separately verified Evercraft-owned HTTPS gateway and authorized Identity/Passport roles. The current remote link helper assumes /reignite/layout/ as the future path and requires exact REIGNITE_LAYOUT_PUBLIC_ORIGIN matching, appropriate proxy path mapping, and security/browser tests. No remote contributor invitations have been issued or deployed.
+
 To revoke a collaborator locally:
 
     node systemia/events/reignite-layout-server.mjs revoke EDITOR_ID
