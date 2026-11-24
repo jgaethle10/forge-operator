@@ -5,7 +5,7 @@ const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const copy=v=>JSON.parse(JSON.stringify(v));
 const categories={performance:'#f38c64',visual_art:'#baa6e7',heritage:'#dbbc75',quiet:'#7dbfaf',participation:'#80b7df',food:'#e7bd74',circulation:'#aeb8bb',operations:'#a6c78f',protected:'#e9a4ab'};
 const frame={interior:{x:74,y:94,w:852,h:235},campus:{x:36,y:48,w:928,h:355}};
-const state={base:null,draft:null,selected:null,view:'interior',token:null,role:null,actor:null,drag:null,overlay:null,opacity:.45,reviews:[]};
+const state={base:null,draft:null,selected:null,view:'interior',token:null,role:null,actor:null,drag:null,overlay:null,opacity:.45,reviews:[],quickPending:null};
 const clamp=(v,min,max)=>Math.max(min,Math.min(max,v));
 const find=id=>state.draft?.zones.find(z=>z.id===id);
 const msg=text=>$('submissionResult').textContent=text;
@@ -141,7 +141,9 @@ $('addZone').addEventListener('click',()=>{
 });
 $('resetDraft').addEventListener('click',()=>{
  if(changed().length&&!confirm('Discard your current local changes?'))return;
- state.draft=copy(state.base);state.selected=null;render();msg('Draft reset to the current planning revision.');
+ state.draft=copy(state.base);state.quickPending=null;state.selected=null;
+ $('quickSend').textContent='Suggest this experience';$('quickExport').disabled=true;
+ render();msg('Draft reset to the current planning revision.');
 });
 $('zoneForm').addEventListener('submit',e=>{
  e.preventDefault();const z=find(state.selected);if(!z)return;
@@ -279,44 +281,61 @@ function showAdvanced(enabled) {
 $('advancedToggle').addEventListener('click',()=>showAdvanced(!document.body.classList.contains('advanced-open')));
 function quickMessage(text){$('quickFeedback').textContent=text}
 $('quickExport').addEventListener('click',()=>$('downloadDraft').click());
+async function submitQuickCandidate(candidate,reason){
+ const result=await api('/api/proposals','POST',{
+  base_revision:state.base.revision,candidate,reason
+ });
+ state.quickPending=null;state.draft=copy(state.base);state.selected=null;
+ $('quickExport').disabled=true;
+ $('quickSend').textContent='Suggest this experience';
+ $('reason').value='';
+ render();
+ quickMessage('Your idea was received for owner review! Reference '+result.proposal_id+'. This does NOT reserve or approve a space.');
+ msg('Proposal submitted for owner review. The planning map is unchanged until it is reviewed.');
+ if(state.role==='owner')await loadReviews();
+}
 $('quickIdeaForm').addEventListener('submit',async event=>{
  event.preventDefault();
  if(!state.base){quickMessage('The map is not loaded. Try again after the planning canvas appears.');return}
- if(changed().length){
-   quickMessage('You already have an unsent layout draft. Download it or reset the draft before starting another idea.');
+ const hasPending=Boolean(state.quickPending&&changed().length);
+ if(changed().length&&!hasPending){
+   quickMessage('There is an existing unsent advanced draft. Download it or reset the draft before starting another idea.');
    return;
  }
- const form=$('quickIdeaForm');
- const fields={
+ const button=$('quickSend');
+ button.disabled=true;
+ try{
+  if(hasPending){
+   if(!state.token){
+    quickMessage('Your preview is saved in this tab. Connect with your invitation to send it, or download your draft.');
+    return;
+   }
+   await submitQuickCandidate(state.draft,state.quickPending.reason);
+   return;
+  }
+  const form=$('quickIdeaForm');
+  const fields={
    kind:form.elements.kind.value,
    name:form.elements.name.value,
    place:form.elements.place.value,
    description:form.elements.description.value
- };
- const id='zone-'+(globalThis.crypto?.randomUUID?.()||String(Date.now())+'00000000').replaceAll('-','').slice(0,24);
- let candidate;
- try{candidate=createQuickSuggestion(state.base,fields,id)}catch(err){quickMessage('Please check your idea: '+err.message);return}
- const button=$('quickSend');
- button.disabled=true;
- try{
+  };
+  const id='zone-'+(globalThis.crypto?.randomUUID?.()||String(Date.now())+'00000000').replaceAll('-','').slice(0,24);
+  const result=createQuickSuggestion(state.base,fields,id);
   if(state.token){
-   const data=await api('/api/proposals','POST',{
-      base_revision:state.base.revision,
-      candidate:candidate.candidate,reason:candidate.reason
-   });
-   quickMessage('Your idea was sent for review! Reference: '+data.proposal_id+'. It is NOT yet an assigned or approved space.');
-   msg('Proposal received in the owner review queue. No venue activity authorized.');
-   if(state.role==='owner')await loadReviews();
+   await submitQuickCandidate(result.candidate,result.reason);
   }else{
-   state.draft=candidate.candidate;
-   state.view=candidate.zone.map;state.selected=candidate.zone.id;render();
-   $('reason').value=candidate.reason;
+   state.draft=result.candidate;
+   state.quickPending={id:result.zone.id,reason:result.reason};
+   state.view=result.zone.map;state.selected=result.zone.id;render();
+   $('reason').value=result.reason;
    $('quickExport').disabled=false;
-   quickMessage('Your idea is on the preview map. To send it, open the team-invite section and connect. Or download the draft to share through an approved channel. It is NOT submitted yet.');
-   msg('Local draft ready, no submission to Evercraft occurred.');
+   button.textContent='Send my preview for review';
+   quickMessage('Idea previewed! Connect with a team invitation to send it for review, or download the draft. Nothing has been submitted yet.');
+   msg('Local draft ready. No submission to Evercraft occurred.');
   }
  }catch(err){
-   quickMessage('Could not send: '+err.message+'. Nothing has been confirmed in the review queue.');
+   quickMessage('Could not submit: '+err.message+'. No receipt was confirmed; your local draft remains available if one was created.');
  }finally{button.disabled=false}
 });
 
