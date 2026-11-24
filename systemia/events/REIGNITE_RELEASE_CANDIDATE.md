@@ -50,3 +50,22 @@ Tests: `node --test tests/reignite-evidence.test.mjs` runs a real local HTTP ser
 - No public index or publicity of draft organizer/readiness/zone plans. The source snapshot reflects **no imported authenticated evidence**; it does not mean the museum or anyone else has done nothing.
 
 **Merge/deploy rule:** No automatic merge, enabling tickets, sending outreach, booking artists, publishing live event announcements, or switching the site to a public production origin as a side effect of this integration. Request explicit release authorization and supply factual receipts first.
+
+## Contributor one-tap UX integration fix | November 24
+
+**Concrete bug closed in this stacked branch:** the server correctly authenticated one-use invitation cookies, but four browser actions still incorrectly checked only for a manually pasted `state.token`. A one-tap editor could therefore be signed in while the UI refused to submit a quick idea, refused an advanced proposal, or skipped their own statuses.
+
+`public/reignite/layout/app.js` now uses one scoped `hasReviewAccess()` decision for both manual-key and HttpOnly-cookie editors, including:
+
+- New invitation → quick experience idea → POST for owner review
+- Returning after cookie-session refresh → `My Ideas and Next Steps` load
+- Previously drafted suggestion → direct submit after editor authentication
+- Advanced layout proposal submission with the same contributor cookie
+
+`api()` continues sending the correct CSRF header on cookie-authenticated writes. Cookies do **not** grant owner-only evidence or approval access.
+
+New `tests/reignite-contributor-flow.test.mjs` executes the actual browser script inside a dependency-free Node VM with mocked DOM/fetch and the real quick-idea module. It tests invite redemption, saved private status rendering, CSRF-bearing submission, session restoration, pending-preview submission, no-login local-only fallback, and owner controls remaining hidden. It runs in the existing source-check workflow alongside the real local HTTP server tests.
+
+**Validation receipt:** GitHub-native REIGNITE site/layout/evidence/contributor flow proof completed SUCCESS at commit `9ab2ed302578a0ff36aca443aaf80d1f1d2d1111` (run `45497463271`). Events feasibility proof SUCCESS (run `45497463354`), Public mobile publishing audit SUCCESS (run `45497463250`). Generic Forge checks were running at verification. This proves executable browser-state and server integration paths, **not** a real Safari/Chrome interaction or live deployment.
+
+**Release remains held:** no owner-approved live origin, vetted reverse proxy, actual museum evidence, guest invitations, artist contracts, event announcement, ticketing or fundraising. Real-device touch and accessibility QA are required before exposing outside access.
