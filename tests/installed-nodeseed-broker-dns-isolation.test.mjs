@@ -5,6 +5,11 @@ import path from 'node:path';
 import os from 'node:os';
 import dgram from 'node:dgram';
 import {createHash} from 'node:crypto';
+import {execFileSync} from 'node:child_process';
+import {parseOwnedTcpPorts}
+  from '../scripts/inspect-penguin-nodeseed-residents.mjs';
+import {evaluateShadowBrokerSocketBinding}
+  from '../systemia/yard/penguin-shadow-broker-socket-witness.mjs';
 import {pathToFileURL} from 'node:url';
 import {runRehearsalShadowBrokerTransaction}
   from '../systemia/yard/shadow-broker-transaction.mjs';
@@ -175,6 +180,12 @@ test('installed historical NodeSeed preserves synthetic Edge DNS while shadow br
     assert.equal(before.ra,false);
     assert.equal(before.answers,1);
 
+    const ownerSockets=()=>execFileSync('ss',['-H','-ltnp'],{
+      encoding:'utf8',timeout:5000,maxBuffer:2*1024*1024,
+      stdio:['ignore','pipe','ignore'],
+    });
+    const beforeOwnedPorts=parseOwnedTcpPorts(ownerSockets(),process.pid);
+    assert.ok(beforeOwnedPorts.length>=3,'synthetic NodeSeed and DNS sockets not owned');
     let duringObserved=false;
     const transaction=await runRehearsalShadowBrokerTransaction({
       nodeSeedReceipt:seed,
@@ -186,6 +197,15 @@ test('installed historical NodeSeed preserves synthetic Edge DNS while shadow br
           public_route_created:false,
         });
         assert.equal(await countServices(seed.endpoint),2);
+        const duringSockets=ownerSockets();
+        const duringPorts=parseOwnedTcpPorts(duringSockets,process.pid);
+        const addedPorts=duringPorts.filter(p=>!beforeOwnedPorts.includes(p));
+        assert.equal(addedPorts.length,1,'one new broker socket required');
+        const listener=evaluateShadowBrokerSocketBinding({
+          ssOutput:duringSockets,pid:process.pid,brokerPort:addedPorts[0],
+        });
+        assert.equal(listener.verified,true,JSON.stringify(listener));
+        assert.equal(listener.public_route_absence_proven,false);
         const journals=fs.readdirSync(journalParent)
           .filter(name=>name.startsWith('shadow-canary-'));
         assert.equal(journals.length,1);
@@ -225,6 +245,8 @@ test('installed historical NodeSeed preserves synthetic Edge DNS while shadow br
 
     // DNS is still the one live synthetic resident after broker teardown.
     assert.equal(await countServices(seed.endpoint),1);
+    const afterOwnedPorts=parseOwnedTcpPorts(ownerSockets(),process.pid);
+    assert.deepEqual(afterOwnedPorts,beforeOwnedPorts);
     const after=await requestJson(seed.endpoint+dnsJob.result.health_path);
     assert.equal(after.instance_id,dnsHealth.instance_id);
 
