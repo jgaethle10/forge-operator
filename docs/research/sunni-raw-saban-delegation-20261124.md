@@ -46,3 +46,14 @@ Local Node 22 source preparation test result: eight scenarios PASS. CI must be i
 4. Real local inference on owned Penguin / NextGen only after Systemia admission, Passport permissions, NodeSeed leases, reviewer approval, and independent receipts.
 
 Never import RAW's unrestricted shell or infinite autonomous loop into privileged services. Keep its source outside the repo unless Lux grants distribution rights.
+
+
+## 2026-11-24 follow-on: two-role sales reconciliation (shadow only)
+
+New \`systemia/saban/shadow-delegated-sales-reconciliation.mjs\` accepts a coordinator-declared mission with analyst and auditor assignments, a source CSV identity, unique bound task IDs, unique idempotency keys, worker reports and **two real local artifacts**. It runs the existing Work Saban \`checkSalesReport\` second-pass arithmetic check against the source rather than trusting either worker's \`verified\` flag. Both artifacts must agree with their own predeclared SHA-256 and byte counts, and the auditor's declared source and analyst digest must match.
+
+The accompanying \`shadow-delegated-sales-reconciliation.test.mjs\` runs twelve synthetic and adversarial scenarios. The test fixture creates deterministic outputs in a throwaway private directory, not genuine independent model workers. The reconciler is intentionally read-only: it does not dispatch, persist state, invoke models, call shells, send data or grant credentials. Re-running the verifier is deterministic but is **not** durable NodeSeed idempotency or process-crash recovery.
+
+The Saban multiplier workflow now runs **both** evidence test files; the exact PR-head Actions result remains the verification gate. No production runtime integration, invoice, customer deliverable, or external network claim follows from these fixtures.
+
+Limitations: the expected hashes must be frozen by an authorized coordinator **before** work begins, distinct agent IDs in a JSON manifest do not authenticate agents, and checks against a mutable local directory are not a hardened cross-process identity/provenance transport. For real work, bind to the existing signed NodeSeed/Passport receipts and independent source-scoped authorization, then complete the Work Saban pilot's multi-tenant and customer-security review.
