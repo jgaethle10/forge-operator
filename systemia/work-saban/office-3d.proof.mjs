@@ -233,8 +233,18 @@ assert.equal(ui.getState().writer,'running');
 assert.equal(all.find(x=>x.dataset.agent==='writer').dataset.activity,'working','activity is tied to a registered event');
 assert.equal(all.find(x=>x.dataset.agent==='writer').dataset.emotion,'focused','character focuses only on running event');
 ui.consumeExecutorEvent({id:'synthetic-2',state:'verified'});
-assert.equal(ui.getState().writer,'verified');
+assert.equal(ui.getState().writer,'running','status-only verification is rejected');
+ui.consumeExecutorEvent({id:'synthetic-2',state:'verified',receipt:{
+  quality_status:'pass',role:'writer',result_sha256:'b'.repeat(64)
+}});
+assert.equal(ui.getState().writer,'verified','valid writer evidence advances the character');
+ui.consumeExecutorEvent({id:'synthetic-2',state:'requested'});
+assert.equal(ui.getState().writer,'verified','late request cannot erase completed work');
+ui.consumeExecutorEvent({id:'synthetic-2',state:'running'});
+assert.equal(ui.getState().writer,'verified','late running event cannot roll back verified evidence');
 ui.consumeExecutorEvent({id:'synthetic-4',state:'failed'});
+ui.consumeExecutorEvent({id:'synthetic-4',state:'running'});
+assert.equal(ui.getState().auditor,'failed','late running event cannot erase a failure');
 assert.equal(ui.getState().auditor,'failed');
 assert.equal(all.find(x=>x.dataset.agent==='auditor').dataset.emotion,'concerned');
 ui.consumeExecutorEvent({id:'synthetic-999',state:'running'});
