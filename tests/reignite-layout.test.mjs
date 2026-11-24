@@ -222,7 +222,7 @@ test('owner-run loopback HTTP: invited edits -> owner review -> planning revisio
       method:'POST',headers:{Origin:origin,'Content-Type':'application/json'},
       body:JSON.stringify({grant:token})
     });
-    return {status:res.status,data:await res.json()};
+    return {status:res.status,data:await res.json(),cookie:res.headers.get('set-cookie')};
   };
   assert.equal((await redeem(grant,'https://untrusted.example')).status,403,
     'cross-origin request must not consume the invitation');
@@ -232,10 +232,48 @@ test('owner-run loopback HTTP: invited edits -> owner review -> planning revisio
   assert.equal(joined.data.event_approved,false);
   assert.equal(joined.data.venue_authorized,false);
   assert.equal((await redeem(grant)).status,410,'invitation must be single-use');
-  const scopedSession=joined.data.session_key;
-  assert.equal((await call(scopedSession,'/api/plan')).data.role,'editor');
-  assert.deepEqual((await call(scopedSession,'/api/mine')).data.items,[]);
-  assert.equal((await call(scopedSession,'/api/reviews')).status,403);
+  assert.equal(joined.data.session_mode,'cookie');
+  assert.equal(joined.data.session_key,undefined,'a bearer session must never be returned to page scripts');
+  assert.match(joined.cookie,/HttpOnly/);
+  assert.match(joined.cookie,/SameSite=Strict/);
+  assert.match(joined.cookie,/Path=\//);
+  assert.doesNotMatch(joined.cookie,/;\s*Secure/,'local loopback HTTP session is not externally exposed');
+  const browserCookie=joined.cookie.split(';')[0];
+  const csrf=joined.data.csrf_token;
+  assert.match(csrf,/^[A-Za-z0-9_-]{43}$/);
+  const cookieCall=async(url,method='GET',payload,csrfOverride=csrf,origin=base)=>{
+    const response=await fetch(base+url,{
+      method,
+      headers:{Cookie:browserCookie,...(method==='POST'?{
+        Origin:origin,'Content-Type':'application/json',
+        ...(csrfOverride?{'X-Reignite-CSRF':csrfOverride}:{})
+      }:{} )},
+      ...(method==='POST'?{body:JSON.stringify(payload||{})}:{})
+    });
+    return {status:response.status,data:await response.json(),
+      cookie:response.headers.get('set-cookie')};
+  };
+  const restored=await cookieCall('/api/session');
+  assert.equal(restored.status,200);
+  assert.equal(restored.data.role,'editor');
+  assert.equal(restored.data.csrf_token,csrf,'session and CSRF persist across new page load');
+  assert.equal((await cookieCall('/api/plan')).data.role,'editor');
+  assert.deepEqual((await cookieCall('/api/mine')).data.items,[]);
+  assert.equal((await cookieCall('/api/reviews')).status,403);
+  assert.equal((await cookieCall('/api/proposals','POST',{foo:'bar'},null)).status,403,
+    'cookie mutations require a CSRF header');
+  assert.equal((await cookieCall('/api/proposals','POST',{foo:'bar'},'incorrect-csrf')).status,403);
+  assert.equal((await cookieCall('/api/proposals','POST',{foo:'bar'},csrf,'https://attacker.example')).status,403);
+  const cookiePlan=(await cookieCall('/api/plan')).data.plan;
+  const cookieCandidate=structuredClone(cookiePlan);
+  cookieCandidate.zones[2].x=.70;
+  const cookieProposed=await cookieCall('/api/proposals','POST',{
+    base_revision:0,candidate:cookieCandidate,reason:'Contributor suggests better space for a quieter area.'
+  });
+  assert.equal(cookieProposed.status,201);
+  assert.equal((await cookieCall('/api/mine')).data.items.length,1,
+    'cookie-authenticated user can only see their own submission');
+  assert.equal((await call(otherEditor,'/api/mine')).data.items.length,0);
 
   assert.equal((await call('invalid-key','/api/plan')).status,401);
   assert.equal((await call(editor,'/api/reviews')).status,403);
@@ -294,8 +332,25 @@ test('owner-run loopback HTTP: invited edits -> owner review -> planning revisio
 
 
   execFileSync(process.execPath,[fileURL(file),'revoke',oneTapId],{env,encoding:'utf8'});
-  assert.equal((await call(scopedSession,'/api/plan')).status,401,
+  assert.equal((await cookieCall('/api/plan')).status,401,
     'revoking invite must invalidate redeemed sessions immediately');
+
+
+  // Logout must invalidate the cookie immediately, including requests from another tab.
+  const secondJoin=execFileSync(process.execPath,[fileURL(file),'invite-link','Short stay editor','1'],{env,encoding:'utf8'});
+  const secondGrant=secondJoin.match(/#join=([A-Za-z0-9_-]{43})/)?.[1];
+  assert(secondGrant);
+  const signedInAgain=await redeem(secondGrant);
+  const secondCookie=signedInAgain.cookie.split(';')[0];
+  const secondCsrf=signedInAgain.data.csrf_token;
+  const logoutResponse=await fetch(base+'/api/session/logout',{
+    method:'POST',headers:{Cookie:secondCookie,Origin:base,'Content-Type':'application/json',
+      'X-Reignite-CSRF':secondCsrf},body:'{}'
+  });
+  assert.equal(logoutResponse.status,200);
+  assert.match(logoutResponse.headers.get('set-cookie'),/Max-Age=0/);
+  const afterLogout=await fetch(base+'/api/session',{headers:{Cookie:secondCookie}});
+  assert.equal(afterLogout.status,401);
 
   execFileSync(process.execPath,[fileURL(file),'revoke',inviteId],{env,encoding:'utf8'});
   assert.equal((await call(editor,'/api/plan')).status,401,'revocations must take effect without server restart');
@@ -313,12 +368,19 @@ test('one-use browser link is consumed and removed before fetch; never grants or
  assert.match(js,/takeInviteFromFragment/);
  assert.match(js,/window\.history\.replaceState/);
  assert.match(js,/\.\/api\/invite\/redeem/);
+ assert.match(js,/restoreCookieSession/);
+ assert.match(js,/credentials:'same-origin'/);
+ assert.match(js,/\/api\/session\/logout/);
+ assert.match(js,/result\.session_mode!=='cookie'/);
  assert.match(js,/workspace\.role!=='editor'/);
  assert.doesNotMatch(js,/sessionStorage|localStorage|document\.cookie/);
  assert.match(server,/grant_hash:null|grant_hash:hash\(grant\)/);
  assert.match(server,/scope:'propose_and_read_own'/);
  assert.match(server,/redeemed_at/);
  assert.match(server,/expires_at_ms/);
+ assert.match(server,/HttpOnly; SameSite=Strict/);
+ assert.match(server,/csrf_token_required/);
+ assert.match(server,/session_cookie|sessionCookie/);
 });
 
 test('explicit remote browser origin cannot be insecure or supplied with a path',()=>{
