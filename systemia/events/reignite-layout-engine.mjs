@@ -89,7 +89,7 @@ export function calculateDiff(current,proposed){
  for(const zone of current.zones)if(!after.has(zone.id))changes.push({zone_id:zone.id,kind:'removed',name:zone.name});
  return changes;
 }
-export function makeProposal(current,candidate,{actor_ref,reason,base_revision}={}){
+export function makeProposal(current,candidate,{actor_id=null,actor_ref,reason,base_revision}={}){
  if(!Number.isInteger(base_revision)||base_revision!==current.revision)throw Error('revision_conflict');
  const actor=clean(actor_ref,80),why=clean(reason,900);
  if(actor.length<3||why.length<12)throw Error('proposal_identity_and_reason_required');
@@ -99,6 +99,7 @@ export function makeProposal(current,candidate,{actor_ref,reason,base_revision}=
  return {
   schema:'evercraft.reignite.layout-proposal.v1',id:'p-'+randomUUID(),
   site_id:current.site_id,base_revision:current.revision,
+  actor_id:typeof actor_id==='string'&&/^(owner|editor-[0-9a-f]{12})$/.test(actor_id)?actor_id:null,
   actor_ref:actor,reason:why,changes,
   candidate:norm,status:'pending',submitted_at:new Date().toISOString(),
   reviewed_at:null,review_note:null,reviewer_ref:null
@@ -119,4 +120,36 @@ export function decideProposal(plan,proposal,{decision,reviewer_ref,review_note}
    plan_hash:digest(next),reviewed_at:updated.reviewed_at,
    event_approved:false,venue_authorized:false,source_only_planning:true,
  }};
+}
+
+
+/**
+ * Minimal contributor-visible status feed.
+ * Only stable authenticated actor IDs match, not mutable display names.
+ * Never returns candidate geometry, third-party proposals, reviewer keys or owner-only receipts.
+ */
+export function myProposalSummaries(proposals, actor_id, current_revision){
+ if(typeof actor_id!=='string'||!/^(owner|editor-[0-9a-f]{12})$/.test(actor_id))throw Error('actor_id_invalid');
+ if(!Array.isArray(proposals)||!Number.isInteger(current_revision))throw Error('proposal_status_data_invalid');
+ return proposals.filter(p=>p.actor_id===actor_id).slice(-80).reverse().map(p=>{
+   const pending=p.status==='pending', merged=p.status==='merged_for_planning', rejected=p.status==='rejected';
+   const outdated=pending&&p.base_revision!==current_revision;
+   return {
+     proposal_id:p.id,
+     title:p.changes?.[0]?.name||'Layout suggestion',
+     summary:p.changes?.map(c=>({kind:c.kind,name:c.name}))||[],
+     submitted_at:p.submitted_at,
+     status:p.status,
+     base_revision:p.base_revision,
+     outdated,
+     reviewed_at:p.reviewed_at,
+     review_note:rejected?p.review_note:null,
+     next_action:merged?'Added to the planning draft only. No venue space or performance is booked.':
+       rejected?'Read the review note and submit a revised suggestion only if you want to.':
+       outdated?'The planning map has changed. The owner may request a fresh proposal.':
+       'Your suggestion is waiting for owner review. No action needed right now.',
+     event_approved:false,
+     venue_authorized:false,
+   };
+ });
 }
