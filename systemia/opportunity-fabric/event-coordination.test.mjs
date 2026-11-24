@@ -1,9 +1,39 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { assessEventFeasibility, eventWorkPackages, EVENT_SCENARIOS, assessEventFromDemandQueue } from './event-coordination.mjs';
+import { assessEventFeasibility, eventWorkPackages, EVENT_SCENARIOS, assessEventFromDemandQueue, assessReigniteConcept, REIGNITE_CONCEPT_FEATURES, eventNextActions } from './event-coordination.mjs';
 
 const caseId = 'synthetic:heritage-event-001';
 const assess = options => assessEventFeasibility({ opportunity_id: caseId, ...options });
+
+test('REIGNITE is one-call, review-first with a clear five-action owner dashboard',()=>{
+ const packet=assessReigniteConcept();
+ const ids=new Set(packet.checks.map(g=>g.id));
+ assert.equal(packet.opportunity_id,'reignite:hangar-b');
+ assert.equal(packet.scenario,'outdoor_separate');
+ for(const id of [...REIGNITE_CONCEPT_FEATURES,'jurisdiction_and_event_hours'])
+   assert(ids.has(id),'missing in REIGNITE flagship profile: '+id);
+ assert.equal(REIGNITE_CONCEPT_FEATURES.length,10);
+ const actions=eventNextActions(packet);
+ assert.equal(actions.total_requirements,packet.checks.length);
+ assert.equal(actions.next.length,5);
+ assert.equal(actions.reported_holds,0);
+ assert.equal(actions.evidence_missing,packet.checks.length);
+ assert.equal(actions.event_approved,false);
+ assert.equal(actions.ticket_sales_authorized,false);
+ assert.equal(packet.external_contact_authorized,false);
+ assert.equal(packet.charitable_collection_authorized,false);
+ assert.equal(packet.performance_or_testing_authorized,false);
+ const held=assessReigniteConcept({evidence:{
+   jurisdiction_and_event_hours:{finding:'not_permitted',source_ref:'synthetic:hours',observed_at:'2026-11-24T20:00:00Z'}
+ }});
+ const summary=eventNextActions(held);
+ assert.equal(held.stage,'hold_pending_qualified_review');
+ assert.equal(summary.reported_holds,1);
+ assert.equal(summary.next[0].requirement,'jurisdiction_and_event_hours');
+ assert.equal(summary.next[0].priority,'stop_and_review');
+ assert.equal(summary.event_approved,false);
+ assert.throws(()=>eventNextActions(packet,{limit:50}),/invalid_action_limit/);
+});
 
 test('unconfirmed heritage event starts with every external action denied', () => {
   const result = assess();
