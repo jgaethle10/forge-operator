@@ -1,0 +1,47 @@
+name: Pacific ES Native Voice Private
+on:
+  push:
+    branches: [studio/pacific-es-v1-native-voice-20261124]
+    paths:
+      - systemia/media-studio/pacific-es-v1-native.py
+      - .github/workflows/pacific-es-v1-native.yml
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  voice:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - name: Install native Kokoro Spanish TTS
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq espeak-ng libsndfile1
+          python -m pip install --disable-pip-version-check 'kokoro==0.9.4' 'soundfile>=0.12,<1.0'
+      - name: Generate native Spanish voice
+        env: {HF_HUB_DISABLE_TELEMETRY: "1"}
+        run: python systemia/media-studio/pacific-es-v1-native.py
+      - name: Verify actual files
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json, hashlib, wave
+          folder=Path('pacific-es-native-voice-private')
+          r=json.loads((folder/'voice_receipt.json').read_text())
+          assert len(r['lines'])==16
+          for x in r['lines']:
+            file=folder/x['file']
+            assert hashlib.sha256(file.read_bytes()).hexdigest()==x['sha256']
+            with wave.open(str(file),'rb') as w:
+              assert w.getnchannels()==1 and w.getframerate()==24000
+              assert 0.45 < w.getnframes()/24000 < 8
+          print('Sixteen independent native Spanish clips verified.')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pacific-es-v1-native-private
+          path: pacific-es-native-voice-private/
+          retention-days: 7
+          if-no-files-found: error
