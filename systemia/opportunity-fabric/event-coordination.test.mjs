@@ -115,3 +115,41 @@ test('Demand Desk adapter rejects absent/duplicate/closed or malformed queue ent
     ...queue, opportunities: [{ id: caseId, status: 'Closed' }]
   }, caseId), /demand_opportunity_not_open/);
 });
+
+test('hybrid silent zone gates outdoor stage and indoor headphone crowd separately', () => {
+  const result = assess({ scenario: 'hybrid_silent_zone' });
+  const byId = new Map(result.checks.map(check => [check.id,check]));
+  for (const id of [
+    'outdoor_ground_and_wind','outdoor_transmission','silent_zone_footprint',
+    'headphone_comms','silent_zone_vibration','artifact_protection',
+    'temporary_dome_review','visual_effects_review',
+  ]) assert(byId.has(id), 'missing hybrid gate: '+id);
+  assert.equal(result.checks.length, 20);
+  assert.equal(result.event_approved, false);
+  assert.equal(result.performance_or_testing_authorized, false);
+  assert.equal(result.ticket_sales_authorized, false);
+  assert.equal(result.external_contact_authorized, false);
+  assert(result.next_work.some(w => w.requirement === 'silent_zone_vibration'));
+});
+
+test('claiming a dome soundproof or a silent disco safe does not bypass professional reviews', () => {
+  const baseline = assess({ scenario: 'hybrid_silent_zone' });
+  const evidence = Object.fromEntries(baseline.checks.map(check => [check.id, {
+    source_ref: 'synthetic:' + check.id, observed_at: '2026-11-23T21:00:00-08:00',
+    finding: 'approved', soundproof: true, safe: true,
+  }]));
+  const result = assess({ scenario: 'hybrid_silent_zone', evidence });
+  assert.equal(result.stage, 'dossier_ready_for_independent_review');
+  assert.equal(result.event_approved, false);
+  assert.equal(result.charitable_collection_authorized, false);
+  assert(result.checks.every(check => check.status === 'submitted_unverified'));
+});
+
+test('hybrid unsafe crowd findings trigger stop instead of permission', () => {
+  const result=assess({scenario:'hybrid_silent_zone', evidence:{
+    silent_zone_vibration: { finding: 'unsafe', source_ref: 'synthetic:structural',
+      observed_at:'2026-11-23T21:00:00-08:00' }
+  }});
+  assert.equal(result.stage,'hold_pending_qualified_review');
+  assert(result.next_work.some(work => work.requirement==='silent_zone_vibration' && work.priority==='stop_and_review'));
+});
