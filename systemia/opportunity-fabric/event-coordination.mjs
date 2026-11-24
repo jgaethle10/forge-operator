@@ -153,7 +153,11 @@ export function eventNextActions(assessment,{limit=5}={}) {
     throw Error('assessment_required');
   if(!Number.isInteger(limit)||limit<1||limit>30)throw Error('invalid_action_limit');
   const holds=assessment.next_work.filter(x=>x.priority==='stop_and_review');
-  const others=assessment.next_work.filter(x=>x.priority!=='stop_and_review');
+  const first=['venue_authority','jurisdiction_and_event_hours','current_condition','space_and_use','structural_review','fire_life_safety'];
+  const others=assessment.next_work.filter(x=>x.priority!=='stop_and_review').sort((a,b)=>{
+    const rank=id=>first.indexOf(id)<0?first.length:first.indexOf(id);
+    return rank(a.requirement)-rank(b.requirement);
+  });
   const pending=holds.concat(others);
   return {
     schema:'evercraft.events.next-actions.v1',
