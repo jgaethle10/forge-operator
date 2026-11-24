@@ -1,0 +1,63 @@
+name: Fallen Exotic Chiles V20 Original C Natural Storytelling
+on:
+  push:
+    branches: [production/fallen-original-mature-narrator-audition-20261124]
+    paths:
+      - 'systemia/media-studio/voice-foundry/exotic-v20-natural-storyteller.py'
+      - '.github/workflows/fallen-exotic-v20-original-c.yml'
+permissions: {contents: read,actions: read}
+jobs:
+  v20:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install original Qwen voice synthesis runtime
+        run: |
+          python -m pip install --disable-pip-version-check huggingface_hub soundfile numpy
+          curl -fLsS --retry 3 'https://github.com/CrispStrobe/CrispASR/releases/latest/download/crispasr-linux-x86_64.tar.gz' -o /tmp/crispasr.tar.gz
+          mkdir -p /tmp/crispasr-dist /tmp/voice-model
+          tar -xzf /tmp/crispasr.tar.gz -C /tmp/crispasr-dist
+          BIN="$(find /tmp/crispasr-dist -type f -name crispasr | head -n 1)"
+          test -n "$BIN"
+          install -m 755 "$BIN" /tmp/crispasr_voice
+          LIB_DIRS="$(find /tmp/crispasr-dist -type f -name '*.so*' -printf '%h\n' | sort -u | paste -sd ':' -)"
+          printf 'LD_LIBRARY_PATH=%s\n' "$LIB_DIRS" >> "$GITHUB_ENV"
+          LD_LIBRARY_PATH="$LIB_DIRS" ldd /tmp/crispasr_voice | tee /tmp/crispasr-deps.txt
+          ! grep -q 'not found' /tmp/crispasr-deps.txt
+          hf download cstr/qwen3-tts-1.7b-base-GGUF qwen3-tts-12hz-1.7b-base-q8_0.gguf --local-dir /tmp/voice-model
+          hf download cstr/qwen3-tts-tokenizer-12hz-GGUF qwen3-tts-tokenizer-12hz.gguf --local-dir /tmp/voice-model
+      - name: Recover verified original synthetic C voice from private artifact
+        env: {GH_TOKEN: '${{ secrets.GITHUB_TOKEN }}'}
+        run: |
+          mkdir -p /tmp/voice-original-C
+          curl --fail --location --silent --show-error \
+            -H "Authorization: Bearer ${GH_TOKEN}" -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/artifacts/14963005488/zip" \
+            -o /tmp/synthetic-original-c.zip
+          unzip -q /tmp/synthetic-original-c.zip '03_english_cloned_from_spanish_anchor.wav' -d /tmp/voice-original-C
+          echo 'ORIGINAL_SYNTHETIC_C_WAV=/tmp/voice-original-C/03_english_cloned_from_spanish_anchor.wav' >> "$GITHUB_ENV"
+      - name: Render six new natural confident storyteller phrases
+        env: {OMP_NUM_THREADS: '4'}
+        run: python systemia/media-studio/voice-foundry/exotic-v20-natural-storyteller.py
+      - name: Integrity preflight for every WAV and non-release receipt
+        run: |
+          python - <<'PY'
+          import hashlib, json, pathlib, wave
+          root=pathlib.Path('exotic-v20-c-natural-storyteller')
+          d=json.loads((root/'receipt.json').read_text())
+          assert len(d['tracks'])==6 and not d['customerReleaseApproved']
+          assert d['noCelebrityOrRealPersonSource']
+          for item in d['tracks']:
+            p=root/item['file']
+            with wave.open(str(p),'rb') as w:
+              assert w.getframerate()>=16000 and w.getnframes()>0
+            assert hashlib.sha256(p.read_bytes()).hexdigest()==item['sha256']
+          print('PASS: source-verified six original narration performances')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: exotic-v20-original-c-natural-storyteller-private
+          path: exotic-v20-c-natural-storyteller/
+          retention-days: 3
+          if-no-files-found: error
