@@ -9,17 +9,16 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 55
     steps:
-      - name: Install CPU build dependencies
+      - name: Retrieve official open-source CPU VoiceDesign runtime
         run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y -qq cmake ninja-build libopenblas-dev
           python -m pip install --disable-pip-version-check huggingface_hub soundfile numpy
-      - name: Build open-source Qwen3-TTS VoiceDesign CPU engine
-        run: |
-          git clone --depth 1 --recurse-submodules --shallow-submodules https://github.com/CrispStrobe/CrispASR.git /tmp/crispasr
-          cmake -S /tmp/crispasr -B /tmp/crispasr/build -G Ninja -DCMAKE_BUILD_TYPE=Release
-          cmake --build /tmp/crispasr/build --target crispasr -j 4
-          test -x /tmp/crispasr/build/bin/crispasr
+          curl -fLsS --retry 3 'https://github.com/CrispStrobe/CrispASR/releases/latest/download/crispasr-linux-x86_64.tar.gz' -o /tmp/crispasr-cpu.tar.gz
+          mkdir -p /tmp/crispasr-dist
+          tar -xzf /tmp/crispasr-cpu.tar.gz -C /tmp/crispasr-dist
+          BIN="$(find /tmp/crispasr-dist -type f -name crispasr | head -n 1)"
+          test -n "$BIN"
+          install -m 755 "$BIN" /tmp/crispasr_voice
+          sha256sum /tmp/crispasr_voice /tmp/crispasr-cpu.tar.gz
       - name: Download Apache-licensed VoiceDesign GGUF and codec weights
         run: |
           mkdir -p /tmp/voice-model
@@ -32,14 +31,14 @@ jobs:
           OMP_NUM_THREADS: "4"
         run: |
           mkdir -p original-mexican-voicedesign-review
-          timeout 900 /tmp/crispasr/build/bin/crispasr \
+          timeout 900 /tmp/crispasr_voice \
             --backend qwen3-tts-1.7b-voicedesign \
             -m /tmp/voice-model/qwen3-tts-12hz-1.7b-voicedesign-q8_0.gguf \
             --codec-model /tmp/voice-model/qwen3-tts-tokenizer-12hz.gguf \
             --instruct "An original Mexican male storyteller in his late sixties, speaking clear English with a natural Mexican Spanish-influenced accent. Resonant warm low baritone, slightly weathered husky timbre, confident, unhurried, restrained wit and a dry close-microphone studio sound. Never an imitation of a famous speaker." \
             --tts "Ricky grows extraordinary peppers. Exotic Chiles brings the fire." \
             --tts-output original-mexican-voicedesign-review/01_weathered_storyteller.wav
-          timeout 900 /tmp/crispasr/build/bin/crispasr \
+          timeout 900 /tmp/crispasr_voice \
             --backend qwen3-tts-1.7b-voicedesign \
             -m /tmp/voice-model/qwen3-tts-12hz-1.7b-voicedesign-q8_0.gguf \
             --codec-model /tmp/voice-model/qwen3-tts-tokenizer-12hz.gguf \
