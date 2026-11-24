@@ -8,6 +8,8 @@ import {createHash} from 'node:crypto';
 import {pathToFileURL} from 'node:url';
 import {runRehearsalShadowBrokerTransaction}
   from '../systemia/yard/shadow-broker-transaction.mjs';
+import {inspectFreshBrokerState}
+  from '../systemia/yard/shadow-broker-fresh-state-witness.mjs';
 
 const INSTALLED_ROOT='/opt/evercraft/forge-operator';
 const EXPECTED={
@@ -184,6 +186,16 @@ test('installed historical NodeSeed preserves synthetic Edge DNS while shadow br
           public_route_created:false,
         });
         assert.equal(await countServices(seed.endpoint),2);
+        const journals=fs.readdirSync(journalParent)
+          .filter(name=>name.startsWith('shadow-canary-'));
+        assert.equal(journals.length,1);
+        const privateJournal=path.join(journalParent,journals[0]);
+        const isolation=inspectFreshBrokerState({
+          nodeRoot:seedRoot,journalDir:privateJournal,stage:'during',
+        });
+        assert.equal(isolation.verified,true,JSON.stringify(isolation));
+        assert.equal(isolation.state_directory_empty,true);
+        assert.equal(isolation.historical_grants_read,false);
         const middleHealth=await requestJson(
           seed.endpoint+dnsJob.result.health_path
         );
@@ -201,6 +213,12 @@ test('installed historical NodeSeed preserves synthetic Edge DNS while shadow br
     assert.equal(duringObserved,true);
     assert.equal(transaction.ok,true,JSON.stringify(transaction));
     assert.equal(transaction.release_confirmed,true);
+    const postIsolation=inspectFreshBrokerState({
+      nodeRoot:seedRoot,journalDir:transaction.journal_directory,
+      stage:'after',
+    });
+    assert.equal(postIsolation.verified,true,JSON.stringify(postIsolation));
+    assert.equal(postIsolation.state_directory_empty,true);
     assert.equal(transaction.authorized_devices,0);
     assert.equal(transaction.historical_grants_imported,false);
     assert.equal(transaction.public_route_created,false);
