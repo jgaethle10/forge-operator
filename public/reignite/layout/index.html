@@ -23,6 +23,38 @@
 </form>
 <p id="quickFeedback" class="quick-feedback" role="status">No login required to try an idea. A private invitation is needed to send it into the owner review queue.</p>
 </section>
+<section id="ownerReadinessPanel" class="owner-evidence" hidden aria-labelledby="ownerReadinessTitle">
+<div class="owner-head">
+<div><div class="overline">Private organizer desk · evidence references only</div>
+<h2 id="ownerReadinessTitle">What needs attention next?</h2>
+<p>One source, one review requirement. Nothing recorded here grants permission to proceed or replaces the museum, engineers, or permitting authorities.</p></div>
+<button id="refreshOwnerReadiness" class="small secondary" type="button">Refresh blockers</button>
+</div>
+<div id="ownerReadinessSummary" class="owner-metrics" role="status">No authenticated evidence imported in this preview.</div>
+<ol id="ownerReadinessActions" class="owner-actions"></ol>
+<details class="owner-source-form">
+<summary>Record a source reference or reported concern</summary>
+<form id="ownerEvidenceForm" autocomplete="off">
+<label for="ownerEvidenceGate">Which requirement?
+<select id="ownerEvidenceGate" name="gate_id" required></select></label>
+<label for="ownerEvidenceSource">Existing evidence reference
+<input id="ownerEvidenceSource" name="source_ref" maxlength="300" required placeholder="https://official.example/document OR private-ledger:venue/record001"></label>
+<label for="ownerEvidenceFinding">What does the source report?
+<select id="ownerEvidenceFinding" name="finding" required>
+<option value="submitted">Submitted for independent review, not verified</option>
+<option value="unsafe">Unsafe concern reported, STOP for qualified review</option>
+<option value="denied">Permission denied or declined, STOP</option>
+<option value="not_permitted">Not permitted under reported conditions, STOP</option>
+<option value="unknown">Unclear, still requires independent review</option>
+</select></label>
+<label for="ownerEvidenceNote">Why is this relevant?
+<textarea id="ownerEvidenceNote" name="note" maxlength="800" minlength="15" rows="3" required placeholder="Record what the source is about and whose qualified review is still required. No private contents or access tokens."></textarea></label>
+<div class="control-row"><button type="submit" id="ownerEvidenceSubmit">Record for review</button></div>
+<p class="sub">Use an official HTTPS source URL without query tokens or a reference to an existing privately held document. Uploads, confidential contents, venue drawings, and personal data do not belong in this form.</p>
+</form>
+</details>
+<p id="ownerEvidenceResult" class="feedback" role="status" aria-live="polite"></p>
+</section>
 <section id="myIdeasPanel" class="my-ideas" hidden aria-labelledby="myIdeasTitle">
 <div class="my-ideas-head">
 <div><div class="overline">Your personal status, not everyone's inbox</div><h2 id="myIdeasTitle">My ideas and next steps</h2><p>Only the invited contributor can see their own suggestions. Planning decisions are not event bookings or venue approvals.</p></div>
