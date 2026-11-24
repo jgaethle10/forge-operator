@@ -145,7 +145,10 @@ function serve(){
           secureCompare(candidate,session.hash))
          return {role:'editor',label:invite.label,id:invite.id,auth_kind:'key'};
      }
+     // A wrong explicit key must not silently fall back to a valid editor cookie.
+     return null;
    }
+   if(raw!==undefined&&raw!==null&&raw!=='')return null;
    if(cookie){
      const candidate=hash(cookie);
      for(const session of authNow.sessions||[]){
