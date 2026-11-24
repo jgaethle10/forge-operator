@@ -137,3 +137,42 @@ sets both fields to null rather than falsely reporting `false`.
 Its observations can therefore never themselves satisfy the existing
 full physical acceptance validator. The exact JS bytes loaded in memory
 also remain unproven. Do not weaken either boundary for a green result.
+
+
+## 2026-11-23: 73 verified checks; new OS loopback witness staged
+
+The founder ran pinned commit `16a4e03d0b125485cf5fedcb67fe9fd7c235fd6b`:
+**7/7 PASS** across four fresh broker private-state tests and three
+installed historical Compute/DNS coexistence regressions. The fresh
+broker directory remained empty during and after synthetic broker activity,
+with no legacy authority files read. Protected Penguin systemd unit
+states remained unchanged. This establishes **73/73 cumulative distinct
+verified checks** across separate sessions.
+
+A new read-only socket witness is staged at
+`systemia/yard/penguin-shadow-broker-socket-witness.mjs`. For an
+observed zero-authority broker, it requires precisely one OS TCP listening
+socket on **127.0.0.1** at the broker port, owned by the
+`evercraft-nodeseed.service` MainPID. It rejects wildcard, LAN, IPv6,
+unowned, duplicated, mismatched, or missing sockets. A new pure test suite
+covers the witness; the physical phase observer and final structural
+acceptance validator now require this evidence.
+
+The installed-historical-Compute rehearsal also compares PID-owned
+listeners before, during and after broker operation to prove the extra
+socket is a single loopback-only broker listener and disappears after
+lease release.
+
+**All new tests and changed regressions above are staged but not yet
+founder-run.** Green results must not be added to the verified count.
+
+**Critical limit:** A loopback-only bind does not prove that Caddy,
+an outbound tunnel, another local proxy, a router, or a provider route
+cannot expose that broker externally. The code explicitly reports
+`public_route_absence_proven:false` and retains `public_route_created:null`
+in the observed phase snapshot. Likewise it does not inspect historical
+device grants, which remain unproven absent globally.
+
+A future physical canary still requires a separate, independently
+trusted route/grant evidence source, reviewed rollback and one-time
+operator authorization. The physical `--run` mode stays HARD DISABLED.
