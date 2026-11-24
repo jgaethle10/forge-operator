@@ -125,3 +125,32 @@ test('unexpected key or malformed base64 in sealed package is rejected even with
  assert.throws(()=>fx.open(digest),/encrypted_fields_invalid/);
  assert.equal(fs.existsSync(fx.opened),false);
 });
+
+test('broker-compatible private token with final newline is sealed and restored canonically',t=>{
+ const fx=fixture(t);
+ fs.writeFileSync(fx.tokenFile,fx.token+'\n',{mode:0o600});
+ const created=fx.prep();
+ assert.equal(created.plaintextReturned,false);
+ const installed=fx.open(created.sha256);
+ assert.equal(installed.status,'PRIVATE_SCOPED_CREDENTIAL_WRITTEN');
+ assert.equal(fs.readFileSync(fx.opened,'utf8'),fx.token);
+ assert.equal(fs.readFileSync(fx.packageFile,'utf8').includes(fx.token),false);
+});
+test('invalid broker-token characters and embedded whitespace refuse packaging',t=>{
+ const fx=fixture(t);
+ for(const candidate of [
+  'Bearer '+fx.token,'bad!'+fx.token,fx.token+'\nEXTRA',
+  fx.token+' \n','too-short',fx.token+'\n\n'
+ ]){
+  fs.writeFileSync(fx.tokenFile,candidate,{mode:0o600});
+  assert.throws(()=>fx.prep(),/token_format_invalid/);
+  assert.equal(fs.existsSync(fx.packageFile),false);
+ }
+});
+test('private key PEM cannot be passed as recipient public key',t=>{
+ const fx=fixture(t);
+ const recipient=fs.readFileSync(fx.privateKey);
+ fs.writeFileSync(fx.pub,recipient,{mode:0o600});
+ assert.throws(()=>fx.prep(),/recipient_public_key_invalid/);
+ assert.equal(fs.existsSync(fx.packageFile),false);
+});
