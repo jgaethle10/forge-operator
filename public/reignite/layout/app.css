@@ -31,3 +31,19 @@ body:not(.advanced-open) #advancedEditor{display:none}
 body.advanced-open #advancedEditor{display:grid}
 @media(max-width:850px){.quick-form{grid-template-columns:repeat(2,minmax(0,1fr))}.quick-detail{grid-column:1/-1}.quick-action{grid-column:1/-1}.quick-head{display:block}.quick-step{display:inline-block;margin:12px 0 16px}}
 @media(max-width:590px){.quick-start{padding:18px 15px}.quick-form{grid-template-columns:1fr}.quick-detail,.quick-action{grid-column:auto}.quick-head h2{font-size:34px}.quick-action button{width:100%;flex:auto}.advanced-bar{align-items:flex-start;flex-direction:column}.advanced-bar button{width:100%}}
+
+/* Participant-facing private status: one next action, clear when nothing is required. */
+.my-ideas{background:#1b292d;border:1px solid #587179;border-radius:12px;padding:20px 22px;margin:13px 0}
+.my-ideas-head{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:15px}
+.my-ideas-head h2{font-size:23px;letter-spacing:-.035em;margin:5px 0 3px}
+.my-ideas-head p{font-size:12px;color:#c2d0d2;margin:0;max-width:650px}
+.idea-status{border:1px solid #455961;background:#111c20;border-radius:9px;padding:14px 16px;margin:9px 0;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:9px 16px;align-items:start}
+.idea-status h3{font-size:16px;margin:0 0 5px}
+.idea-status p{font-size:12px;color:#bdc9cc;margin:0}
+.proposal-id{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;overflow-wrap:anywhere}
+.idea-state{font-size:11px;font-weight:850;letter-spacing:.02em;color:#f7d1a7;text-align:right}
+.idea-state.merged_for_planning{color:#b7e0bd}
+.idea-state.rejected{color:#f8b7a6}
+.idea-action{grid-column:1/-1;color:#f3e7d4!important;font-size:13px!important;font-weight:700}
+.my-review{grid-column:1/-1;background:#293940;padding:9px 10px;border-radius:6px;color:#dbe7e9!important}
+@media(max-width:670px){.my-ideas{padding:16px 14px}.my-ideas-head{align-items:flex-start;flex-direction:column}.idea-status{grid-template-columns:1fr}.idea-state{text-align:left}}
