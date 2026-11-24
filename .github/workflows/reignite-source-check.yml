@@ -1,10 +1,12 @@
-name: REIGNITE site source proof
+name: REIGNITE site and collaborative layout proof
 
 on:
   pull_request:
     paths:
       - 'public/reignite/**'
       - 'tests/reignite-site.test.mjs'
+      - 'tests/reignite-layout.test.mjs'
+      - 'systemia/events/reignite-layout-*.mjs'
       - '.github/workflows/reignite-source-check.yml'
   workflow_dispatch:
 
@@ -12,9 +14,9 @@ permissions:
   contents: read
 
 jobs:
-  site-source-proof:
+  site-and-layout-proof:
     runs-on: ubuntu-24.04
-    timeout-minutes: 4
+    timeout-minutes: 6
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
@@ -22,5 +24,10 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Test REIGNITE site honesty, access and ownership
-        run: node --test tests/reignite-site.test.mjs
+      - name: Syntax-check owned layout scripts
+        run: |
+          node --check public/reignite/layout/app.js
+          node --check systemia/events/reignite-layout-engine.mjs
+          node --check systemia/events/reignite-layout-server.mjs
+      - name: Test source honesty, facility proposals, invited editor and owner review
+        run: node --test tests/reignite-site.test.mjs tests/reignite-layout.test.mjs
