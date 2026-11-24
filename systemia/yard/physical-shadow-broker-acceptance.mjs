@@ -70,6 +70,7 @@ function brokerValid(b){
   return plain(b)&&b.service==='remote-capacity-broker'&&
     BROKER_ID.test(String(b.instance_id||''))&&
     strictLoopback(b.endpoint)&&
+    b.loopback_listener_verified===true&&
     b.authorized_devices===0&&b.registered_nodes===0&&
     b.pending_enrollment_requests===0&&
     b.deployment_receipt_bound===false&&
