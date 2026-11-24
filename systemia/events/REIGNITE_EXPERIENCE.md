@@ -46,6 +46,16 @@ This is one straightforward **one-minute idea** interaction, not a survey. Behin
 - Each participant receives a single latest source of truth for their own tasks and schedule, not multiple overlapping messages.
 - Accessible labels, keyboard operation, readable contrast, reduced motion and screen-reader status.
 
+## One-stop organizer home (now in site-source review)
+
+The REIGNITE concept page links to `public/reignite/organizer/index.html` with **just two organizer choices**: review the current blockers or examine proposed venue zones and contributor suggestions. This is a routing page, not another copy of the safety checklist, new CRM, task dispatcher or account system.
+
+**Safety of incomplete integration:** the canonical readiness preview exists in separate draft Events PR #2548 at `public/reignite/readiness/index.html`. The organizer home only enables its readiness link after a same-origin HTTP read confirms that the actual unindexed, clearly non-live source preview is present. On the current site-only branch, it shows a plain statement that the two feature branches have not yet been released together. It does not send visitors to an unavailable route or silently replace the source preview with invented permit statuses.
+
+The existing protected layout editor remains the sole write/review path, under `/reignite/layout/`. Invited contributor sessions stay scoped to their own ideas; the organizer home itself has **no credential entry, private data, publishing, payment or authority to approve areas**. A successful GitHub build is not museum or event permission.
+
+**Release gate:** PR #2548 (Events rules/readiness) and PR #2553 (site/layout/organizer home) must both undergo review and enter the same authorized Evercraft-owned artifact bundle before the readiness link is presented as available. Verify owner-only paths, local mobile browser behavior, same-origin routing, CSP and site-approved public visibility before deployment. No public launch is requested by this planning-only change.
+
 ## The next release increments
 
 1. **Trusted remote invited access:** replace copy-paste local keys with a simple owner-issued, short-lived, one-tap session on an Evercraft-owned HTTPS origin using actual Identity/Passport/Interaction Ledger security, with scoped view/submit/review capabilities, expiry and revocation. No raw secrets in public URLs, query parameters, GitHub or logs.
