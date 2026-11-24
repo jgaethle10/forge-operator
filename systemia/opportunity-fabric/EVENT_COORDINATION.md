@@ -49,6 +49,28 @@ Treat the above as a *concept review packet*, not a certified engineering analys
 
 No path in this source module grants venue approval, publishes a public event, dispatches an agent, contacts a partner, starts a test, collects charitable donations or opens ticketing. Qualified on-site engineering and site-specific authorizations remain external gates.
 
+## REIGNITE program and sound-hour readiness | November 24, 2026
+
+Flagship one-call, fail-closed review profile:
+
+    import { assessReigniteConcept, eventNextActions } from './event-coordination.mjs';
+    const packet = assessReigniteConcept();
+    const next = eventNextActions(packet); // up to five plain-language owner actions
+
+Selecting the flagship profile adds explicit independent review gates for the proposed acoustic visual dome, Quiet Wing, visitor DJ booth, karaoke, art exhibition, photography contest, food competition, silent auction, international performing artists, and the freestanding temporary dome. All are design proposals and **not approved bookings or confirmed programming**.
+
+**Mandatory jurisdiction_and_event_hours gate:** determine the actual hangar parcel boundary and competent city/county/airport authority, written music and dance curfew/clearance rules, and any lawful exemptions *before* building a schedule. No all-night performance is promised or assumed.
+
+Official source references for the owner review dossier:
+- Tillamook County outdoor music festival Ordinance 2 (1970), currently listed as adopted: https://www.tillamookcounty.gov/sites/default/files/fileattachments/ordinance/22885/ordinance02-publicfestivals.pdf . Its 12:01 a.m.–9 a.m. outdoor music prohibition and 2 a.m. site clearance are conditional on applicability. Verify geographic jurisdiction, attendance/admission thresholds and current interpretation with the county, not by reading a decades-old PDF alone.
+- City of Tillamook noise code section 130.08: https://codelibrary.amlegal.com/codes/tillamookor/latest/tillamook_or/0-0-0-4976 . Includes restrictions on sound plainly audible in nearby dwellings/noise-sensitive units between 10 p.m. and 7 a.m. Whether this city's code governs the hangar parcel has not yet been established.
+- U.S. State Department professional performance rules: https://fam.state.gov/fam/09fam/09fam040202.html and https://fam.state.gov/fam/09fam/09fam040214.html . Ordinary visitor status is generally not sufficient for professional U.S. performance even when unpaid; narrow exceptions require specialist review and the right performer-specific immigration authority.
+- Food vendors and cook-off: obtain the current relevant Tillamook County temporary food licensing, health authority, sanitation, allergy and food-sampling requirements before invitations or service.
+
+eventNextActions sorts reported safety/legal holds first, distinguishes missing evidence from merely submitted/unverified evidence and surfaces at most five bounded next steps. It never grants permits, confirms a musician's status, sends invitations, schedules an event, sets safe occupancy, collects charitable funds or enables tickets.
+
+This source-only profile is not a deployed live readiness dashboard. No current as-built site survey or museum/Port agreement has been received by this module. The site editor in draft PR #2553 remains separate until authenticated source provenance and role/access controls have been independently verified.
+
 ## Read-only Demand adapter (present in source)
 
 `assessEventFromDemandQueue(queue, opportunityId, options)` consumes the exact existing `GET /api/systemia/queue` envelope, requiring `schema: 1`, `kind: evercraft.demand-desk.queue`, integer revision and exactly one currently open opportunity ID. It passes that ID to the same event feasibility evaluator. It records a *claimed* Demand stage and verification flag for context but **never translates "Replied", "Won", "verified" or any sales classification into venue or regulatory approval**. It refuses missing, duplicate and closed opportunity records. It neither mutates Demand's workspace nor fetches a queue by itself; an authorized owned runtime supplies the queue and establishes its origin independently.
