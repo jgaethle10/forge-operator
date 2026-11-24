@@ -192,7 +192,15 @@ class API(BaseHTTPRequestHandler):
         self.wfile.write(b)
 
     def authorized(self):
-        candidate = self.headers.get('Authorization', '').removeprefix('Bearer ').strip()
+        # The public site is protected by Caddy HTTP Basic authentication, which
+        # owns the Authorization header. The private app token therefore uses its
+        # own header, avoiding a Basic/Bearer collision in browser fetch requests.
+        # Bearer remains supported for existing loopback-only machine clients.
+        candidate = self.headers.get('X-Evercraft-Demand-Token', '').strip()
+        if not candidate:
+            bearer = self.headers.get('Authorization', '')
+            if bearer.startswith('Bearer '):
+                candidate = bearer[len('Bearer '):].strip()
         if not candidate or not hmac.compare_digest(candidate, self.server.api_token):
             self.reply(401, {'error': 'Unauthorized'})
             return False
