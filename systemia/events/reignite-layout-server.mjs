@@ -141,7 +141,7 @@ function serve(){
      return send(res,200,{plan:db.plan,role:who.role,actor:who.label,pending_count:who.role==='owner'?db.proposals.filter(p=>p.status==='pending').length:undefined});
    if(req.method==='GET'&&url==='/api/reviews'){
      if(who.role!=='owner')return send(res,403,{error:'owner_only'});
-     return send(res,200,{proposals:db.proposals.slice(-100),revision:db.plan.revision});
+     return send(res,200,{proposals:db.proposals.filter(p=>p.status==='pending').slice(-100),revision:db.plan.revision});
    }
    if(req.method==='POST'&&req.headers.origin!==origin)
      return send(res,403,{error:'same_origin_post_required'});
