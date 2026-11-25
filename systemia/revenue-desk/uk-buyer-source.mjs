@@ -25,13 +25,34 @@ export function normalizeUk(packageData,{now=new Date()}={}){
  }
  return {schema:'evercraft.kaidance.buyer-source-receipt.v1',records_observed:packageData.releases.length,candidates,coverage_complete:false,qualified_count:0,send_performed:false};
 }
-export async function collectUk({now=new Date(),fetchFn=fetch}={}){
+export async function collectUk({now=new Date(),fetchFn=fetch,maxPages=5}={}){
+ if(!Number.isFinite(+now)||!Number.isInteger(maxPages)||maxPages<1||maxPages>10)throw Error('invalid_uk_bounds');
  const u=new URL(endpoint);
- u.searchParams.set('updatedFrom',new Date(+now-86400000).toISOString());
- u.searchParams.set('updatedTo',now.toISOString());
- const response=await fetchFn(u.href,{method:'GET',redirect:'error',signal:AbortSignal.timeout(20000),headers:{Accept:'application/json'}});
- if(!response.ok)throw Error('uk_http_'+response.status);
- const reader=response.body.getReader();let size=0;const chunks=[];
- try{for(;;){const {done,value}=await reader.read();if(done)break;size+=value.byteLength;if(size>8000000)throw Error('uk_response_limit');chunks.push(Buffer.from(value));}}finally{await reader.cancel();}
- return normalizeUk(JSON.parse(Buffer.concat(chunks).toString('utf8')),{now});
+ u.searchParams.set('updatedFrom',new Date(+now-86400000).toISOString().slice(0,19));
+ u.searchParams.set('updatedTo',now.toISOString().slice(0,19));
+ u.searchParams.set('limit','100');
+ let next=u.href,pages=0;
+ const visited=new Set(),releases=[];
+ while(next&&pages<maxPages){
+  if(visited.has(next))throw Error('uk_cursor_loop');
+  visited.add(next);
+  const response=await fetchFn(next,{method:'GET',redirect:'error',signal:AbortSignal.timeout(20000),headers:{Accept:'application/json'}});
+  if(!response.ok)throw Error('uk_http_'+response.status);
+  const reader=response.body.getReader();let size=0;const chunks=[];
+  try{for(;;){const {done,value}=await reader.read();if(done)break;size+=value.byteLength;if(size>8000000)throw Error('uk_response_limit');chunks.push(Buffer.from(value));}}finally{await reader.cancel();}
+  const pkg=JSON.parse(Buffer.concat(chunks).toString('utf8'));
+  if(!Array.isArray(pkg.releases)||pkg.releases.length>100)throw Error('invalid_uk_page');
+  releases.push(...pkg.releases);pages++;
+  next=null;
+  if(pkg.links?.next){
+   const n=new URL(pkg.links.next,u);
+   if(n.origin!==u.origin||n.pathname!==u.pathname||n.username||n.password||n.hash)throw Error('uk_cursor_target_invalid');
+   for(const k of ['updatedFrom','updatedTo','limit'])if(n.searchParams.get(k)!==u.searchParams.get(k))throw Error('uk_cursor_window_changed');
+   const cursor=n.searchParams.get('cursor');
+   if(!cursor||cursor.length>300)throw Error('uk_cursor_invalid');
+   next=n.href;
+  }
+ }
+ const result=normalizeUk({releases},{now});
+ return {...result,pages_observed:pages,coverage_complete:!next};
 }
