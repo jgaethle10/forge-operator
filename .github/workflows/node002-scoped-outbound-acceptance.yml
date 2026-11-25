@@ -1,0 +1,19 @@
+name: Node002 scoped outbound acceptance
+on:
+  pull_request:
+    paths:
+      - 'systemia/network/**'
+      - '.github/workflows/node002-scoped-outbound-acceptance.yml'
+permissions:
+  contents: read
+jobs:
+  scoped-policy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --check systemia/network/outbound-node-agent.mjs
+      - run: node --test systemia/network/scoped-outbound-policy.test.mjs
