@@ -334,6 +334,20 @@ function showOwnerReadiness(data){
    (x.priority==='stop_and_review'?' · REPORTED HOLD, STOP':' · Obtain source evidence')+
    '</small></li>'
  ).join(''):'<li>No source requests listed. External venue, engineering and permit approval are still REQUIRED.</li>';
+ const fly=data.optional_programs?.find(x=>x.id==='aviation_fly_in');
+ if(fly){
+   $('ownerFlyInStatus').textContent='('+fly.missing+' missing · '+fly.reported_holds+' reported holds)';
+   $('ownerFlyInIntro').textContent=fly.next_action;
+   $('ownerFlyInChecks').innerHTML=fly.checks.map(x=>
+     '<li><strong>'+esc(x.gate_id.replaceAll('_',' '))+'</strong>'+
+     '<span>'+esc(x.status.replaceAll('_',' '))+
+     (x.hold_pending_independent_review?' · STOP for independent review':'')+'</span>'+
+     '<p>'+esc(x.question)+'</p></li>'
+   ).join('');
+ }else{
+   $('ownerFlyInStatus').textContent='(not loaded)';
+   $('ownerFlyInChecks').textContent='No verified planning status is available.';
+ }
  const select=$('ownerEvidenceGate'),chosen=select.value;
  select.innerHTML=data.gates.map(x=>'<option value="'+esc(x.gate_id)+'">'+
    esc(x.gate_id.replaceAll('_',' '))+' · '+esc(x.status.replaceAll('_',' '))+
