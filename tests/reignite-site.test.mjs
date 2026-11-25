@@ -36,11 +36,14 @@ test('music timing claims remain conditional and detailed ordinance review docum
  assert.match(docs,/exact parcel\/jurisdiction/);
 });
 
-test('all eight program options and quiet zone are present but proposed',()=>{
+test('nine proposed program options include an unapproved aviation fly-in',()=>{
  for(const text of ['Outdoor main stage','The visual dome','The Quiet Wing',
  'Take the Decks + Karaoke','Art + photography','Heritage + fundraising',
- 'Food + community','The history of Hangar B']) assert(html.includes(text),text);
+ 'Food + community','The history of Hangar B','Pilots for Hangar B']) assert(html.includes(text),text);
  assert.match(html,/Proposed<\/span>/);
+ assert.match(html,/Optional concept · not scheduled/);
+ assert.match(html,/no aircraft arrival invitations or slots exist/);
+ assert.doesNotMatch(html,/fly-in tickets available|book your arrival|guaranteed aircraft parking/i);
 });
 
 test('fully owned, no hidden marketing capture or third-party dependencies',()=>{
