@@ -9,6 +9,17 @@ export function sourceRegistry({samKey}={}){
   {key:'sam',enabled:typeof samKey==='string'&&!!samKey.trim(),collect:()=>collectSam({apiKey:samKey,maxPages:1})}
  ];
 }
+// Only known numeric counters cross the persistence boundary.
+const diagnosticKeys=['unique_notices','inactive_or_non_tender','expired_or_unverified_deadline','missing_buyer_or_title','unmatched_scope','invalid_notice_id'];
+function boundedDiagnostics(r){
+ const d={};
+ for(const key of diagnosticKeys){
+  const n=r.diagnostics?.[key];
+  if(Number.isSafeInteger(n)&&n>=0&&n<=r.records_observed)d[key]=n;
+ }
+ if(Number.isSafeInteger(r.pages_observed)&&r.pages_observed>=1&&r.pages_observed<=10)d.pages_observed=r.pages_observed;
+ return d;
+}
 export async function runDiscovery({sources=sourceRegistry(),now=new Date()}={}){
  if(!Array.isArray(sources)||sources.length>10||!Number.isFinite(+now))throw Error('invalid_cycle');
  const keys=new Set(),seen=new Set(),candidates=[],results=[];
@@ -26,7 +37,7 @@ export async function runDiscovery({sources=sourceRegistry(),now=new Date()}={})
    }
    let added=0;
    for(const c of accepted){if(seen.has(c.candidate_ref))continue;seen.add(c.candidate_ref);candidates.push(c);added++;}
-   results.push({source:s.key,state:'observed',records:r.records_observed,candidates:added,coverage_complete:r.coverage_complete===true});
+   results.push({source:s.key,state:'observed',records:r.records_observed,candidates:added,coverage_complete:r.coverage_complete===true,diagnostics:boundedDiagnostics(r)});
   }catch{results.push({source:s.key,state:'held',records:null,candidates:null});}
  }
  return {schema:'evercraft.kaidance.discovery-cycle.v1',observed_at:now.toISOString(),sources:results,candidates,unique_candidates:candidates.length,qualified_count:0,send_performed:false,crm_write_performed:false};
