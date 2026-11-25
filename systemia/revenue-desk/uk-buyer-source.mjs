@@ -1,6 +1,13 @@
 import {createHash} from 'node:crypto';
 const endpoint='https://www.find-tender.service.gov.uk/api/1.0/ocdsReleasePackages';
-const lanes=[['media',/video production|film production|animation services|audiovisual production/i],['software',/website (design|development|redesign)|software development|web development/i],['ev-planning',/electric vehicle charging|ev charging|chargepoint feasibility/i]];
+// Discovery hints only: a text match never establishes capability, budget,
+ // buyer eligibility, contact permission or an approved price.
+const lanes=[
+ ['ev-planning',/\b(?:electric vehicle charging|ev charg(?:ing|ers?)|charge\s?point(?:s| infrastructure)?|charging infrastructure|charging station feasibility|fleet electrification)\b/i],
+ ['media',/\b(?:video production|film production|animation services|audio[ -]?visual production|videography|video editing|film making|filmmaking|promotional videos?|digital content production|multimedia production|commercial photography and video|motion graphics|subtitling|captioning services)\b/i],
+ ['software',/\b(?:websites? (?:design|development|redesign|replacement|maintenance|migration)|software (?:development|modernisation|modernization|migration|integration)|web (?:development|design)|digital platform development|application development|legacy (?:software|system) moderni[sz]ation|workflow automation|systems integration|business process automation|website accessibility audit)\b/i],
+ ['research',/\b(?:market research|market intelligence|research services|data analysis services|feasibility stud(?:y|ies)|desk research|literature review|research and analysis|economic impact stud(?:y|ies)|transcription services|audio transcription|document digitisation|document digitization)\b/i]
+];
 export function normalizeUk(packageData,{now=new Date()}={}){
  if(!Array.isArray(packageData?.releases)||packageData.releases.length>1000||!Number.isFinite(+now))throw Error('invalid_uk_package');
  const latest=new Map();
