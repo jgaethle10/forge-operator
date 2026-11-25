@@ -50,6 +50,11 @@ const EXTRA = Object.freeze({
 });
 
 const FEATURE_GATES = Object.freeze({
+  fly_in_sponsor_and_museum_authority: { id: 'fly_in_sponsor_and_museum_authority', owner: 'airport sponsor / Port of Tillamook Bay / current authorized museum representative', question: 'Confirm current Hangar B lease/operating authority and obtain written, separately scoped airport and museum consent before proposing coordinated arrivals or access; August 2026 term sheet does not itself establish completed transfer or event authorization' },
+  fly_in_aircraft_parking_capacity: { id: 'fly_in_aircraft_parking_capacity', owner: 'Tillamook airport operator / qualified pilot liaison', question: 'Obtain operator-validated aircraft transient parking capacity, existing users, runway/taxiway access, arrival flow, possible prior permission requirements, fuel and ground services; do not assume any number of fly-in aircraft' },
+  fly_in_ground_and_attendee_separation: { id: 'fly_in_ground_and_attendee_separation', owner: 'airport operator / safety and accessibility lead / fire authority', question: 'Review safe airside/public separation, propeller hazards, barriers and escorts, emergency access, approved pedestrian paths, lighting, ADA access, ground crew and aircraft movement safety on an operator-approved site plan' },
+  fly_in_pilot_briefing_weather: { id: 'fly_in_pilot_briefing_weather', owner: 'airport operator / licensed pilot liaison / event safety lead', question: 'Define independent pilot responsibility for current aeronautical information and NOTAM review, operational contact and communication, coastal weather alternate/cancellation conditions, limited parking contingency and safe no-show response; no flight commitments' },
+  fly_in_faa_event_classification: { id: 'fly_in_faa_event_classification', owner: 'airport sponsor / FAA liaison / qualified aviation event advisor', question: 'Determine whether a simple arrival of visiting aircraft, airport-use restriction, closure, aerial demonstration, or airshow is actually proposed; obtain any applicable airport sponsor and FAA approvals, waivers, ground plans and notices before promoting altered air operations; ordinary fly-in does not automatically mean airshow' },
   international_performers: { id: 'international_performers', owner: 'artist liaison / qualified immigration counsel', question: 'Performer eligibility, travel, work authorization, contracts and financial responsibilities verified; a visitor classification or unpaid performance alone is not permission to work' },
   acoustic_dome_performance: { id: 'acoustic_dome_performance', owner: 'venue / event production / acoustical lead', question: 'Indoor acoustic session footprint, safe levels, museum exhibits, accessible emergency communication and qualified fire/structural checks reviewed; dome is not assumed soundproof' },
   quiet_wing: { id: 'quiet_wing', owner: 'accessibility and safety lead / venue', question: 'Quiet reset area has truly separated noise, accessible seating and egress, fire-safe material, water/spill controls and protection of artifacts' },
@@ -142,6 +147,25 @@ export function assessReigniteConcept({evidence={},scenario='outdoor_separate'}=
     scenario,evidence,
     features:REIGNITE_CONCEPT_FEATURES
   });
+}
+
+
+/**
+ * Optional REIGNITE fly-in exploration. Distinct from the flagship festival
+ * baseline: an enthusiastic pilot's comment is an idea, not an airport request,
+ * an invitation to arrive, a waiver, an airport closure, or a booked event.
+ */
+export const REIGNITE_FLY_IN_FEATURES = Object.freeze([
+ 'fly_in_sponsor_and_museum_authority','fly_in_aircraft_parking_capacity',
+ 'fly_in_ground_and_attendee_separation','fly_in_pilot_briefing_weather',
+ 'fly_in_faa_event_classification'
+]);
+
+export function assessReigniteFlyIn({evidence={}}={}) {
+ return assessEventFeasibility({
+  opportunity_id:'reignite:hangar-b:fly-in',scenario:'outdoor_separate',
+  features:REIGNITE_FLY_IN_FEATURES,evidence
+ });
 }
 
 /**
