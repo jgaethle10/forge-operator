@@ -34,3 +34,35 @@ test('spoofed host or non-notice path cannot enter UK research queue',()=>{
   assert.equal(planBuyerResearch({schema:'evercraft.kaidance.discovery-checkpoint.v1',records:[{...c,source_url}]},{now}).jobs.length,0);
  }
 });
+
+test('expanded service vocabulary maps to research lanes without qualifying buyers',()=>{
+ for(const [title,lane] of [['Videography services','media'],['Workflow automation','software'],['Market research','research'],['Audio transcription','research'],['Fleet electrification','ev-planning']]){
+  const r=normalize({...release,tender:{...release.tender,title}});
+  assert.equal(r.candidates.length,1,title);
+  assert.equal(r.candidates[0].suggested_lane,lane);
+  assert.equal(r.candidates[0].qualified,false);
+  assert.equal(r.candidates[0].contact_authorized,false);
+ }
+});
+test('unmatched scope diagnostic remains explicit',()=>{
+ const r=normalize({...release,tender:{...release.tender,title:'Office furniture'}});
+ assert.equal(r.diagnostics.unmatched_scope,1);
+ assert.equal(r.candidates.length,0);
+});
+test('pagination follows same-origin cursor and reports bounded coverage',async()=>{
+ const {collectUk}=await import('../systemia/revenue-desk/uk-buyer-source.mjs');
+ let calls=0;
+ const fetchFn=async url=>{
+  calls++;
+  const next=new URL(url);next.searchParams.set('cursor','next-'+calls);
+  return new Response(JSON.stringify({releases:[release],links:{next:next.href}}));
+ };
+ const r=await collectUk({now,fetchFn,maxPages:2});
+ assert.equal(calls,2);assert.equal(r.pages_observed,2);
+ assert.equal(r.records_observed,2);assert.equal(r.candidates.length,1);
+ assert.equal(r.coverage_complete,false);
+});
+test('pagination rejects cross-origin continuation',async()=>{
+ const {collectUk}=await import('../systemia/revenue-desk/uk-buyer-source.mjs');
+ await assert.rejects(collectUk({now,fetchFn:async()=>new Response(JSON.stringify({releases:[],links:{next:'https://example.com/'}}))}),/uk_cursor_target_invalid/);
+});
