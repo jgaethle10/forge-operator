@@ -1,0 +1,61 @@
+name: Fallen Exotic Chiles V23 Two Independent Spanish-First Storytellers
+on:
+  push:
+    branches: [production/fallen-original-mature-narrator-audition-20261124]
+    paths:
+      - 'systemia/media-studio/voice-foundry/exotic-v23-independent-voices.py'
+      - '.github/workflows/fallen-exotic-v23-independent-voices.yml'
+permissions: {contents: read}
+jobs:
+  render:
+    name: New independent ${{ matrix.persona }} narrator
+    runs-on: ubuntu-24.04
+    timeout-minutes: 55
+    strategy:
+      fail-fast: false
+      matrix:
+        persona: [weathered, velvet]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install native open-source VoiceDesign and Base model
+        run: |
+          python -m pip install --disable-pip-version-check huggingface_hub numpy soundfile
+          curl -fLsS --retry 3 'https://github.com/CrispStrobe/CrispASR/releases/latest/download/crispasr-linux-x86_64.tar.gz' -o /tmp/crispasr.tar.gz
+          mkdir -p /tmp/crispasr-dist /tmp/voice-model
+          tar -xzf /tmp/crispasr.tar.gz -C /tmp/crispasr-dist
+          BIN="$(find /tmp/crispasr-dist -type f -name crispasr | head -n 1)"
+          test -n "$BIN"
+          install -m 755 "$BIN" /tmp/crispasr_voice
+          LIB_DIRS="$(find /tmp/crispasr-dist -type f -name '*.so*' -printf '%h\n' | sort -u | paste -sd ':' -)"
+          printf 'LD_LIBRARY_PATH=%s\n' "$LIB_DIRS" >> "$GITHUB_ENV"
+          LD_LIBRARY_PATH="$LIB_DIRS" ldd /tmp/crispasr_voice | tee /tmp/crispasr-deps.txt
+          ! grep -q 'not found' /tmp/crispasr-deps.txt
+          hf download cstr/qwen3-tts-1.7b-voicedesign-GGUF qwen3-tts-12hz-1.7b-voicedesign-q8_0.gguf --local-dir /tmp/voice-model
+          hf download cstr/qwen3-tts-1.7b-base-GGUF qwen3-tts-12hz-1.7b-base-q8_0.gguf --local-dir /tmp/voice-model
+          hf download cstr/qwen3-tts-tokenizer-12hz-GGUF qwen3-tts-tokenizer-12hz.gguf --local-dir /tmp/voice-model
+      - name: Design an original older Spanish speaker and transfer into English
+        env:
+          VOICE_PERSONA: '${{ matrix.persona }}'
+          OMP_NUM_THREADS: '4'
+        run: python systemia/media-studio/voice-foundry/exotic-v23-independent-voices.py
+      - name: Verify distinct voice source and every real WAV
+        env: {VOICE_PERSONA: '${{ matrix.persona }}'}
+        run: |
+          python - <<'PY'
+          import json,os,wave,hashlib,pathlib
+          root=pathlib.Path('v23-independent-'+os.environ['VOICE_PERSONA'])
+          r=json.loads((root/'receipt.json').read_text())
+          assert len(r['cues'])==6 and r['notBasedOnOriginalC']
+          assert r['originalSyntheticReferenceOnly'] and not r['customerDeliveryAuthorized']
+          for x in [r['anchor']]+r['cues']:
+            p=root/x['file']
+            with wave.open(str(p),'rb') as w: assert w.getnframes()>0 and w.getframerate()>=16000
+            assert hashlib.sha256(p.read_bytes()).hexdigest()==x['sha256']
+          print('PASS: wholly new Spanish-first synthetic voice and 6 English clauses')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: fallen-exotic-v23-${{ matrix.persona }}-private
+          path: v23-independent-${{ matrix.persona }}/
+          retention-days: 3
+          if-no-files-found: error
