@@ -69,3 +69,13 @@ New `tests/reignite-contributor-flow.test.mjs` executes the actual browser scrip
 **Validation receipt:** GitHub-native REIGNITE site/layout/evidence/contributor flow proof completed SUCCESS at commit `9ab2ed302578a0ff36aca443aaf80d1f1d2d1111` (run `45497463271`). Events feasibility proof SUCCESS (run `45497463354`), Public mobile publishing audit SUCCESS (run `45497463250`). Generic Forge checks were running at verification. This proves executable browser-state and server integration paths, **not** a real Safari/Chrome interaction or live deployment.
 
 **Release remains held:** no owner-approved live origin, vetted reverse proxy, actual museum evidence, guest invitations, artist contracts, event announcement, ticketing or fundraising. Real-device touch and accessibility QA are required before exposing outside access.
+
+## Genuine mobile Chrome + touch verification | November 24, 2026
+
+Native GitHub runner installs no browser application code into the Evercraft product. The new `tests/reignite-mobile-chrome.test.mjs` requires Chrome/Chromium already on the Ubuntu runner (and fails rather than silently skipping if missing). It uses Chrome DevTools and Node 22 built-ins to open a real rendered page against the ephemeral owner-local REIGNITE service with synthetic collaborator and owner credentials.
+
+At an iPhone-like 390 × 844 viewport with touch emulation, the test checks readable page width/no horizontal overflow, a submit button at least 44 px tall, editor-only access, owner panels hidden, removal of the single-use fragment and absence of HttpOnly session tokens from JavaScript. It types a short idea into the actual form and **dispatches Chrome touchscreen events to its visible submit button**, verifies the genuine POST, owner's private review, contributor status update, session restoration after reload and that event authorization remains false.
+
+**Verified:** native REIGNITE workflow `mobile-chrome-proof` run `45517444948` completed SUCCESS on commit `8b209364f4ca42e2743f787b9957bc9c0cb6657e`, alongside the independent Node-source tests. Earlier Chrome smoke on commit `dddf2dec82e8d791527c641836397b65fd793e76` also completed SUCCESS. All tests use a private temporary localhost dataset, not actual museum documents or public invitations.
+
+**Limit:** Emulated Chrome touch is stronger than Node DOM mocks, but is **not** physical iPhone testing or Safari/WebKit QA; nor does it establish screen-reader usability, load under production TLS, real participant comprehension, or permission to publish an event. Required release restrictions remain in force.
