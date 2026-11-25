@@ -79,3 +79,15 @@ At an iPhone-like 390 × 844 viewport with touch emulation, the test checks read
 **Verified:** native REIGNITE workflow `mobile-chrome-proof` run `45517444948` completed SUCCESS on commit `8b209364f4ca42e2743f787b9957bc9c0cb6657e`, alongside the independent Node-source tests. Earlier Chrome smoke on commit `dddf2dec82e8d791527c641836397b65fd793e76` also completed SUCCESS. All tests use a private temporary localhost dataset, not actual museum documents or public invitations.
 
 **Limit:** Emulated Chrome touch is stronger than Node DOM mocks, but is **not** physical iPhone testing or Safari/WebKit QA; nor does it establish screen-reader usability, load under production TLS, real participant comprehension, or permission to publish an event. Required release restrictions remain in force.
+
+## Community pilot fly-in as conditional program | November 25, 2026
+
+Community feedback prompted the optional **Pilots for Hangar B** concept. The production website adds a ninth concept card visibly marked *not scheduled*; no arrivals, tickets or airshow are advertised. It is not included in the festival's canonical 25-gate source-only readiness snapshot, which must remain reproducible and byte-stable.
+
+`systemia/opportunity-fabric/event-coordination.mjs` adds five flight-specific conditional gates and `assessReigniteFlyIn()`: the current airport/museum authorization chain; verified aircraft parking and movement capacity; public/airside separation and accessible emergency pathways; weather and pilot-notice responsibility; and correct FAA event classification (ordinary flying visit versus organized fly-in, ground closure or airshow). The FAA's current guidance explicitly distinguishes these types of activity. Reported permissions remain `submitted_unverified` and can never self-authorize.
+
+`systemia/events/reignite-evidence.mjs` integrates these five gates into the existing owner-only evidence ledger, surfaced under `optional_programs`, separate from the 25 festival requirements. Owner UI displays their status and lets the operator reference an official public source or existing private document without exposing it to contributors. Unsafe reports remain sticky holds. No separate app, contact database, pilots' personal details, booking engine or external runtime was created.
+
+**Important Port source:** On August 20, 2026, the Port of Tillamook Bay publicly announced an approved term sheet for a future Hangar B lease/sale and museum operations transition to Vintage Aviation Museum. That is not proof the transfer completed, and event authority must be confirmed with the current operator/land owner and airport. See `systemia/events/REIGNITE_AVIATION_FLYIN.md` for the sourced five-step program and the precise release boundaries.
+
+**Status:** This is an optional feasibility program, not a pilot invitation, announced date, FAA waiver, airport parking guarantee, sponsored event, fundraiser or permission to use Hangar B. No new external message was sent. Release remains HELD on venue, current operating rights, airport coordination, engineering and owned HTTPS/Passport security.
