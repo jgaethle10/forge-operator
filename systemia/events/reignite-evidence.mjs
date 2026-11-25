@@ -3,12 +3,12 @@
  * Canonical gates are imported. Owner entries are source reports, not approvals.
  */
 import { randomUUID } from 'node:crypto';
-import { assessReigniteConcept, eventNextActions } from '../opportunity-fabric/event-coordination.mjs';
+import { assessReigniteConcept, assessReigniteFlyIn, REIGNITE_FLY_IN_FEATURES, eventNextActions } from '../opportunity-fabric/event-coordination.mjs';
 
 export const EVIDENCE_SCHEMA='evercraft.reignite.owner-evidence.v1';
 const FINDINGS=Object.freeze(['submitted','unsafe','denied','not_permitted','unknown']);
 const HOLD_FINDINGS=new Set(['unsafe','denied','not_permitted']);
-const gateIds=new Set(assessReigniteConcept().checks.map(x=>x.id));
+const gateIds=new Set([...assessReigniteConcept().checks.map(x=>x.id),...REIGNITE_FLY_IN_FEATURES]);
 const validIso=(x)=>typeof x==='string'&&Number.isFinite(Date.parse(x))&&
   new Date(x).toISOString()===x;
 const trim=(s,max)=>typeof s==='string'?s.trim().slice(0,max):'';
@@ -83,6 +83,16 @@ export function ownerReadiness(desk){
  }
  const assessment=assessReigniteConcept({evidence});
  const next=eventNextActions(assessment);
+ const aviation=assessReigniteFlyIn({evidence});
+ const flyInGates=aviation.checks.filter(g=>REIGNITE_FLY_IN_FEATURES.includes(g.id));
+ const asGate=g=>({
+   gate_id:g.id,owner:g.owner,question:g.question,status:g.status,
+   last_report:latest.has(g.id)?{
+    record_id:latest.get(g.id).id,source_ref:latest.get(g.id).source_ref,
+    note:latest.get(g.id).note,recorded_at:latest.get(g.id).recorded_at
+   }:null,
+   hold_pending_independent_review:holds.has(g.id)
+ });
  return {
   schema:'evercraft.reignite.owner-readiness.v1',
   desk_revision:desk.revision,
@@ -95,14 +105,19 @@ export function ownerReadiness(desk){
    independently_approved:0
   },
   next:next.next,
-  gates:assessment.checks.map(g=>({
-   gate_id:g.id,owner:g.owner,question:g.question,status:g.status,
-   last_report:latest.has(g.id)?{
-    record_id:latest.get(g.id).id,source_ref:latest.get(g.id).source_ref,
-    note:latest.get(g.id).note,recorded_at:latest.get(g.id).recorded_at
-   }:null,
-   hold_pending_independent_review:holds.has(g.id)
-  })),
+  gates:assessment.checks.map(asGate).concat(flyInGates.map(asGate)),
+  optional_programs:[{
+   id:'aviation_fly_in',title:'Pilots for Hangar B · potential fly-in',
+   status:'concept_only_not_scheduled',
+   next_action:'Confirm the current museum and airport authorities and whether a fly-in is operationally feasible before contacting or inviting visiting pilots.',
+   requirements:flyInGates.length,
+   source_reports_pending_review:flyInGates.filter(g=>g.status==='submitted_unverified').length,
+   missing:flyInGates.filter(g=>g.status==='missing').length,
+   reported_holds:flyInGates.filter(g=>g.status==='hold_reported').length,
+   checks:flyInGates.map(asGate),
+   airport_permission_granted:false,pilots_invited:false,
+   aircraft_slots_reserved:false,airshow_authorized:false
+  }],
   history_count:desk.items.length,
   source_report_only:true,
   event_approved:false,venue_authorized:false,ticket_sales_authorized:false,
