@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { makeReigniteReadinessSnapshot, renderReigniteReadinessHtml } from './reignite-readiness-page.mjs';
-import { assessEventFeasibility, eventWorkPackages, EVENT_SCENARIOS, assessEventFromDemandQueue, assessReigniteConcept, REIGNITE_CONCEPT_FEATURES, eventNextActions } from './event-coordination.mjs';
+import { assessEventFeasibility, eventWorkPackages, EVENT_SCENARIOS, assessEventFromDemandQueue, assessReigniteConcept, REIGNITE_CONCEPT_FEATURES, assessReigniteFlyIn, REIGNITE_FLY_IN_FEATURES, eventNextActions } from './event-coordination.mjs';
 
 const caseId = 'synthetic:heritage-event-001';
 const assess = options => assessEventFeasibility({ opportunity_id: caseId, ...options });
@@ -70,6 +70,44 @@ test('REIGNITE is one-call, review-first with a clear five-action owner dashboar
  assert.equal(summary.next[0].priority,'stop_and_review');
  assert.equal(summary.event_approved,false);
  assert.throws(()=>eventNextActions(packet,{limit:50}),/invalid_action_limit/);
+});
+
+
+test('pilot fly-in is five distinct optional evidence gates, not a booked public airshow',()=>{
+ const original=assessReigniteConcept();
+ assert.equal(original.checks.length,25,'flagship source snapshot must remain byte-identical');
+ const fly=assessReigniteFlyIn();
+ assert.equal(fly.opportunity_id,'reignite:hangar-b:fly-in');
+ assert.equal(fly.checks.length,20);
+ assert.equal(REIGNITE_FLY_IN_FEATURES.length,5);
+ assert.deepEqual(fly.checks.slice(-5).map(g=>g.id),REIGNITE_FLY_IN_FEATURES);
+ for(const key of REIGNITE_FLY_IN_FEATURES){
+   const check=fly.checks.find(g=>g.id===key);
+   assert.equal(check.status,'missing',key);
+   assert(check.owner.length>5);
+   assert(check.question.length>50);
+   assert(fly.next_work.some(w=>w.requirement===key&&w.priority==='obtain_evidence'));
+ }
+ assert.match(fly.checks.find(g=>g.id==='fly_in_faa_event_classification').question,/does not automatically mean airshow/);
+ assert.match(fly.checks.find(g=>g.id==='fly_in_sponsor_and_museum_authority').question,/term sheet does not itself/);
+ for(const flag of ['external_contact_authorized','event_approved','ticket_sales_authorized',
+  'charitable_collection_authorized','performance_or_testing_authorized'])
+  assert.equal(fly[flag],false);
+ assert(eventWorkPackages(fly).every(p=>p.authorized_to_dispatch===false&&p.assignment_state==='unassigned'));
+ const fakePermissions=Object.fromEntries(REIGNITE_FLY_IN_FEATURES.map(id=>[id,{
+  source_ref:'synthetic:'+id,observed_at:'2026-11-25T08:00:00Z',
+  finding:'approved',faa_waiver_issued:true,port_approved:true
+ }]));
+ const claimed=assessReigniteFlyIn({evidence:fakePermissions});
+ assert.equal(claimed.event_approved,false);
+ assert.equal(claimed.external_contact_authorized,false);
+ assert(REIGNITE_FLY_IN_FEATURES.every(id=>claimed.checks.find(g=>g.id===id).status==='submitted_unverified'));
+ const hold=assessReigniteFlyIn({evidence:{
+  fly_in_ground_and_attendee_separation:{finding:'unsafe',source_ref:'synthetic:apron',observed_at:'2026-11-25T08:00:00Z'}
+ }});
+ assert.equal(hold.stage,'hold_pending_qualified_review');
+ assert.equal(hold.next_work.find(w=>w.requirement==='fly_in_ground_and_attendee_separation').priority,'stop_and_review');
+ assert.equal(hold.event_approved,false);
 });
 
 test('unconfirmed heritage event starts with every external action denied', () => {
