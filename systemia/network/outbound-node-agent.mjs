@@ -178,7 +178,7 @@ export async function startOutboundNodeAgent({
     if (!scoped) return capacity;
     const supported = capacity?.supported_workloads;
     if (!Array.isArray(supported)) throw Error('missing_supported_workloads');
-    const admitted = supported.filter(workload=>permit({method:'POST',route:'/v1/jobs',body:{workload}}));
+    const admitted = supported.filter(workload=>permit({method:'POST',route:'/v1/jobs',body:{workload_class:workload}}));
     if (!admitted.length) throw Error('no_admitted_workloads');
     return {...capacity,supported_workloads:admitted};
   }
