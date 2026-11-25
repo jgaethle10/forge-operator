@@ -72,6 +72,47 @@ test('unsafe or denied reports remain HOLD even if a later optimistic source is 
  assert.equal(v.ticket_sales_authorized,false);
 });
 
+test('optional pilot fly-in has its own private review packet without changing core festival count',()=>{
+ const initial=ownerReadiness(emptyEvidenceDesk());
+ assert.equal(initial.summary.requirements,25);
+ assert.equal(initial.gates.length,30);
+ const fly=initial.optional_programs.find(p=>p.id==='aviation_fly_in');
+ assert(fly);
+ assert.equal(fly.status,'concept_only_not_scheduled');
+ assert.equal(fly.requirements,5);
+ assert.equal(fly.missing,5);
+ assert.equal(fly.airport_permission_granted,false);
+ assert.equal(fly.pilots_invited,false);
+ assert.equal(fly.aircraft_slots_reserved,false);
+ assert.equal(fly.airshow_authorized,false);
+ assert.match(fly.next_action,/current museum and airport authorities/);
+ const recorded=addOwnerEvidence(emptyEvidenceDesk(),{
+   base_revision:0,gate_id:'fly_in_sponsor_and_museum_authority',
+   source_ref:'https://potb.specialdistrict.org/tillamook-air-museum-announces-partnership-with-vintage-aviation-museum',
+   finding:'submitted',
+   note:'Port announced a term sheet in August 2026, but event permission and final transfer remain unverified.'
+ });
+ const after=ownerReadiness(recorded.desk);
+ assert.equal(after.summary.requirements,25);
+ assert.equal(after.summary.missing,25,'optional fly-in sources must not satisfy general venue permission');
+ assert.equal(after.optional_programs[0].source_reports_pending_review,1);
+ assert.equal(after.optional_programs[0].missing,4);
+ assert.equal(after.optional_programs[0].airport_permission_granted,false);
+ const hazard=addOwnerEvidence(recorded.desk,{
+   base_revision:1,gate_id:'fly_in_ground_and_attendee_separation',
+   source_ref:'private-ledger:airport/synthetic-safety-concern001',
+   finding:'unsafe',note:'Synthetic hazard raised for independent airport and fire review before further planning.'
+ }).desk;
+ const optimistic=addOwnerEvidence(hazard,{
+   base_revision:2,gate_id:'fly_in_ground_and_attendee_separation',
+   source_ref:'private-ledger:airport/synthetic-follow-up001',
+   finding:'submitted',note:'Subsequent information exists but does not clear the previously reported safety concern.'
+ }).desk;
+ const ready=ownerReadiness(optimistic);
+ assert.equal(ready.optional_programs[0].reported_holds,1);
+ assert.equal(ready.optional_programs[0].checks.find(x=>x.gate_id==='fly_in_ground_and_attendee_separation').hold_pending_independent_review,true);
+ assert.equal(ready.event_approved,false);
+});
 test('private references, exact revisions and careful notes are required',()=>{
  const d=emptyEvidenceDesk();
  assert(allowedEvidenceSource(reference));
@@ -97,6 +138,10 @@ test('simplified owner-only browser view remains hidden without owner authorizat
  const css=readFileSync(new URL('../public/reignite/layout/app.css',import.meta.url),'utf8');
  assert.match(html,/id="ownerReadinessPanel"[^>]*hidden/);
  assert.match(html,/id="ownerEvidenceForm"/);
+ assert.match(html,/id="ownerFlyInSection"/);
+ assert.match(js,/ownerFlyInStatus/);
+ assert.match(js,/optional_programs/);
+ assert.match(css,/\.owner-flyin-list/);
  assert.match(html,/Record a source reference or reported concern/);
  assert.match(html,/ZERO independently approved|Nothing recorded here grants permission/);
  assert.match(js,/\$\('ownerReadinessPanel'\)\.hidden=state\.role!=='owner'/);
