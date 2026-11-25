@@ -1,0 +1,69 @@
+name: Fallen V22 Original Latin-American Storyteller Connected Phrases
+on:
+  push:
+    branches: [production/fallen-original-mature-narrator-audition-20261124]
+    paths:
+      - 'systemia/media-studio/voice-foundry/exotic-v22-connected-storyteller.py'
+      - '.github/workflows/fallen-exotic-v22-connected.yml'
+permissions: {contents: read,actions: read}
+jobs:
+  v22:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        lane: [understated, fireside]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install native Qwen reference-voice renderer
+        run: |
+          python -m pip install --disable-pip-version-check huggingface_hub numpy soundfile
+          curl -fLsS --retry 3 'https://github.com/CrispStrobe/CrispASR/releases/latest/download/crispasr-linux-x86_64.tar.gz' -o /tmp/crispasr.tar.gz
+          mkdir -p /tmp/crispasr-dist /tmp/voice-model
+          tar -xzf /tmp/crispasr.tar.gz -C /tmp/crispasr-dist
+          BIN="$(find /tmp/crispasr-dist -type f -name crispasr | head -n 1)"
+          test -n "$BIN"
+          install -m 755 "$BIN" /tmp/crispasr_voice
+          LIB_DIRS="$(find /tmp/crispasr-dist -type f -name '*.so*' -printf '%h\n' | sort -u | paste -sd ':' -)"
+          printf 'LD_LIBRARY_PATH=%s\n' "$LIB_DIRS" >> "$GITHUB_ENV"
+          LD_LIBRARY_PATH="$LIB_DIRS" ldd /tmp/crispasr_voice | tee /tmp/crispasr-deps.txt
+          ! grep -q 'not found' /tmp/crispasr-deps.txt
+          hf download cstr/qwen3-tts-1.7b-base-GGUF qwen3-tts-12hz-1.7b-base-q8_0.gguf --local-dir /tmp/voice-model
+          hf download cstr/qwen3-tts-tokenizer-12hz-GGUF qwen3-tts-tokenizer-12hz.gguf --local-dir /tmp/voice-model
+      - name: Recover exact private original synthetic voice C source
+        env: {GH_TOKEN: '${{ secrets.GITHUB_TOKEN }}'}
+        run: |
+          mkdir -p /tmp/synthetic-C
+          curl --fail --location --silent --show-error \
+            -H "Authorization: Bearer ${GH_TOKEN}" -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/artifacts/14963005488/zip" \
+            -o /tmp/synthetic-C.zip
+          unzip -q /tmp/synthetic-C.zip '03_english_cloned_from_spanish_anchor.wav' -d /tmp/synthetic-C
+          echo 'SYNTHETIC_C_REFERENCE=/tmp/synthetic-C/03_english_cloned_from_spanish_anchor.wav' >> "$GITHUB_ENV"
+      - name: Generate connected original voice performances
+        env:
+          OMP_NUM_THREADS: '4'
+          NARRATOR_LANE: '${{ matrix.lane }}'
+        run: python systemia/media-studio/voice-foundry/exotic-v22-connected-storyteller.py
+      - name: Verify original source and all generated WAV hash receipts
+        env: {NARRATOR_LANE: '${{ matrix.lane }}'}
+        run: |
+          python - <<'PY'
+          import json,os,hashlib,pathlib,wave
+          root=pathlib.Path('v22-original-c-'+os.environ['NARRATOR_LANE'])
+          record=json.loads((root/'receipt.json').read_text())
+          assert len(record['cues'])==4 and record['originalSyntheticReferenceOnly']
+          assert not record['actorRecordingUsed'] and not record['customerDeliveryAuthorized']
+          for cue in record['cues']:
+            p=root/cue['file']
+            assert hashlib.sha256(p.read_bytes()).hexdigest()==cue['sha256']
+            with wave.open(str(p),'rb') as w:assert w.getnframes()>0
+          print('PASS four original C-connected WAV cues')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: fallen-v22-original-c-${{ matrix.lane }}
+          path: v22-original-c-${{ matrix.lane }}/
+          retention-days: 3
+          if-no-files-found: error
