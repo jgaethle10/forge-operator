@@ -105,17 +105,23 @@ test('Chrome 390px viewport: one-use invite -> submission -> owner review -> ref
   if(service.exitCode!==null)throw Error('private server stopped');
   return (await fetch(origin+'/health')).ok;
  },'private localhost service');
+ let chromeErrors='';
  chrome=spawn(chromeBinary,[
   '--headless=new','--no-sandbox','--disable-gpu','--disable-dev-shm-usage',
   '--no-first-run','--no-default-browser-check','--disable-extensions',
   '--remote-allow-origins=*','--remote-debugging-port=0',
   '--user-data-dir='+profile,'about:blank'
- ],{stdio:'ignore'});
+ ],{stdio:['ignore','ignore','pipe']});
+ chrome.stderr.on('data',chunk=>{
+  chromeErrors=(chromeErrors+String(chunk)).slice(-3000);
+ });
  const chromePort=await eventually(()=>{
-  if(chrome.exitCode!==null)throw Error('Chrome exited');
+  if(chrome.exitCode!==null)throw Error('Chrome exited: '+chromeErrors.slice(-600));
   const portText=readFileSync(join(profile,'DevToolsActivePort'),'utf8').split('\n')[0];
   return Number(portText)>0?Number(portText):null;
- },'Chrome debugging port');
+ },'Chrome debugging port',{tries:350,delay:100}).catch(err=>{
+  throw Error(err.message+'; browser diagnostics: '+chromeErrors.slice(-700));
+ });
  const target=await eventually(async()=>{
   const res=await fetch('http://127.0.0.1:'+chromePort+'/json/list');
   const targets=await res.json();
