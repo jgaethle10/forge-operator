@@ -1,9 +1,11 @@
 // Single bounded research cycle. No scheduler, contact actions or CRM writes.
 import {collectNyc} from './nyc-buyer-source.mjs';
+import {collectUk} from './uk-buyer-source.mjs';
 import {collectSam} from './sam-buyer-source.mjs';
 export function sourceRegistry({samKey}={}){
  return [
   {key:'nyc',enabled:true,collect:()=>collectNyc()},
+  {key:'uk',enabled:true,collect:()=>collectUk()},
   {key:'sam',enabled:typeof samKey==='string'&&!!samKey.trim(),collect:()=>collectSam({apiKey:samKey,maxPages:1})}
  ];
 }
