@@ -10,20 +10,21 @@ export function normalizeUk(packageData,{now=new Date()}={}){
   if(!prev||Date.parse(r.date)>=Date.parse(prev.date))latest.set(r.ocid,r);
  }
  const candidates=[];
+ const diagnostics={unique_notices:latest.size,inactive_or_non_tender:0,expired_or_unverified_deadline:0,missing_buyer_or_title:0,unmatched_scope:0,invalid_notice_id:0};
  for(const r of latest.values()){
   const t=r.tender;
-  if(t?.status!=='active'||!Array.isArray(r.tag)||!r.tag.some(x=>x==='tender'||x==='tenderUpdate')||r.tag.some(x=>/Cancellation|award|contract/i.test(x)))continue;
+  if(t?.status!=='active'||!Array.isArray(r.tag)||!r.tag.some(x=>x==='tender'||x==='tenderUpdate')||r.tag.some(x=>/Cancellation|award|contract/i.test(x))){diagnostics.inactive_or_non_tender++;continue;}
   const deadline=t.tenderPeriod?.endDate;
-  if(typeof deadline!=='string'||!/(Z|[+-]\d\d:\d\d)$/.test(deadline)||!(Date.parse(deadline)>+now))continue;
+  if(typeof deadline!=='string'||!/(Z|[+-]\d\d:\d\d)$/.test(deadline)||!(Date.parse(deadline)>+now)){diagnostics.expired_or_unverified_deadline++;continue;}
   const title=t.title,buyer=r.buyer?.name;
-  if(typeof title!=='string'||!title.trim()||typeof buyer!=='string'||!buyer.trim())continue;
+  if(typeof title!=='string'||!title.trim()||typeof buyer!=='string'||!buyer.trim()){diagnostics.missing_buyer_or_title++;continue;}
   const lane=lanes.find(([,pattern])=>pattern.test(title+' '+String(t.description??'').slice(0,20000)))?.[0];
-  if(!lane)continue;
+  if(!lane){diagnostics.unmatched_scope++;continue;}
   const id=String(r.id??'');
-  if(!/^\d{6}-\d{4}$/.test(id))continue;
+  if(!/^\d{6}-\d{4}$/.test(id)){diagnostics.invalid_notice_id++;continue;}
   candidates.push({candidate_ref:'uk:'+createHash('sha256').update(r.ocid).digest('hex').slice(0,40),source_url:'https://www.find-tender.service.gov.uk/Notice/'+id,buyer:buyer.slice(0,300),title:title.slice(0,300),deadline,deadline_timezone:null,suggested_lane:lane,stage:'research_required',qualified:false,contact_authorized:false});
  }
- return {schema:'evercraft.kaidance.buyer-source-receipt.v1',records_observed:packageData.releases.length,candidates,coverage_complete:false,qualified_count:0,send_performed:false};
+ return {schema:'evercraft.kaidance.buyer-source-receipt.v1',records_observed:packageData.releases.length,diagnostics,candidates,coverage_complete:false,qualified_count:0,send_performed:false};
 }
 export async function collectUk({now=new Date(),fetchFn=fetch,maxPages=5}={}){
  if(!Number.isFinite(+now)||!Number.isInteger(maxPages)||maxPages<1||maxPages>10)throw Error('invalid_uk_bounds');
