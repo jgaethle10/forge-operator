@@ -11,9 +11,9 @@ export function createScopedOutboundPolicy({policy='content-hash-only',workloads
     if(method==='GET') return ['/v1/health','/v1/capacity','/v1/operator/status'].includes(route);
     if(method!=='POST') return false;
     if(route==='/v1/attest') return true;
-    if(route==='/v1/jobs') return allowed.has(body?.workload);
+    if(route==='/v1/jobs') return allowed.has(body?.workload_class);
     // Lease admission must independently enforce workload authorization at the runtime.
-    if(route==='/v1/leases') return allowed.has(body?.workload);
+    if(route==='/v1/leases') return allowed.has(body?.workload_class);
     return /^\/v1\/leases\/[A-Za-z0-9_-]{1,128}\/(?:renew|release)$/.test(route);
   };
 }
