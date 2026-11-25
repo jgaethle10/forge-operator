@@ -143,7 +143,10 @@ test('Chrome 390px viewport: one-use invite -> submission -> owner review -> ref
  assert(mobile.submitHeight>=44,'mobile quick-submit target below 44px');
  assert.equal(mobile.inviteInUrl,false);
  assert.equal(mobile.cookieExposed,false,'HttpOnly cookie hidden from script');
- await tab.evaluate('(()=>{const form=document.getElementById("quickIdeaForm");form.elements.kind.value="art";form.elements.name.value="Coastal community photo exhibit";form.elements.place.value="unsure";form.elements.description.value="An accessible coastal photography exhibit with local artist contributions.";form.requestSubmit()})()');
+ const tap=await tab.evaluate('(()=>{const form=document.getElementById("quickIdeaForm");form.elements.kind.value="art";form.elements.name.value="Coastal community photo exhibit";form.elements.place.value="unsure";form.elements.description.value="An accessible coastal photography exhibit with local artist contributions.";const button=document.getElementById("quickSend");button.scrollIntoView({block:"center",behavior:"instant"});const rect=button.getBoundingClientRect();return {x:rect.left+rect.width/2,y:rect.top+rect.height/2,visible:rect.top>=0&&rect.bottom<=innerHeight&&rect.width>=44&&rect.height>=44}})()');
+ assert(tap.visible,'submit target not visible and touch-sized at 390px');
+ await tab.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:tap.x,y:tap.y}]});
+ await tab.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
  await eventually(async()=>{
   const x=await tab.evaluate('document.getElementById("quickFeedback")?.textContent||""');
   return x.includes('received for owner review')?x:null;
