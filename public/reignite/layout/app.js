@@ -1,5 +1,5 @@
 import { IDEAS, PLACES, createQuickSuggestion } from './quick-idea.mjs';
-/* REIGNITE local-first planning client. No external runtime, cookies or persistent credentials. */
+/* REIGNITE local-first planning client. Owner keys are memory-only; invited editors use scoped HttpOnly cookies, not localStorage. */
 const $=id=>document.getElementById(id);
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const copy=v=>JSON.parse(JSON.stringify(v));
