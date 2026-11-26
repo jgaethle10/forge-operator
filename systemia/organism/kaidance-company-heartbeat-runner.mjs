@@ -18,6 +18,7 @@ import {runLearningCommunityCycle} from './kaidance-learning-community-cycle.mjs
 import {runAirCoreDevelopmentCycle} from './kaidance-aircore-development.mjs';
 import {runPrivateResearchContinuity} from './kaidance-rd-continuity.mjs';
 import {runFindMyPartCycle} from './kaidance-findmypart-execution.mjs';
+import {projectIndustrialHeartbeatProof} from '../atlas/industrial-heartbeat-proof.mjs';
 import {runCommercialSourceProof} from './kaidance-commercial-source-proof.mjs';
 import {runEventOpportunityScout} from '../events/event-opportunity-scout-runner.mjs';
 import {runSAMEventScout} from '../events/event-opportunity-us-sam-runner.mjs';
@@ -433,6 +434,7 @@ export function runCompanyHeartbeat({
  const researchContinuity=runPrivateResearchContinuity({enabled:rdContinuityEnabled,root:repo,outDir:out,now});
  const forest=classifyForestReceipt(forestReceipt,now);
  const fmp=findmypartExecutionReceipt?.schema==='evercraft.findmypart.execution-cycle.v1'&&findmypartExecutionReceipt.tick===tick&&findmypartExecutionReceipt.outreach_authorized===false&&findmypartExecutionReceipt.buyers_qualified===0?findmypartExecutionReceipt:null;
+ const industrialProof=projectIndustrialHeartbeatProof(fmp?.industrial_proof);
  const inbound=fmp?.inbound_revenue_review;
  const inboundSummary=inbound?.schema==='evercraft.findmypart.inbound-revenue-review.v1'&&inbound.contains_buyer_pii===false&&inbound.prior_contact_verified===false&&inbound.buyers_qualified===0&&inbound.outreach_authorized===false&&inbound.payment_verified===false&&inbound.fulfillment_authorized===false&&['not_admitted','hold_inbox_capacity','hold_inbox_integrity','hold_private_inbox_binding','inbox_empty','consented_inquiries_require_review'].includes(inbound.state)&&['observed_inquiries','unique_case_candidates','duplicate_inquiries','invalid_inquiries'].every(k=>Number.isSafeInteger(inbound[k])&&inbound[k]>=0&&inbound[k]<=500)&&(inbound.oldest_pending_ms===null||Number.isSafeInteger(inbound.oldest_pending_ms)&&inbound.oldest_pending_ms>=0)?
  {state:inbound.state,observed_inquiries:inbound.observed_inquiries,unique_case_candidates:inbound.unique_case_candidates,duplicate_inquiries:inbound.duplicate_inquiries,invalid_inquiries:inbound.invalid_inquiries,oldest_pending_ms:inbound.oldest_pending_ms,prior_contact_verified:false,outreach_authorized:false,payment_verified:false}:null;
@@ -458,7 +460,7 @@ export function runCompanyHeartbeat({
    any_buyer_contact:false,any_sponsor_commitment:false};
  const engineeringPilot=observeEngineeringPilot({root:engineeringPilotRoot,now});
  const report={...planned.report,proof,engineering_pilot:engineeringPilot,commercial_source_proof:commercialSourceProof||{status:'not_executed',executed:false},event_discovery:eventDiscovery,infrastructure_watch:aiw,forest_restoration:forest,
-  findmypart:{state:'review_queued',priority:1,heartbeat_seconds:300,workstreams:findmypartCandidates.map(x=>x.work_key),worker_dispatched:false,source_poll_performed:fmp?.source_poll_performed===true,buyers_qualified:0,outreach_authorized:false,engineering_benchmark_executed:fmp?.engineering_benchmark_executed===true,commercial_status:fmp?.commercial_status||'not_executed',inbound_revenue_review:inboundSummary,inbound_contact_history:contactHistory,source_observation:fmp?.observation||null,service_fit_evidence:fmpShopCandidates.map(({work_key,source_url,observed_at,evidence_ref})=>({work_key,source_url,observed_at,evidence_ref})),code_changes:0},
+  findmypart:{state:'review_queued',priority:1,heartbeat_seconds:300,workstreams:findmypartCandidates.map(x=>x.work_key),worker_dispatched:false,source_poll_performed:fmp?.source_poll_performed===true,buyers_qualified:0,outreach_authorized:false,engineering_benchmark_executed:fmp?.engineering_benchmark_executed===true,commercial_status:fmp?.commercial_status||'not_executed',industrial_proof:industrialProof,inbound_revenue_review:inboundSummary,inbound_contact_history:contactHistory,source_observation:fmp?.observation||null,service_fit_evidence:fmpShopCandidates.map(({work_key,source_url,observed_at,evidence_ref})=>({work_key,source_url,observed_at,evidence_ref})),code_changes:0},
   research_continuity:researchContinuity,
   global_opportunities:global,network_development:network,
   learning_community:learningSummary,aircore_development:aircoreSummary};
