@@ -33,7 +33,7 @@ export function normalizeUk(packageData,{now=new Date()}={}){
  }
  return {schema:'evercraft.kaidance.buyer-source-receipt.v1',records_observed:packageData.releases.length,diagnostics,candidates,coverage_complete:false,qualified_count:0,send_performed:false};
 }
-export async function collectUk({now=new Date(),fetchFn=fetch,maxPages=5}={}){
+export async function collectUkReleaseWindow({now=new Date(),fetchFn=fetch,maxPages=5}={}){
  if(!Number.isFinite(+now)||!Number.isInteger(maxPages)||maxPages<1||maxPages>10)throw Error('invalid_uk_bounds');
  const u=new URL(endpoint);
  u.searchParams.set('updatedFrom',new Date(+now-86400000).toISOString().slice(0,19));
@@ -61,6 +61,11 @@ export async function collectUk({now=new Date(),fetchFn=fetch,maxPages=5}={}){
    next=n.href;
   }
  }
- const result=normalizeUk({releases},{now});
- return {...result,pages_observed:pages,coverage_complete:!next};
+ return {releases,pages_observed:pages,coverage_complete:!next};
+}
+
+export async function collectUk(options={}){
+ const now=options.now??new Date();
+ const window=await collectUkReleaseWindow({...options,now});
+ return {...normalizeUk(window,{now}),pages_observed:window.pages_observed,coverage_complete:window.coverage_complete};
 }
