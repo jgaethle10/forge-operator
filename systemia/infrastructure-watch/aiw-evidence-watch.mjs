@@ -88,7 +88,8 @@ export async function probeAiWSource(source,{fetcher=fetch}={}){
 }
 function privateRoot(out){
   const dir=path.resolve(out);
-  if(dir===ROOT||dir.startsWith(ROOT+path.sep))
+  const ciStaging=path.join(ROOT,'artifacts/aiw-evidence-watch');
+  if((dir===ROOT||dir.startsWith(ROOT+path.sep))&&dir!==ciStaging)
     throw Error('aiw_private_output_required_outside_source_tree');
   if(fs.existsSync(dir)&&fs.lstatSync(dir).isSymbolicLink())
     throw Error('aiw_output_symlink_refused');
