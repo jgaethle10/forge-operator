@@ -20,7 +20,8 @@
     "network_development_source_receipt": "artifacts/kaidance-network-development/latest.json",
     "network_development_mission_snapshot": "artifacts/kaidance-network-development/mission-snapshot.json",
     "aircore_source_receipt": "artifacts/kaidance-company-heartbeat/aircore-development/latest.json",
-    "aircore_review_queue": "artifacts/kaidance-company-heartbeat/aircore-development/queue.json"
+    "aircore_review_queue": "artifacts/kaidance-company-heartbeat/aircore-development/queue.json",
+    "external_skill_intake_review": "artifacts/kaidance-company-heartbeat/latest.json#external_skill_intake"
   },
   "authority": {
     "inventory_read": "autonomous",
@@ -42,7 +43,11 @@
     "aircore_bounded_source_proof": "allowlisted_local_only",
     "aircore_physical_tests": false,
     "aircore_hardware_purchase": false,
-    "aircore_partner_outreach": false
+    "aircore_partner_outreach": false,
+    "external_skill_metadata_observation": "read_only_bounded_source",
+    "external_skill_install": false,
+    "external_skill_runtime_execution": false,
+    "external_skill_customer_data": false
   },
   "claims": {
     "all_public_products_inventoried": true,
@@ -56,6 +61,8 @@
     "network_field_validated": false,
     "network_runtime_active_after_source_merge": false,
     "aircore_prototype_built": false,
-    "aircore_cadr_verified": false
+    "aircore_cadr_verified": false,
+    "external_skills_installed_every_tick": false,
+    "external_skill_review_is_customer_delivery": false
   }
 }
