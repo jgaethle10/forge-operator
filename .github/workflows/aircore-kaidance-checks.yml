@@ -26,3 +26,30 @@ jobs:
         run: node --test systemia/breath-of-fresh-air/aircore-sizing.test.mjs tests/kaidance-aircore-development.test.mjs
       - name: Existing company heartbeat guardrail regression
         run: node --test tests/kaidance-company-heartbeat.test.mjs tests/kaidance-next-action.test.mjs tests/aiw-evidence-watch.test.mjs tests/kaidance-network-heartbeat-integration.test.mjs
+      - name: Execute one real bounded AirCore source-proof cycle (no hardware)
+        run: |
+          node --input-type=module <<'JS'
+          import fs from 'node:fs';
+          import os from 'node:os';
+          import path from 'node:path';
+          import {runAirCoreDevelopmentCycle} from './systemia/organism/kaidance-aircore-development.mjs';
+          const out=fs.mkdtempSync(path.join(os.tmpdir(),'aircore-real-source-proof-'));
+          try{
+            const cycle=runAirCoreDevelopmentCycle({
+              root:process.cwd(),outDir:out,runProofs:true
+            });
+            if(cycle.report.source_status!=='source_proof_passed'||
+               cycle.report.proof_executed_this_tick!==true||
+               cycle.report.measured_cadr_cfm!==null||
+               cycle.report.physical_prototype_built!==false||
+               cycle.queue.execution_authorized!==false)
+              throw Error('AirCore source proof or held physical gates not verified');
+            console.log(JSON.stringify({
+              source_status:cycle.report.source_status,
+              proof_executed:cycle.report.proof_executed_this_tick,
+              receipt_ref:cycle.receipt_ref,
+              measured_cadr_cfm:null,
+              hardware_work_dispatched:false
+            }));
+          }finally{fs.rmSync(out,{recursive:true,force:true});}
+          JS
