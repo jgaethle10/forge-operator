@@ -34,10 +34,16 @@ def produce(source_dir, commit):
     pdf_path = base / "kennedy-private-review-synthetic.pdf"
     if pdf_path.is_symlink() or not pdf_path.is_file() or pdf_path.stat().st_size > 30000000:
         raise ValueError("kennedy_private_pdf_missing_or_unsafe")
-    pdf_hash = hashlib.sha256(pdf_path.read_bytes()).hexdigest()
+    pdf_bytes = pdf_path.read_bytes()
+    if (not pdf_bytes.startswith(b'%PDF-1.4') or b'/Count 2' not in pdf_bytes
+            or b'PRIVATE SOURCE REVIEW' not in pdf_bytes
+            or b'NOT FOR EXTERNAL DELIVERY' not in pdf_bytes):
+        raise ValueError('kennedy_private_pdf_structure_or_release_warning_missing')
+    pdf_hash = hashlib.sha256(pdf_bytes).hexdigest()
     if (metadata.get("schema") != "evercraft.kss.private-source-review.qa.v1"
             or metadata.get("fixture") != "entirely_synthetic_owned_local_only"
             or metadata.get("pages") != 2
+            or metadata.get("actual_vault_stored_bytes_used") is not True
             or metadata.get("real_site_address") is not False
             or metadata.get("human_visual_review") != "not_performed"
             or metadata.get("external_release_authorized") is not False
@@ -92,7 +98,7 @@ def main():
     args = parser.parse_args()
     commit = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
     receipt = produce(args.input_dir, commit)
-    out = Path(args.out_file).resolve()
+    out = Path(args.out_file).absolute()
     out.parent.mkdir(mode=0o700, parents=True, exist_ok=True)
     if out.exists() and out.is_symlink():
         raise ValueError("kennedy_output_symlink_refused")
