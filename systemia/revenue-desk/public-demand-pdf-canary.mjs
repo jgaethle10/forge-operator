@@ -79,7 +79,7 @@ export function resumePdfExtraction({receipt,expectedSha}={}){
  const raw=read(receipt,2000000);
  if(sha(raw)!==expectedSha)throw Error('acquisition_receipt_mismatch');
  const prior=JSON.parse(raw);
- if(prior.schema!=='evercraft.public-demand.pdf-evidence.v1'||!['hold_isolated_parser_unavailable','hold_isolated_parser_failed'].includes(prior.state)||prior.qualified!==false||prior.contact_authorized!==false||prior.execution_authorized!==false||prior.send_performed!==false)throw Error('invalid_acquisition_hold');
+ if(prior.schema!=='evercraft.public-demand.pdf-evidence.v1'||!['hold_isolated_parser_unavailable','hold_isolated_parser_failed','extracted_requires_research'].includes(prior.state)||prior.qualified!==false||prior.contact_authorized!==false||prior.execution_authorized!==false||prior.send_performed!==false)throw Error('invalid_acquisition_hold');
  const u=new URL(prior.url);
  if(!allowedOrigins.has(u.origin)||u.origin!==new URL(prior.parent_source).origin||u.search||u.hash||u.username||u.password||!u.pathname.toLowerCase().endsWith('.pdf')||!/^[a-f0-9]{64}$/.test(prior.parent_receipt_sha256))throw Error('invalid_document_source');
  const key=sha(JSON.stringify({url:prior.url,parent_receipt_sha256:prior.parent_receipt_sha256,parent_source:prior.parent_source}));
@@ -93,7 +93,10 @@ export function resumePdfExtraction({receipt,expectedSha}={}){
   const {text,...summary}=record;
   return {...summary,receipt:dest,receipt_sha256:sha(saved),reused:true,network_performed:false};
  }
- const parsed=extract(pdf);
+ const parsed=prior.state==='extracted_requires_research'
+  ?{state:prior.state,text:prior.text,text_sha256:prior.text_sha256,page_limit:prior.page_limit,full_document_coverage_verified:false}
+  :extract(pdf);
+ if(parsed.state==='extracted_requires_research'&&(typeof parsed.text!=='string'||!parsed.text.trim()||sha(parsed.text)!==parsed.text_sha256||parsed.page_limit!==40))throw Error('invalid_extracted_text');
  if(parsed.state!=='extracted_requires_research')return {url:prior.url,pdf_sha256:prior.pdf_sha256,acquisition_receipt_sha256:expectedSha,state:parsed.state,qualified:false,network_performed:false,send_performed:false};
  const record={schema:'evercraft.public-demand.pdf-extraction.v1',url:prior.url,acquisition_receipt_sha256:expectedSha,pdf_sha256:prior.pdf_sha256,observed_at:new Date().toISOString(),...parsed,qualified:false,contact_authorized:false,execution_authorized:false,send_performed:false};
  const body=Buffer.from(JSON.stringify(record));
