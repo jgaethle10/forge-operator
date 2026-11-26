@@ -77,13 +77,30 @@ async function selfTest(){
   for(const fault of ['count','changed','revision','negative','duplicate','missing','truncated']){
     let rejected=false;try{await collect(fixture(fault))}catch{rejected=true}check(rejected);
   }
+  const batch=requestSpec('/query',{f:'json',objectIds:Array.from({length:500},(_,i)=>i+10000).join(','),outFields:'OBJECTID',returnGeometry:'false'});
+  check(batch.options.method==='POST'&&batch.url.search===''&&new URLSearchParams(batch.options.body).get('objectIds').split(',').length===500);
+  const count=requestSpec('/query',{f:'json',where:'1=1',returnCountOnly:'true'});
+  check(count.options.method==='GET'&&count.url.searchParams.get('where')==='1=1'&&count.stage==='count');
+  check(requestSpec('',{f:'json'}).stage==='metadata'&&requestSpec('/query',{f:'json',returnIdsOnly:'true'}).stage==='ids');
   return {state:'PASS',assertions:passed,scope:'synthetic fixtures only'};
 }
-async function liveGet(path,params){
+function requestSpec(path,params){
   if(path!==''&&path!=='/query')throw new Error('invalid_endpoint');
-  const url=new URL(ROOT+path);url.search=new URLSearchParams(params).toString();
-  const res=await fetch(url,{redirect:'error',signal:AbortSignal.timeout(30000),headers:{Accept:'application/json'}});
-  if(!res.ok||!res.body)throw new Error('source_http_'+res.status);
+  const url=new URL(ROOT+path), encoded=new URLSearchParams(params).toString();
+  const stage=path===''?'metadata':params.returnCountOnly?'count':params.returnIdsOnly?'ids':params.objectIds?'attributes':'unknown';
+  if(stage==='unknown')throw new Error('invalid_query_stage');
+  const post=stage==='attributes';
+  if(!post)url.search=encoded;
+  return {url,stage,options:{method:post?'POST':'GET',
+    headers:post?{Accept:'application/json','Content-Type':'application/x-www-form-urlencoded'}:{Accept:'application/json'},
+    ...(post?{body:encoded}:{})}};
+}
+async function liveGet(path,params){
+  const {url,stage,options}=requestSpec(path,params);
+  let res;
+  try{res=await fetch(url,{...options,redirect:'error',signal:AbortSignal.timeout(30000)});}
+  catch(e){throw new Error('source_transport_'+stage+'_'+(e.cause?.code||e.name||'unknown'));}
+  if(!res.ok||!res.body)throw new Error('source_http_'+stage+'_'+res.status);
   const reader=res.body.getReader(),parts=[];let bytes=0;
   try{for(;;){const {value,done}=await reader.read();if(done)break;bytes+=value.byteLength;if(bytes>16000000){await reader.cancel();throw new Error('response_limit');}parts.push(Buffer.from(value));}}
   finally{reader.releaseLock();}
