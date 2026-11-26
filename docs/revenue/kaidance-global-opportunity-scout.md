@@ -57,3 +57,9 @@ node systemia/organism/kaidance-company-heartbeat-runner.mjs --out /owned/privat
 The second command runs the **existing** company pulse and calls the public read-only global scout once if due. The owner-private sibling `kaidance-global-opportunities/` contains `latest.json`, `state.json`, `queue.json`, and `mission-snapshot.json`. A source failure logs a hold, leaves revenue outreach disabled, and does not bring down the rest of the company heartbeat.
 
 **Next release gate:** independent live owned-resident readback and source API response verification. No claims of global automated sales, international partnerships, signed bids, real purchases or paid work are created by merging a PR.
+
+## PROPERTY-001: property rescue and remote operations
+
+Mission #2584 extends the existing scout's topic matching with the canonical `evercraft-property-services` key for explicit property management, preservation, maintenance, rental turnover and related service notices. These remain unqualified research candidates; the existing EPS public capability is local and does not establish national delivery or property management licensing. The existing receipt validator accepts this key without changing outreach or execution authority.
+
+The registry's US vendor/procurement pages are **manual source review only**; their addition does not implement an automated US feed or prove any buyer is available. See the first source-evidence batch on #2584. Verify local capacity, licensing, insurance, existing contact history, and a viable payment arrangement before drafting an offer. No platform scraping, owner distress targeting, autonomous applications or spending. The only automatic source remains the existing World Bank API. A future independently tested US connector must preserve the same heartbeat, ledger, source TTL, receipt, and authorization boundaries.
