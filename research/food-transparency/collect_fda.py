@@ -21,12 +21,20 @@ def normalize(raw):
     rows = obj.get("results")
     if not isinstance(rows, list) or not rows or any(not isinstance(r, dict) for r in rows):
         raise ValueError("missing or invalid results; no successful receipt")
-    if any(not isinstance(r.get("recall_number"), str) or not r["recall_number"] for r in rows):
-        raise ValueError("missing recall identifiers")
     keys = ("recall_number", "event_id", "report_date", "recall_initiation_date",
             "classification", "status", "recalling_firm", "product_description",
             "reason_for_recall", "code_info", "distribution_pattern", "country", "state")
-    return obj.get("meta", {}), [{k: r.get(k) for k in keys} for r in rows]
+    records = []
+    for index, row in enumerate(rows):
+        record = {k: row.get(k) for k in keys}
+        number = row.get("recall_number")
+        identified = isinstance(number, str) and bool(number.strip())
+        record["identity_status"] = "source_identifier_present" if identified else "review_required"
+        # Snapshot-local locator only; never a substitute recall number.
+        record["source_row_index"] = index
+        record["source_row_sha256"] = sha(encoded(row))
+        records.append(record)
+    return obj.get("meta", {}), records
 
 def write_once(path, data):
     # Publish a complete file atomically, never replace existing evidence.
@@ -49,17 +57,24 @@ def encoded(obj):
     return (json.dumps(obj, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode()
 
 def collect(root, raw, source, retrieved_at):
-    meta, rows = normalize(raw)
     digest = sha(raw)
-    normalized = encoded({"records": rows, "scope": "one page, not exhaustive", "source_sha256": digest})
+    # Retain original bytes even when the response cannot be normalized.
+    write_once(root / "raw" / (digest + ".json"), raw)
+    meta, rows = normalize(raw)
+    identified = [r for r in rows if r["identity_status"] == "source_identifier_present"]
+    review = [r for r in rows if r["identity_status"] == "review_required"]
+    normalized = encoded({"records": identified, "review_required": review,
+                          "scope": "one page, not exhaustive", "source_sha256": digest})
     receipt = {"mission": "FOOD-TRANSPARENCY-001", "source": source,
                "documentation": DOC, "retrieved_at_utc": retrieved_at,
                "source_last_updated": meta.get("last_updated"),
                "source_reported_total": meta.get("results", {}).get("total"),
-               "records": len(rows), "raw_sha256": digest, "normalized_sha256": sha(normalized),
+               "records": len(rows), "identified_records": len(identified),
+               "review_required_records": len(review),
+               "raw_sha256": digest, "normalized_sha256": sha(normalized),
                "scope": "one page ordered by report_date; not complete recall coverage",
-               "publication": "held", "status": "collection_success"}
-    write_once(root / "raw" / (digest + ".json"), raw)
+               "publication": "held",
+               "status": "collection_review_required" if review else "collection_success"}
     write_once(root / "normalized" / (sha(normalized) + ".json"), normalized)
     data = encoded(receipt)
     write_once(root / "receipts" / (sha(data) + ".json"), data)
@@ -91,6 +106,28 @@ def self_test():
             pass
         else:
             raise AssertionError("evidence overwritten")
+        mixed = encoded({"results": [{"recall_number": "FIXTURE-3"},
+                                      {"event_id": "fixture-event"},
+                                      {"recall_number": "  "},
+                                      {"recall_number": 42}]})
+        c = collect(root, mixed, "fixture", "fixture-mixed")
+        assert c["records"] == 4 and c["identified_records"] == 1
+        assert c["review_required_records"] == 3
+        assert c["status"] == "collection_review_required"
+        doc = json.loads((root / "normalized" / (c["normalized_sha256"] + ".json")).read_bytes())
+        assert len(doc["records"]) == 1 and len(doc["review_required"]) == 3
+        assert doc["review_required"][0]["recall_number"] is None
+        assert doc["review_required"][0]["source_row_index"] == 1
+        assert doc["review_required"][0]["event_id"] == "fixture-event"
+        assert doc["review_required"][2]["recall_number"] == 42
+        invalid = b'{"results":[]}'
+        try:
+            collect(root, invalid, "fixture", "fixture-invalid")
+        except ValueError:
+            assert (root / "raw" / (sha(invalid) + ".json")).read_bytes() == invalid
+            assert len(list((root / "receipts").glob("*.json"))) == 2
+        else:
+            raise AssertionError("invalid response accepted")
     print("FOOD_TRANSPARENCY_SELF_TEST PASS")
 
 def main():
