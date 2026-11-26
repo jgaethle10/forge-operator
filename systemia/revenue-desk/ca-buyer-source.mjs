@@ -35,21 +35,26 @@ export function normalizeCanada(input,{now=new Date()}={}){
  if(fields.some(k=>!header.includes(k)))throw Error('ca_schema_changed');
  const ix=Object.fromEntries(fields.map(k=>[k,header.indexOf(k)]));
  const candidates=[],seen=new Set();
+ const diagnostics={unique_notices:0,inactive_or_non_tender:0,expired_or_unverified_deadline:0,missing_buyer_or_title:0,unmatched_scope:0,invalid_notice_id:0};
+ const observed=new Set();
  for(const row of rows){
   const [en,fr,ref,rawDue,status,buyerEn,buyerFr,urlEn,urlFr,descEn,descFr]=fields.map(k=>row[ix[k]]?.trim()||'');
-  if(status.toLowerCase()!=='open'||!ref||!(en||fr)||!(buyerEn||buyerFr))continue;
+  if(!ref){diagnostics.invalid_notice_id++;continue;}
+  if(!observed.has(ref)){observed.add(ref);diagnostics.unique_notices++;}
+  if(status.toLowerCase()!=='open'){diagnostics.inactive_or_non_tender++;continue;}
+  if(!(en||fr)||!(buyerEn||buyerFr)){diagnostics.missing_buyer_or_title++;continue;}
   // Unzoned times deliberately remain unqualified and are not guessed.
-  if(!/(Z|[+-]\d{2}:?\d{2})$/.test(rawDue))continue;
-  const due=Date.parse(rawDue);if(!Number.isFinite(due)||due<=+now)continue;
+  if(!/(Z|[+-]\d{2}:?\d{2})$/.test(rawDue)){diagnostics.expired_or_unverified_deadline++;continue;}
+  const due=Date.parse(rawDue);if(!Number.isFinite(due)||due<=+now){diagnostics.expired_or_unverified_deadline++;continue;}
   const lane=lanes.find(([,p])=>p.test([en,fr,descEn.slice(0,20000),descFr.slice(0,20000)].join(' ')))?.[0];
-  if(!lane)continue;
-  let u;try{u=new URL(urlEn||urlFr);}catch{continue;}
-  if(u.protocol!=='https:'||u.hostname!=='canadabuys.canada.ca'||u.username||u.password||u.port||!/^\/(en|fr)\/tender-opportunities\//.test(u.pathname))continue;
+  if(!lane){diagnostics.unmatched_scope++;continue;}
+  let u;try{u=new URL(urlEn||urlFr);}catch{diagnostics.invalid_notice_id++;continue;}
+  if(u.protocol!=='https:'||u.hostname!=='canadabuys.canada.ca'||u.username||u.password||u.port||!/^\/(en|fr)\/tender-opportunities\//.test(u.pathname)){diagnostics.invalid_notice_id++;continue;}
   const candidate_ref='ca:'+createHash('sha256').update(ref).digest('hex').slice(0,40);
   if(seen.has(candidate_ref))continue;seen.add(candidate_ref);
   candidates.push({candidate_ref,source_url:u.href,buyer:(buyerEn||buyerFr).slice(0,300),title:(en||fr).slice(0,300),deadline:new Date(due).toISOString(),deadline_timezone:null,suggested_lane:lane,stage:'research_required',qualified:false,contact_authorized:false});
  }
- return {schema:'evercraft.kaidance.buyer-source-receipt.v1',records_observed:rows.length,candidates:candidates.slice(0,500),coverage_complete:candidates.length<=500,qualified_count:0,send_performed:false};
+ return {schema:'evercraft.kaidance.buyer-source-receipt.v1',records_observed:rows.length,diagnostics,candidates:candidates.slice(0,500),coverage_complete:candidates.length<=500,qualified_count:0,send_performed:false};
 }
 export async function collectCanada({now=new Date(),fetchFn=fetch}={}){
  const response=await fetchFn(endpoint,{method:'GET',redirect:'error',signal:AbortSignal.timeout(45000)});
