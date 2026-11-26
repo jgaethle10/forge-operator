@@ -31,6 +31,17 @@ jobs:
           node --check systemia/participation-economy/creator-access.mjs
           node --check systemia/participation-economy/creator-media-store.mjs
           node --check systemia/participation-economy/creator-media-pilot.mjs
+      - name: Homecoming founding preview contract
+        run: |
+          node --input-type=commonjs -e '
+            const html=require("node:fs").readFileSync("systemia/participation-economy/homecoming-preview.html","utf8");
+            const scripts=[...html.matchAll(/<script>([\s\S]*?)<\/script>/g)];
+            if(scripts.length!==1)throw Error("Expected local filter script");
+            new Function(scripts[0][1]);
+            for(const s of ["Founding preview","Custody unverified","No images collected or published","yakimavalleytrolleys.org/yvt-history/","yvl.org/services/special-collections-and-archive-services/"])if(!html.includes(s))throw Error("Missing boundary or source: "+s);
+            if(/<form\b|<input\b|<script[^>]+src=|fetch\s*\(|XMLHttpRequest|sendBeacon|localStorage|sessionStorage|<iframe\b|<img\b/.test(html))throw Error("Unapproved collection or external media");
+            if((html.match(/<article class="card"/g)||[]).length!==5)throw Error("Expected five source-linked cards");
+          '
       - name: Verify seasonal household consent and nonbinding estimate bridge
         run: node --test systemia/participation-economy/season-household-bridge.test.mjs
       - name: Run economy and fraud-hold tests
