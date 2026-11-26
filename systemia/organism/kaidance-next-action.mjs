@@ -175,6 +175,16 @@ export function planKaidanceNextAction({
     'existing_systemia_operator_review'));
   }
  }
+ // HumanFilter proof is local QA, never permission to publish or change production.
+ const hf=companyReport.humanfilter;
+ if(hf?.schema==='evercraft.kaidance.humanfilter-proof.v1'&&hf.release_authorized===false&&hf.private_feed_accessed===false){
+  const expected=hf.status==='passed'&&hf.executed===true&&HASH.test(hf.source_fingerprint||'')
+   ?'humanfilter:release-evidence-review':'humanfilter:proof-reconciliation';
+  const row=companyQueue.candidates?.find(x=>x.lane_key==='humanfilter'&&x.work_key===expected&&x.authority==='systemia_operator_review_required'&&x.execution_authorized===false&&x.publication_authorized===false);
+  if(row)choices.push(action(expected.endsWith('reconciliation')?1:3,expected,'humanfilter',
+   expected.endsWith('reconciliation')?'investigate_local_rule_proof':'review_browser_regression_and_versioned_package_gates',
+   'company',HASH.test(hf.source_fingerprint||'')?hf.source_fingerprint:null,'existing_systemia_operator_review'));
+ }
  const unbound=companyQueue.candidates?.filter(x=>
   x?.action==='bind_existing_systemia_capability_or_admit_bounded_new_adapter'&&
   /^product:[a-z0-9-]+:adapter-admission$/.test(x.work_key||'')&&
