@@ -52,6 +52,18 @@ export class EngineeringFencePilot{
   }finally{fs.rmdirSync(this.lock);}
  }
  #time(){return new Date(this.clock()).toISOString();}
+ // Observational metrics only; not an admission, dispatch or release grant.
+ observe(){
+  const state=fs.existsSync(this.file)?JSON.parse(fs.readFileSync(this.file,'utf8')):{sequence:0,jobs:{}};
+  const jobs=Object.values(state.jobs),now=this.clock();
+  const age=j=>Math.max(0,now-Date.parse(j.admitted_at));
+  const waiting=jobs.filter(j=>j.status==='accepted');
+  return receipt({schema:'evercraft.engineering.pilot-observation.v1',observed_at:this.#time(),
+   sequence:state.sequence,accepted:waiting.length,reserved:jobs.filter(j=>j.status==='reserved').length,
+   uncertain:jobs.filter(j=>j.status==='intent').length,completed:jobs.filter(j=>j.status==='complete').length,
+   superseded:jobs.filter(j=>j.status==='superseded').length,oldest_waiting_ms:waiting.length?Math.max(...waiting.map(age)):null,
+   writer_lock_present:fs.existsSync(this.lock),execution_authorized:false,...flags});
+ }
  #authority(actor){return this.passport.authorize({subject_ref:actor,product:'engineering-pilot',scope:'ref.write',resource_ref:'synthetic',at:this.#time()}).decision==='allow';}
  // Read-only reconciliation, not permission to clear orphan locks or retry.
  inspectUncertain(){
@@ -69,6 +81,17 @@ export class EngineeringFencePilot{
   });
   return receipt({state:locked||intents.length?'reconciliation_required':'no_uncertain_intent_observed',locked,intents,current,replay_authorized:false,...flags});
  }
+ // Serialize the scoped pilot revocation route with the same writer lock.
+ // Existing Passport verifies the issuer/self authority. This is only a
+ // trusted local fixture boundary; direct Passport callers can bypass it.
+ revokeWriterGrant({grant_id,actor_ref,authority_receipt_ref,idempotency_key}){
+  return this.#tx(()=>{
+   const at=this.#time(),grant=this.passport.getGrantState(grant_id,{at});
+   if(grant.product!=='engineering-pilot'||!grant.scopes.includes('ref.write'))return deny('outside_pilot_grant_scope');
+   const r=this.passport.revokeGrant({grant_id,actor_ref,authority_receipt_ref,idempotency_key,authority_state:'manual_authorized',revoked_at:at});
+   return receipt({state:r.state,grant_id,passport_receipt:r.receipt.receipt_hash,...flags});
+  });
+ }
  #startWriter({j,id,actor,fence,request,save}){
   const leaseId='engineering-pilot-'+id+'-'+fence+'-'+request.operation;
   j.status='intent';j.intent=request;save();
@@ -82,7 +105,7 @@ export class EngineeringFencePilot{
  #finishWriter({leaseId,done,j,save,status}){
   const completed=this.gate.completeExecution({lease_id:leaseId,idempotency_key:leaseId+':complete',outcome_evidence_ref:done.receipt_hash,completed_at:this.#time()});
   if(completed.state!=='completed')throw Error('writer_completion_unverified');
-  j.status=status;j.result=done;save();return done;
+  j.status=status;j.result=done;j.completed_at=this.#time();save();return done;
  }
  #closure(paths){
   // Server-owned semantic map; different files can share a resource.
@@ -110,7 +133,7 @@ export class EngineeringFencePilot{
    const packet=this.intake.buildSystemiaAdmissionPacket(candidate.candidate.candidate_id,{actor_ref:this.admissionActor,at});
    if(accepted.decision.decision!=='accept'||packet.content_fingerprint!==digest||packet.execution_authority_granted!==false)throw Error('intake_binding_invalid');
    const admission=receipt({state:'accepted_proposal_only',request_id:id,digest,resources,admission_ref:packet.receipt_hash,execution_authorized:false,...flags});
-   s.jobs[id]={proposal,digest,resources,admission,status:'accepted'};save();return admission;
+   s.jobs[id]={proposal,digest,resources,admission,status:'accepted',admitted_at:at};save();return admission;
   });
  }
  reserve(id,{actor,ttlMs=60000}={}){
@@ -124,7 +147,7 @@ export class EngineeringFencePilot{
    }
    if(Object.values(s.jobs).some(other=>other.status==='intent'))return deny('writer_intent_reconciliation_required');
    if(git(this.repo,['rev-parse',ref])!==j.proposal.base_sha)return deny('stale_proposal_base');
-   j.fence=++s.sequence;j.actor=actor;j.expires=this.clock()+ttlMs;j.status='reserved';save();
+   j.fence=++s.sequence;j.actor=actor;j.expires=this.clock()+ttlMs;j.status='reserved';j.reserved_at=at;save();
    return receipt({state:'reserved',request_id:id,fence:j.fence,resources:j.resources,...flags});
   });
  }

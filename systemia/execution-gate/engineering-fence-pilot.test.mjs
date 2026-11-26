@@ -166,11 +166,7 @@ test('synthetic rollback is a new gated revert commit, not a ref rewind',async()
   assert.equal(git(f.repo,'rev-parse',revert.candidate+'^{tree}'),git(f.repo,'rev-parse',f.base+'^{tree}'));
  }finally{fs.rmSync(f.root,{recursive:true,force:true});}
 });
-test('two separate writer processes cannot both integrate against one target SHA',async()=>{
- const f=fixture();
- try{
-  const a=inputFor(f,'a','r/file.txt','A'),c=inputFor(f,'c','s/file.txt','C');
-  await Promise.all([f.pilot.verifyCandidate(a),f.pilot.verifyCandidate(c)]);
+function childCode(){
   const imports={
    pilot:new URL('./engineering-fence-pilot.mjs',import.meta.url).href,
    passport:new URL('../passport/passport.mjs',import.meta.url).href,
@@ -184,12 +180,61 @@ test('two separate writer processes cannot both integrate against one target SHA
    'import path from "node:path";const [root,raw]=process.argv.slice(1);const passportStateDir=path.join(root,"passport");'+
    'const passport=new EvercraftPassport({stateDir:passportStateDir});const intake=new EvercraftIntakeFabric({stateDir:path.join(root,"intake"),passportStateDir});'+
    'const gate=new EvercraftExecutionGate({stateDir:path.join(root,"gate"),passportStateDir,meterStateDir:path.join(root,"meter"),routeLedgerPath:path.join(root,"routes.json")});'+
+   'const mode=process.argv[3];if(mode==="before-cas"){const start=gate.startExecution.bind(gate);gate.startExecution=x=>{const r=start(x);if(r.state==="started")process.kill(process.pid,"SIGKILL");return r;};}if(mode==="after-cas")gate.completeExecution=()=>process.kill(process.pid,"SIGKILL");'+
    'console.log(JSON.stringify(new EngineeringFencePilot({root,passport,intake,gate,adapterActor:"pilot:adapter",admissionActor:"pilot:admission"}).publish(JSON.parse(raw))));';
+  return code;
+}
+test('two separate writer processes cannot both integrate against one target SHA',async()=>{
+ const f=fixture();
+ try{
+  const a=inputFor(f,'a','r/file.txt','A'),c=inputFor(f,'c','s/file.txt','C');
+  await Promise.all([f.pilot.verifyCandidate(a),f.pilot.verifyCandidate(c)]);
+  const code=childCode();
   const results=await Promise.all([a,c].map(async x=>JSON.parse((await run(process.execPath,['--input-type=module','-e',code,f.root,JSON.stringify(x)],{timeout:15000})).stdout)));
   const winners=results.filter(x=>x.state==='published_synthetic');assert.equal(winners.length,1);
   const loser=results.find(x=>x.state==='held');assert.ok(['reservation_or_writer_reconciliation_required','stale_target_rebase_retest_required'].includes(loser.reason));
   assert.equal(git(f.repo,'rev-parse','refs/heads/pilot-integration'),winners[0].current);
   assert.equal(git(f.repo,'cat-file','-t',a.candidate),'commit');assert.equal(git(f.repo,'cat-file','-t',c.candidate),'commit');
   console.log(JSON.stringify({synthetic:true,concurrent_writer_processes:2,winners:1,losers_held:1,production_mutations:0}));
+ }finally{fs.rmSync(f.root,{recursive:true,force:true});}
+});
+
+test('hard-killed actual writer before and after CAS leaves durable orphan and never replays',async()=>{
+ for(const mode of ['before-cas','after-cas']){
+  const f=fixture();
+  try{
+   const a=inputFor(f,'a','r/file.txt','A'),c=inputFor(f,'c','s/file.txt','C');
+   await Promise.all([f.pilot.verifyCandidate(a),f.pilot.verifyCandidate(c)]);
+   await assert.rejects(()=>run(process.execPath,['--input-type=module','-e',childCode(),f.root,JSON.stringify(a),mode],{timeout:15000}),e=>e.signal==='SIGKILL');
+   const restarted=new EngineeringFencePilot(f.options),hold=restarted.inspectUncertain();
+   assert.equal(hold.locked,true);assert.equal(hold.state,'reconciliation_required');assert.equal(hold.intents.length,1);
+   assert.equal(hold.intents[0].observation,mode==='before-cas'?'prior_ref_present':'candidate_present');
+   assert.equal(hold.intents[0].replay_authorized,false);
+   assert.equal(restarted.publish(a).reason,'reservation_or_writer_reconciliation_required');
+   assert.equal(restarted.publish(c).reason,'reservation_or_writer_reconciliation_required');
+   assert.equal(git(f.repo,'rev-parse','refs/heads/pilot-integration'),mode==='before-cas'?f.base:a.candidate);
+   assert.equal(restarted.observe().uncertain,1);
+   console.log(JSON.stringify({synthetic:true,hard_kill:mode,lock_preserved:true,ref_observation:hold.intents[0].observation,replay_authorized:false}));
+  }finally{fs.rmSync(f.root,{recursive:true,force:true});}
+ }
+});
+test('scoped revocation and mutation share one lock, and metrics are read-only',async()=>{
+ const f=fixture();
+ try{
+  const a=inputFor(f,'a','r/file.txt','A');
+  f.pilot.submit(f.proposal('b','shared/file.txt'));
+  f.advance(1000);
+  const before=f.pilot.observe();
+  assert.equal(before.accepted,1);assert.equal(before.reserved,1);assert.equal(before.oldest_waiting_ms,1000);
+  assert.equal(before.execution_authorized,false);
+  const request={grant_id:'writer',actor_ref:'pilot:authority',authority_receipt_ref:'pilot:fixture',idempotency_key:'scoped-revoke'};
+  fs.mkdirSync(path.join(f.root,'fence.lock'),{mode:0o700});
+  assert.equal(f.pilot.revokeWriterGrant(request).reason,'reservation_or_writer_reconciliation_required');
+  assert.equal(f.passport.getGrantState('writer',{at:new Date(f.options.clock()).toISOString()}).active,true);
+  fs.rmdirSync(path.join(f.root,'fence.lock'));
+  assert.equal(f.pilot.revokeWriterGrant(request).state,'revoked');
+  assert.equal(f.pilot.publish(a).reason,'writer_not_authorized');
+  assert.equal(git(f.repo,'rev-parse','refs/heads/pilot-integration'),f.base);
+  assert.equal(f.pilot.observe().completed,0);
  }finally{fs.rmSync(f.root,{recursive:true,force:true});}
 });
