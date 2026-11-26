@@ -41,6 +41,7 @@ import { NodeSeedMicroWorkloads, runNodeSeedRegisteredWorkload } from './nodesee
 import {createClassroomNodeProbeWorker,CLASSROOM_NODE_WORKLOAD} from '../classroom/node002-compute-probe.mjs';
 import {createCemeterySnapshotReceiver,CEMETERY_RESTORE_WORKLOAD} from '../evermaps/cemetery/snapshot-receiver.mjs';
 import {createCemeteryNodeWorker,CEMETERY_WORKLOAD} from '../evermaps/cemetery/node002-ingest-worker.mjs';
+import {createFindMyPartDeskWorker,FINDMYPART_DESK_WORKLOAD} from '../revenue-desk/node002-desk-shadow-worker.mjs';
 import { detectHardwareCapacity } from './hardware-inventory.mjs';
 
 const CODE_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
@@ -554,6 +555,8 @@ export async function startEvercraftComputeNode({
   maxStagedBlobBytes = Number(process.env.EVERCRAFT_MAX_STAGED_BLOB_BYTES || 2147483648),
   classroomProbeEnabled = process.env.EVERCRAFT_CLASSROOM_NODE002_PROBE_ENABLED === 'true',
   classroomProbePort = Number(process.env.EVERCRAFT_CLASSROOM_LLAMA_PORT || 8080),
+  findMyPartDeskReviewEnabled = false,
+  findMyPartDeskRoot = '',
 } = {}) {
   if (!root) throw new Error('root is required');
   const loopbackHost = host === '127.0.0.1' || host === '::1' || host === 'localhost';
@@ -927,6 +930,9 @@ export async function startEvercraftComputeNode({
   const cemeteryNode=nodeId==='evercraft-node002-nextgen';
   const cemeteryRestore=cemeteryNode && process.env.EVERCRAFT_CEMETERY_RESTORE_ENABLED==='true' ? createCemeterySnapshotReceiver({nodeId,warehouse:cemeteryWarehouse,approvedDigest:process.env.EVERCRAFT_CEMETERY_APPROVED_DIGEST,enabled:true}) : null;
   const cemeteryIngest=cemeteryNode && process.env.EVERCRAFT_CEMETERY_INGEST_ENABLED==='true' && !cemeteryRestore ? createCemeteryNodeWorker({nodeId,warehouse:cemeteryWarehouse,enabled:true}) : null;
+  // Explicit owner composition only; no environment or remote job can enable this.
+  const findMyPartDesk = findMyPartDeskReviewEnabled === true && nodeId === 'evercraft-node002-nextgen' && loopbackHost && allocatorTokenHash
+    ? createFindMyPartDeskWorker({nodeId,deskRoot:findMyPartDeskRoot,enabled:true}) : null;
   const supported = new Set([
     'systemia.private-core-origin.v1',
     'systemia.core-supervisor.v1',
@@ -955,6 +961,7 @@ export async function startEvercraftComputeNode({
   if (classroomProbeAdmitted) supported.add(CLASSROOM_NODE_WORKLOAD);
   if (cemeteryRestore) supported.add(CEMETERY_RESTORE_WORKLOAD);
   if (cemeteryIngest) supported.add(CEMETERY_WORKLOAD);
+  if (findMyPartDesk) supported.add(FINDMYPART_DESK_WORKLOAD);
   if (browserRuntimeReady) {
     supported.add('systemia.evercraft-web-browser.v1');
   }
@@ -1364,6 +1371,24 @@ export async function startEvercraftComputeNode({
           }catch(error){
             const code=String(error?.message||'');
             return send(res,422,{error:/^(cemetery|migration)_[a-z0-9_]+$/.test(code)?code:'cemetery_execution_held'});
+          }
+        }
+
+        if (workloadClass === FINDMYPART_DESK_WORKLOAD) {
+          if (!findMyPartDesk) return send(res,403,{error:'desk_workload_disabled'});
+          const key=String(body.idempotency_key||body.input?.idempotency_key||'');
+          if(body.input?.idempotency_key && body.input.idempotency_key!==key)
+            return send(res,422,{error:'desk_job_identity_conflict'});
+          try {
+            const result=findMyPartDesk.execute({payload:body.input?.payload,idempotencyKey:key});
+            return send(res,200,{ok:true,node_id:nodeId,workload_class:workloadClass,result,
+              receipt:chain.issue('findmypart.desk.shadow.executed',{
+                lease_id:body.lease_id,workload_class:workloadClass,idempotency_key:key,
+                result_sha256:sha(JSON.stringify(result)),outreach_authorized:false
+              })});
+          } catch(error) {
+            const code=String(error?.message||'');
+            return send(res,422,{error:/^desk_[a-z0-9_]+$/.test(code)?code:'desk_execution_held'});
           }
         }
 
