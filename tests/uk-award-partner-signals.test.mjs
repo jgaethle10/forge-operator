@@ -48,3 +48,31 @@ test('undated old releases and malformed explicit dates remain held',()=>{
  const malformed=release();malformed.awards[0].date='not-a-date';
  for(const r of [old,malformed])assert.equal(planUkAwardPartners({releases:[r]},{now}).signals.length,0);
 });
+
+test('adjacent infrastructure work is a bounded hypothesis only',()=>{
+ const r=release();r.tender.description='Highway maintenance and drainage works';
+ const p=planUkAwardPartners({releases:[r]},{now});
+ assert.equal(p.signals.length,1);
+ const s=p.signals[0];
+ assert.equal(s.lane,'infrastructure-research');
+ assert.equal(s.fit_basis,'adjacent_scope_hypothesis');
+ assert.match(s.scope_excerpt,/Highway maintenance/);
+ assert.equal(s.subcontract_demand_verified,false);
+ assert.equal(s.contact_authorized,false);
+ assert.equal(s.execution_authorized,false);
+ assert.equal(s.qualified,false);
+ assert.equal(p.diagnostics.adjacent_scope_signals,1);
+});
+test('explicit EV scope takes precedence over adjacent civil scope',()=>{
+ const r=release();r.tender.description='Civil engineering and electric vehicle charging';
+ const p=planUkAwardPartners({releases:[r]},{now});
+ assert.equal(p.signals[0].lane,'ev-planning');
+ assert.equal(p.signals[0].fit_basis,'explicit_scope_keyword');
+ assert.equal(p.diagnostics.adjacent_scope_signals,0);
+});
+test('adjacent scope cannot override cancellation or missing supplier identity',()=>{
+ for(const mutate of [r=>r.tag=['awardCancellation'],r=>r.awards[0].suppliers[0].id='']){
+ const r=release();r.tender.description='Facilities management';mutate(r);
+ assert.equal(planUkAwardPartners({releases:[r]},{now}).signals.length,0);
+ }
+});
