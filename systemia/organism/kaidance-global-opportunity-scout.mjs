@@ -18,7 +18,9 @@ const TERM_RULES=[
  {term:/gis|geospatial|remote sens|mapping|map data|spatial|site assessment|land use/i,offer:'evermaps'},
  {term:/market analy|feasibility study|market research|economic analys|data analy|digital transform|information system|software develop/i,offer:'evercraft-research'},
  {term:/logistic|supply chain|inventory|fleet management|port management/i,offer:'evercraft-remote-ops'},
- {term:/power sector|grid|renewable energy|energy resilience|infrastructure assessment/i,offer:'site-survive'}
+ {term:/power sector|grid|renewable energy|energy resilience|infrastructure assessment/i,offer:'site-survive'},
+ // Public procurement research only; EV legal-held runtime and partner data are untouched.
+ {term:/electric vehicle charging|ev charging|charging station|charging infrastructure|evse|vehicle electrification/i,offer:'aliev'}
 ];
 const KEY=/^OP[0-9]{6,10}$/;
 const SCHEMA='evercraft.kaidance.global-opportunity-scout.v1';
