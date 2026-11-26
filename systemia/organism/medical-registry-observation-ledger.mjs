@@ -52,16 +52,32 @@ export function compareRegistryObservations(before,after) {
   }));
 }
 
+// Check the entire persisted state before accepting it as research history.
+// A valid-looking JSON record with a stale receipt must never replace the ledger.
+export function validateRegistryLedgerState(previous) {
+ if(!previous || previous.schema!==SCHEMA || !Array.isArray(previous.records) ||
+    previous.records.length>500 || !/^sha256:[0-9a-f]{64}$/.test(String(previous.receipt_hash||'')))return false;
+ const {receipt_hash,...body}=previous;
+ if(digest(body)!==receipt_hash)return false;
+ const seen=new Set();
+ return previous.records.every(r=>{
+  if(!isNct(r?.nct_id)||seen.has(r.nct_id)||
+    typeof r.first_observed_at!=='string'||typeof r.last_observed_at!=='string'||
+    !Number.isFinite(Date.parse(r.first_observed_at))||
+    !Number.isFinite(Date.parse(r.last_observed_at))||
+    r.last_snapshot?.nct_id!==r.nct_id || !Array.isArray(r.observed_changes)||
+    r.observed_changes.length>10)return false;
+  seen.add(r.nct_id);
+  const {snapshot_digest,...snapshot}=r.last_snapshot;
+  return snapshot_digest===digest(snapshot);
+ });
+}
+
 export function updateRegistryObservationLedger({
  registry,previous=null,now=new Date(),maxRecords=200
 }={}) {
  const observedAt=now.toISOString(),cap=Math.max(1,Math.min(500,Math.floor(Number(maxRecords)||200)));
- const previousOk=previous==null || (
-  previous.schema===SCHEMA &&
-  Array.isArray(previous.records) && previous.records.length<=500 &&
-  previous.records.every(r=>isNct(r?.nct_id) && typeof r.first_observed_at==='string' &&
-   r.last_snapshot?.nct_id===r.nct_id && Array.isArray(r.observed_changes))
- );
+ const previousOk=previous==null || validateRegistryLedgerState(previous);
  const records=previousOk && Array.isArray(previous?.records)
   ? previous.records.map(x=>structuredClone(x)):[];
  const byId=new Map(records.map(x=>[x.nct_id,x]));

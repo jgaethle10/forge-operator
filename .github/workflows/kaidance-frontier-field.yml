@@ -15,15 +15,42 @@ on:
       - 'systemia/organism/medical-registered-trial-lane*.mjs'
       - 'systemia/organism/medical-outcome-audit*.mjs'
       - 'systemia/organism/medical-registry-observation-ledger*.mjs'
+      - 'systemia/organism/medical-historical-review-queue*.mjs'
       - 'systemia/organism/medical-registry-source-probe.mjs'
       - 'systemia/organism/medical-workflow-continuity.test.mjs'
       - 'systemia/organism/medical-abstract-evidence*.mjs'
       - 'systemia/organism/kaidance-frontier-proof.mjs'
       - 'systemia/organism/kaidance-frontier-cycle.mjs'
       - 'systemia/organism/kaidance-company-heartbeat*.mjs'
+      - 'systemia/organism/kaidance-creative-development.mjs'
+      - 'systemia/organism/kaidance-learning-community-cycle.mjs'
+      - 'tests/kaidance-learning-community-cycle.test.mjs'
+      - 'tests/evercraft-circles-kaidance.test.mjs'
+      - 'tests/systemia-university-kaidance.test.mjs'
+      - 'tests/kaidance-education-family-source.test.mjs'
+      - 'systemia/organism/kaidance-aircore-development.mjs'
+      - 'systemia/breath-of-fresh-air/**'
+      - 'tests/kaidance-aircore-development.test.mjs'
+      - 'registry/kaidance-aircore-development.v1.json'
+      - 'registry/kaidance-creative-development.v1.json'
+      - 'tests/kaidance-creative-development.test.mjs'
+      - 'public/leiland/**'
+      - 'public/kaidance/visual.mjs'
+      - 'public/kaidance/current-field.mjs'
+      - 'public/kaidance/confluence.css'
+      - 'systemia/media-studio/creative-council-saban-adapter.mjs'
+      - 'systemia/organism/kaidance-global-opportunity-scout.mjs'
+      - 'tests/kaidance-global-opportunity-scout.test.mjs'
       - 'systemia/organism/kaidance-next-action.mjs'
       - 'tests/kaidance-next-action.test.mjs'
       - 'systemia/organism/kaidance-company-heartbeat.workflow.json'
+      - 'systemia/organism/kaidance-network-development.mjs'
+      - 'tests/kaidance-network-development.test.mjs'
+      - 'tests/kaidance-network-heartbeat-integration.test.mjs'
+      - 'registry/kaidance-network-development.v1.json'
+      - 'systemia/infrastructure-watch/**'
+      - 'systemia/organism/aiw-evidence-watch.workflow.json'
+      - 'tests/aiw-evidence-watch.test.mjs'
       - 'systemia/organism/kaidance-worlds-saban-*.mjs'
       - 'tests/kaidance-worlds-saban-review.test.mjs'
       - 'systemia/organism/kaidance-source-patch-*.mjs'
@@ -45,6 +72,9 @@ on:
       - 'tests/kaidance-offer-checkout.test.mjs'
       - 'registry/kaidance-company-lanes.v1.json'
       - 'tests/kaidance-company-heartbeat.test.mjs'
+      - 'tests/kaidance-rd-continuity.test.mjs'
+      - 'systemia/organism/kaidance-rd-continuity.mjs'
+      - 'systemia/organism/mission-continuity-readonly*.mjs'
       - 'systemia/collider/**'
       - 'registry/**'
       - 'public/.well-known/evercraft-products.json'
@@ -62,14 +92,41 @@ on:
       - 'systemia/organism/medical-registered-trial-lane*.mjs'
       - 'systemia/organism/medical-outcome-audit*.mjs'
       - 'systemia/organism/medical-registry-observation-ledger*.mjs'
+      - 'systemia/organism/medical-historical-review-queue*.mjs'
       - 'systemia/organism/medical-registry-source-probe.mjs'
       - 'systemia/organism/medical-workflow-continuity.test.mjs'
       - 'systemia/organism/kaidance-frontier-proof.mjs'
       - 'systemia/organism/kaidance-frontier-cycle.mjs'
       - 'systemia/organism/kaidance-company-heartbeat*.mjs'
+      - 'systemia/organism/kaidance-creative-development.mjs'
+      - 'systemia/organism/kaidance-learning-community-cycle.mjs'
+      - 'tests/kaidance-learning-community-cycle.test.mjs'
+      - 'tests/evercraft-circles-kaidance.test.mjs'
+      - 'tests/systemia-university-kaidance.test.mjs'
+      - 'tests/kaidance-education-family-source.test.mjs'
+      - 'systemia/organism/kaidance-aircore-development.mjs'
+      - 'systemia/breath-of-fresh-air/**'
+      - 'tests/kaidance-aircore-development.test.mjs'
+      - 'registry/kaidance-aircore-development.v1.json'
+      - 'registry/kaidance-creative-development.v1.json'
+      - 'tests/kaidance-creative-development.test.mjs'
+      - 'public/leiland/**'
+      - 'public/kaidance/visual.mjs'
+      - 'public/kaidance/current-field.mjs'
+      - 'public/kaidance/confluence.css'
+      - 'systemia/media-studio/creative-council-saban-adapter.mjs'
+      - 'systemia/organism/kaidance-global-opportunity-scout.mjs'
+      - 'tests/kaidance-global-opportunity-scout.test.mjs'
       - 'systemia/organism/kaidance-next-action.mjs'
       - 'tests/kaidance-next-action.test.mjs'
       - 'systemia/organism/kaidance-company-heartbeat.workflow.json'
+      - 'systemia/organism/kaidance-network-development.mjs'
+      - 'tests/kaidance-network-development.test.mjs'
+      - 'tests/kaidance-network-heartbeat-integration.test.mjs'
+      - 'registry/kaidance-network-development.v1.json'
+      - 'systemia/infrastructure-watch/**'
+      - 'systemia/organism/aiw-evidence-watch.workflow.json'
+      - 'tests/aiw-evidence-watch.test.mjs'
       - 'systemia/organism/kaidance-worlds-saban-*.mjs'
       - 'tests/kaidance-worlds-saban-review.test.mjs'
       - 'systemia/organism/kaidance-source-patch-*.mjs'
@@ -91,6 +148,9 @@ on:
       - 'tests/kaidance-offer-checkout.test.mjs'
       - 'registry/kaidance-company-lanes.v1.json'
       - 'tests/kaidance-company-heartbeat.test.mjs'
+      - 'tests/kaidance-rd-continuity.test.mjs'
+      - 'systemia/organism/kaidance-rd-continuity.mjs'
+      - 'systemia/organism/mission-continuity-readonly*.mjs'
       - 'systemia/collider/**'
       - 'registry/**'
       - 'public/.well-known/evercraft-products.json'
@@ -101,6 +161,8 @@ on:
 
 permissions:
   contents: read
+  actions: read
+  pull-requests: read
 
 concurrency:
   group: kaidance-frontier-field-${{ github.ref }}
@@ -123,6 +185,13 @@ jobs:
           path: |
             artifacts/kaidance-frontier/runtime/state.json
             artifacts/kaidance-company-heartbeat/state.json
+            artifacts/kaidance-company-heartbeat/learning-community/state.json
+            artifacts/kaidance-company-heartbeat/aircore-development/state.json
+            artifacts/kaidance-network-development/state.json
+            artifacts/kaidance-creative-development/state.json
+            artifacts/kaidance-global-opportunities/state.json
+            artifacts/aiw-evidence-watch/state.json
+            artifacts/aiw-evidence-watch/latest.json
             artifacts/kaidance-company-heartbeat/next-action-state.json
             artifacts/kaidance-worlds-saban-review/goals/
             artifacts/kaidance-source-candidate/state.json
@@ -165,14 +234,46 @@ jobs:
       - name: Prove longitudinal ClinicalTrials.gov observation ledger
         run: node systemia/organism/medical-registry-observation-ledger.test.mjs
 
+      - name: Validate AIW official-source boundary and Kaidance/Systemia handoff
+        run: node --test tests/aiw-evidence-watch.test.mjs
+
+      - name: Reconcile due official bridge-source metadata for AIW (read only)
+        run: node systemia/infrastructure-watch/aiw-evidence-watch.mjs --out artifacts/aiw-evidence-watch
+
+      - name: Verify worldwide source polling, 300-second queue reuse and outreach deny-by-default
+        run: node --test tests/kaidance-global-opportunity-scout.test.mjs
+
       - name: Validate KAIDANCE company heartbeat safety and truthful progress
-        run: node --test tests/kaidance-company-heartbeat.test.mjs
+        run: node --test tests/kaidance-company-heartbeat.test.mjs tests/kaidance-rd-continuity.test.mjs
+
+      - name: Prove existing mission continuity assessor
+        run: node systemia/organism/mission-continuity-readonly.proof.mjs
+
+      - name: Validate KAIDANCE Leiland and graphics Saban development boundaries
+        run: node --test tests/kaidance-creative-development.test.mjs
 
       - name: Validate one-company evidence-backed next action without a new worker
         run: node --test tests/kaidance-next-action.test.mjs
 
+      - name: Verify Saban network mission review contract and dedupe
+        run: node --test tests/kaidance-network-development.test.mjs tests/kaidance-network-heartbeat-integration.test.mjs
+
+      - name: Review Network revival on existing KAIDANCE five-minute pulse
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node systemia/organism/kaidance-network-development.mjs --out artifacts/kaidance-network-development
+
+      - name: Prove KAIDANCE learning/Circles source and protected development work
+        run: node --test tests/kaidance-learning-community-cycle.test.mjs tests/evercraft-circles-kaidance.test.mjs tests/systemia-university-kaidance.test.mjs tests/kaidance-education-family-source.test.mjs
+
+      - name: Verify AirCore bounded engineering review and zero physical-performance claims
+        run: node --test tests/kaidance-aircore-development.test.mjs systemia/breath-of-fresh-air/aircore-sizing.test.mjs
+
       - name: Reconcile Evercraft company portfolio on KAIDANCE heartbeat
-        run: node systemia/organism/kaidance-company-heartbeat-runner.mjs --out artifacts/kaidance-company-heartbeat --prove-worlds
+        env:
+          SYSTEMIA_AIW_EVIDENCE_RECEIPT_FILE: artifacts/aiw-evidence-watch/latest.json
+          SYSTEMIA_NETWORK_DEVELOPMENT_RECEIPT_FILE: artifacts/kaidance-network-development/latest.json
+        run: node systemia/organism/kaidance-company-heartbeat-runner.mjs --out artifacts/kaidance-company-heartbeat --prove-worlds --prove-learning --prove-aircore
 
       - name: Verify durable Systemia goal and actual registered Saban World Engine assignment
         run: node --test tests/kaidance-worlds-saban-review.test.mjs
@@ -201,6 +302,9 @@ jobs:
       - name: Reconcile this heartbeat's promoted offers with provider-backed checkout candidates
         run: node systemia/payments/kaidance-checkout-cycle.mjs --out artifacts/kaidance-offer-checkout
 
+      - name: Prove historical clinical protocol reviewer queue and ledger integrity
+        run: node systemia/organism/medical-historical-review-queue.test.mjs
+
       - name: Run live KAIDANCE frontier field cycle
         run: node systemia/organism/kaidance-frontier-cycle.mjs
 
@@ -211,6 +315,13 @@ jobs:
           path: |
             artifacts/kaidance-frontier/runtime/state.json
             artifacts/kaidance-company-heartbeat/state.json
+            artifacts/kaidance-company-heartbeat/learning-community/state.json
+            artifacts/kaidance-company-heartbeat/aircore-development/state.json
+            artifacts/kaidance-network-development/state.json
+            artifacts/kaidance-creative-development/state.json
+            artifacts/kaidance-global-opportunities/state.json
+            artifacts/aiw-evidence-watch/state.json
+            artifacts/aiw-evidence-watch/latest.json
             artifacts/kaidance-company-heartbeat/next-action-state.json
             artifacts/kaidance-worlds-saban-review/goals/
             artifacts/kaidance-source-candidate/state.json
@@ -233,7 +344,20 @@ jobs:
             artifacts/kaidance-offer-checkout/latest.json
             artifacts/kaidance-offer-checkout/actions.json
             artifacts/kaidance-offer-checkout/mission-snapshot.json
+            artifacts/aiw-evidence-watch/latest.json
+            artifacts/aiw-evidence-watch/queue.json
+            artifacts/aiw-evidence-watch/mission-snapshot.json
+            artifacts/kaidance-global-opportunities/latest.json
+            artifacts/kaidance-global-opportunities/queue.json
+            artifacts/kaidance-global-opportunities/mission-snapshot.json
+            artifacts/kaidance-creative-development/latest.json
+            artifacts/kaidance-creative-development/queue.json
+            artifacts/kaidance-creative-development/mission-snapshot.json
+            artifacts/kaidance-network-development/latest.json
+            artifacts/kaidance-network-development/mission-snapshot.json
             artifacts/kaidance-company-heartbeat/latest.json
+            artifacts/kaidance-company-heartbeat/learning-community/latest.json
+            artifacts/kaidance-company-heartbeat/learning-community/queue.json
             artifacts/kaidance-company-heartbeat/mission-snapshot.json
             artifacts/kaidance-company-heartbeat/queue.json
             artifacts/kaidance-company-heartbeat/next-action.json
@@ -276,6 +400,9 @@ jobs:
             artifacts/medical-registered-trials/history/latest.json
             artifacts/medical-registered-trials/history/review.md
             artifacts/medical-registered-trials/history/index.html
+            artifacts/medical-registered-trials/historical-review/latest.json
+            artifacts/medical-registered-trials/historical-review/review.md
+            artifacts/medical-registered-trials/historical-review/index.html
           if-no-files-found: warn
           retention-days: 14
 

@@ -11,7 +11,16 @@
   "outputs": {
     "cycle_report": "artifacts/kaidance-company-heartbeat/latest.json",
     "mission_snapshot": "artifacts/kaidance-company-heartbeat/mission-snapshot.json",
-    "queue": "artifacts/kaidance-company-heartbeat/queue.json"
+    "queue": "artifacts/kaidance-company-heartbeat/queue.json",
+    "global_opportunity_review_queue": "artifacts/kaidance-global-opportunities/queue.json",
+    "global_opportunity_source_receipt": "artifacts/kaidance-global-opportunities/latest.json",
+    "creative_source_review": "artifacts/kaidance-creative-development/latest.json",
+    "creative_improvement_queue": "artifacts/kaidance-creative-development/queue.json",
+    "creative_mission_snapshot": "artifacts/kaidance-creative-development/mission-snapshot.json",
+    "network_development_source_receipt": "artifacts/kaidance-network-development/latest.json",
+    "network_development_mission_snapshot": "artifacts/kaidance-network-development/mission-snapshot.json",
+    "aircore_source_receipt": "artifacts/kaidance-company-heartbeat/aircore-development/latest.json",
+    "aircore_review_queue": "artifacts/kaidance-company-heartbeat/aircore-development/queue.json"
   },
   "authority": {
     "inventory_read": "autonomous",
@@ -21,12 +30,32 @@
     "production_mutation": false,
     "payment": false,
     "outreach": false,
-    "private_customer_data": false
+    "private_customer_data": false,
+    "official_global_source_poll": "bounded_read_only",
+    "auto_bid": false,
+    "auto_partner_contact": false,
+    "registered_saban_creative_review": "bounded_read_only",
+    "autonomous_graphics_generation": false,
+    "network_pr_metadata": "read_only_fixed_pr",
+    "network_code_generation": false,
+    "network_field_test": false,
+    "aircore_bounded_source_proof": "allowlisted_local_only",
+    "aircore_physical_tests": false,
+    "aircore_hardware_purchase": false,
+    "aircore_partner_outreach": false
   },
   "claims": {
     "all_public_products_inventoried": true,
     "all_products_have_workers": false,
     "all_projects_developed_every_tick": false,
-    "github_cron_guaranteed": false
+    "github_cron_guaranteed": false,
+    "global_buyers_verified": false,
+    "global_source_queue_is_paid_revenue": false,
+    "all_graphics_redeveloped_every_tick": false,
+    "network_developed_every_tick": false,
+    "network_field_validated": false,
+    "network_runtime_active_after_source_merge": false,
+    "aircore_prototype_built": false,
+    "aircore_cadr_verified": false
   }
 }

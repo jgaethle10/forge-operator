@@ -1,0 +1,23 @@
+{
+  "schema": "evercraft.kaidance.network-development-source.v1",
+  "mission_key": "evercraft-network-saban-continuity-revival",
+  "goal_key": "network-cross-device-encrypted-recovery",
+  "lane_key": "education-network",
+  "product_key": "evercraft-network",
+  "heartbeat_seconds": 300,
+  "github_repository": "jgaethle10/forge-operator",
+  "pull_request": 2240,
+  "expected_head_branch": "feature/network-saban-resilience-revival-20261117",
+  "expected_base_branch": "main",
+  "required_workflows": [
+    "Network Saban Offline Resilience Tests",
+    "Forge checks"
+  ],
+  "field_validation_verified": false,
+  "live_systemia_dispatch_authorized": false,
+  "auto_deploy": false,
+  "auto_merge": false,
+  "code_write_authorized": false,
+  "production_network_changes_authorized": false,
+  "five_minute_frequency_is_best_effort": true
+}

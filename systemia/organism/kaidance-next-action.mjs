@@ -157,6 +157,85 @@ export function planKaidanceNextAction({
     'existing_systemia_operator_review'));
   }
  }
+ // AIW source metadata changed or failed its bounded official-source probe.
+ // This is a Systemia human-review handoff, never permission to ingest data,
+ // update the map, alter Caddy, or publish an infrastructure safety claim.
+ if(companyReport.infrastructure_watch?.status==='verified_receipt'){
+  const aiw=companyQueue.candidates?.filter(x=>
+   x?.lane_key==='infrastructure-watch'&&
+   /^aiw:[a-z0-9-]+:source-(?:change|unverified)$/.test(x.work_key||'')&&
+   ['review_official_source_metadata_change','investigate_official_source_reachability'].includes(x.action)&&
+   x.authority==='systemia_operator_review_required'&&
+   x.execution_authorized===false&&x.publication_authorized===false)||[];
+  if(aiw.length){
+   const first=[...aiw].sort((a,b)=>a.work_key.localeCompare(b.work_key))[0];
+   choices.push(action(2,first.work_key,'infrastructure-watch',
+    'review_american_infrastructure_watch_official_source_evidence','company',
+    'source:systemia/infrastructure-watch/source-registry.v1.json',
+    'existing_systemia_operator_review'));
+  }
+ }
+ // Kaidance's existing revenue lane can nominate a sourced global notice.
+ // This is research triage only. The final buyer/deadline/eligibility and
+ // existing private Interaction Ledger / Passport permit stay separate.
+ if(companyReport.global_opportunities?.status==='verified_source_receipt'){
+  const global=companyQueue.candidates?.filter(x=>
+   x?.lane_key==='revenue'&&
+   /^global:worldbank:op[0-9]{6,10}$/.test(x.work_key||'')&&
+   x.action==='verify_worldbank_notice_deadline_buyer_eligibility_and_delivery_fit'&&
+   x.authority==='systemia_operator_review_required'&&
+   x.execution_authorized===false&&x.outreach_authorized===false&&
+   x.application_authorized===false&&x.payment_verified===false)||[];
+  if(global.length){
+   const first=[...global].sort((a,b)=>a.work_key.localeCompare(b.work_key))[0];
+   choices.push(action(2,first.work_key,'revenue',
+    'verify_global_contract_notice_and_independent_buyer_fit','company',
+    'source:registry/kaidance-global-opportunity-sources.v1.json',
+    'systemia_operator_review_required'));
+  }
+ }
+ // Evercraft Network's existing source-bound Saban revival PR is reviewed by
+ // the *same* company heartbeat. No auto-coding or network execution follows.
+ if(companyReport.network_development?.status==='verified_receipt'){
+  const rows=companyQueue.candidates?.filter(row=>
+   row?.lane_key==='education-network'&&
+   /^network:(ci_failed|ci_pending|field_gate_due|merged_needs_readback):[a-f0-9]{12}$/.test(row.work_key||'')&&
+   ['investigate_failed_network_ci','reconcile_network_ci_run',
+    'run_authorized_cross_device_encrypted_outage_test',
+    'verify_owned_network_runtime_and_field_receipts'].includes(row.action)&&
+   row.authority==='systemia_operator_review_required'&&
+   row.source_authority==='github_rest_read_only'&&
+   row.execution_authorized===false&&
+   row.code_write_authorized===false&&row.production_mutation_authorized===false&&
+   row.field_validated===false&&row.dispatch_authorized===false)||[];
+  if(rows.length){
+   const row=rows[0];
+   choices.push(action(row.action==='investigate_failed_network_ci'?1:2,
+    row.work_key,'education-network',row.action,'company',
+    row.evidence_ref,'systemia_operator_review_required'));
+  }
+ }
+ // AirCore remains in the Systemia review queue until vendor P-Q curves and
+ // physically measured evidence exist. Do not turn a code test into CADR.
+ if(companyReport.aircore_development?.state==='source_reconciled'){
+  const rows=companyQueue.candidates?.filter(row=>
+   row?.lane_key==='aircore-development'&&
+   row.mission_key==='breath-of-fresh-air-aircore-v01'&&
+   ['restore_missing_aircore_owned_source','investigate_aircore_model_or_test_failure',
+    'run_bounded_aircore_design_source_proof',
+    'review_two_real_blower_and_filter_pressure_curves'].includes(row.action)&&
+   row.authority==='systemia_operator_review_required'&&
+   row.execution_authorized===false&&row.hardware_purchase_authorized===false&&
+   row.partner_contact_authorized===false&&row.code_write_authorized===false&&
+   row.physical_validation_verified===false)||[];
+  if(rows.length){
+   const row=rows[0];
+   choices.push(action(row.action==='investigate_aircore_model_or_test_failure'?1:3,
+    row.work_key,'aircore-development',row.action,'company',
+    'source:registry/kaidance-aircore-development.v1.json',
+    'systemia_operator_review_required'));
+  }
+ }
  // FOREST-001: review-only decisions from the current company report and queue.
  const forest=companyReport.forest_restoration;
  const forestActions={

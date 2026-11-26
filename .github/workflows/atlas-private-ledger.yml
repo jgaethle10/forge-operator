@@ -1,0 +1,35 @@
+name: Atlas private freight ledger safety gate
+on:
+  pull_request:
+    paths:
+      - 'systemia/atlas/private-freight-ledger.mjs'
+      - 'systemia/atlas/private-freight-ledger.test.mjs'
+      - 'systemia/atlas/PRIVATE-LEDGER.md'
+      - '.github/workflows/atlas-private-ledger.yml'
+  push:
+    branches:
+      - feature/systemia-atlas-private-ledger-20261125
+    paths:
+      - 'systemia/atlas/private-freight-ledger.mjs'
+      - 'systemia/atlas/private-freight-ledger.test.mjs'
+      - 'systemia/atlas/PRIVATE-LEDGER.md'
+      - '.github/workflows/atlas-private-ledger.yml'
+permissions:
+  contents: read
+jobs:
+  private-ledger-security:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Syntax check core and tests
+        run: |
+          node --check systemia/atlas/private-freight-ledger.mjs
+          node --check systemia/atlas/private-freight-ledger.test.mjs
+      - name: Test tenant isolation and evidence durability
+        run: node --test systemia/atlas/private-freight-ledger.test.mjs
+      - name: Preserve legacy synthetic cockpit contract
+        run: node --test tests/systemia-atlas-rebuild.test.mjs tests/atlas-route-twin.test.mjs

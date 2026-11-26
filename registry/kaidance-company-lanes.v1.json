@@ -95,13 +95,25 @@
     },
     {
       "lane_key": "education-network",
-      "description": "Infinite Classroom, communications and sovereign education",
+      "description": "Infinite Classroom, Systemia University, safeguarded Ascend and owned learning/deep-learning workstreams",
       "mode": "observe_existing_workflows",
       "cadence_seconds": 300,
       "products": [
         "infinite-classroom",
         "evercraft-network",
-        "systemia-university"
+        "systemia-university",
+        "ascend"
+      ],
+      "services": [],
+      "priority": 2
+    },
+    {
+      "lane_key": "community-network",
+      "description": "Evercraft Circles professional networking, member-consented relationships and controlled referral onboarding",
+      "mode": "observe_existing_workflows",
+      "cadence_seconds": 300,
+      "products": [
+        "evercraft-circles"
       ],
       "services": [],
       "priority": 2
@@ -125,6 +137,44 @@
     {
       "lane_key": "cemetery-atlas",
       "description": "EverMaps national cemetery research, source rights, burial ingestion and Tahoma validation",
+      "mode": "observe_existing_workflows",
+      "cadence_seconds": 300,
+      "products": [],
+      "services": [],
+      "priority": 2
+    },
+    {
+      "lane_key": "infrastructure-watch",
+      "description": "American Infrastructure Watch official bridge-source discovery, dated evidence checks, and controlled publication review",
+      "mode": "observe_existing_workflows",
+      "cadence_seconds": 300,
+      "products": [],
+      "services": [
+        "aiw-evidence-watch"
+      ],
+      "priority": 2
+    },
+    {
+      "lane_key": "leiland-observatory",
+      "description": "Leiland public neural-universe visuals, source-honest spectator and browser accessibility",
+      "mode": "observe_existing_workflows",
+      "cadence_seconds": 300,
+      "products": [],
+      "services": [],
+      "priority": 2
+    },
+    {
+      "lane_key": "evercraft-graphics",
+      "description": "Shared KAIDANCE visual theater and registered Saban creative-council art direction",
+      "mode": "observe_existing_workflows",
+      "cadence_seconds": 300,
+      "products": [],
+      "services": [],
+      "priority": 2
+    },
+    {
+      "lane_key": "aircore-development",
+      "description": "Unpublished Breath of Fresh Air AirCore V0.1 engineering: source-proof plus held physical bench validation",
       "mode": "observe_existing_workflows",
       "cadence_seconds": 300,
       "products": [],

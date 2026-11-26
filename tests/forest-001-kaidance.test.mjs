@@ -26,9 +26,9 @@ test('existing heartbeat surfaces forest hold without dispatch; same tick remain
   assert.ok(r.report.lanes.some(x=>x.lane_key==='forest-restoration'));
   const row=r.queue.candidates.find(x=>x.work_key==='forest-001:resolve-qcew_kittitas');
   assert.equal(row.execution_authorized,false);
-  assert.equal(r.next_action.current_next_action.work_key,row.work_key);
+  assert.ok(r.next_action.candidates.some(x=>x.work_key===row.work_key));
   assert.equal(r.next_action.execution_performed,false);
-  assert.equal(r.next_action.current_next_action.dispatch_authorized,false);
+  assert.equal(r.next_action.candidates.find(x=>x.work_key===row.work_key).dispatch_authorized,false);
   assert.equal(r.mission_snapshot.counts.admitted,0);
   assert.equal(runCompanyHeartbeat({root:'.',outDir:dir,now,forestReceipt:receipt}).duplicate,true);
   const bad=structuredClone(r.queue);
