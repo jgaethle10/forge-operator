@@ -180,6 +180,17 @@
       "products": [],
       "services": [],
       "priority": 2
+    },
+    {
+      "lane_key": "findmypart",
+      "description": "P0 revenue: product recovery engineering and qualified repair-shop/supplier discovery via existing Systemia Revenue Desk; review only until worker and buyer door proven.",
+      "mode": "observe_existing_workflows",
+      "cadence_seconds": 300,
+      "products": [
+        "findmypart"
+      ],
+      "services": [],
+      "priority": 1
     }
   ]
 }
