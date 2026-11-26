@@ -13,6 +13,7 @@ import {classifyNext} from '../evermaps/cemetery/source-classification.mjs';
 import {writeKaidanceNextAction} from './kaidance-next-action.mjs';
 import {runGlobalOpportunityScout} from './kaidance-global-opportunity-scout.mjs';
 import {runKaidanceCreativeDevelopment} from './kaidance-creative-development.mjs';
+import {runLearningCommunityCycle} from './kaidance-learning-community-cycle.mjs';
 const sourceRoot=path.resolve(fileURLToPath(new URL('../../',import.meta.url)));
 const sha=value=>'sha256:'+createHash('sha256').update(value).digest('hex');
 function readJson(file){return JSON.parse(fs.readFileSync(file,'utf8'))}
@@ -133,7 +134,7 @@ function readAiWReceipt(file){
 }
 export function runCompanyHeartbeat({
  root=sourceRoot,outDir=path.join(sourceRoot,'artifacts/kaidance-company-heartbeat'),
- now=new Date(),proveWorlds=false,spawn=spawnSync,aiwReceipt=null,globalOpportunityReceipt=null
+ now=new Date(),proveWorlds=false,proveLearning=false,learningCycle=runLearningCommunityCycle,spawn=spawnSync,aiwReceipt=null,globalOpportunityReceipt=null
 }={}){
  const repo=path.resolve(root),out=path.resolve(outDir);
  const manifest=readJson(path.join(repo,'registry/kaidance-company-lanes.v1.json'));
@@ -160,11 +161,43 @@ export function runCompanyHeartbeat({
    scope:'worlds_read_only_source_contracts',exit_code:Number.isInteger(result.status)?result.status:null,
    timeout:result.error?.code==='ETIMEDOUT',output_persisted:false};
  }
+ // Kaidance's existing 300-second company clock reconciles learning and
+ // community source work. No second scheduler or source-write authority.
+ let learning=null;
+ try{
+  learning=learningCycle({
+   root:repo,outDir:path.join(out,'learning-community'),now,
+   runProofs:proveLearning===true,spawn
+  });
+ }catch(error){
+  const raw=String(error?.message||'');
+  learning={held:true,reason:/^learning_[a-z0-9_]+$/.test(raw)?raw:'learning_cycle_held',
+   report:null,queue:null};
+ }
  const planned=planCompanyHeartbeat({manifest,products,supervisor,previous,now,
   worldsFingerprint:fingerprint,proof,workflowManifestCount:countWorkflowManifests(repo)});
  const aiw=classifyAiWReceipt(aiwReceipt,now);
  const global=classifyGlobalOpportunityReceipt(globalOpportunityReceipt,now);
- const report={...planned.report,proof,infrastructure_watch:aiw,global_opportunities:global};
+ const learningSummary=learning?.report?{
+  state:'source_reconciled',
+  tracked:learning.report.counts.tracked,
+  source_proofs_run:learning.report.counts.source_proofs_run,
+  passed:learning.report.counts.passed,
+  failed:learning.report.counts.failed,
+  development_review_count:learning.report.counts.needing_development_review,
+  publication_authorized:false,autonomous_code_writes:0,
+  child_or_member_data_access:false,
+  execution_receipt_ref:learning.report_ref,
+  authority:'existing_kaidance_heartbeat'
+ }:{
+  state:learning?.held?'held':learning?.duplicate?'duplicate_tick':'not_executed',
+  reason:learning?.reason||null,
+  tracked:0,source_proofs_run:0,passed:0,failed:0,
+  publication_authorized:false,autonomous_code_writes:0,
+  child_or_member_data_access:false
+ };
+ const report={...planned.report,proof,infrastructure_watch:aiw,
+  global_opportunities:global,learning_community:learningSummary};
  const queue={schema:'evercraft.kaidance.company-heartbeat.queue.v1',observed_at:report.observed_at,
   execution_authorized:false,
   candidates:[
@@ -180,6 +213,10 @@ export function runCompanyHeartbeat({
     authority:'systemia_operator_review_required',execution_authorized:false,
     outreach_authorized:false,application_authorized:false,payment_verified:false
    })),
+   ...(learning?.queue?.candidates||[]).map(row=>({
+    ...row,execution_authorized:false,release_authorized:false,
+    authority:'systemia_goal_review_required'
+   })),
    ...report.company_portfolio.products_not_yet_named.slice(0,12).map(key=>({
     work_key:'product:'+key+':adapter-admission',lane_key:null,priority:3,
     action:'bind_existing_systemia_capability_or_admit_bounded_new_adapter',authority:'source_review_required'
@@ -188,11 +225,12 @@ export function runCompanyHeartbeat({
   no_remote_work_dispatched:true,no_code_changes_made:true};
  const snapshot={...planned.snapshot,
   counts:{...planned.snapshot.counts,
-   scanned:planned.snapshot.counts.scanned+aiw.sources_observed+global.sources_observed,
+   scanned:planned.snapshot.counts.scanned+aiw.sources_observed+global.sources_observed+(learning?.report?.counts?.tracked||0),
    changed:planned.snapshot.counts.changed+(global.newly_seen||0),
-   held:planned.snapshot.counts.held+aiw.review_candidates.length+global.review_candidates.length},
+   held:planned.snapshot.counts.held+aiw.review_candidates.length+global.review_candidates.length+(learning?.report?.counts?.failed||0)},
   evidence_refs:[
     ...planned.snapshot.evidence_refs,
+    ...(learning?.report_ref?['source:registry/kaidance-learning-community-workstreams.v1.json',learning.report_ref]:[]),
     ...(aiw.status==='verified_receipt'?[
       'source:systemia/infrastructure-watch/source-registry.v1.json',sha(JSON.stringify(aiw))]:[]),
     ...(global.status==='verified_source_receipt'?[
@@ -229,6 +267,7 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
     status:'held',reason:String(e?.message||e).slice(0,120)}));
   }
   const result=runCompanyHeartbeat({outDir,proveWorlds:process.argv.includes('--prove-worlds'),
+    proveLearning:process.argv.includes('--prove-learning')||process.env.SYSTEMIA_KAIDANCE_LEARNING_SOURCE_PROOFS==='true',
     aiwReceipt,globalOpportunityReceipt});
   // The same company heartbeat owns Leiland + visual art-direction review.
   // This is not another scheduler or a remote code-generation worker.
@@ -262,6 +301,8 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
    global_opportunity_receipt:result.report?.global_opportunities?.status||null,
    global_opportunity_outreach_authorized:false,
    next_action_key:result.next_action?.current_next_action?.work_key||null,
+   learning_community_state:result.report?.learning_community?.state||null,
+   learning_source_proofs_run:result.report?.learning_community?.source_proofs_run||0,
    next_action_execution_authorized:false,
    creative_development:creative,
    creative_code_changes:0,creative_auto_publication:false,
