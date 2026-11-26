@@ -165,6 +165,12 @@ export function planKaidanceNextAction({
    try{const u=new URL(x.evidence_ref);
     if(u.protocol!=='https:'||u.username||u.password||u.hash)return false;
     if(u.hostname==='www.find-tender.service.gov.uk')return true;
+    if(u.hostname==='oregonbuys.gov')
+     return u.pathname==='/bso/external/bidDetail.sda'&&
+      u.searchParams.size===3&&
+      /^S-[A-Z0-9]{3,12}-\d{8}$/.test(u.searchParams.get('docId')||'')&&
+      u.searchParams.get('external')==='true'&&
+      u.searchParams.get('parentUrl')==='close';
     if(['sam.gov','www.sam.gov','beta.sam.gov'].includes(u.hostname))
      return /^\/opp\/[a-f0-9]{32}\/view\/?$/i.test(u.pathname)&&!u.search;
     return false;
