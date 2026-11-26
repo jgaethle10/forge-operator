@@ -140,7 +140,9 @@ test('existing heartbeat admits up to six official event reviews without repeati
    schema:'evercraft.events.opportunity-scout-state.v1',
    last_attempt_ms:at.getTime(),last_success_at:at.toISOString(),
    observation:{schema:'evercraft.events.opportunity-review.v1',
-    candidates:[candidate,{...candidate,opportunity_key:'event:'+'b'.repeat(20)}]}
+    candidates:[candidate,{...candidate,opportunity_key:'event:'+'b'.repeat(20)},
+     {...candidate,opportunity_key:'event:'+'c'.repeat(20),
+      source_url:'https://www.find-tender.service.gov.uk.attacker.example/Notice/123'}]}
   }),{mode:0o600});
   const result=runCompanyHeartbeat({root:'.',outDir:out,now:at,proveWorlds:false});
   const events=result.queue.candidates.filter(c=>c.lane_key==='events');
