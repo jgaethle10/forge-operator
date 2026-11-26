@@ -230,7 +230,7 @@ export function planKaidanceNextAction({
    row.physical_validation_verified===false)||[];
   if(rows.length){
    const row=rows[0];
-   choices.push(action(row.action==='investigate_aircore_model_or_test_failure'?1:2,
+   choices.push(action(row.action==='investigate_aircore_model_or_test_failure'?1:3,
     row.work_key,'aircore-development',row.action,'company',
     'source:registry/kaidance-aircore-development.v1.json',
     'systemia_operator_review_required'));
