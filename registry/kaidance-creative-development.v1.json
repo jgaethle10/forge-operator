@@ -45,6 +45,50 @@
         "data_graphics_director"
       ],
       "design_goal": "Develop a consistent, source-honest Evercraft visual system spanning Kaidance's living network theater and the registered creative studio while improving phone readability and real-frame quality"
+    },
+    {
+      "project_key": "work-saban-proof",
+      "title": "Work Saban / Source-Verified Browser Graphics",
+      "lane_key": "evercraft-graphics",
+      "source_files": [
+        "public/work-saban/demo/index.html",
+        "public/work-saban/demo/demo.js",
+        "public/work-saban/demo/engine.mjs"
+      ],
+      "proof_test": "tests/work-saban-browser-demo.test.mjs",
+      "review_roles": [
+        "beauty_judge",
+        "data_graphics_director",
+        "documentary_truth_guard"
+      ],
+      "design_goal": "Improve the verified Work Saban browser demonstration and phone visual quality using actual audited calculations; do not imply live agent execution or customer claims",
+      "review_gate": {
+        "pr_number": 1868,
+        "required_source": "public/work-saban/demo/visual-replay.mjs",
+        "source": "github_draft_pr"
+      }
+    },
+    {
+      "project_key": "saban-operations-graphics",
+      "title": "Saban / Private Operations Visual Proof",
+      "lane_key": "evercraft-graphics",
+      "source_files": [
+        "systemia/saban/work-state.mjs",
+        "systemia/saban/scheduler.mjs",
+        "systemia/graphics-command/README.md"
+      ],
+      "proof_test": "tests/kaidance-saban-graphics-source.test.mjs",
+      "review_roles": [
+        "data_graphics_director",
+        "documentary_truth_guard",
+        "brand_art_director"
+      ],
+      "design_goal": "Develop compact, evidence-bound Saban operations visual proof with actual state counts, private receipt guards, source-grounded mobile review and no synthetic work mistaken for live activity",
+      "review_gate": {
+        "pr_number": 1914,
+        "required_source": "systemia/graphics-command/saban-transition-view.mjs",
+        "source": "github_draft_pr"
+      }
     }
   ],
   "authority": {
