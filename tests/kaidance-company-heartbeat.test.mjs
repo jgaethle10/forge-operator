@@ -121,3 +121,28 @@ test('company heartbeat surfaces a verified existing checkout handoff, without p
     path.join(out,'next-action-mission-snapshot.json'),'utf8')).counts.admitted,0);
  }finally{fs.rmSync(root,{recursive:true,force:true})}
 });
+
+test('HumanFilter uses the existing tick, produces a bounded proof, and fails closed',()=>{
+ const dir=fs.mkdtempSync(path.join(os.tmpdir(),'kaidance-humanfilter-'));
+ let calls=0;
+ try{
+  const mock=(cmd,args)=>{
+   assert.deepEqual(args,['--test','products/humanfilter/tests/rules.test.cjs']);
+   calls++;return {status:0,error:null};
+  };
+  const first=runCompanyHeartbeat({root:'.',outDir:dir,now,spawn:mock});
+  assert.equal(first.report.humanfilter.status,'passed');
+  assert.match(first.report.humanfilter.source_fingerprint,/^sha256:[a-f0-9]{64}$/);
+  assert.equal(first.report.humanfilter.private_feed_accessed,false);
+  assert.equal(first.report.humanfilter.release_authorized,false);
+  assert.ok(first.queue.candidates.some(x=>x.work_key==='humanfilter:release-evidence-review'&&x.execution_authorized===false));
+  assert.ok(first.next_action.candidates.some(x=>x.work_key==='humanfilter:release-evidence-review'&&x.dispatch_authorized===false));
+  assert.equal(runCompanyHeartbeat({root:'.',outDir:dir,now,spawn:mock}).duplicate,true);
+  assert.equal(calls,1);
+  const next=runCompanyHeartbeat({root:'.',outDir:dir,now:new Date(now.getTime()+300000),spawn:()=>({status:1})});
+  assert.equal(next.report.humanfilter.status,'failed');
+  assert.ok(next.queue.candidates.some(x=>x.work_key==='humanfilter:proof-reconciliation'&&x.publication_authorized===false));
+  assert.ok(next.next_action.candidates.some(x=>x.work_key==='humanfilter:proof-reconciliation'));
+  assert.equal(next.report.advancement.code_changes,0);
+ }finally{fs.rmSync(dir,{recursive:true,force:true})}
+});
