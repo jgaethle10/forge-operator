@@ -161,7 +161,15 @@ export function planKaidanceNextAction({
   x?.lane_key==='events'&&x.action==='verify_event_tender_source_buyer_eligibility_and_delivery_capacity'&&
   /^event:[a-f0-9]{20}$/.test(x.work_key||'')&&x.outreach_authorized===false&&
   x.dispatch_authorized===false&&x.authority==='founder_review_required'&&
-  typeof x.evidence_ref==='string'&&x.evidence_ref.startsWith('https://www.find-tender.service.gov.uk/'))||[];
+  typeof x.evidence_ref==='string'&&(()=>{
+   try{const u=new URL(x.evidence_ref);
+    if(u.protocol!=='https:'||u.username||u.password||u.hash)return false;
+    if(u.hostname==='www.find-tender.service.gov.uk')return true;
+    if(['sam.gov','www.sam.gov','beta.sam.gov'].includes(u.hostname))
+     return /^\/opp\/[a-f0-9]{32}\/view\/?$/i.test(u.pathname)&&!u.search;
+    return false;
+   }catch{return false}
+  })())||[];
  for(const candidate of eventCandidates.slice(0,4)){
   choices.push(action(3,candidate.work_key,'events',
    'check_original_event_tender_and_eligibility_before_founder_approved_pitch',
