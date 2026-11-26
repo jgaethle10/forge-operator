@@ -11,7 +11,9 @@
   "outputs": {
     "cycle_report": "artifacts/kaidance-company-heartbeat/latest.json",
     "mission_snapshot": "artifacts/kaidance-company-heartbeat/mission-snapshot.json",
-    "queue": "artifacts/kaidance-company-heartbeat/queue.json"
+    "queue": "artifacts/kaidance-company-heartbeat/queue.json",
+    "global_opportunity_review_queue": "artifacts/kaidance-global-opportunities/queue.json",
+    "global_opportunity_source_receipt": "artifacts/kaidance-global-opportunities/latest.json"
   },
   "authority": {
     "inventory_read": "autonomous",
@@ -21,12 +23,17 @@
     "production_mutation": false,
     "payment": false,
     "outreach": false,
-    "private_customer_data": false
+    "private_customer_data": false,
+    "official_global_source_poll": "bounded_read_only",
+    "auto_bid": false,
+    "auto_partner_contact": false
   },
   "claims": {
     "all_public_products_inventoried": true,
     "all_products_have_workers": false,
     "all_projects_developed_every_tick": false,
-    "github_cron_guaranteed": false
+    "github_cron_guaranteed": false,
+    "global_buyers_verified": false,
+    "global_source_queue_is_paid_revenue": false
   }
 }
