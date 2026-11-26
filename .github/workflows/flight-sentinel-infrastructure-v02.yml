@@ -1,0 +1,43 @@
+name: Flight Sentinel Infrastructure Guardian v0.2 - offline dependencies
+on:
+  push:
+    branches: [research/flight-sentinel-infrastructure-guardian-001]
+    paths:
+      - "research/flight-sentinel/infrastructure_guardian/v0_2/**"
+      - ".github/workflows/flight-sentinel-infrastructure-v02.yml"
+  pull_request:
+    paths:
+      - "research/flight-sentinel/infrastructure_guardian/v0_2/**"
+      - ".github/workflows/flight-sentinel-infrastructure-v02.yml"
+permissions:
+  contents: read
+jobs:
+  offline-dependency-oracle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Run 31 synthetic dependency regressions
+        working-directory: research/flight-sentinel/infrastructure_guardian/v0_2
+        run: python3 -m unittest -v test_dependency_lab
+      - name: Reproduce counterexample evidence
+        working-directory: research/flight-sentinel/infrastructure_guardian/v0_2
+        run: |
+          python3 run_v02.py
+          python3 - <<'PY'
+          import json
+          with open('evidence-v02.json',encoding='utf-8') as f:
+              r=json.load(f)
+          assert r['scenario_count']==9
+          harmful={c['case'] for c in r['cases'] if c['critical_harmed']}
+          assert harmful=={'unmodeled_backup_power_failure',
+                           'all_telemetry_consistently_wrong'}
+          for c in r['cases']:
+              if c['case'] in harmful:
+                  assert c['predicted_lost']==[]
+                  assert c['unexpected_losses']==['tracking','voice']
+          print('Two unresolved hypothetical harm counterexamples preserved')
+          PY

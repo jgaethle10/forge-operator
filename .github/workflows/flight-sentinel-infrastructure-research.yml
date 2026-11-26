@@ -1,0 +1,42 @@
+name: Flight Sentinel - Infrastructure Guardian (offline research)
+on:
+  push:
+    branches: [research/flight-sentinel-infrastructure-guardian-001]
+    paths:
+      - "research/flight-sentinel/infrastructure_guardian/**"
+      - ".github/workflows/flight-sentinel-infrastructure-research.yml"
+  pull_request:
+    paths:
+      - "research/flight-sentinel/infrastructure_guardian/**"
+      - ".github/workflows/flight-sentinel-infrastructure-research.yml"
+permissions:
+  contents: read
+jobs:
+  offline-synthetic-regressions:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Run offline infrastructure tests
+        working-directory: research/flight-sentinel/infrastructure_guardian/v0_1
+        run: python3 -m unittest -v test_infrastructure
+      - name: Run synthetic incident campaign
+        working-directory: research/flight-sentinel/infrastructure_guardian/v0_1
+        run: |
+          python3 run_campaign.py
+          python3 - <<'PY'
+          import json
+          with open('campaign-results.json', encoding='utf-8') as f:
+              report=json.load(f)
+          cases={x['name']: x for x in report['scenarios']}
+          assert len(cases) == 10
+          assert cases['flood']['baseline_overload_ticks'] == 5
+          assert cases['flood']['simulation_overload_ticks'] == 2
+          assert cases['flood_without_permission']['simulation_overload_ticks'] == 5
+          assert cases['coherent_spoof']['simulation_overload_ticks'] == 5
+          assert cases['distributed_burst']['simulation_overload_ticks'] == 5
+          print('Known failure cases intentionally retained')
+          PY

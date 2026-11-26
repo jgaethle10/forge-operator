@@ -1,0 +1,30 @@
+{
+  "schema": "evercraft.kaidance.research-source-handoff.v1",
+  "project_key": "flight-sentinel-infrastructure",
+  "source_repository": "jgaethle10/forge-operator",
+  "existing_research_pr": 2112,
+  "existing_research_branch": "research/flight-sentinel-infrastructure-guardian-001",
+  "existing_kaidance_lane": "infrastructure-watch",
+  "canonical_anti_dormancy_issue": 1426,
+  "kaidance_integration_review_pr": 2592,
+  "public_source_paths": [
+    "research/flight-sentinel/infrastructure_guardian/v0_2/dependency_lab.py",
+    "research/flight-sentinel/infrastructure_guardian/v0_2/test_dependency_lab.py"
+  ],
+  "private_systemia_admission_state": "not_verified",
+  "execution_receipt_state": "not_verified",
+  "worker_auto_dispatch_authorized": false,
+  "production_deployment_authorized": false,
+  "source_presence_is_research_progress": false,
+  "external_communications_authorized": false,
+  "publication_authorized": false,
+  "flight_or_network_controls_authorized": false,
+  "physical_testing_authorized": false,
+  "independent_assurance_status": "not_certified",
+  "unresolved_safety_gates": [
+    "hidden_shared_dependency_remains_unresolved",
+    "coherent_false_telemetry_remains_unresolved",
+    "no_live_communications_or_network_isolation"
+  ],
+  "next_action": "reconcile_authoritative_private_systemia_admission_and_real_completed_research_receipt_without_duplicate_scheduler"
+}
