@@ -57,6 +57,37 @@ function eventScoutReview(out,now){
   return {status:'read_only_review_candidates',candidates};
  }catch{return {status:'unreadable_source_receipt',candidates:[]}}
 }
+function usSAMScoutReview(out,now){
+ if(path.basename(out)!=='kaidance-company-heartbeat')
+  return {status:'not_in_canonical_heartbeat_root',candidates:[]};
+ const file=path.join(path.dirname(out),'event-opportunity-us-sam/state.json');
+ try{
+  if(!fs.existsSync(file))return {status:'no_us_source_receipt',candidates:[]};
+  const st=fs.lstatSync(file);
+  if(!st.isFile()||st.isSymbolicLink()||(st.mode&0o077)!==0||st.size>256*1024)
+   return {status:'unsafe_us_receipt',candidates:[]};
+  const data=JSON.parse(fs.readFileSync(file,'utf8'));
+  if(data?.schema!=='evercraft.events.us-sam-scout-state.v1'||
+    data.observation?.schema!=='evercraft.events.us-sam-review.v1')
+    return {status:'us_source_not_connected_or_schema_invalid',candidates:[]};
+  const age=new Date(now).getTime()-Date.parse(data.last_success_at);
+  if(!Number.isFinite(age)||age<0||age>8*3600000)
+   return {status:'us_source_stale',candidates:[]};
+  const list=(data.observation.candidates||[]).filter(c=>{
+   try{const u=new URL(c?.source_url||'');
+    return /^event:[a-f0-9]{20}$/.test(c?.opportunity_key||'')&&
+     c.source==='us_sam_public_v2'&&
+     u.protocol==='https:'&&['sam.gov','www.sam.gov','beta.sam.gov'].includes(u.hostname)&&
+     /^\/opp\/[a-f0-9]{32}\/view\/?$/i.test(u.pathname)&&
+     !u.username&&!u.password&&!u.hash&&!u.search&&
+     c.outreach_authorized===false&&c.dispatch_authorized===false&&
+     c.buyer_contact_verified===false&&c.revenue_confirmed===false&&
+     (!c.deadline||Date.parse(c.deadline)>new Date(now).getTime());
+   }catch{return false}
+  }).slice(0,6);
+  return {status:'read_only_us_review_candidates',candidates:list};
+ }catch{return {status:'unreadable_us_source_receipt',candidates:[]}}
+}
 function countWorkflowManifests(root,max=30000){
  let files=0,count=0;
  function walk(dir,depth=0){
@@ -104,10 +135,12 @@ export function runCompanyHeartbeat({
  const planned=planCompanyHeartbeat({manifest,products,supervisor,previous,now,
   worldsFingerprint:fingerprint,proof,workflowManifestCount:countWorkflowManifests(repo)});
  const scout=eventScoutReview(out,now);
+ const usScout=usSAMScoutReview(out,now);
  const report={...planned.report,proof,
   event_discovery:{lane_key:'events',source_status:scout.status,
-   candidates_for_review:scout.candidates.length,
-   external_work_performed:false,public_uk_procurement_only:true,
+   candidates_for_review:scout.candidates.length+usScout.candidates.length,
+   uk_source_status:scout.status,us_source_status:usScout.status,
+   external_work_performed:false,source_regions:['United Kingdom','United States'],
    any_buyer_contact:false,any_sponsor_commitment:false}};
  const queue={schema:'evercraft.kaidance.company-heartbeat.queue.v1',observed_at:report.observed_at,
   execution_authorized:false,
@@ -120,6 +153,13 @@ export function runCompanyHeartbeat({
     evidence_ref:c.source_url,authority:'founder_review_required',
     outreach_authorized:false,dispatch_authorized:false,
     source_region:'United Kingdom',deadline:c.deadline
+   })),
+   ...usScout.candidates.map((c)=>({
+    work_key:c.opportunity_key,lane_key:'events',priority:3,
+    action:'verify_event_tender_source_buyer_eligibility_and_delivery_capacity',
+    evidence_ref:c.source_url,authority:'founder_review_required',
+    outreach_authorized:false,dispatch_authorized:false,
+    source_region:'United States',deadline:c.deadline
    })),
    ...report.company_portfolio.products_not_yet_named.slice(0,12).map(key=>({
     work_key:'product:'+key+':adapter-admission',lane_key:null,priority:3,
