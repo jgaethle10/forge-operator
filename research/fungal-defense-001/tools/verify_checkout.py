@@ -27,10 +27,12 @@ REQUIRED_FILES = (
     "research/fungal-defense-001/data/cdc-nndss-provisional-2026-w43.json",
     "research/fungal-defense-001/data/cdc-cauris-annual-2026-11-13.json",
     "research/fungal-defense-001/release-gates.json",
+    "research/fungal-defense-001/kaidance-research-handoff.v1.json",
     "research/fungal-defense-001/tools/validate_surveillance.py",
     "research/fungal-defense-001/tools/check_observatory.py",
     "research/fungal-defense-001/tools/check_provisional.py",
     "research/fungal-defense-001/tools/check_annual_revision.py",
+    "research/fungal-defense-001/tools/check_kaidance_handoff.py",
 )
 
 
