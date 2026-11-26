@@ -56,6 +56,10 @@ test('Every five-minute tick reconciles all eight without inventing deployments'
   assert.equal(fs.statSync(path.join(dir,'state.json')).mode&0o077,0);
   const same=runLearningCommunityCycle({root:'.',outDir:dir,now:new Date(time.getTime()+290000)});
   assert.equal(same.duplicate,true);
+  assert.equal(same.report.tick,first.report.tick);
+  assert.equal(same.queue.candidates.length,8);
+  assert.equal(same.report_ref,first.report_ref);
+  assert.equal(same.executed,false);
   const next=runLearningCommunityCycle({root:'.',outDir:dir,
    now:new Date(time.getTime()+300000)});
   assert.equal(next.duplicate,false);
@@ -106,5 +110,15 @@ test('Failed proof stays failed, never promoted to verified release; next tick m
    spawn:()=>({status:0,error:null})});
   assert.equal(next.report.counts.passed,2);
   assert.equal(next.report.production_mutations,0);
+ }finally{fs.rmSync(dir,{recursive:true,force:true})}
+});
+
+test('Interrupted company cycle cannot forge missing same-tick learning evidence',()=>{
+ const dir=temp();
+ try{
+  runLearningCommunityCycle({root:'.',outDir:dir,now:time});
+  fs.unlinkSync(path.join(dir,'queue.json'));
+  assert.throws(()=>runLearningCommunityCycle({root:'.',outDir:dir,now:time}),
+   /learning_duplicate_receipts_missing_or_untrusted/);
  }finally{fs.rmSync(dir,{recursive:true,force:true})}
 });
