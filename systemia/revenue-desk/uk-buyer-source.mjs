@@ -33,11 +33,11 @@ export function normalizeUk(packageData,{now=new Date()}={}){
  }
  return {schema:'evercraft.kaidance.buyer-source-receipt.v1',records_observed:packageData.releases.length,diagnostics,candidates,coverage_complete:false,qualified_count:0,send_performed:false};
 }
-export async function collectUkReleaseWindow({now=new Date(),fetchFn=fetch,maxPages=5}={}){
- if(!Number.isFinite(+now)||!Number.isInteger(maxPages)||maxPages<1||maxPages>10)throw Error('invalid_uk_bounds');
+export async function collectUkReleaseWindow({now=new Date(),fetchFn=fetch,maxPages=5,windowEnd=now,windowStart=new Date(+windowEnd-86400000)}={}){
+ if(!Number.isFinite(+now)||!Number.isInteger(maxPages)||maxPages<1||maxPages>10||!(windowStart instanceof Date)||!(windowEnd instanceof Date)||!Number.isFinite(+windowStart)||!Number.isFinite(+windowEnd)||+windowStart>=+windowEnd||+windowEnd>+now||+windowEnd-+windowStart>86400000||+now-+windowStart>180*86400000)throw Error('invalid_uk_bounds');
  const u=new URL(endpoint);
- u.searchParams.set('updatedFrom',new Date(+now-86400000).toISOString().slice(0,19));
- u.searchParams.set('updatedTo',now.toISOString().slice(0,19));
+ u.searchParams.set('updatedFrom',windowStart.toISOString().slice(0,19));
+ u.searchParams.set('updatedTo',windowEnd.toISOString().slice(0,19));
  u.searchParams.set('limit','100');
  let next=u.href,pages=0;
  const visited=new Set(),releases=[];
@@ -61,7 +61,7 @@ export async function collectUkReleaseWindow({now=new Date(),fetchFn=fetch,maxPa
    next=n.href;
   }
  }
- return {releases,pages_observed:pages,coverage_complete:!next};
+ return {releases,pages_observed:pages,coverage_complete:!next,window_start:windowStart.toISOString(),window_end:windowEnd.toISOString()};
 }
 
 export async function collectUk(options={}){
