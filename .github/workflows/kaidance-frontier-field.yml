@@ -35,6 +35,10 @@ on:
       - 'systemia/organism/kaidance-next-action.mjs'
       - 'tests/kaidance-next-action.test.mjs'
       - 'systemia/organism/kaidance-company-heartbeat.workflow.json'
+      - 'systemia/organism/kaidance-network-development.mjs'
+      - 'tests/kaidance-network-development.test.mjs'
+      - 'tests/kaidance-network-heartbeat-integration.test.mjs'
+      - 'registry/kaidance-network-development.v1.json'
       - 'systemia/infrastructure-watch/**'
       - 'systemia/organism/aiw-evidence-watch.workflow.json'
       - 'tests/aiw-evidence-watch.test.mjs'
@@ -95,6 +99,10 @@ on:
       - 'systemia/organism/kaidance-next-action.mjs'
       - 'tests/kaidance-next-action.test.mjs'
       - 'systemia/organism/kaidance-company-heartbeat.workflow.json'
+      - 'systemia/organism/kaidance-network-development.mjs'
+      - 'tests/kaidance-network-development.test.mjs'
+      - 'tests/kaidance-network-heartbeat-integration.test.mjs'
+      - 'registry/kaidance-network-development.v1.json'
       - 'systemia/infrastructure-watch/**'
       - 'systemia/organism/aiw-evidence-watch.workflow.json'
       - 'tests/aiw-evidence-watch.test.mjs'
@@ -129,6 +137,8 @@ on:
 
 permissions:
   contents: read
+  actions: read
+  pull-requests: read
 
 concurrency:
   group: kaidance-frontier-field-${{ github.ref }}
@@ -151,6 +161,7 @@ jobs:
           path: |
             artifacts/kaidance-frontier/runtime/state.json
             artifacts/kaidance-company-heartbeat/state.json
+            artifacts/kaidance-network-development/state.json
             artifacts/kaidance-creative-development/state.json
             artifacts/kaidance-global-opportunities/state.json
             artifacts/aiw-evidence-watch/state.json
@@ -215,9 +226,18 @@ jobs:
       - name: Validate one-company evidence-backed next action without a new worker
         run: node --test tests/kaidance-next-action.test.mjs
 
+      - name: Verify Saban network mission review contract and dedupe
+        run: node --test tests/kaidance-network-development.test.mjs tests/kaidance-network-heartbeat-integration.test.mjs
+
+      - name: Review Network revival on existing KAIDANCE five-minute pulse
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node systemia/organism/kaidance-network-development.mjs --out artifacts/kaidance-network-development
+
       - name: Reconcile Evercraft company portfolio on KAIDANCE heartbeat
         env:
           SYSTEMIA_AIW_EVIDENCE_RECEIPT_FILE: artifacts/aiw-evidence-watch/latest.json
+          SYSTEMIA_NETWORK_DEVELOPMENT_RECEIPT_FILE: artifacts/kaidance-network-development/latest.json
         run: node systemia/organism/kaidance-company-heartbeat-runner.mjs --out artifacts/kaidance-company-heartbeat --prove-worlds
 
       - name: Verify durable Systemia goal and actual registered Saban World Engine assignment
@@ -260,6 +280,7 @@ jobs:
           path: |
             artifacts/kaidance-frontier/runtime/state.json
             artifacts/kaidance-company-heartbeat/state.json
+            artifacts/kaidance-network-development/state.json
             artifacts/kaidance-creative-development/state.json
             artifacts/kaidance-global-opportunities/state.json
             artifacts/aiw-evidence-watch/state.json
@@ -295,6 +316,8 @@ jobs:
             artifacts/kaidance-creative-development/latest.json
             artifacts/kaidance-creative-development/queue.json
             artifacts/kaidance-creative-development/mission-snapshot.json
+            artifacts/kaidance-network-development/latest.json
+            artifacts/kaidance-network-development/mission-snapshot.json
             artifacts/kaidance-company-heartbeat/latest.json
             artifacts/kaidance-company-heartbeat/mission-snapshot.json
             artifacts/kaidance-company-heartbeat/queue.json

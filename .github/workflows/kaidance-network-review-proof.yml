@@ -1,0 +1,32 @@
+name: Kaidance Network 300-second Integration Proof
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/organism/kaidance-network-development.mjs'
+      - 'systemia/organism/kaidance-company-heartbeat-runner.mjs'
+      - 'systemia/organism/kaidance-next-action.mjs'
+      - 'registry/kaidance-network-development.v1.json'
+      - 'registry/kaidance-company-lanes.v1.json'
+      - 'tests/kaidance-network-development.test.mjs'
+      - 'tests/kaidance-network-heartbeat-integration.test.mjs'
+      - 'systemia/organism/kaidance-company-heartbeat.workflow.json'
+      - '.github/workflows/kaidance-network-review-proof.yml'
+      - '.github/workflows/kaidance-frontier-field.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  network-review-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test source-bound Saban PR observation and Kaidance company handoff
+        run: |
+          node --test tests/kaidance-network-development.test.mjs tests/kaidance-network-heartbeat-integration.test.mjs
+          node --test tests/kaidance-company-heartbeat.test.mjs tests/kaidance-next-action.test.mjs
