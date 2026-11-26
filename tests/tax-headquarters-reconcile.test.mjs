@@ -1,0 +1,15 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {reconcile} from '../systemia/tax-headquarters/reconcile.mjs';
+const row=(transactionId,amountCents,extra={})=>({source:'fixture',accountId:'A',transactionId,date:'2026-10-26',amountCents,status:'posted',...extra});
+test('unknown deposits are not sales',()=>{const x=reconcile([row('u',220000)]);assert.equal(x.confirmedCategorizedCustomerReceiptsCents,0);assert.equal(x.queues.unclassified.length,1);assert.equal(x.taxDueCents,null)});
+test('verified transfer pairs are excluded',()=>{const x=reconcile([row('out',-30100,{kind:'internal_transfer',transferId:'L'}),row('in',30100,{accountId:'B',kind:'internal_transfer',transferId:'L'})]);assert.equal(x.verifiedTransferPairs,1);assert.equal(x.queues.review.length,0)});
+test('unmatched transfer is held',()=>{const x=reconcile([row('x',1000,{kind:'internal_transfer',transferId:'L'})]);assert.equal(x.verifiedTransferPairs,0);assert.equal(x.queues.transferExceptions.length,1)});
+test('sale without evidence stays unconfirmed',()=>{const x=reconcile([row('sale',5000,{kind:'customer_receipt',businessLine:'EPS'})]);assert.equal(x.confirmedCategorizedCustomerReceiptsCents,0);assert.equal(x.queues.review.length,1)});
+test('documented receipts and costs categorized separately',()=>{const x=reconcile([row('sale',5000,{kind:'customer_receipt',businessLine:'EPS',evidenceRefs:['invoice']}),row('cost',-2100,{kind:'business_expense',businessLine:'EPS',evidenceRefs:['receipt']})]);assert.equal(x.confirmedCategorizedCustomerReceiptsCents,5000);assert.equal(x.confirmedCategorizedBusinessExpensesCents,2100)});
+test('pending is excluded',()=>{const x=reconcile([row('p',3000,{status:'pending',kind:'customer_receipt',businessLine:'EPS',evidenceRefs:['invoice']})]);assert.equal(x.postedCount,0);assert.equal(x.pendingCount,1);assert.equal(x.confirmedCategorizedCustomerReceiptsCents,0)});
+test('identical duplicate is skipped',()=>{const r=row('d',100);const x=reconcile([r,r]);assert.equal(x.postedCount,1);assert.equal(x.duplicateRowsDropped,1)});
+test('conflicting duplicate throws',()=>assert.throws(()=>reconcile([row('d',100),row('d',200)]),/Conflicting duplicate/));
+test('fractional cents rejected',()=>assert.throws(()=>reconcile([row('x',1.5)]),/integer cents/));
+test('same transaction id on two accounts remains distinct',()=>{const x=reconcile([row('id',100),row('id',100,{accountId:'B'})]);assert.equal(x.postedCount,2)});
+test('equal amounts alone do not prove transfers',()=>{const x=reconcile([row('x',-100,{kind:'internal_transfer'}),row('y',100,{accountId:'B',kind:'internal_transfer'})]);assert.equal(x.verifiedTransferPairs,0);assert.equal(x.queues.review.length,2)});
