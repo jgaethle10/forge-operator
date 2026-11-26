@@ -119,7 +119,7 @@ export async function runNetworkDevelopment({outDir,now=new Date(),token=process
   }catch{pr=null;workflows=null;error='github_read_unavailable';}
  }
  const planned=planNetworkDevelopment({config,pr,workflows,previous,now});
- if(error)planned.report.reason=error;
+ // The HOLD report remains hash-consistent even when an API read fails.
  // A failed GitHub GET is a HOLD, not an implied zero or green.
  const out=path.resolve(outDir);
  writePrivateJson(path.join(out,'latest.json'),planned.report);
