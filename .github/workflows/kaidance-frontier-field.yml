@@ -15,6 +15,7 @@ on:
       - 'systemia/organism/medical-registered-trial-lane*.mjs'
       - 'systemia/organism/medical-outcome-audit*.mjs'
       - 'systemia/organism/medical-registry-observation-ledger*.mjs'
+      - 'systemia/organism/medical-historical-review-queue*.mjs'
       - 'systemia/organism/medical-registry-source-probe.mjs'
       - 'systemia/organism/medical-workflow-continuity.test.mjs'
       - 'systemia/organism/medical-abstract-evidence*.mjs'
@@ -65,6 +66,7 @@ on:
       - 'systemia/organism/medical-registered-trial-lane*.mjs'
       - 'systemia/organism/medical-outcome-audit*.mjs'
       - 'systemia/organism/medical-registry-observation-ledger*.mjs'
+      - 'systemia/organism/medical-historical-review-queue*.mjs'
       - 'systemia/organism/medical-registry-source-probe.mjs'
       - 'systemia/organism/medical-workflow-continuity.test.mjs'
       - 'systemia/organism/kaidance-frontier-proof.mjs'
@@ -217,6 +219,9 @@ jobs:
       - name: Reconcile this heartbeat's promoted offers with provider-backed checkout candidates
         run: node systemia/payments/kaidance-checkout-cycle.mjs --out artifacts/kaidance-offer-checkout
 
+      - name: Prove historical clinical protocol reviewer queue and ledger integrity
+        run: node systemia/organism/medical-historical-review-queue.test.mjs
+
       - name: Run live KAIDANCE frontier field cycle
         run: node systemia/organism/kaidance-frontier-cycle.mjs
 
@@ -297,6 +302,9 @@ jobs:
             artifacts/medical-registered-trials/history/latest.json
             artifacts/medical-registered-trials/history/review.md
             artifacts/medical-registered-trials/history/index.html
+            artifacts/medical-registered-trials/historical-review/latest.json
+            artifacts/medical-registered-trials/historical-review/review.md
+            artifacts/medical-registered-trials/historical-review/index.html
           if-no-files-found: warn
           retention-days: 14
 
