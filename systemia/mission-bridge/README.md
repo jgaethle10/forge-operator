@@ -378,3 +378,23 @@ bash systemia/mission-bridge/gems/recover_and_run_gems004.sh \
 The `execute_gems_research_bundle.sh hard` stage still runs the previously CI-tested three-fold hard-mining vs distance-bin-matched control and writes full-area FP/TP/FN private proxy evidence, never an official score or new GeoTIFF. A green **synthetic** CI test of this launcher proves only that missing/unverified model archives cannot trigger a download or training. The owner must inspect the real run receipt before any potential challenge submission, and GEMS-001 #330339, public DTI 0.0552 remains selected.
 
 **No assertion is made that public data downloading, private model ZIP recovery, actual GEMS-004 training, private Saban dispatch, or any competition action completed from this ChatGPT turn.**
+
+### GEMS-006: independent-seed replication of the promising GEMS-004 matched-random control
+
+**Motivation:** Owner-executed original-data GEMS-004 (Nov 26 UTC) rejected hard mining in all three mapped-fault development folds. Baseline `0.07104721`, distance-bin-matched random `0.07381975`, hard mined `0.04419989` pooled **known-mapped-fault proxy DTI**. Matched random gained **+0.00277254** (+3.90%) over baseline; promising but only a single random draw. Private GEMS-004 evidence archive SHA-256 `3a0932606198bdacd93e985d5b995bb0471d7323a367b5d671df89bd561dd9e7`; non-sensitive result receipt [issue #2260, comment #7182336509](https://github.com/jgaethle10/forge-operator/issues/2260#issuecomment-7182336509).
+
+**GEMS-006 pre-registration:** New `gems/gems_006_seed_replication.py` uses **new sampling seed 1306**, with **original GEMS-001 HGB architecture and model seed 306**, **original geographic connected-fault folds/assignments from seed 306**, original threshold `0.2`, same regional masks, original full-area DTI proxy. It independently redraws the baseline 5P random training negatives, and compares to `3P` of those + `2P` fresh random negatives matched by **the frozen original GEMS-004 train-only hard-negative distance-bin counts**. The latter retains the exact geographic stratification hypothesis from GEMS-004 without fitting or reconsidering the rejected hard-negative model. Only two models per fold are fitted. Pilot and 3P shared samples, per-fold original-vs-replicate index hashes, and full and off-corridor TP/FP/FN are recorded in a private write-once JSON receipt.
+
+**Important scientific limits:** This is a **training-sampling sensitivity replication**, **not independently held-out geographic validation**. The matched distance distribution was conditioned on the earlier GEMS-004 training-only hard-mining output, so the replication does **not** independently validate distance-bin selection. No tuning if this seed fails, no automatic seed search, and no claim of improvement on undiscovered faults. Accept a signal only if pooled DTI and fold-level comparisons stay positive, FP savings do not disguise disproportionate TP loss, and receipts pass original/replication geometry and fault-truth conservation. Even a success remains mapped-fault exploratory evidence.
+
+Execute only in the **original owner-private Work research environment** where all verified files and actual original `run.py` ZIP remain available, **not in CI**. Reuse the original `hard-negative-full-area.json` from GEMS-004. No dataset re-download is needed. Require the exact original preserved GEMS-001 archive SHA-256 `c64bc77aa5756236dce97e08bf29e67396311d6b2014cf40c38358b354fcc377`, its `run.py` SHA-256 `db07aef8eb3edaa78efdc704d867cc8c2cf12ae1c8d17152fd0280238c92ca8b`, original three raster hashes and original GEMS-004 source/score validity:
+
+```bash
+bash systemia/mission-bridge/gems/execute_gems006_seed_replication.sh \
+  /PRIVATE/official-geodawn/data \
+  /PRIVATE/gems_001_verified_submission.zip \
+  /PRIVATE/GEMS004/run-a/hard-negative-full-area.json \
+  /PRIVATE/NEW/GEMS006-seed1306-evidence
+```
+
+The launcher rejects symlinks, missing or hash-drifted inputs, preexisting output, wrong model archive, source data inside the GitHub checkout, repeated automatic execution, and corrupted GEMS-004 scoring receipts **before allocating full research compute**. It creates **no competition candidate, scored submission, public raster, deployment, or automatic selection change**. Existing incumbent GEMS-001 submission #330339 remains selected at official public DTI **0.0552**. Source PR #2259, progress/receipt issue #2260. Green CI tests use **fabricated synthetic arrays only**, not the original official dataset or a new GEMS-006 result.
