@@ -17,6 +17,10 @@ function setup() {
     stateDir: ledgerStateDir,
     passportStateDir,
   });
+  fs.mkdirSync(ledgerStateDir,{mode:0o700});
+  fs.writeFileSync(ledger.organizationRegistryFile,JSON.stringify({organizations:[{
+    organization_key:'fixture-org',state:'clear',contact_subject_refs:['contact:acme','contact:alternate'],
+    contact_emails:['buyer@example.test'],evidence_ref:'fixture:review'}]}),{mode:0o600});
   return { root, passport, ledger };
 }
 
@@ -398,4 +402,57 @@ test('changing approved message content causes permit consumption to fail', () =
   );
 
   fs.rmSync(root, { recursive: true, force: true });
+});
+
+test('organization seasonal hold defeats grants across all channels and aliases',()=>{
+ const {root,passport,ledger}=setup();
+ try{
+  const at='2027-04-01T00:00:00Z';
+  passport.issueGrant({grant_id:'grant_all',idempotency_key:'grant:all',
+   subject_ref:'agent:relationship-assistant',issuer_ref:'evercraft:identity-authority',
+   product:'evercraft-relationship',scopes:['contact.email','contact.sms','contact.phone','contact.dm','contact.push'],
+   resource_refs:['contact:acme','contact:alternate'],starts_at:'2026-09-01T00:00:00Z',
+   ends_at:'2027-05-01T00:00:00Z',authority_state:'verified_identity_authority',
+   authority_receipt_ref:'fixture:grant'});
+  const data=JSON.parse(fs.readFileSync(ledger.organizationRegistryFile,'utf8'));
+  data.organizations[0].state='customer_hold';
+  data.organizations[0].review_not_before='2027-03-20';
+  fs.writeFileSync(ledger.organizationRegistryFile,JSON.stringify(data));
+  for(const subject_ref of ['contact:acme','contact:alternate']){
+   for(const channel of ['email','sms','phone','dm','push']){
+    const p=ledger.prepareContactPermit({subject_ref,channel,actor_ref:'agent:relationship-assistant',
+     content:'Fixture outreach',at,permit_idempotency_key:'permit:'+subject_ref+':'+channel});
+    assert.equal(p.state,'denied');
+    assert.ok(p.preflight.reasons.includes('organization_contact_hold'));
+    assert.equal(p.permit,null);
+   }
+  }
+ }finally{fs.rmSync(root,{recursive:true,force:true});}
+});
+
+test('dispatch recheck detects a new organization hold after permit minting',()=>{
+ const {root,passport,ledger}=setup();
+ try{
+  const now=Date.now(),at=new Date(now).toISOString();
+  passport.issueGrant({grant_id:'grant_live',idempotency_key:'grant:live',
+   subject_ref:'agent:relationship-assistant',issuer_ref:'evercraft:identity-authority',
+   product:'evercraft-relationship',scopes:['contact.email'],resource_refs:['contact:acme'],
+   starts_at:new Date(now-60000).toISOString(),ends_at:new Date(now+600000).toISOString(),
+   authority_state:'verified_identity_authority',authority_receipt_ref:'fixture:grant'});
+  const input={subject_ref:'contact:acme',channel:'email',actor_ref:'agent:relationship-assistant'};
+  const p=ledger.prepareContactPermit({...input,content:'Fixture approved content',at,permit_idempotency_key:'permit:live'});
+  assert.equal(p.state,'permit_minted');
+  const check={...input,permit_id:p.permit.permit_id,content_fingerprint:p.preflight.signals.content_fingerprint};
+  assert.equal(ledger.recheckContactBeforeDispatch(check).decision,'allow');
+  assert.equal(ledger.recheckContactBeforeDispatch({...check,subject_ref:'contact:alternate'}).decision,'deny');
+  const data=JSON.parse(fs.readFileSync(ledger.organizationRegistryFile,'utf8'));
+  data.organizations[0].state='customer_hold';
+  fs.writeFileSync(ledger.organizationRegistryFile,JSON.stringify(data));
+  const result=ledger.recheckContactBeforeDispatch(check);
+  assert.equal(result.decision,'deny');
+  assert.ok(result.reasons.includes('organization_contact_hold'));
+  assert.equal(result.send_performed,false);
+  fs.unlinkSync(ledger.organizationRegistryFile);
+  assert.ok(ledger.recheckContactBeforeDispatch(check).reasons.includes('organization_registry_missing_or_ambiguous'));
+ }finally{fs.rmSync(root,{recursive:true,force:true});}
 });
