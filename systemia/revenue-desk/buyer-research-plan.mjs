@@ -6,10 +6,11 @@ export function planBuyerResearch(checkpoint,{now=new Date(),limit=25}={}){
  const jobs=[],seen=new Set();let held=0;
  for(const c of checkpoint.records){
   const lane=Object.hasOwn(lanes,c?.suggested_lane)?lanes[c.suggested_lane]:null;
-  if(!lane||c.stage!=='research_required'||c.qualified!==false||c.contact_authorized!==false||typeof c.candidate_ref!=='string'||! /^(nyc|sam|uk):[a-z0-9]{1,40}$/.test(c.candidate_ref)||seen.has(c.candidate_ref)||typeof c.buyer!=='string'||!c.buyer.trim()||typeof c.title!=='string'||!c.title.trim()){held++;continue;}
+  if(!lane||c.stage!=='research_required'||c.qualified!==false||c.contact_authorized!==false||typeof c.candidate_ref!=='string'||! /^(nyc|sam|uk|ca):[a-z0-9]{1,40}$/.test(c.candidate_ref)||seen.has(c.candidate_ref)||typeof c.buyer!=='string'||!c.buyer.trim()||typeof c.title!=='string'||!c.title.trim()){held++;continue;}
   let u;try{u=new URL(c.source_url);}catch{held++;continue;}
-  const expected={nyc:'data.cityofnewyork.us',sam:'sam.gov',uk:'www.find-tender.service.gov.uk'}[c.candidate_ref.split(':')[0]];
+  const expected={nyc:'data.cityofnewyork.us',sam:'sam.gov',uk:'www.find-tender.service.gov.uk',ca:'canadabuys.canada.ca'}[c.candidate_ref.split(':')[0]];
   if(c.candidate_ref.startsWith('uk:')&&!/^\/Notice\/\d{6}-\d{4}$/.test(u.pathname)){held++;continue;}
+  if(c.candidate_ref.startsWith('ca:')&&!/^\/(en|fr)\/tender-opportunities\/.+/.test(u.pathname)){held++;continue;}
   if(u.protocol!=='https:'||u.hostname!==expected||u.username||u.password||u.port){held++;continue;}
   // Local wall-clock deadlines require independent verification; do not invent an offset.
   let due=null;
