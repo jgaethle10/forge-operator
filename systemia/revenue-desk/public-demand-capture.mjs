@@ -25,5 +25,16 @@ export async function capturePublicDemand({job,browse,now=new Date()}={}){
  if(typeof text!=='string'||!text.trim()||text.length>40000||hash(text)!==r.text_sha256)return hold('hold_text_integrity');
  const start=Date.parse(r.started_at),end=Date.parse(r.finished_at);
  if(!Number.isFinite(start)||!Number.isFinite(end)||start<+now-60000||end<start||end>Math.max(+now,Date.now())+60000)return hold('hold_capture_clock');
- return {...base,state:'captured_requires_research',http_status:status,captured_at:r.finished_at,title:String(snapshot.title||'').slice(0,500),text,text_sha256:r.text_sha256,browser_receipt_sha256:evidence_receipt_sha256,capture_verification:'local_browser_response_integrity_only',required_evidence:expected.required_evidence};
+ // Snapshot links are local navigation hints, not authenticated document evidence.
+ // Do not follow them here. Keep only same-origin, query-free public document pointers.
+ const document_pointers=[],seen=new Set();
+ for(const link of (Array.isArray(snapshot.links)?snapshot.links.slice(0,150):[])){
+  let u;try{u=new URL(link?.href)}catch{continue;}
+  if(u.origin!==source.origin||u.protocol!=='https:'||u.username||u.password||u.search||!/(?:\.pdf|\.docx)$/i.test(u.pathname))continue;
+  u.hash='';
+  if(seen.has(u.href))continue;seen.add(u.href);
+  document_pointers.push({url:u.href,label:String(link.text||'').slice(0,200),status:'unverified_document_pointer'});
+  if(document_pointers.length===20)break;
+ }
+ return {...base,document_pointers,state:'captured_requires_research',http_status:status,captured_at:r.finished_at,title:String(snapshot.title||'').slice(0,500),text,text_sha256:r.text_sha256,browser_receipt_sha256:evidence_receipt_sha256,capture_verification:'local_browser_response_integrity_only',required_evidence:expected.required_evidence};
 }
