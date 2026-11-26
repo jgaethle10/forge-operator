@@ -1,0 +1,85 @@
+{
+  "schema": "evercraft.external-skill-candidates.v1",
+  "purpose": "Revenue-first external guidance for an existing paid offer; not permission to execute or install.",
+  "owned_product": "audit-center-website-audit-machine-v1",
+  "candidates": [
+    {
+      "id": "vercel-web-design-guidelines",
+      "product_key": "audit-center-website-audit-machine-v1",
+      "execution_mode": "instructions_only",
+      "upstream": "https://github.com/vercel-labs/agent-skills/tree/main/skills/web-design-guidelines",
+      "source": {
+        "repository": "https://github.com/vercel-labs/agent-skills",
+        "path": "skills/web-design-guidelines/SKILL.md",
+        "commit": null,
+        "sha256": null
+      },
+      "legal": {
+        "spdx": null,
+        "reviewed": false,
+        "notice_path": null
+      },
+      "review": {
+        "source_reviewed": false,
+        "dependencies_reviewed": false,
+        "sandbox_passed": false,
+        "fixture_comparison_passed": false,
+        "product_contract_checked": false,
+        "owner_approved": false
+      },
+      "requested_scopes": []
+    },
+    {
+      "id": "vercel-react-best-practices",
+      "product_key": "audit-center-website-audit-machine-v1",
+      "execution_mode": "instructions_only",
+      "upstream": "https://github.com/vercel-labs/agent-skills/tree/main/skills/react-best-practices",
+      "source": {
+        "repository": "https://github.com/vercel-labs/agent-skills",
+        "path": "skills/react-best-practices/SKILL.md",
+        "commit": null,
+        "sha256": null
+      },
+      "legal": {
+        "spdx": "MIT",
+        "reviewed": false,
+        "notice_path": null
+      },
+      "review": {
+        "source_reviewed": false,
+        "dependencies_reviewed": false,
+        "sandbox_passed": false,
+        "fixture_comparison_passed": false,
+        "product_contract_checked": false,
+        "owner_approved": false
+      },
+      "requested_scopes": []
+    },
+    {
+      "id": "anthropic-webapp-testing",
+      "product_key": "audit-center-website-audit-machine-v1",
+      "execution_mode": "instructions_only",
+      "upstream": "https://github.com/anthropics/skills/tree/main/skills/webapp-testing",
+      "source": {
+        "repository": "https://github.com/anthropics/skills",
+        "path": "skills/webapp-testing/SKILL.md",
+        "commit": null,
+        "sha256": null
+      },
+      "legal": {
+        "spdx": null,
+        "reviewed": false,
+        "notice_path": null
+      },
+      "review": {
+        "source_reviewed": false,
+        "dependencies_reviewed": false,
+        "sandbox_passed": false,
+        "fixture_comparison_passed": false,
+        "product_contract_checked": false,
+        "owner_approved": false
+      },
+      "requested_scopes": []
+    }
+  ]
+}
