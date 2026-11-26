@@ -121,6 +121,52 @@ export function classifyGlobalOpportunityReceipt(value,now=new Date()){
   last_source_state:value.status,receipt_hash:value.receipt_hash,
   outreach_authorized:false,payment_verified:false};
 }
+// Authenticated, bounded GitHub source report from Kaidance's own Network PR
+// observer. A CI pass or a source commit is never a physical outage receipt.
+export function classifyNetworkDevelopmentReceipt(v,now=new Date()){
+ const empty={status:'not_connected',review_candidates:[],newly_seen:0};
+ if(!v)return empty;
+ const accepted=new Set(['ci_failed','ci_pending','field_gate_due','merged_needs_readback','held_source']);
+ const allowed={
+  ci_failed:'investigate_failed_network_ci',
+  ci_pending:'reconcile_network_ci_run',
+  field_gate_due:'run_authorized_cross_device_encrypted_outage_test',
+  merged_needs_readback:'verify_owned_network_runtime_and_field_receipts',
+  held_source:'reconcile_network_pr_source'
+ };
+ const age=+new Date(now)-Date.parse(v.observed_at);
+ if(!Number.isFinite(age)||age< -60000||age>15*60000)return {...empty,status:'stale'};
+ const valid=v.schema==='evercraft.kaidance.network-development.v1'&&
+  v.repo==='jgaethle10/forge-operator'&&v.pr_number===2240&&
+  v.heartbeat_seconds===300&&accepted.has(v.phase)&&
+  v.source_reference==='github:jgaethle10/forge-operator:pull:2240'&&
+  v.worker_dispatched===false&&v.code_changes===0&&v.automatic_pr_writes===0&&
+  v.production_deployments===0&&v.carrier_contacts===0&&
+  v.operator_review_required===true&&v.field_validation_verified===false&&
+  v.encrypted_two_host_delivery_verified===false&&v.real_wan_outage_verified===false&&
+  /^sha256:[a-f0-9]{64}$/.test(v.decision_ref||'')&&
+  v.receipt_hash===sha(JSON.stringify({...v,receipt_hash:null}))&&
+  (v.head_sha===null||/^[a-f0-9]{40}$/.test(v.head_sha))&&
+  (v.source_authority==='github_rest_read_only'||v.source_authority==='not_connected')&&
+  Array.isArray(v.checks)&&v.checks.length<=2&&
+  v.checks.every(x=>['Network Saban Offline Resilience Tests','Forge checks'].includes(x.name)&&
+   ['success','failed','held','pending'].includes(x.status))&&
+  v.candidate?.lane_key==='education-network'&&
+  v.candidate?.work_key==='network:'+v.phase+':'+(v.head_sha?v.head_sha.slice(0,12):'unverified')&&
+  v.candidate?.action===allowed[v.phase]&&
+  v.candidate?.execution_authorized===false&&
+  v.candidate?.code_write_authorized===false&&
+  v.candidate?.production_mutation_authorized===false&&
+  v.candidate?.field_validated===false&&
+  [0,1].includes(v.newly_seen);
+ if(!valid)return {...empty,status:'invalid'};
+ if(v.source_authority!=='github_rest_read_only'||v.phase==='held_source')
+  return {...empty,status:'held_source'};
+ return {status:'verified_receipt',phase:v.phase,head_sha:v.head_sha,
+  decision_ref:v.decision_ref,last_observed_at:v.observed_at,
+  newly_seen:v.newly_seen,review_candidates:[v.candidate],
+  field_validation_verified:false,execution_authorized:false};
+}
 function readAiWReceipt(file){
  if(!file)return null;
  const abs=path.resolve(file),dir=path.dirname(abs);
@@ -132,7 +178,7 @@ function readAiWReceipt(file){
 }
 export function runCompanyHeartbeat({
  root=sourceRoot,outDir=path.join(sourceRoot,'artifacts/kaidance-company-heartbeat'),
- now=new Date(),proveWorlds=false,spawn=spawnSync,aiwReceipt=null,globalOpportunityReceipt=null
+ now=new Date(),proveWorlds=false,spawn=spawnSync,aiwReceipt=null,globalOpportunityReceipt=null,networkDevelopmentReceipt=null
 }={}){
  const repo=path.resolve(root),out=path.resolve(outDir);
  const manifest=readJson(path.join(repo,'registry/kaidance-company-lanes.v1.json'));
@@ -163,7 +209,8 @@ export function runCompanyHeartbeat({
   worldsFingerprint:fingerprint,proof,workflowManifestCount:countWorkflowManifests(repo)});
  const aiw=classifyAiWReceipt(aiwReceipt,now);
  const global=classifyGlobalOpportunityReceipt(globalOpportunityReceipt,now);
- const report={...planned.report,proof,infrastructure_watch:aiw,global_opportunities:global};
+ const network=classifyNetworkDevelopmentReceipt(networkDevelopmentReceipt,now);
+ const report={...planned.report,proof,infrastructure_watch:aiw,global_opportunities:global,network_development:network};
  const queue={schema:'evercraft.kaidance.company-heartbeat.queue.v1',observed_at:report.observed_at,
   execution_authorized:false,
   candidates:[
@@ -172,6 +219,9 @@ export function runCompanyHeartbeat({
    ...aiw.review_candidates.map(row=>({work_key:row.key,lane_key:'infrastructure-watch',priority:2,
     action:row.action,authority:'systemia_operator_review_required',
     execution_authorized:false,publication_authorized:false})),
+   ...network.review_candidates.map(row=>({...row,
+    evidence_ref:'source:github:pull:2240:'+network.head_sha,
+    source_authority:'github_rest_read_only',dispatch_authorized:false})),
    ...global.review_candidates.slice(0,8).map(row=>({
     work_key:row.work_key,lane_key:'revenue',priority:2,
     action:'verify_worldbank_notice_deadline_buyer_eligibility_and_delivery_fit',
@@ -187,15 +237,17 @@ export function runCompanyHeartbeat({
   no_remote_work_dispatched:true,no_code_changes_made:true};
  const snapshot={...planned.snapshot,
   counts:{...planned.snapshot.counts,
-   scanned:planned.snapshot.counts.scanned+aiw.sources_observed+global.sources_observed,
-   changed:planned.snapshot.counts.changed+(global.newly_seen||0),
-   held:planned.snapshot.counts.held+aiw.review_candidates.length+global.review_candidates.length},
+   scanned:planned.snapshot.counts.scanned+aiw.sources_observed+global.sources_observed+(network.status==='verified_receipt'?1:0),
+   changed:planned.snapshot.counts.changed+(global.newly_seen||0)+(network.newly_seen||0),
+   held:planned.snapshot.counts.held+aiw.review_candidates.length+global.review_candidates.length+network.review_candidates.length},
   evidence_refs:[
     ...planned.snapshot.evidence_refs,
     ...(aiw.status==='verified_receipt'?[
       'source:systemia/infrastructure-watch/source-registry.v1.json',sha(JSON.stringify(aiw))]:[]),
     ...(global.status==='verified_source_receipt'?[
-      'source:registry/kaidance-global-opportunity-sources.v1.json',global.receipt_hash]:[])
+      'source:registry/kaidance-global-opportunity-sources.v1.json',global.receipt_hash]:[]),
+    ...(network.status==='verified_receipt'?[
+      'source:registry/kaidance-network-development.v1.json',network.decision_ref]:[])
   ].slice(0,30)};
  fs.mkdirSync(out,{recursive:true,mode:0o700});
  // Commit the cycle watermark LAST. An interrupted write must be retryable
@@ -216,6 +268,7 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
  try{
   const outDir=opt('--out')||process.env.SYSTEMIA_COMPANY_HEARTBEAT_OUT_DIR||path.join(sourceRoot,'artifacts/kaidance-company-heartbeat');
   const aiwReceipt=readAiWReceipt(opt('--aiw-receipt')||process.env.SYSTEMIA_AIW_EVIDENCE_RECEIPT_FILE||'');
+  const networkDevelopmentReceipt=readAiWReceipt(opt('--network-development-receipt')||process.env.SYSTEMIA_NETWORK_DEVELOPMENT_RECEIPT_FILE||'');
   let globalOpportunityReceipt=null;
   try{
    const globalOut=path.join(path.dirname(path.resolve(outDir)),'kaidance-global-opportunities');
@@ -228,7 +281,7 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
     status:'held',reason:String(e?.message||e).slice(0,120)}));
   }
   const result=runCompanyHeartbeat({outDir,proveWorlds:process.argv.includes('--prove-worlds'),
-    aiwReceipt,globalOpportunityReceipt});
+    aiwReceipt,globalOpportunityReceipt,networkDevelopmentReceipt});
   // Explicit owner opt-in only; CI and existing installations default off.
   let cemetery=null, cemeteryClassification=null;
   if(process.env.SYSTEMIA_CEMETERY_RESEARCH_OUT_DIR){
@@ -244,6 +297,7 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
    infrastructure_watch_receipt:result.report?.infrastructure_watch?.status||null,
    infrastructure_watch_publication_authorized:false,
    global_opportunity_receipt:result.report?.global_opportunities?.status||null,
+   network_development_receipt:result.report?.network_development?.status||null,
    global_opportunity_outreach_authorized:false,
    next_action_key:result.next_action?.current_next_action?.work_key||null,
    next_action_execution_authorized:false,
