@@ -14,6 +14,7 @@ import {writeKaidanceNextAction} from './kaidance-next-action.mjs';
 import {runGlobalOpportunityScout} from './kaidance-global-opportunity-scout.mjs';
 import {runKaidanceCreativeDevelopment} from './kaidance-creative-development.mjs';
 import {runLearningCommunityCycle} from './kaidance-learning-community-cycle.mjs';
+import {runAirCoreDevelopmentCycle} from './kaidance-aircore-development.mjs';
 const sourceRoot=path.resolve(fileURLToPath(new URL('../../',import.meta.url)));
 const sha=value=>'sha256:'+createHash('sha256').update(value).digest('hex');
 function readJson(file){return JSON.parse(fs.readFileSync(file,'utf8'))}
@@ -180,7 +181,9 @@ function readAiWReceipt(file){
 }
 export function runCompanyHeartbeat({
  root=sourceRoot,outDir=path.join(sourceRoot,'artifacts/kaidance-company-heartbeat'),
- now=new Date(),proveWorlds=false,proveLearning=false,learningCycle=runLearningCommunityCycle,spawn=spawnSync,aiwReceipt=null,globalOpportunityReceipt=null,networkDevelopmentReceipt=null
+ now=new Date(),proveWorlds=false,proveLearning=false,proveAirCore=false,
+ learningCycle=runLearningCommunityCycle,aircoreCycle=runAirCoreDevelopmentCycle,
+ spawn=spawnSync,aiwReceipt=null,globalOpportunityReceipt=null,networkDevelopmentReceipt=null
 }={}){
  const repo=path.resolve(root),out=path.resolve(outDir);
  const manifest=readJson(path.join(repo,'registry/kaidance-company-lanes.v1.json'));
@@ -218,6 +221,17 @@ export function runCompanyHeartbeat({
   learning={held:true,reason:/^learning_[a-z0-9_]+$/.test(raw)?raw:'learning_cycle_held',
    report:null,queue:null};
  }
+ // AirCore is an unpublished product-engineering stream. Advance its bounded
+ // source evidence on the existing company clock; never fabricate a bench test.
+ let aircore=null;
+ try{
+  aircore=aircoreCycle({root:repo,outDir:path.join(out,'aircore-development'),
+   now,runProofs:proveAirCore===true,spawn});
+ }catch(error){
+  const raw=String(error?.message||'');
+  aircore={held:true,reason:/^aircore_[a-z0-9_]+$/.test(raw)?raw:'aircore_cycle_held',
+   report:null,queue:null};
+ }
  const planned=planCompanyHeartbeat({manifest,products,supervisor,previous,now,
   worldsFingerprint:fingerprint,proof,workflowManifestCount:countWorkflowManifests(repo)});
  const aiw=classifyAiWReceipt(aiwReceipt,now);
@@ -240,9 +254,19 @@ export function runCompanyHeartbeat({
   publication_authorized:false,autonomous_code_writes:0,
   child_or_member_data_access:false
  };
+ const aircoreSummary=aircore?.report?{
+  state:'source_reconciled',mission_key:aircore.report.mission_key,
+  source_status:aircore.report.source_status,
+  source_fingerprint:aircore.report.source_fingerprint,
+  source_proof_executed_this_tick:aircore.report.proof_executed_this_tick,
+  physical_prototype_built:false,measured_cadr_cfm:null,
+  worker_dispatched:false,partnership_outreach_authorized:false,
+  execution_receipt_ref:aircore.receipt_ref
+ }:{state:aircore?.held?'held':'not_executed',reason:aircore?.reason||null,
+  physical_prototype_built:false,worker_dispatched:false};
  const report={...planned.report,proof,infrastructure_watch:aiw,
   global_opportunities:global,network_development:network,
-  learning_community:learningSummary};
+  learning_community:learningSummary,aircore_development:aircoreSummary};
  const queue={schema:'evercraft.kaidance.company-heartbeat.queue.v1',observed_at:report.observed_at,
   execution_authorized:false,
   candidates:[
@@ -265,6 +289,10 @@ export function runCompanyHeartbeat({
     ...row,execution_authorized:false,release_authorized:false,
     authority:'systemia_goal_review_required'
    })),
+   ...(aircore?.queue?.candidates||[]).map(row=>({
+    ...row,execution_authorized:false,hardware_purchase_authorized:false,
+    partner_contact_authorized:false,authority:'systemia_operator_review_required'
+   })),
    ...report.company_portfolio.products_not_yet_named.slice(0,12).map(key=>({
     work_key:'product:'+key+':adapter-admission',lane_key:null,priority:3,
     action:'bind_existing_systemia_capability_or_admit_bounded_new_adapter',authority:'source_review_required'
@@ -273,12 +301,14 @@ export function runCompanyHeartbeat({
   no_remote_work_dispatched:true,no_code_changes_made:true};
  const snapshot={...planned.snapshot,
   counts:{...planned.snapshot.counts,
-   scanned:planned.snapshot.counts.scanned+aiw.sources_observed+global.sources_observed+(network.status==='verified_receipt'?1:0)+(learning?.report?.counts?.tracked||0),
-   changed:planned.snapshot.counts.changed+(global.newly_seen||0)+(network.newly_seen||0),
-   held:planned.snapshot.counts.held+aiw.review_candidates.length+global.review_candidates.length+network.review_candidates.length+(learning?.report?.counts?.failed||0)},
+   scanned:planned.snapshot.counts.scanned+aiw.sources_observed+global.sources_observed+(network.status==='verified_receipt'?1:0)+(learning?.report?.counts?.tracked||0)+(aircore?.report?1:0),
+   changed:planned.snapshot.counts.changed+(global.newly_seen||0)+(network.newly_seen||0)+(aircore?.report?.newly_seen||0),
+   held:planned.snapshot.counts.held+aiw.review_candidates.length+global.review_candidates.length+network.review_candidates.length+(learning?.report?.counts?.failed||0)+
+    (aircore?.held||['source_proof_failed','missing_source_hold'].includes(aircore?.report?.source_status)?1:0)},
   evidence_refs:[
     ...planned.snapshot.evidence_refs,
     ...(learning?.report_ref?['source:registry/kaidance-learning-community-workstreams.v1.json',learning.report_ref]:[]),
+    ...(aircore?.receipt_ref?['source:registry/kaidance-aircore-development.v1.json',aircore.receipt_ref]:[]),
     ...(aiw.status==='verified_receipt'?[
       'source:systemia/infrastructure-watch/source-registry.v1.json',sha(JSON.stringify(aiw))]:[]),
     ...(global.status==='verified_source_receipt'?[
@@ -319,6 +349,7 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
   }
   const result=runCompanyHeartbeat({outDir,proveWorlds:process.argv.includes('--prove-worlds'),
     proveLearning:process.argv.includes('--prove-learning')||process.env.SYSTEMIA_KAIDANCE_LEARNING_SOURCE_PROOFS==='true',
+    proveAirCore:process.argv.includes('--prove-aircore')||process.env.SYSTEMIA_KAIDANCE_AIRCORE_SOURCE_PROOFS==='true',
     aiwReceipt,globalOpportunityReceipt,networkDevelopmentReceipt});
   // The same company heartbeat owns Leiland + visual art-direction review.
   // This is not another scheduler or a remote code-generation worker.
@@ -355,6 +386,8 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
    next_action_key:result.next_action?.current_next_action?.work_key||null,
    learning_community_state:result.report?.learning_community?.state||null,
    learning_source_proofs_run:result.report?.learning_community?.source_proofs_run||0,
+   aircore_source_status:result.report?.aircore_development?.source_status||null,
+   aircore_verified_cadr_cfm:null,aircore_prototype_built:false,
    next_action_execution_authorized:false,
    creative_development:creative,
    creative_code_changes:0,creative_auto_publication:false,
