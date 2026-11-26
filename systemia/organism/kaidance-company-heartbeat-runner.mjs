@@ -23,7 +23,7 @@ function atomicJson(file,value){
 export function sourceFingerprint(root,files){
  const hash=createHash('sha256');
  for(const file of [...files].sort()){
-  if(!/^(?:public\/worlds|tests)\/[a-z0-9./-]+$/.test(file)||file.includes('..'))throw Error('untrusted_company_source_path');
+  if(!/^(?:(?:public\/worlds|tests)\/[a-z0-9./-]+|research\/reality-engine\/(?:benchmark\.py|demo\.html))$/.test(file)||file.includes('..'))throw Error('untrusted_company_source_path');
   const full=path.join(root,file);
   if(fs.lstatSync(full).isSymbolicLink())throw Error('company_source_symlink_refused');
   hash.update(file+'\0');hash.update(fs.readFileSync(full));hash.update('\0');
