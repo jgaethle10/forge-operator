@@ -107,6 +107,10 @@ export function reserveColdOutreach({
     matching[0].prospect_ref!==opportunityRef)
   return {state:'held',reasons:['signed_contact_or_opportunity_unresolved'],send_performed:false};
  const verifiedProspect=matching[0];
+ if(report.organization_registry_valid!==true||
+    !OPAQUE.test(verifiedProspect.organization_ref||'')||
+    verifiedProspect.organization_contact_state!=='clear')
+  return {state:'held',reasons:['signed_organization_identity_or_hold'],send_performed:false};
  if(verifiedProspect.actionable_as_new_cold_target!==true||
     !Array.isArray(verifiedProspect.reasons)||verifiedProspect.reasons.length!==0||
     ['opted_out','bounced','blocked','do_not_contact','customer_hold','declined'].includes(verifiedProspect.contact_state))
