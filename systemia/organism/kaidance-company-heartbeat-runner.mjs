@@ -432,6 +432,9 @@ export function runCompanyHeartbeat({
  const researchContinuity=runPrivateResearchContinuity({enabled:rdContinuityEnabled,root:repo,outDir:out,now});
  const forest=classifyForestReceipt(forestReceipt,now);
  const fmp=findmypartExecutionReceipt?.schema==='evercraft.findmypart.execution-cycle.v1'&&findmypartExecutionReceipt.tick===tick&&findmypartExecutionReceipt.outreach_authorized===false&&findmypartExecutionReceipt.buyers_qualified===0?findmypartExecutionReceipt:null;
+ const inbound=fmp?.inbound_revenue_review;
+ const fmpInbound=inbound?.schema==='evercraft.findmypart.inbound-revenue-review.v1'&&inbound.state==='consented_inquiries_require_review'&&inbound.outreach_authorized===false&&Number.isSafeInteger(inbound.unique_case_candidates)&&inbound.unique_case_candidates>0&&inbound.unique_case_candidates<=500?
+ [{work_key:'findmypart:consented-inbound-review',lane_key:'findmypart',priority:1,action:'reconcile_existing_revenue_desk_inbound_case_before_any_reply',authority:'systemia_operator_review_required',execution_authorized:false,outreach_authorized:false,evidence_ref:sha(JSON.stringify(inbound))}]:[];
  const fmpShopCandidates=(Array.isArray(fmp?.service_fit_candidates)?fmp.service_fit_candidates:[]).slice(0,6).map(row=>({work_key:row.work_key,lane_key:'findmypart',priority:1,action:'reconcile_existing_revenue_desk_then_confirm_actual_stalled_case',authority:'systemia_operator_review_required',business_name:row.business_name,source_url:row.source_url,observed_at:row.observed_at,evidence_ref:row.body_digest,buyer_need_confirmed:false,execution_authorized:false,outreach_authorized:false}));
  const findmypartCandidates=[
   {work_key:'findmypart:product-development',lane_key:'findmypart',priority:1,action:'reconcile_repair_graph_recovery_benchmarks_and_buyer_door_then_lease_next_bounded_engineering_task',authority:'systemia_operator_review_required',execution_authorized:false,evidence_ref:'source:github:issue:1758'},
@@ -448,13 +451,14 @@ export function runCompanyHeartbeat({
    external_work_performed:false,source_regions:['United Kingdom','United States'],
    any_buyer_contact:false,any_sponsor_commitment:false};
  const report={...planned.report,proof,commercial_source_proof:commercialSourceProof||{status:'not_executed',executed:false},event_discovery:eventDiscovery,infrastructure_watch:aiw,forest_restoration:forest,
-  findmypart:{state:'review_queued',priority:1,heartbeat_seconds:300,workstreams:findmypartCandidates.map(x=>x.work_key),worker_dispatched:false,source_poll_performed:fmp?.source_poll_performed===true,buyers_qualified:0,outreach_authorized:false,engineering_benchmark_executed:fmp?.engineering_benchmark_executed===true,commercial_status:fmp?.commercial_status||'not_executed',source_observation:fmp?.observation||null,service_fit_evidence:fmpShopCandidates.map(({work_key,source_url,observed_at,evidence_ref})=>({work_key,source_url,observed_at,evidence_ref})),code_changes:0},
+  findmypart:{state:'review_queued',priority:1,heartbeat_seconds:300,workstreams:findmypartCandidates.map(x=>x.work_key),worker_dispatched:false,source_poll_performed:fmp?.source_poll_performed===true,buyers_qualified:0,outreach_authorized:false,engineering_benchmark_executed:fmp?.engineering_benchmark_executed===true,commercial_status:fmp?.commercial_status||'not_executed',inbound_revenue_review:inbound?{state:inbound.state,observed_inquiries:inbound.observed_inquiries,unique_case_candidates:inbound.unique_case_candidates,duplicate_inquiries:inbound.duplicate_inquiries,invalid_inquiries:inbound.invalid_inquiries,oldest_pending_ms:inbound.oldest_pending_ms,prior_contact_verified:false,outreach_authorized:false,payment_verified:false}:null,source_observation:fmp?.observation||null,service_fit_evidence:fmpShopCandidates.map(({work_key,source_url,observed_at,evidence_ref})=>({work_key,source_url,observed_at,evidence_ref})),code_changes:0},
   research_continuity:researchContinuity,
   global_opportunities:global,network_development:network,
   learning_community:learningSummary,aircore_development:aircoreSummary};
  const queue={schema:'evercraft.kaidance.company-heartbeat.queue.v1',observed_at:report.observed_at,
   execution_authorized:false,
   candidates:[
+   ...fmpInbound,
    ...findmypartCandidates,
    ...fmpShopCandidates,
    ...(proof.status==='failed'?[{work_key:'worlds:source-proof-failure',lane_key:'worlds',priority:1,action:'investigate_failed_source_tests',authority:'review_required'}]:[]),
@@ -574,7 +578,7 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
     if(!parent.isDirectory()||parent.isSymbolicLink()||(parent.mode&0o077)!==0||parent.uid!==process.getuid())throw Error('private_root_required');
     const existing=path.join(outDir,'state.json');
     if(!fs.existsSync(existing)||readJson(existing).tick<Math.floor(+at/300000))
-     findmypartExecutionReceipt=await runFindMyPartCycle({outDir:path.join(outDir,'findmypart-execution'),now:at,network:true});
+     findmypartExecutionReceipt=await runFindMyPartCycle({outDir:path.join(outDir,'findmypart-execution'),now:at,network:true,inboxBinding:process.env.SYSTEMIA_FINDMYPART_INBOUND_REVIEW==='true'?{enabled:true,storeDir:process.env.EVERCRAFT_FINDMYPART_LEADS_DIR,key:process.env.EVERCRAFT_FINDMYPART_INTAKE_KEY_B64}:null});
    }catch{console.error(JSON.stringify({schema:'evercraft.findmypart.execution-hold.v1',status:'held'}))}
   }
   let commercialSourceProof=null;
