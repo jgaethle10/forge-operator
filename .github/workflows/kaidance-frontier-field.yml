@@ -72,6 +72,8 @@ on:
       - 'tests/kaidance-offer-checkout.test.mjs'
       - 'registry/kaidance-company-lanes.v1.json'
       - 'tests/kaidance-company-heartbeat.test.mjs'
+      - 'tests/kaidance-earth-pulse-source.test.mjs'
+      - 'systemia/organism/kaidance-earth-pulse-source.mjs'
       - 'tests/kaidance-rd-continuity.test.mjs'
       - 'systemia/organism/kaidance-rd-continuity.mjs'
       - 'systemia/organism/mission-continuity-readonly*.mjs'
@@ -148,6 +150,8 @@ on:
       - 'tests/kaidance-offer-checkout.test.mjs'
       - 'registry/kaidance-company-lanes.v1.json'
       - 'tests/kaidance-company-heartbeat.test.mjs'
+      - 'tests/kaidance-earth-pulse-source.test.mjs'
+      - 'systemia/organism/kaidance-earth-pulse-source.mjs'
       - 'tests/kaidance-rd-continuity.test.mjs'
       - 'systemia/organism/kaidance-rd-continuity.mjs'
       - 'systemia/organism/mission-continuity-readonly*.mjs'
@@ -244,7 +248,7 @@ jobs:
         run: node --test tests/kaidance-global-opportunity-scout.test.mjs
 
       - name: Validate KAIDANCE company heartbeat safety and truthful progress
-        run: node --test tests/kaidance-company-heartbeat.test.mjs tests/kaidance-rd-continuity.test.mjs
+        run: node --test tests/kaidance-company-heartbeat.test.mjs tests/kaidance-rd-continuity.test.mjs tests/kaidance-earth-pulse-source.test.mjs
 
       - name: Prove existing mission continuity assessor
         run: node systemia/organism/mission-continuity-readonly.proof.mjs

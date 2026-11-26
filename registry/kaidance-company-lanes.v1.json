@@ -80,6 +80,15 @@
       "priority": 2
     },
     {
+      "lane_key": "earth-pulse",
+      "description": "Earth Pulse public-science field photo and USGS research; source review only pending Systemia private R&D admission and field validation",
+      "mode": "observe_existing_workflows",
+      "cadence_seconds": 300,
+      "products": [],
+      "services": [],
+      "priority": 2
+    },
+    {
       "lane_key": "energy-infrastructure",
       "description": "AliEV, infrastructure intelligence and site planning",
       "mode": "observe_existing_workflows",
