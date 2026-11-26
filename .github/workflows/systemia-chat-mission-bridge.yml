@@ -70,6 +70,8 @@ jobs:
           bash -n systemia/mission-bridge/gems/execute_gems_research_bundle.sh
           bash -n systemia/mission-bridge/gems/recover_and_run_gems004.sh
           bash -n systemia/mission-bridge/gems/execute_gems006_seed_replication.sh
+          bash -n systemia/mission-bridge/gems/execute_gems007_southern_transfer.sh
+          python3 -m py_compile systemia/mission-bridge/gems/gems_007_southern_transfer.py systemia/mission-bridge/gems/test_gems_007_southern_transfer.py
           python3 -m py_compile systemia/mission-bridge/gems/gems_006_seed_replication.py systemia/mission-bridge/gems/test_gems_006_seed_replication.py
           python3 -m unittest discover -s systemia/mission-bridge/gems -p test_verify_official_input_hashes.py -v
       - name: Run bounded synthetic GEMS computation (not official competition data)
@@ -125,6 +127,7 @@ jobs:
           python -m unittest -v test_gems_research_bundle.py
           python -m unittest -v test_gems_source_recovery.py
           python -m unittest -v test_gems_006_seed_replication.py
+          python -m unittest -v test_gems_007_southern_transfer.py
           python -m unittest -v test_gems_003_exploratory_overlay.py
           python -m unittest -v test_verify_official_input_hashes.py
       - name: Assert no scored submission or production tasks were invoked
