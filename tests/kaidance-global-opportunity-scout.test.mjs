@@ -105,7 +105,7 @@ test('failed official source does not manufacture fresh opportunities or break c
   assert.equal(classifyGlobalOpportunityReceipt(fail.report,at).status,'held_source_error');
   const cooldown=await runGlobalOpportunityScout({outDir:out,now:new Date(+at+300000),registry:config,
     fetcher:async()=>{throw Error('should not refetch in failure backoff')}});
-  assert.equal(cooldown.report.status,'cooldown');
+  assert.equal(cooldown.report.status,'stale'); // no verified successful source snapshot after the 429
   assert.equal(cooldown.report.review_candidates.length,0);
   assert.equal(classifyGlobalOpportunityReceipt(cooldown.report,new Date(+at+300000)).status,'stale');
  }finally{fs.rmSync(out,{recursive:true,force:true})}
