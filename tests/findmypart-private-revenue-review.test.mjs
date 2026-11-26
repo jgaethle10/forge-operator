@@ -6,6 +6,7 @@ import path from 'node:path';
 import {randomBytes,createCipheriv} from 'node:crypto';
 import {reviewFindMyPartInbound} from '../systemia/organism/findmypart-private-revenue-review.mjs';
 import {runFindMyPartCycle} from '../systemia/organism/kaidance-findmypart-execution.mjs';
+import {runCompanyHeartbeat} from '../systemia/organism/kaidance-company-heartbeat-runner.mjs';
 const now=new Date('2026-11-26T22:00:00Z'),key=randomBytes(32);
 const sample={schema:'evercraft.findmypart.customer-inquiry.v1',received_at:'2026-11-26T21:00:00Z',email:'buyer@example.test',part_description:'Obsolete hydraulic switch with worn serial markings',equipment_context:'Ford 3600 tractor',consent:true,state:'NEW_HUMAN_REVIEW_REQUIRED',payment_created:false,agent_execution_authorized:false};
 function put(dir,n,overrides={}){
@@ -31,6 +32,13 @@ test('consented encrypted cases deduplicate by actual identity and preserve sepa
   assert.equal(cycle.next_action,'reconcile_existing_revenue_desk_inbound_case_before_any_reply');
   assert.doesNotMatch(fs.readFileSync(path.join(outDir,'latest.json'),'utf8'),/FMP-[0-9]{24}|buyer@example|hydraulic switch/i);
   assert.equal(cycle.outreach_authorized,false);assert.equal(cycle.payment_verified,false);
+  const companyOut=path.join(outDir,'kaidance-company-heartbeat');
+  const company=runCompanyHeartbeat({outDir:companyOut,now,findmypartExecutionReceipt:cycle});
+  assert.equal(company.report.findmypart.inbound_revenue_review.unique_case_candidates,2);
+  assert.ok(company.queue.candidates.some(x=>x.work_key==='findmypart:consented-inbound-review'));
+  assert.equal(company.next_action.current_next_action.work_key,'findmypart:consented-inbound-review');
+  assert.equal(company.next_action.customer_contacts,0);
+  assert.doesNotMatch(JSON.stringify(company.report),/FMP-[0-9]{24}|buyer@example|hydraulic switch/i);
   const duplicate=await runFindMyPartCycle({outDir,now,inboxBinding:input});
   assert.equal(duplicate.duplicate,true);
  }finally{fs.rmSync(dir,{recursive:true,force:true});fs.rmSync(outDir,{recursive:true,force:true})}

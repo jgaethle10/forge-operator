@@ -263,6 +263,19 @@ export function planKaidanceNextAction({
  // FindMyPart: a source-fit observation is a review handoff, never a buyer,
  // permission to contact, or authority to write the Revenue Desk.
  const fmp=companyReport.findmypart;
+ // Actual consented inquiries outrank cold service-fit observations. The
+ // aggregate and queue row must agree, with no contact/payment authority.
+ const inbound=fmp?.inbound_revenue_review;
+ if(fmp?.priority===1&&fmp.state==='review_queued'&&fmp.buyers_qualified===0&&fmp.outreach_authorized===false&&inbound?.state==='consented_inquiries_require_review'&&
+    inbound.prior_contact_verified===false&&inbound.outreach_authorized===false&&inbound.payment_verified===false&&
+    ['observed_inquiries','unique_case_candidates','duplicate_inquiries','invalid_inquiries'].every(k=>Number.isSafeInteger(inbound[k])&&inbound[k]>=0&&inbound[k]<=500)&&
+    inbound.unique_case_candidates>0&&inbound.invalid_inquiries===0&&inbound.unique_case_candidates+inbound.duplicate_inquiries===inbound.observed_inquiries&&
+    Number.isSafeInteger(inbound.oldest_pending_ms)&&inbound.oldest_pending_ms>=0){
+  const row=(companyQueue.candidates||[]).find(x=>x?.work_key==='findmypart:consented-inbound-review'&&
+   x.lane_key==='findmypart'&&x.priority===1&&x.action==='reconcile_existing_revenue_desk_inbound_case_before_any_reply'&&
+   x.authority==='systemia_operator_review_required'&&x.execution_authorized===false&&x.outreach_authorized===false&&x.evidence_ref===hash(inbound));
+  if(row)choices.push(action(1,row.work_key,'findmypart',row.action,'company_findmypart_receipt',row.evidence_ref,'existing_systemia_operator_review'));
+ }
  if(fmp?.priority===1&&fmp.state==='review_queued'&&fmp.buyers_qualified===0&&
     fmp.outreach_authorized===false&&Array.isArray(fmp.service_fit_evidence)&&fmp.service_fit_evidence.length<=6){
   const seen=new Set();
