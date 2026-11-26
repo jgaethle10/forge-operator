@@ -13,7 +13,10 @@
     "mission_snapshot": "artifacts/kaidance-company-heartbeat/mission-snapshot.json",
     "queue": "artifacts/kaidance-company-heartbeat/queue.json",
     "global_opportunity_review_queue": "artifacts/kaidance-global-opportunities/queue.json",
-    "global_opportunity_source_receipt": "artifacts/kaidance-global-opportunities/latest.json"
+    "global_opportunity_source_receipt": "artifacts/kaidance-global-opportunities/latest.json",
+    "creative_source_review": "artifacts/kaidance-creative-development/latest.json",
+    "creative_improvement_queue": "artifacts/kaidance-creative-development/queue.json",
+    "creative_mission_snapshot": "artifacts/kaidance-creative-development/mission-snapshot.json"
   },
   "authority": {
     "inventory_read": "autonomous",
@@ -26,7 +29,9 @@
     "private_customer_data": false,
     "official_global_source_poll": "bounded_read_only",
     "auto_bid": false,
-    "auto_partner_contact": false
+    "auto_partner_contact": false,
+    "registered_saban_creative_review": "bounded_read_only",
+    "autonomous_graphics_generation": false
   },
   "claims": {
     "all_public_products_inventoried": true,
@@ -34,6 +39,7 @@
     "all_projects_developed_every_tick": false,
     "github_cron_guaranteed": false,
     "global_buyers_verified": false,
-    "global_source_queue_is_paid_revenue": false
+    "global_source_queue_is_paid_revenue": false,
+    "all_graphics_redeveloped_every_tick": false
   }
 }

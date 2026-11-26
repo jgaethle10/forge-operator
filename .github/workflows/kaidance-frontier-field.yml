@@ -22,6 +22,14 @@ on:
       - 'systemia/organism/kaidance-frontier-proof.mjs'
       - 'systemia/organism/kaidance-frontier-cycle.mjs'
       - 'systemia/organism/kaidance-company-heartbeat*.mjs'
+      - 'systemia/organism/kaidance-creative-development.mjs'
+      - 'registry/kaidance-creative-development.v1.json'
+      - 'tests/kaidance-creative-development.test.mjs'
+      - 'public/leiland/**'
+      - 'public/kaidance/visual.mjs'
+      - 'public/kaidance/current-field.mjs'
+      - 'public/kaidance/confluence.css'
+      - 'systemia/media-studio/creative-council-saban-adapter.mjs'
       - 'systemia/organism/kaidance-global-opportunity-scout.mjs'
       - 'tests/kaidance-global-opportunity-scout.test.mjs'
       - 'systemia/organism/kaidance-next-action.mjs'
@@ -74,6 +82,14 @@ on:
       - 'systemia/organism/kaidance-frontier-proof.mjs'
       - 'systemia/organism/kaidance-frontier-cycle.mjs'
       - 'systemia/organism/kaidance-company-heartbeat*.mjs'
+      - 'systemia/organism/kaidance-creative-development.mjs'
+      - 'registry/kaidance-creative-development.v1.json'
+      - 'tests/kaidance-creative-development.test.mjs'
+      - 'public/leiland/**'
+      - 'public/kaidance/visual.mjs'
+      - 'public/kaidance/current-field.mjs'
+      - 'public/kaidance/confluence.css'
+      - 'systemia/media-studio/creative-council-saban-adapter.mjs'
       - 'systemia/organism/kaidance-global-opportunity-scout.mjs'
       - 'tests/kaidance-global-opportunity-scout.test.mjs'
       - 'systemia/organism/kaidance-next-action.mjs'
@@ -135,6 +151,7 @@ jobs:
           path: |
             artifacts/kaidance-frontier/runtime/state.json
             artifacts/kaidance-company-heartbeat/state.json
+            artifacts/kaidance-creative-development/state.json
             artifacts/kaidance-global-opportunities/state.json
             artifacts/aiw-evidence-watch/state.json
             artifacts/aiw-evidence-watch/latest.json
@@ -192,6 +209,9 @@ jobs:
       - name: Validate KAIDANCE company heartbeat safety and truthful progress
         run: node --test tests/kaidance-company-heartbeat.test.mjs
 
+      - name: Validate KAIDANCE Leiland and graphics Saban development boundaries
+        run: node --test tests/kaidance-creative-development.test.mjs
+
       - name: Validate one-company evidence-backed next action without a new worker
         run: node --test tests/kaidance-next-action.test.mjs
 
@@ -240,6 +260,7 @@ jobs:
           path: |
             artifacts/kaidance-frontier/runtime/state.json
             artifacts/kaidance-company-heartbeat/state.json
+            artifacts/kaidance-creative-development/state.json
             artifacts/kaidance-global-opportunities/state.json
             artifacts/aiw-evidence-watch/state.json
             artifacts/aiw-evidence-watch/latest.json
@@ -271,6 +292,9 @@ jobs:
             artifacts/kaidance-global-opportunities/latest.json
             artifacts/kaidance-global-opportunities/queue.json
             artifacts/kaidance-global-opportunities/mission-snapshot.json
+            artifacts/kaidance-creative-development/latest.json
+            artifacts/kaidance-creative-development/queue.json
+            artifacts/kaidance-creative-development/mission-snapshot.json
             artifacts/kaidance-company-heartbeat/latest.json
             artifacts/kaidance-company-heartbeat/mission-snapshot.json
             artifacts/kaidance-company-heartbeat/queue.json
