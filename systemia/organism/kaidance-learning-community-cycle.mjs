@@ -125,10 +125,24 @@ export function runLearningCommunityCycle({
  const catalog=products||readJson(path.join(repo,'registry/public-products.json'));
  validateLearningCommunityManifest(cfg,catalog);
  const priorPath=path.join(out,'state.json');
+ if(fs.existsSync(priorPath)&&fs.lstatSync(priorPath).isSymbolicLink())fail('learning_state_symlink_denied');
  const prior=fs.existsSync(priorPath)?readJson(priorPath):null;
  if(prior&&prior.schema!==STATUS)fail('learning_previous_state_invalid');
  if(prior&&prior.tick>tick)fail('learning_clock_rollback');
- if(prior?.tick===tick)return {duplicate:true,tick,executed:false,report:null,queue:null};
+ if(prior?.tick===tick){
+  // The company tick can be interrupted AFTER the learning subcycle committed.
+  // Reuse exactly its bounded receipt and queue, never silently drop or rerun.
+  const reportFile=path.join(out,'latest.json'),queueFile=path.join(out,'queue.json');
+  if(!fs.existsSync(reportFile)||!fs.existsSync(queueFile)||
+     fs.lstatSync(reportFile).isSymbolicLink()||fs.lstatSync(queueFile).isSymbolicLink())
+   fail('learning_duplicate_receipts_missing_or_untrusted');
+  const report=readJson(reportFile),queue=readJson(queueFile);
+  if(report.schema!==STATUS||queue.schema!=='evercraft.kaidance.learning-community-queue.v1'||
+    report.tick!==tick||queue.tick!==tick)
+   fail('learning_duplicate_receipts_invalid');
+  return {duplicate:true,tick,executed:false,report,queue,
+   report_ref:sha(JSON.stringify(report))};
+ }
 
  const tracks=cfg.workstreams.map(row=>{
   const {fingerprint,missing}=fingerprintLearningSources(repo,row.source_files);
