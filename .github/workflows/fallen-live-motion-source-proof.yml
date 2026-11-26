@@ -1,0 +1,49 @@
+name: Fallen Licensed Live-Motion Source Proof
+on:
+  push:
+    branches: [creative/fallen-flagship-20261027]
+    paths: ['.github/workflows/fallen-live-motion-source-proof.yml']
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  footage:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Audit second provider and download candidate live-action masters
+        run: |
+          mkdir -p receipts footage
+          python3 - <<'PY'
+          import subprocess,json,pathlib,hashlib
+          ids=[
+            ("creative-vertical","29380115","https://www.pexels.com/video/close-up-of-video-editing-on-computer-29380115/",["https://videos.pexels.com/video-files/29380115/12656380_1080_1920_30fps.mp4"]),
+            ("creative-artist","35331911","https://www.pexels.com/video/focused-man-editing-on-computer-at-night-35331911/",["https://videos.pexels.com/video-files/35331911/14970104_1920_1080_25fps.mp4","https://videos.pexels.com/video-files/35331911/14970104_3840_2160_25fps.mp4"]),
+            ("electronics","7057342","https://www.pexels.com/video/person-fixing-electronics-7057342/",["https://videos.pexels.com/video-files/7057342/7057342-hd_1920_1080_24fps.mp4","https://videos.pexels.com/video-files/7057342/7057342-uhd_3840_2160_24fps.mp4"]),
+          ]
+          rows=[]
+          for name,id,page,urls in ids:
+              found=False
+              for url in urls:
+                  p=subprocess.run(["curl","-L","-sS","-I","--max-time","12","-w","\n%{http_code}","-o","/dev/null",url],capture_output=True,text=True)
+                  status=p.stdout.strip().splitlines()[-1] if p.stdout.strip() else ""
+                  rows.append(dict(name=name,page=page,url=url,http=status))
+                  if status=="200":
+                      fn="footage/"+name+".mp4"
+                      dl=subprocess.run(["curl","-fL","--max-time","95","-sS","-o",fn,url],capture_output=True,text=True)
+                      b=pathlib.Path(fn).stat().st_size if pathlib.Path(fn).exists() else 0
+                      rows[-1].update(download_bytes=b,sha256=hashlib.sha256(pathlib.Path(fn).read_bytes()).hexdigest() if b>100000 else "",valid=dl.returncode==0 and b>100000)
+                      found=rows[-1]["valid"]
+                      if found:break
+              print(name,"valid",found,flush=True)
+          pathlib.Path("receipts/download-check.json").write_text(json.dumps(rows,indent=2))
+          print(json.dumps([r for r in rows if r.get("valid")],indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: fallen-pexels-live-motion-candidates
+          path: |
+            receipts/download-check.json
+            footage/*.mp4
+          retention-days: 7
+          if-no-files-found: error

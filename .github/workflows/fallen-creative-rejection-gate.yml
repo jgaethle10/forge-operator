@@ -1,0 +1,36 @@
+name: Fallen Studios creative rejection gate
+on:
+  push:
+    branches: [creative/fallen-flagship-20261027]
+    paths:
+      - 'systemia/media-studio/hero-canary/manual-creative-release-gate.py'
+      - 'systemia/media-studio/hero-canary/rejected-60s-review.json'
+      - '.github/workflows/fallen-creative-rejection-gate.yml'
+  pull_request:
+    paths:
+      - 'systemia/media-studio/hero-canary/manual-creative-release-gate.py'
+      - 'systemia/media-studio/hero-canary/rejected-60s-review.json'
+      - '.github/workflows/fallen-creative-rejection-gate.yml'
+permissions:
+  contents: read
+jobs:
+  reject-unapproved-film:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - name: Source syntax check and confirm rejected film is HOLD
+        run: |
+          python3 -m py_compile systemia/media-studio/hero-canary/manual-creative-release-gate.py
+          python3 systemia/media-studio/hero-canary/manual-creative-release-gate.py \
+            --review systemia/media-studio/hero-canary/rejected-60s-review.json \
+            --output /tmp/fallen-creative-rejection.json --expect-hold
+          python3 - <<'PY'
+          import json
+          p=json.load(open("/tmp/fallen-creative-rejection.json"))
+          assert p["status"]=="HOLD"
+          assert "owner_approval_missing" in p["blockers"]
+          assert "low_or_unrated_commercial_relevance" in p["blockers"]
+          assert p["publication_triggered"] is False
+          print("PASS: Rejected film is blocked from release")
+          PY

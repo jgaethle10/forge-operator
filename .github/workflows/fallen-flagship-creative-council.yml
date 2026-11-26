@@ -1,0 +1,32 @@
+name: Fallen Studios flagship creative council (non-billable)
+on:
+  push:
+    branches:
+      - creative/fallen-flagship-20261027
+    paths:
+      - '.github/workflows/fallen-flagship-creative-council.yml'
+      - 'systemia/media-studio/run-fallen-flagship-council.mjs'
+      - 'systemia/saban/fixtures/fallen-flagship-commercial-creative-council-job.json'
+  pull_request:
+    paths:
+      - '.github/workflows/fallen-flagship-creative-council.yml'
+      - 'systemia/media-studio/run-fallen-flagship-council.mjs'
+      - 'systemia/saban/fixtures/fallen-flagship-commercial-creative-council-job.json'
+permissions:
+  contents: read
+jobs:
+  council:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run deterministic creative council against flagship shots
+        run: node systemia/media-studio/run-fallen-flagship-council.mjs --output artifacts/fallen-flagship-council/creative-council-receipt.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: fallen-flagship-council-receipt
+          path: artifacts/fallen-flagship-council/creative-council-receipt.json
+          if-no-files-found: error
