@@ -277,3 +277,43 @@
   .fallen-package-row,
   .fallen-footer { flex-direction: column; align-items: flex-start; }
 }
+
+/* Toon director: character-first controls are production planning, not rendered proof. */
+.fallen-toon-desk h2 { margin: 10px 0 8px; font-size: clamp(20px, 3vw, 27px); letter-spacing: -.025em; }
+.fallen-toon-note { color: #a99d91; line-height: 1.6; font-size: 13px; max-width: 900px; }
+.fallen-toon-toolbar {
+  display: grid; grid-template-columns: repeat(2, minmax(0,1fr));
+  gap: 16px; margin: 18px 0;
+}
+.fallen-toon-toolbar label,
+.fallen-toon-acting label,
+.fallen-toon-dialogue label { display: grid; gap: 7px; font-size: 12px; color: #b9afa5; }
+.fallen-toon-toolbar select,
+.fallen-toon-toolbar textarea,
+.fallen-toon-acting textarea,
+.fallen-toon-dialogue select {
+  box-sizing: border-box; width: 100%; border: 1px solid #514137;
+  border-radius: 11px; padding: 11px 12px; background: #110f11;
+  color: #f2e3d2; line-height: 1.5; font: inherit;
+}
+.fallen-toon-toolbar textarea,
+.fallen-toon-acting textarea { resize: vertical; min-height: 65px; }
+.fallen-toon-cast { display: grid; gap: 14px; }
+.fallen-toon-actor {
+  border: 1px solid #332a25; border-radius: 15px;
+  padding: 17px; background: #131114;
+}
+.fallen-toon-actor > strong { color: #ffc093; display: block; margin-bottom: 14px; }
+.fallen-toon-acting { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 13px; }
+.fallen-toon-dialogue { border-top: 1px solid #332a25; margin-top: 18px; padding-top: 15px; }
+.fallen-toon-dialogue h3 { margin: 2px 0 14px; }
+.fallen-toon-dialogue label {
+  grid-template-columns: minmax(0,1fr) 170px; align-items: center; margin-top: 10px;
+}
+.fallen-toon-dialogue label span { line-height: 1.5; overflow-wrap: anywhere; }
+.fallen-toon-validation { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 22px; }
+.fallen-toon-validation p { color: #a5b8a4; font-size: 12px; max-width: 520px; margin: 0; line-height: 1.5; }
+@media (max-width: 620px) {
+  .fallen-toon-toolbar,.fallen-toon-acting,.fallen-toon-dialogue label { grid-template-columns: 1fr; }
+  .fallen-toon-actor { padding: 12px; }
+}

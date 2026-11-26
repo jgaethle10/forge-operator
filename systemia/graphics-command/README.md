@@ -5,7 +5,7 @@ Evercraft Graphics Command is the art-direction layer between evidence-rich prod
 It does not replace Visual Desk, Fallen, World Engine, or Clip. It forces them to behave like one visual system:
 
 ```
-Systemia / Radar / FAIE / TOWI / Journal / RIVET / AliEV
+Systemia / verified product evidence / Journal / Radar / owned media sources
   -> Graphics Command
   -> Fallen Creative Council + visual strategy exploration
   -> Shot Tournament
@@ -48,3 +48,7 @@ The tournament report schema is `evercraft.graphics-command.shot-tournament.v1`;
 
 
 Rendering does not grant publication authority.
+
+## One Graphics Megazord
+
+The commercial build now has one [production mesh](./MEGAZORD.md) linking Graphics Command, Fallen Creative Council, World Engine work orders, Fallen motion, sound, Visual Desk and Clip. It fingerprints real bytes, allocates shot frames, and blocks claims of a finished video until video, audio, master-QC, deployment and publication receipts actually exist.
