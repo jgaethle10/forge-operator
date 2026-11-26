@@ -60,6 +60,22 @@ test('global scope is geographical, not a country filter; only current procureme
  }
 });
 
+
+test('public EV charging notices enter AliEV review without creating a buyer or payment',()=>{
+ const n=notice('OP00483310','Request for Expression of Interest',
+   'Feasibility assessment for electric vehicle charging stations');
+ n.project_name='Urban transport electrification';
+ const normalized=normalizeGlobalNotices({procnotices:[n]},{now:at,maxAgeDays:21});
+ assert.equal(normalized.rows.length,1);
+ const row=normalized.rows[0];
+ assert.ok(row.fit_offer_keys.includes('aliev'));
+ assert.equal(row.contract_eligibility,'unverified');
+ assert.equal(row.revenue_usd,null);
+ assert.equal(row.outreach_authorized,false);
+ assert.equal(row.application_authorized,false);
+ assert.equal(row.payment_verified,false);
+});
+
 test('one source poll for many five-minute beats, stable dedupe and private receipts',async()=>{
  const out=tmp();let calls=0,urls=[];
  const fetcher=async(url)=>{calls++;urls.push(url);return response(
