@@ -189,6 +189,61 @@
       "products": [],
       "services": [],
       "priority": 2
+    },
+    {
+      "lane_key": "forest-restoration",
+      "description": "FOREST-001: FAIE forest restoration, dated treatment and workforce evidence, and Systemia-reviewed economic opportunities",
+      "mode": "observe_existing_workflows",
+      "cadence_seconds": 300,
+      "products": [],
+      "services": [],
+      "priority": 2
+    },
+    {
+      "lane_key": "findmypart",
+      "description": "P0 revenue: product recovery engineering and qualified repair-shop/supplier discovery via existing Systemia Revenue Desk; review only until worker and buyer door proven.",
+      "mode": "observe_existing_workflows",
+      "cadence_seconds": 300,
+      "products": [
+        "findmypart"
+      ],
+      "services": [],
+      "priority": 1
+    },
+    {
+      "lane_key": "property-services",
+      "description": "EPS field-service customer intake and estimator source continuity; no job acceptance or sending",
+      "mode": "observe_existing_workflows",
+      "cadence_seconds": 300,
+      "products": [
+        "evercraft-property-services",
+        "eps-estimate-engine"
+      ],
+      "services": [],
+      "priority": 1
+    },
+    {
+      "lane_key": "legacy-rescue",
+      "description": "Legacy software and IBM i paid-offer source continuity; live checkout separately verified",
+      "mode": "observe_existing_workflows",
+      "cadence_seconds": 300,
+      "products": [
+        "legacy-rescue-lab",
+        "ibmi-rescue"
+      ],
+      "services": [],
+      "priority": 1
+    },
+    {
+      "lane_key": "faie-intelligence",
+      "description": "FAIE source-contract proof and evidence-first intelligence; no live evidence inference",
+      "mode": "observe_existing_workflows",
+      "cadence_seconds": 300,
+      "products": [
+        "faie"
+      ],
+      "services": [],
+      "priority": 2
     }
   ]
 }

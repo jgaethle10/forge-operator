@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import {createHash} from 'node:crypto';
 import {planKaidanceNextAction,writeKaidanceNextAction}
  from '../systemia/organism/kaidance-next-action.mjs';
 
@@ -155,4 +156,44 @@ test('unrecognized output directory never scans unrelated sibling merchant data'
   assert.equal(result.report.current_next_action.work_key,'product:aliev:adapter-admission');
   assert.equal(result.report.source_status.checkout,'missing');
  }finally{fs.rmSync(base,{recursive:true,force:true})}
+});
+
+test('FindMyPart service-fit evidence reaches priority-one next action without send or dispatch authority',()=>{
+ const row={work_key:'findmypart:shop:fixture',lane_key:'findmypart',priority:1,
+  action:'reconcile_existing_revenue_desk_then_confirm_actual_stalled_case',
+  authority:'systemia_operator_review_required',source_url:'https://example.com/repair',
+  observed_at:stamp,evidence_ref:digest,buyer_need_confirmed:false,execution_authorized:false,outreach_authorized:false};
+ const fmp={priority:1,state:'review_queued',buyers_qualified:0,outreach_authorized:false,
+  service_fit_evidence:[{work_key:row.work_key,source_url:row.source_url,observed_at:stamp,evidence_ref:digest}]};
+ const run=(rows,report=fmp)=>planKaidanceNextAction({now,companyReport:{...companyReport,findmypart:report},
+  companyQueue:{...companyQueue,candidates:[...companyQueue.candidates,...rows]}});
+ const good=run([row,row]);
+ assert.equal(good.report.current_next_action.work_key,row.work_key);
+ assert.equal(good.report.current_next_action.dispatch_authorized,false);
+ assert.equal(good.report.candidates.filter(x=>x.work_key===row.work_key).length,1);
+ assert.equal(good.report.customer_contacts,0);
+ assert.equal(good.snapshot.counts.admitted,0);
+ for(const bad of [{...row,evidence_ref:'sha256:'+'b'.repeat(64)},{...row,outreach_authorized:true},
+  {...row,buyer_need_confirmed:true},{...row,source_url:'http://example.com/repair'}]){
+  assert.ok(!run([bad]).report.candidates.some(x=>x.work_key===row.work_key));
+ }
+ const stale=new Date(+now-86400001).toISOString();
+ assert.ok(!run([{...row,observed_at:stale}],{...fmp,service_fit_evidence:[{...fmp.service_fit_evidence[0],observed_at:stale}]}).report.candidates.some(x=>x.work_key===row.work_key));
+ assert.ok(!run([row],{...fmp,service_fit_evidence:[]}).report.candidates.some(x=>x.work_key===row.work_key));
+ const withCheckout=planKaidanceNextAction({now,companyReport:{...companyReport,findmypart:fmp},companyQueue:{...companyQueue,candidates:[row]},sources:{checkout:fresh(checkout),checkoutActions:fresh(checkoutActions)}});
+ assert.equal(withCheckout.report.current_next_action.work_key,'checkout:verified-candidates');
+});
+
+test('consented inbound handoff binds aggregate evidence, outranks cold discovery, and cannot authorize reply',()=>{
+ const inbound={state:'consented_inquiries_require_review',observed_inquiries:3,unique_case_candidates:2,duplicate_inquiries:1,invalid_inquiries:0,oldest_pending_ms:3600000,prior_contact_verified:false,outreach_authorized:false,payment_verified:false};
+ const row={work_key:'findmypart:consented-inbound-review',lane_key:'findmypart',priority:1,action:'reconcile_existing_revenue_desk_inbound_case_before_any_reply',authority:'systemia_operator_review_required',execution_authorized:false,outreach_authorized:false,evidence_ref:'sha256:'+createHash('sha256').update(JSON.stringify(inbound)).digest('hex')};
+ const shop={work_key:'findmypart:shop:fixture',lane_key:'findmypart',priority:1,action:'reconcile_existing_revenue_desk_then_confirm_actual_stalled_case',authority:'systemia_operator_review_required',source_url:'https://example.com/repair',observed_at:stamp,evidence_ref:digest,buyer_need_confirmed:false,execution_authorized:false,outreach_authorized:false};
+ const fmp={priority:1,state:'review_queued',buyers_qualified:0,outreach_authorized:false,inbound_revenue_review:inbound,service_fit_evidence:[{work_key:shop.work_key,source_url:shop.source_url,observed_at:stamp,evidence_ref:digest}]};
+ const run=(rows,report=fmp)=>planKaidanceNextAction({now,companyReport:{...companyReport,findmypart:report},companyQueue:{...companyQueue,candidates:[shop,...rows]}});
+ const good=run([row,row]);assert.equal(good.report.current_next_action.work_key,row.work_key);
+ assert.equal(good.report.current_next_action.dispatch_authorized,false);assert.equal(good.report.customer_contacts,0);
+ assert.equal(good.report.candidates.filter(x=>x.work_key===row.work_key).length,1);
+ for(const bad of [{...row,evidence_ref:digest},{...row,outreach_authorized:true},{...row,execution_authorized:true}])
+  assert.equal(run([bad]).report.current_next_action.work_key,shop.work_key);
+ assert.equal(run([row],{...fmp,inbound_revenue_review:{...inbound,unique_case_candidates:3}}).report.current_next_action.work_key,shop.work_key);
 });

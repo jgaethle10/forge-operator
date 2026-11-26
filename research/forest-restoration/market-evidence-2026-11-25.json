@@ -1,0 +1,104 @@
+{
+  "schema": "evercraft.forest-001.market-evidence.v1",
+  "observed_on": "2026-11-25",
+  "validation": {
+    "commit": "0877c3bc9270238bff4e1593af7cd26dfce85121",
+    "blob_sha": "742e2e726e701f136aab89200b5c435d36e2d4a1",
+    "sha256": "3f1c68ea45df607aa2eab810d1f17336a77e8d81c068a50e521a44c11bcb31a5",
+    "node": "v22.16.0",
+    "assertions": 9,
+    "status": "PASS",
+    "execution_scope": "isolated review container; not Evercraft owned runtime",
+    "method": "Reconstructed exact file from pinned GitHub fetch; git hash-object matched; node --self-test executed"
+  },
+  "auction_listings": [
+    {
+      "agreement": "110181",
+      "name": "Q DEAD END",
+      "county": "Yakima",
+      "scheduled_date": "2026-11-19",
+      "listed_volume": 3402,
+      "listed_volume_unit": null,
+      "listed_value_usd": 25000,
+      "reoffer": true,
+      "actual_bid": null,
+      "purchaser": null,
+      "source": "https://dnr.wa.gov/product-sales-and-leasing/timber-sales/timber-auction-packets/previous-timber-auctions",
+      "evidence": "indexed official listing; not verified executed contract",
+      "price_basis": "listed value only; no inferred per-unit rate",
+      "outreach": false
+    },
+    {
+      "agreement": "110311",
+      "name": "Q 99 BEES",
+      "county": "Kittitas",
+      "scheduled_date": "2026-10-29",
+      "listed_volume": 3515,
+      "listed_volume_unit": null,
+      "listed_value_usd": 220000,
+      "listing_update": "2026-09-15",
+      "original_book_listed_value_usd": 57000,
+      "actual_bid": null,
+      "purchaser": null,
+      "source": "https://dnr.wa.gov/product-sales-and-leasing/timber-sales/timber-auction-packets/previous-timber-auctions",
+      "evidence": "indexed official listing; not verified executed contract",
+      "price_basis": "listed value only; no inferred per-unit rate",
+      "outreach": false
+    }
+  ],
+  "result_index": {
+    "sale": "Sasse Salmon",
+    "county": "Kittitas",
+    "auction_date": "2026-09-23",
+    "source": "https://dnr.wa.gov/product-sales-and-leasing/timber-sales/timber-auction-packets/timber-auction-results",
+    "actual_bid": null,
+    "purchaser": null,
+    "access": "indexed listing; direct fetch 403"
+  },
+  "price_feed": {
+    "source": "https://dnr.wa.gov/product-sales-and-leasing/timber-sales/timber-sale-querylog-prices",
+    "frequency": "monthly",
+    "basis": "delivered log price survey, not stumpage",
+    "current_values": null,
+    "access": "indexed description; direct fetch 403"
+  },
+  "gis": {
+    "source": "https://services.arcgis.com/4x406oNViizbGo13/ArcGIS/rest/services/Completed_FH_Treatments_2017_2022_EWA/FeatureServer/0",
+    "reported_end": "2026-10-31",
+    "layer_metadata_reverified": true,
+    "features_ingested": 0
+  },
+  "employment_source": {
+    "source": "https://esd.wa.gov/jobs-and-training/labor-market-information/employment-and-wages/covered-employment-qcew",
+    "available_vintage": "2025 annual averages; 2026 Q1 preliminary",
+    "target_naics": [
+      "113",
+      "115310",
+      "321",
+      "322"
+    ],
+    "county_codes": [
+      "53077",
+      "53037"
+    ],
+    "note": "Use mutually exclusive codes, separate ownership categories, retain disclosure-suppressed values as null; paper and wood manufacturing existing jobs are not incremental forestry jobs.",
+    "county_values": null
+  },
+  "candidate_project": {
+    "source": "https://chelancountywa.gov/natural-resources/pages/forest-products-campus",
+    "existing_study": {
+      "author": "Mason, Bruce & Girard",
+      "estimated_accessible_board_feet_low": 153000000,
+      "estimated_accessible_board_feet_high": 448000000,
+      "horizon_years": 20,
+      "geography": "Chelan, Kittitas and Okanogan counties",
+      "study_context": "2023 feasibility study",
+      "not_committed_supply": true
+    },
+    "status": "existing study overlaps proposed Evercraft deliverable; hold generic feedstock pitch; verify a specific unmet need",
+    "buyer": null,
+    "procurement": null
+  },
+  "decision": "HOLD_ACTUAL_FORECAST_AND_OUTREACH",
+  "next": "Verify current winning bids, units, timber grades, delivered prices and county detailed QCEW; no live dispatch or integration."
+}
