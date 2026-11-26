@@ -54,3 +54,17 @@ test('live-format local deadline is retained without inventing timezone',()=>{
  assert.equal(p.jobs[0].contact_authorized,false);
  assert.equal(p.jobs[0].execution_authorized,false);
 });
+
+test('observed procurement destinations are research-only; spoofed destinations are rejected',()=>{
+ const allowed=['https://www.merx.com/public/solicitations/4178025905/abstract?language=EN','https://discovery.ariba.com/rfx/23143616','https://portal.us.bn.cloud.ariba.com/dashboard/public/appext/comsapsbncdiscoveryui'];
+ const denied=['http://discovery.ariba.com/rfx/23143616','https://discovery.ariba.com.evil.test/rfx/23143616','https://discovery.ariba.com/login','https://user@discovery.ariba.com/rfx/23143616','https://www.merx.com/account'];
+ for(const url of [...allowed,...denied]){
+  const candidate=[...row];candidate[7]=url;
+  const result=normalizeCanada(csv(candidate),{now});
+  const expected=allowed.includes(url)?1:0;
+  assert.equal(result.candidates.length,expected);
+  const plan=planBuyerResearch({schema:'evercraft.kaidance.discovery-checkpoint.v1',records:result.candidates},{now});
+  assert.equal(plan.jobs.length,expected);
+  for(const job of plan.jobs){assert.equal(job.contact_authorized,false);assert.equal(job.execution_authorized,false);}
+ }
+});
