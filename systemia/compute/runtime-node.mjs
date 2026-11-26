@@ -2917,7 +2917,29 @@ export async function startEvercraftComputeNode({
             });
           }
 
+          // Explicit owner admission only; use a fixed directory inside the
+          // already-admitted Core workspace, never caller-selected paths.
+          const publicDemandEnabled = body.input?.public_demand_documents === true;
+          const publicDemandRoot = path.join(workspaceRoot, 'public-demand-research');
+          if (publicDemandEnabled) {
+            const inbox = path.join(publicDemandRoot, 'document-inbox.json');
+            try {
+              const rootStat = fs.lstatSync(publicDemandRoot);
+              const inboxStat = fs.lstatSync(inbox);
+              if (!rootStat.isDirectory() || rootStat.uid !== process.getuid() || (rootStat.mode & 0o077) ||
+                  !inboxStat.isFile() || inboxStat.uid !== process.getuid() || (inboxStat.mode & 0o077) ||
+                  inboxStat.size > 65536 ||
+                  !isWithin(fs.realpathSync(allowedRoot), fs.realpathSync(publicDemandRoot))) {
+                return send(res, 422, { error: 'public_demand_private_inbox_invalid' });
+              }
+            } catch {
+              return send(res, 422, { error: 'public_demand_private_inbox_unavailable' });
+            }
+          }
+
           const serviceEnv = {
+            SYSTEMIA_PUBLIC_DEMAND_RESEARCH_ROOT: publicDemandEnabled ? publicDemandRoot : '',
+            SYSTEMIA_PUBLIC_DEMAND_DOCUMENT_INBOX: publicDemandEnabled ? path.join(publicDemandRoot, 'document-inbox.json') : '',
             NODE_ENV: String(process.env.NODE_ENV || 'production'),
             EVERCRAFT_RELEASE_REF: releaseRef,
             SYSTEMIA_YARD_STATE_DIR: yardStateDir,
