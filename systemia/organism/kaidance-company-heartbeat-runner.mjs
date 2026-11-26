@@ -12,6 +12,7 @@ import {researchCycle} from '../evermaps/cemetery/research-cycle.mjs';
 import {classifyNext} from '../evermaps/cemetery/source-classification.mjs';
 import {writeKaidanceNextAction} from './kaidance-next-action.mjs';
 import {runGlobalOpportunityScout} from './kaidance-global-opportunity-scout.mjs';
+import {assessLightForgeProject} from './lightforge-development-intake.mjs';
 const sourceRoot=path.resolve(fileURLToPath(new URL('../../',import.meta.url)));
 const sha=value=>'sha256:'+createHash('sha256').update(value).digest('hex');
 function readJson(file){return JSON.parse(fs.readFileSync(file,'utf8'))}
@@ -163,7 +164,10 @@ export function runCompanyHeartbeat({
   worldsFingerprint:fingerprint,proof,workflowManifestCount:countWorkflowManifests(repo)});
  const aiw=classifyAiWReceipt(aiwReceipt,now);
  const global=classifyGlobalOpportunityReceipt(globalOpportunityReceipt,now);
- const report={...planned.report,proof,infrastructure_watch:aiw,global_opportunities:global};
+ // Source review only: this metadata contains neither unpublished code nor customer data.
+ const lightforge=assessLightForgeProject(readJson(path.join(repo,'registry/kaidance-lightforge-development.v1.json')));
+ const report={...planned.report,proof,infrastructure_watch:aiw,global_opportunities:global,
+  lightforge_development:lightforge.report};
  const queue={schema:'evercraft.kaidance.company-heartbeat.queue.v1',observed_at:report.observed_at,
   execution_authorized:false,
   candidates:[
@@ -172,6 +176,7 @@ export function runCompanyHeartbeat({
    ...aiw.review_candidates.map(row=>({work_key:row.key,lane_key:'infrastructure-watch',priority:2,
     action:row.action,authority:'systemia_operator_review_required',
     execution_authorized:false,publication_authorized:false})),
+   lightforge.candidate,
    ...global.review_candidates.slice(0,8).map(row=>({
     work_key:row.work_key,lane_key:'revenue',priority:2,
     action:'verify_worldbank_notice_deadline_buyer_eligibility_and_delivery_fit',
@@ -187,15 +192,16 @@ export function runCompanyHeartbeat({
   no_remote_work_dispatched:true,no_code_changes_made:true};
  const snapshot={...planned.snapshot,
   counts:{...planned.snapshot.counts,
-   scanned:planned.snapshot.counts.scanned+aiw.sources_observed+global.sources_observed,
+   scanned:planned.snapshot.counts.scanned+aiw.sources_observed+global.sources_observed+1,
    changed:planned.snapshot.counts.changed+(global.newly_seen||0),
-   held:planned.snapshot.counts.held+aiw.review_candidates.length+global.review_candidates.length},
+   held:planned.snapshot.counts.held+aiw.review_candidates.length+global.review_candidates.length+1},
   evidence_refs:[
     ...planned.snapshot.evidence_refs,
     ...(aiw.status==='verified_receipt'?[
       'source:systemia/infrastructure-watch/source-registry.v1.json',sha(JSON.stringify(aiw))]:[]),
     ...(global.status==='verified_source_receipt'?[
-      'source:registry/kaidance-global-opportunity-sources.v1.json',global.receipt_hash]:[])
+      'source:registry/kaidance-global-opportunity-sources.v1.json',global.receipt_hash]:[]),
+    'source:registry/kaidance-lightforge-development.v1.json',lightforge.report.source_digest
   ].slice(0,30)};
  fs.mkdirSync(out,{recursive:true,mode:0o700});
  // Commit the cycle watermark LAST. An interrupted write must be retryable
