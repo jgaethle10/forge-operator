@@ -22,6 +22,8 @@ on:
       - 'systemia/organism/kaidance-frontier-proof.mjs'
       - 'systemia/organism/kaidance-frontier-cycle.mjs'
       - 'systemia/organism/kaidance-company-heartbeat*.mjs'
+      - 'systemia/organism/kaidance-home-memory-scout.mjs'
+      - 'tests/kaidance-home-memory-scout.test.mjs'
       - 'systemia/organism/kaidance-creative-development.mjs'
       - 'systemia/organism/kaidance-learning-community-cycle.mjs'
       - 'tests/kaidance-learning-community-cycle.test.mjs'
@@ -98,6 +100,8 @@ on:
       - 'systemia/organism/kaidance-frontier-proof.mjs'
       - 'systemia/organism/kaidance-frontier-cycle.mjs'
       - 'systemia/organism/kaidance-company-heartbeat*.mjs'
+      - 'systemia/organism/kaidance-home-memory-scout.mjs'
+      - 'tests/kaidance-home-memory-scout.test.mjs'
       - 'systemia/organism/kaidance-creative-development.mjs'
       - 'systemia/organism/kaidance-learning-community-cycle.mjs'
       - 'tests/kaidance-learning-community-cycle.test.mjs'
@@ -242,6 +246,9 @@ jobs:
 
       - name: Verify worldwide source polling, 300-second queue reuse and outreach deny-by-default
         run: node --test tests/kaidance-global-opportunity-scout.test.mjs
+
+      - name: Verify Home archive scout bounds, custody and dedupe (fixtures only)
+        run: node --test tests/kaidance-home-memory-scout.test.mjs
 
       - name: Validate KAIDANCE company heartbeat safety and truthful progress
         run: node --test tests/kaidance-company-heartbeat.test.mjs tests/kaidance-rd-continuity.test.mjs
