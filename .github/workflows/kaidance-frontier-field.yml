@@ -23,6 +23,8 @@ on:
       - 'systemia/organism/kaidance-frontier-cycle.mjs'
       - 'systemia/organism/kaidance-company-heartbeat*.mjs'
       - 'systemia/organism/kaidance-global-opportunity-scout.mjs'
+      - 'systemia/organism/kaidance-kennedy-quality-review.mjs'
+      - 'tests/kaidance-kennedy-quality-review.test.mjs'
       - 'tests/kaidance-global-opportunity-scout.test.mjs'
       - 'systemia/organism/kaidance-next-action.mjs'
       - 'tests/kaidance-next-action.test.mjs'
@@ -75,6 +77,8 @@ on:
       - 'systemia/organism/kaidance-frontier-cycle.mjs'
       - 'systemia/organism/kaidance-company-heartbeat*.mjs'
       - 'systemia/organism/kaidance-global-opportunity-scout.mjs'
+      - 'systemia/organism/kaidance-kennedy-quality-review.mjs'
+      - 'tests/kaidance-kennedy-quality-review.test.mjs'
       - 'tests/kaidance-global-opportunity-scout.test.mjs'
       - 'systemia/organism/kaidance-next-action.mjs'
       - 'tests/kaidance-next-action.test.mjs'
@@ -191,6 +195,9 @@ jobs:
 
       - name: Validate KAIDANCE company heartbeat safety and truthful progress
         run: node --test tests/kaidance-company-heartbeat.test.mjs
+
+      - name: Validate Kennedy source-bound visual QA intake (no release authority)
+        run: node --test tests/kaidance-kennedy-quality-review.test.mjs
 
       - name: Validate one-company evidence-backed next action without a new worker
         run: node --test tests/kaidance-next-action.test.mjs
