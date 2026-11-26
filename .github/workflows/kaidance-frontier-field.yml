@@ -78,6 +78,9 @@ on:
       - 'registry/kaidance-company-lanes.v1.json'
       - 'tests/kaidance-company-heartbeat.test.mjs'
       - 'tests/findmypart-kaidance-execution.test.mjs'
+      - 'systemia/atlas/industrial-*.mjs'
+      - 'systemia/atlas/private-freight-ledger*.mjs'
+      - 'tests/industrial-kaidance-proof.test.mjs'
       - 'tests/findmypart-private-revenue-review.test.mjs'
       - 'systemia/organism/findmypart-private-revenue-review.mjs'
       - 'tests/kaidance-commercial-source-proof.test.mjs'
@@ -166,6 +169,9 @@ on:
       - 'registry/kaidance-company-lanes.v1.json'
       - 'tests/kaidance-company-heartbeat.test.mjs'
       - 'tests/findmypart-kaidance-execution.test.mjs'
+      - 'systemia/atlas/industrial-*.mjs'
+      - 'systemia/atlas/private-freight-ledger*.mjs'
+      - 'tests/industrial-kaidance-proof.test.mjs'
       - 'tests/findmypart-private-revenue-review.test.mjs'
       - 'systemia/organism/findmypart-private-revenue-review.mjs'
       - 'tests/kaidance-commercial-source-proof.test.mjs'
@@ -271,6 +277,9 @@ jobs:
 
       - name: Validate KAIDANCE company heartbeat safety and truthful progress
         run: node --test tests/kaidance-company-heartbeat.test.mjs tests/kaidance-rd-continuity.test.mjs tests/findmypart-kaidance-execution.test.mjs tests/kaidance-commercial-source-proof.test.mjs tests/findmypart-private-revenue-review.test.mjs
+
+      - name: Verify industrial order continuity and existing Kaidance integration
+        run: node --test tests/industrial-kaidance-proof.test.mjs systemia/atlas/industrial-order-proof.test.mjs systemia/atlas/industrial-order-resume.test.mjs systemia/atlas/private-freight-ledger.test.mjs tests/systemia-atlas-rebuild.test.mjs tests/atlas-route-twin.test.mjs
 
       - name: Prove existing mission continuity assessor
         run: node systemia/organism/mission-continuity-readonly.proof.mjs

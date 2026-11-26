@@ -4,6 +4,7 @@ import path from 'node:path';
 import {createHash,randomBytes} from 'node:crypto';
 import {fileURLToPath} from 'node:url';
 import {runBenchmark} from '../../scripts/findmypart-saban-benchmark.mjs';
+import {runIndustrialHeartbeatProof,projectIndustrialHeartbeatProof} from '../atlas/industrial-heartbeat-proof.mjs';
 import {reviewFindMyPartInbound} from './findmypart-private-revenue-review.mjs';
 const SOURCES=Object.freeze([
  {key:'small-engine-specialties',name:'Small Engine Specialties',sector:'small_engine',url:'https://www.sespecialties.com/parts-and-service',terms:['repair','parts']},
@@ -49,11 +50,12 @@ export async function runFindMyPartCycle({outDir,now=new Date(),fetchImpl=fetch,
  const old=readPrivate(stateFile);
  if(old&&(old.schema!=='evercraft.findmypart.execution-state.v1'||!Number.isSafeInteger(old.tick)||!old.attempts||typeof old.attempts!=='object'))throw Error('findmypart_state_invalid');
  if(old?.tick>tick)throw Error('findmypart_clock_rollback');
- if(old?.tick===tick){const report=readPrivate(latestFile);if(report?.tick!==tick)throw Error('findmypart_receipt_mismatch');return {...report,duplicate:true,source_poll_performed:false,engineering_benchmark_executed:false}}
+ if(old?.tick===tick){const report=readPrivate(latestFile);if(report?.tick!==tick)throw Error('findmypart_receipt_mismatch');return {...report,duplicate:true,source_poll_performed:false,engineering_benchmark_executed:false,industrial_proof:projectIndustrialHeartbeatProof(null)}}
  const attempts={...(old?.attempts||{})};
  const observations=Object.fromEntries(SOURCES.filter(s=>old?.observations?.[s.key]).map(s=>[s.key,old.observations[s.key]]));
  const inbound=reviewFindMyPartInbound({...inboxBinding,now:at,enabled:inboxBinding?.enabled===true}).summary;
  const benchmark=runBenchmark();
+ const industrialProof=runIndustrialHeartbeatProof();
  let observation=null,sourcePoll=false;
  const due=SOURCES.find(s=>!Number.isFinite(attempts[s.key])||ms-attempts[s.key]>=DAY);
  if(network&&due){
@@ -67,6 +69,7 @@ export async function runFindMyPartCycle({outDir,now=new Date(),fetchImpl=fetch,
  }
  const report={schema:'evercraft.findmypart.execution-cycle.v1',tick,observed_at:at.toISOString(),duplicate:false,
   inbound_revenue_review:inbound,
+  industrial_proof:industrialProof,
   engineering_benchmark_executed:true,benchmark_cases:benchmark.dataset_size,real_world_recoveries_verified:benchmark.real_world_recoveries_verified,
   source_poll_performed:sourcePoll,commercial_status:!network?'network_disabled':due?observation.status:'source_cooldown',
   observation,service_fit_candidates:Object.values(observations).filter(x=>x.status==='service_fit_observed'&&ms-Date.parse(x.observed_at)>=0&&ms-Date.parse(x.observed_at)<=DAY).map(x=>({work_key:'findmypart:shop:'+x.source_key,business_name:x.business_name,source_url:x.source_url,sector:x.sector,observed_at:x.observed_at,body_digest:x.body_digest,buyer_need_confirmed:false,outreach_authorized:false})),buyers_qualified:0,worker_dispatched:false,code_changes:0,outreach_authorized:false,payment_verified:false,
