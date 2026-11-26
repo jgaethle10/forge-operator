@@ -27,14 +27,27 @@ export async function capturePublicDemand({job,browse,now=new Date()}={}){
  if(!Number.isFinite(start)||!Number.isFinite(end)||start<+now-60000||end<start||end>Math.max(+now,Date.now())+60000)return hold('hold_capture_clock');
  // Snapshot links are local navigation hints, not authenticated document evidence.
  // Do not follow them here. Keep only same-origin, query-free public document pointers.
- const document_pointers=[],seen=new Set();
- for(const link of (Array.isArray(snapshot.links)?snapshot.links.slice(0,150):[])){
+ const {pointers:document_pointers,eligible_count:document_pointer_count,truncated:document_pointers_truncated}=rankDocumentPointers(source,snapshot.links);
+ return {...base,document_pointers,document_pointer_count,document_pointers_truncated,state:'captured_requires_research',http_status:status,captured_at:r.finished_at,title:String(snapshot.title||'').slice(0,500),text,text_sha256:r.text_sha256,browser_receipt_sha256:evidence_receipt_sha256,capture_verification:'local_browser_response_integrity_only',required_evidence:expected.required_evidence};
+}
+
+// Rank navigation hints BEFORE limiting output. A relevant solicitation late
+// in a directory must not be displaced by historical budget documents.
+export function rankDocumentPointers(source,links){
+ const origin=new URL(source).origin, candidates=[],seen=new Set();
+ for(const link of (Array.isArray(links)?links.slice(0,150):[])){
   let u;try{u=new URL(link?.href)}catch{continue;}
-  if(u.origin!==source.origin||u.protocol!=='https:'||u.username||u.password||u.search||!/(?:\.pdf|\.docx)$/i.test(u.pathname))continue;
+  if(u.origin!==origin||u.protocol!=='https:'||u.username||u.password||u.search||!/(?:\.pdf|\.docx)$/i.test(u.pathname))continue;
   u.hash='';
   if(seen.has(u.href))continue;seen.add(u.href);
-  document_pointers.push({url:u.href,label:String(link.text||'').slice(0,200),status:'unverified_document_pointer'});
-  if(document_pointers.length===20)break;
+  let filename;try{filename=decodeURIComponent(u.pathname.split('/').pop())}catch{filename=u.pathname;}
+  const label=String(link.text||'').slice(0,200);
+  const words=(filename+' '+label).toLowerCase().replace(/[^a-z0-9]+/g,' ');
+  const solicitation=/\b(?:rfp|rfq|rfi|solicitation|tender|addendum|addenda|invitation to bid|request for proposals?|request for qualifications?|request for quotations?)\b/.test(words);
+  const budget=/\b(?:budget|resolution|financial statement|audit report)\b/.test(words);
+  const rank=solicitation?0:budget?2:1;
+  candidates.push({url:u.href,label,status:'unverified_document_pointer',research_priority:rank});
  }
- return {...base,document_pointers,state:'captured_requires_research',http_status:status,captured_at:r.finished_at,title:String(snapshot.title||'').slice(0,500),text,text_sha256:r.text_sha256,browser_receipt_sha256:evidence_receipt_sha256,capture_verification:'local_browser_response_integrity_only',required_evidence:expected.required_evidence};
+ candidates.sort((a,b)=>a.research_priority-b.research_priority);
+ return {pointers:candidates.slice(0,20),eligible_count:candidates.length,truncated:candidates.length>20};
 }
