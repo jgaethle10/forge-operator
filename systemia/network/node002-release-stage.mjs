@@ -23,6 +23,8 @@ export function stageAuthorizedRelease({ledgerDirectory,stageDirectory,expectedS
  try{
  const receipt=readLedger(ledgerDirectory);
  if(receipt.schema!=='evercraft.node002.release-ledger.v1'||receipt.state!=='authorized_not_staged'||receipt.activation_authorized!==false||!Number.isSafeInteger(expectedSequence)||expectedSequence<1||receipt.last_sequence!==expectedSequence||! /^[a-f0-9]{40}$/.test(receipt.commit)||!phases.has(receipt.phase)||! /^[a-f0-9]{64}$/.test(receipt.grant_sha256))throw Error('stage_authorization_invalid');
+ const expiry=Date.parse(receipt.expires_at);
+ if(!Number.isFinite(expiry)||expiry<=Date.now())throw Error('stage_authorization_expired');
  const target=path.join(stageDirectory,receipt.commit);
  // Existing directories are never overwritten or executed.
  if(fs.existsSync(target))throw Error('stage_target_exists_reconcile');
@@ -38,6 +40,7 @@ export function stageAuthorizedRelease({ledgerDirectory,stageDirectory,expectedS
  if(git(['rev-parse','FETCH_HEAD'])!==receipt.commit)throw Error('stage_commit_mismatch');
  git(['checkout','--detach','--quiet',receipt.commit]);
  if(git(['rev-parse','HEAD'])!==receipt.commit||git(['status','--porcelain'])!=='')throw Error('stage_checkout_unverified');
+ if(expiry<=Date.now())throw Error('stage_authorization_expired');
  const result={schema:'evercraft.node002.release-stage-receipt.v1',commit:receipt.commit,phase:receipt.phase,sequence:receipt.last_sequence,grant_sha256:receipt.grant_sha256,state:'staged_not_validated',activation_authorized:false};
  const out=path.join(stageDirectory,receipt.commit+'.receipt.json');
  const rf=fs.openSync(out,'wx',0o600);
