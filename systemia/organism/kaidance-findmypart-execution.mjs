@@ -50,24 +50,26 @@ export async function runFindMyPartCycle({outDir,now=new Date(),fetchImpl=fetch,
  if(old?.tick>tick)throw Error('findmypart_clock_rollback');
  if(old?.tick===tick){const report=readPrivate(latestFile);if(report?.tick!==tick)throw Error('findmypart_receipt_mismatch');return {...report,duplicate:true,source_poll_performed:false,engineering_benchmark_executed:false}}
  const attempts={...(old?.attempts||{})};
+ const observations=Object.fromEntries(SOURCES.filter(s=>old?.observations?.[s.key]).map(s=>[s.key,old.observations[s.key]]));
  const benchmark=runBenchmark();
  let observation=null,sourcePoll=false;
  const due=SOURCES.find(s=>!Number.isFinite(attempts[s.key])||ms-attempts[s.key]>=DAY);
  if(network&&due){
   // One fixed first-party GET maximum, no form submission, no redirects. Attempt is reserved before I/O to bound retries.
   attempts[due.key]=ms;
-  write(stateFile,{schema:'evercraft.findmypart.execution-state.v1',tick:old?.tick??-1,attempts});
+  write(stateFile,{schema:'evercraft.findmypart.execution-state.v1',tick:old?.tick??-1,attempts,observations});
   sourcePoll=true;
   let result;try{result=await boundedPage(due,fetchImpl)}catch{result={status:'source_unavailable'}}
   observation={source_key:due.key,business_name:due.name,sector:due.sector,source_url:due.url,observed_at:at.toISOString(),...result,buyer_need_confirmed:false,outreach_authorized:false};
+  observations[due.key]=observation;
  }
  const report={schema:'evercraft.findmypart.execution-cycle.v1',tick,observed_at:at.toISOString(),duplicate:false,
   engineering_benchmark_executed:true,benchmark_cases:benchmark.dataset_size,real_world_recoveries_verified:benchmark.real_world_recoveries_verified,
   source_poll_performed:sourcePoll,commercial_status:!network?'network_disabled':due?observation.status:'source_cooldown',
-  observation,buyers_qualified:0,worker_dispatched:false,code_changes:0,outreach_authorized:false,payment_verified:false,
+  observation,service_fit_candidates:Object.values(observations).filter(x=>x.status==='service_fit_observed'&&ms-Date.parse(x.observed_at)>=0&&ms-Date.parse(x.observed_at)<=DAY).map(x=>({work_key:'findmypart:shop:'+x.source_key,business_name:x.business_name,source_url:x.source_url,sector:x.sector,observed_at:x.observed_at,body_digest:x.body_digest,buyer_need_confirmed:false,outreach_authorized:false})),buyers_qualified:0,worker_dispatched:false,code_changes:0,outreach_authorized:false,payment_verified:false,
   next_action:observation?.status==='service_fit_observed'?'reconcile_existing_revenue_desk_then_confirm_actual_stalled_case':'review_benchmark_gaps_and_due_sources'};
  write(latestFile,report);
- write(stateFile,{schema:'evercraft.findmypart.execution-state.v1',tick,attempts});
+ write(stateFile,{schema:'evercraft.findmypart.execution-state.v1',tick,attempts,observations});
  return report;
 }
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)){
