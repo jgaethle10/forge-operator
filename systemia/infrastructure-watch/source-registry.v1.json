@@ -1,0 +1,37 @@
+{
+  "schema": "evercraft.aiw.official-source-registry.v1",
+  "project_key": "american-infrastructure-watch",
+  "purpose": "read_only_metadata_monitoring_not_bridge_ingestion",
+  "cadence_seconds": 86400,
+  "max_fetch_bytes": 1000000,
+  "sources": [
+    {
+      "key": "fhwa-2025-state-summary",
+      "url": "https://www.fhwa.dot.gov/bridge/nbi/sd2025.cfm",
+      "source_year": 2025,
+      "scope": "national_state_summaries",
+      "content_type": "text/html"
+    },
+    {
+      "key": "fhwa-2026-national-bridge-data",
+      "url": "https://www.fhwa.dot.gov/bridge/nbi/nbi_data_2026.cfm",
+      "source_year": 2026,
+      "scope": "national_bridge_inventory_catalogue",
+      "content_type": "text/html"
+    },
+    {
+      "key": "fhwa-inventory-definitions",
+      "url": "https://www.fhwa.dot.gov/bridge/nbi/nbi_data.cfm",
+      "scope": "bridge_inventory_methods",
+      "content_type": "text/html"
+    }
+  ],
+  "authority": {
+    "network_read": "official_allowlisted_urls_only",
+    "ingest_data": false,
+    "modify_production": false,
+    "publish": false,
+    "send_outreach": false,
+    "source_change_requires_review": true
+  }
+}
