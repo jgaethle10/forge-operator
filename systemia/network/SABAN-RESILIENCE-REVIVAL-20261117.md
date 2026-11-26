@@ -76,3 +76,18 @@ Identified false-positive risk: the signed evidence reviewer could count repeate
 Added `systemia/network/field-topology-preflight.mjs` and `tests/network-field-topology-preflight.test.mjs`. The tool reads only local interfaces and guest-environment hints, rejects loopback/public/unassigned IP binds, and emits redacted classifications. It performs zero packet/network probes, does not touch production host settings, and cannot claim another device is reachable. It flags WSL/Crostini NAT uncertainty instead of silently reconfiguring a firewall or router.
 
 Local Node.js 22 regression: **5 PASS, 0 FAIL** across four test files. GitHub branch/CI review is distinct and may lag latest document commits. No live Node001/Node002 shell access, physical outage proof, online carrier access, satcom, or live Systemia DB update was performed; PR stays draft.
+
+## 2026-11-25 operator-reported live Windows-to-WSL relay response
+
+The operator provided terminal output from **Penguin Linux**, after running an operator-initiated temporary HTTP relay on NextGen:
+
+```text
+$ curl --noproxy '*' --connect-timeout 3 --max-time 8 http://<NextGen-Windows-LAN-IP>:47825/bridge-probe
+EVERCRAFT_BRIDGE_CONFIRMED
+```
+
+This **operator-reported** live output is consistent with the short-lived Windows relay accepting a LAN HTTP request and returning the success token only after its localhost HTTP request to a NextGen WSL test backend returned HTTP 200. Prior operator-shared independent checks had already established (a) Penguin-to-NextGen Windows ICMP and TCP and (b) Windows-to-WSL localhost HTTP. The relay script had earlier suffered a JavaScript/PowerShell backtick syntax issue, which was corrected before this successful request.
+
+**Verification and limitations:** The NextGen process's corresponding `WINDOWS_FORWARDED_TO_WSL` and `WSL_RECEIVED_FROM_WINDOWS` logs had not yet been supplied at the time of recording. The evidence is a user-provided terminal transcript, not machine-attested provenance. Do not claim complete two-sided receipt corroboration yet. The transit does not involve end-to-end Saban secure-envelope payloads, production relay identity, resilience to internet outage, physical peer cryptographic identity, satellite access, or integrated Kaidance runtime. The test used a temporary operator-run LAN relay with synthetic data; it is not a deployed service. No private IPs, keys, secrets, or raw host captures are committed here.
+
+**Next gate:** corroborate the paired NextGen logs, then run the consented end-to-end encrypted Saban field-outage experiment and save signed self-attested receipts. Do not promote this to physical outage recovery until the WAN-isolation and interruption/recovery steps are witnessed.
