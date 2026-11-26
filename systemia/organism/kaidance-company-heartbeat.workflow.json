@@ -18,7 +18,9 @@
     "creative_improvement_queue": "artifacts/kaidance-creative-development/queue.json",
     "creative_mission_snapshot": "artifacts/kaidance-creative-development/mission-snapshot.json",
     "network_development_source_receipt": "artifacts/kaidance-network-development/latest.json",
-    "network_development_mission_snapshot": "artifacts/kaidance-network-development/mission-snapshot.json"
+    "network_development_mission_snapshot": "artifacts/kaidance-network-development/mission-snapshot.json",
+    "aircore_source_receipt": "artifacts/kaidance-company-heartbeat/aircore-development/latest.json",
+    "aircore_review_queue": "artifacts/kaidance-company-heartbeat/aircore-development/queue.json"
   },
   "authority": {
     "inventory_read": "autonomous",
@@ -36,7 +38,11 @@
     "autonomous_graphics_generation": false,
     "network_pr_metadata": "read_only_fixed_pr",
     "network_code_generation": false,
-    "network_field_test": false
+    "network_field_test": false,
+    "aircore_bounded_source_proof": "allowlisted_local_only",
+    "aircore_physical_tests": false,
+    "aircore_hardware_purchase": false,
+    "aircore_partner_outreach": false
   },
   "claims": {
     "all_public_products_inventoried": true,
@@ -48,6 +54,8 @@
     "all_graphics_redeveloped_every_tick": false,
     "network_developed_every_tick": false,
     "network_field_validated": false,
-    "network_runtime_active_after_source_merge": false
+    "network_runtime_active_after_source_merge": false,
+    "aircore_prototype_built": false,
+    "aircore_cadr_verified": false
   }
 }
