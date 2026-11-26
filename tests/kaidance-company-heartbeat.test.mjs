@@ -5,6 +5,7 @@ import os from 'node:os';
 import path from 'node:path';
 import {planCompanyHeartbeat,validateCompanyLanes} from '../systemia/organism/kaidance-company-heartbeat.mjs';
 import {runCompanyHeartbeat,sourceFingerprint} from '../systemia/organism/kaidance-company-heartbeat-runner.mjs';
+import {runRegionalEventReview} from '../systemia/events/event-opportunity-regional-review-runner.mjs';
 const products=JSON.parse(fs.readFileSync('registry/public-products.json','utf8'));
 const supervisor=JSON.parse(fs.readFileSync('systemia/core/resident-services.json','utf8'));
 const lanes=JSON.parse(fs.readFileSync('registry/kaidance-company-lanes.v1.json','utf8'));
@@ -193,5 +194,31 @@ test('US SAM event source is admitted as founder-review only, quarantined when s
    now:new Date(at.getTime()+9*3600000)});
   assert.equal(stale.report.event_discovery.us_source_status,'us_source_stale');
   assert.equal(stale.queue.candidates.filter(c=>c.lane_key==='events').length,0);
+ }finally{fs.rmSync(root,{recursive:true,force:true})}
+});
+
+test('reviewed Oregon tender evidence joins Kaidance queue without external actions or evergreen freshness',()=>{
+ const root=fs.mkdtempSync(path.join(os.tmpdir(),'kaidance-regional-review-'));
+ const out=path.join(root,'kaidance-company-heartbeat');
+ const intake=path.join(root,'event-opportunity-regional');
+ const at=new Date('2026-11-26T07:45:00.000Z');
+ try{
+  const admitted=runRegionalEventReview({rootDir:'.',outDir:intake,now:at});
+  assert.equal(admitted.candidate_count,2);
+  const result=runCompanyHeartbeat({root:'.',outDir:out,now:at});
+  const candidates=result.queue.candidates.filter(x=>x.source_region==='Oregon, USA');
+  assert.equal(candidates.length,2);
+  assert.equal(result.report.event_discovery.regional_source_status,'regional_manual_review_only');
+  assert.equal(result.report.event_discovery.regional_crawl_performed,false);
+  assert(candidates.every(x=>x.outreach_authorized===false));
+  assert(candidates.every(x=>x.dispatch_authorized===false));
+  assert(candidates.every(x=>x.prior_outreach_history_checked===false));
+  assert.equal(result.queue.execution_authorized,false);
+  assert(result.next_action.candidates.some(x=>x.lane_key==='events'&&
+   x.evidence_ref.includes('oregonbuys.gov/bso/external/bidDetail.sda')));
+  assert.equal(result.next_action.customer_contacts,0);
+  const stale=runCompanyHeartbeat({root:'.',outDir:out,now:new Date(at.getTime()+20*60000)});
+  assert.equal(stale.report.event_discovery.regional_source_status,'regional_receipt_stale');
+  assert.equal(stale.queue.candidates.filter(x=>x.source_region==='Oregon, USA').length,0);
  }finally{fs.rmSync(root,{recursive:true,force:true})}
 });
