@@ -12,6 +12,7 @@ import {researchCycle} from '../evermaps/cemetery/research-cycle.mjs';
 import {classifyNext} from '../evermaps/cemetery/source-classification.mjs';
 import {writeKaidanceNextAction} from './kaidance-next-action.mjs';
 import {runGlobalOpportunityScout} from './kaidance-global-opportunity-scout.mjs';
+import {runKaidanceCreativeDevelopment} from './kaidance-creative-development.mjs';
 const sourceRoot=path.resolve(fileURLToPath(new URL('../../',import.meta.url)));
 const sha=value=>'sha256:'+createHash('sha256').update(value).digest('hex');
 function readJson(file){return JSON.parse(fs.readFileSync(file,'utf8'))}
@@ -229,6 +230,21 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
   }
   const result=runCompanyHeartbeat({outDir,proveWorlds:process.argv.includes('--prove-worlds'),
     aiwReceipt,globalOpportunityReceipt});
+  // The same company heartbeat owns Leiland + visual art-direction review.
+  // This is not another scheduler or a remote code-generation worker.
+  let creative={status:'held',reviewed_this_tick:0};
+  try{
+   const creativeOut=path.join(path.dirname(path.resolve(outDir)),'kaidance-creative-development');
+   const cycle=await runKaidanceCreativeDevelopment({root:sourceRoot,outDir:creativeOut});
+   creative={status:cycle.duplicate?'duplicate':'reconciled',
+    reviewed_this_tick:cycle.report?.source_review_completed_this_tick||0,
+    held_projects:cycle.report?.held_projects||0,
+    snapshot_written:!cycle.duplicate};
+  }catch(error){
+   console.error(JSON.stringify({schema:'evercraft.kaidance.creative-hold.v1',
+    status:'held',reason:String(error?.message||error).slice(0,120),
+    new_code_changes:0,publication_authorized:false}));
+  }
   // Explicit owner opt-in only; CI and existing installations default off.
   let cemetery=null, cemeteryClassification=null;
   if(process.env.SYSTEMIA_CEMETERY_RESEARCH_OUT_DIR){
@@ -247,6 +263,8 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
    global_opportunity_outreach_authorized:false,
    next_action_key:result.next_action?.current_next_action?.work_key||null,
    next_action_execution_authorized:false,
+   creative_development:creative,
+   creative_code_changes:0,creative_auto_publication:false,
    worker_launches:0,production_mutations:0,
    output_directory:'configured_private_runtime_or_ci_artifacts'}));
   if(result.report?.proof?.status==='failed')process.exitCode=1;
