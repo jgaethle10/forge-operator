@@ -128,6 +128,7 @@ jobs:
           python -m unittest -v test_gems_source_recovery.py
           python -m unittest -v test_gems_006_seed_replication.py
           python -m unittest -v test_gems_007_southern_transfer.py
+          python -m unittest -v test_gems_008c_nbmg_service_scout.py
           python -m unittest -v test_gems_003_exploratory_overlay.py
           python -m unittest -v test_verify_official_input_hashes.py
       - name: Assert no scored submission or production tasks were invoked
