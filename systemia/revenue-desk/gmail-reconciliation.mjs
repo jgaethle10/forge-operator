@@ -20,6 +20,29 @@ function digest(key,value){
  if(typeof key!=='string'||Buffer.byteLength(key)<32)throw Error('private_hmac_key_required');
  return 'hmac256:'+createHmac('sha256',key).update(value).digest('hex');
 }
+
+// Private authoritative organization registry. No guessing from email domains
+// (shared providers and franchises make that unsafe). A held organization stays
+// held until the trusted registry is explicitly revised after review.
+function organizationIndex(registry){
+ const map=new Map(),keys=new Set();
+ if(!Array.isArray(registry)||registry.length===0)return {map,valid:false};
+ for(const org of registry){
+  const key=clean(org?.organization_key),state=clean(org?.state);
+  if(!key||keys.has(key)||!['clear','customer_hold','do_not_contact','review_required'].includes(state)||
+     !clean(org?.evidence_ref)||!Array.isArray(org?.contact_emails)||!org.contact_emails.length)
+   return {map:new Map(),valid:false};
+  keys.add(key);
+  for(const addr of org.contact_emails){
+   const email=canonicalEmail(addr);
+   if(!email)return {map:new Map(),valid:false};
+   if(map.has(email)&&map.get(email).key!==key)return {map:new Map(),valid:false};
+   map.set(email,{key,state});
+  }
+ }
+ return {map,valid:true};
+}
+
 function fingerprint(v){return 'sha256:'+createHash('sha256').update(v).digest('hex');}
 function assertArray(v,n){if(!Array.isArray(v))throw Error(n+'_array_required');}
 function safeCount(x){return Number.isSafeInteger(x)&&x>=0?x:null;}
@@ -32,9 +55,10 @@ function safeCount(x){return Number.isSafeInteger(x)&&x>=0?x:null;}
 export function reconcileGmailOutreach({
  messages=[],prospects=[],now=new Date().toISOString(),hmacKey,
  historyComplete=false,providerDailyCap=null,coldTarget=400,replyReserve=100,
- minimumCooldownHours=72
+ minimumCooldownHours=72,organizationRegistry=null
 }={}){
  assertArray(messages,'messages');assertArray(prospects,'prospects');
+ const organizations=organizationIndex(organizationRegistry);
  const clock=parseTime(now,'now'),cold=safeCount(coldTarget),reserve=safeCount(replyReserve);
  const cap=safeCount(providerDailyCap);
  if(cold===null||reserve===null||!Number.isSafeInteger(minimumCooldownHours)||minimumCooldownHours<0)
@@ -125,6 +149,10 @@ export function reconcileGmailOutreach({
   if(usedOpportunities.has(prospectKey))reasons.push('duplicate_opportunity_across_agents');
   usedContacts.add(emailKey);
   usedOpportunities.add(prospectKey);
+  const org=organizations.map.get(email);
+  if(!organizations.valid)reasons.push('organization_registry_missing_or_ambiguous');
+  else if(!org)reasons.push('organization_identity_unresolved');
+  else if(org.state!=='clear')reasons.push('organization_contact_hold');
   if(suppressed)reasons.push('suppressed_or_customer_hold');
   if(priorContact)reasons.push('prior_contact_reconcile_before_new_outreach');
   if(cooldown)reasons.push('cooldown_active');
@@ -140,6 +168,8 @@ export function reconcileGmailOutreach({
   // A permit record in source data is NOT a live Passport execution permit.
   keyedProspects.push({
     prospect_ref:digest(hmacKey,prospectKey),contact_ref:emailKey,source_ref_hash:clean(p.source_ref)?digest(hmacKey,clean(p.source_ref)):null,
+    organization_ref:org?digest(hmacKey,'organization:'+org.key):null,
+    organization_contact_state:org?.state||'unresolved',
     stage:latestBuyerReply?'replied':priorContact?'sent':stage,
     last_contact_ref:latest?'gmail:'+latest.id:null,
     last_contact_at:latest?new Date(latest.time).toISOString():null,
@@ -165,6 +195,7 @@ export function reconcileGmailOutreach({
     inbound_non_auto_messages:inboxBuyerReplies,
     newly_paid_orders_verified:0},
   prospects:keyedProspects,
+  organization_registry_valid:organizations.valid,
   private_identifiers_exported:false,private_body_exported:false,
   provider_delivery_verified:false,customer_acceptance_verified:false,paid_revenue_verified:false,
   advisory_only:true,send_performed:false
