@@ -39,6 +39,7 @@ def verify(d:object,root:Path=ROOT)->list[str]:
         need(a.get(key) is True,"unsafe_authority_"+key)
     need(a.get("cadence_seconds")==300,"wrong_heartbeat_cadence")
     c=d.get("cadence_policy",{})
+    if not isinstance(c,dict):return issues+["cadence_policy_missing"]
     need(c.get("liveness_seconds")==300,"wrong_liveness_cadence")
     need(type(c.get("full_source_review_minimum_seconds")) is int and
          c["full_source_review_minimum_seconds"]>=86400,"source_review_reruns_too_frequently")
@@ -58,9 +59,10 @@ def verify(d:object,root:Path=ROOT)->list[str]:
         value=e.get(key,"")
         need(isinstance(value,str) and
              bool(re.fullmatch(r"research/fungal-defense-001/[A-Za-z0-9_./-]+",value)) and
-             ".." not in value and (root.parent/value).is_file(),
+             ".." not in value and (root.parents[1]/value).is_file(),
              "source_artifact_missing_"+key)
     nxt=d.get("bounded_next_action",{})
+    if not isinstance(nxt,dict):return issues+["next_action_missing"]
     need(nxt.get("authorized_to_execute") is False and
          nxt.get("requires_operator_authorization") is True and
          nxt.get("source_evidence_only") is True,"unauthorized_automatic_action")
