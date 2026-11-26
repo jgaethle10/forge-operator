@@ -13,13 +13,40 @@ export async function runScheduler({
   plan,
   contract,
   rootDir = process.cwd(),
-  statePath = null
+  statePath = null,
+  onStateObservation = null
 }) {
   if (!adapter || typeof adapter.runAssignment !== 'function') {
     throw new Error('Scheduler requires an adapter with runAssignment().');
   }
 
   const workerCount = Math.max(1, Number.parseInt(String(physicalWorkers || 1), 10) || 1);
+  if(onStateObservation!==null && typeof onStateObservation!=='function')
+    throw new Error('Saban observation must be a synchronous callback');
+  let observed=0,observationFailures=0;
+  const sendObservation=(kind)=>{
+    if(!onStateObservation)return;
+    // Only totals enter the callback. No job/worker identifiers or payloads.
+    const counts={queued:0,leased:0,completed:0,dead_letter:0};
+    for(const job of Object.values(state.jobs||{})){
+      if(!Object.hasOwn(counts,job.state)){
+        observationFailures++;
+        return;
+      }
+      counts[job.state]++;
+    }
+    try{
+      const result=onStateObservation({kind,at:new Date().toISOString(),
+        total:Object.keys(state.jobs||{}).length,counts});
+      if(result&&typeof result.then==='function')
+        throw new Error('Saban observation callback must be synchronous');
+      observed++;
+    }catch{
+      // A failed graphics observer never converts a successful task into a
+      // scheduler failure, nor causes another execution attempt.
+      observationFailures++;
+    }
+  };
 
   async function runWorker(index) {
     const workerId = `worker-${String(index + 1).padStart(3, '0')}`;
@@ -28,6 +55,7 @@ export async function runScheduler({
       const leased = leaseNext(state, { workerId });
       if (!leased) return;
       if (statePath) saveWorkState(statePath, state);
+      sendObservation('leased');
 
       const startedAt = Date.now();
       try {
@@ -54,6 +82,7 @@ export async function runScheduler({
           }
         });
         if (statePath) saveWorkState(statePath, state);
+        sendObservation('completed');
       } catch (error) {
         fail(state, {
           jobId: leased.job_id,
@@ -65,6 +94,7 @@ export async function runScheduler({
           retry: true
         });
         if (statePath) saveWorkState(statePath, state);
+        sendObservation(state.jobs[leased.job_id].state==='queued'?'retry_queued':'dead_letter');
       }
     }
   }
@@ -74,12 +104,21 @@ export async function runScheduler({
   );
 
   if (statePath) saveWorkState(statePath, state);
+  const summary=summarizeWorkState(state);
+  sendObservation('scheduler_finished');
 
   return {
     schema: 'evercraft.saban.scheduler-receipt.v1',
     generated_at: new Date().toISOString(),
     worker_count: workerCount,
-    summary: summarizeWorkState(state),
+    summary,
+    observation_summary:{
+      enabled:onStateObservation!==null,emitted:observed,
+      failures:observationFailures,
+      locally_observed_only:true,
+      event_history_complete:false,
+      callback_gaps:observationFailures>0
+    },
     state
   };
 }
