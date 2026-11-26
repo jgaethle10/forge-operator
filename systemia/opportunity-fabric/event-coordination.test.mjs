@@ -89,7 +89,9 @@ test('pilot fly-in is five distinct optional evidence gates, not a booked public
    assert(fly.next_work.some(w=>w.requirement===key&&w.priority==='obtain_evidence'));
  }
  assert.match(fly.checks.find(g=>g.id==='fly_in_faa_event_classification').question,/does not automatically mean airshow/);
- assert.match(fly.checks.find(g=>g.id==='fly_in_sponsor_and_museum_authority').question,/term sheet does not itself/);
+ assert.match(fly.checks.find(g=>g.id==='fly_in_sponsor_and_museum_authority').question,/Vintage Aviation Museum reports it acquired Hangar B/);
+ assert.match(fly.checks.find(g=>g.id==='fly_in_sponsor_and_museum_authority').question,/Port retained the land/);
+ assert.equal(fly.event_approved,false);
  for(const flag of ['external_contact_authorized','event_approved','ticket_sales_authorized',
   'charitable_collection_authorized','performance_or_testing_authorized'])
   assert.equal(fly[flag],false);
