@@ -39,6 +39,8 @@ async function main(){
  const mail=readJson(option('--mail-file'));
  const prospects=readJson(option('--prospects-file'));
  const key=inputFile(option('--hmac-key-file')).toString('utf8').trim();
+ const orgFile=option('--organization-registry-file');
+ const organizationRegistry=orgFile?readJson(orgFile).organizations:null;
  const cap=Number(option('--provider-cap'));
  // FULL COVERAGE must be manually established with connector pagination and
  // missing-message checks. A CLI flag cannot prove Gmail completeness.
@@ -47,6 +49,7 @@ async function main(){
  const report=reconcileGmailOutreach({
   messages:mail.messages,
   prospects:prospects.prospects,
+  organizationRegistry,
   now:new Date().toISOString(),
   hmacKey:key,
   historyComplete,
