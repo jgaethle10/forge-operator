@@ -92,6 +92,29 @@ test('Runner writes local private receipts; no worker, deployment, or code write
 });
 
 
+test('company heartbeat keeps unpublished LightForge blocked and queued for review only',()=>{
+ const dir=fs.mkdtempSync(path.join(os.tmpdir(),'kaidance-lightforge-intake-'));
+ try{
+  const result=runCompanyHeartbeat({root:'.',outDir:dir,now,proveWorlds:false});
+  const report=result.report.lightforge_development;
+  assert.equal(report.schema,'evercraft.kaidance.lightforge-readiness.v1');
+  assert.equal(report.product_key,'evercraft-lightforge');
+  assert.equal(report.status,'release_blocked');
+  assert.equal(report.gates_independently_verified,0);
+  assert.equal(report.shipping_authorized,false);
+  assert.equal(report.development_worker_dispatched,false);
+  const candidate=result.queue.candidates.find(x=>x.lane_key==='lightforge');
+  assert.equal(candidate.work_key,'lightforge:gate:canonical-source');
+  assert.equal(candidate.execution_authorized,false);
+  assert.equal(candidate.publication_authorized,false);
+  assert.ok(result.mission_snapshot.counts.held>=1);
+  const later=runCompanyHeartbeat({root:'.',outDir:dir,
+    now:new Date(now.getTime()+300000),proveWorlds:false});
+  assert.equal(later.report.lightforge_development.source_digest,report.source_digest);
+  assert.equal(later.report.advancement.autonomous_development_workers_launched,0);
+ }finally{fs.rmSync(dir,{recursive:true,force:true})}
+});
+
 test('company heartbeat surfaces a verified existing checkout handoff, without performing it',()=>{
  const root=fs.mkdtempSync(path.join(os.tmpdir(),'kaidance-next-action-integration-'));
  const out=path.join(root,'kaidance-company-heartbeat');
