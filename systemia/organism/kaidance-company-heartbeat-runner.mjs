@@ -17,6 +17,7 @@ import {runLearningCommunityCycle} from './kaidance-learning-community-cycle.mjs
 import {runAirCoreDevelopmentCycle} from './kaidance-aircore-development.mjs';
 import {runPrivateResearchContinuity} from './kaidance-rd-continuity.mjs';
 import {runFindMyPartCycle} from './kaidance-findmypart-execution.mjs';
+import {runCommercialSourceProof} from './kaidance-commercial-source-proof.mjs';
 import {runEventOpportunityScout} from '../events/event-opportunity-scout-runner.mjs';
 import {runSAMEventScout} from '../events/event-opportunity-us-sam-runner.mjs';
 import {runRegionalEventReview} from '../events/event-opportunity-regional-review-runner.mjs';
@@ -347,7 +348,7 @@ export function runCompanyHeartbeat({
  root=sourceRoot,outDir=path.join(sourceRoot,'artifacts/kaidance-company-heartbeat'),
  now=new Date(),proveWorlds=false,proveLearning=false,proveAirCore=false,
  learningCycle=runLearningCommunityCycle,aircoreCycle=runAirCoreDevelopmentCycle,
- spawn=spawnSync,aiwReceipt=null,globalOpportunityReceipt=null,networkDevelopmentReceipt=null,rdContinuityEnabled=false,forestReceipt=null,findmypartExecutionReceipt=null
+ spawn=spawnSync,aiwReceipt=null,globalOpportunityReceipt=null,networkDevelopmentReceipt=null,rdContinuityEnabled=false,forestReceipt=null,findmypartExecutionReceipt=null,commercialSourceProof=null,eventResidentPulse=null
 }={}){
  const repo=path.resolve(root),out=path.resolve(outDir);
  const manifest=readJson(path.join(repo,'registry/kaidance-company-lanes.v1.json'));
@@ -440,12 +441,13 @@ export function runCompanyHeartbeat({
  const usScout=usSAMScoutReview(out,now);
  const regionalScout=regionalEventReview(out,now);
   const eventDiscovery={lane_key:'events',source_status:scout.status,
+   resident_source_pulse:eventResidentPulse,
    candidates_for_review:scout.candidates.length+usScout.candidates.length+regionalScout.candidates.length,
    uk_source_status:scout.status,us_source_status:usScout.status,
    regional_source_status:regionalScout.status,regional_crawl_performed:false,
    external_work_performed:false,source_regions:['United Kingdom','United States'],
    any_buyer_contact:false,any_sponsor_commitment:false};
- const report={...planned.report,proof,event_discovery:eventDiscovery,infrastructure_watch:aiw,forest_restoration:forest,
+ const report={...planned.report,proof,commercial_source_proof:commercialSourceProof||{status:'not_executed',executed:false},event_discovery:eventDiscovery,infrastructure_watch:aiw,forest_restoration:forest,
   findmypart:{state:'review_queued',priority:1,heartbeat_seconds:300,workstreams:findmypartCandidates.map(x=>x.work_key),worker_dispatched:false,source_poll_performed:fmp?.source_poll_performed===true,buyers_qualified:0,outreach_authorized:false,engineering_benchmark_executed:fmp?.engineering_benchmark_executed===true,commercial_status:fmp?.commercial_status||'not_executed',source_observation:fmp?.observation||null,service_fit_evidence:fmpShopCandidates.map(({work_key,source_url,observed_at,evidence_ref})=>({work_key,source_url,observed_at,evidence_ref})),code_changes:0},
   research_continuity:researchContinuity,
   global_opportunities:global,network_development:network,
@@ -575,7 +577,15 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
      findmypartExecutionReceipt=await runFindMyPartCycle({outDir:path.join(outDir,'findmypart-execution'),now:at,network:true});
    }catch{console.error(JSON.stringify({schema:'evercraft.findmypart.execution-hold.v1',status:'held'}))}
   }
-  const result=runCompanyHeartbeat({outDir,now:at,findmypartExecutionReceipt,proveWorlds:process.argv.includes('--prove-worlds'),
+  let commercialSourceProof=null;
+  if(process.env.SYSTEMIA_COMMERCIAL_SOURCE_PROOFS==='true'&&process.env.GITHUB_ACTIONS!=='true'&&path.isAbsolute(outDir)&&path.basename(outDir)==='kaidance-company-heartbeat'){
+   try{
+    const existing=path.join(outDir,'state.json');
+    if(!fs.existsSync(existing)||readJson(existing).tick<Math.floor(+at/300000))
+     commercialSourceProof=runCommercialSourceProof({root:sourceRoot,outDir:path.join(outDir,'commercial-source-proof'),now:at,enabled:true});
+   }catch{commercialSourceProof={status:'held',executed:false}}
+  }
+  const result=runCompanyHeartbeat({outDir,now:at,findmypartExecutionReceipt,commercialSourceProof,eventResidentPulse:eventSourcePulse,proveWorlds:process.argv.includes('--prove-worlds'),
     proveLearning:process.argv.includes('--prove-learning')||process.env.SYSTEMIA_KAIDANCE_LEARNING_SOURCE_PROOFS==='true',
     proveAirCore:process.argv.includes('--prove-aircore')||process.env.SYSTEMIA_KAIDANCE_AIRCORE_SOURCE_PROOFS==='true',
     aiwReceipt,globalOpportunityReceipt,networkDevelopmentReceipt,forestReceipt,
