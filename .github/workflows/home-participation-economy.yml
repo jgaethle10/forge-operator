@@ -1,0 +1,115 @@
+name: Home Participation Economy v0.1
+on:
+  pull_request:
+    paths:
+      - "systemia/participation-economy/**"
+      - ".github/workflows/home-participation-economy.yml"
+  push:
+    branches: [main]
+    paths:
+      - "systemia/participation-economy/**"
+      - ".github/workflows/home-participation-economy.yml"
+permissions:
+  contents: read
+jobs:
+  simulation-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Validate simulation engine and pilot source
+        run: |
+          node --check systemia/participation-economy/engine.mjs
+          node --check systemia/participation-economy/pilot.mjs
+          node --check systemia/participation-economy/journal.mjs
+          node --check systemia/participation-economy/journal-pilot.mjs
+          node --check systemia/participation-economy/creator-intake.mjs
+          node --check systemia/participation-economy/creator-record-store.mjs
+          node --check systemia/participation-economy/creator-queue-pilot.mjs
+          node --check systemia/participation-economy/creator-access.mjs
+          node --check systemia/participation-economy/creator-media-store.mjs
+          node --check systemia/participation-economy/creator-media-pilot.mjs
+      - name: Homecoming founding preview contract
+        run: |
+          node --input-type=commonjs -e '
+            const html=require("node:fs").readFileSync("systemia/participation-economy/homecoming-preview.html","utf8");
+            const scripts=[...html.matchAll(/<script>([\s\S]*?)<\/script>/g)];
+            if(scripts.length!==1)throw Error("Expected local filter script");
+            new Function(scripts[0][1]);
+            for(const s of ["Founding preview","Custody unverified","No images collected or published","yakimavalleytrolleys.org/yvt-history/","yvl.org/services/special-collections-and-archive-services/"])if(!html.includes(s))throw Error("Missing boundary or source: "+s);
+            if(/<form\b|<input\b|<script[^>]+src=|fetch\s*\(|XMLHttpRequest|sendBeacon|localStorage|sessionStorage|<iframe\b|<img\b/.test(html))throw Error("Unapproved collection or external media");
+            if((html.match(/<article class="card"/g)||[]).length!==12)throw Error("Expected twelve source-linked cards");
+          '
+      - name: Verify Homecoming record provenance and era filters
+        run: node --test systemia/participation-economy/homecoming-records.test.mjs
+      - name: Verify seasonal household consent and nonbinding estimate bridge
+        run: node --test systemia/participation-economy/season-household-bridge.test.mjs
+      - name: Run economy and fraud-hold tests
+        run: node --test systemia/participation-economy/engine.test.mjs systemia/participation-economy/journal.test.mjs systemia/participation-economy/creator-intake.test.mjs systemia/participation-economy/creator-record-store.test.mjs systemia/participation-economy/creator-access.test.mjs systemia/participation-economy/creator-media-store.test.mjs systemia/participation-economy/creator-media-access.test.mjs
+      - name: Prove demo remains read-only
+        run: |
+          node systemia/participation-economy/pilot.mjs > /tmp/home-participation-pilot.json
+          node systemia/participation-economy/journal-pilot.mjs > /tmp/home-participation-journal.json
+          node --input-type=module -e '
+            import fs from "node:fs";
+            const x=JSON.parse(fs.readFileSync("/tmp/home-participation-pilot.json","utf8"));
+            if(x.payouts_enabled!==false || x.financial_authority_granted!==false) process.exit(1);
+            if(x.demonstration!=="synthetic_unverified_no_money_movement") process.exit(1);
+            if(x.status!=="simulation_only") process.exit(1);
+            const journal=JSON.parse(fs.readFileSync("/tmp/home-participation-journal.json","utf8"));
+            if(!journal.journal_verification.ok) process.exit(1);
+            if(journal.before_refund.status!=="simulation_only") process.exit(1);
+            if(journal.before_refund.payouts_enabled!==false) process.exit(1);
+            if(journal.after_refund.status!=="held" || journal.after_refund.revenue_basis_cents!==null) process.exit(1);
+            if(journal.after_refund.payouts_enabled!==false) process.exit(1);
+          '
+
+      - name: Verify creator queue demo is persistence-only and withdrawn content stays held
+        run: |
+          node systemia/participation-economy/creator-queue-pilot.mjs > /tmp/home-creator-queue-pilot.json
+          node --input-type=module -e '
+            import {readFileSync} from "node:fs";
+            const p=JSON.parse(readFileSync("/tmp/home-creator-queue-pilot.json","utf8"));
+            if(p.persisted_after_restart!==true)process.exit(1);
+            if(p.demonstration!=="synthetic_unverified_no_media_no_money_movement")process.exit(1);
+            for(const k of ["submitted","reviewed","withdrawn"]){
+              if(p[k].published!==false || p[k].payouts_enabled!==false || p[k].payable_cents!==null)process.exit(1);
+            }
+            if(p.withdrawn.routes.some(x=>x.state!=="held"))process.exit(1);
+          '
+
+      - name: Check creator Studio preview is local-only, syntactically valid and never claims payments
+        run: |
+          node --input-type=commonjs -e '
+            const fs=require("node:fs");
+            const html=fs.readFileSync("systemia/participation-economy/creator-studio-preview.html","utf8");
+            const match=[...html.matchAll(/<script>([\s\S]*?)<\/script>/g)];
+            if(match.length!==1)throw Error("Expected one local inline UI script");
+            new Function(match[0][1]);
+            for(const phrase of [
+              "Local prototype", "not live", "Nothing is uploaded or published",
+              "creator_publish_opt_in", "creator_revenue_opt_in",
+              "publisher_authority:false", "payouts_enabled:false"
+            ])if(!html.includes(phrase))throw Error("Missing local-only boundary: "+phrase);
+            if(/<script[^>]+src=|fetch\s*\(|XMLHttpRequest|sendBeacon|localStorage/.test(html))
+              throw Error("Unexpected external transfer or persistent browser storage");
+            console.log("Creator Studio local preview contract OK");
+          '
+
+      - name: Verify owned private media receipt to creator queue end-to-end
+        run: |
+          node systemia/participation-economy/creator-media-pilot.mjs > /tmp/home-media-pilot.json
+          node --input-type=module -e '
+            import {readFileSync} from "node:fs";
+            const x=JSON.parse(readFileSync("/tmp/home-media-pilot.json","utf8"));
+            if(x.demonstration!=="synthetic_local_bytes_not_decoded_no_publication_no_payments")process.exit(1);
+            if(!x.media_persisted||!x.story_persisted_after_restart)process.exit(1);
+            if(!x.media_receipt.asset_ref.startsWith("asset:sha256:"))process.exit(1);
+            if(x.media_receipt.public_url!==null||x.media_receipt.malware_scanned!==false)process.exit(1);
+            if(x.submitted.published!==false||x.reviewed.published!==false)process.exit(1);
+            if(x.withdrawn.state!=="withdrawn"||x.withdrawn.published!==false)process.exit(1);
+            if(x.withdrawn.routes.some(r=>r.state!=="held"))process.exit(1);
+            if(x.payouts_enabled!==false||x.payable_cents!==null)process.exit(1);
+          '

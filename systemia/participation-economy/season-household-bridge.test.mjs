@@ -1,0 +1,16 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {seasonalCardCandidate,seasonalEstimateCandidate} from './season-household-bridge.mjs';
+const card={card_ref:'card:1',source_ref:'story:1',kind:'recipe',season:'autumn',review_state:'approved',creator_opt_in:true,sponsored:false};
+const actor={household_ref:'hh:1',actor_ref:'person:1'};
+const task={household_ref:'hh:1',task_ref:'task:1',service_kind:'yard_cleanup',state:'open',revision:1};
+const consent={...actor,task_ref:task.task_ref,revision:1,purpose:'nonbinding_estimate_preview',state:'granted'};
+test('public card is only a candidate, never published or saved automatically',()=>{let p=seasonalCardCandidate(card);assert.equal(p.state,'candidate_for_trusted_review');assert.equal(p.published,false);assert.equal(p.save_to_household_authority,false);});
+test('private fields rejected from public card',()=>assert.throws(()=>seasonalCardCandidate({...card,household_ref:'hh:1'}),/invalid_public_card/));
+test('review and consent both required',()=>{assert.equal(seasonalCardCandidate({...card,creator_opt_in:false}).state,'held');assert.equal(seasonalCardCandidate({...card,review_state:'pending'}).state,'held');});
+test('sponsorship must be disclosed',()=>{assert.throws(()=>seasonalCardCandidate({...card,sponsored:true}),/sponsor_disclosure/);assert.equal(seasonalCardCandidate({...card,sponsored:true,sponsor_label:'business:1'}).sponsored,true);});
+test('private estimate preview does not create a job, quote, payout or contact',()=>{let p=seasonalEstimateCandidate({actor,task,consent});assert.equal(p.state,'candidate_for_authenticated_intake');assert.equal(p.destination,'eps');for(const k of ['published','external_contact','job_created','booking_created','payment_authority','payouts_enabled'])assert.equal(p[k],false);for(const k of ['public_projection','quote_cents','creator_earnings_cents'])assert.equal(p[k],null);});
+test('no, revoked, wrong-purpose or stale consent is held',()=>{for(const c of [undefined,{...consent,state:'revoked'},{...consent,purpose:'publish'},{...consent,revision:2},{...consent,actor_ref:'person:2'}])assert.equal(seasonalEstimateCandidate({actor,task,consent:c}).destination,null);});
+test('cross-household scope rejected',()=>assert.throws(()=>seasonalEstimateCandidate({actor:{...actor,household_ref:'hh:2'},task,consent}),/scope_mismatch/));
+test('closed tasks and arbitrary destinations held or rejected',()=>{assert.equal(seasonalEstimateCandidate({actor,task:{...task,state:'completed'},consent}).state,'held');assert.throws(()=>seasonalEstimateCandidate({actor,task:{...task,service_kind:'arbitrary'},consent}),/invalid_private_task/);});
+test('stable dedupe for same revision; new revision requires renewed consent',()=>{const a=seasonalEstimateCandidate({actor,task,consent});assert.equal(a.dedupe_key,seasonalEstimateCandidate({actor,task,consent}).dedupe_key);assert.notEqual(a.dedupe_key,seasonalEstimateCandidate({actor,task:{...task,revision:2},consent:{...consent,revision:2}}).dedupe_key);});

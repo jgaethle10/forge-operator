@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f6f8f4">
+<title>Evercraft Home | Creator Studio (local prototype)</title>
+<style>
+:root{font-family:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#1c2926;background:#f6f8f4;font-synthesis:none}
+*{box-sizing:border-box}
+body{margin:0} button,input,select{font:inherit}
+button{cursor:pointer} button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #59b58f;outline-offset:3px}
+header{height:72px;border-bottom:1px solid #dce4df;background:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 max(22px,calc((100vw - 1180px)/2));gap:15px}
+.brand{font-weight:900;letter-spacing:-1.5px;font-size:25px}.brand b{color:#25916b}.brand small{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#778982;margin-left:13px}
+.pill{display:inline-block;border:1px solid #cfdad1;background:#f4f8f2;color:#536a5d;border-radius:999px;font-size:11px;font-weight:750;padding:9px 12px;text-transform:uppercase;letter-spacing:.05em}
+.shell{max-width:1180px;margin:0 auto;padding:34px 24px 90px}
+.eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:.18em;font-weight:850;color:#33805f}
+h1{font-size:clamp(34px,5vw,62px);letter-spacing:-.067em;line-height:1.02;margin:13px 0 14px;max-width:700px}
+.lead{color:#52645e;line-height:1.65;max-width:700px;font-size:15px}
+.layout{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(310px,.92fr);align-items:start;gap:24px;margin-top:30px}
+.panel{background:#fff;border:1px solid #dfe8e2;border-radius:24px;padding:26px;box-shadow:0 10px 36px #172d2208}
+h2{font-size:22px;letter-spacing:-.04em;margin:0 0 5px}
+.hint{font-size:13px;color:#6f817a;line-height:1.5;margin:4px 0 18px}
+.field{margin:17px 0}
+label.field-label{font-weight:750;font-size:13px;display:block;margin-bottom:8px}
+input[type=text],select{border:1px solid #cbd8d0;border-radius:12px;background:#fcfdfb;width:100%;color:#172820;padding:12px 13px;min-height:46px}
+input::placeholder{color:#94a69c}
+.columns{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.section-label{font-size:11px;text-transform:uppercase;letter-spacing:.13em;color:#7e9187;font-weight:850;margin:24px 0 12px}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.check{border:1px solid #dce8df;border-radius:12px;padding:11px 12px;display:flex;gap:10px;align-items:center;font-size:13px;min-height:44px}
+.check input{accent-color:#188963;width:17px;height:17px;flex:none}
+.fullcheck{margin:10px 0;display:flex;align-items:flex-start;gap:10px;font-size:13px;color:#385146;line-height:1.45}
+.fullcheck input{width:17px;height:17px;flex:none;margin-top:1px;accent-color:#188963}
+.drop{border:1px dashed #abcdb7;border-radius:16px;background:#f6faf7;padding:17px}
+.drop strong{display:block;font-size:14px}
+.drop small{display:block;color:#678071;font-size:12px;margin-top:4px;line-height:1.5}
+.file{margin-top:12px;max-width:100%;font-size:12px}
+.action{border:0;color:#fff;background:#173b30;border-radius:14px;font-weight:800;min-height:52px;padding:13px 22px;width:100%;margin-top:15px}
+.action:hover{background:#245844}
+.action:disabled{opacity:.55;cursor:not-allowed}
+.note{font-size:12px;color:#6f817a;line-height:1.5;margin-top:11px}
+.preview{position:sticky;top:18px;overflow:hidden}
+.cover{height:295px;background:linear-gradient(165deg,#c1d1bf 0%,#859b87 44%,#263e38 100%);position:relative;border-radius:17px;overflow:hidden;margin-top:18px}
+.sun{position:absolute;width:125px;height:125px;top:37px;right:35px;border-radius:50%;background:#fff5d5;filter:blur(2px);opacity:.7;box-shadow:0 0 75px #fff8d2}
+.ground{position:absolute;bottom:0;width:100%;height:70px;background:#33473d}
+.stone{position:absolute;bottom:42px;left:32%;width:130px;height:180px;background:#abb4a2;border-radius:65px 65px 6px 6px;border:8px solid #8c9c8c;box-shadow:14px 14px 0 #152e254a;transform:rotate(-2deg)}
+.stone:before{content:"";position:absolute;width:68px;height:1px;left:24px;top:74px;background:#617467;box-shadow:0 13px #617467,0 26px #617467}
+.cover-caption{position:absolute;bottom:16px;left:16px;right:16px;background:#101e1bbf;color:#e9f7ec;padding:12px 14px;border-radius:10px;backdrop-filter:blur(8px);font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:800}
+.story-title{font-weight:900;font-size:26px;letter-spacing:-.045em;line-height:1.14;margin:21px 0 8px;word-break:break-word}
+.line{color:#70837b;font-size:13px;line-height:1.5}
+.hold{padding:15px 17px;margin-top:18px;background:#fbf7e9;border:1px solid #ede5ce;border-radius:14px}
+.hold strong{font-size:13px;color:#66532f}
+.hold p{color:#73674e;font-size:12px;line-height:1.55;margin:6px 0 0}
+.destinations{margin-top:17px;display:grid;gap:8px}
+.destination{display:flex;justify-content:space-between;gap:14px;padding:11px 0;border-bottom:1px solid #edf1ed;font-size:13px}
+.destination span:last-child{font-size:11px;color:#92764b}
+.economy{margin-top:20px;padding-top:17px;border-top:1px solid #e2eae3}
+.economy .bar{display:flex;height:9px;border-radius:8px;overflow:hidden;margin:12px 0}
+.economy .bar span:nth-child(1){width:60%;background:#29875f}
+.economy .bar span:nth-child(2){width:10%;background:#74aac0}
+.economy .bar span:nth-child(3){width:5%;background:#d9af67}
+.economy .bar span:nth-child(4){width:25%;background:#314c45}
+.economy p{font-size:12px;color:#6e8077;line-height:1.5}
+.notice{margin-top:22px;border-top:1px solid #e2ebe4;padding-top:17px;font-size:12px;color:#687d71;line-height:1.6}
+#feedback{min-height:18px;font-size:12px;font-weight:700;color:#b0523a;margin-top:8px}
+footer{font-size:12px;color:#7a8b82;text-align:center;margin-top:35px}
+@media(max-width:820px){header{height:64px;padding:0 17px}.brand{font-size:22px}.brand small{display:none}.shell{padding:27px 15px 60px}.layout{grid-template-columns:1fr}.panel{padding:20px;border-radius:18px}.preview{position:static}.cover{height:230px}.stone{height:160px;width:118px}.columns{grid-template-columns:1fr}}
+@media(max-width:380px){.choices{grid-template-columns:1fr}.pill{font-size:9px;padding:7px}.panel{padding:16px}}
+</style>
+</head>
+<body>
+<header><div class="brand">evercraft<b>.home</b><small>Creator Studio</small></div><span class="pill">Local prototype · not live</span></header>
+<main class="shell">
+  <div class="eyebrow">The stories that deserve to be told</div>
+  <h1>Create something worth remembering.</h1>
+  <p class="lead">Prepare an original film or historical story for Evercraft Home. Choose where it could live, protect the rights to your work, and see what evidence a future editorial review would require.</p>
+  <div class="layout">
+    <section class="panel" aria-labelledby="composer-title">
+      <h2 id="composer-title">Your next story</h2>
+      <p class="hint">This is a standalone private preview. Your details remain in this tab unless you download the draft file. Nothing is uploaded or published.</p>
+      <div class="field"><label class="field-label" for="title">Story title</label><input id="title" type="text" maxlength="160" placeholder="Before We Were Here: The Valley's Forgotten Lives"></div>
+      <div class="columns">
+        <div class="field"><label class="field-label" for="format">Story format</label><select id="format"><option value="documentary">Documentary film</option><option value="historical_story">Historical story</option><option value="photo_essay">Photo essay</option><option value="research_note">Research note</option></select></div>
+        <div class="field"><label class="field-label" for="cemetery">Historical site reference</label><input id="cemetery" type="text" placeholder="cemetery:tahoma"></div>
+      </div>
+      <div class="section-label">Discoverability</div>
+      <div class="choices" role="group" aria-label="Desired publishing destinations">
+        <label class="check"><input type="checkbox" class="destination-check" value="home" checked> Home social</label>
+        <label class="check"><input type="checkbox" class="destination-check" value="journal" checked> Journal</label>
+        <label class="check"><input type="checkbox" class="destination-check" value="evermaps" checked> EverMaps</label>
+        <label class="check"><input type="checkbox" class="destination-check" value="clip" checked> Evercraft Clip</label>
+      </div>
+      <div class="field"><label class="field-label" for="sources">Source reference IDs</label><input id="sources" type="text" placeholder="archive:entry1, historical:record2"><p class="note">For this prototype, enter 1 to 24 reference IDs separated by commas. Verified sources and citations will be required before real historical publication.</p></div>
+      <div class="columns">
+        <div class="field"><label class="field-label" for="confidence">Gravesite location confidence</label><select id="confidence"><option value="unverified">Unverified</option><option value="cemetery_only">Cemetery verified only</option><option value="verified_marker">Individual marker verified</option></select></div>
+        <div class="field"><label class="field-label" for="marker">Marker reference</label><input type="text" id="marker" placeholder="marker:source"></div>
+      </div>
+      <div class="section-label">Original media</div>
+      <div class="drop">
+        <strong>Select your working footage</strong>
+        <small>Local preview only. The file is never uploaded, copied into the draft manifest, or saved by this page.</small>
+        <input class="file" id="file" type="file" accept="video/*,image/*" aria-label="Select local media">
+        <div id="filename" class="note" aria-live="polite">No file selected</div>
+      </div>
+      <div class="section-label">Rights &amp; consent</div>
+      <label class="fullcheck"><input type="checkbox" id="original"> This is original work I have permission to submit.</label>
+      <label class="fullcheck"><input type="checkbox" id="rights"> I have the necessary rights or permissions for the included footage and material.</label>
+      <label class="fullcheck"><input type="checkbox" id="publish"> I consent to future editorial consideration. This is not permission for automatic publication.</label>
+      <label class="fullcheck"><input type="checkbox" id="revenue"> I would like to be considered for a future, separately agreed revenue-sharing opportunity.</label>
+      <label class="fullcheck"><input type="checkbox" id="living"> This story identifies living people and needs privacy review.</label>
+      <label class="fullcheck"><input type="checkbox" id="private"> This story contains private family material that must not be published without additional consent.</label>
+      <button id="export" class="action" type="button">Export private draft manifest</button>
+      <div id="feedback" role="status" aria-live="polite"></div>
+      <p class="note">Export generates a local JSON metadata draft with unverified placeholder identity and media references. It is not a submission, account creation, publishing request, or payout enrollment.</p>
+    </section>
+    <aside class="panel preview" aria-labelledby="preview-title">
+      <div class="eyebrow">Story preview</div>
+      <div class="cover" role="img" aria-label="Stylized headstone silhouette in a misty valley">
+        <div class="sun"></div><div class="stone"></div><div class="ground"></div>
+        <div class="cover-caption">Before We Were Here · Series concept</div>
+      </div>
+      <h2 id="preview-title" class="story-title">A story begins here.</h2>
+      <div id="format-note" class="line">Documentary film · Private draft · Original work</div>
+      <div class="hold"><strong id="hold-title">Editorial review required</strong><p id="hold-detail">This story has not been submitted, verified, or published. Its publication routes remain held.</p></div>
+      <div class="destinations" id="routes" aria-label="Selected destinations"></div>
+      <div class="economy">
+        <div class="eyebrow">Illustrative participation split</div>
+        <div class="bar" aria-label="Creator 60%, distribution 10%, community 5%, Evercraft 25%"><span></span><span></span><span></span><span></span></div>
+        <p>60% creator · 10% verified distributor · 5% reviewed community contributor · 25% Evercraft, calculated only on a modeled net-collected basis. No earnings or payouts exist through this prototype.</p>
+      </div>
+      <div class="notice">Creative work stays with its rights holder. Actual licensing, release permissions, sponsor terms, revenue verification, taxes and payout eligibility require separate agreements and operational systems.</div>
+    </aside>
+  </div>
+  <footer>Evercraft Home Creator Studio · owned static local prototype · no network calls, uploads, tracking, publication or money movement</footer>
+</main>
+<script>
+'use strict';
+const $ = id => document.getElementById(id);
+const formIds = ['title','format','cemetery','sources','confidence','marker','original','rights','publish','revenue','living','private'];
+const destinationNames = {home:'Home social',journal:'Evercraft Journal',evermaps:'EverMaps',clip:'Evercraft Clip'};
+const validRef = /^[A-Za-z0-9:_./-]{1,160}$/;
+function selectedRoutes(){
+  return Array.from(document.querySelectorAll('.destination-check:checked')).map(x=>x.value);
+}
+function sourceRefs(){return $('sources').value.split(',').map(s=>s.trim()).filter(Boolean);}
+function paint(){
+  const title=$('title').value.trim();
+  $('preview-title').textContent=title||'A story begins here.';
+  $('format-note').textContent=$('format').selectedOptions[0].text+' · Private draft · Original work not verified';
+  const routes=selectedRoutes();
+  const container=$('routes');
+  container.replaceChildren();
+  for(const destination of routes){
+    const div=document.createElement('div'),name=document.createElement('strong'),status=document.createElement('span');
+    div.className='destination';name.textContent=destinationNames[destination];status.textContent='Held · Not published';
+    div.append(name,status);container.append(div);
+  }
+  if(!routes.length){const p=document.createElement('p');p.className='line';p.textContent='No destinations selected';container.append(p);}
+  let reasons=[];
+  if(!$('original').checked||!$('rights').checked||!$('publish').checked)reasons.push('Originality, rights, and editorial-consent declarations are incomplete.');
+  if(routes.includes('evermaps')&&(!$('cemetery').value.trim()||$('confidence').value==='unverified'))reasons.push('EverMaps requires documented historical-site location evidence.');
+  if(routes.includes('journal')&&!sourceRefs().length)reasons.push('Journal requires historical sources and independent fact review.');
+  if($('living').checked||$('private').checked)reasons.push('Privacy and family permissions require special handling.');
+  if(!reasons.length)reasons.push('Draft declarations are complete. Independent identity, source, rights, media and editorial reviews are still required.');
+  $('hold-title').textContent='Editorial review required';
+  $('hold-detail').textContent=reasons.join(' ');
+}
+function exportDraft(){
+  $('feedback').textContent='';
+  const routes=selectedRoutes(),title=$('title').value.trim(),sources=sourceRefs(),cemetery=$('cemetery').value.trim(),marker=$('marker').value.trim();
+  const errors=[];
+  if(!title||title.length>160)errors.push('Enter a story title.');
+  if(!routes.length)errors.push('Choose a destination.');
+  if(sources.length>24||sources.some(x=>!validRef.test(x))||new Set(sources).size!==sources.length)errors.push('Use up to 24 unique source IDs without spaces.');
+  if(cemetery&&!validRef.test(cemetery))errors.push('Use a valid historical site reference.');
+  if(marker&&!validRef.test(marker))errors.push('Use a valid marker reference.');
+  if($('confidence').value==='verified_marker'&&!marker)errors.push('A verified marker needs a marker reference.');
+  if(routes.includes('evermaps')&&!cemetery)errors.push('EverMaps routing needs a cemetery reference.');
+  if(errors.length){$('feedback').textContent=errors.join(' ');return;}
+  const heritage=cemetery?{cemetery_ref:cemetery,location_confidence:$('confidence').value}:null;
+  if(heritage&&marker)heritage.marker_ref=marker;
+  const manifest={
+    development_only:true,
+    schema:'evercraft.home.local-draft-manifest.v0.1',
+    story:{
+      id:'story:local_'+Date.now(),
+      creator_ref:'creator:unverified_local',
+      asset_ref:'asset:not_uploaded',
+      title,format:$('format').value,destinations:routes,source_refs:sources,heritage,
+      creator_publish_opt_in:$('publish').checked,
+      creator_revenue_opt_in:$('revenue').checked,
+      rights_asserted:$('rights').checked,
+      original_work_asserted:$('original').checked,
+      identifies_living_people:$('living').checked,
+      contains_private_family_content:$('private').checked
+    },
+    file_bytes_included:false,media_uploaded:false,
+    publisher_authority:false,payouts_enabled:false
+  };
+  const blob=new Blob([JSON.stringify(manifest,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob),a=document.createElement('a');
+  a.href=url;a.download='evercraft-home-story-draft.json';document.body.append(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+  $('feedback').style.color='#317657';
+  $('feedback').textContent='Draft exported locally. Nothing was uploaded or published.';
+}
+for(const id of formIds){$(id).addEventListener('input',paint);$(id).addEventListener('change',paint);}
+for(const node of document.querySelectorAll('.destination-check'))node.addEventListener('change',paint);
+$('file').addEventListener('change',()=>{
+  const file=$('file').files[0];
+  $('filename').textContent=file?file.name+' · Local only, not uploaded':'No file selected';
+});
+$('export').addEventListener('click',exportDraft);
+paint();
+</script>
+</body>
+</html>

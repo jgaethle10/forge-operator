@@ -1,0 +1,102 @@
+{
+  "schema": "evercraft.home.community-records.v1",
+  "community": "yakima-wa",
+  "review_date": "2026-11-26",
+  "scope": "source_linked_metadata_candidates",
+  "publication_authorized": false,
+  "media_copied": false,
+  "personal_matches": false,
+  "records": [
+    {
+      "id": "loc-2017706505",
+      "year": 2003,
+      "kind": "places",
+      "title": "Track 29 Mall",
+      "place": "Yakima",
+      "type": "photograph_record",
+      "source": "Library of Congress",
+      "url": "https://www.loc.gov/item/2017706505/",
+      "credit": "John Margolies",
+      "rights": "no_known_restrictions_reported",
+      "text": "A color photograph of the shopping destination, taken in 2003."
+    },
+    {
+      "id": "loc-2018698355",
+      "year": 2018,
+      "kind": "places",
+      "title": "Red Apple Inn sign",
+      "place": "Yakima",
+      "type": "photograph_record",
+      "source": "Library of Congress",
+      "url": "https://www.loc.gov/pictures/item/2018698355/",
+      "credit": "Carol M. Highsmith Archive, Library of Congress",
+      "rights": "no_known_restrictions_reported",
+      "text": "A May 2018 photograph of a familiar roadside sign."
+    },
+    {
+      "id": "parker-field-1937",
+      "year": 1937,
+      "kind": "schools places",
+      "title": "The beginning of Parker Field",
+      "place": "Yakima",
+      "type": "historical_moment",
+      "source": "Yakima Valley College Athletics",
+      "url": "https://goyaks.com/sports/2018/7/12/parker-faller-field.aspx",
+      "credit": "Yakima Valley College Athletics",
+      "rights": "link_only",
+      "text": "The original ballpark opened as the home of the minor-league Pippins."
+    },
+    {
+      "id": "parker-field-1973",
+      "year": 1973,
+      "kind": "schools places",
+      "title": "A new chapter for youth baseball",
+      "place": "Yakima",
+      "type": "historical_moment",
+      "source": "Yakima Valley College Athletics",
+      "url": "https://goyaks.com/sports/2018/7/12/parker-faller-field.aspx",
+      "credit": "Yakima Valley College Athletics",
+      "rights": "link_only",
+      "text": "The rebuilt field helped renew American Legion baseball and a partnership with Yakima Youth Baseball."
+    },
+    {
+      "id": "bears-1993",
+      "year": 1993,
+      "kind": "schools traditions",
+      "title": "A new home for the Yakima Bears",
+      "place": "Yakima",
+      "type": "historical_moment",
+      "source": "Minor League Baseball",
+      "url": "https://www.milb.com/news/gcs-39718",
+      "credit": "Minor League Baseball",
+      "rights": "link_only",
+      "text": "Yakima County Stadium opened for the 1993 Northwest League season."
+    },
+    {
+      "id": "bears-2000",
+      "year": 2000,
+      "kind": "schools traditions",
+      "title": "The Bears win another championship",
+      "place": "Yakima",
+      "type": "historical_moment",
+      "source": "Minor League Baseball",
+      "url": "https://www.milb.com/news/gcs-39718",
+      "credit": "Minor League Baseball",
+      "rights": "link_only",
+      "text": "The Bears won their second Northwest League title after the 1990 return of professional baseball."
+    },
+    {
+      "id": "fair-1892",
+      "year": 1892,
+      "kind": "traditions places",
+      "title": "The fairgrounds' beginnings",
+      "place": "Yakima",
+      "type": "historical_moment",
+      "source": "State Fair Park",
+      "url": "https://www.statefairpark.org/p/connect-with-us/history1",
+      "credit": "State Fair Park",
+      "rights": "link_only",
+      "text": "State Fair Park traces its origins to Washington's 1892 state fair designation and early fairs on the grounds."
+    }
+  ]
+}
