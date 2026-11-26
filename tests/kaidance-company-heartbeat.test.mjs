@@ -158,3 +158,25 @@ test('existing company tick reconciles owner-private R&D once, without publishin
   assert.equal(next.mission_snapshot.counts.admitted,0);
  }finally{fs.rmSync(state,{recursive:true,force:true})}
 });
+
+
+test('FindMyPart has two stable priority-one review workstreams on successive company ticks',()=>{
+ const dir=fs.mkdtempSync(path.join(os.tmpdir(),'kaidance-findmypart-'));
+ try{
+  const lane=lanes.lanes.find(x=>x.lane_key==='findmypart');
+  assert.equal(lane.priority,1);assert.equal(lane.cadence_seconds,300);
+  assert.deepEqual(lane.products,['findmypart']);
+  for(const at of [now,new Date(now.getTime()+300000)]){
+   const r=runCompanyHeartbeat({root:'.',outDir:dir,now:at});
+   assert.equal(r.duplicate,false);
+   const rows=r.queue.candidates.filter(x=>x.lane_key==='findmypart');
+   assert.deepEqual(rows.map(x=>x.work_key),['findmypart:product-development','findmypart:commercial-discovery']);
+   assert.ok(rows.every(x=>x.priority===1&&x.execution_authorized===false));
+   assert.equal(rows[1].outreach_authorized,false);
+   assert.equal(r.report.findmypart.worker_dispatched,false);
+   assert.equal(r.report.findmypart.source_poll_performed,false);
+   assert.equal(r.report.findmypart.buyers_qualified,0);
+   assert.equal(r.mission_snapshot.counts.admitted,0);
+  }
+ }finally{fs.rmSync(dir,{recursive:true,force:true})}
+});
