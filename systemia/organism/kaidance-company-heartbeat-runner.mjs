@@ -47,9 +47,31 @@ function countWorkflowManifests(root,max=30000){
  walk(path.join(root,'systemia'));
  return count;
 }
+export function classifyForestReceipt(value,now=new Date()){
+ const keys=['dnr','qcew_yakima','qcew_kittitas'];
+ const allowed={dnr:'PASS_ATTRIBUTES_ONLY',qcew_yakima:'PASS_BASELINE',qcew_kittitas:'PASS_BASELINE'};
+ const hold=(status,action)=>({status,source_receipt_present:!!value,review_candidates:[{work_key:'forest-001:'+action,action}],sources_observed:0,worker_verified:false,execution_authorized:false});
+ if(!value)return hold('not_connected','collect_initial_baseline');
+ if(value.schema!=='evercraft.forest-001.owned-receipt.v1'||value.mission_key!=='FOREST-001'||!(/^[a-f0-9]{40}$/.test(value.source_commit||''))||!(/^[a-f0-9]{64}$/.test(value.evidence_manifest_sha256||''))||value.execution_authorized!==false||value.publication_authorized!==false||!keys.every(k=>['HOLD',allowed[k]].includes(value.sources?.[k])))return hold('invalid','review_invalid_receipt');
+ const age=new Date(now).getTime()-Date.parse(value.observed_at);
+ if(!Number.isFinite(age)||age< -60000)return hold('invalid','review_invalid_receipt');
+ if(age>=86400000)return hold('review_due','review_source_freshness');
+ const missing=keys.filter(k=>value.sources[k]==='HOLD');
+ return {status:missing.length?'partial_reported_receipt':'reported_baseline_receipt',source_receipt_present:true,last_observed_at:value.observed_at,source_commit:value.source_commit,evidence_manifest_sha256:value.evidence_manifest_sha256,sources:Object.fromEntries(keys.map(k=>[k,value.sources[k]])),sources_observed:keys.length-missing.length,worker_verified:false,execution_authorized:false,review_candidates:missing.map(k=>({work_key:'forest-001:resolve-'+k,action:'resolve_'+k+'_source_hold'}))};
+}
+function readForestReceipt(file){
+ if(!file)return null;
+ try{
+  const abs=path.resolve(file), dir=path.dirname(abs);
+  if(!fs.existsSync(abs))return null;
+  const stat=fs.lstatSync(abs), parent=fs.lstatSync(dir);
+  if(!stat.isFile()||parent.isSymbolicLink()||stat.size>16384||(stat.mode&0o077)!==0||(parent.mode&0o077)!==0||(typeof process.getuid==='function'&&(stat.uid!==process.getuid()||parent.uid!==process.getuid())))return {};
+  return readJson(abs);
+ }catch{return {};}
+}
 export function runCompanyHeartbeat({
  root=sourceRoot,outDir=path.join(sourceRoot,'artifacts/kaidance-company-heartbeat'),
- now=new Date(),proveWorlds=false,spawn=spawnSync
+ now=new Date(),proveWorlds=false,spawn=spawnSync,forestReceipt=null
 }={}){
  const repo=path.resolve(root),out=path.resolve(outDir);
  const manifest=readJson(path.join(repo,'registry/kaidance-company-lanes.v1.json'));
@@ -78,12 +100,14 @@ export function runCompanyHeartbeat({
  }
  const planned=planCompanyHeartbeat({manifest,products,supervisor,previous,now,
   worldsFingerprint:fingerprint,proof,workflowManifestCount:countWorkflowManifests(repo)});
- const report={...planned.report,proof};
+ const forest=classifyForestReceipt(forestReceipt,now);
+ const report={...planned.report,proof,forest_restoration:forest};
  const queue={schema:'evercraft.kaidance.company-heartbeat.queue.v1',observed_at:report.observed_at,
   execution_authorized:false,
   candidates:[
    ...(proof.status==='failed'?[{work_key:'worlds:source-proof-failure',lane_key:'worlds',priority:1,action:'investigate_failed_source_tests',authority:'review_required'}]:[]),
    ...(proof.status==='due_not_executed'?[{work_key:'worlds:source-proof-due',lane_key:'worlds',priority:2,action:'run_bounded_source_proof',authority:'existing_allowlisted_local_only'}]:[]),
+   ...forest.review_candidates.map(row=>({...row,lane_key:'forest-restoration',priority:3,authority:'systemia_operator_review_required',execution_authorized:false,publication_authorized:false})),
    ...report.company_portfolio.products_not_yet_named.slice(0,12).map(key=>({
     work_key:'product:'+key+':adapter-admission',lane_key:null,priority:3,
     action:'bind_existing_systemia_capability_or_admit_bounded_new_adapter',authority:'source_review_required'
@@ -108,7 +132,8 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
  const opt=name=>{const i=process.argv.indexOf(name);return i>=0?process.argv[i+1]:''};
  try{
   const outDir=opt('--out')||process.env.SYSTEMIA_COMPANY_HEARTBEAT_OUT_DIR||path.join(sourceRoot,'artifacts/kaidance-company-heartbeat');
-  const result=runCompanyHeartbeat({outDir,proveWorlds:process.argv.includes('--prove-worlds')});
+  const forestReceipt=readForestReceipt(opt('--forest-receipt')||process.env.SYSTEMIA_FOREST_EVIDENCE_RECEIPT_FILE||'');
+  const result=runCompanyHeartbeat({outDir,proveWorlds:process.argv.includes('--prove-worlds'),forestReceipt});
   // Explicit owner opt-in only; CI and existing installations default off.
   let cemetery=null, cemeteryClassification=null;
   if(process.env.SYSTEMIA_CEMETERY_RESEARCH_OUT_DIR){
@@ -121,6 +146,8 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
   console.log(JSON.stringify({schema:'evercraft.kaidance.company-heartbeat-cli.v1',ok:true,
    cemetery_research:cemetery,cemetery_classification:cemeteryClassification,duplicate:result.duplicate,source_proof:result.report?.proof?.status||null,
    public_products_observed:result.report?.company_portfolio?.public_products||null,
+   forest_restoration_receipt:result.report?.forest_restoration?.status||null,
+   forest_restoration_execution_authorized:false,
    next_action_key:result.next_action?.current_next_action?.work_key||null,
    next_action_execution_authorized:false,
    worker_launches:0,production_mutations:0,
