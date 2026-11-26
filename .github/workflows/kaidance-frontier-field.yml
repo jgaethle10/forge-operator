@@ -27,9 +27,6 @@ on:
       - 'systemia/infrastructure-watch/**'
       - 'systemia/organism/aiw-evidence-watch.workflow.json'
       - 'tests/aiw-evidence-watch.test.mjs'
-      - 'systemia/infrastructure-watch/**'
-      - 'systemia/organism/aiw-evidence-watch.workflow.json'
-      - 'tests/aiw-evidence-watch.test.mjs'
       - 'systemia/organism/kaidance-worlds-saban-*.mjs'
       - 'tests/kaidance-worlds-saban-review.test.mjs'
       - 'systemia/organism/kaidance-source-patch-*.mjs'
@@ -76,6 +73,9 @@ on:
       - 'systemia/organism/kaidance-next-action.mjs'
       - 'tests/kaidance-next-action.test.mjs'
       - 'systemia/organism/kaidance-company-heartbeat.workflow.json'
+      - 'systemia/infrastructure-watch/**'
+      - 'systemia/organism/aiw-evidence-watch.workflow.json'
+      - 'tests/aiw-evidence-watch.test.mjs'
       - 'systemia/organism/kaidance-worlds-saban-*.mjs'
       - 'tests/kaidance-worlds-saban-review.test.mjs'
       - 'systemia/organism/kaidance-source-patch-*.mjs'
@@ -129,8 +129,6 @@ jobs:
           path: |
             artifacts/kaidance-frontier/runtime/state.json
             artifacts/kaidance-company-heartbeat/state.json
-            artifacts/aiw-evidence-watch/state.json
-            artifacts/aiw-evidence-watch/latest.json
             artifacts/aiw-evidence-watch/state.json
             artifacts/aiw-evidence-watch/latest.json
             artifacts/kaidance-company-heartbeat/next-action-state.json
@@ -229,6 +227,8 @@ jobs:
           path: |
             artifacts/kaidance-frontier/runtime/state.json
             artifacts/kaidance-company-heartbeat/state.json
+            artifacts/aiw-evidence-watch/state.json
+            artifacts/aiw-evidence-watch/latest.json
             artifacts/kaidance-company-heartbeat/next-action-state.json
             artifacts/kaidance-worlds-saban-review/goals/
             artifacts/kaidance-source-candidate/state.json
