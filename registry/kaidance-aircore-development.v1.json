@@ -1,0 +1,37 @@
+{
+  "schema": "evercraft.kaidance.aircore-development.v1",
+  "mission_key": "breath-of-fresh-air-aircore-v01",
+  "goal_key": "prove-a-removable-filtration-core-before-refresh-table-integration",
+  "lane_key": "aircore-development",
+  "heartbeat_seconds": 300,
+  "systemia_review_required": true,
+  "source_files": [
+    "systemia/breath-of-fresh-air/aircore-sizing.mjs",
+    "systemia/breath-of-fresh-air/aircore-sizing.test.mjs",
+    "systemia/breath-of-fresh-air/AIRCORE_V01_ENGINEERING_PREFLIGHT.md"
+  ],
+  "proof_tests": [
+    "systemia/breath-of-fresh-air/aircore-sizing.test.mjs"
+  ],
+  "policy": {
+    "maximum_proofs_per_tick": 1,
+    "proof_timeout_ms": 25000,
+    "proof_expiry_seconds": 3600,
+    "code_write_authorized": false,
+    "production_mutation_authorized": false,
+    "hardware_purchase_authorized": false,
+    "customer_or_partner_contact_authorized": false,
+    "public_air_quality_claim_authorized": false,
+    "physical_test_verified": false,
+    "automatic_publish_authorized": false
+  },
+  "gates": {
+    "G0": "source_and_calculation_validation",
+    "G1": "obtain_two_real_blower_filter_pq_curves_and_costed_bom",
+    "G2": "qualified_low_voltage_bench_fixture_and_guarded_airpath",
+    "G3": "measure_loaded_flow_pressure_noise_power_and_thermal",
+    "G4": "third_party_particle_cadr_testing",
+    "G5": "furniture_structural_and_safety_testing",
+    "G6": "founder_gate_for_partner_outreach_and_commercialization"
+  }
+}
