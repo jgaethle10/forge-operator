@@ -31,3 +31,10 @@ jobs:
           node --check systemia/revenue-desk/owned-gmail-import.test.mjs
       - name: Receipt and quota safety proof
         run: node --test systemia/revenue-desk/gmail-reconciliation.test.mjs systemia/revenue-desk/atomic-send-reservations.test.mjs systemia/revenue-desk/owned-gmail-import.test.mjs
+
+      - name: FindMyPart owned desk and paired heartbeat shadow proof
+        run: |
+          python3 systemia/revenue-desk/findmypart-desk-shadow-review.py --self-test
+          python3 systemia/revenue-desk/findmypart-queue-review-handoff.py --self-test
+          node --test systemia/revenue-desk/node002-desk-shadow-worker.test.mjs
+          node --test systemia/revenue-desk/node002-desk-compute.test.mjs
