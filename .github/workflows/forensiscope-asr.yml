@@ -7,6 +7,8 @@ on:
       - "systemia/forensiscope/asr-runner.test.mjs"
       - "systemia/forensiscope/transcription-engine.mjs"
       - "systemia/forensiscope/transcription-engine.test.mjs"
+      - "systemia/forensiscope/asr-comparison.mjs"
+      - "systemia/forensiscope/asr-comparison.test.mjs"
       - "systemia/compute/runtime-node.mjs"
       - "systemia/forensiscope/batch-transcribe.mjs"
       - "systemia/forensiscope/batch-transcribe.test.mjs"
@@ -24,6 +26,8 @@ on:
       - "systemia/forensiscope/asr-runner.test.mjs"
       - "systemia/forensiscope/transcription-engine.mjs"
       - "systemia/forensiscope/transcription-engine.test.mjs"
+      - "systemia/forensiscope/asr-comparison.mjs"
+      - "systemia/forensiscope/asr-comparison.test.mjs"
       - "systemia/compute/runtime-node.mjs"
       - "systemia/forensiscope/batch-transcribe.mjs"
       - "systemia/forensiscope/batch-transcribe.test.mjs"
@@ -56,3 +60,5 @@ jobs:
           node --check systemia/forensiscope/doctor.mjs
       - name: ForensiScope runtime tests
         run: npm run test:forensiscope-runtime
+      - name: ForensiScope bounded autoresearch comparison tests
+        run: node --test systemia/forensiscope/asr-comparison.test.mjs
