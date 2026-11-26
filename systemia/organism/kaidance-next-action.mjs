@@ -157,6 +157,16 @@ export function planKaidanceNextAction({
     'existing_systemia_operator_review'));
   }
  }
+ const eventCandidates=companyQueue.candidates?.filter(x=>
+  x?.lane_key==='events'&&x.action==='verify_event_tender_source_buyer_eligibility_and_delivery_capacity'&&
+  /^event:[a-f0-9]{20}$/.test(x.work_key||'')&&x.outreach_authorized===false&&
+  x.dispatch_authorized===false&&x.authority==='founder_review_required'&&
+  typeof x.evidence_ref==='string'&&x.evidence_ref.startsWith('https://www.find-tender.service.gov.uk/'))||[];
+ for(const candidate of eventCandidates.slice(0,4)){
+  choices.push(action(3,candidate.work_key,'events',
+   'check_original_event_tender_and_eligibility_before_founder_approved_pitch',
+   'company',candidate.evidence_ref,'founder_review_required'));
+ }
  const unbound=companyQueue.candidates?.filter(x=>
   x?.action==='bind_existing_systemia_capability_or_admit_bounded_new_adapter'&&
   /^product:[a-z0-9-]+:adapter-admission$/.test(x.work_key||'')&&
