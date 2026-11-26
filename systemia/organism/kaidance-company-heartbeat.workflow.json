@@ -20,7 +20,8 @@
     "network_development_source_receipt": "artifacts/kaidance-network-development/latest.json",
     "network_development_mission_snapshot": "artifacts/kaidance-network-development/mission-snapshot.json",
     "aircore_source_receipt": "artifacts/kaidance-company-heartbeat/aircore-development/latest.json",
-    "aircore_review_queue": "artifacts/kaidance-company-heartbeat/aircore-development/queue.json"
+    "aircore_review_queue": "artifacts/kaidance-company-heartbeat/aircore-development/queue.json",
+    "revenue_desk_private_advisory_source": "owner_private_only:systemia-revenue-desk/reconciled-gmail-report.json"
   },
   "authority": {
     "inventory_read": "autonomous",
@@ -42,7 +43,10 @@
     "aircore_bounded_source_proof": "allowlisted_local_only",
     "aircore_physical_tests": false,
     "aircore_hardware_purchase": false,
-    "aircore_partner_outreach": false
+    "aircore_partner_outreach": false,
+    "revenue_desk_private_read": "opt_in_local_0600_no_live_gmail_connection",
+    "revenue_desk_customer_data_publication": false,
+    "revenue_desk_reply_email": false
   },
   "claims": {
     "all_public_products_inventoried": true,
@@ -56,6 +60,9 @@
     "network_field_validated": false,
     "network_runtime_active_after_source_merge": false,
     "aircore_prototype_built": false,
-    "aircore_cadr_verified": false
+    "aircore_cadr_verified": false,
+    "private_revenue_desk_production_bound": false,
+    "buyer_reply_is_a_qualified_contract": false,
+    "private_revenue_desk_reconciliation_every_tick": false
   }
 }

@@ -175,6 +175,26 @@ export function planKaidanceNextAction({
     'existing_systemia_operator_review'));
   }
  }
+ // A fresh PRIVATE Systemia Revenue Desk reconciliation flags a human
+ // inbound message after the latest outbound. This is triage, not an
+ // acceptance, prospect permit, or an automatic follow-up.
+ if(companyReport.revenue_desk_continuity?.status==='verified_private_advisory'){
+  const inbound=(companyQueue.candidates||[]).filter(x=>
+    x?.lane_key==='revenue'&&
+    /^revenue:reply:hmac256:[a-f0-9]{64}$/.test(x.work_key||'')&&
+    x.action==='review_unanswered_inbound_in_existing_revenue_desk'&&
+    x.authority==='systemia_operator_review_required'&&
+    x.execution_authorized===false&&x.outreach_authorized===false&&
+    x.application_authorized===false&&x.payment_authorized===false&&
+    x.customer_acceptance_verified===false&&x.payment_verified===false);
+  if(inbound.length){
+   const first=[...inbound].sort((a,b)=>a.work_key.localeCompare(b.work_key))[0];
+   choices.push(action(1,first.work_key,'revenue',
+     'triage_unanswered_inbound_using_private_revenue_desk','company',
+     'source:systemia/revenue-desk/gmail-reconciliation.mjs',
+     'existing_systemia_operator_review'));
+  }
+ }
  // Kaidance's existing revenue lane can nominate a sourced global notice.
  // This is research triage only. The final buyer/deadline/eligibility and
  // existing private Interaction Ledger / Passport permit stay separate.

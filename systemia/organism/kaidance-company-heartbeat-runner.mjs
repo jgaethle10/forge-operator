@@ -12,6 +12,7 @@ import {researchCycle} from '../evermaps/cemetery/research-cycle.mjs';
 import {classifyNext} from '../evermaps/cemetery/source-classification.mjs';
 import {writeKaidanceNextAction} from './kaidance-next-action.mjs';
 import {runGlobalOpportunityScout} from './kaidance-global-opportunity-scout.mjs';
+import {readPrivateRevenueDeskReceipt,classifyRevenueDeskReceipt} from './kaidance-revenue-desk-bridge.mjs';
 import {runKaidanceCreativeDevelopment} from './kaidance-creative-development.mjs';
 import {runLearningCommunityCycle} from './kaidance-learning-community-cycle.mjs';
 import {runAirCoreDevelopmentCycle} from './kaidance-aircore-development.mjs';
@@ -184,7 +185,7 @@ export function runCompanyHeartbeat({
  root=sourceRoot,outDir=path.join(sourceRoot,'artifacts/kaidance-company-heartbeat'),
  now=new Date(),proveWorlds=false,proveLearning=false,proveAirCore=false,
  learningCycle=runLearningCommunityCycle,aircoreCycle=runAirCoreDevelopmentCycle,
- spawn=spawnSync,aiwReceipt=null,globalOpportunityReceipt=null,networkDevelopmentReceipt=null,rdContinuityEnabled=false
+ spawn=spawnSync,aiwReceipt=null,globalOpportunityReceipt=null,revenueDeskReceipt=null,networkDevelopmentReceipt=null,rdContinuityEnabled=false
 }={}){
  const repo=path.resolve(root),out=path.resolve(outDir);
  const manifest=readJson(path.join(repo,'registry/kaidance-company-lanes.v1.json'));
@@ -237,6 +238,7 @@ export function runCompanyHeartbeat({
   worldsFingerprint:fingerprint,proof,workflowManifestCount:countWorkflowManifests(repo)});
  const aiw=classifyAiWReceipt(aiwReceipt,now);
  const global=classifyGlobalOpportunityReceipt(globalOpportunityReceipt,now);
+ const revenueDesk=classifyRevenueDeskReceipt(revenueDeskReceipt,now);
  const network=classifyNetworkDevelopmentReceipt(networkDevelopmentReceipt,now);
  const learningSummary=learning?.report?{
   state:'source_reconciled',tracked:learning.report.counts.tracked,
@@ -268,7 +270,7 @@ export function runCompanyHeartbeat({
  const researchContinuity=runPrivateResearchContinuity({enabled:rdContinuityEnabled,root:repo,outDir:out,now});
  const report={...planned.report,proof,infrastructure_watch:aiw,
   research_continuity:researchContinuity,
-  global_opportunities:global,network_development:network,
+  global_opportunities:global,revenue_desk_continuity:revenueDesk,network_development:network,
   learning_community:learningSummary,aircore_development:aircoreSummary};
  const queue={schema:'evercraft.kaidance.company-heartbeat.queue.v1',observed_at:report.observed_at,
   execution_authorized:false,
@@ -281,6 +283,7 @@ export function runCompanyHeartbeat({
    ...network.review_candidates.map(row=>({...row,
     evidence_ref:'source:github:pull:2240:'+network.head_sha,
     source_authority:'github_rest_read_only',dispatch_authorized:false})),
+   ...revenueDesk.review_candidates.map(row=>({...row})),
    ...global.review_candidates.slice(0,8).map(row=>({
     work_key:row.work_key,lane_key:'revenue',priority:2,
     action:'verify_worldbank_notice_deadline_buyer_eligibility_and_delivery_fit',
@@ -306,7 +309,7 @@ export function runCompanyHeartbeat({
   counts:{...planned.snapshot.counts,
    scanned:planned.snapshot.counts.scanned+aiw.sources_observed+global.sources_observed+(network.status==='verified_receipt'?1:0)+(learning?.report?.counts?.tracked||0)+(aircore?.report?1:0),
    changed:planned.snapshot.counts.changed+(global.newly_seen||0)+(network.newly_seen||0)+(aircore?.report?.newly_seen||0),
-   held:planned.snapshot.counts.held+aiw.review_candidates.length+global.review_candidates.length+network.review_candidates.length+(learning?.report?.counts?.failed||0)+
+   held:planned.snapshot.counts.held+aiw.review_candidates.length+global.review_candidates.length+revenueDesk.review_candidates.length+network.review_candidates.length+(learning?.report?.counts?.failed||0)+
     (aircore?.held||['source_proof_failed','missing_source_hold'].includes(aircore?.report?.source_status)?1:0)},
   evidence_refs:[
     ...planned.snapshot.evidence_refs,
@@ -314,6 +317,8 @@ export function runCompanyHeartbeat({
     ...(aircore?.receipt_ref?['source:registry/kaidance-aircore-development.v1.json',aircore.receipt_ref]:[]),
     ...(aiw.status==='verified_receipt'?[
       'source:systemia/infrastructure-watch/source-registry.v1.json',sha(JSON.stringify(aiw))]:[]),
+    ...(revenueDesk.status==='verified_private_advisory'?[
+      'source:systemia/revenue-desk/gmail-reconciliation.mjs',revenueDesk.receipt_ref]:[]),
     ...(global.status==='verified_source_receipt'?[
       'source:registry/kaidance-global-opportunity-sources.v1.json',global.receipt_hash]:[]),
     ...(network.status==='verified_receipt'?[
@@ -339,6 +344,13 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
   const outDir=opt('--out')||process.env.SYSTEMIA_COMPANY_HEARTBEAT_OUT_DIR||path.join(sourceRoot,'artifacts/kaidance-company-heartbeat');
   const aiwReceipt=readAiWReceipt(opt('--aiw-receipt')||process.env.SYSTEMIA_AIW_EVIDENCE_RECEIPT_FILE||'');
   const networkDevelopmentReceipt=readAiWReceipt(opt('--network-development-receipt')||process.env.SYSTEMIA_NETWORK_DEVELOPMENT_RECEIPT_FILE||'');
+  // Owner-private materialized report from the EXISTING Revenue Desk, opt-in only.
+  let revenueDeskReceipt=null;
+  const privateRevenueFile=opt('--revenue-desk-receipt')||process.env.SYSTEMIA_REVENUE_DESK_RECONCILIATION_FILE||'';
+  if(privateRevenueFile){
+    try{revenueDeskReceipt=readPrivateRevenueDeskReceipt(privateRevenueFile);}
+    catch{revenueDeskReceipt={schema:'held_private_receipt_input'};}
+  }
   let globalOpportunityReceipt=null;
   try{
    const globalOut=path.join(path.dirname(path.resolve(outDir)),'kaidance-global-opportunities');
@@ -353,7 +365,7 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
   const result=runCompanyHeartbeat({outDir,proveWorlds:process.argv.includes('--prove-worlds'),
     proveLearning:process.argv.includes('--prove-learning')||process.env.SYSTEMIA_KAIDANCE_LEARNING_SOURCE_PROOFS==='true',
     proveAirCore:process.argv.includes('--prove-aircore')||process.env.SYSTEMIA_KAIDANCE_AIRCORE_SOURCE_PROOFS==='true',
-    aiwReceipt,globalOpportunityReceipt,networkDevelopmentReceipt,
+    aiwReceipt,globalOpportunityReceipt,revenueDeskReceipt,networkDevelopmentReceipt,
     rdContinuityEnabled:process.env.SYSTEMIA_KAIDANCE_RD_CONTINUITY_ENABLED==='true'});
   // The same company heartbeat owns Leiland + visual art-direction review.
   // This is not another scheduler or a remote code-generation worker.
@@ -385,6 +397,7 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
    infrastructure_watch_receipt:result.report?.infrastructure_watch?.status||null,
    infrastructure_watch_publication_authorized:false,
    global_opportunity_receipt:result.report?.global_opportunities?.status||null,
+   revenue_desk_continuity:result.report?.revenue_desk_continuity?.status||null,
    network_development_receipt:result.report?.network_development?.status||null,
    global_opportunity_outreach_authorized:false,
    next_action_key:result.next_action?.current_next_action?.work_key||null,
