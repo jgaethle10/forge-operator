@@ -28,19 +28,20 @@ export function admitReleaseGrant({directory,grant,signature,nowMs=Date.now()}={
  const lock=path.join(directory,'admission.lock');
  const file=path.join(directory,'ledger.json');
  const fd=fs.openSync(lock,'wx',0o600); // stale lock deliberately requires local reconciliation
- let committed=false;
+ let uncertain=false;
  try{
  const prior=JSON.parse(readPrivate(file));
  if(prior.schema!==schema||!Number.isSafeInteger(prior.last_sequence)||prior.last_sequence<0)throw Error('ledger_state_invalid');
  const ownerPublicKey=readPrivate(path.join(directory,'owner-public.pem'));
  const accepted=verifyReleaseGrant({grant,signature,ownerPublicKey,lastSequence:prior.last_sequence,nowMs});
  const receipt={schema,last_sequence:accepted.sequence,commit:accepted.commit,phase:accepted.phase,grant_sha256:createHash('sha256').update(releaseGrantBytes(grant)).digest('hex'),state:'authorized_not_staged',activation_authorized:false};
+ uncertain=true;
  persist(directory,file,receipt);
- committed=true;
+ uncertain=false;
  return Object.freeze(receipt);
  }finally{
  fs.closeSync(fd);
  // Retain lock after any uncertainty; no automatic reset or replay.
- if(committed){fs.unlinkSync(lock);syncDir(directory)}
+ if(!uncertain){fs.unlinkSync(lock);syncDir(directory)}
  }
 }
