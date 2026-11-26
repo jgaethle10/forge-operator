@@ -56,5 +56,26 @@ if collect_county 53037; then KITTITAS=PASS_BASELINE; fi
 ) > "$RUN/evidence.sha256"
 printf 'DNR=%s\nQCEW_YAKIMA=%s\nQCEW_KITTITAS=%s\n' "$DNR" "$YAKIMA" "$KITTITAS" | tee "$RUN/status.txt"
 printf 'Private receipt: %s\n' "$RUN"
+# Small private handoff for the existing Kaidance heartbeat; no raw source rows.
+# Only pinned invocations may replace this receipt. Partial collections remain HOLD.
+if [[ "${FOREST_SOURCE_COMMIT:-}" =~ ^[a-f0-9]{40}$ ]]; then
+  node --input-type=module - "$STATE" "$RUN" "$FOREST_SOURCE_COMMIT" "$DNR" "$YAKIMA" "$KITTITAS" <<'FOREST_RECEIPT'
+import fs from 'node:fs';
+import path from 'node:path';
+import {createHash,randomBytes} from 'node:crypto';
+const [state,run,commit,dnr,qcew_yakima,qcew_kittitas]=process.argv.slice(2);
+const stat=fs.lstatSync(state);
+if(!stat.isDirectory()||stat.isSymbolicLink()||(stat.mode&0o077)!==0||stat.uid!==process.getuid())throw Error('forest_private_state_required');
+const receipt={schema:'evercraft.forest-001.owned-receipt.v1',mission_key:'FOREST-001',
+ observed_at:new Date().toISOString(),source_commit:commit,
+ evidence_manifest_sha256:createHash('sha256').update(fs.readFileSync(path.join(run,'evidence.sha256'))).digest('hex'),
+ sources:{dnr,qcew_yakima,qcew_kittitas},execution_authorized:false,publication_authorized:false};
+const dest=path.join(state,'kaidance-receipt.json'),tmp=dest+'.'+randomBytes(8).toString('hex')+'.tmp';
+if(fs.existsSync(dest)&&fs.lstatSync(dest).isSymbolicLink())throw Error('forest_receipt_symlink_refused');
+try{fs.writeFileSync(tmp,JSON.stringify(receipt,null,2)+'\n',{flag:'wx',mode:0o600});fs.renameSync(tmp,dest)}
+finally{if(fs.existsSync(tmp))fs.unlinkSync(tmp)}
+FOREST_RECEIPT
+  printf '%s\n' 'Kaidance handoff: private kaidance-receipt.json written (review only).'
+fi
 if [[ "$DNR" != PASS_ATTRIBUTES_ONLY || "$YAKIMA" != PASS_BASELINE || "$KITTITAS" != PASS_BASELINE ]]; then exit 1; fi
 printf '%s\n' 'PASS: source collection only; geometry join, rights review, verified demand and deployment remain HOLD.'
