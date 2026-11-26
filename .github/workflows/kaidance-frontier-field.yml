@@ -23,6 +23,7 @@ on:
       - 'systemia/organism/kaidance-company-heartbeat*.mjs'
       - 'systemia/events/event-opportunity-*.mjs'
       - 'tests/event-opportunity-scout.test.mjs'
+      - 'tests/event-opportunity-us-sam.test.mjs'
       - 'systemia/organism/kaidance-next-action.mjs'
       - 'tests/kaidance-next-action.test.mjs'
       - 'systemia/organism/kaidance-company-heartbeat.workflow.json'
@@ -71,6 +72,7 @@ on:
       - 'systemia/organism/kaidance-company-heartbeat*.mjs'
       - 'systemia/events/event-opportunity-*.mjs'
       - 'tests/event-opportunity-scout.test.mjs'
+      - 'tests/event-opportunity-us-sam.test.mjs'
       - 'systemia/organism/kaidance-next-action.mjs'
       - 'tests/kaidance-next-action.test.mjs'
       - 'systemia/organism/kaidance-company-heartbeat.workflow.json'
@@ -128,6 +130,7 @@ jobs:
             artifacts/kaidance-frontier/runtime/state.json
             artifacts/kaidance-company-heartbeat/state.json
             artifacts/event-opportunity-scout/state.json
+            artifacts/event-opportunity-us-sam/state.json
             artifacts/kaidance-company-heartbeat/next-action-state.json
             artifacts/kaidance-worlds-saban-review/goals/
             artifacts/kaidance-source-candidate/state.json
@@ -179,6 +182,18 @@ jobs:
       - name: Verify event opportunity scout duplicate and outreach safety contracts
         run: node --test tests/event-opportunity-scout.test.mjs
 
+      - name: Verify US SAM.gov official notice and private-key safety contracts
+        run: node --test tests/event-opportunity-us-sam.test.mjs
+
+      - name: Check optional US SAM.gov event notice source with the same KAIDANCE clock
+        if: github.event_name != 'pull_request'
+        env:
+          SAM_GOV_PUBLIC_API_KEY: ${{ secrets.SAM_GOV_PUBLIC_API_KEY }}
+        run: node systemia/events/event-opportunity-us-sam-runner.mjs --out artifacts/event-opportunity-us-sam --live
+
+      - name: Record no-network US source contract on pull requests
+        if: github.event_name == 'pull_request'
+        run: node systemia/events/event-opportunity-us-sam-runner.mjs --out artifacts/event-opportunity-us-sam
       - name: Record source-only event scout receipt on pull requests
         if: github.event_name == 'pull_request'
         run: node systemia/events/event-opportunity-scout-runner.mjs --out artifacts/event-opportunity-scout
@@ -227,6 +242,7 @@ jobs:
             artifacts/kaidance-frontier/runtime/state.json
             artifacts/kaidance-company-heartbeat/state.json
             artifacts/event-opportunity-scout/state.json
+            artifacts/event-opportunity-us-sam/state.json
             artifacts/kaidance-company-heartbeat/next-action-state.json
             artifacts/kaidance-worlds-saban-review/goals/
             artifacts/kaidance-source-candidate/state.json
@@ -250,6 +266,7 @@ jobs:
             artifacts/kaidance-offer-checkout/actions.json
             artifacts/kaidance-offer-checkout/mission-snapshot.json
             artifacts/event-opportunity-scout/latest.json
+            artifacts/event-opportunity-us-sam/latest.json
             artifacts/kaidance-company-heartbeat/latest.json
             artifacts/kaidance-company-heartbeat/mission-snapshot.json
             artifacts/kaidance-company-heartbeat/queue.json
