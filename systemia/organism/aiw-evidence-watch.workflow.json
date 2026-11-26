@@ -1,0 +1,36 @@
+{
+  "schema": "evercraft.systemia.workflow-manifest.v1",
+  "workflow_key": "aiw-evidence-watch",
+  "mission_key": "evercraft-american-infrastructure-watch-source-observation",
+  "runtime": "systemia-core-resident+kaidance-heartbeat",
+  "cadence_seconds": 300,
+  "source_probe_cadence_seconds": 86400,
+  "material_change_only": true,
+  "entrypoint": "systemia/infrastructure-watch/aiw-evidence-watch.mjs",
+  "sources": "systemia/infrastructure-watch/source-registry.v1.json",
+  "outputs": {
+    "report": "artifacts/aiw-evidence-watch/latest.json",
+    "review_queue": "artifacts/aiw-evidence-watch/queue.json",
+    "mission_snapshot": "artifacts/aiw-evidence-watch/mission-snapshot.json"
+  },
+  "authority": {
+    "official_public_source_fetch": "bounded_allowlist",
+    "source_change_detection": "review_only",
+    "read_existing_data": true,
+    "automatic_source_data_ingestion": false,
+    "production_deployment": false,
+    "caddy_mutation": false,
+    "public_site_updates": false,
+    "public_safety_claims": false,
+    "payment": false,
+    "outreach": false
+  },
+  "truth_gates": [
+    "official_https_source_only",
+    "strict_size_and_timeout",
+    "source_fingerprint_not_new_bridge_data",
+    "source_change_requires_systemia_review",
+    "dated_federal_evidence_not_live_hazard",
+    "no_publication_without_separate_validated_release"
+  ]
+}
