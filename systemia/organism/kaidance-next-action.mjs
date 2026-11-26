@@ -215,6 +215,27 @@ export function planKaidanceNextAction({
     row.evidence_ref,'systemia_operator_review_required'));
   }
  }
+ // AirCore remains in the Systemia review queue until vendor P-Q curves and
+ // physically measured evidence exist. Do not turn a code test into CADR.
+ if(companyReport.aircore_development?.state==='source_reconciled'){
+  const rows=companyQueue.candidates?.filter(row=>
+   row?.lane_key==='aircore-development'&&
+   row.mission_key==='breath-of-fresh-air-aircore-v01'&&
+   ['restore_missing_aircore_owned_source','investigate_aircore_model_or_test_failure',
+    'run_bounded_aircore_design_source_proof',
+    'review_two_real_blower_and_filter_pressure_curves'].includes(row.action)&&
+   row.authority==='systemia_operator_review_required'&&
+   row.execution_authorized===false&&row.hardware_purchase_authorized===false&&
+   row.partner_contact_authorized===false&&row.code_write_authorized===false&&
+   row.physical_validation_verified===false)||[];
+  if(rows.length){
+   const row=rows[0];
+   choices.push(action(row.action==='investigate_aircore_model_or_test_failure'?1:2,
+    row.work_key,'aircore-development',row.action,'company',
+    'source:registry/kaidance-aircore-development.v1.json',
+    'systemia_operator_review_required'));
+  }
+ }
  const unbound=companyQueue.candidates?.filter(x=>
   x?.action==='bind_existing_systemia_capability_or_admit_bounded_new_adapter'&&
   /^product:[a-z0-9-]+:adapter-admission$/.test(x.work_key||'')&&
