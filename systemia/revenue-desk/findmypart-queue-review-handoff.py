@@ -10,6 +10,8 @@ import pathlib
 import re
 import stat
 import sys
+import sqlite3
+import tempfile
 
 SCHEMA="evercraft.findmypart.queue-review-envelope.v1"
 QUEUE="evercraft.kaidance.company-heartbeat.queue.v1"
@@ -120,7 +122,33 @@ def self_test():
         pass
     else:
         raise AssertionError("changed envelope accepted")
-    print(json.dumps({"self_test":"passed","synthetic_only":True}))
+    # Exercise a complete paired-receipt export -> serialized envelope ->
+    # real SQLite read, not merely validation of a fabricated candidate array.
+    with tempfile.TemporaryDirectory() as temp:
+        db=pathlib.Path(temp)/"desk.sqlite3"
+        with sqlite3.connect(db) as c:
+            c.execute("CREATE TABLE opportunities(id INTEGER,external_id TEXT,body TEXT)")
+            c.execute("CREATE TABLE sent(id INTEGER,opportunity_id INTEGER,body TEXT,recorded_at TEXT)")
+            c.execute("INSERT INTO opportunities VALUES(1,'fixture',?)",(json.dumps({"business":"Example Repair"}),))
+            c.execute("INSERT INTO sent VALUES(1,1,?,'fixture')",(json.dumps({"recipient":"buyer@example.com"}),))
+        before=db.read_bytes()
+        decoded=json.loads(json.dumps(result))
+        received=import_review(decoded,db,now+1)
+        assert received["source_digest"]==result["payload_digest"]
+        assert received["source_tick"]==result["source_tick"]
+        assert received["candidates"][0]["sent_matches"]==1
+        assert received["transport_authenticated"] is False
+        assert received["contact_clearance"] is False
+        assert received["outreach_authorized"] is False
+        assert "buyer@example.com" not in json.dumps(received)
+        assert db.read_bytes()==before
+        try:
+            import_review(decoded,db,now+901)
+        except ValueError:
+            pass
+        else:
+            raise AssertionError("stale envelope accepted")
+    print(json.dumps({"self_test":"passed","synthetic_only":True,"paired_receipt_to_sqlite":True}))
 
 def main():
     p=argparse.ArgumentParser()
