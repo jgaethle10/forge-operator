@@ -12,6 +12,7 @@ import {researchCycle} from '../evermaps/cemetery/research-cycle.mjs';
 import {classifyNext} from '../evermaps/cemetery/source-classification.mjs';
 import {writeKaidanceNextAction} from './kaidance-next-action.mjs';
 import {runGlobalOpportunityScout} from './kaidance-global-opportunity-scout.mjs';
+import {classifyKennedyQualityReceipt} from './kaidance-kennedy-quality-review.mjs';
 const sourceRoot=path.resolve(fileURLToPath(new URL('../../',import.meta.url)));
 const sha=value=>'sha256:'+createHash('sha256').update(value).digest('hex');
 function readJson(file){return JSON.parse(fs.readFileSync(file,'utf8'))}
@@ -130,9 +131,20 @@ function readAiWReceipt(file){
  if(!stats.isFile()||stats.size>256000)throw Error('aiw_receipt_invalid_file');
  return JSON.parse(fs.readFileSync(abs,'utf8'));
 }
+function readKennedyReceipt(file){
+ if(!file)return null;
+ const abs=path.resolve(file);
+ if(!fs.existsSync(abs))return null;
+ const s=fs.lstatSync(abs),parent=fs.lstatSync(path.dirname(abs));
+ if(!s.isFile()||s.isSymbolicLink()||parent.isSymbolicLink()||
+    (s.mode&0o077)!==0||s.size>256000)
+  throw Error('kennedy_private_receipt_untrusted_file');
+ return JSON.parse(fs.readFileSync(abs,'utf8'));
+}
 export function runCompanyHeartbeat({
  root=sourceRoot,outDir=path.join(sourceRoot,'artifacts/kaidance-company-heartbeat'),
- now=new Date(),proveWorlds=false,spawn=spawnSync,aiwReceipt=null,globalOpportunityReceipt=null
+ now=new Date(),proveWorlds=false,spawn=spawnSync,aiwReceipt=null,globalOpportunityReceipt=null,
+ kennedyQualityReceipt=null
 }={}){
  const repo=path.resolve(root),out=path.resolve(outDir);
  const manifest=readJson(path.join(repo,'registry/kaidance-company-lanes.v1.json'));
@@ -163,12 +175,15 @@ export function runCompanyHeartbeat({
   worldsFingerprint:fingerprint,proof,workflowManifestCount:countWorkflowManifests(repo)});
  const aiw=classifyAiWReceipt(aiwReceipt,now);
  const global=classifyGlobalOpportunityReceipt(globalOpportunityReceipt,now);
- const report={...planned.report,proof,infrastructure_watch:aiw,global_opportunities:global};
+ const kennedy=classifyKennedyQualityReceipt(kennedyQualityReceipt,now);
+ const report={...planned.report,proof,infrastructure_watch:aiw,global_opportunities:global,
+  kennedy_quality:kennedy};
  const queue={schema:'evercraft.kaidance.company-heartbeat.queue.v1',observed_at:report.observed_at,
   execution_authorized:false,
   candidates:[
    ...(proof.status==='failed'?[{work_key:'worlds:source-proof-failure',lane_key:'worlds',priority:1,action:'investigate_failed_source_tests',authority:'review_required'}]:[]),
    ...(proof.status==='due_not_executed'?[{work_key:'worlds:source-proof-due',lane_key:'worlds',priority:2,action:'run_bounded_source_proof',authority:'existing_allowlisted_local_only'}]:[]),
+   ...kennedy.review_candidates,
    ...aiw.review_candidates.map(row=>({work_key:row.key,lane_key:'infrastructure-watch',priority:2,
     action:row.action,authority:'systemia_operator_review_required',
     execution_authorized:false,publication_authorized:false})),
@@ -189,13 +204,17 @@ export function runCompanyHeartbeat({
   counts:{...planned.snapshot.counts,
    scanned:planned.snapshot.counts.scanned+aiw.sources_observed+global.sources_observed,
    changed:planned.snapshot.counts.changed+(global.newly_seen||0),
-   held:planned.snapshot.counts.held+aiw.review_candidates.length+global.review_candidates.length},
+   held:planned.snapshot.counts.held+aiw.review_candidates.length+global.review_candidates.length+
+    kennedy.review_candidates.length},
   evidence_refs:[
     ...planned.snapshot.evidence_refs,
     ...(aiw.status==='verified_receipt'?[
       'source:systemia/infrastructure-watch/source-registry.v1.json',sha(JSON.stringify(aiw))]:[]),
     ...(global.status==='verified_source_receipt'?[
-      'source:registry/kaidance-global-opportunity-sources.v1.json',global.receipt_hash]:[])
+      'source:registry/kaidance-global-opportunity-sources.v1.json',global.receipt_hash]:[]),
+    ...(kennedy.status==='verified_review_receipt'?[
+      'source:systemia/organism/kaidance-kennedy-quality-review.mjs',
+      kennedy.review_candidates[0].receipt_ref]:[])
   ].slice(0,30)};
  fs.mkdirSync(out,{recursive:true,mode:0o700});
  // Commit the cycle watermark LAST. An interrupted write must be retryable
@@ -216,6 +235,8 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
  try{
   const outDir=opt('--out')||process.env.SYSTEMIA_COMPANY_HEARTBEAT_OUT_DIR||path.join(sourceRoot,'artifacts/kaidance-company-heartbeat');
   const aiwReceipt=readAiWReceipt(opt('--aiw-receipt')||process.env.SYSTEMIA_AIW_EVIDENCE_RECEIPT_FILE||'');
+  const kennedyQualityReceipt=readKennedyReceipt(
+    opt('--kennedy-quality-receipt')||process.env.SYSTEMIA_KENNEDY_QUALITY_RECEIPT_FILE||'');
   let globalOpportunityReceipt=null;
   try{
    const globalOut=path.join(path.dirname(path.resolve(outDir)),'kaidance-global-opportunities');
@@ -228,7 +249,7 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
     status:'held',reason:String(e?.message||e).slice(0,120)}));
   }
   const result=runCompanyHeartbeat({outDir,proveWorlds:process.argv.includes('--prove-worlds'),
-    aiwReceipt,globalOpportunityReceipt});
+    aiwReceipt,globalOpportunityReceipt,kennedyQualityReceipt});
   // Explicit owner opt-in only; CI and existing installations default off.
   let cemetery=null, cemeteryClassification=null;
   if(process.env.SYSTEMIA_CEMETERY_RESEARCH_OUT_DIR){
@@ -244,6 +265,8 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
    infrastructure_watch_receipt:result.report?.infrastructure_watch?.status||null,
    infrastructure_watch_publication_authorized:false,
    global_opportunity_receipt:result.report?.global_opportunities?.status||null,
+   kennedy_quality_receipt:result.report?.kennedy_quality?.status||null,
+   kennedy_development_completed:false,
    global_opportunity_outreach_authorized:false,
    next_action_key:result.next_action?.current_next_action?.work_key||null,
    next_action_execution_authorized:false,
