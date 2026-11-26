@@ -29,6 +29,7 @@ on:
       - 'systemia/organism/kaidance-company-heartbeat.workflow.json'
       - 'systemia/organism/kaidance-network-development.mjs'
       - 'tests/kaidance-network-development.test.mjs'
+      - 'tests/kaidance-network-heartbeat-integration.test.mjs'
       - 'registry/kaidance-network-development.v1.json'
       - 'systemia/infrastructure-watch/**'
       - 'systemia/organism/aiw-evidence-watch.workflow.json'
@@ -84,6 +85,7 @@ on:
       - 'systemia/organism/kaidance-company-heartbeat.workflow.json'
       - 'systemia/organism/kaidance-network-development.mjs'
       - 'tests/kaidance-network-development.test.mjs'
+      - 'tests/kaidance-network-heartbeat-integration.test.mjs'
       - 'registry/kaidance-network-development.v1.json'
       - 'systemia/infrastructure-watch/**'
       - 'systemia/organism/aiw-evidence-watch.workflow.json'
@@ -205,7 +207,7 @@ jobs:
         run: node --test tests/kaidance-next-action.test.mjs
 
       - name: Verify Network PR review contract and dedupe policy
-        run: node --test tests/kaidance-network-development.test.mjs
+        run: node --test tests/kaidance-network-development.test.mjs tests/kaidance-network-heartbeat-integration.test.mjs
 
       - name: Review Saban Network development on this existing five-minute heartbeat
         env:
