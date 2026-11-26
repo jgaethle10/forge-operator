@@ -135,6 +135,7 @@ jobs:
           path: |
             artifacts/kaidance-frontier/runtime/state.json
             artifacts/kaidance-company-heartbeat/state.json
+            artifacts/kaidance-company-heartbeat/learning-community/state.json
             artifacts/kaidance-global-opportunities/state.json
             artifacts/aiw-evidence-watch/state.json
             artifacts/aiw-evidence-watch/latest.json
@@ -195,10 +196,13 @@ jobs:
       - name: Validate one-company evidence-backed next action without a new worker
         run: node --test tests/kaidance-next-action.test.mjs
 
+      - name: Prove KAIDANCE learning and Circles five-minute source boundaries
+        run: node --test tests/kaidance-learning-community-cycle.test.mjs tests/evercraft-circles-kaidance.test.mjs tests/systemia-university-kaidance.test.mjs tests/kaidance-education-family-source.test.mjs
+
       - name: Reconcile Evercraft company portfolio on KAIDANCE heartbeat
         env:
           SYSTEMIA_AIW_EVIDENCE_RECEIPT_FILE: artifacts/aiw-evidence-watch/latest.json
-        run: node systemia/organism/kaidance-company-heartbeat-runner.mjs --out artifacts/kaidance-company-heartbeat --prove-worlds
+        run: node systemia/organism/kaidance-company-heartbeat-runner.mjs --out artifacts/kaidance-company-heartbeat --prove-worlds --prove-learning
 
       - name: Verify durable Systemia goal and actual registered Saban World Engine assignment
         run: node --test tests/kaidance-worlds-saban-review.test.mjs
@@ -240,6 +244,7 @@ jobs:
           path: |
             artifacts/kaidance-frontier/runtime/state.json
             artifacts/kaidance-company-heartbeat/state.json
+            artifacts/kaidance-company-heartbeat/learning-community/state.json
             artifacts/kaidance-global-opportunities/state.json
             artifacts/aiw-evidence-watch/state.json
             artifacts/aiw-evidence-watch/latest.json
@@ -272,6 +277,8 @@ jobs:
             artifacts/kaidance-global-opportunities/queue.json
             artifacts/kaidance-global-opportunities/mission-snapshot.json
             artifacts/kaidance-company-heartbeat/latest.json
+            artifacts/kaidance-company-heartbeat/learning-community/latest.json
+            artifacts/kaidance-company-heartbeat/learning-community/queue.json
             artifacts/kaidance-company-heartbeat/mission-snapshot.json
             artifacts/kaidance-company-heartbeat/queue.json
             artifacts/kaidance-company-heartbeat/next-action.json
