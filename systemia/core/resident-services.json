@@ -361,6 +361,18 @@
         "--campaign": "SYSTEMIA_SPACE_DUDZ_CAMPAIGN",
         "--authority-receipt-file": "SYSTEMIA_SPACE_DUDZ_CLIP_AUTHORITY_RECEIPT_FILE"
       }
+    },
+    {
+      "service_key": "kaidance-public-demand-documents",
+      "mode": "cycle",
+      "manifest": "systemia/revenue-desk/kaidance-public-demand-documents.workflow.json",
+      "executable": "systemia/revenue-desk/public-demand-document-cycle.mjs",
+      "cadence_seconds": 300,
+      "optional_when_unconfigured": true,
+      "env_args": {
+        "--root": "SYSTEMIA_PUBLIC_DEMAND_RESEARCH_ROOT",
+        "--inbox": "SYSTEMIA_PUBLIC_DEMAND_DOCUMENT_INBOX"
+      }
     }
   ]
 }

@@ -85,6 +85,7 @@ export async function startLocalOrganism({
   ravenInferenceModel = '',
   ravenProviderCredentialStateDir = '',
   ravenOllamaOrigin = '',
+  publicDemandDocuments = false,
   zeroSpendCapacity = true,
   nativeBrowserBootstrap = true,
   nativeBrowserPreparer = prepareNativeBrowserRuntime,
@@ -260,6 +261,7 @@ export async function startLocalOrganism({
         raven_inference_model: String(ravenInferenceModel || '').trim(),
         provider_credential_state_dir: String(ravenProviderCredentialStateDir || '').trim(),
         raven_ollama_origin: String(ravenOllamaOrigin || '').trim(),
+        ...(publicDemandDocuments === true ? {public_demand_documents:true} : {}),
       },
       rollbackTarget: 'local-organism:core-previous',
       leaseTtlMs: 3_600_000,
@@ -543,6 +545,7 @@ if (isCli) {
       process.env.EVERCRAFT_CREDENTIAL_STATE_DIR ||
       '',
     ravenOllamaOrigin: process.env.RAVEN_OLLAMA_ORIGIN || '',
+    publicDemandDocuments: process.env.EVERCRAFT_PUBLIC_DEMAND_DOCUMENTS_ADMISSION === 'true',
     zeroSpendCapacity: String(
       process.env.EVERCRAFT_LOCAL_ZERO_SPEND ?? 'true'
     ).toLowerCase() !== 'false',
