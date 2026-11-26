@@ -40,8 +40,10 @@ jobs:
             new Function(scripts[0][1]);
             for(const s of ["Founding preview","Custody unverified","No images collected or published","yakimavalleytrolleys.org/yvt-history/","yvl.org/services/special-collections-and-archive-services/"])if(!html.includes(s))throw Error("Missing boundary or source: "+s);
             if(/<form\b|<input\b|<script[^>]+src=|fetch\s*\(|XMLHttpRequest|sendBeacon|localStorage|sessionStorage|<iframe\b|<img\b/.test(html))throw Error("Unapproved collection or external media");
-            if((html.match(/<article class="card"/g)||[]).length!==5)throw Error("Expected five source-linked cards");
+            if((html.match(/<article class="card"/g)||[]).length!==12)throw Error("Expected twelve source-linked cards");
           '
+      - name: Verify Homecoming record provenance and era filters
+        run: node --test systemia/participation-economy/homecoming-records.test.mjs
       - name: Verify seasonal household consent and nonbinding estimate bridge
         run: node --test systemia/participation-economy/season-household-bridge.test.mjs
       - name: Run economy and fraud-hold tests
