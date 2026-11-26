@@ -35,6 +35,7 @@ function setup(){
    official_contact_verified:true,provider_status_verified:true,
    legal_requirements_verified:true,delivery_scope_verified:true,
    passport_exact_message_permit_verified:true}],
+  organizationRegistry:[{organization_key:'fixture-org',state:'clear',contact_emails:['buyer@firm.example'],evidence_ref:'fixture:review'}],
   now:NOW,hmacKey,historyComplete:true,providerDailyCap:500,
   coldTarget:400,replyReserve:100,
  });
@@ -227,6 +228,22 @@ test('inconsistent signed readiness cannot release explicit suppression',()=>{
    const r=reserveColdOutreach({...c.kwargs,report:signed,reportProof:c.sign(signed)});
    assert.equal(r.state,'held');
    assert.deepEqual(r.reasons,['signed_contact_preference_or_readiness_hold']);
+  }
+  assert.equal(inspectReservations({stateDir:c.stateDir}).count,0);
+ }finally{dispose(c);}
+});
+
+test('signed organization hold and missing registry deny even a contact-ready row',()=>{
+ const c=setup();
+ try{
+  for(const signed of [
+   {...c.report,organization_registry_valid:false},
+   {...c.report,prospects:[{...c.report.prospects[0],organization_contact_state:'customer_hold'}]},
+   {...c.report,prospects:[{...c.report.prospects[0],organization_ref:null}]}
+  ]){
+   const r=reserveColdOutreach({...c.kwargs,report:signed,reportProof:c.sign(signed)});
+   assert.equal(r.state,'held');
+   assert.deepEqual(r.reasons,['signed_organization_identity_or_hold']);
   }
   assert.equal(inspectReservations({stateDir:c.stateDir}).count,0);
  }finally{dispose(c);}
