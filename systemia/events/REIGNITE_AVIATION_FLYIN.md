@@ -8,9 +8,17 @@ A pilot responding to the public REIGNITE preservation concept described how Han
 
 ## High-priority discovery that changes our contact plan
 
-**Ownership/operation transition:** A Port of Tillamook Bay press release dated August 20, 2026 announces that commissioners approved a **term sheet** for a future lease and sale of Hangar B to Vintage Aviation Museum, which would assume museum operations. A term sheet is not proof that the future transfer has been completed or that either party authorizes our event. The same announcement describes preserving the hangar and returning visitors, but reports no REIGNITE permission.
+**Verified ownership update (November 25, 2026):** The Port's August 20 release documented a proposed term sheet, but later evidence confirms the transaction happened. Vintage Aviation Museum now says it **acquired Hangar B and the Tillamook Air Museum**; the museum reopened October 29, 2026. A November 14 public-radio investigation reports that Vintage bought Hangar B for $1 and the Port's museum assets for $20, with the Port retaining the land under a long-term ground lease. That confirms the new museum operator, **not** event-use permission, right to use the Port's airfield, or a cleared repair footprint. Coordinate the museum/event decision with Vintage leadership and all airport/ramp questions separately with the Port/airport operator.
 
 Primary official source: https://potb.specialdistrict.org/tillamook-air-museum-announces-partnership-with-vintage-aviation-museum
+
+New museum operator's own confirmation: https://www.vintageaviationmuseum.org/
+
+November 14 public-radio acquisition/reporting and structural repair caveats: https://www.klcc.org/economy-business/2026-11-14/tillamook-air-museum-reopens-wwii-hangar-sale
+
+Museum's current staff contacts: https://www.tillamookair.com/contacts
+
+New Hangar B Preservation Council (membership/partnership exploratory, not an endorsement of REIGNITE): https://www.tillamookair.com/new-page-2
 
 **Airport parking distinction:** Tillamook Air Museum's visitor page currently mentions parking for visiting aircraft and overnight aircraft parking at the Tillamook Airport/RV Park. This is general information for ordinary visits, NOT evidence of group fly-in capacity, a guaranteed arrival slot, tarmac event rights or coordination.
 
@@ -36,6 +44,6 @@ The five gates exist as **optional** `REIGNITE_FLY_IN_FEATURES` in the canonical
 
 ## What to ask the decision-makers once the owner approves outreach
 
-Can we explore an aviation-preservation gathering without interfering with airport operations? Who holds current Hangar B event rights during the Vintage Aviation Museum transition, and who is authorized to speak for the airport? What is the first technical document we need for a pre-feasibility review? Would you prefer a minimal general-aviation visitor program or no coordinated aircraft arrivals at all?
+Can we explore an aviation-preservation gathering without interfering with airport operations? Vintage Aviation Museum has confirmed acquisition of Hangar B. Who on the museum team can review a tentative event footprint, and which Port/airport representative handles any separate airside or aircraft-parking request? What is the first technical document we need for a pre-feasibility review? Would you prefer a minimal general-aviation visitor program or no coordinated aircraft arrivals at all?
 
 **Current next action:** prepare a concise *joint* authority question for the Port/airport sponsor and current museum representative. Check prior conversations/outbound history before sending anything, so we avoid duplicate museum contacts. No additional outreach was sent by this source update.
