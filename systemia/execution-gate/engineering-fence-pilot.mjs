@@ -19,7 +19,7 @@ const sorted=a=>[...new Set(a)].sort();
 const flags={production_authorized:false,release_authorized:false};
 const receipt=x=>({...x,receipt_hash:sha(x)});
 const deny=reason=>({state:'held',reason,...flags});
-function git(repo,args){return execFileSync('git',['-C',repo,...args],{encoding:'utf8',timeout:10000,maxBuffer:1048576,env:{PATH:process.env.PATH,HOME:os.tmpdir(),GIT_CONFIG_NOSYSTEM:'1',GIT_CONFIG_GLOBAL:'/dev/null',GIT_NO_REPLACE_OBJECTS:'1'}}).trim();}
+function git(repo,args){return execFileSync('git',['-C',repo,'-c','core.hooksPath=/dev/null',...args],{encoding:'utf8',timeout:10000,maxBuffer:1048576,env:{PATH:process.env.PATH,HOME:os.tmpdir(),GIT_CONFIG_NOSYSTEM:'1',GIT_CONFIG_GLOBAL:'/dev/null',GIT_NO_REPLACE_OBJECTS:'1'}}).trim();}
 function persist(file,value){
  const tmp=file+'.'+randomUUID()+'.tmp';
  const fd=fs.openSync(tmp,'wx',0o600);
@@ -52,6 +52,38 @@ export class EngineeringFencePilot{
   }finally{fs.rmdirSync(this.lock);}
  }
  #time(){return new Date(this.clock()).toISOString();}
+ #authority(actor){return this.passport.authorize({subject_ref:actor,product:'engineering-pilot',scope:'ref.write',resource_ref:'synthetic',at:this.#time()}).decision==='allow';}
+ // Read-only reconciliation, not permission to clear orphan locks or retry.
+ inspectUncertain(){
+  const state=fs.existsSync(this.file)?JSON.parse(fs.readFileSync(this.file,'utf8')):{jobs:{}};
+  const locked=fs.existsSync(this.lock);
+  const current=git(this.repo,['rev-parse',ref]);
+  const intents=Object.entries(state.jobs).filter(([,j])=>j.status==='intent').map(([id,j])=>{
+   const intent=j.intent;
+   const actual=intent?.target_ref&&intent.target_ref!==ref
+    ? (()=>{try{return git(this.repo,['rev-parse','--verify',intent.target_ref]);}catch{return null;}})()
+    :current;
+   return {request_id:id,fence:j.fence,target_ref:intent?.target_ref||ref,current:actual,
+    observation:actual===intent?.candidate?'candidate_present':actual===(intent?.expected||null)?'prior_ref_present':'ref_diverged',
+    authoritative_outcome_verified:false,replay_authorized:false};
+  });
+  return receipt({state:locked||intents.length?'reconciliation_required':'no_uncertain_intent_observed',locked,intents,current,replay_authorized:false,...flags});
+ }
+ #startWriter({j,id,actor,fence,request,save}){
+  const leaseId='engineering-pilot-'+id+'-'+fence+'-'+request.operation;
+  j.status='intent';j.intent=request;save();
+  const prepared=this.gate.prepareExecution({lease_id:leaseId,idempotency_key:leaseId+':prepare',actor_ref:actor,passport_product:'engineering-pilot',scope:'ref.write',resource_ref:'synthetic',specialist_slug:'engineering-pilot',route_mode:'registered_internal',request,prepared_at:this.#time()});
+  if(prepared.state!=='prepared')return deny('execution_gate_prepare_held');
+  const started=this.gate.startExecution({lease_id:leaseId,idempotency_key:leaseId+':start',start_evidence_ref:sha(request),started_at:this.#time()});
+  if(!started.dispatch_allowed||started.duplicate)return deny('execution_gate_start_held');
+  if(this.clock()>=j.expires||!this.#authority(actor))return deny('write_authority_expired_or_revoked');
+  return {state:'writer_started',leaseId,started};
+ }
+ #finishWriter({leaseId,done,j,save,status}){
+  const completed=this.gate.completeExecution({lease_id:leaseId,idempotency_key:leaseId+':complete',outcome_evidence_ref:done.receipt_hash,completed_at:this.#time()});
+  if(completed.state!=='completed')throw Error('writer_completion_unverified');
+  j.status=status;j.result=done;save();return done;
+ }
  #closure(paths){
   // Server-owned semantic map; different files can share a resource.
   const resources=[];
@@ -90,6 +122,7 @@ export class EngineeringFencePilot{
    for(const other of Object.values(s.jobs)){
     if(['reserved','intent'].includes(other.status)&&other.resources.some(r=>j.resources.includes(r)))return deny('resource_conflict_or_uncertain_effect');
    }
+   if(Object.values(s.jobs).some(other=>other.status==='intent'))return deny('writer_intent_reconciliation_required');
    if(git(this.repo,['rev-parse',ref])!==j.proposal.base_sha)return deny('stale_proposal_base');
    j.fence=++s.sequence;j.actor=actor;j.expires=this.clock()+ttlMs;j.status='reserved';save();
    return receipt({state:'reserved',request_id:id,fence:j.fence,resources:j.resources,...flags});
@@ -114,7 +147,7 @@ export class EngineeringFencePilot{
   const g=this.#goalBinding({id,fence,expected,candidate});
   const admitted=this.#tx((s)=>{
    const j=Object.hasOwn(s.jobs,id)?s.jobs[id]:null;
-   return j?.status==='reserved'&&j.actor===actor&&j.fence===fence&&j.proposal.base_sha===expected&&this.clock()<j.expires;
+   return j?.status==='reserved'&&j.actor===actor&&j.fence===fence&&j.proposal.base_sha===expected&&this.clock()<j.expires&&this.#authority(actor);
   });
   if(admitted!==true)return deny('verification_reservation_held');
   if(fs.existsSync(g.file)){
@@ -134,11 +167,18 @@ export class EngineeringFencePilot{
    if(!j||j.status!=='reserved'||j.actor!==actor||j.fence!==fence||this.clock()>=j.expires)return deny('stale_or_expired_fence');
    if(this.passport.authorize({subject_ref:actor,product:'engineering-pilot',scope:'ref.write',resource_ref:'synthetic',at:this.#time()}).decision!=='allow')return deny('writer_not_authorized');
    if(git(this.repo,['rev-parse',ref])===j.proposal.base_sha||git(this.repo,['rev-list','--parents','-n','1',candidate])!==candidate+' '+j.proposal.base_sha)return deny('stale_candidate_not_proven');
-   // Preserve the losing candidate under a fixed local artifact ref before
-   // freeing a never-dispatched reservation. No intent can be superseded.
-   git(this.repo,['update-ref','refs/engineering-pilot/artifacts/'+id+'-'+fence,candidate,'0'.repeat(40)]);
-   j.status='superseded';j.preserved_candidate=candidate;save();
-   return receipt({state:'superseded',request_id:id,fence,preserved_candidate:candidate,...flags});
+   if(Object.values(s.jobs).some(other=>other.status==='intent'))return deny('writer_intent_reconciliation_required');
+   const changed=git(this.repo,['diff','--no-renames','--name-only','-z',j.proposal.base_sha,candidate]).split('\0').filter(Boolean);
+   if(!changed.length||changed.some(p=>!j.proposal.paths.includes(p)))return deny('expanded_diff');
+   const target_ref='refs/engineering-pilot/artifacts/'+id+'-'+fence;
+   const request={operation:'preserve',target_ref,id,fence,expected:null,candidate,proposal_digest:j.digest,changed:sorted(changed)};
+   const start=this.#startWriter({j,id,actor,fence,request,save});
+   if(start.state!=='writer_started')return start;
+   git(this.repo,['update-ref',target_ref,candidate,'0'.repeat(40)]);
+   if(git(this.repo,['rev-parse',target_ref])!==candidate)throw Error('artifact_readback_mismatch');
+   j.preserved_candidate=candidate;
+   const done=receipt({state:'superseded',request_id:id,fence,preserved_candidate:candidate,gate_receipt:start.started.lease.receipt_hash,...flags});
+   return this.#finishWriter({leaseId:start.leaseId,done,j,save,status:'superseded'});
   });
  }
  publish({id,actor,fence,expected,candidate,testPassed}){
@@ -147,6 +187,7 @@ export class EngineeringFencePilot{
    const j=Object.hasOwn(s.jobs,id)?s.jobs[id]:null;
    if(!j||j.status!=='reserved'||j.actor!==actor||j.fence!==fence||this.clock()>=j.expires)return deny('stale_or_expired_fence');
    if(this.passport.authorize({subject_ref:actor,product:'engineering-pilot',scope:'ref.write',resource_ref:'synthetic',at:this.#time()}).decision!=='allow')return deny('writer_not_authorized');
+   if(Object.values(s.jobs).some(other=>other.status==='intent'))return deny('writer_intent_reconciliation_required');
    if(expected!==j.proposal.base_sha||git(this.repo,['rev-parse',ref])!==expected)return deny('stale_target_rebase_retest_required');
    if(testPassed===false||!this.#testTree(expected,candidate))return deny('failed_acceptance');
    if(git(this.repo,['rev-list','--parents','-n','1',candidate])!==candidate+' '+expected)return deny('candidate_parent_mismatch');
@@ -161,23 +202,14 @@ export class EngineeringFencePilot{
    const goal=JSON.parse(fs.readFileSync(binding.file,'utf8'));
    const task=goal.tasks?.[0];
    if(goal.schema!=='evercraft.goal.state.v1'||goal.goal_key!==binding.key||goal.mission_key!=='engineering-fence-pilot'||goal.status!=='complete'||goal.context_refs?.[0]!==binding.evidence||goal.tasks?.length!==1||task?.work_key!=='verify-tree'||task.status!=='complete'||!task.receipt_refs?.includes(binding.evidence))return deny('durable_verification_unbound');
-   const request={id,fence,expected,candidate,changed:sorted(changed),proposal_digest:j.digest,verification_ref:binding.evidence};
-   const leaseId='engineering-pilot-'+id+'-'+fence;
-   // Intent checkpoint BEFORE permit/start and ref mutation. Unknown outcomes
-   // remain held even after expiration; no automatic replay or lock stealing.
-   j.status='intent';j.intent=request;save();
-   const prepared=this.gate.prepareExecution({lease_id:leaseId,idempotency_key:leaseId+':prepare',actor_ref:actor,passport_product:'engineering-pilot',scope:'ref.write',resource_ref:'synthetic',specialist_slug:'engineering-pilot',route_mode:'registered_internal',request,prepared_at:this.#time()});
-   if(prepared.state!=='prepared')return deny('execution_gate_prepare_held');
-   const started=this.gate.startExecution({lease_id:leaseId,idempotency_key:leaseId+':start',start_evidence_ref:sha(request),started_at:this.#time()});
-   if(!started.dispatch_allowed||started.duplicate)return deny('execution_gate_start_held');
-   if(this.clock()>=j.expires||this.passport.authorize({subject_ref:actor,product:'engineering-pilot',scope:'ref.write',resource_ref:'synthetic',at:this.#time()}).decision!=='allow')return deny('write_authority_expired_or_revoked');
-   // Actual mutation boundary: gate + current fence + exact expected ref,
-   // while the non-stealable local writer lock is held.
+   const request={operation:'integrate',target_ref:ref,id,fence,expected,candidate,changed:sorted(changed),proposal_digest:j.digest,verification_ref:binding.evidence};
+   const start=this.#startWriter({j,id,actor,fence,request,save});
+   if(start.state!=='writer_started')return start;
+   // Actual CAS under the non-stealable writer lock.
    git(this.repo,['update-ref',ref,candidate,expected]);
    if(git(this.repo,['rev-parse',ref])!==candidate)throw Error('ref_readback_mismatch');
-   const done=receipt({state:'published_synthetic',request_id:id,fence,previous:expected,current:candidate,gate_receipt:started.lease.receipt_hash,...flags});
-   this.gate.completeExecution({lease_id:leaseId,idempotency_key:leaseId+':complete',outcome_evidence_ref:done.receipt_hash,completed_at:this.#time()});
-   j.status='complete';j.result=done;save();return done;
+   const done=receipt({state:'published_synthetic',request_id:id,fence,previous:expected,current:candidate,gate_receipt:start.started.lease.receipt_hash,...flags});
+   return this.#finishWriter({leaseId:start.leaseId,done,j,save,status:'complete'});
   });
  }
 }
