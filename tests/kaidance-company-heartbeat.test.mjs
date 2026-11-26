@@ -5,6 +5,7 @@ import os from 'node:os';
 import path from 'node:path';
 import {planCompanyHeartbeat,validateCompanyLanes} from '../systemia/organism/kaidance-company-heartbeat.mjs';
 import {runCompanyHeartbeat,sourceFingerprint} from '../systemia/organism/kaidance-company-heartbeat-runner.mjs';
+import {runRegionalEventReview} from '../systemia/events/event-opportunity-regional-review-runner.mjs';
 const products=JSON.parse(fs.readFileSync('registry/public-products.json','utf8'));
 const supervisor=JSON.parse(fs.readFileSync('systemia/core/resident-services.json','utf8'));
 const lanes=JSON.parse(fs.readFileSync('registry/kaidance-company-lanes.v1.json','utf8'));
@@ -119,6 +120,108 @@ test('company heartbeat surfaces a verified existing checkout handoff, without p
   assert.equal(next.decision_ref,result.next_action.decision_ref);
   assert.equal(JSON.parse(fs.readFileSync(
     path.join(out,'next-action-mission-snapshot.json'),'utf8')).counts.admitted,0);
+ }finally{fs.rmSync(root,{recursive:true,force:true})}
+});
+
+test('existing heartbeat admits up to six official event reviews without repeating outreach or fabricating client work',()=>{
+ const root=fs.mkdtempSync(path.join(os.tmpdir(),'kaidance-event-scout-'));
+ const out=path.join(root,'kaidance-company-heartbeat');
+ const scout=path.join(root,'event-opportunity-scout');
+ const at=new Date('2026-11-25T22:00:00.000Z');
+ const id='event:'+'a'.repeat(20);
+ const candidate={opportunity_key:id,
+  source_url:'https://www.find-tender.service.gov.uk/Notice/012345-2026',
+  outreach_authorized:false,dispatch_authorized:false,
+  buyer_contact_verified:false,revenue_confirmed:false,
+  deadline:'2026-12-15T00:00:00.000Z'};
+ fs.mkdirSync(scout,{recursive:true,mode:0o700});
+ try{
+  fs.writeFileSync(path.join(scout,'state.json'),JSON.stringify({
+   schema:'evercraft.events.opportunity-scout-state.v1',
+   last_attempt_ms:at.getTime(),last_success_at:at.toISOString(),
+   observation:{schema:'evercraft.events.opportunity-review.v1',
+    candidates:[candidate,{...candidate,opportunity_key:'event:'+'b'.repeat(20)},
+     {...candidate,opportunity_key:'event:'+'c'.repeat(20),
+      source_url:'https://www.find-tender.service.gov.uk.attacker.example/Notice/123'}]}
+  }),{mode:0o600});
+  const result=runCompanyHeartbeat({root:'.',outDir:out,now:at,proveWorlds:false});
+  const events=result.queue.candidates.filter(c=>c.lane_key==='events');
+  assert.equal(events.length,2);
+  assert.equal(events[0].outreach_authorized,false);
+  assert.equal(events[0].dispatch_authorized,false);
+  assert.equal(events[0].authority,'founder_review_required');
+  assert.equal(result.report.event_discovery.candidates_for_review,2);
+  assert.equal(result.report.event_discovery.any_buyer_contact,false);
+  assert(result.next_action.candidates.some(x=>x.work_key===id));
+  assert.equal(result.next_action.execution_performed,false);
+  assert.equal(result.next_action.customer_contacts,0);
+  assert.equal(runCompanyHeartbeat({root:'.',outDir:out,now:at}).duplicate,true);
+  const stale=runCompanyHeartbeat({root:'.',outDir:out,
+   now:new Date(at.getTime()+9*3600000)});
+  assert.equal(stale.report.event_discovery.candidates_for_review,0);
+  assert.equal(stale.queue.candidates.some(x=>x.lane_key==='events'),false);
+ }finally{fs.rmSync(root,{recursive:true,force:true})}
+});
+
+test('US SAM event source is admitted as founder-review only, quarantined when stale',()=>{
+ const root=fs.mkdtempSync(path.join(os.tmpdir(),'kaidance-us-event-scout-'));
+ const out=path.join(root,'kaidance-company-heartbeat');
+ const dir=path.join(root,'event-opportunity-us-sam');
+ const at=new Date('2026-11-25T22:00:00.000Z');
+ const id='a'.repeat(32);
+ const item={opportunity_key:'event:'+'b'.repeat(20),source:'us_sam_public_v2',
+  source_url:'https://sam.gov/opp/'+id+'/view',
+  outreach_authorized:false,dispatch_authorized:false,buyer_contact_verified:false,
+  revenue_confirmed:false,deadline:'2026-12-20T00:00:00.000Z'};
+ fs.mkdirSync(dir,{recursive:true,mode:0o700});
+ try{
+  fs.writeFileSync(path.join(dir,'state.json'),JSON.stringify({
+   schema:'evercraft.events.us-sam-scout-state.v1',last_attempt_ms:at.getTime(),
+   last_success_at:at.toISOString(),
+   observation:{schema:'evercraft.events.us-sam-review.v1',candidates:[item,
+    {...item,opportunity_key:'event:'+'c'.repeat(20),source_url:'https://sam.gov.evil.example/opp/'+id+'/view'}]}
+  }),{mode:0o600});
+  const r=runCompanyHeartbeat({root:'.',outDir:out,now:at});
+  assert.equal(r.report.event_discovery.candidates_for_review,1);
+  assert.equal(r.report.event_discovery.us_source_status,'read_only_us_review_candidates');
+  const candidates=r.queue.candidates.filter(c=>c.lane_key==='events');
+  assert.equal(candidates.length,1);
+  assert.equal(candidates[0].source_region,'United States');
+  assert.equal(candidates[0].outreach_authorized,false);
+  assert.equal(candidates[0].dispatch_authorized,false);
+  assert.equal(r.next_action.candidates.some(x=>x.work_key===item.opportunity_key),true);
+  assert.equal(r.next_action.execution_performed,false);
+  assert.equal(r.next_action.customer_contacts,0);
+  const stale=runCompanyHeartbeat({root:'.',outDir:out,
+   now:new Date(at.getTime()+9*3600000)});
+  assert.equal(stale.report.event_discovery.us_source_status,'us_source_stale');
+  assert.equal(stale.queue.candidates.filter(c=>c.lane_key==='events').length,0);
+ }finally{fs.rmSync(root,{recursive:true,force:true})}
+});
+
+test('reviewed Oregon tender evidence joins Kaidance queue without external actions or evergreen freshness',()=>{
+ const root=fs.mkdtempSync(path.join(os.tmpdir(),'kaidance-regional-review-'));
+ const out=path.join(root,'kaidance-company-heartbeat');
+ const intake=path.join(root,'event-opportunity-regional');
+ const at=new Date('2026-11-26T07:45:00.000Z');
+ try{
+  const admitted=runRegionalEventReview({rootDir:'.',outDir:intake,now:at});
+  assert.equal(admitted.candidate_count,2);
+  const result=runCompanyHeartbeat({root:'.',outDir:out,now:at});
+  const candidates=result.queue.candidates.filter(x=>x.source_region==='Oregon, USA');
+  assert.equal(candidates.length,2);
+  assert.equal(result.report.event_discovery.regional_source_status,'regional_manual_review_only');
+  assert.equal(result.report.event_discovery.regional_crawl_performed,false);
+  assert(candidates.every(x=>x.outreach_authorized===false));
+  assert(candidates.every(x=>x.dispatch_authorized===false));
+  assert(candidates.every(x=>x.prior_outreach_history_checked===false));
+  assert.equal(result.queue.execution_authorized,false);
+  assert(result.next_action.candidates.some(x=>x.lane_key==='events'&&
+   x.evidence_ref.includes('oregonbuys.gov/bso/external/bidDetail.sda')));
+  assert.equal(result.next_action.customer_contacts,0);
+  const stale=runCompanyHeartbeat({root:'.',outDir:out,now:new Date(at.getTime()+20*60000)});
+  assert.equal(stale.report.event_discovery.regional_source_status,'regional_receipt_stale');
+  assert.equal(stale.queue.candidates.filter(x=>x.source_region==='Oregon, USA').length,0);
  }finally{fs.rmSync(root,{recursive:true,force:true})}
 });
 

@@ -22,6 +22,11 @@ on:
       - 'systemia/organism/kaidance-frontier-proof.mjs'
       - 'systemia/organism/kaidance-frontier-cycle.mjs'
       - 'systemia/organism/kaidance-company-heartbeat*.mjs'
+      - 'systemia/events/event-opportunity-*.mjs'
+      - 'tests/event-opportunity-scout.test.mjs'
+      - 'tests/event-opportunity-us-sam.test.mjs'
+      - 'tests/event-opportunity-regional-review.test.mjs'
+      - 'systemia/events/regional-official-notices.review.v1.json'
       - 'systemia/organism/kaidance-creative-development.mjs'
       - 'systemia/organism/kaidance-learning-community-cycle.mjs'
       - 'tests/kaidance-learning-community-cycle.test.mjs'
@@ -98,6 +103,11 @@ on:
       - 'systemia/organism/kaidance-frontier-proof.mjs'
       - 'systemia/organism/kaidance-frontier-cycle.mjs'
       - 'systemia/organism/kaidance-company-heartbeat*.mjs'
+      - 'systemia/events/event-opportunity-*.mjs'
+      - 'tests/event-opportunity-scout.test.mjs'
+      - 'tests/event-opportunity-us-sam.test.mjs'
+      - 'tests/event-opportunity-regional-review.test.mjs'
+      - 'systemia/events/regional-official-notices.review.v1.json'
       - 'systemia/organism/kaidance-creative-development.mjs'
       - 'systemia/organism/kaidance-learning-community-cycle.mjs'
       - 'tests/kaidance-learning-community-cycle.test.mjs'
@@ -185,6 +195,8 @@ jobs:
           path: |
             artifacts/kaidance-frontier/runtime/state.json
             artifacts/kaidance-company-heartbeat/state.json
+            artifacts/event-opportunity-scout/state.json
+            artifacts/event-opportunity-us-sam/state.json
             artifacts/kaidance-company-heartbeat/learning-community/state.json
             artifacts/kaidance-company-heartbeat/aircore-development/state.json
             artifacts/kaidance-network-development/state.json
@@ -269,6 +281,33 @@ jobs:
       - name: Verify AirCore bounded engineering review and zero physical-performance claims
         run: node --test tests/kaidance-aircore-development.test.mjs systemia/breath-of-fresh-air/aircore-sizing.test.mjs
 
+      - name: Verify event opportunity scout duplicate and outreach safety contracts
+        run: node --test tests/event-opportunity-scout.test.mjs
+
+      - name: Verify US SAM.gov official notice and private-key safety contracts
+        run: node --test tests/event-opportunity-us-sam.test.mjs
+
+      - name: Check optional US SAM.gov event notice source with the same KAIDANCE clock
+        if: github.event_name != 'pull_request'
+        env:
+          SAM_GOV_PUBLIC_API_KEY: ${{ secrets.SAM_GOV_PUBLIC_API_KEY }}
+        run: node systemia/events/event-opportunity-us-sam-runner.mjs --out artifacts/event-opportunity-us-sam --live
+
+      - name: Record no-network US source contract on pull requests
+        if: github.event_name == 'pull_request'
+        run: node systemia/events/event-opportunity-us-sam-runner.mjs --out artifacts/event-opportunity-us-sam
+      - name: Record source-only event scout receipt on pull requests
+        if: github.event_name == 'pull_request'
+        run: node systemia/events/event-opportunity-scout-runner.mjs --out artifacts/event-opportunity-scout
+
+      - name: Check bounded official UK event tender source on current KAIDANCE cycle
+        if: github.event_name != 'pull_request'
+        run: node systemia/events/event-opportunity-scout-runner.mjs --out artifacts/event-opportunity-scout --live
+      - name: Verify Oregon and Washington official portal evidence intake
+        run: node --test tests/event-opportunity-regional-review.test.mjs
+
+      - name: Admit time-bounded regional public notices for founder review only
+        run: node systemia/events/event-opportunity-regional-review-runner.mjs --out artifacts/event-opportunity-regional
       - name: Reconcile Evercraft company portfolio on KAIDANCE heartbeat
         env:
           SYSTEMIA_AIW_EVIDENCE_RECEIPT_FILE: artifacts/aiw-evidence-watch/latest.json
@@ -315,6 +354,8 @@ jobs:
           path: |
             artifacts/kaidance-frontier/runtime/state.json
             artifacts/kaidance-company-heartbeat/state.json
+            artifacts/event-opportunity-scout/state.json
+            artifacts/event-opportunity-us-sam/state.json
             artifacts/kaidance-company-heartbeat/learning-community/state.json
             artifacts/kaidance-company-heartbeat/aircore-development/state.json
             artifacts/kaidance-network-development/state.json
@@ -355,6 +396,9 @@ jobs:
             artifacts/kaidance-creative-development/mission-snapshot.json
             artifacts/kaidance-network-development/latest.json
             artifacts/kaidance-network-development/mission-snapshot.json
+            artifacts/event-opportunity-scout/latest.json
+            artifacts/event-opportunity-us-sam/latest.json
+            artifacts/event-opportunity-regional/latest.json
             artifacts/kaidance-company-heartbeat/latest.json
             artifacts/kaidance-company-heartbeat/learning-community/latest.json
             artifacts/kaidance-company-heartbeat/learning-community/queue.json
