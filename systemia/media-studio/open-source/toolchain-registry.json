@@ -1,0 +1,78 @@
+{
+  "schema": "evercraft.fallen.open-source-toolchain.v1",
+  "scope": "Evercraft || Fallen Studios | local execution only",
+  "policy": {
+    "repositoryMirrorIsNotInstallation": true,
+    "canRunOnOwnerHardwareOnly": true,
+    "systemiaOwnerOfRouting": true,
+    "sabanOperatorForAdmittedTasks": true,
+    "thirdPartyHostedExecution": false,
+    "automaticSpend": false,
+    "automaticPublication": false,
+    "modelWeightsSeparateRightsReview": true,
+    "binaryLicenseAuditRequired": true
+  },
+  "tools": [
+    {
+      "id": "ffmpeg",
+      "repo": "FFmpeg/FFmpeg",
+      "commit": "d35e13b9e05cc20f48373f88e399c8ef0c16fc61",
+      "license": "LGPL/GPL conditional on linked components and build configuration",
+      "role": "local media encode / decode / probe",
+      "executor": "ffmpeg",
+      "stage": "existing-in-fallen",
+      "requiresGPU": false
+    },
+    {
+      "id": "opentimelineio",
+      "repo": "AcademySoftwareFoundation/OpenTimelineIO",
+      "commit": "bad7ab5a40ac1a95d9d78a87c95a688d8b57cf28",
+      "package": "opentimelineio==0.18.1",
+      "license": "Apache-2.0",
+      "role": "professional timeline interchange .otio",
+      "executor": "otio_bridge.py",
+      "stage": "v1-ci-verification",
+      "requiresGPU": false
+    },
+    {
+      "id": "blender",
+      "repo": "blender/blender",
+      "commit": "7539ade214fb5971c4c39430362fd9f8f07da600",
+      "license": "GPL family (review bundled components before binary redistribution)",
+      "role": "owned 3D scene + VFX rendering",
+      "executor": "blender",
+      "stage": "capability-discovery-only",
+      "requiresGPU": false
+    },
+    {
+      "id": "comfyui",
+      "repo": "Comfy-Org/ComfyUI",
+      "commit": "e9afbccc2669677076feb08e52658f129cd8c12b",
+      "license": "GPL-3.0; model and custom nodes have independent terms",
+      "role": "node-graph image/video inference behind verified local worker",
+      "executor": "comfyui-loopback",
+      "stage": "blocked-pending-hardware-license-worker-admission",
+      "requiresGPU": true
+    },
+    {
+      "id": "kdenlive",
+      "repo": "KDE/kdenlive",
+      "commit": "00141d89668d2519d48cc12b0b001ae34b72cf42",
+      "license": "GPL-3.0",
+      "role": "optional editor with GUI on user-owned machine",
+      "executor": "kdenlive",
+      "stage": "discovery-only",
+      "requiresGPU": false
+    },
+    {
+      "id": "mlt",
+      "repo": "mltframework/mlt",
+      "commit": "2a51ed9cca0b7edca5f1c34749bad67b76b0051a",
+      "license": "LGPL-2.1 (recheck plugin/component variations)",
+      "role": "MLT rendering backend for NLE export",
+      "executor": "melt",
+      "stage": "discovery-only",
+      "requiresGPU": false
+    }
+  ]
+}
