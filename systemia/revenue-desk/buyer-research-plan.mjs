@@ -1,3 +1,4 @@
+import {canadaNoticeUrl} from './ca-notice-url.mjs';
 // Pure research handoff; does not admit contacts, invoke agents or send messages.
 import {createHash} from 'node:crypto';
 const lanes=Object.freeze({'media':'commercial-media','commercial-media':'commercial-media','software':'software','research':'research','ev-planning':'ev-planning'});
@@ -10,8 +11,8 @@ export function planBuyerResearch(checkpoint,{now=new Date(),limit=25}={}){
   let u;try{u=new URL(c.source_url);}catch{held++;continue;}
   const expected={nyc:'data.cityofnewyork.us',sam:'sam.gov',uk:'www.find-tender.service.gov.uk',ca:'canadabuys.canada.ca'}[c.candidate_ref.split(':')[0]];
   if(c.candidate_ref.startsWith('uk:')&&!/^\/Notice\/\d{6}-\d{4}$/.test(u.pathname)){held++;continue;}
-  if(c.candidate_ref.startsWith('ca:')&&!/^\/(en|fr)\/tender-opportunities\/.+/.test(u.pathname)){held++;continue;}
-  if(u.protocol!=='https:'||u.hostname!==expected||u.username||u.password||u.port){held++;continue;}
+  if(c.candidate_ref.startsWith('ca:')){if(!canadaNoticeUrl(c.source_url)){held++;continue;}}
+  else if(u.protocol!=='https:'||u.hostname!==expected||u.username||u.password||u.port){held++;continue;}
   // Local wall-clock deadlines require independent verification; do not invent an offset.
   let due=null;
   if(c.deadline_timezone===null&&typeof c.deadline==='string'&&/(Z|[+-]\d\d:\d\d)$/.test(c.deadline)){
