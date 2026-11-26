@@ -34,7 +34,7 @@ test('Fingerprint is content-bound, source-scoped and never reads path traversal
  assert.match(a.fingerprint,/^sha256:[a-f0-9]{64}$/);
  assert.equal(a.fingerprint,b.fingerprint);
  assert.deepEqual(a.missing,[]);
- assert.throws(()=>fingerprintLearningSources('.',['../.ssh/id_ed25519']),/learning_untrusted_source_path/);
+ assert.throws(()=>fingerprintLearningSources('.', ['../.ssh/id_ed25519']),/learning_untrusted_source_path/);
  const gap=fingerprintLearningSources('.',['public/missing-classroom-file.mjs']);
  assert.deepEqual(gap.missing,['public/missing-classroom-file.mjs']);
 });
