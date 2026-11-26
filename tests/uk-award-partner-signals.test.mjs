@@ -27,3 +27,24 @@ test('later cancellation suppresses earlier award',()=>{
 test('missing supplier identity and invalid notice are held',()=>{
  for(const change of [r=>r.awards[0].suppliers[0].id='',r=>r.id='not-a-notice']){const r=release();change(r);assert.equal(planUkAwardPartners({releases:[r]},{now}).signals.length,0);}
 });
+
+test('missing award date permits restricted research without inventing award timing',()=>{
+ const r=release();delete r.awards[0].date;
+ const result=planUkAwardPartners({releases:[r]},{now});
+ assert.equal(result.signals.length,1);
+ const s=result.signals[0];
+ assert.equal(s.awarded_at,null);
+ assert.equal(s.release_published_at,r.date);
+ assert.equal(s.award_date_status,'missing_requires_research');
+ assert.equal(s.award_date_verified,false);
+ assert.equal(s.qualified,false);
+ assert.equal(s.contact_authorized,false);
+ assert.equal(s.execution_authorized,false);
+ assert.ok(s.required_evidence.includes('award_date_and_delivery_status'));
+ assert.equal(result.diagnostics.undated_award_research_signals,1);
+});
+test('undated old releases and malformed explicit dates remain held',()=>{
+ const old=release();delete old.awards[0].date;old.date='2025-01-01T00:00:00Z';
+ const malformed=release();malformed.awards[0].date='not-a-date';
+ for(const r of [old,malformed])assert.equal(planUkAwardPartners({releases:[r]},{now}).signals.length,0);
+});
