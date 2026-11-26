@@ -49,6 +49,7 @@ def main() -> int:
         [sys.executable, str(TOOLS / "check_observatory.py")],
         [sys.executable, str(TOOLS / "check_provisional.py")],
         [sys.executable, str(TOOLS / "check_annual_revision.py")],
+        [sys.executable, str(TOOLS / "check_kaidance_handoff.py")],
         [sys.executable, "-m", "unittest", "discover", "-s", str(TOOLS), "-p", "test_*.py", "-v"],
         [sys.executable, str(TOOLS / "release_gate.py"), "--self-test"],
         [sys.executable, str(TOOLS / "release_gate.py"), "--stage", "preview"],
