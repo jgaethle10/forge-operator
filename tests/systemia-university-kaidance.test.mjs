@@ -10,7 +10,7 @@ test('University retains bounded proving and verification gates',()=>{
  assert.equal(entry.human_confirmation_required,true);
  assert(entry.boundaries.some(x=>x.includes('provisional evidence is not verified')));
  assert(entry.boundaries.some(x=>x.includes('human-reviewed')));
- assert(entry.boundaries.some(x=>x.includes('does not authorize contacting people')));
+ assert(entry.boundaries.some(x=>x.includes('do not authorize contacting people')));
  assert.match(registry,/public proofs and workforce profiles must be explicitly approved/);
  assert(manifest&&typeof manifest==='object');
  assert.equal(entry.commercial,null);
