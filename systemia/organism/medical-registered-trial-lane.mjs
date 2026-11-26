@@ -9,6 +9,7 @@ import { buildMedicalReviewPacket, renderMedicalReviewMarkdown } from './medical
 import { crosscheckClinicalRegistrations, renderRegistryHTML, renderRegistryMarkdown } from './medical-registry-crosscheck.mjs';
 import { writeMedicalOutcomeAudit } from './medical-outcome-audit.mjs';
 import { writeRegistryObservationLedger } from './medical-registry-observation-ledger.mjs';
+import { writeMedicalHistoricalReviewQueue } from './medical-historical-review-queue.mjs';
 
 export const PUBMED_SEARCH='https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi';
 export const REGISTERED_TRIAL_QUERY='clinicaltrials.gov[si]';
@@ -191,6 +192,10 @@ export async function runRegisteredTrialLane({
   discovery,source,review,registry,now,
   outDir:path.join(outDir,'outcome-audit')
  });
+ const historicalReview=writeMedicalHistoricalReviewQueue({
+  registry,history:historyLedger,outcomeAudit,now,
+  outDir:path.join(outDir,'historical-review')
+ });
  const body={
   schema:'evercraft.medical.registered-trial-lane.v1',
   observed_at:now.toISOString(),discovery,
@@ -201,6 +206,9 @@ export async function runRegisteredTrialLane({
   registry_observation_ledger_receipt:historyLedger.receipt_hash,
   registry_observation_ledger_status:historyLedger.status,
   registry_observation_ledger_counts:historyLedger.counts,
+  historical_review_queue_status:historicalReview.status,
+  historical_review_queue_counts:historicalReview.counts,
+  historical_review_queue_receipt:historicalReview.receipt_hash,
   input_receipts:{source:source.receipt_hash,discovery:discovery.receipt_hash},
   reviewed_full_text:0,
   independently_verified_outcomes:0,
