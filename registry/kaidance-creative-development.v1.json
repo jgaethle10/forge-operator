@@ -36,7 +36,8 @@
         "public/kaidance/current-field.mjs",
         "public/kaidance/confluence.css",
         "systemia/media-studio/creative-council-saban-adapter.mjs",
-        "systemia/media-studio/commercial-visual-qc.mjs"
+        "systemia/media-studio/commercial-visual-qc.mjs",
+        "systemia/graphics-command/director.mjs"
       ],
       "proof_test": "tests/kaidance-cinematic-experience.test.mjs",
       "review_roles": [
@@ -75,7 +76,7 @@
       "source_files": [
         "systemia/saban/work-state.mjs",
         "systemia/saban/scheduler.mjs",
-        "systemia/graphics-command/README.md"
+        "systemia/graphics-command/director.mjs"
       ],
       "proof_test": "tests/kaidance-saban-graphics-source.test.mjs",
       "review_roles": [
