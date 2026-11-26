@@ -103,7 +103,7 @@ export function classifyGlobalOpportunityReceipt(value,now=new Date()){
  const sourceAge=clock-Date.parse(value.last_source_checked_at||'');
  if(!Number.isFinite(sourceAge)||sourceAge< -60000||sourceAge>24*3600000)
   return {status:'stale',review_candidates:[],sources_observed:0};
- const accepted=new Set(['faie','evermaps','evercraft-research','evercraft-remote-ops','site-survive']);
+ const accepted=new Set(['faie','evermaps','evercraft-research','evercraft-remote-ops','site-survive','evercraft-property-services']);
  const valid=value.review_candidates.every(row=>
    /^global:worldbank:op[0-9]{6,10}$/.test(row?.work_key||'')&&
    /^https:\/\/projects\.worldbank\.org\/en\/projects-operations\/procurement-detail\/OP[0-9]{6,10}$/.test(row?.source_url||'')&&
