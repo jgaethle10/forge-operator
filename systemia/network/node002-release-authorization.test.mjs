@@ -1,0 +1,16 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {generateKeyPairSync,sign} from 'node:crypto';
+import {releaseGrantBytes,verifyReleaseGrant} from './node002-release-authorization.mjs';
+const {privateKey,publicKey}=generateKeyPairSync('ed25519');
+const ownerPublicKey=publicKey.export({type:'spki',format:'pem'});
+const nowMs=Date.parse('2026-11-25T00:00:00Z');
+const grant={schema:'evercraft.node002.release-grant.v1',repository:'jgaethle10/forge-operator',node_id:'evercraft-node002-nextgen',commit:'a'.repeat(40),operation:'stage-only',phase:'cemetery-restore',sequence:2,issued_at:'2026-11-24T23:00:00Z',expires_at:'2026-11-25T01:00:00Z'};
+const signed=g=>sign(null,releaseGrantBytes(g),privateKey).toString('base64');
+const check=(g=grant,opts={})=>verifyReleaseGrant({grant:g,signature:signed(g),ownerPublicKey,lastSequence:1,nowMs,...opts});
+test('valid owner grant stages only',()=>assert.deepEqual(check(),{commit:grant.commit,phase:grant.phase,sequence:2,stage_only:true,activation_authorized:false}));
+test('rejects wrong scope even when signed',()=>{for(const patch of [{node_id:'other'},{repository:'other/repo'},{operation:'activate'},{phase:'shell'},{commit:'main'}])assert.throws(()=>check({...grant,...patch}),/scope_denied/)});
+test('rejects replay and missing durable sequence',()=>{for(const lastSequence of [2,3,undefined,-1])assert.throws(()=>check(grant,{lastSequence}),/sequence_denied/)});
+test('rejects expired and future grants',()=>{for(const patch of [{expires_at:'2026-11-24T23:59:59Z'},{issued_at:'2026-11-25T00:01:00Z'},{expires_at:'2026-11-27T00:00:00Z'}])assert.throws(()=>check({...grant,...patch}),/time_denied/)});
+test('rejects tampering and wrong key',()=>{assert.throws(()=>check({...grant,commit:'b'.repeat(40)},{signature:signed(grant)}),/signature_denied/);const other=generateKeyPairSync('ed25519').publicKey.export({type:'spki',format:'pem'});assert.throws(()=>check(grant,{ownerPublicKey:other}),/signature_denied/)});
+test('rejects extra grant fields',()=>assert.throws(()=>releaseGrantBytes({...grant,command:'restart'}),/invalid_release_fields/));
