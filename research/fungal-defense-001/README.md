@@ -264,3 +264,13 @@ The last command **must exit 2** with `status=blocked`; it is a safety assertion
 ### Public release gates remain closed
 
 The project is a research prototype. Do not merge or publish as a clinical decision system or live disease tracker. Preserve original sources and reporting definitions. Before an owned Evercraft deployment, require an authentic Node001/Node002 receipt, security/privacy and accessibility checks, independent scientific review, and a documented release signoff. `release-gates.json` remains unapproved.
+
+## Kaidance five-minute R&D continuity handoff (November 25, 2026)
+
+Founder direction: connect the **Fungal Defense research**, including source provenance, fungal resistance evidence, review backlog and next actions, to **the existing** Kaidance → Systemia five-minute heartbeat. It is a liveness/reconciliation cadence, **not** authorization to poll CDC every five minutes, claim new discoveries, launch new scientific workloads, or publish health alerts.
+
+The source handoff `kaidance-research-handoff.v1.json` is committed on this branch with safeguards and reviewed source references. `tools/check_kaidance_handoff.py` and its nine negative/positive test cases guard the packet. The handoff is included in the local acceptance runner, checkout admission and offline PR tests.
+
+The **actual Systemia implementation target is the existing private R&D continuity adapter** in [draft PR #2588](https://github.com/jgaethle10/forge-operator/pull/2588), under [canonical liveness issue #1426](https://github.com/jgaethle10/forge-operator/issues/1426). See its [Fungal Defense crosswalk](https://github.com/jgaethle10/forge-operator/blob/research/kaidance-rd-continuity-20261125/docs/operations/kaidance-fungal-defense-crosswalk.md) and six source-to-private-liveness tests.
+
+The Mission Ledger entry, private owner/goal binding, deployed SHA, authenticated complete mission-export, three resident five-minute ticks and independent research artifact receipts are **not verified**. Until those are present, the correct state is **SOURCE_HANDOFF_STAGED**, not live development. There is no second task scheduler, no external runtime, and no public Fungal Defense observatory publication. Preserve existing experiments/research history, negative findings and evidence version dates.
