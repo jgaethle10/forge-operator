@@ -62,7 +62,7 @@
       "upstream": "https://github.com/anthropics/skills/tree/main/skills/webapp-testing",
       "source": {
         "repository": "https://github.com/anthropics/skills",
-        "path": "skills/tree/main/SKILL.md",
+        "path": "skills/webapp-testing/SKILL.md",
         "commit": null,
         "sha256": null
       },
