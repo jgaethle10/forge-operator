@@ -72,6 +72,9 @@ on:
       - 'tests/kaidance-offer-checkout.test.mjs'
       - 'registry/kaidance-company-lanes.v1.json'
       - 'tests/kaidance-company-heartbeat.test.mjs'
+      - 'tests/kaidance-rd-continuity.test.mjs'
+      - 'systemia/organism/kaidance-rd-continuity.mjs'
+      - 'systemia/organism/mission-continuity-readonly*.mjs'
       - 'systemia/collider/**'
       - 'registry/**'
       - 'public/.well-known/evercraft-products.json'
@@ -145,6 +148,9 @@ on:
       - 'tests/kaidance-offer-checkout.test.mjs'
       - 'registry/kaidance-company-lanes.v1.json'
       - 'tests/kaidance-company-heartbeat.test.mjs'
+      - 'tests/kaidance-rd-continuity.test.mjs'
+      - 'systemia/organism/kaidance-rd-continuity.mjs'
+      - 'systemia/organism/mission-continuity-readonly*.mjs'
       - 'systemia/collider/**'
       - 'registry/**'
       - 'public/.well-known/evercraft-products.json'
@@ -238,7 +244,10 @@ jobs:
         run: node --test tests/kaidance-global-opportunity-scout.test.mjs
 
       - name: Validate KAIDANCE company heartbeat safety and truthful progress
-        run: node --test tests/kaidance-company-heartbeat.test.mjs
+        run: node --test tests/kaidance-company-heartbeat.test.mjs tests/kaidance-rd-continuity.test.mjs
+
+      - name: Prove existing mission continuity assessor
+        run: node systemia/organism/mission-continuity-readonly.proof.mjs
 
       - name: Validate KAIDANCE Leiland and graphics Saban development boundaries
         run: node --test tests/kaidance-creative-development.test.mjs

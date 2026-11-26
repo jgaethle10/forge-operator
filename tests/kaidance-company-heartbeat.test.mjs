@@ -121,3 +121,40 @@ test('company heartbeat surfaces a verified existing checkout handoff, without p
     path.join(out,'next-action-mission-snapshot.json'),'utf8')).counts.admitted,0);
  }finally{fs.rmSync(root,{recursive:true,force:true})}
 });
+
+test('existing company tick reconciles owner-private R&D once, without publishing its records',()=>{
+ const state=fs.mkdtempSync(path.join(os.tmpdir(),'kaidance-rd-company-'));
+ const out=path.join(state,'company'),rd=path.join(state,'kaidance-rd-continuity'),goals=path.join(state,'goals');
+ const secret='SYNTHETIC_PRIVATE_MISSION_01';
+ try{
+  fs.mkdirSync(rd,{mode:0o700});fs.mkdirSync(goals,{mode:0o700});
+  const save=(file,value)=>fs.writeFileSync(file,JSON.stringify(value),{mode:0o600});
+  const receiptAt=new Date(now.getTime()-60000).toISOString();
+  const row={mission_id:secret,admission_state:'admitted',disposition:'active',owner:'PRIVATE_OWNER',
+   receipt_sla_seconds:3600,next_action:{description:'PRIVATE_NEXT_ACTION',due_at:new Date(now.getTime()+3600000).toISOString()},
+   last_work_receipt:{ref:'PRIVATE_RECEIPT',observed_at:receiptAt},
+   goal_binding:{goal_key:'goal-a',work_key:'work-a',state_relpath:'goals/a.json'}};
+  const file=path.join(rd,'mission-export.json');
+  save(file,{schema:'evercraft.systemia.rd-continuity-export.v1',scope:'all_rd',coverage_complete:true,
+   exported_at:now.toISOString(),priority_mission_ids:[secret],missions:[row]});
+  save(path.join(goals,'a.json'),{schema:'evercraft.goal.state.v1',mission_key:secret,goal_key:'goal-a',revision:3,
+   tasks:[{mission_key:secret,goal_key:'goal-a',work_key:'work-a',status:'complete',last_result:'complete',attempt:1,
+    receipt_refs:['PRIVATE_RECEIPT'],updated_at:receiptAt}]});
+  const first=runCompanyHeartbeat({root:'.',outDir:out,now,rdContinuityEnabled:true});
+  assert.equal(first.report.research_continuity.status,'private_reconciled');
+  const privateFile=path.join(rd,'latest.json');
+  const before=fs.readFileSync(privateFile,'utf8');
+  assert.equal(JSON.parse(before).counts.goal_checkpoints_matched,1);
+  assert.equal(first.mission_snapshot.counts.admitted,0);
+  for(const f of ['latest.json','queue.json','mission-snapshot.json','next-action.json','state.json']){
+   assert.doesNotMatch(fs.readFileSync(path.join(out,f),'utf8'),/SYNTHETIC_PRIVATE_MISSION|PRIVATE_OWNER|PRIVATE_NEXT_ACTION|PRIVATE_RECEIPT/);
+  }
+  fs.unlinkSync(file);
+  assert.equal(runCompanyHeartbeat({root:'.',outDir:out,now,rdContinuityEnabled:true}).duplicate,true);
+  assert.equal(fs.readFileSync(privateFile,'utf8'),before);
+  const next=runCompanyHeartbeat({root:'.',outDir:out,now:new Date(+now+300000),rdContinuityEnabled:true});
+  assert.equal(next.report.research_continuity.status,'held');
+  assert.equal(JSON.parse(fs.readFileSync(privateFile,'utf8')).missions,null);
+  assert.equal(next.mission_snapshot.counts.admitted,0);
+ }finally{fs.rmSync(state,{recursive:true,force:true})}
+});
