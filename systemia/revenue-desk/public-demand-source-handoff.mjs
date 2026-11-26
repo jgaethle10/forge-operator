@@ -9,8 +9,8 @@ import {admitCapture} from './public-demand-inbox-admit.mjs';
 import {startNativeBrowserRuntime} from '../evercraft-web/browser-worker/native-runtime.mjs';
 const sha=x=>createHash('sha256').update(x).digest('hex');
 const sources={
- yvl:{url:'https://www.yvl.org/about-us/finance-and-purchasing/',title:'YVL procurement index solicitation-ranked observation v2',lane:'software'},
- susta:{url:'https://www.susta.org/contact/rfp/',title:'SUSTA procurement index solicitation-ranked observation v2',lane:'research'}
+ yvl:{url:'https://www.yvl.org/about-us/finance-and-purchasing/',title:'YVL procurement index document-link observation v3',lane:'software'},
+ susta:{url:'https://www.susta.org/contact/rfp/',title:'SUSTA procurement index document-link observation v3',lane:'research'}
 };
 const flags={qualified:false,contact_authorized:false,execution_authorized:false,send_performed:false};
 function read(file,max=2000000){
@@ -47,8 +47,12 @@ export async function captureAndAdmit({root,sourceKey,browse}){
  const goal=JSON.parse(read(path.join(root,'goals',result.goal_key+'.json')));
  const task=goal.tasks?.[0];
  if(goal.schema!=='evercraft.goal.state.v1'||goal.goal_key!==result.goal_key||goal.mission_key!=='kaidance-public-demand-research'||goal.tasks?.length!==1||task?.status!=='complete'||task.work_key!=='capture-original-public-source'||task.attempt_key!==record.attempt_key||record.assignment_ref!=='sha256:'+key||!task.receipt_refs?.includes('sha256:'+digest)||record.capture?.job_ref!==job.job_ref||record.capture?.source_url!==job.source_url||record.capture?.state!=='captured_requires_research'||Object.keys(flags).some(k=>record.capture[k]!==false))throw Error('capture_goal_lineage_mismatch');
- const indices=selectNewSolicitations({capture:record.capture,knownUrls});
- if(!indices.length)return {...base,state:'no_new_solicitation_pointers',added:0,capture_sha256:digest,document_pointer_count:record.capture.document_pointer_count??null,document_pointers_truncated:record.capture.document_pointers_truncated??null};
+ // YVL's page includes a large closed-bid archive. For this approved
+ // canary only admit the currently identified solicitation family, not
+ // archived bids merely because they contain RFP or RFQ in their names.
+ const selectedCapture=sourceKey==='yvl'?{...record.capture,document_pointers:record.capture.document_pointers.map(p=>/\bRFP[- ]26[- ]002\b/i.test(decodeURIComponent(new URL(p.url).pathname)+' '+(p.label||''))?p:{...p,research_priority:2})}:record.capture;
+ const indices=selectNewSolicitations({capture:selectedCapture,knownUrls});
+ if(!indices.length)return {...base,state:'no_new_solicitation_pointers',added:0,capture_sha256:digest,document_pointer_count:record.capture.document_pointer_count??null,document_pointers_truncated:record.capture.document_pointers_truncated??null,document_link_coverage:record.capture.document_link_coverage??null};
  const admission=admitCapture({root,sourceFile:artifact,expectedSha:digest,indices});
  return {...base,state:admission.state,added:admission.added,capture_sha256:digest,admission};
 }

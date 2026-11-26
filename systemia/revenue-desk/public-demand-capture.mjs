@@ -27,8 +27,12 @@ export async function capturePublicDemand({job,browse,now=new Date()}={}){
  if(!Number.isFinite(start)||!Number.isFinite(end)||start<+now-60000||end<start||end>Math.max(+now,Date.now())+60000)return hold('hold_capture_clock');
  // Snapshot links are local navigation hints, not authenticated document evidence.
  // Do not follow them here. Keep only same-origin, query-free public document pointers.
- const {pointers:document_pointers,eligible_count:document_pointer_count,truncated:document_pointers_truncated}=rankDocumentPointers(source,snapshot.links);
- return {...base,document_pointers,document_pointer_count,document_pointers_truncated,state:'captured_requires_research',http_status:status,captured_at:r.finished_at,title:String(snapshot.title||'').slice(0,500),text,text_sha256:r.text_sha256,browser_receipt_sha256:evidence_receipt_sha256,capture_verification:'local_browser_response_integrity_only',required_evidence:expected.required_evidence};
+ const doc=snapshot.document_links;
+ const bound=doc&&Array.isArray(doc.links)&&doc.links.length<=150&&typeof r.document_links_sha256==='string'&&hash(JSON.stringify(doc))===r.document_links_sha256;
+ if((doc||r.document_links_sha256)&&!bound)return hold('hold_document_link_integrity');
+ const ranked=rankDocumentPointers(source,bound?doc.links:snapshot.links);
+ const {pointers:document_pointers,eligible_count:document_pointer_count,truncated:document_pointers_truncated}=ranked;
+ return {...base,document_pointers,document_pointer_count,document_pointers_truncated,document_link_coverage:bound?{anchors_total:doc.anchors_total,anchors_scanned:doc.anchors_scanned,eligible_count:doc.eligible_count,scan_truncated:doc.scan_truncated,output_truncated:doc.output_truncated,document_links_sha256:r.document_links_sha256}:null,state:'captured_requires_research',http_status:status,captured_at:r.finished_at,title:String(snapshot.title||'').slice(0,500),text,text_sha256:r.text_sha256,browser_receipt_sha256:evidence_receipt_sha256,capture_verification:'local_browser_response_integrity_only',required_evidence:expected.required_evidence};
 }
 
 // Rank navigation hints BEFORE limiting output. A relevant solicitation late
