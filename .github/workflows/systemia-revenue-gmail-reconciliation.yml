@@ -36,3 +36,4 @@ jobs:
         run: |
           python3 systemia/revenue-desk/findmypart-desk-shadow-review.py --self-test
           python3 systemia/revenue-desk/findmypart-queue-review-handoff.py --self-test
+          node --test systemia/revenue-desk/node002-desk-shadow-worker.test.mjs
