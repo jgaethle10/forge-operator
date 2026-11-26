@@ -210,17 +210,19 @@ export async function runKaidanceCreativeDevelopment({root=ROOT,outDir,now=new D
     requires_systemia_approval:true,code_write_authorized:false,
     auto_publish_authorized:false};
   })};
+ const releaseHeld=projects.filter(p=>p.release_gate!==null).length;
  const report={schema:'evercraft.kaidance.creative-development.v1',
   observed_at:at.toISOString(),tick,heartbeat_seconds:300,
   scheduler:'existing_company_heartbeat',projects,
   source_review_completed_this_tick:changed,held_projects:held,
+  release_held_projects:releaseHeld,
   code_changes:0,visual_assets_generated:0,autonomous_code_generation:false,
   real_browser_render_executed:false,publication_authorized:false,
   limitations:['GitHub cron is best effort','source proof is not visual acceptance',
    'creative review is not code generation','no private inference or live model activity inferred']};
  const snapshot={schema:'evercraft.kaidance.mission-snapshot.v1',
-  snapshot_ref:SHA(JSON.stringify({tick,projects:projects.map(x=>x.source_fingerprint),changed,held})),
-  observed_at:at.toISOString(),counts:{scanned:m.projects.length,changed,admitted:0,held},
+  snapshot_ref:SHA(JSON.stringify({tick,projects:projects.map(x=>x.source_fingerprint),changed,held,releaseHeld})),
+  observed_at:at.toISOString(),counts:{scanned:m.projects.length,changed,admitted:0,held:held+releaseHeld},
   evidence_refs:projects.flatMap(p=>[p.source_fingerprint,...(p.review_run_this_tick?[p.review_receipt_ref]:[])]).slice(0,12)};
  atomic(path.join(out,'latest.json'),report);atomic(path.join(out,'queue.json'),queue);
  atomic(path.join(out,'mission-snapshot.json'),snapshot);
