@@ -62,6 +62,12 @@
       "stale_after_seconds": 900
     },
     {
+      "source_key": "kaidance-creative-development",
+      "path": "../../artifacts/kaidance-creative-development/mission-snapshot.json",
+      "required": false,
+      "stale_after_seconds": 900
+    },
+    {
       "source_key": "kaidance-offer-checkout",
       "path": "../../artifacts/kaidance-offer-checkout/mission-snapshot.json",
       "required": false,
