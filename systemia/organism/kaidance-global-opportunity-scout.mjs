@@ -14,6 +14,7 @@ const MAX_STORED=120;
 const MAX_ACTIVE=12;
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 const TERM_RULES=[
+ {term:/\b(?:property (?:management|preservation|maintenance)|vacant (?:property|home) (?:maintenance|preservation)|vacation rental (?:management|operations)|rental turnover|housing maintenance)\b/i,offer:'evercraft-property-services'},
  {term:/agricultur|agribusiness|agro|coffee|cacao|farming|soil|irrigat|crop|water resource|food production/i,offer:'faie'},
  {term:/gis|geospatial|remote sens|mapping|map data|spatial|site assessment|land use/i,offer:'evermaps'},
  {term:/market analy|feasibility study|market research|economic analys|data analy|digital transform|information system|software develop/i,offer:'evercraft-research'},
