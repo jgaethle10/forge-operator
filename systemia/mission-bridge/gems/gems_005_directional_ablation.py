@@ -13,6 +13,22 @@ from gems_002_segment_holdouts import (split_connected_faults,masks_for_fold,
 from gems_002_full_area_validation import full_scoreable_masks,score_masked_proxy
 from gems_005_directional_features import make_directional_matrix
 
+def copied_base_columns_equal(original, augmented, indices):
+    """Exact sampled-base equality, treating matching-position NaNs as equal.
+
+    The 38-feature model must preserve *all* 34 baseline feature values.
+    No numerical tolerance, fill-in, reordering or feature imputation is
+    allowed. Infinities retain sign; finite changes and NaN relocation fail.
+    """
+    if (original.ndim != 2 or augmented.ndim != 2 or
+        original.shape[0] != augmented.shape[0] or
+        augmented.shape[1] < original.shape[1]):
+        return False
+    return bool(np.array_equal(
+        augmented[indices, :original.shape[1]], original[indices],
+        equal_nan=True))
+
+
 def fit_same_samples(original,augmented,labels,indices):
     def model():
         return HistGradientBoostingClassifier(max_iter=100,learning_rate=.10,
@@ -66,7 +82,7 @@ def execute(data,evidence):
         if np.any(train&~north_flat):raise AssertionError("south_train_leakage")
         distances=train_only_distances(raw,valid,train)
         indices,counts=sample_indices(labels,train,distances,0)
-        if np.any(~train[indices]) or not np.array_equal(augmented[indices,:34],original[indices]):
+        if np.any(~train[indices]) or not copied_base_columns_equal(original,augmented,indices):
             raise AssertionError("train_samples_or_base_columns_changed")
         baseline_model,challenge_model=fit_same_samples(original,augmented,labels,indices)
         baseline=measure(reference,baseline_model,original,north_flat,north,truth,full,corridor,known)
