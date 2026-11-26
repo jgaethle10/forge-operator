@@ -16,6 +16,7 @@ import {runKaidanceCreativeDevelopment} from './kaidance-creative-development.mj
 import {runLearningCommunityCycle} from './kaidance-learning-community-cycle.mjs';
 import {runAirCoreDevelopmentCycle} from './kaidance-aircore-development.mjs';
 import {runPrivateResearchContinuity} from './kaidance-rd-continuity.mjs';
+import {runFindMyPartCycle} from './kaidance-findmypart-execution.mjs';
 const sourceRoot=path.resolve(fileURLToPath(new URL('../../',import.meta.url)));
 const sha=value=>'sha256:'+createHash('sha256').update(value).digest('hex');
 function readJson(file){return JSON.parse(fs.readFileSync(file,'utf8'))}
@@ -184,7 +185,7 @@ export function runCompanyHeartbeat({
  root=sourceRoot,outDir=path.join(sourceRoot,'artifacts/kaidance-company-heartbeat'),
  now=new Date(),proveWorlds=false,proveLearning=false,proveAirCore=false,
  learningCycle=runLearningCommunityCycle,aircoreCycle=runAirCoreDevelopmentCycle,
- spawn=spawnSync,aiwReceipt=null,globalOpportunityReceipt=null,networkDevelopmentReceipt=null,rdContinuityEnabled=false
+ spawn=spawnSync,aiwReceipt=null,globalOpportunityReceipt=null,networkDevelopmentReceipt=null,rdContinuityEnabled=false,findmypartExecutionReceipt=null
 }={}){
  const repo=path.resolve(root),out=path.resolve(outDir);
  const manifest=readJson(path.join(repo,'registry/kaidance-company-lanes.v1.json'));
@@ -266,12 +267,13 @@ export function runCompanyHeartbeat({
  }:{state:aircore?.held?'held':'not_executed',reason:aircore?.reason||null,
   physical_prototype_built:false,worker_dispatched:false};
  const researchContinuity=runPrivateResearchContinuity({enabled:rdContinuityEnabled,root:repo,outDir:out,now});
+ const fmp=findmypartExecutionReceipt?.schema==='evercraft.findmypart.execution-cycle.v1'&&findmypartExecutionReceipt.tick===tick&&findmypartExecutionReceipt.outreach_authorized===false&&findmypartExecutionReceipt.buyers_qualified===0?findmypartExecutionReceipt:null;
  const findmypartCandidates=[
   {work_key:'findmypart:product-development',lane_key:'findmypart',priority:1,action:'reconcile_repair_graph_recovery_benchmarks_and_buyer_door_then_lease_next_bounded_engineering_task',authority:'systemia_operator_review_required',execution_authorized:false,evidence_ref:'source:github:issue:1758'},
   {work_key:'findmypart:commercial-discovery',lane_key:'findmypart',priority:1,action:'reconcile_existing_revenue_desk_and_qualify_new_repair_shop_supplier_leads_from_approved_sources',authority:'systemia_operator_review_required',execution_authorized:false,outreach_authorized:false,evidence_ref:'source:github:issue:1600'}
  ];
  const report={...planned.report,proof,infrastructure_watch:aiw,
-  findmypart:{state:'review_queued',priority:1,heartbeat_seconds:300,workstreams:findmypartCandidates.map(x=>x.work_key),worker_dispatched:false,source_poll_performed:false,buyers_qualified:0,outreach_authorized:false},
+  findmypart:{state:'review_queued',priority:1,heartbeat_seconds:300,workstreams:findmypartCandidates.map(x=>x.work_key),worker_dispatched:false,source_poll_performed:fmp?.source_poll_performed===true,buyers_qualified:0,outreach_authorized:false,engineering_benchmark_executed:fmp?.engineering_benchmark_executed===true,commercial_status:fmp?.commercial_status||'not_executed',source_observation:fmp?.observation||null,code_changes:0},
   research_continuity:researchContinuity,
   global_opportunities:global,network_development:network,
   learning_community:learningSummary,aircore_development:aircoreSummary};
@@ -356,7 +358,12 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
    console.error(JSON.stringify({schema:'evercraft.kaidance.global-opportunity-hold.v1',
     status:'held',reason:String(e?.message||e).slice(0,120)}));
   }
-  const result=runCompanyHeartbeat({outDir,proveWorlds:process.argv.includes('--prove-worlds'),
+  let findmypartExecutionReceipt=null;
+  if(process.env.SYSTEMIA_FINDMYPART_EXECUTION_ENABLED==='true'){
+   try{findmypartExecutionReceipt=await runFindMyPartCycle({outDir:path.join(path.resolve(outDir),'findmypart-execution'),network:true})}
+   catch{console.error(JSON.stringify({schema:'evercraft.findmypart.execution-hold.v1',status:'held'}))}
+  }
+  const result=runCompanyHeartbeat({outDir,findmypartExecutionReceipt,proveWorlds:process.argv.includes('--prove-worlds'),
     proveLearning:process.argv.includes('--prove-learning')||process.env.SYSTEMIA_KAIDANCE_LEARNING_SOURCE_PROOFS==='true',
     proveAirCore:process.argv.includes('--prove-aircore')||process.env.SYSTEMIA_KAIDANCE_AIRCORE_SOURCE_PROOFS==='true',
     aiwReceipt,globalOpportunityReceipt,networkDevelopmentReceipt,
