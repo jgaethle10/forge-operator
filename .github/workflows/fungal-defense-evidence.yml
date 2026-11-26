@@ -30,6 +30,7 @@ jobs:
           python3 research/fungal-defense-001/tools/check_observatory.py
           python3 research/fungal-defense-001/tools/check_provisional.py
           python3 research/fungal-defense-001/tools/check_annual_revision.py
+          python3 research/fungal-defense-001/tools/check_kaidance_handoff.py
 
       - name: Verify public release is blocked by default
         shell: bash
