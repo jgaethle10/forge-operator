@@ -48,6 +48,15 @@
       "priority": 1
     },
     {
+      "lane_key": "events",
+      "description": "REIGNITE and global event production/partnership opportunities; source-only discovery and human-reviewed revenue qualification",
+      "mode": "observe_existing_workflows",
+      "cadence_seconds": 300,
+      "products": [],
+      "services": [],
+      "priority": 1
+    },
+    {
       "lane_key": "commercial-studio",
       "description": "Fallen production, Evercraft Clip, ForensiScope and delivery",
       "mode": "observe_existing_workflows",
