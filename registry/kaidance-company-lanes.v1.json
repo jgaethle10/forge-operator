@@ -80,6 +80,15 @@
       "priority": 2
     },
     {
+      "lane_key": "kennedy-design-quality",
+      "description": "Kennedy Space Station visual QA and source-registered spatial drawing progression (private review, no automatic code writes)",
+      "mode": "observe_existing_workflows",
+      "cadence_seconds": 300,
+      "products": [],
+      "services": [],
+      "priority": 2
+    },
+    {
       "lane_key": "energy-infrastructure",
       "description": "AliEV, infrastructure intelligence and site planning",
       "mode": "observe_existing_workflows",
