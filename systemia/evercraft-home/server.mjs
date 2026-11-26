@@ -4,6 +4,8 @@ import path from "node:path";
 import { createHash, randomUUID, timingSafeEqual } from "node:crypto";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { EvercraftPassport } from "../passport/passport.mjs";
+import { AtlasPrivateFreightLedger } from "../atlas/private-freight-ledger.mjs";
+import { handleAtlasHomeRequest } from "../atlas/home-bridge.mjs";
 import { EvercraftIdentity, IdentityRateLimiter } from "../identity/identity.mjs";
 import { authorizeEvercraftHome, verifyEvercraftSession } from "./identity.mjs";
 import { planSystemiaMission, readSystemiaInventory } from "./systemia-adapter.mjs";
@@ -131,6 +133,8 @@ export async function startEvercraftHomeServer({
   identityKeyId = String(process.env.EVERCRAFT_IDENTITY_KEY_ID || "primary").trim(),
   identityPreviousKeysJson = String(process.env.EVERCRAFT_IDENTITY_PREVIOUS_KEYS_JSON || "").trim(),
   passportStateDir = String(process.env.EVERCRAFT_PASSPORT_STATE_DIR || "").trim(),
+  atlasPrivateEnabled = String(process.env.EVERCRAFT_ATLAS_PRIVATE_ENABLED || "false").toLowerCase() === "true",
+  atlasStateDir = String(process.env.EVERCRAFT_ATLAS_STATE_DIR || "").trim(),
   yardStateDir = String(process.env.EVERCRAFT_YARD_STATE_DIR || "").trim(),
   identityStateDir = String(process.env.EVERCRAFT_IDENTITY_STATE_DIR || "").trim(),
   credentialStateDir = String(process.env.EVERCRAFT_CREDENTIAL_STATE_DIR || (identityStateDir ? path.join(identityStateDir, "provider-credentials") : "")).trim(),
@@ -169,6 +173,23 @@ export async function startEvercraftHomeServer({
     : {};
   const identity = authMode === "passport" && identityStateDir
     ? new EvercraftIdentity({ stateDir: identityStateDir })
+    : null;
+  // No Atlas private API without explicit opt-in + Passport identity.
+  // Reject repository-relative, shared or public roots before constructing the ledger.
+  if (atlasPrivateEnabled) {
+    if (authMode !== "passport" || !atlasStateDir || !path.isAbsolute(atlasStateDir))
+      throw new Error("atlas_private_requires_passport_and_absolute_state");
+    const root = path.resolve(atlasStateDir);
+    const rel = path.relative(repoRoot, root);
+    if (!rel || (!rel.startsWith(".." + path.sep) && rel !== "..") || path.relative(root, repoRoot) === "")
+      throw new Error("atlas_private_state_inside_source_tree");
+    if (root === path.resolve(identityStateDir) || root === path.resolve(passportStateDir))
+      throw new Error("atlas_private_state_overlap");
+  }
+  const atlasPrivateLedger = atlasPrivateEnabled
+    ? new AtlasPrivateFreightLedger({
+        stateDir: atlasStateDir, identityStateDir, passportStateDir, sessionKeyring: signingKeys
+      })
     : null;
   const loginLimiter = new IdentityRateLimiter();
   const credentialVault = credentialStateDir ? new ProviderCredentialVault({ stateDir: credentialStateDir }) : null;
@@ -256,6 +277,8 @@ export async function startEvercraftHomeServer({
       signing_key_id: authMode === "passport" ? identityKeyId : null,
       accepted_signing_key_count: authMode === "passport" ? Object.keys(signingKeys).length : 0,
       session_revocation_supported: Boolean(identity),
+      atlas_private_opt_in_enabled: Boolean(atlasPrivateLedger),
+      atlas_private_auto_dispatch_enabled: false,
       provider_credential_vault_configured: Boolean(credentialVault),
       raven_readonly_execution_configured: Boolean(ravenWorkBridgeUrl && ravenWorkBridgeTokenFile),
       lineage_control_room_configured: Boolean(lineageControlRoom),
@@ -391,6 +414,11 @@ export async function startEvercraftHomeServer({
 
   const app = http.createServer(async (req, res) => {
     const url = new URL(req.url || "/", "http://localhost");
+    if (await handleAtlasHomeRequest({
+      req, res, url, ledger: atlasPrivateLedger,
+      homeSession: sessionFor, sessionToken: cookies(req).evercraft_session,
+      readBody: readJsonBody, respond: json, cookieSecure
+    })) return;
 
     if (req.method === "GET" && (url.pathname === "/api/health" || url.pathname === "/health")) {
       return json(res, 200, {
