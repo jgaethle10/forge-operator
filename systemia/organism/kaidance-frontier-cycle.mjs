@@ -174,6 +174,9 @@ const body = {
     registry_history_status: registeredTrials.registry_observation_ledger_status,
     registry_history_counts: registeredTrials.registry_observation_ledger_counts,
     registry_history_receipt: registeredTrials.registry_observation_ledger_receipt,
+    historical_review_queue_status: registeredTrials.historical_review_queue_status,
+    historical_review_queue_counts: registeredTrials.historical_review_queue_counts,
+    historical_review_queue_receipt: registeredTrials.historical_review_queue_receipt,
     publication_disposition: medicalBrief.publication_disposition,
     receipt_hash: medicalBrief.receipt_hash
   },
