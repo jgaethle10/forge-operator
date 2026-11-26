@@ -91,3 +91,20 @@ This **operator-reported** live output is consistent with the short-lived Window
 **Verification and limitations:** The NextGen process's corresponding `WINDOWS_FORWARDED_TO_WSL` and `WSL_RECEIVED_FROM_WINDOWS` logs had not yet been supplied at the time of recording. The evidence is a user-provided terminal transcript, not machine-attested provenance. Do not claim complete two-sided receipt corroboration yet. The transit does not involve end-to-end Saban secure-envelope payloads, production relay identity, resilience to internet outage, physical peer cryptographic identity, satellite access, or integrated Kaidance runtime. The test used a temporary operator-run LAN relay with synthetic data; it is not a deployed service. No private IPs, keys, secrets, or raw host captures are committed here.
 
 **Next gate:** corroborate the paired NextGen logs, then run the consented end-to-end encrypted Saban field-outage experiment and save signed self-attested receipts. Do not promote this to physical outage recovery until the WAN-isolation and interruption/recovery steps are witnessed.
+
+## 2026-11-25 corroborated physical-computer HTTP relay handoff
+
+**Operator-supplied, two-terminal observation, 2026-11-25:** Penguin's Linux terminal returned `EVERCRAFT_BRIDGE_CONFIRMED` for an HTTP GET to the NextGen Windows LAN listener at TCP 47825. The separate NextGen terminal output for the same temporary operator-run experiment confirms this event sequence:
+
+```text
+WSL_BACKEND_LISTENING
+WINDOWS_RELAY_LISTENING
+WSL_RECEIVED_FROM_WINDOWS
+WINDOWS_FORWARDED_TO_WSL
+```
+
+The Windows temporary PowerShell relay responded with the success token **only after** its own localhost request to the WSL Node.js backend returned HTTP 200. The Penguin success token and the NextGen receiver/forwarder events corroborate completion of the **Penguin Linux → Windows-host TCP relay → NextGen WSL HTTP backend** path. The physical computers are distinct according to operator environment descriptions, but the transcript is **user-provided**, not a cryptographically attested measurement from independently verified physical hardware. The exercise used synthetic HTTP text, not Saban's encrypted secure-envelope payload. The temporary listener exited after accepting one request or timing out. This was not a persisted gateway.
+
+Limits: no WAN disconnection witnessed; no Saban encrypted end-to-end delivery; no secure key provisioning across two independent physical devices; no field-distance/radio/mesh/satellite/Verizon transport capability or failover proven. No production deployment, Windows firewall modification, permanent port forwarding, Base44 runtime or active Systemia database write. No personal IP addresses, keys, exact hostnames or raw private logs committed here.
+
+**Next engineering gate:** author an opt-in, bounded, local-LAN relay script that passes only the two existing `field-outage-lab.mjs` authenticated endpoints (`GET /v1/hello` and `POST /v1/envelope`), preserves exact request and reply bytes, limits sizes/timeouts, and binds only an operator-approved Windows LAN interface. Validate it through Windows-to-WSL and Penguin-to-NextGen two-sided receipts before interrupting the relay and proving queued encrypted recovery. Remote commands, automatic firewall edits, long-lived exposure and physical outage claims remain prohibited until operator-approved validation.
