@@ -1,0 +1,38 @@
+name: Atlas authenticated Home API security
+on:
+  pull_request:
+    paths:
+      - 'systemia/atlas/**'
+      - 'systemia/evercraft-home/server.mjs'
+      - 'systemia/evercraft-home/atlas-private-http.test.mjs'
+      - '.github/workflows/atlas-home-private-api.yml'
+  push:
+    branches:
+      - feature/systemia-atlas-home-private-api-20261125
+    paths:
+      - 'systemia/atlas/**'
+      - 'systemia/evercraft-home/server.mjs'
+      - 'systemia/evercraft-home/atlas-private-http.test.mjs'
+      - '.github/workflows/atlas-home-private-api.yml'
+permissions:
+  contents: read
+jobs:
+  atlas-home-private:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Parse trusted backend modules
+        run: |
+          node --check systemia/atlas/home-bridge.mjs
+          node --check systemia/evercraft-home/server.mjs
+          node --check systemia/evercraft-home/atlas-private-http.test.mjs
+      - name: Verify live HTTP authentication, origin, tenant and revocation boundary
+        run: node --test systemia/evercraft-home/atlas-private-http.test.mjs
+      - name: Prove private evidence safety and legacy synthetic experience
+        run: |
+          node --test systemia/atlas/private-freight-ledger.test.mjs
+          node --test tests/systemia-atlas-rebuild.test.mjs tests/atlas-route-twin.test.mjs
