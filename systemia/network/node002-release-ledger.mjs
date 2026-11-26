@@ -34,7 +34,7 @@ export function admitReleaseGrant({directory,grant,signature,nowMs=Date.now()}={
  if(prior.schema!==schema||!Number.isSafeInteger(prior.last_sequence)||prior.last_sequence<0)throw Error('ledger_state_invalid');
  const ownerPublicKey=readPrivate(path.join(directory,'owner-public.pem'));
  const accepted=verifyReleaseGrant({grant,signature,ownerPublicKey,lastSequence:prior.last_sequence,nowMs});
- const receipt={schema,last_sequence:accepted.sequence,commit:accepted.commit,phase:accepted.phase,grant_sha256:createHash('sha256').update(releaseGrantBytes(grant)).digest('hex'),state:'authorized_not_staged',activation_authorized:false};
+ const receipt={schema,last_sequence:accepted.sequence,commit:accepted.commit,phase:accepted.phase,expires_at:grant.expires_at,grant_sha256:createHash('sha256').update(releaseGrantBytes(grant)).digest('hex'),state:'authorized_not_staged',activation_authorized:false};
  uncertain=true;
  persist(directory,file,receipt);
  uncertain=false;
