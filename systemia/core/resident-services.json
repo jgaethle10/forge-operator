@@ -35,7 +35,8 @@
       "cadence_seconds": 300,
       "optional_when_unconfigured": true,
       "static_args": [
-        "--prove-worlds"
+        "--prove-worlds",
+        "--events-resident"
       ],
       "env_args": {
         "--out": "SYSTEMIA_COMPANY_HEARTBEAT_OUT_DIR"

@@ -16,6 +16,9 @@ import {runKaidanceCreativeDevelopment} from './kaidance-creative-development.mj
 import {runLearningCommunityCycle} from './kaidance-learning-community-cycle.mjs';
 import {runAirCoreDevelopmentCycle} from './kaidance-aircore-development.mjs';
 import {runPrivateResearchContinuity} from './kaidance-rd-continuity.mjs';
+import {runEventOpportunityScout} from '../events/event-opportunity-scout-runner.mjs';
+import {runSAMEventScout} from '../events/event-opportunity-us-sam-runner.mjs';
+import {runRegionalEventReview} from '../events/event-opportunity-regional-review-runner.mjs';
 const sourceRoot=path.resolve(fileURLToPath(new URL('../../',import.meta.url)));
 const sha=value=>'sha256:'+createHash('sha256').update(value).digest('hex');
 function readJson(file){return JSON.parse(fs.readFileSync(file,'utf8'))}
@@ -282,6 +285,41 @@ function readAiWReceipt(file){
  if(!stats.isFile()||stats.size>256000)throw Error('aiw_receipt_invalid_file');
  return JSON.parse(fs.readFileSync(abs,'utf8'));
 }
+// Only the explicitly configured owned resident invokes the same existing
+// adapters here. GitHub Actions already runs them before the company pulse.
+export async function runResidentEventSources({
+ root=sourceRoot,outDir,now=new Date(),enabled=false,githubActions=false,
+ apiKey='',uk=runEventOpportunityScout,us=runSAMEventScout,regional=runRegionalEventReview
+}={}){
+ if(!enabled||githubActions||typeof outDir!=='string'||!path.isAbsolute(outDir)||
+    path.basename(path.resolve(outDir))!=='kaidance-company-heartbeat')
+  return {status:'not_admitted',sources:[]};
+ const out=path.resolve(outDir),parent=path.dirname(out),at=new Date(now);
+ if(!Number.isFinite(at.getTime()))return {status:'invalid_clock',sources:[]};
+ try{
+  if(fs.existsSync(parent)&&fs.lstatSync(parent).isSymbolicLink())
+   return {status:'unsafe_root',sources:[]};
+  const existing=path.join(out,'state.json');
+  if(fs.existsSync(existing)){
+   const st=fs.lstatSync(existing);
+   if(!st.isFile()||st.isSymbolicLink()||st.size>1024*1024)
+    return {status:'unsafe_state',sources:[]};
+   if(readJson(existing).tick>=Math.floor(at.getTime()/300000))
+    return {status:'duplicate_or_clock_rollback',sources:[]};
+  }
+ }catch{return {status:'unsafe_state',sources:[]}}
+ const jobs=[
+  ['uk',()=>uk({outDir:path.join(parent,'event-opportunity-scout'),now:at,live:true})],
+  ['us',()=>us({outDir:path.join(parent,'event-opportunity-us-sam'),now:at,live:true,apiKey})],
+  ['regional',()=>regional({rootDir:root,outDir:path.join(parent,'event-opportunity-regional'),now:at})]
+ ];
+ const sources=[];
+ for(const [key,run] of jobs){
+  try{const r=await run();sources.push({key,status:r?.status||'unverified'});}
+  catch{sources.push({key,status:'held_source_failure'});}
+ }
+ return {status:'reconciled',sources};
+}
 export function runCompanyHeartbeat({
  root=sourceRoot,outDir=path.join(sourceRoot,'artifacts/kaidance-company-heartbeat'),
  now=new Date(),proveWorlds=false,proveLearning=false,proveAirCore=false,
@@ -483,6 +521,13 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
    console.error(JSON.stringify({schema:'evercraft.kaidance.global-opportunity-hold.v1',
     status:'held',reason:String(e?.message||e).slice(0,120)}));
   }
+  const eventSourcePulse=await runResidentEventSources({
+   outDir,enabled:process.argv.includes('--events-resident'),
+   githubActions:process.env.GITHUB_ACTIONS==='true',
+   apiKey:process.env.SAM_GOV_PUBLIC_API_KEY||''
+  });
+  if(eventSourcePulse.status!=='not_admitted')
+   console.log(JSON.stringify({schema:'evercraft.events.resident-source-pulse.v1',...eventSourcePulse}));
   const result=runCompanyHeartbeat({outDir,proveWorlds:process.argv.includes('--prove-worlds'),
     proveLearning:process.argv.includes('--prove-learning')||process.env.SYSTEMIA_KAIDANCE_LEARNING_SOURCE_PROOFS==='true',
     proveAirCore:process.argv.includes('--prove-aircore')||process.env.SYSTEMIA_KAIDANCE_AIRCORE_SOURCE_PROOFS==='true',
