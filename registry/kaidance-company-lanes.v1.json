@@ -141,6 +141,24 @@
         "aiw-evidence-watch"
       ],
       "priority": 2
+    },
+    {
+      "lane_key": "leiland-observatory",
+      "description": "Leiland public neural-universe visuals, source-honest spectator and browser accessibility",
+      "mode": "observe_existing_workflows",
+      "cadence_seconds": 300,
+      "products": [],
+      "services": [],
+      "priority": 2
+    },
+    {
+      "lane_key": "evercraft-graphics",
+      "description": "Shared KAIDANCE visual theater and registered Saban creative-council art direction",
+      "mode": "observe_existing_workflows",
+      "cadence_seconds": 300,
+      "products": [],
+      "services": [],
+      "priority": 2
     }
   ]
 }
