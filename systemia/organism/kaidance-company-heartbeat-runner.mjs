@@ -16,6 +16,7 @@ import {runKaidanceCreativeDevelopment} from './kaidance-creative-development.mj
 import {runLearningCommunityCycle} from './kaidance-learning-community-cycle.mjs';
 import {runAirCoreDevelopmentCycle} from './kaidance-aircore-development.mjs';
 import {runPrivateResearchContinuity} from './kaidance-rd-continuity.mjs';
+import {runFindMyPartCycle} from './kaidance-findmypart-execution.mjs';
 import {runEventOpportunityScout} from '../events/event-opportunity-scout-runner.mjs';
 import {runSAMEventScout} from '../events/event-opportunity-us-sam-runner.mjs';
 import {runRegionalEventReview} from '../events/event-opportunity-regional-review-runner.mjs';
@@ -320,11 +321,33 @@ export async function runResidentEventSources({
  }
  return {status:'reconciled',sources};
 }
+export function classifyForestReceipt(value,now=new Date()){
+ const keys=['dnr','qcew_yakima','qcew_kittitas'];
+ const allowed={dnr:'PASS_ATTRIBUTES_ONLY',qcew_yakima:'PASS_BASELINE',qcew_kittitas:'PASS_BASELINE'};
+ const hold=(status,action)=>({status,source_receipt_present:!!value,review_candidates:[{work_key:'forest-001:'+action,action}],sources_observed:0,worker_verified:false,execution_authorized:false});
+ if(!value)return hold('not_connected','collect_initial_baseline');
+ if(value.schema!=='evercraft.forest-001.owned-receipt.v1'||value.mission_key!=='FOREST-001'||!(/^[a-f0-9]{40}$/.test(value.source_commit||''))||!(/^[a-f0-9]{64}$/.test(value.evidence_manifest_sha256||''))||value.execution_authorized!==false||value.publication_authorized!==false||!keys.every(k=>['HOLD',allowed[k]].includes(value.sources?.[k])))return hold('invalid','review_invalid_receipt');
+ const age=new Date(now).getTime()-Date.parse(value.observed_at);
+ if(!Number.isFinite(age)||age< -60000)return hold('invalid','review_invalid_receipt');
+ if(age>=86400000)return hold('review_due','review_source_freshness');
+ const missing=keys.filter(k=>value.sources[k]==='HOLD');
+ return {status:missing.length?'partial_reported_receipt':'reported_baseline_receipt',source_receipt_present:true,last_observed_at:value.observed_at,source_commit:value.source_commit,evidence_manifest_sha256:value.evidence_manifest_sha256,sources:Object.fromEntries(keys.map(k=>[k,value.sources[k]])),sources_observed:keys.length-missing.length,worker_verified:false,execution_authorized:false,review_candidates:missing.map(k=>({work_key:'forest-001:resolve-'+k,action:'resolve_'+k+'_source_hold'}))};
+}
+function readForestReceipt(file){
+ if(!file)return null;
+ try{
+  const abs=path.resolve(file), dir=path.dirname(abs);
+  if(!fs.existsSync(abs))return null;
+  const stat=fs.lstatSync(abs), parent=fs.lstatSync(dir);
+  if(!stat.isFile()||parent.isSymbolicLink()||stat.size>16384||(stat.mode&0o077)!==0||(parent.mode&0o077)!==0||(typeof process.getuid==='function'&&(stat.uid!==process.getuid()||parent.uid!==process.getuid())))return {};
+  return readJson(abs);
+ }catch{return {};}
+}
 export function runCompanyHeartbeat({
  root=sourceRoot,outDir=path.join(sourceRoot,'artifacts/kaidance-company-heartbeat'),
  now=new Date(),proveWorlds=false,proveLearning=false,proveAirCore=false,
  learningCycle=runLearningCommunityCycle,aircoreCycle=runAirCoreDevelopmentCycle,
- spawn=spawnSync,aiwReceipt=null,globalOpportunityReceipt=null,networkDevelopmentReceipt=null,rdContinuityEnabled=false
+ spawn=spawnSync,aiwReceipt=null,globalOpportunityReceipt=null,networkDevelopmentReceipt=null,rdContinuityEnabled=false,forestReceipt=null,findmypartExecutionReceipt=null
 }={}){
  const repo=path.resolve(root),out=path.resolve(outDir);
  const manifest=readJson(path.join(repo,'registry/kaidance-company-lanes.v1.json'));
@@ -406,6 +429,13 @@ export function runCompanyHeartbeat({
  }:{state:aircore?.held?'held':'not_executed',reason:aircore?.reason||null,
   physical_prototype_built:false,worker_dispatched:false};
  const researchContinuity=runPrivateResearchContinuity({enabled:rdContinuityEnabled,root:repo,outDir:out,now});
+ const forest=classifyForestReceipt(forestReceipt,now);
+ const fmp=findmypartExecutionReceipt?.schema==='evercraft.findmypart.execution-cycle.v1'&&findmypartExecutionReceipt.tick===tick&&findmypartExecutionReceipt.outreach_authorized===false&&findmypartExecutionReceipt.buyers_qualified===0?findmypartExecutionReceipt:null;
+ const fmpShopCandidates=(Array.isArray(fmp?.service_fit_candidates)?fmp.service_fit_candidates:[]).slice(0,6).map(row=>({work_key:row.work_key,lane_key:'findmypart',priority:1,action:'reconcile_existing_revenue_desk_then_confirm_actual_stalled_case',authority:'systemia_operator_review_required',business_name:row.business_name,source_url:row.source_url,observed_at:row.observed_at,evidence_ref:row.body_digest,buyer_need_confirmed:false,execution_authorized:false,outreach_authorized:false}));
+ const findmypartCandidates=[
+  {work_key:'findmypart:product-development',lane_key:'findmypart',priority:1,action:'reconcile_repair_graph_recovery_benchmarks_and_buyer_door_then_lease_next_bounded_engineering_task',authority:'systemia_operator_review_required',execution_authorized:false,evidence_ref:'source:github:issue:1758'},
+  {work_key:'findmypart:commercial-discovery',lane_key:'findmypart',priority:1,action:'reconcile_existing_revenue_desk_and_qualify_new_repair_shop_supplier_leads_from_approved_sources',authority:'systemia_operator_review_required',execution_authorized:false,outreach_authorized:false,evidence_ref:'source:github:issue:1600'}
+ ];
  const scout=eventScoutReview(out,now);
  const usScout=usSAMScoutReview(out,now);
  const regionalScout=regionalEventReview(out,now);
@@ -415,13 +445,16 @@ export function runCompanyHeartbeat({
    regional_source_status:regionalScout.status,regional_crawl_performed:false,
    external_work_performed:false,source_regions:['United Kingdom','United States'],
    any_buyer_contact:false,any_sponsor_commitment:false};
- const report={...planned.report,proof,event_discovery:eventDiscovery,infrastructure_watch:aiw,
+ const report={...planned.report,proof,event_discovery:eventDiscovery,infrastructure_watch:aiw,forest_restoration:forest,
+  findmypart:{state:'review_queued',priority:1,heartbeat_seconds:300,workstreams:findmypartCandidates.map(x=>x.work_key),worker_dispatched:false,source_poll_performed:fmp?.source_poll_performed===true,buyers_qualified:0,outreach_authorized:false,engineering_benchmark_executed:fmp?.engineering_benchmark_executed===true,commercial_status:fmp?.commercial_status||'not_executed',source_observation:fmp?.observation||null,code_changes:0},
   research_continuity:researchContinuity,
   global_opportunities:global,network_development:network,
   learning_community:learningSummary,aircore_development:aircoreSummary};
  const queue={schema:'evercraft.kaidance.company-heartbeat.queue.v1',observed_at:report.observed_at,
   execution_authorized:false,
   candidates:[
+   ...findmypartCandidates,
+   ...fmpShopCandidates,
    ...(proof.status==='failed'?[{work_key:'worlds:source-proof-failure',lane_key:'worlds',priority:1,action:'investigate_failed_source_tests',authority:'review_required'}]:[]),
    ...(proof.status==='due_not_executed'?[{work_key:'worlds:source-proof-due',lane_key:'worlds',priority:2,action:'run_bounded_source_proof',authority:'existing_allowlisted_local_only'}]:[]),
    ...scout.candidates.map((c)=>({
@@ -467,6 +500,7 @@ export function runCompanyHeartbeat({
     ...row,execution_authorized:false,hardware_purchase_authorized:false,
     partner_contact_authorized:false,authority:'systemia_operator_review_required'
    })),
+   ...forest.review_candidates.map(row=>({...row,lane_key:'forest-restoration',priority:3,authority:'systemia_operator_review_required',execution_authorized:false,publication_authorized:false})),
    ...report.company_portfolio.products_not_yet_named.slice(0,12).map(key=>({
     work_key:'product:'+key+':adapter-admission',lane_key:null,priority:3,
     action:'bind_existing_systemia_capability_or_admit_bounded_new_adapter',authority:'source_review_required'
@@ -477,7 +511,7 @@ export function runCompanyHeartbeat({
   counts:{...planned.snapshot.counts,
    scanned:planned.snapshot.counts.scanned+aiw.sources_observed+global.sources_observed+(network.status==='verified_receipt'?1:0)+(learning?.report?.counts?.tracked||0)+(aircore?.report?1:0),
    changed:planned.snapshot.counts.changed+(global.newly_seen||0)+(network.newly_seen||0)+(aircore?.report?.newly_seen||0),
-   held:planned.snapshot.counts.held+aiw.review_candidates.length+global.review_candidates.length+network.review_candidates.length+(learning?.report?.counts?.failed||0)+
+   held:planned.snapshot.counts.held+forest.review_candidates.length+findmypartCandidates.length+fmpShopCandidates.length+aiw.review_candidates.length+global.review_candidates.length+network.review_candidates.length+(learning?.report?.counts?.failed||0)+
     (aircore?.held||['source_proof_failed','missing_source_hold'].includes(aircore?.report?.source_status)?1:0)},
   evidence_refs:[
     ...planned.snapshot.evidence_refs,
@@ -508,6 +542,7 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
  const opt=name=>{const i=process.argv.indexOf(name);return i>=0?process.argv[i+1]:''};
  try{
   const outDir=opt('--out')||process.env.SYSTEMIA_COMPANY_HEARTBEAT_OUT_DIR||path.join(sourceRoot,'artifacts/kaidance-company-heartbeat');
+  const forestReceipt=readForestReceipt(opt('--forest-receipt')||process.env.SYSTEMIA_FOREST_EVIDENCE_RECEIPT_FILE||'');
   const aiwReceipt=readAiWReceipt(opt('--aiw-receipt')||process.env.SYSTEMIA_AIW_EVIDENCE_RECEIPT_FILE||'');
   const networkDevelopmentReceipt=readAiWReceipt(opt('--network-development-receipt')||process.env.SYSTEMIA_NETWORK_DEVELOPMENT_RECEIPT_FILE||'');
   let globalOpportunityReceipt=null;
@@ -521,17 +556,29 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
    console.error(JSON.stringify({schema:'evercraft.kaidance.global-opportunity-hold.v1',
     status:'held',reason:String(e?.message||e).slice(0,120)}));
   }
+  const at=new Date();
   const eventSourcePulse=await runResidentEventSources({
-   outDir,enabled:process.argv.includes('--events-resident'),
+   outDir,now:at,enabled:process.argv.includes('--events-resident'),
    githubActions:process.env.GITHUB_ACTIONS==='true',
    apiKey:process.env.SAM_GOV_PUBLIC_API_KEY||''
   });
   if(eventSourcePulse.status!=='not_admitted')
    console.log(JSON.stringify({schema:'evercraft.events.resident-source-pulse.v1',...eventSourcePulse}));
-  const result=runCompanyHeartbeat({outDir,proveWorlds:process.argv.includes('--prove-worlds'),
+  let findmypartExecutionReceipt=null;
+  // Same owner-resident clock; do not run network discovery from hosted CI.
+  if(process.env.SYSTEMIA_FINDMYPART_EXECUTION_ENABLED==='true'&&process.env.GITHUB_ACTIONS!=='true'&&path.isAbsolute(outDir)&&path.basename(outDir)==='kaidance-company-heartbeat'){
+   try{
+    const parent=fs.lstatSync(path.dirname(outDir));
+    if(!parent.isDirectory()||parent.isSymbolicLink()||(parent.mode&0o077)!==0||parent.uid!==process.getuid())throw Error('private_root_required');
+    const existing=path.join(outDir,'state.json');
+    if(!fs.existsSync(existing)||readJson(existing).tick<Math.floor(+at/300000))
+     findmypartExecutionReceipt=await runFindMyPartCycle({outDir:path.join(outDir,'findmypart-execution'),now:at,network:true});
+   }catch{console.error(JSON.stringify({schema:'evercraft.findmypart.execution-hold.v1',status:'held'}))}
+  }
+  const result=runCompanyHeartbeat({outDir,now:at,findmypartExecutionReceipt,proveWorlds:process.argv.includes('--prove-worlds'),
     proveLearning:process.argv.includes('--prove-learning')||process.env.SYSTEMIA_KAIDANCE_LEARNING_SOURCE_PROOFS==='true',
     proveAirCore:process.argv.includes('--prove-aircore')||process.env.SYSTEMIA_KAIDANCE_AIRCORE_SOURCE_PROOFS==='true',
-    aiwReceipt,globalOpportunityReceipt,networkDevelopmentReceipt,
+    aiwReceipt,globalOpportunityReceipt,networkDevelopmentReceipt,forestReceipt,
     rdContinuityEnabled:process.env.SYSTEMIA_KAIDANCE_RD_CONTINUITY_ENABLED==='true'});
   // The same company heartbeat owns Leiland + visual art-direction review.
   // This is not another scheduler or a remote code-generation worker.
@@ -565,6 +612,9 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
    global_opportunity_receipt:result.report?.global_opportunities?.status||null,
    network_development_receipt:result.report?.network_development?.status||null,
    global_opportunity_outreach_authorized:false,
+   forest_restoration_receipt:result.report?.forest_restoration?.status||null,
+   forest_restoration_execution_authorized:false,
+   findmypart_commercial_status:result.report?.findmypart?.commercial_status||null,
    next_action_key:result.next_action?.current_next_action?.work_key||null,
    learning_community_state:result.report?.learning_community?.state||null,
    learning_source_proofs_run:result.report?.learning_community?.source_proofs_run||0,

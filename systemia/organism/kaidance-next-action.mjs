@@ -260,6 +260,26 @@ export function planKaidanceNextAction({
    'check_original_event_tender_and_eligibility_before_founder_approved_pitch',
    'company',candidate.evidence_ref,'founder_review_required'));
  }
+ // FOREST-001: review-only decisions from the current company report and queue.
+ const forest=companyReport.forest_restoration;
+ const forestActions={
+  'forest-001:collect_initial_baseline':'collect_initial_baseline',
+  'forest-001:review_invalid_receipt':'review_invalid_receipt',
+  'forest-001:review_source_freshness':'review_source_freshness',
+  'forest-001:resolve-dnr':'resolve_dnr_source_hold',
+  'forest-001:resolve-qcew_yakima':'resolve_qcew_yakima_source_hold',
+  'forest-001:resolve-qcew_kittitas':'resolve_qcew_kittitas_source_hold'
+ };
+ if(forest?.execution_authorized===false&&forest.worker_verified===false&&Array.isArray(forest.review_candidates)){
+  const seen=new Set();
+  for(const row of (companyQueue.candidates||[])){
+   if(!Object.hasOwn(forestActions,row.work_key)||seen.has(row.work_key)||row.action!==forestActions[row.work_key]||row.lane_key!=='forest-restoration'||row.execution_authorized!==false||row.publication_authorized!==false||row.authority!=='systemia_operator_review_required'||!forest.review_candidates.some(x=>x.work_key===row.work_key&&x.action===row.action))continue;
+   seen.add(row.work_key);
+   choices.push(action(3,row.work_key,'forest-restoration',row.action,'company_forest_receipt',
+    /^[a-f0-9]{64}$/.test(forest.evidence_manifest_sha256||'')?'sha256:'+forest.evidence_manifest_sha256:null,
+    'existing_systemia_operator_review'));
+  }
+ }
  const unbound=companyQueue.candidates?.filter(x=>
   x?.action==='bind_existing_systemia_capability_or_admit_bounded_new_adapter'&&
   /^product:[a-z0-9-]+:adapter-admission$/.test(x.work_key||'')&&

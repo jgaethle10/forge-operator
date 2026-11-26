@@ -94,9 +94,10 @@ export async function waitForFindMyPartService(url,{
 export function ensurePrivateIntakeDirectory(root,name,uid,gid){
  if(!['alert-outbox','alert-receipts'].includes(name))throw Error('invalid_private_child');
  const dest=path.join(root,name);
- const exists=fs.existsSync(dest);
- if(exists){
-  const stat=fs.lstatSync(dest);
+ // lstat detects dangling symlinks as existing objects; never follow them.
+ let stat;
+ try{stat=fs.lstatSync(dest)}catch(error){if(error?.code!=='ENOENT')throw error}
+ if(stat){
   if(!stat.isDirectory()||stat.isSymbolicLink()||(stat.mode&0o077)!==0||
     stat.uid!==uid||stat.gid!==gid)
    throw Error('private_child_directory_unsafe');
