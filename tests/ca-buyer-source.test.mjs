@@ -21,8 +21,8 @@ test('French demand becomes one deduplicated, unqualified research candidate',()
  const p=planBuyerResearch({schema:'evercraft.kaidance.discovery-checkpoint.v1',records:r.candidates},{now});
  assert.equal(p.jobs.length,1);assert.equal(p.jobs[0].execution_authorized,false);
 });
-test('closed, expired, unzoned and spoofed notices cannot enter research',()=>{
- for(const [i,v] of [[4,'Closed'],[3,'2026-11-20T14:00:00-0500'],[3,'2026-12-12T14:00:00'],[7,'https://example.test/en/tender-opportunities/test']]){
+test('closed, expired, malformed and spoofed notices cannot enter research',()=>{
+ for(const [i,v] of [[4,'Closed'],[3,'2026-11-20T14:00:00-0500'],[3,'2026-02-30T14:00:00'],[3,'2026-11-20T14:00:00'],[7,'https://example.test/en/tender-opportunities/test']]){
   const r=[...row];r[i]=v;
   assert.equal(normalizeCanada(csv(r),{now}).candidates.length,0);
  }
@@ -39,4 +39,18 @@ test('collector uses official endpoint and read-only request',async()=>{
   return new Response(csv(row));
  }});
  assert.equal(r.candidates.length,1);
+});
+
+test('live-format local deadline is retained without inventing timezone',()=>{
+ const local=[...row];local[3]='2026-12-21T14:00:00';
+ const r=normalizeCanada(csv(local),{now});
+ assert.equal(r.candidates.length,1);
+ const c=r.candidates[0];
+ assert.equal(c.deadline,local[3]);
+ assert.equal(c.deadline_timezone,'unverified-source-local');
+ const p=planBuyerResearch({schema:'evercraft.kaidance.discovery-checkpoint.v1',records:r.candidates},{now});
+ assert.equal(p.jobs.length,1);
+ assert.equal(p.jobs[0].deadline_timezone,'unverified-source-local');
+ assert.equal(p.jobs[0].contact_authorized,false);
+ assert.equal(p.jobs[0].execution_authorized,false);
 });
