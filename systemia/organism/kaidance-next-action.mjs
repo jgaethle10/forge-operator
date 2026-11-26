@@ -175,6 +175,25 @@ export function planKaidanceNextAction({
     'existing_systemia_operator_review'));
   }
  }
+ // Kaidance's existing revenue lane can nominate a sourced global notice.
+ // This is research triage only. The final buyer/deadline/eligibility and
+ // existing private Interaction Ledger / Passport permit stay separate.
+ if(companyReport.global_opportunities?.status==='verified_source_receipt'){
+  const global=companyQueue.candidates?.filter(x=>
+   x?.lane_key==='revenue'&&
+   /^global:worldbank:op[0-9]{6,10}$/.test(x.work_key||'')&&
+   x.action==='verify_worldbank_notice_deadline_buyer_eligibility_and_delivery_fit'&&
+   x.authority==='systemia_operator_review_required'&&
+   x.execution_authorized===false&&x.outreach_authorized===false&&
+   x.application_authorized===false&&x.payment_verified===false)||[];
+  if(global.length){
+   const first=[...global].sort((a,b)=>a.work_key.localeCompare(b.work_key))[0];
+   choices.push(action(2,first.work_key,'revenue',
+    'verify_global_contract_notice_and_independent_buyer_fit','company',
+    'source:registry/kaidance-global-opportunity-sources.v1.json',
+    'systemia_operator_review_required'));
+  }
+ }
  const unbound=companyQueue.candidates?.filter(x=>
   x?.action==='bind_existing_systemia_capability_or_admit_bounded_new_adapter'&&
   /^product:[a-z0-9-]+:adapter-admission$/.test(x.work_key||'')&&
