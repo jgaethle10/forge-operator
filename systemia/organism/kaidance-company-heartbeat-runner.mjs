@@ -14,6 +14,7 @@ import {writeKaidanceNextAction} from './kaidance-next-action.mjs';
 import {runGlobalOpportunityScout} from './kaidance-global-opportunity-scout.mjs';
 import {runKaidanceCreativeDevelopment} from './kaidance-creative-development.mjs';
 import {runLearningCommunityCycle} from './kaidance-learning-community-cycle.mjs';
+import {runPrivateResearchContinuity} from './kaidance-rd-continuity.mjs';
 const sourceRoot=path.resolve(fileURLToPath(new URL('../../',import.meta.url)));
 const sha=value=>'sha256:'+createHash('sha256').update(value).digest('hex');
 function readJson(file){return JSON.parse(fs.readFileSync(file,'utf8'))}
@@ -180,7 +181,7 @@ function readAiWReceipt(file){
 }
 export function runCompanyHeartbeat({
  root=sourceRoot,outDir=path.join(sourceRoot,'artifacts/kaidance-company-heartbeat'),
- now=new Date(),proveWorlds=false,proveLearning=false,learningCycle=runLearningCommunityCycle,spawn=spawnSync,aiwReceipt=null,globalOpportunityReceipt=null,networkDevelopmentReceipt=null
+ now=new Date(),proveWorlds=false,proveLearning=false,learningCycle=runLearningCommunityCycle,spawn=spawnSync,aiwReceipt=null,globalOpportunityReceipt=null,networkDevelopmentReceipt=null,rdContinuityEnabled=false
 }={}){
  const repo=path.resolve(root),out=path.resolve(outDir);
  const manifest=readJson(path.join(repo,'registry/kaidance-company-lanes.v1.json'));
@@ -240,7 +241,9 @@ export function runCompanyHeartbeat({
   publication_authorized:false,autonomous_code_writes:0,
   child_or_member_data_access:false
  };
+ const researchContinuity=runPrivateResearchContinuity({enabled:rdContinuityEnabled,root:repo,outDir:out,now});
  const report={...planned.report,proof,infrastructure_watch:aiw,
+  research_continuity:researchContinuity,
   global_opportunities:global,network_development:network,
   learning_community:learningSummary};
  const queue={schema:'evercraft.kaidance.company-heartbeat.queue.v1',observed_at:report.observed_at,
@@ -319,7 +322,8 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
   }
   const result=runCompanyHeartbeat({outDir,proveWorlds:process.argv.includes('--prove-worlds'),
     proveLearning:process.argv.includes('--prove-learning')||process.env.SYSTEMIA_KAIDANCE_LEARNING_SOURCE_PROOFS==='true',
-    aiwReceipt,globalOpportunityReceipt,networkDevelopmentReceipt});
+    aiwReceipt,globalOpportunityReceipt,networkDevelopmentReceipt,
+    rdContinuityEnabled:process.env.SYSTEMIA_KAIDANCE_RD_CONTINUITY_ENABLED==='true'});
   // The same company heartbeat owns Leiland + visual art-direction review.
   // This is not another scheduler or a remote code-generation worker.
   let creative={status:'held',reviewed_this_tick:0};
