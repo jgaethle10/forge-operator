@@ -194,6 +194,23 @@ export function planKaidanceNextAction({
     'systemia_operator_review_required'));
   }
  }
+ // The unpublished LightForge release remains blocked until independent
+ // physical, Windows and customer receipts are reviewed; never auto-dispatch.
+ const lightforge=companyReport.lightforge_development;
+ if(lightforge?.schema==='evercraft.kaidance.lightforge-readiness.v1'&&
+    lightforge.status==='release_blocked'&&lightforge.shipping_authorized===false&&
+    lightforge.development_worker_dispatched===false&&
+    lightforge.gates_independently_verified===0){
+   const candidate=(companyQueue.candidates||[]).find(x=>
+     x.lane_key==='lightforge'&&x.work_key===lightforge.next_work_key&&
+     x.action==='review_lightforge_release_gate'&&
+     x.authority==='systemia_operator_review_required'&&
+     x.execution_authorized===false&&x.publication_authorized===false);
+   if(candidate)choices.push(action(4,candidate.work_key,'lightforge',
+     'review_lightforge_release_gate','company',
+     'source:registry/kaidance-lightforge-development.v1.json',
+     'existing_systemia_operator_review'));
+ }
  const unbound=companyQueue.candidates?.filter(x=>
   x?.action==='bind_existing_systemia_capability_or_admit_bounded_new_adapter'&&
   /^product:[a-z0-9-]+:adapter-admission$/.test(x.work_key||'')&&
