@@ -22,6 +22,8 @@ on:
       - 'systemia/organism/kaidance-frontier-proof.mjs'
       - 'systemia/organism/kaidance-frontier-cycle.mjs'
       - 'systemia/organism/kaidance-company-heartbeat*.mjs'
+      - 'systemia/organism/kaidance-global-opportunity-scout.mjs'
+      - 'tests/kaidance-global-opportunity-scout.test.mjs'
       - 'systemia/organism/kaidance-next-action.mjs'
       - 'tests/kaidance-next-action.test.mjs'
       - 'systemia/organism/kaidance-company-heartbeat.workflow.json'
@@ -72,6 +74,8 @@ on:
       - 'systemia/organism/kaidance-frontier-proof.mjs'
       - 'systemia/organism/kaidance-frontier-cycle.mjs'
       - 'systemia/organism/kaidance-company-heartbeat*.mjs'
+      - 'systemia/organism/kaidance-global-opportunity-scout.mjs'
+      - 'tests/kaidance-global-opportunity-scout.test.mjs'
       - 'systemia/organism/kaidance-next-action.mjs'
       - 'tests/kaidance-next-action.test.mjs'
       - 'systemia/organism/kaidance-company-heartbeat.workflow.json'
@@ -131,6 +135,7 @@ jobs:
           path: |
             artifacts/kaidance-frontier/runtime/state.json
             artifacts/kaidance-company-heartbeat/state.json
+            artifacts/kaidance-global-opportunities/state.json
             artifacts/aiw-evidence-watch/state.json
             artifacts/aiw-evidence-watch/latest.json
             artifacts/kaidance-company-heartbeat/next-action-state.json
@@ -180,6 +185,9 @@ jobs:
 
       - name: Reconcile due official bridge-source metadata for AIW (read only)
         run: node systemia/infrastructure-watch/aiw-evidence-watch.mjs --out artifacts/aiw-evidence-watch
+
+      - name: Verify worldwide source polling, 300-second queue reuse and outreach deny-by-default
+        run: node --test tests/kaidance-global-opportunity-scout.test.mjs
 
       - name: Validate KAIDANCE company heartbeat safety and truthful progress
         run: node --test tests/kaidance-company-heartbeat.test.mjs
@@ -232,6 +240,7 @@ jobs:
           path: |
             artifacts/kaidance-frontier/runtime/state.json
             artifacts/kaidance-company-heartbeat/state.json
+            artifacts/kaidance-global-opportunities/state.json
             artifacts/aiw-evidence-watch/state.json
             artifacts/aiw-evidence-watch/latest.json
             artifacts/kaidance-company-heartbeat/next-action-state.json
@@ -259,6 +268,9 @@ jobs:
             artifacts/aiw-evidence-watch/latest.json
             artifacts/aiw-evidence-watch/queue.json
             artifacts/aiw-evidence-watch/mission-snapshot.json
+            artifacts/kaidance-global-opportunities/latest.json
+            artifacts/kaidance-global-opportunities/queue.json
+            artifacts/kaidance-global-opportunities/mission-snapshot.json
             artifacts/kaidance-company-heartbeat/latest.json
             artifacts/kaidance-company-heartbeat/mission-snapshot.json
             artifacts/kaidance-company-heartbeat/queue.json
