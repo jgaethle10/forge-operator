@@ -79,7 +79,8 @@ test('Daily source watch: first baseline, repeat skips, real metadata change is 
     assert.equal(pulse.queue.execution_authorized,false);
     assert.equal(pulse.queue.candidates.filter(x=>x.lane_key==='infrastructure-watch').length,1);
     assert.equal(pulse.queue.candidates.find(x=>x.lane_key==='infrastructure-watch').publication_authorized,false);
-    assert.equal(pulse.mission_snapshot.counts.held,1);
+    assert.equal(pulse.mission_snapshot.counts.held,1+Number(pulse.report.lightforge_development?.status==='release_blocked'),
+      'AIW hold plus separately observed unpublished LightForge release hold');
     assert.equal(pulse.next_action.current_next_action?.lane_key,'infrastructure-watch');
     assert.equal(pulse.next_action.current_next_action?.dispatch_authorized,false);
     assert.equal(pulse.next_action.publication_actions,0);
