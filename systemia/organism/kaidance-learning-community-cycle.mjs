@@ -11,7 +11,7 @@ import {fileURLToPath} from 'node:url';
 const DEFAULT_ROOT=fileURLToPath(new URL('../../',import.meta.url));
 const SCHEMA='evercraft.kaidance.learning-community-workstreams.v1';
 const STATUS='evercraft.kaidance.learning-community-cycle.v1';
-const SOURCE=/^(?:systemia|public|registry|tests)\/[a-z0-9][a-z0-9./-]{0,175}$/;
+const SOURCE=/^(?:systemia|public|registry|tests)\/[A-Za-z0-9][A-Za-z0-9./-]{0,175}$/;
 const SHA=/^sha256:[a-f0-9]{64}$/;
 const sha=value=>'sha256:'+createHash('sha256').update(value).digest('hex');
 function fail(code){throw Error(code)}
