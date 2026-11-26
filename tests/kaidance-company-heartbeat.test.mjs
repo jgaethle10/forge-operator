@@ -121,3 +121,41 @@ test('company heartbeat surfaces a verified existing checkout handoff, without p
     path.join(out,'next-action-mission-snapshot.json'),'utf8')).counts.admitted,0);
  }finally{fs.rmSync(root,{recursive:true,force:true})}
 });
+
+test('existing heartbeat admits up to six official event reviews without repeating outreach or fabricating client work',()=>{
+ const root=fs.mkdtempSync(path.join(os.tmpdir(),'kaidance-event-scout-'));
+ const out=path.join(root,'kaidance-company-heartbeat');
+ const scout=path.join(root,'event-opportunity-scout');
+ const at=new Date('2026-11-25T22:00:00.000Z');
+ const id='event:'+'a'.repeat(20);
+ const candidate={opportunity_key:id,
+  source_url:'https://www.find-tender.service.gov.uk/Notice/012345-2026',
+  outreach_authorized:false,dispatch_authorized:false,
+  buyer_contact_verified:false,revenue_confirmed:false,
+  deadline:'2026-12-15T00:00:00.000Z'};
+ fs.mkdirSync(scout,{recursive:true,mode:0o700});
+ try{
+  fs.writeFileSync(path.join(scout,'state.json'),JSON.stringify({
+   schema:'evercraft.events.opportunity-scout-state.v1',
+   last_attempt_ms:at.getTime(),last_success_at:at.toISOString(),
+   observation:{schema:'evercraft.events.opportunity-review.v1',
+    candidates:[candidate,{...candidate,opportunity_key:'event:'+'b'.repeat(20)}]}
+  }),{mode:0o600});
+  const result=runCompanyHeartbeat({root:'.',outDir:out,now:at,proveWorlds:false});
+  const events=result.queue.candidates.filter(c=>c.lane_key==='events');
+  assert.equal(events.length,2);
+  assert.equal(events[0].outreach_authorized,false);
+  assert.equal(events[0].dispatch_authorized,false);
+  assert.equal(events[0].authority,'founder_review_required');
+  assert.equal(result.report.event_discovery.candidates_for_review,2);
+  assert.equal(result.report.event_discovery.any_buyer_contact,false);
+  assert.equal(result.next_action.current_next_action.work_key,id);
+  assert.equal(result.next_action.execution_performed,false);
+  assert.equal(result.next_action.customer_contacts,0);
+  assert.equal(runCompanyHeartbeat({root:'.',outDir:out,now:at}).duplicate,true);
+  const stale=runCompanyHeartbeat({root:'.',outDir:out,
+   now:new Date(at.getTime()+9*3600000)});
+  assert.equal(stale.report.event_discovery.candidates_for_review,0);
+  assert.equal(stale.queue.candidates.some(x=>x.lane_key==='events'),false);
+ }finally{fs.rmSync(root,{recursive:true,force:true})}
+});
