@@ -22,3 +22,34 @@ test('one registered source per six-hour slot; restart replay does not browse',a
   assert.equal(calls,2);
  }finally{fs.rmSync(root,{recursive:true,force:true});}
 });
+
+test('durable slot claim excludes a concurrent observer and an interrupted slot does not poison future slots',async()=>{
+ const root=fs.mkdtempSync(path.join(os.tmpdir(),'refresh-claim-proof-'));
+ try{
+  const now=new Date('2026-11-26T12:01:00Z');
+  let release, entered, calls=0;
+  const started=new Promise(resolve=>{entered=resolve;});
+  const wait=new Promise(resolve=>{release=resolve;});
+  const observe=async({sourceKey})=>{calls++;entered();await wait;return {source_key:sourceKey,state:'no_new_solicitation_pointers',added:0,...flags};};
+  const first=refreshDueSource({root,now,observe});
+  await started;
+  const duplicate=await refreshDueSource({root,now,observe});
+  assert.equal(duplicate.state,'hold_refresh_attempt_unresolved');
+  assert.equal(calls,1);
+  assert.equal(duplicate.contact_authorized,false);
+  release();
+  const completed=await first;
+  assert.equal(completed.attempt_sha256,duplicate.attempt_sha256);
+  assert.equal((await refreshDueSource({root,now,observe})).state,'not_due');
+  const next=new Date(+now+21600000);
+  const slot=Math.floor(+next/21600000);
+  const dir=path.join(root,'source-refresh-receipts');
+  const sourceKey=['yvl','susta'][slot%2];
+  fs.writeFileSync(path.join(dir,'slot-'+slot+'.attempt.json'),JSON.stringify({schema:'evercraft.public-demand.source-refresh-attempt.v1',slot,source_key:sourceKey,started_at:next.toISOString(),...flags}),{mode:0o600});
+  assert.equal((await refreshDueSource({root,now:next,observe})).state,'hold_refresh_attempt_unresolved');
+  assert.equal(calls,1);
+  const later=await refreshDueSource({root,now:new Date(+next+21600000),observe});
+  assert.equal(later.state,'no_new_solicitation_pointers');
+  assert.equal(calls,2);
+ }finally{fs.rmSync(root,{recursive:true,force:true});}
+});

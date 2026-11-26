@@ -29,25 +29,42 @@ export async function refreshDueSource({root,now=new Date(),observe}){
  if(!path.isAbsolute(root)||!Number.isFinite(+now)||+now<0||typeof observe!=='function')throw Error('invalid_refresh_input');
  privateDir(root);
  const dir=path.join(root,'source-refresh-receipts');privateDir(dir);
- const slot=Math.floor(+now/interval),sourceKey=sources[slot%sources.length],file=path.join(dir,'slot-'+slot+'.json'),lock=path.join(dir,'refresh.lock');
- fs.mkdirSync(lock,{mode:0o700});
- try{
-  if(fs.existsSync(file)){
-   const raw=read(file),old=JSON.parse(raw);
-   if(old.schema!=='evercraft.public-demand.source-refresh-receipt.v1'||old.slot!==slot||old.source_key!==sourceKey||Object.keys(flags).some(k=>old[k]!==false))throw Error('refresh_receipt_mismatch');
-   return {state:'not_due',slot,source_key:sourceKey,receipt_sha256:sha(raw),...flags};
+ const slot=Math.floor(+now/interval),sourceKey=sources[slot%sources.length],file=path.join(dir,'slot-'+slot+'.json'),attemptFile=path.join(dir,'slot-'+slot+'.attempt.json');
+ const prior=()=>{
+  const raw=read(file),old=JSON.parse(raw);
+  if(old.schema!=='evercraft.public-demand.source-refresh-receipt.v1'||old.slot!==slot||old.source_key!==sourceKey||Object.keys(flags).some(k=>old[k]!==false))throw Error('refresh_receipt_mismatch');
+  if(old.attempt_sha256!==undefined){
+   if(old.attempt_sha256!==sha(read(attemptFile)))throw Error('refresh_attempt_binding_mismatch');
   }
-  let result;
-  try{
-   const r=await observe({root,sourceKey,observationSlot:slot});
-   if(r?.source_key!==sourceKey||Object.keys(flags).some(k=>r[k]!==false)||!Number.isInteger(r.added)||r.added<0||r.added>3)throw Error('invalid_handoff_result');
-   result={state:r.state,added:r.added,goal_key:r.goal_key||null,capture_sha256:r.capture_sha256||null,inbox_sha256:r.admission?.inbox_sha256||null};
-  }catch(e){result={state:'hold_source_refresh',added:0,reason:String(e.message).slice(0,160)};}
-  const record={schema:'evercraft.public-demand.source-refresh-receipt.v1',slot,source_key:sourceKey,observed_at:now.toISOString(),...result,...flags};
-  const receipt_sha256=retain(file,record);
-  return {...record,receipt_sha256};
- }finally{fs.rmdirSync(lock);}
+  return {state:'not_due',slot,source_key:sourceKey,receipt_sha256:sha(raw),...flags};
+ };
+ if(fs.existsSync(file))return prior();
+ // Do not reuse a legacy in-flight lock from an older executable.
+ if(fs.existsSync(path.join(dir,'refresh.lock')))return {state:'hold_legacy_refresh_lock',slot,source_key:sourceKey,...flags};
+ // Claim the slot durably BEFORE network activity. A killed process may
+ // leave an unresolved attempt, but cannot repeat the same slot or block
+ // every future slot. The existing supervisor serializes normal cycles.
+ const attempt={schema:'evercraft.public-demand.source-refresh-attempt.v1',slot,source_key:sourceKey,started_at:now.toISOString(),...flags};
+ let attempt_sha256;
+ try{attempt_sha256=retain(attemptFile,attempt);}
+ catch(e){
+  if(e.code!=='EEXIST')throw e;
+  if(fs.existsSync(file))return prior();
+  const raw=read(attemptFile),old=JSON.parse(raw);
+  if(old.schema!==attempt.schema||old.slot!==slot||old.source_key!==sourceKey||Object.keys(flags).some(k=>old[k]!==false))throw Error('refresh_attempt_mismatch');
+  return {state:'hold_refresh_attempt_unresolved',slot,source_key:sourceKey,attempt_sha256:sha(raw),...flags};
+ }
+ let result;
+ try{
+  const r=await observe({root,sourceKey,observationSlot:slot});
+  if(r?.source_key!==sourceKey||Object.keys(flags).some(k=>r[k]!==false)||!Number.isInteger(r.added)||r.added<0||r.added>3)throw Error('invalid_handoff_result');
+  result={state:r.state,added:r.added,goal_key:r.goal_key||null,capture_sha256:r.capture_sha256||null,inbox_sha256:r.admission?.inbox_sha256||null};
+ }catch(e){result={state:'hold_source_refresh',added:0,reason:String(e.message).slice(0,160)};}
+ const record={schema:'evercraft.public-demand.source-refresh-receipt.v1',slot,source_key:sourceKey,observed_at:now.toISOString(),attempt_sha256,...result,...flags};
+ const receipt_sha256=retain(file,record);
+ return {...record,receipt_sha256};
 }
+
 export async function refreshWithBrowser({root,sourceDir,browsersPath}){
  if(!path.isAbsolute(sourceDir)||!path.isAbsolute(browsersPath))throw Error('absolute_browser_bindings_required');
  return refreshDueSource({root,observe:async({sourceKey,observationSlot})=>{
