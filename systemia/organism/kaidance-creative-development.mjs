@@ -78,7 +78,13 @@ function source(root,relative){
 }
 export function creativeFingerprint(root,p){
  const h=createHash('sha256');
- for(const rel of [...p.source_files,p.proof_test].sort()){
+ const files=[...p.source_files,p.proof_test];
+ // An unmerged PR is never read from another branch or counted as reviewed.
+ // Once an approved visual source actually lands in this checkout, its bytes
+ // enter the fingerprint and force a new bounded source review.
+ const gated=RELEASE_GATES[p.project_key]?.required_source;
+ if(gated&&fs.existsSync(path.resolve(root,gated)))files.push(gated);
+ for(const rel of files.sort()){
   h.update(rel+'\0');h.update(fs.readFileSync(source(root,rel)));h.update('\0');
  }
  return 'sha256:'+h.digest('hex');
