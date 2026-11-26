@@ -95,13 +95,25 @@
     },
     {
       "lane_key": "education-network",
-      "description": "Infinite Classroom, communications and sovereign education",
+      "description": "Infinite Classroom, Systemia University, safeguarded Ascend and owned learning/deep-learning workstreams",
       "mode": "observe_existing_workflows",
       "cadence_seconds": 300,
       "products": [
         "infinite-classroom",
         "evercraft-network",
-        "systemia-university"
+        "systemia-university",
+        "ascend"
+      ],
+      "services": [],
+      "priority": 2
+    },
+    {
+      "lane_key": "community-network",
+      "description": "Evercraft Circles professional networking, member-consented relationships and controlled referral onboarding",
+      "mode": "observe_existing_workflows",
+      "cadence_seconds": 300,
+      "products": [
+        "evercraft-circles"
       ],
       "services": [],
       "priority": 2
