@@ -205,6 +205,22 @@ export class AtlasPrivateFreightLedger {
   const {snapshot}=readLedger(file,id);
   return {...snapshot,actor_ref:actor.actor_ref,read_only:true};
  }
+ // Resolve a previously acknowledged mutation after restart. Same actor,
+ // exact tenant read grant and matching event hash are mandatory.
+ readMutationReceipt({sessionToken,tenant,idempotencyKey,eventHash}={}){
+  const id=tenantId(tenant),key=reqId(idempotencyKey,'idempotency_key');
+  const actor=this.#access(sessionToken,id,'atlas.read');
+  if(typeof eventHash!=='string'||!/^sha256:[a-f0-9]{64}$/.test(eventHash))
+   throw Error('atlas_receipt_hash_required');
+  const {file}=this.#file(id,false);
+  const {raw}=readLedger(file,id);
+  const event=raw.find(e=>e.idempotency_key===key);
+  if(!event||event.actor_ref!==actor.actor_ref||event.hash!==eventHash)
+   throw Error('atlas_receipt_unavailable');
+  return {state:'recorded',revision:event.revision,event_id:event.event_id,
+   event_hash:event.hash,type:event.type,record:event.payload,
+   dispatch_allowed:false,external_action_performed:false};
+ }
  mutate({sessionToken,tenant,type,payload,idempotencyKey,expectedRevision}={}){
   const id=tenantId(tenant),key=reqId(idempotencyKey,'idempotency_key');
   if(!ALLOWED.has(type))throw new Error('atlas_event_type_denied');
