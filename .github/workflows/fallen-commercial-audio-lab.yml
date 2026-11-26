@@ -12,6 +12,9 @@ on:
       - 'systemia/media-studio/commercial-visual-qc.test.mjs'
       - 'systemia/media-studio/customer-commercial-gate.mjs'
       - 'systemia/media-studio/customer-commercial-gate.test.mjs'
+      - 'systemia/media-studio/fallen-signature-gate.mjs'
+      - 'systemia/media-studio/fallen-signature-gate.test.mjs'
+      - 'systemia/media-studio/FALLEN-SIGNATURE-STANDARD.md'
       - 'systemia/media-studio/cli.ts'
       - 'systemia/media-studio/client-commercial-preflight.md'
       - 'systemia/media-studio/commercial-creative-roles.test.mjs'
@@ -38,5 +41,5 @@ jobs:
           node --test systemia/media-studio/commercial-audio-lab.test.mjs systemia/media-studio/commercial-creative-roles.test.mjs
       - name: Test customer audio visual and rights release gates
         run: |
-          node --test systemia/media-studio/commercial-audio-qc.test.mjs systemia/media-studio/commercial-visual-qc.test.mjs systemia/media-studio/commercial-release-preflight.test.mjs systemia/media-studio/customer-commercial-gate.test.mjs
+          node --test systemia/media-studio/commercial-audio-qc.test.mjs systemia/media-studio/commercial-visual-qc.test.mjs systemia/media-studio/commercial-release-preflight.test.mjs systemia/media-studio/customer-commercial-gate.test.mjs systemia/media-studio/fallen-signature-gate.test.mjs
           node systemia/saban/multiplier.mjs --software fallen-creative-council --inventory systemia/saban/fixtures/commercial-audio-council-job.json --agents 28 --workers 4 --execute --reconcile
