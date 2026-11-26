@@ -158,3 +158,6 @@ test('existing company tick reconciles owner-private R&D once, without publishin
   assert.equal(next.mission_snapshot.counts.admitted,0);
  }finally{fs.rmSync(state,{recursive:true,force:true})}
 });
+
+// FOREST-001 regression is part of the existing company heartbeat CI suite.
+import './forest-001-kaidance.test.mjs';

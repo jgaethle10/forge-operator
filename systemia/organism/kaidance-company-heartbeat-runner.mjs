@@ -180,11 +180,33 @@ function readAiWReceipt(file){
  if(!stats.isFile()||stats.size>256000)throw Error('aiw_receipt_invalid_file');
  return JSON.parse(fs.readFileSync(abs,'utf8'));
 }
+export function classifyForestReceipt(value,now=new Date()){
+ const keys=['dnr','qcew_yakima','qcew_kittitas'];
+ const allowed={dnr:'PASS_ATTRIBUTES_ONLY',qcew_yakima:'PASS_BASELINE',qcew_kittitas:'PASS_BASELINE'};
+ const hold=(status,action)=>({status,source_receipt_present:!!value,review_candidates:[{work_key:'forest-001:'+action,action}],sources_observed:0,worker_verified:false,execution_authorized:false});
+ if(!value)return hold('not_connected','collect_initial_baseline');
+ if(value.schema!=='evercraft.forest-001.owned-receipt.v1'||value.mission_key!=='FOREST-001'||!(/^[a-f0-9]{40}$/.test(value.source_commit||''))||!(/^[a-f0-9]{64}$/.test(value.evidence_manifest_sha256||''))||value.execution_authorized!==false||value.publication_authorized!==false||!keys.every(k=>['HOLD',allowed[k]].includes(value.sources?.[k])))return hold('invalid','review_invalid_receipt');
+ const age=new Date(now).getTime()-Date.parse(value.observed_at);
+ if(!Number.isFinite(age)||age< -60000)return hold('invalid','review_invalid_receipt');
+ if(age>=86400000)return hold('review_due','review_source_freshness');
+ const missing=keys.filter(k=>value.sources[k]==='HOLD');
+ return {status:missing.length?'partial_reported_receipt':'reported_baseline_receipt',source_receipt_present:true,last_observed_at:value.observed_at,source_commit:value.source_commit,evidence_manifest_sha256:value.evidence_manifest_sha256,sources:Object.fromEntries(keys.map(k=>[k,value.sources[k]])),sources_observed:keys.length-missing.length,worker_verified:false,execution_authorized:false,review_candidates:missing.map(k=>({work_key:'forest-001:resolve-'+k,action:'resolve_'+k+'_source_hold'}))};
+}
+function readForestReceipt(file){
+ if(!file)return null;
+ try{
+  const abs=path.resolve(file), dir=path.dirname(abs);
+  if(!fs.existsSync(abs))return null;
+  const stat=fs.lstatSync(abs), parent=fs.lstatSync(dir);
+  if(!stat.isFile()||parent.isSymbolicLink()||stat.size>16384||(stat.mode&0o077)!==0||(parent.mode&0o077)!==0||(typeof process.getuid==='function'&&(stat.uid!==process.getuid()||parent.uid!==process.getuid())))return {};
+  return readJson(abs);
+ }catch{return {};}
+}
 export function runCompanyHeartbeat({
  root=sourceRoot,outDir=path.join(sourceRoot,'artifacts/kaidance-company-heartbeat'),
  now=new Date(),proveWorlds=false,proveLearning=false,proveAirCore=false,
  learningCycle=runLearningCommunityCycle,aircoreCycle=runAirCoreDevelopmentCycle,
- spawn=spawnSync,aiwReceipt=null,globalOpportunityReceipt=null,networkDevelopmentReceipt=null,rdContinuityEnabled=false
+ spawn=spawnSync,aiwReceipt=null,globalOpportunityReceipt=null,networkDevelopmentReceipt=null,rdContinuityEnabled=false,forestReceipt=null
 }={}){
  const repo=path.resolve(root),out=path.resolve(outDir);
  const manifest=readJson(path.join(repo,'registry/kaidance-company-lanes.v1.json'));
@@ -266,7 +288,8 @@ export function runCompanyHeartbeat({
  }:{state:aircore?.held?'held':'not_executed',reason:aircore?.reason||null,
   physical_prototype_built:false,worker_dispatched:false};
  const researchContinuity=runPrivateResearchContinuity({enabled:rdContinuityEnabled,root:repo,outDir:out,now});
- const report={...planned.report,proof,infrastructure_watch:aiw,
+ const forest=classifyForestReceipt(forestReceipt,now);
+ const report={...planned.report,proof,infrastructure_watch:aiw,forest_restoration:forest,
   research_continuity:researchContinuity,
   global_opportunities:global,network_development:network,
   learning_community:learningSummary,aircore_development:aircoreSummary};
@@ -296,6 +319,7 @@ export function runCompanyHeartbeat({
     ...row,execution_authorized:false,hardware_purchase_authorized:false,
     partner_contact_authorized:false,authority:'systemia_operator_review_required'
    })),
+   ...forest.review_candidates.map(row=>({...row,lane_key:'forest-restoration',priority:3,authority:'systemia_operator_review_required',execution_authorized:false,publication_authorized:false})),
    ...report.company_portfolio.products_not_yet_named.slice(0,12).map(key=>({
     work_key:'product:'+key+':adapter-admission',lane_key:null,priority:3,
     action:'bind_existing_systemia_capability_or_admit_bounded_new_adapter',authority:'source_review_required'
@@ -337,6 +361,7 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
  const opt=name=>{const i=process.argv.indexOf(name);return i>=0?process.argv[i+1]:''};
  try{
   const outDir=opt('--out')||process.env.SYSTEMIA_COMPANY_HEARTBEAT_OUT_DIR||path.join(sourceRoot,'artifacts/kaidance-company-heartbeat');
+  const forestReceipt=readForestReceipt(opt('--forest-receipt')||process.env.SYSTEMIA_FOREST_EVIDENCE_RECEIPT_FILE||'');
   const aiwReceipt=readAiWReceipt(opt('--aiw-receipt')||process.env.SYSTEMIA_AIW_EVIDENCE_RECEIPT_FILE||'');
   const networkDevelopmentReceipt=readAiWReceipt(opt('--network-development-receipt')||process.env.SYSTEMIA_NETWORK_DEVELOPMENT_RECEIPT_FILE||'');
   let globalOpportunityReceipt=null;
@@ -353,7 +378,7 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
   const result=runCompanyHeartbeat({outDir,proveWorlds:process.argv.includes('--prove-worlds'),
     proveLearning:process.argv.includes('--prove-learning')||process.env.SYSTEMIA_KAIDANCE_LEARNING_SOURCE_PROOFS==='true',
     proveAirCore:process.argv.includes('--prove-aircore')||process.env.SYSTEMIA_KAIDANCE_AIRCORE_SOURCE_PROOFS==='true',
-    aiwReceipt,globalOpportunityReceipt,networkDevelopmentReceipt,
+    aiwReceipt,globalOpportunityReceipt,networkDevelopmentReceipt,forestReceipt,
     rdContinuityEnabled:process.env.SYSTEMIA_KAIDANCE_RD_CONTINUITY_ENABLED==='true'});
   // The same company heartbeat owns Leiland + visual art-direction review.
   // This is not another scheduler or a remote code-generation worker.
@@ -387,6 +412,8 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
    global_opportunity_receipt:result.report?.global_opportunities?.status||null,
    network_development_receipt:result.report?.network_development?.status||null,
    global_opportunity_outreach_authorized:false,
+   forest_restoration_receipt:result.report?.forest_restoration?.status||null,
+   forest_restoration_execution_authorized:false,
    next_action_key:result.next_action?.current_next_action?.work_key||null,
    learning_community_state:result.report?.learning_community?.state||null,
    learning_source_proofs_run:result.report?.learning_community?.source_proofs_run||0,
