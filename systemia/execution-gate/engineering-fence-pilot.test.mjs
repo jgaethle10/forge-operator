@@ -10,6 +10,8 @@ import {EvercraftIntakeFabric} from '../intake-fabric/intake.mjs';
 import {EvercraftExecutionGate} from './gate.mjs';
 import {EngineeringFencePilot} from './engineering-fence-pilot.mjs';
 import {LineageStore} from '../lineage/core.mjs';
+import {runCompanyHeartbeat} from '../organism/kaidance-company-heartbeat-runner.mjs';
+import {observeEngineeringPilot} from '../organism/kaidance-engineering-pilot-observation.mjs';
 const run=promisify(execFile);
 const git=(p,...a)=>execFileSync('git',['-C',p,...a],{encoding:'utf8'}).trim();
 function fixture(){
@@ -236,5 +238,35 @@ test('scoped revocation and mutation share one lock, and metrics are read-only',
   assert.equal(f.pilot.publish(a).reason,'writer_not_authorized');
   assert.equal(git(f.repo,'rev-parse','refs/heads/pilot-integration'),f.base);
   assert.equal(f.pilot.observe().completed,0);
+ }finally{fs.rmSync(f.root,{recursive:true,force:true});}
+});
+
+test('existing company heartbeat reads actual pilot state on two ticks without advancing it',()=>{
+ const f=fixture();
+ const out=path.join(f.root,'kaidance-company-heartbeat');
+ try{
+  f.pilot.submit(f.proposal('a','r/file.txt'));
+  const source=path.join(f.root,'fence.json'),before=fs.readFileSync(source);
+  const at=new Date(f.options.clock());
+  const first=runCompanyHeartbeat({outDir:out,now:at,engineeringPilotRoot:f.root});
+  assert.equal(first.report.engineering_pilot.state,'observed_synthetic');
+  assert.equal(first.report.engineering_pilot.observation.accepted,1);
+  assert.equal(first.report.engineering_pilot.worker_dispatched,false);
+  assert.equal(first.mission_snapshot.engineering_pilot_receipt,first.report.engineering_pilot.receipt_hash);
+  assert.equal(first.queue.execution_authorized,false);
+  assert.equal(runCompanyHeartbeat({outDir:out,now:at,engineeringPilotRoot:f.root}).duplicate,true);
+  assert.deepEqual(fs.readFileSync(source),before);
+  const second=runCompanyHeartbeat({outDir:out,now:new Date(+at+300000),engineeringPilotRoot:f.root});
+  assert.equal(second.tick,first.tick+1);assert.notEqual(second.receipt_ref,first.receipt_ref);
+  assert.notEqual(second.report.engineering_pilot.receipt_hash,first.report.engineering_pilot.receipt_hash);
+  assert.equal(second.report.engineering_pilot.observation.state_digest,first.report.engineering_pilot.observation.state_digest);
+  assert.equal(second.report.engineering_pilot.observation.oldest_waiting_ms,300000);
+  assert.deepEqual(fs.readFileSync(source),before);
+  assert.equal(git(f.repo,'rev-parse','refs/heads/pilot-integration'),f.base);
+  assert.equal(observeEngineeringPilot({root:'relative',now:at}).state,'held');
+  assert.equal(observeEngineeringPilot({now:at}).state,'not_admitted');
+  fs.chmodSync(source,0o644);
+  assert.equal(observeEngineeringPilot({root:f.root,now:at}).state,'held');
+  console.log(JSON.stringify({synthetic:true,existing_heartbeat_ticks:2,distinct_receipts:true,pilot_state_unchanged:true,workers_dispatched:0,production_mutations:0}));
  }finally{fs.rmSync(f.root,{recursive:true,force:true});}
 });

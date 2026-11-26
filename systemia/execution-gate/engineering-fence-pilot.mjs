@@ -56,10 +56,11 @@ export class EngineeringFencePilot{
  observe(){
   const state=fs.existsSync(this.file)?JSON.parse(fs.readFileSync(this.file,'utf8')):{sequence:0,jobs:{}};
   const jobs=Object.values(state.jobs),now=this.clock();
+  if(!Number.isSafeInteger(state.sequence)||state.sequence<0||jobs.some(j=>!['accepted','reserved','intent','complete','superseded'].includes(j.status)||!Number.isFinite(Date.parse(j.admitted_at))))throw Error('pilot_state_invalid');
   const age=j=>Math.max(0,now-Date.parse(j.admitted_at));
   const waiting=jobs.filter(j=>j.status==='accepted');
   return receipt({schema:'evercraft.engineering.pilot-observation.v1',observed_at:this.#time(),
-   sequence:state.sequence,accepted:waiting.length,reserved:jobs.filter(j=>j.status==='reserved').length,
+   state_digest:sha(state),synthetic:true,sequence:state.sequence,accepted:waiting.length,reserved:jobs.filter(j=>j.status==='reserved').length,
    uncertain:jobs.filter(j=>j.status==='intent').length,completed:jobs.filter(j=>j.status==='complete').length,
    superseded:jobs.filter(j=>j.status==='superseded').length,oldest_waiting_ms:waiting.length?Math.max(...waiting.map(age)):null,
    writer_lock_present:fs.existsSync(this.lock),execution_authorized:false,...flags});
