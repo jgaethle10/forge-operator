@@ -1,0 +1,65 @@
+{
+  "schema": "evercraft.systemia.rd-source-handoff.v1",
+  "project_key": "FUNGAL-DEFENSE-001",
+  "originating_issue": "https://github.com/jgaethle10/forge-operator/issues/1834",
+  "source_review_pr": "https://github.com/jgaethle10/forge-operator/pull/1908",
+  "kaidance_continuity_pr": "https://github.com/jgaethle10/forge-operator/pull/2588",
+  "canonical_continuity_issue": "https://github.com/jgaethle10/forge-operator/issues/1426",
+  "authority": {
+    "systemia_mission_admission": "not_verified",
+    "authoritative_private_mission_id": null,
+    "authoritative_owner": null,
+    "current_state": "candidate_source_handoff_only",
+    "no_new_scheduler": true,
+    "use_existing_company_heartbeat": true,
+    "cadence_seconds": 300,
+    "heartbeat_reconciles_not_research_execution": true,
+    "private_export_required": true,
+    "no_auto_admission": true,
+    "no_automatic_work_dispatch": true,
+    "no_public_health_alerts": true,
+    "no_automatic_source_revision": true,
+    "no_publication": true,
+    "no_clinical_decision_support": true,
+    "no_pathogen_experiments": true
+  },
+  "cadence_policy": {
+    "liveness_seconds": 300,
+    "full_source_review_minimum_seconds": 604800,
+    "source_review_mode": "only when authoritative new source or bounded due lease; never scrape every 300-second tick",
+    "artifact_validation_mode": "when pinned source changes or explicit authorized source-proof lease",
+    "on_missing_receipt": "hold_and_raise_private_exception_no_false_progress",
+    "on_stale_source": "manual_review_required_no_public_update",
+    "on_duplicate_tick": "reuse_canonical_systemia_tick_no_duplicate_worker",
+    "on_unknown_mission_identity": "do_not_promote_proposed_source_into_admitted_ledger"
+  },
+  "existing_evidence": {
+    "source_code_branch": "research/fungal-defense-001",
+    "latest_observatory": "research/fungal-defense-001/observatory-v0.4.html",
+    "versioned_historical_data": "research/fungal-defense-001/data/cdc-cauris-clinical-annual.json",
+    "dated_revised_annual_data": "research/fungal-defense-001/data/cdc-cauris-annual-2026-11-13.json",
+    "separate_provisional_data": "research/fungal-defense-001/data/cdc-nndss-provisional-2026-w43.json",
+    "local_validation_runner": "research/fungal-defense-001/tools/run_owned_validation.py",
+    "local_handoff_script": "research/fungal-defense-001/tools/validate_on_owned_node.sh",
+    "editorial_factcheck": "research/fungal-defense-001/editorial/2026-11-15-candida-auris-fact-check.md",
+    "last_source_review_date": "2026-11-15",
+    "last_work_execution_receipt": "unverified_on_evercraft_owned_node",
+    "last_private_systemia_goal_checkpoint": "not_provided",
+    "ci_receipt_status": "not_verified_for_current_source",
+    "research_advanced_this_tick": false
+  },
+  "bounded_next_action": {
+    "kind": "admission_and_owner_runtime_readback",
+    "description": "Systemia owner: crosswalk FUNGAL-DEFENSE-001 against existing private admitted R&D registry; if admitted, configure private all-R&D mission export and priority ID, map existing goal checkpoint, run pinned local validation on authorized owned node; return signed/reviewable private execution and source receipts.",
+    "requires_operator_authorization": true,
+    "authorized_to_execute": false,
+    "source_evidence_only": true
+  },
+  "explicit_out_of_scope": [
+    "new timers, workflow schedulers, parallel mission ledgers or recurring bots",
+    "automated drug/pathogen experimentation, culturing or high-risk laboratory procedures",
+    "patient-level, facility-level or suppressed cell surveillance reconstruction",
+    "clinical advice, diagnosis, individual risk scoring, crisis alerts or public publication",
+    "new external hosting/cloud runtimes or paid compute"
+  ]
+}

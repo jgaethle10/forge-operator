@@ -1,0 +1,75 @@
+{
+  "schema": "evercraft.fungal-defense.test-receipt.v1",
+  "local_date": "2026-11-04 America/Los_Angeles",
+  "observed_utc": "2026-11-05T07:28:35Z",
+  "execution_environment": "Isolated assistant development container; NOT Evercraft Node001 or Node002",
+  "repository": "jgaethle10/forge-operator",
+  "branch": "research/fungal-defense-001",
+  "tests": [
+    {
+      "command": "python3 tools/validate_surveillance.py --self-test",
+      "result": "PASS",
+      "details": "Valid snapshot plus seven intentionally corrupted or unsafe data fixtures detected"
+    },
+    {
+      "command": "python3 -m unittest discover -s tools -p 'test_*.py' -v",
+      "result": "PASS",
+      "details": "Six offline unit tests, including local HTTP 302/200/404 boundary checks"
+    },
+    {
+      "command": "python3 -m py_compile tools/*.py",
+      "result": "PASS",
+      "details": "All local Python modules compiled"
+    },
+    {
+      "command": "python3 tools/source_watch.py --fixture official-cdc-headline-fixture.html",
+      "result": "PASS",
+      "details": "Expected 2024 count 6304; receipt source_mode=fixture; does not constitute online CDC fetch"
+    }
+  ],
+  "code_sha_provenance": [
+    {
+      "path": "research/fungal-defense-001/data/cdc-cauris-clinical-annual.json",
+      "git_blob_sha": "6a5473210c106f670a742cb5c46a391ddd1d8502",
+      "matches_executed_local_copy": true
+    },
+    {
+      "path": "research/fungal-defense-001/tools/validate_surveillance.py",
+      "git_blob_sha": "f2f346b9bfd5541cdb086e83e53731c47943d46a",
+      "matches_executed_local_copy": true
+    },
+    {
+      "path": "research/fungal-defense-001/tools/source_watch.py",
+      "git_blob_sha": "cecab9571564631aada2f91b866a015ac3e50661",
+      "matches_executed_local_copy": true
+    },
+    {
+      "path": "research/fungal-defense-001/tools/test_source_watch.py",
+      "git_blob_sha": "b094a88a92d0b887ebfcbaebfa3842acf014c50e",
+      "matches_executed_local_copy": true
+    },
+    {
+      "path": "research/fungal-defense-001/tools/serve_local.py",
+      "git_blob_sha": "8af5e3eaddfe57c4b86e1ec2b0213103953ee00d",
+      "matches_executed_local_copy": true
+    },
+    {
+      "path": "research/fungal-defense-001/tools/test_serve_local.py",
+      "git_blob_sha": "ca142343a7846021d409ba0c544757366440c23e",
+      "matches_executed_local_copy": true
+    }
+  ],
+  "not_verified": [
+    "Live CDC network fetch from Evercraft-owned machine",
+    "Real-device UI rendering and interaction",
+    "Running on Node001/Node002",
+    "Systemia runtime integration",
+    "External clinical review",
+    "Public deployment"
+  ],
+  "guarantees": {
+    "patient_data_used": false,
+    "live_disease_alert_generated": false,
+    "automatic_source_publication": false
+  }
+}

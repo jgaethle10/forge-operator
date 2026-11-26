@@ -1,0 +1,60 @@
+{
+  "schema": "evercraft.fungal-defense.pinned-handoff-dev-validation.v1",
+  "date": "2026-11-10",
+  "execution_environment": "isolated assistant development container; not Evercraft-owned Node001/Node002",
+  "branch": "research/fungal-defense-001",
+  "files": [
+    {
+      "path": "research/fungal-defense-001/tools/validate_on_owned_node.sh",
+      "git_blob_sha": "3469af4a4ba2528ced2d87219c6bb2c1ac974fef",
+      "local_tested_bytes_match_committed_file": true
+    },
+    {
+      "path": "research/fungal-defense-001/tools/test_node_handoff.py",
+      "git_blob_sha": "d5da2b50a03363bd97a3701e3b92a596fcfe8266",
+      "local_tested_bytes_match_committed_file": true
+    }
+  ],
+  "executions": [
+    {
+      "command": "bash -n validate_on_owned_node.sh",
+      "status": "PASS",
+      "scope": "shell syntax"
+    },
+    {
+      "command": "bash validate_on_owned_node.sh --help",
+      "status": "PASS",
+      "scope": "command help only"
+    },
+    {
+      "command": "bash validate_on_owned_node.sh",
+      "status": "EXPECTED_BLOCK",
+      "exit_code": 2,
+      "scope": "missing reviewed commit; never attempts clone"
+    },
+    {
+      "command": "python3 -B -m unittest -v test_node_handoff",
+      "status": "PASS",
+      "tests_run": 6,
+      "failures": 0,
+      "errors": 0,
+      "scope": "offline mock Git/Python; no network or owned node"
+    }
+  ],
+  "tested_properties": [
+    "missing or malformed SHA stops before clone",
+    "changed SHA stops before validation execution, cleans checkout",
+    "matching SHA invokes designated local validation runner",
+    "failed validation exits nonzero and never prints success",
+    "distinct private receipts are created across repeated runs",
+    "receipt directory is restricted by umask 077"
+  ],
+  "limits": [
+    "GitHub clone and node execution have not run on NextGen or Penguin",
+    "mock Git/Python binaries simulate execution and are not real GitHub or physical hardware receipts",
+    "scientific review, production deployment, Systemia orchestration and live source updates remain pending"
+  ],
+  "node_execution_verified": false,
+  "public_deployment_performed": false,
+  "public_release_approved": false
+}

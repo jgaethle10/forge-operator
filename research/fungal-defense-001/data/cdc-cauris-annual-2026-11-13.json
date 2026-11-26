@@ -1,0 +1,79 @@
+{
+  "schema": "evercraft.fungal-defense.cdc-annual-revision.v1",
+  "evidence_review_date": "2026-11-15",
+  "source_publication_date": "2026-11-13",
+  "source_name": "CDC Tracking C. auris, National Clinical Cases Reported Over Time",
+  "source_url": "https://www.cdc.gov/candida-auris/tracking-c-auris/",
+  "source_class": "official_us_public_health_surveillance",
+  "case_definition": "Reported U.S. clinical cases of Candida auris by year; not deaths, total prevalence, screening-only cases or necessarily invasive infections",
+  "is_live": false,
+  "surveillance_years": [
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023,
+    2024,
+    2025
+  ],
+  "yearly_clinical_cases": [
+    51,
+    171,
+    330,
+    477,
+    767,
+    1557,
+    2918,
+    4531,
+    6370,
+    8780
+  ],
+  "total_2016_2025": 25952,
+  "historical_archive_reference": "data/cdc-cauris-clinical-annual.json",
+  "method": "Keep 2026-11-13 CDC chart revision as a distinct immutable observed snapshot. Previous CDC 2016–2024 snapshot is never silently overwritten. Revised annual data are NOT NNDSS provisional current-year notification values.",
+  "historical_archive_2024": 6304,
+  "revised_2024": 6370,
+  "difference_2024": 66,
+  "latest_comparison": {
+    "year": 2025,
+    "versus_year": 2024,
+    "difference": 2410,
+    "percent": 37.83359497645212
+  },
+  "provenance_notes": [
+    "The CDC website's dated Nov 13, 2026 page includes 2025 annual case totals and changed some historical yearly counts.",
+    "The dated latest CDC page is authoritative for that page version; archived old file reflects an earlier CDC tracking page snapshot.",
+    "There is a separately defined corrected 2026 MMWR analytical series, not interchangeable with the tracking page.",
+    "2026 NNDSS week-by-week notifications are provisional, different in scope, definition and temporal basis.",
+    "The observed increased count does not prove a newly discovered pathogen, a local outbreak, or an individual's risk."
+  ],
+  "context": [
+    {
+      "claim": "Candida auris is a newly discovered fungus in 2026",
+      "status": "false",
+      "source": "https://www.cdc.gov/mmwr/volumes/65/wr/mm6544e1.htm",
+      "evidence": "CDC November 11, 2016 described U.S. cases and global reports from 2009–2015."
+    },
+    {
+      "claim": "Drug-resistant Candida auris is a documented healthcare-associated hazard",
+      "status": "true",
+      "source": "https://www.cdc.gov/candida-auris/",
+      "evidence": "CDC documents antifungal resistance, spread in healthcare facilities and greater risk in already very ill patients."
+    },
+    {
+      "claim": "The November 13, 2026 CDC tracking update includes new 2025 annual data and historical revisions",
+      "status": "true",
+      "source": "https://www.cdc.gov/candida-auris/tracking-c-auris/",
+      "evidence": "National chart reports 8,780 clinical cases in 2025 and 6,370 in 2024, with revised earlier-year figures."
+    }
+  ],
+  "reporting_policy": {
+    "no_automatic_outbreak_alerts": true,
+    "no_auto_publish": true,
+    "no_patient_or_facility_identification": true,
+    "no_unsourced_forecasts": true
+  }
+}
