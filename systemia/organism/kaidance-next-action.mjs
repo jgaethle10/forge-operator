@@ -157,6 +157,24 @@ export function planKaidanceNextAction({
     'existing_systemia_operator_review'));
   }
  }
+ // AIW source metadata changed or failed its bounded official-source probe.
+ // This is a Systemia human-review handoff, never permission to ingest data,
+ // update the map, alter Caddy, or publish an infrastructure safety claim.
+ if(companyReport.infrastructure_watch?.status==='verified_receipt'){
+  const aiw=companyQueue.candidates?.filter(x=>
+   x?.lane_key==='infrastructure-watch'&&
+   /^aiw:[a-z0-9-]+:source-(?:change|unverified)$/.test(x.work_key||'')&&
+   ['review_official_source_metadata_change','investigate_official_source_reachability'].includes(x.action)&&
+   x.authority==='systemia_operator_review_required'&&
+   x.execution_authorized===false&&x.publication_authorized===false)||[];
+  if(aiw.length){
+   const first=[...aiw].sort((a,b)=>a.work_key.localeCompare(b.work_key))[0];
+   choices.push(action(2,first.work_key,'infrastructure-watch',
+    'review_american_infrastructure_watch_official_source_evidence','company',
+    'source:systemia/infrastructure-watch/source-registry.v1.json',
+    'existing_systemia_operator_review'));
+  }
+ }
  const unbound=companyQueue.candidates?.filter(x=>
   x?.action==='bind_existing_systemia_capability_or_admit_bounded_new_adapter'&&
   /^product:[a-z0-9-]+:adapter-admission$/.test(x.work_key||'')&&

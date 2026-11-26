@@ -39,6 +39,20 @@
       ],
       "env_args": {
         "--out": "SYSTEMIA_COMPANY_HEARTBEAT_OUT_DIR"
+      },
+      "optional_env_args": {
+        "--aiw-receipt": "SYSTEMIA_AIW_EVIDENCE_RECEIPT_FILE"
+      }
+    },
+    {
+      "service_key": "aiw-evidence-watch",
+      "mode": "cycle",
+      "manifest": "systemia/organism/aiw-evidence-watch.workflow.json",
+      "executable": "systemia/infrastructure-watch/aiw-evidence-watch.mjs",
+      "cadence_seconds": 300,
+      "optional_when_unconfigured": true,
+      "env_args": {
+        "--out": "SYSTEMIA_AIW_EVIDENCE_OUT_DIR"
       }
     },
     {

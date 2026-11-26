@@ -47,9 +47,47 @@ function countWorkflowManifests(root,max=30000){
  walk(path.join(root,'systemia'));
  return count;
 }
+// Only a bounded, dated source-observation receipt can enter the company
+// heartbeat. Receipt data is not publication permission or a live hazard claim.
+export function classifyAiWReceipt(value,now=new Date()){
+ if(!value)return {status:'not_connected',review_candidates:[],sources_observed:0};
+ if(value.schema!=='evercraft.aiw.evidence-watch.v1'||
+    value.project_key!=='american-infrastructure-watch'||
+    value.source_authority!=='fhwa_official_public_only'||
+    value.no_auto_approval!==true||
+    value.no_public_data_mutation!==true||
+    value.production_changes!==0||value.publications_authorized!==0||
+    value.ingested_bridge_records!==0||
+    !Array.isArray(value.sources)||value.sources.length>8||
+    !Array.isArray(value.review_candidates)||value.review_candidates.length>8)
+  return {status:'invalid',review_candidates:[],sources_observed:0};
+ const age=new Date(now).getTime()-Date.parse(value.observed_at);
+ if(!Number.isFinite(age)||age< -60000||age>48*3600*1000)
+  return {status:'stale',review_candidates:[],sources_observed:0};
+ const validCandidates=value.review_candidates.every(x=>
+  typeof x.key==='string'&&/^aiw:[a-z0-9-]+:source-(?:change|unverified)$/.test(x.key)&&
+  typeof x.source_key==='string'&&
+  x.approval_required===true&&x.publication_authorized===false);
+ if(!validCandidates)return {status:'invalid',review_candidates:[],sources_observed:0};
+ return {status:'verified_receipt',last_observed_at:value.observed_at,
+  source_state:value.status,review_candidates:value.review_candidates,
+  sources_observed:value.sources.length,
+  changed_source_keys:value.changed_source_keys||[],
+  unverified_source_keys:value.unverified_source_keys||[],
+  publication_authorized:false};
+}
+function readAiWReceipt(file){
+ if(!file)return null;
+ const abs=path.resolve(file),dir=path.dirname(abs);
+ if(!fs.existsSync(abs))return null;
+ if(fs.lstatSync(abs).isSymbolicLink()||fs.lstatSync(dir).isSymbolicLink())throw Error('aiw_receipt_symlink_refused');
+ const stats=fs.statSync(abs);
+ if(!stats.isFile()||stats.size>256000)throw Error('aiw_receipt_invalid_file');
+ return JSON.parse(fs.readFileSync(abs,'utf8'));
+}
 export function runCompanyHeartbeat({
  root=sourceRoot,outDir=path.join(sourceRoot,'artifacts/kaidance-company-heartbeat'),
- now=new Date(),proveWorlds=false,spawn=spawnSync
+ now=new Date(),proveWorlds=false,spawn=spawnSync,aiwReceipt=null
 }={}){
  const repo=path.resolve(root),out=path.resolve(outDir);
  const manifest=readJson(path.join(repo,'registry/kaidance-company-lanes.v1.json'));
@@ -78,37 +116,50 @@ export function runCompanyHeartbeat({
  }
  const planned=planCompanyHeartbeat({manifest,products,supervisor,previous,now,
   worldsFingerprint:fingerprint,proof,workflowManifestCount:countWorkflowManifests(repo)});
- const report={...planned.report,proof};
+ const aiw=classifyAiWReceipt(aiwReceipt,now);
+ const report={...planned.report,proof,infrastructure_watch:aiw};
  const queue={schema:'evercraft.kaidance.company-heartbeat.queue.v1',observed_at:report.observed_at,
   execution_authorized:false,
   candidates:[
    ...(proof.status==='failed'?[{work_key:'worlds:source-proof-failure',lane_key:'worlds',priority:1,action:'investigate_failed_source_tests',authority:'review_required'}]:[]),
    ...(proof.status==='due_not_executed'?[{work_key:'worlds:source-proof-due',lane_key:'worlds',priority:2,action:'run_bounded_source_proof',authority:'existing_allowlisted_local_only'}]:[]),
+   ...aiw.review_candidates.map(row=>({work_key:row.key,lane_key:'infrastructure-watch',priority:2,
+    action:row.action,authority:'systemia_operator_review_required',
+    execution_authorized:false,publication_authorized:false})),
    ...report.company_portfolio.products_not_yet_named.slice(0,12).map(key=>({
     work_key:'product:'+key+':adapter-admission',lane_key:null,priority:3,
     action:'bind_existing_systemia_capability_or_admit_bounded_new_adapter',authority:'source_review_required'
    }))
   ],
   no_remote_work_dispatched:true,no_code_changes_made:true};
+ const snapshot={...planned.snapshot,
+  counts:{...planned.snapshot.counts,
+   scanned:planned.snapshot.counts.scanned+aiw.sources_observed,
+   held:planned.snapshot.counts.held+aiw.review_candidates.length},
+  evidence_refs:aiw.status==='verified_receipt'
+   ?[...planned.snapshot.evidence_refs,'source:systemia/infrastructure-watch/source-registry.v1.json',
+     sha(JSON.stringify(aiw))].slice(0,30)
+   :planned.snapshot.evidence_refs};
  fs.mkdirSync(out,{recursive:true,mode:0o700});
  // Commit the cycle watermark LAST. An interrupted write must be retryable
  // without falsely reporting a completed tick with missing evidence receipts.
  atomicJson(path.join(out,'latest.json'),report);
  atomicJson(path.join(out,'queue.json'),queue);
- atomicJson(path.join(out,'mission-snapshot.json'),planned.snapshot);
+ atomicJson(path.join(out,'mission-snapshot.json'),snapshot);
  // Read-only next-step reconciliation uses already-written prior/sibling
  // receipts. No external effects or second scheduler. State watermark stays last.
  const next=writeKaidanceNextAction({outDir:out,companyReport:report,companyQueue:queue,now});
  atomicJson(statePath,planned.state);
  return {duplicate:false,tick,executed:true,report,queue,
-  next_action:next.report,mission_snapshot:planned.snapshot,
-  receipt_ref:sha(JSON.stringify(planned.snapshot))};
+  next_action:next.report,mission_snapshot:snapshot,
+  receipt_ref:sha(JSON.stringify(snapshot))};
 }
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)){
  const opt=name=>{const i=process.argv.indexOf(name);return i>=0?process.argv[i+1]:''};
  try{
   const outDir=opt('--out')||process.env.SYSTEMIA_COMPANY_HEARTBEAT_OUT_DIR||path.join(sourceRoot,'artifacts/kaidance-company-heartbeat');
-  const result=runCompanyHeartbeat({outDir,proveWorlds:process.argv.includes('--prove-worlds')});
+  const aiwReceipt=readAiWReceipt(opt('--aiw-receipt')||process.env.SYSTEMIA_AIW_EVIDENCE_RECEIPT_FILE||'');
+  const result=runCompanyHeartbeat({outDir,proveWorlds:process.argv.includes('--prove-worlds'),aiwReceipt});
   // Explicit owner opt-in only; CI and existing installations default off.
   let cemetery=null, cemeteryClassification=null;
   if(process.env.SYSTEMIA_CEMETERY_RESEARCH_OUT_DIR){
@@ -121,6 +172,8 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
   console.log(JSON.stringify({schema:'evercraft.kaidance.company-heartbeat-cli.v1',ok:true,
    cemetery_research:cemetery,cemetery_classification:cemeteryClassification,duplicate:result.duplicate,source_proof:result.report?.proof?.status||null,
    public_products_observed:result.report?.company_portfolio?.public_products||null,
+   infrastructure_watch_receipt:result.report?.infrastructure_watch?.status||null,
+   infrastructure_watch_publication_authorized:false,
    next_action_key:result.next_action?.current_next_action?.work_key||null,
    next_action_execution_authorized:false,
    worker_launches:0,production_mutations:0,
