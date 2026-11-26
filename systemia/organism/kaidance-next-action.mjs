@@ -260,6 +260,29 @@ export function planKaidanceNextAction({
    'check_original_event_tender_and_eligibility_before_founder_approved_pitch',
    'company',candidate.evidence_ref,'founder_review_required'));
  }
+ // FindMyPart: a source-fit observation is a review handoff, never a buyer,
+ // permission to contact, or authority to write the Revenue Desk.
+ const fmp=companyReport.findmypart;
+ if(fmp?.priority===1&&fmp.state==='review_queued'&&fmp.buyers_qualified===0&&
+    fmp.outreach_authorized===false&&Array.isArray(fmp.service_fit_evidence)&&fmp.service_fit_evidence.length<=6){
+  const seen=new Set();
+  for(const row of companyQueue.candidates||[]){
+   if(row?.lane_key!=='findmypart'||row.priority!==1||
+      !/^findmypart:shop:[a-z0-9-]{1,80}$/.test(row.work_key||'')||
+      seen.has(row.work_key)||row.action!=='reconcile_existing_revenue_desk_then_confirm_actual_stalled_case'||
+      row.authority!=='systemia_operator_review_required'||row.execution_authorized!==false||
+      row.outreach_authorized!==false||row.buyer_need_confirmed!==false||
+      !HASH.test(row.evidence_ref||''))continue;
+   const age=at.getTime()-Date.parse(row.observed_at);
+   if(!Number.isFinite(age)||age<0||age>86400000)continue;
+   try{const u=new URL(row.source_url);if(u.protocol!=='https:'||u.username||u.password||u.hash)continue}catch{continue}
+   if(!fmp.service_fit_evidence.some(e=>e?.work_key===row.work_key&&
+      e.source_url===row.source_url&&e.observed_at===row.observed_at&&e.evidence_ref===row.evidence_ref))continue;
+   seen.add(row.work_key);
+   choices.push(action(1,row.work_key,'findmypart',row.action,'company_findmypart_receipt',
+    row.evidence_ref,'existing_systemia_operator_review'));
+  }
+ }
  // FOREST-001: review-only decisions from the current company report and queue.
  const forest=companyReport.forest_restoration;
  const forestActions={

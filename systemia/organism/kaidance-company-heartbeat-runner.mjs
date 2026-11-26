@@ -446,7 +446,7 @@ export function runCompanyHeartbeat({
    external_work_performed:false,source_regions:['United Kingdom','United States'],
    any_buyer_contact:false,any_sponsor_commitment:false};
  const report={...planned.report,proof,event_discovery:eventDiscovery,infrastructure_watch:aiw,forest_restoration:forest,
-  findmypart:{state:'review_queued',priority:1,heartbeat_seconds:300,workstreams:findmypartCandidates.map(x=>x.work_key),worker_dispatched:false,source_poll_performed:fmp?.source_poll_performed===true,buyers_qualified:0,outreach_authorized:false,engineering_benchmark_executed:fmp?.engineering_benchmark_executed===true,commercial_status:fmp?.commercial_status||'not_executed',source_observation:fmp?.observation||null,code_changes:0},
+  findmypart:{state:'review_queued',priority:1,heartbeat_seconds:300,workstreams:findmypartCandidates.map(x=>x.work_key),worker_dispatched:false,source_poll_performed:fmp?.source_poll_performed===true,buyers_qualified:0,outreach_authorized:false,engineering_benchmark_executed:fmp?.engineering_benchmark_executed===true,commercial_status:fmp?.commercial_status||'not_executed',source_observation:fmp?.observation||null,service_fit_evidence:fmpShopCandidates.map(({work_key,source_url,observed_at,evidence_ref})=>({work_key,source_url,observed_at,evidence_ref})),code_changes:0},
   research_continuity:researchContinuity,
   global_opportunities:global,network_development:network,
   learning_community:learningSummary,aircore_development:aircoreSummary};
