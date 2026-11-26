@@ -50,7 +50,11 @@ function eventScoutReview(out,now){
   const candidates=(data.observation.candidates||[]).filter(c=>
    /^event:[a-f0-9]{20}$/.test(c?.opportunity_key||'')&&
    c.outreach_authorized===false&&c.dispatch_authorized===false&&
-   c.source_url?.startsWith('https://www.find-tender.service.gov.uk/')&&
+   (()=>{try{const u=new URL(c.source_url);
+    return u.protocol==='https:'&&
+     u.hostname==='www.find-tender.service.gov.uk'&&
+     !u.username&&!u.password&&!u.hash;
+    }catch{return false}})()&&
    c.buyer_contact_verified===false&&c.revenue_confirmed===false&&
    (!c.deadline||Date.parse(c.deadline)>new Date(now).getTime()))
    .slice(0,6);
