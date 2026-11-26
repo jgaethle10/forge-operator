@@ -30,12 +30,15 @@ export function selectNewSolicitations({capture,knownUrls,limit=3}){
  }
  return selected;
 }
-export async function captureAndAdmit({root,sourceKey,browse}){
+export async function captureAndAdmit({root,sourceKey,browse,observationSlot=null}){
+ if(observationSlot!==null&&(!Number.isSafeInteger(observationSlot)||observationSlot<0))throw Error('invalid_observation_slot');
  if(!path.isAbsolute(root)||!Object.hasOwn(sources,sourceKey)||typeof browse!=='function')throw Error('invalid_registered_source');
  const inbox=path.join(root,'document-inbox.json');
  const before=read(inbox,65536);
  const knownUrls=new Set(planDocumentCycle({root,manifestRaw:before}).map(x=>x.job.url));
- const job=planPublicDemandResearch({hits:[sources[sourceKey]]}).jobs[0];
+ const source=sources[sourceKey];
+ const hit=observationSlot===null?source:{...source,title:source.title+' slot '+observationSlot};
+ const job=planPublicDemandResearch({hits:[hit]}).jobs[0];
  const result=await runPublicDemandGoal({directory:root,job,browse});
  const base={schema:'evercraft.public-demand.source-handoff.v1',source_key:sourceKey,goal_key:result.goal_key,capture_state:result.capture_state,source_url:job.source_url,...flags};
  if(!result.local_receipt_verified||result.goal_state!=='complete'||result.capture_state!=='captured_requires_research')return {...base,state:'hold_capture_not_verified',added:0};
@@ -47,6 +50,7 @@ export async function captureAndAdmit({root,sourceKey,browse}){
  const goal=JSON.parse(read(path.join(root,'goals',result.goal_key+'.json')));
  const task=goal.tasks?.[0];
  if(goal.schema!=='evercraft.goal.state.v1'||goal.goal_key!==result.goal_key||goal.mission_key!=='kaidance-public-demand-research'||goal.tasks?.length!==1||task?.status!=='complete'||task.work_key!=='capture-original-public-source'||task.attempt_key!==record.attempt_key||record.assignment_ref!=='sha256:'+key||!task.receipt_refs?.includes('sha256:'+digest)||record.capture?.job_ref!==job.job_ref||record.capture?.source_url!==job.source_url||record.capture?.state!=='captured_requires_research'||Object.keys(flags).some(k=>record.capture[k]!==false))throw Error('capture_goal_lineage_mismatch');
+ if(observationSlot!==null&&!record.capture.document_link_coverage)return {...base,state:'hold_unbound_document_links',added:0,capture_sha256:digest};
  // YVL's page includes a large closed-bid archive. For this approved
  // canary only admit the currently identified solicitation family, not
  // archived bids merely because they contain RFP or RFQ in their names.
