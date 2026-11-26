@@ -16,6 +16,7 @@ import {runKaidanceCreativeDevelopment} from './kaidance-creative-development.mj
 import {runLearningCommunityCycle} from './kaidance-learning-community-cycle.mjs';
 import {runAirCoreDevelopmentCycle} from './kaidance-aircore-development.mjs';
 import {runPrivateResearchContinuity} from './kaidance-rd-continuity.mjs';
+import {runHomeMemoryScout,SOURCES as HOME_SOURCES} from './kaidance-home-memory-scout.mjs';
 const sourceRoot=path.resolve(fileURLToPath(new URL('../../',import.meta.url)));
 const sha=value=>'sha256:'+createHash('sha256').update(value).digest('hex');
 function readJson(file){return JSON.parse(fs.readFileSync(file,'utf8'))}
@@ -184,7 +185,7 @@ export function runCompanyHeartbeat({
  root=sourceRoot,outDir=path.join(sourceRoot,'artifacts/kaidance-company-heartbeat'),
  now=new Date(),proveWorlds=false,proveLearning=false,proveAirCore=false,
  learningCycle=runLearningCommunityCycle,aircoreCycle=runAirCoreDevelopmentCycle,
- spawn=spawnSync,aiwReceipt=null,globalOpportunityReceipt=null,networkDevelopmentReceipt=null,rdContinuityEnabled=false
+ spawn=spawnSync,aiwReceipt=null,globalOpportunityReceipt=null,networkDevelopmentReceipt=null,homeMemoryReceipt=null,rdContinuityEnabled=false
 }={}){
  const repo=path.resolve(root),out=path.resolve(outDir);
  const manifest=readJson(path.join(repo,'registry/kaidance-company-lanes.v1.json'));
@@ -266,7 +267,10 @@ export function runCompanyHeartbeat({
  }:{state:aircore?.held?'held':'not_executed',reason:aircore?.reason||null,
   physical_prototype_built:false,worker_dispatched:false};
  const researchContinuity=runPrivateResearchContinuity({enabled:rdContinuityEnabled,root:repo,outDir:out,now});
- const report={...planned.report,proof,infrastructure_watch:aiw,
+ const homeValid=homeMemoryReceipt?.schema==='evercraft.kaidance.home-memory-scout.v1'&&homeMemoryReceipt.tick===tick&&homeMemoryReceipt.source_metadata_only===true&&homeMemoryReceipt.raw_content_persisted===false&&homeMemoryReceipt.archive_items_ingested===0&&homeMemoryReceipt.media_copied===0&&homeMemoryReceipt.personal_matches===0&&homeMemoryReceipt.publication_authorized===false&&homeMemoryReceipt.contact_authorized===false&&Array.isArray(homeMemoryReceipt.candidates)&&homeMemoryReceipt.candidates.length<=HOME_SOURCES.length&&homeMemoryReceipt.candidates.every(c=>HOME_SOURCES.some(s=>s.key===c.source_key&&s.url===c.source_url)&&c.execution_authorized===false&&c.publication_authorized===false&&c.contact_authorized===false&&c.personal_matching_authorized===false&&['review_archive_doorway_and_rights','reconcile_archive_source_availability'].includes(c.action)&&/^home-memory:[a-z-]+:(?:[a-f0-9]{16}|source-hold)$/.test(c.work_key));
+ const homeCandidates=homeValid?homeMemoryReceipt.candidates.map(c=>({work_key:c.work_key,lane_key:'systemia-core',priority:2,source_url:c.source_url,source_key:c.source_key,action:c.action,authority:'systemia_operator_review_required',execution_authorized:false,publication_authorized:false,contact_authorized:false})):[];
+ const homeSummary={status:homeValid?homeMemoryReceipt.status:homeMemoryReceipt?'held_invalid':'not_connected',source_count:HOME_SOURCES.length,review_candidates:homeCandidates.length,archive_items_ingested:0,publication_authorized:false};
+ const report={...planned.report,proof,infrastructure_watch:aiw,home_memory:homeSummary,
   research_continuity:researchContinuity,
   global_opportunities:global,network_development:network,
   learning_community:learningSummary,aircore_development:aircoreSummary};
@@ -288,6 +292,7 @@ export function runCompanyHeartbeat({
     authority:'systemia_operator_review_required',execution_authorized:false,
     outreach_authorized:false,application_authorized:false,payment_verified:false
    })),
+   ...homeCandidates,
    ...(learning?.queue?.candidates||[]).map(row=>({
     ...row,execution_authorized:false,release_authorized:false,
     authority:'systemia_goal_review_required'
@@ -350,10 +355,18 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
    console.error(JSON.stringify({schema:'evercraft.kaidance.global-opportunity-hold.v1',
     status:'held',reason:String(e?.message||e).slice(0,120)}));
   }
+  let homeMemoryReceipt=null;
+  if(process.env.SYSTEMIA_KAIDANCE_HOME_MEMORY_ENABLED==='true'){
+   try{
+    const homeOut=path.join(path.dirname(path.resolve(outDir)),'kaidance-home-memory');
+    if(homeOut===path.resolve(outDir)||homeOut===sourceRoot||homeOut.startsWith(sourceRoot+path.sep))throw Error('home_private_sibling_required');
+    homeMemoryReceipt=await runHomeMemoryScout({outDir:homeOut});
+   }catch{console.error(JSON.stringify({schema:'evercraft.kaidance.home-memory-hold.v1',status:'held',publication_authorized:false}));}
+  }
   const result=runCompanyHeartbeat({outDir,proveWorlds:process.argv.includes('--prove-worlds'),
     proveLearning:process.argv.includes('--prove-learning')||process.env.SYSTEMIA_KAIDANCE_LEARNING_SOURCE_PROOFS==='true',
     proveAirCore:process.argv.includes('--prove-aircore')||process.env.SYSTEMIA_KAIDANCE_AIRCORE_SOURCE_PROOFS==='true',
-    aiwReceipt,globalOpportunityReceipt,networkDevelopmentReceipt,
+    aiwReceipt,globalOpportunityReceipt,networkDevelopmentReceipt,homeMemoryReceipt,
     rdContinuityEnabled:process.env.SYSTEMIA_KAIDANCE_RD_CONTINUITY_ENABLED==='true'});
   // The same company heartbeat owns Leiland + visual art-direction review.
   // This is not another scheduler or a remote code-generation worker.
@@ -388,6 +401,8 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
    network_development_receipt:result.report?.network_development?.status||null,
    global_opportunity_outreach_authorized:false,
    next_action_key:result.next_action?.current_next_action?.work_key||null,
+   home_memory_status:result.report?.home_memory?.status||null,
+   home_memory_review_candidates:result.report?.home_memory?.review_candidates||0,
    learning_community_state:result.report?.learning_community?.state||null,
    learning_source_proofs_run:result.report?.learning_community?.source_proofs_run||0,
    aircore_source_status:result.report?.aircore_development?.source_status||null,
