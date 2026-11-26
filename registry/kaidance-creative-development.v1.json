@@ -1,0 +1,61 @@
+{
+  "schema": "evercraft.kaidance.creative-development-registry.v1",
+  "heartbeat_seconds": 300,
+  "mission_key": "evercraft-creative-visual-development",
+  "systemia_owner": "systemia-core",
+  "registered_saban_software": "fallen-creative-council",
+  "source_only": true,
+  "automatic_code_write": false,
+  "automatic_publication": false,
+  "projects": [
+    {
+      "project_key": "leiland-observatory",
+      "title": "Leiland / Sovereign AI Observatory",
+      "lane_key": "leiland-observatory",
+      "source_files": [
+        "public/leiland/index.html",
+        "public/leiland/style.css",
+        "public/leiland/brain.js",
+        "public/leiland/neural-universe.mjs",
+        "public/leiland/pulse-bridge.mjs"
+      ],
+      "proof_test": "tests/leiland-neural-universe.test.mjs",
+      "review_roles": [
+        "beauty_judge",
+        "world_builder",
+        "documentary_truth_guard"
+      ],
+      "design_goal": "Make the actual source-honest, mobile-first, 9:16 Leiland neural observatory cinematic, legible and worth revisiting while distinguishing ambient art from source-attested Kaidance work"
+    },
+    {
+      "project_key": "evercraft-graphics",
+      "title": "Evercraft / Shared Graphics and Visual Quality",
+      "lane_key": "evercraft-graphics",
+      "source_files": [
+        "public/kaidance/visual.mjs",
+        "public/kaidance/current-field.mjs",
+        "public/kaidance/confluence.css",
+        "systemia/media-studio/creative-council-saban-adapter.mjs",
+        "systemia/media-studio/commercial-visual-qc.mjs"
+      ],
+      "proof_test": "tests/kaidance-cinematic-experience.test.mjs",
+      "review_roles": [
+        "beauty_judge",
+        "brand_art_director",
+        "data_graphics_director"
+      ],
+      "design_goal": "Develop a consistent, source-honest Evercraft visual system spanning Kaidance's living network theater and the registered creative studio while improving phone readability and real-frame quality"
+    }
+  ],
+  "authority": {
+    "source_review": "bounded_registered_saban",
+    "local_source_proof": "bounded_read_only",
+    "output": "owner_private_receipts",
+    "github_code_write": false,
+    "auto_merge": false,
+    "auto_deploy": false,
+    "auto_publish": false,
+    "customer_data": false,
+    "provider_calls": false
+  }
+}
