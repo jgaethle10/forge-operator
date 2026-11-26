@@ -48,7 +48,8 @@ async function setup(t,{grantAtlas=true}={}){
  const cookie='evercraft_session='+encodeURIComponent(signed.token);
  const url=runtime.url+'/api/atlas/private/alpha';
  const fetchPrivate=async(pathSuffix='',options={})=>{
-  return fetch(url+pathSuffix,{headers:{cookie,...(options.headers||{})},...options});
+  const {headers={},...rest}=options;
+  return fetch(url+pathSuffix,{...rest,headers:{cookie,...headers}});
  };
  const post=(payload,headers={})=>fetchPrivate('/events',{
    method:'POST',
