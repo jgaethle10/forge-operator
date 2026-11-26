@@ -1,3 +1,5 @@
+import {execFile} from 'node:child_process';
+import {promisify} from 'node:util';
 import {createHash} from 'node:crypto';
 const endpoint='https://canadabuys.canada.ca/opendata/pub/openTenderNotice-ouvertAvisAppelOffres.csv';
 const lanes=[
@@ -65,4 +67,11 @@ export async function collectCanada({now=new Date(),fetchFn=fetch}={}){
  const reader=response.body.getReader();let size=0;const chunks=[];
  try{for(;;){const {done,value}=await reader.read();if(done)break;size+=value.byteLength;if(size>32000000)throw Error('ca_response_limit');chunks.push(Buffer.from(value));}}finally{await reader.cancel();}
  return normalizeCanada(Buffer.concat(chunks).toString('utf8'),{now});
+}
+
+// Explicit public dataset transport. No redirects, credentials, shell or retry on denial.
+const execFileAsync=promisify(execFile);
+export async function collectCanadaCurl({now=new Date(),run=execFileAsync}={}){
+ const {stdout}=await run('/usr/bin/curl',['--disable','--fail','--silent','--show-error','--proto','=https','--max-time','45','--max-filesize','32000000',endpoint],{encoding:'utf8',maxBuffer:32000000,timeout:50000});
+ return normalizeCanada(stdout,{now});
 }
