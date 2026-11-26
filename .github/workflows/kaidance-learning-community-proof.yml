@@ -1,0 +1,46 @@
+name: Kaidance Learning and Circles Source Proof
+
+on:
+  pull_request:
+    paths:
+      - 'registry/kaidance-learning-community-workstreams.v1.json'
+      - 'registry/kaidance-company-lanes.v1.json'
+      - 'systemia/organism/kaidance-learning-community-cycle.mjs'
+      - 'systemia/organism/kaidance-company-heartbeat-runner.mjs'
+      - 'tests/kaidance-learning-community-cycle.test.mjs'
+      - 'tests/evercraft-circles-kaidance.test.mjs'
+      - 'tests/systemia-university-kaidance.test.mjs'
+      - 'tests/kaidance-education-family-source.test.mjs'
+      - '.github/workflows/kaidance-frontier-field.yml'
+      - '.github/workflows/kaidance-learning-community-proof.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'registry/kaidance-learning-community-workstreams.v1.json'
+      - 'systemia/organism/kaidance-learning-community-cycle.mjs'
+      - 'systemia/organism/kaidance-company-heartbeat-runner.mjs'
+      - 'tests/kaidance-learning-community-cycle.test.mjs'
+      - '.github/workflows/kaidance-learning-community-proof.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  bounded-development:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Syntax and manifest
+        run: |
+          node --check systemia/organism/kaidance-learning-community-cycle.mjs
+          node --check systemia/organism/kaidance-company-heartbeat-runner.mjs
+          node --check tests/kaidance-learning-community-cycle.test.mjs
+      - name: Eight workstream boundaries, source proofs and dedupe
+        run: |
+          node --test tests/kaidance-learning-community-cycle.test.mjs tests/evercraft-circles-kaidance.test.mjs tests/systemia-university-kaidance.test.mjs tests/kaidance-education-family-source.test.mjs
+      - name: Existing company heartbeat remains non-mutating
+        run: node --test tests/kaidance-company-heartbeat.test.mjs
