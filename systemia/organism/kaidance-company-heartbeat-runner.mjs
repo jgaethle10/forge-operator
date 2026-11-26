@@ -11,6 +11,7 @@ import {planCompanyHeartbeat,validateCompanyLanes} from './kaidance-company-hear
 import {researchCycle} from '../evermaps/cemetery/research-cycle.mjs';
 import {classifyNext} from '../evermaps/cemetery/source-classification.mjs';
 import {writeKaidanceNextAction} from './kaidance-next-action.mjs';
+import {proveHumanFilter,humanFilterCandidate} from './kaidance-humanfilter-proof.mjs';
 const sourceRoot=path.resolve(fileURLToPath(new URL('../../',import.meta.url)));
 const sha=value=>'sha256:'+createHash('sha256').update(value).digest('hex');
 function readJson(file){return JSON.parse(fs.readFileSync(file,'utf8'))}
@@ -117,10 +118,13 @@ export function runCompanyHeartbeat({
  const planned=planCompanyHeartbeat({manifest,products,supervisor,previous,now,
   worldsFingerprint:fingerprint,proof,workflowManifestCount:countWorkflowManifests(repo)});
  const aiw=classifyAiWReceipt(aiwReceipt,now);
- const report={...planned.report,proof,infrastructure_watch:aiw};
+ const humanfilter=manifest.lanes.some(x=>x.lane_key==='humanfilter')?proveHumanFilter({root:repo,spawn}):null;
+ const hfCandidate=humanFilterCandidate(humanfilter);
+ const report={...planned.report,proof,infrastructure_watch:aiw,humanfilter};
  const queue={schema:'evercraft.kaidance.company-heartbeat.queue.v1',observed_at:report.observed_at,
   execution_authorized:false,
   candidates:[
+   ...(hfCandidate?[hfCandidate]:[]),
    ...(proof.status==='failed'?[{work_key:'worlds:source-proof-failure',lane_key:'worlds',priority:1,action:'investigate_failed_source_tests',authority:'review_required'}]:[]),
    ...(proof.status==='due_not_executed'?[{work_key:'worlds:source-proof-due',lane_key:'worlds',priority:2,action:'run_bounded_source_proof',authority:'existing_allowlisted_local_only'}]:[]),
    ...aiw.review_candidates.map(row=>({work_key:row.key,lane_key:'infrastructure-watch',priority:2,
@@ -171,6 +175,7 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
   }
   console.log(JSON.stringify({schema:'evercraft.kaidance.company-heartbeat-cli.v1',ok:true,
    cemetery_research:cemetery,cemetery_classification:cemeteryClassification,duplicate:result.duplicate,source_proof:result.report?.proof?.status||null,
+   humanfilter_proof:result.report?.humanfilter?.status||null,
    public_products_observed:result.report?.company_portfolio?.public_products||null,
    infrastructure_watch_receipt:result.report?.infrastructure_watch?.status||null,
    infrastructure_watch_publication_authorized:false,
