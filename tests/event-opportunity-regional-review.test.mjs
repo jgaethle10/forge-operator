@@ -1,6 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import {runRegionalEventReview} from '../systemia/events/event-opportunity-regional-review-runner.mjs';
 import {normalizeRegionalEventNotice,reviewRegionalEventCandidates,REGIONAL_OFFICIAL_PORTALS}
  from '../systemia/events/event-opportunity-regional-review.mjs';
 const at=new Date('2026-11-26T07:45:00.000Z');
@@ -56,4 +59,29 @@ test('snapshot official portals are source entry points, not claims of machine p
  assert(REGIONAL_OFFICIAL_PORTALS.every(x=>x.access.includes('not_machine_verified')||x.access.includes('directory_to_its_OpenGov_portal')));
  assert.throws(()=>reviewRegionalEventCandidates(null,{now:at}));
  assert.throws(()=>reviewRegionalEventCandidates(seed.sources,{now:at,maxCandidates:500}));
+});
+
+test('regional offline review writes private source-backed receipts without browsing, sending or claiming revenue',()=>{
+ const dir=fs.mkdtempSync(path.join(os.tmpdir(),'kaidance-regional-notices-'));
+ try{
+  const report=runRegionalEventReview({rootDir:'.',outDir:dir,now:at});
+  assert.equal(report.candidate_count,2);
+  assert.equal(report.official_portal_live_crawl,false);
+  assert.equal(report.outreach_sent,0);
+  assert.equal(report.bids_submitted,0);
+  assert.equal(report.revenue_earned,0);
+  for(const name of ['state.json','latest.json']){
+   const p=path.join(dir,name);
+   assert.equal(fs.statSync(p).mode&0o777,0o600);
+  }
+  const saved=JSON.parse(fs.readFileSync(path.join(dir,'state.json'),'utf8'));
+  assert.equal(saved.schema,'evercraft.events.regional-intake-state.v1');
+  assert.equal(saved.source_portal_live_verified,false);
+  assert.equal(saved.observation.candidates.length,2);
+  assert(saved.observation.candidates.every(x=>x.outreach_authorized===false));
+  const expired=runRegionalEventReview({rootDir:'.',outDir:dir,
+   now:new Date('2026-11-29T12:00:00Z')});
+  assert.equal(expired.candidate_count,0);
+  assert.equal(expired.status,'no_current_manual_source_evidence');
+ }finally{fs.rmSync(dir,{recursive:true,force:true})}
 });
