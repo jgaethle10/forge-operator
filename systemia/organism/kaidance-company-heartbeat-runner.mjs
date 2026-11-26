@@ -16,6 +16,7 @@ import {runKaidanceCreativeDevelopment} from './kaidance-creative-development.mj
 import {runLearningCommunityCycle} from './kaidance-learning-community-cycle.mjs';
 import {runAirCoreDevelopmentCycle} from './kaidance-aircore-development.mjs';
 import {runPrivateResearchContinuity} from './kaidance-rd-continuity.mjs';
+import {reviewKaidanceExternalSkills} from './kaidance-external-skill-intake.mjs';
 const sourceRoot=path.resolve(fileURLToPath(new URL('../../',import.meta.url)));
 const sha=value=>'sha256:'+createHash('sha256').update(value).digest('hex');
 function readJson(file){return JSON.parse(fs.readFileSync(file,'utf8'))}
@@ -266,8 +267,10 @@ export function runCompanyHeartbeat({
  }:{state:aircore?.held?'held':'not_executed',reason:aircore?.reason||null,
   physical_prototype_built:false,worker_dispatched:false};
  const researchContinuity=runPrivateResearchContinuity({enabled:rdContinuityEnabled,root:repo,outDir:out,now});
+ // Existing 300-second company pulse observes only source metadata; no skill is run.
+ const externalSkills=reviewKaidanceExternalSkills({root:repo,now});
  const report={...planned.report,proof,infrastructure_watch:aiw,
-  research_continuity:researchContinuity,
+  research_continuity:researchContinuity,external_skill_intake:externalSkills,
   global_opportunities:global,network_development:network,
   learning_community:learningSummary,aircore_development:aircoreSummary};
  const queue={schema:'evercraft.kaidance.company-heartbeat.queue.v1',observed_at:report.observed_at,
@@ -296,6 +299,7 @@ export function runCompanyHeartbeat({
     ...row,execution_authorized:false,hardware_purchase_authorized:false,
     partner_contact_authorized:false,authority:'systemia_operator_review_required'
    })),
+   ...externalSkills.review_candidates.map(row=>({...row,dispatch_authorized:false})),
    ...report.company_portfolio.products_not_yet_named.slice(0,12).map(key=>({
     work_key:'product:'+key+':adapter-admission',lane_key:null,priority:3,
     action:'bind_existing_systemia_capability_or_admit_bounded_new_adapter',authority:'source_review_required'
@@ -304,10 +308,10 @@ export function runCompanyHeartbeat({
   no_remote_work_dispatched:true,no_code_changes_made:true};
  const snapshot={...planned.snapshot,
   counts:{...planned.snapshot.counts,
-   scanned:planned.snapshot.counts.scanned+aiw.sources_observed+global.sources_observed+(network.status==='verified_receipt'?1:0)+(learning?.report?.counts?.tracked||0)+(aircore?.report?1:0),
+   scanned:planned.snapshot.counts.scanned+aiw.sources_observed+global.sources_observed+(network.status==='verified_receipt'?1:0)+(learning?.report?.counts?.tracked||0)+(aircore?.report?1:0)+externalSkills.candidate_count,
    changed:planned.snapshot.counts.changed+(global.newly_seen||0)+(network.newly_seen||0)+(aircore?.report?.newly_seen||0),
    held:planned.snapshot.counts.held+aiw.review_candidates.length+global.review_candidates.length+network.review_candidates.length+(learning?.report?.counts?.failed||0)+
-    (aircore?.held||['source_proof_failed','missing_source_hold'].includes(aircore?.report?.source_status)?1:0)},
+    (aircore?.held||['source_proof_failed','missing_source_hold'].includes(aircore?.report?.source_status)?1:0)+externalSkills.quarantined},
   evidence_refs:[
     ...planned.snapshot.evidence_refs,
     ...(learning?.report_ref?['source:registry/kaidance-learning-community-workstreams.v1.json',learning.report_ref]:[]),
@@ -317,7 +321,9 @@ export function runCompanyHeartbeat({
     ...(global.status==='verified_source_receipt'?[
       'source:registry/kaidance-global-opportunity-sources.v1.json',global.receipt_hash]:[]),
     ...(network.status==='verified_receipt'?[
-      'source:registry/kaidance-network-development.v1.json',network.decision_ref]:[])
+      'source:registry/kaidance-network-development.v1.json',network.decision_ref]:[]),
+    ...(externalSkills.source_fingerprint?[
+      'source:systemia/saban/external-skill-candidates.json',externalSkills.source_fingerprint]:[])
   ].slice(0,30)};
  fs.mkdirSync(out,{recursive:true,mode:0o700});
  // Commit the cycle watermark LAST. An interrupted write must be retryable
@@ -391,6 +397,9 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
    learning_community_state:result.report?.learning_community?.state||null,
    learning_source_proofs_run:result.report?.learning_community?.source_proofs_run||0,
    aircore_source_status:result.report?.aircore_development?.source_status||null,
+   external_skill_intake_status:result.report?.external_skill_intake?.status||null,
+   external_skills_quarantined:result.report?.external_skill_intake?.quarantined||0,
+   external_skills_installed:0,
    aircore_verified_cadr_cfm:null,aircore_prototype_built:false,
    next_action_execution_authorized:false,
    creative_development:creative,
