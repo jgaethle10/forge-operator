@@ -171,6 +171,15 @@
       "products": [],
       "services": [],
       "priority": 2
+    },
+    {
+      "lane_key": "aircore-development",
+      "description": "Unpublished Breath of Fresh Air AirCore V0.1 engineering: source-proof plus held physical bench validation",
+      "mode": "observe_existing_workflows",
+      "cadence_seconds": 300,
+      "products": [],
+      "services": [],
+      "priority": 2
     }
   ]
 }
