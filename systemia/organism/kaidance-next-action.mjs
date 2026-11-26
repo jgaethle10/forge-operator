@@ -194,6 +194,27 @@ export function planKaidanceNextAction({
     'systemia_operator_review_required'));
   }
  }
+ // Evercraft Network's existing source-bound Saban revival PR is reviewed by
+ // the *same* company heartbeat. No auto-coding or network execution follows.
+ if(companyReport.network_development?.status==='verified_receipt'){
+  const rows=companyQueue.candidates?.filter(row=>
+   row?.lane_key==='education-network'&&
+   /^network:(ci_failed|ci_pending|field_gate_due|merged_needs_readback):[a-f0-9]{12}$/.test(row.work_key||'')&&
+   ['investigate_failed_network_ci','reconcile_network_ci_run',
+    'run_authorized_cross_device_encrypted_outage_test',
+    'verify_owned_network_runtime_and_field_receipts'].includes(row.action)&&
+   row.authority==='systemia_operator_review_required'&&
+   row.source_authority==='github_rest_read_only'&&
+   row.execution_authorized===false&&
+   row.code_write_authorized===false&&row.production_mutation_authorized===false&&
+   row.field_validated===false&&row.dispatch_authorized===false)||[];
+  if(rows.length){
+   const row=rows[0];
+   choices.push(action(row.action==='investigate_failed_network_ci'?1:2,
+    row.work_key,'education-network',row.action,'company',
+    row.evidence_ref,'systemia_operator_review_required'));
+  }
+ }
  const unbound=companyQueue.candidates?.filter(x=>
   x?.action==='bind_existing_systemia_capability_or_admit_bounded_new_adapter'&&
   /^product:[a-z0-9-]+:adapter-admission$/.test(x.work_key||'')&&
