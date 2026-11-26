@@ -87,6 +87,37 @@ function normalizeEventType(value) {
   return eventType;
 }
 
+// Read the same owner-maintained private organization registry used by Revenue
+// Desk, extended with opaque canonical Passport contact references. Never take
+// a caller-provided preference or a seasonal date as authorization.
+function organizationPreference(file, subjectRef) {
+  try {
+    const parent = fs.lstatSync(path.dirname(file));
+    const stat = fs.lstatSync(file);
+    if (!parent.isDirectory() || parent.isSymbolicLink() || (parent.mode & 0o077) ||
+        !stat.isFile() || stat.isSymbolicLink() || (stat.mode & 0o077)) throw Error('unsafe_registry');
+    const data = JSON.parse(fs.readFileSync(file, 'utf8'));
+    if (!Array.isArray(data.organizations) || !data.organizations.length) throw Error('missing_registry');
+    const index = new Map(), keys = new Set();
+    for (const org of data.organizations) {
+      if (typeof org?.organization_key !== 'string' || !org.organization_key.trim() ||
+          keys.has(org.organization_key) || !['clear','customer_hold','do_not_contact','review_required'].includes(org.state) ||
+          typeof org.evidence_ref !== 'string' || !org.evidence_ref.trim() ||
+          !Array.isArray(org.contact_subject_refs) || !org.contact_subject_refs.length) throw Error('invalid_registry');
+      keys.add(org.organization_key);
+      for (const ref of org.contact_subject_refs) {
+        if (typeof ref !== 'string' || !/^contact:[A-Za-z0-9_.:-]{1,120}$/.test(ref) || index.has(ref))
+          throw Error('ambiguous_contact');
+        index.set(ref, org.state);
+      }
+    }
+    const state = index.get(subjectRef);
+    return state === 'clear' ? null : state ? 'organization_contact_hold' : 'organization_identity_unresolved';
+  } catch {
+    return 'organization_registry_missing_or_ambiguous';
+  }
+}
+
 export class EvercraftInteractionLedger {
   constructor({ stateDir, passportStateDir } = {}) {
     if (!stateDir) throw new Error('interaction_ledger_state_dir_required');
@@ -94,6 +125,7 @@ export class EvercraftInteractionLedger {
 
     this.stateDir = path.resolve(stateDir);
     this.eventsFile = path.join(this.stateDir, 'interaction-events.jsonl');
+    this.organizationRegistryFile = path.join(this.stateDir, 'organization-registry.json');
     this.lockDir = path.join(this.stateDir, '.mutation-lock');
     this.passport = new EvercraftPassport({ stateDir: passportStateDir });
 
@@ -358,6 +390,8 @@ export class EvercraftInteractionLedger {
 
     const reasons = [];
     if (authorization.decision !== 'allow') reasons.push('passport_contact_scope_missing');
+    const preference = organizationPreference(this.organizationRegistryFile, subjectRef);
+    if (preference) reasons.push(preference);
 
     const latestOptEvent = [...history]
       .reverse()
@@ -489,6 +523,30 @@ export class EvercraftInteractionLedger {
       permit_receipt: permit.receipt,
       send_performed: false,
     };
+  }
+
+  // Provider adapters must call immediately before dispatch. This read-only
+  // result does not send, reserve a provider operation, or prove atomicity.
+  recheckContactBeforeDispatch(input) {
+    const at = new Date().toISOString();
+    const subject = requiredString(input?.subject_ref, 'subject_ref');
+    const actor = requiredString(input?.actor_ref, 'actor_ref');
+    const channel = normalizeChannel(input?.channel);
+    const content = requiredString(input?.content_fingerprint, 'content_fingerprint');
+    const permitId = requiredString(input?.permit_id, 'permit_id');
+    const preflight = this.preflightContact({subject_ref:subject, actor_ref:actor,
+      channel, content_fingerprint:content, at});
+    const reasons = [...preflight.reasons];
+    try {
+      const permit = this.passport.getActionPermitState(permitId, {at});
+      if (!permit.active || permit.actor_ref !== actor || permit.resource_ref !== subject ||
+          permit.scope !== 'contact.'+channel || permit.request_fingerprint !== content ||
+          permit.grant_id !== preflight.passport_grant_id)
+        reasons.push('contact_permit_inactive_or_mismatched');
+    } catch { reasons.push('contact_permit_unavailable'); }
+    return stableReceipt({schema:'evercraft.interaction-ledger.dispatch-recheck.v1',
+      decision:reasons.length?'deny':'allow', reasons, evaluated_at:at,
+      provider_dispatch_authorized:false, send_performed:false});
   }
 
   finalizePermittedContact(input) {
