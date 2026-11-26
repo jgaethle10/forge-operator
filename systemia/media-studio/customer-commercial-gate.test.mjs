@@ -6,6 +6,7 @@ import path from 'node:path';
 import {spawnSync} from 'node:child_process';
 import test from 'node:test';
 import {assembleCustomerCommercialGate,runCustomerCommercialGate} from './customer-commercial-gate.mjs';
+import {FALLEN_SIGNATURE_SCHEMA,REQUIRED_CREATIVE_CHECKS,REQUIRED_PLAYBACK_CHECKS} from './fallen-signature-gate.mjs';
 
 const SHA='a'.repeat(64);
 const request={
@@ -51,6 +52,9 @@ test('single customer gate assembles all quality receipts with no shipping autho
   const r=assemble();
   assert.equal(r.schema,'evercraft.fallen.customer-commercial-gate-report.v1');
   assert.equal(r.status,'blocked'); // missing real rights, actual creative and production approval
+  assert.equal(r.signatureQualityStatus,'blocked');
+  assert.ok(r.signatureQuality.reasons.includes('signature_review_schema_invalid'));
+  assert.equal(r.boundaries.signatureReviewMandatoryForClientReady,true);
   assert.equal(r.masterSha256,SHA);
   assert.equal(r.audioStatus,'accepted');
   assert.equal(r.pictureStatus,'accepted');
@@ -147,4 +151,46 @@ test('manual and canonical source declarations cannot silently override each oth
   assert.throws(()=>runCustomerCommercialGate({request:{
     ...brief,studioDelivery:{videoPath:'/tmp/different.mp4'}}}),
     /ambiguous_studio_delivery_sources/);
+});
+
+test('accepted technical customer package remains BLOCKED until final-master Signature review passes',()=>{
+  const valid=structuredClone(request);
+  valid.rights=['product','music'].map(assetId=>({
+    assetId,status:'verified',permittedUses:['commercial_video'],
+    evidenceRef:'private-rights:'+assetId,reviewedBy:'director',reviewedAt:'2026-11-16T19:00:00Z',
+  }));
+  valid.productionGrade={schema:'evercraft.fallen.production-grade-report.v1',
+    status:'accepted',beatReports:['hook','value','cta'].map(beatId=>({beatId,status:'accepted'}))};
+  valid.creativeReview={reviewedBy:'director',reviewedAt:'2026-11-16T19:00:00Z',checks:{
+    brandAccurate:true,subjectVisible:true,mobileReadable:true,
+    motionAndContinuity:true,factualClaimsVerified:true,
+    musicAndVoiceBalanced:true,clearCallToAction:true,
+  }};
+  const withoutSignature=assemble({request:valid});
+  assert.equal(withoutSignature.release.status,'ready_for_client_preview');
+  assert.equal(withoutSignature.status,'blocked');
+  assert.ok(withoutSignature.signatureQuality.reasons.includes('signature_review_schema_invalid'));
+
+  valid.signatureReview={
+    schema:FALLEN_SIGNATURE_SCHEMA,masterSha256:SHA,
+    releaseReportDigest:withoutSignature.release.reportDigest,
+    reviewedBy:'director',reviewedAt:'2026-11-16T19:10:00Z',
+    signoffEvidenceRef:'private-review:final-master',
+    overallDecision:'approved',unresolvedDefects:[],
+    checks:Object.fromEntries(REQUIRED_CREATIVE_CHECKS.map(name=>
+      [name,{passed:true,evidenceRef:'private-review:check:'+name}])),
+    playback:Object.fromEntries(REQUIRED_PLAYBACK_CHECKS.map(name=>
+      [name,{passed:true,evidenceRef:'private-review:device:'+name}])),
+    noNarrationConfirmed:true,
+  };
+  const accepted=assemble({request:valid});
+  assert.equal(accepted.status,'ready_for_client_preview');
+  assert.equal(accepted.signatureQualityStatus,'signature_ready_for_client_preview');
+  assert.equal(accepted.boundaries.deliveryAuthorityGranted,false);
+  assert.equal(accepted.boundaries.publicationAuthorityGranted,false);
+
+  valid.signatureReview.checks.cleanDeliberateAudioMix.passed=false;
+  const badMix=assemble({request:valid});
+  assert.equal(badMix.status,'blocked');
+  assert.ok(badMix.signatureQuality.reasons.includes('signature_creative_failed:cleanDeliberateAudioMix'));
 });
