@@ -1,5 +1,6 @@
 import { setTimeout as sleep } from 'node:timers/promises';
 import { ReplayGuard, openEnvelope, sealEnvelope } from './secure-envelope.mjs';
+import { createScopedOutboundPolicy } from './scoped-outbound-policy.mjs';
 
 function isLoopbackUrl(value) {
   try {
@@ -163,7 +164,24 @@ export async function startOutboundNodeAgent({
   localAllocatorToken,
   pollBackoffMs = 100,
   capacityRefreshEveryPoll = true,
+  expectedNodeId,
+  commandPolicy,
+  capacityWorkloadAllowlist,
+  preRegisterGuard,
 } = {}) {
+  const scoped = commandPolicy !== undefined || capacityWorkloadAllowlist !== undefined || expectedNodeId === 'evercraft-node002-nextgen';
+  const permit = scoped ? createScopedOutboundPolicy({policy:commandPolicy,workloads:capacityWorkloadAllowlist}) : null;
+  if (scoped && !expectedNodeId) throw Error('scoped_node_identity_required');
+  if (preRegisterGuard !== undefined && typeof preRegisterGuard !== 'function') throw Error('invalid_registration_guard');
+  function checkCapacity(capacity) {
+    if (expectedNodeId && capacity?.node_id !== expectedNodeId) throw Error('unexpected_node_identity');
+    if (!scoped) return capacity;
+    const supported = capacity?.supported_workloads;
+    if (!Array.isArray(supported)) throw Error('missing_supported_workloads');
+    const admitted = supported.filter(workload=>permit({method:'POST',route:'/v1/jobs',body:{workload_class:workload}}));
+    if (!admitted.length) throw Error('no_admitted_workloads');
+    return {...capacity,supported_workloads:admitted};
+  }
   const broker = assertBrokerUrl(brokerUrl);
   const localEndpoint = String(localCapacityEndpoint || '').replace(/\/$/, '');
   if (!localEndpoint) throw new Error('localCapacityEndpoint is required');
@@ -188,6 +206,8 @@ export async function startOutboundNodeAgent({
   let registeredAt = null;
   let lastCommandAt = null;
   let lastError = null;
+  let lastPollAt = null;
+  let lastSuccessfulPollAt = null;
   let loopPromise = null;
 
   async function localRequest(route, {
@@ -207,11 +227,12 @@ export async function startOutboundNodeAgent({
   }
 
   async function register() {
+    if (preRegisterGuard) await preRegisterGuard();
     const capacityResponse = await localRequest('/v1/capacity');
     if (!capacityResponse.ok) {
       throw new Error(`local_capacity_failed:${capacityResponse.status}`);
     }
-    const capacity = capacityResponse.body;
+    const capacity = checkCapacity(capacityResponse.body);
     nodeId = String(capacity.node_id || '');
     deviceFingerprint = String(capacity.device_fingerprint || '');
     if (!nodeId || !deviceFingerprint) {
@@ -264,7 +285,7 @@ export async function startOutboundNodeAgent({
   async function execute(command) {
     const method = String(command.method || 'GET').toUpperCase();
     const route = String(command.route || '');
-    if (!routeAllowed(method, route)) {
+    if (!routeAllowed(method, route) || (permit && !permit({method,route,body:command.body}))) {
       return {
         status: 403,
         body: { error: 'remote_route_not_allowed' },
@@ -326,9 +347,11 @@ export async function startOutboundNodeAgent({
         if (capacityRefreshEveryPoll) {
           const fresh = await localRequest('/v1/capacity');
           if (!fresh.ok) throw new Error(`local_capacity_failed:${fresh.status}`);
-          capacity = fresh.body;
+          capacity = checkCapacity(fresh.body);
+          if (capacity.node_id !== nodeId || capacity.device_fingerprint !== deviceFingerprint) throw Error('capacity_identity_changed');
         }
 
+        lastPollAt = new Date().toISOString();
         pollController = new AbortController();
         const polled = await jsonRequest(`${broker}/v1/remote/agent/poll`, {
           method: 'POST',
@@ -345,6 +368,8 @@ export async function startOutboundNodeAgent({
           continue;
         }
         if (polled.status === 204) {
+          lastSuccessfulPollAt = new Date().toISOString();
+          lastError = null;
           backoff = pollBackoffMs;
           continue;
         }
@@ -399,6 +424,7 @@ export async function startOutboundNodeAgent({
         }
 
         await sendResult(commandId, result);
+        lastSuccessfulPollAt = new Date().toISOString();
 
         lastCommandAt = new Date().toISOString();
         lastError = null;
@@ -433,6 +459,8 @@ export async function startOutboundNodeAgent({
         registered_at: registeredAt,
         last_command_at: lastCommandAt,
         last_error: lastError,
+        last_poll_at: lastPollAt,
+        last_successful_poll_at: lastSuccessfulPollAt,
         public_ingress: false,
         local_compute_scope: 'loopback_only',
         secure_envelope_schema: 'evercraft.secure-envelope.v1',
