@@ -1,0 +1,87 @@
+{
+  "schema": "evercraft.gems.full-grid-offline-qc-independent.v1",
+  "date": "2026-11-19",
+  "source": "Owner uploaded TIFF and two QC receipt JSONs directly to current conversation",
+  "candidate_filename": "gems_002_candidate_UNSUBMITTED.tif",
+  "candidate_sha256": "7d2b4cf8bc16421e36b196b2b6b349b65e0b6732560a392b98ac699ff3c6be80",
+  "independently_rehashed_current_upload": true,
+  "candidate_byte_size": 3596653,
+  "grid": {
+    "width": 3292,
+    "height": 3730,
+    "crs": "EPSG:32611",
+    "pixel_size_m": 100,
+    "transform": [
+      100,
+      0,
+      243350,
+      0,
+      -100,
+      4508550,
+      0,
+      0,
+      1
+    ],
+    "float32_bands": 1,
+    "finite_pixels": 5167373,
+    "nan_pixels": 7111787,
+    "min_valid_probability": 0,
+    "max_valid_probability": 0.9844131469726562
+  },
+  "verified_by_independent_raster_read": {
+    "pixels_ge_0_2": 444269,
+    "pixels_ge_0_5": 142571,
+    "receipt_sha256_agrees": true,
+    "receipt_positive_count_agrees": true
+  },
+  "incumbent_from_uploaded_comparison_receipt": {
+    "gems_001_sha256": "3b2360bed8966b4bfdae76bfeb5436bf6dccd16ac9dc5ff402434736bdee57a4",
+    "cells_ge_0_2": 384797,
+    "cells_ge_0_5": 34010,
+    "independently_rehashed_in_current_container": true
+  },
+  "comparison_from_work_receipt": {
+    "cells_ge_0_2_ratio": 1.1545542194975533,
+    "iou_at_0_2": 0.2875035135642994,
+    "new_only_at_0_2": 259136,
+    "old_only_at_0_2": 199664,
+    "gems_002_connected_components_ge_0_2": 117461,
+    "gems_002_single_pixel_components_ge_0_2": 62862
+  },
+  "training_receipt": {
+    "positive_train": 60988,
+    "negative_train": 304940,
+    "negative_exclusion_pixels": 10,
+    "model_features": 34,
+    "source_sha256": "db07aef8eb3edaa78efdc704d867cc8c2cf12ae1c8d17152fd0280238c92ca8b",
+    "full_area_precision_validated": false,
+    "hidden_new_fault_score_known": false
+  },
+  "interpretation": "Both archived GEMS-001 TIFF and uploaded GEMS-002 TIFF independently SHA-256 checked and pixel-wise compared in current container; corroborates the Work comparison receipt. No labels for hidden newly discovered faults accessible, so scored DTI and full-area precision remain unverified.",
+  "recommendation": "Hold for explicit user decision on single official scored submission after documenting leaderboard risk and optional further diagnostic review.",
+  "scored_submission_made": false,
+  "independently_rehashed_preserved_gems_001_tif": true,
+  "full_grid_independent_pixel_comparison": {
+    "grid_metadata_exact_match": true,
+    "valid_nan_mask_exact_match": true,
+    "valid_cells": 5167373,
+    "threshold_0_2": {
+      "old": 384797,
+      "new": 444269,
+      "intersection": 185133,
+      "union": 643933,
+      "iou": 0.2875035135642994,
+      "new_only": 259136,
+      "old_only": 199664
+    },
+    "threshold_0_5": {
+      "old": 34010,
+      "new": 142571,
+      "intersection": 26584,
+      "union": 149997,
+      "iou": 0.17723021127089209,
+      "new_only": 115987,
+      "old_only": 7426
+    }
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "schema": "evercraft.gems.connected-segment-real-replay.v1",
+  "date": "2026-11-19",
+  "archive_filename": "gems_002_segment_replay.zip",
+  "archive_sha256": "128ed665ac261754e75a669a050c3c9b51fdde20de729cd08ba2d4c17c594323",
+  "reported_source_commit": "68a88136f3dbfbbbf73fa55a1fdd49734cff2ab4",
+  "model_source_sha256": "db07aef8eb3edaa78efdc704d867cc8c2cf12ae1c8d17152fd0280238c92ca8b",
+  "input_hashes": {
+    "example_submission": "2176d08e485aa2cd2860ce8df539db4faf4d76163b38a4dd8c30a40454d35cbc",
+    "existing_faults": "7ba308ccdc4418b31a178f4f1ef21aaa6e152e4028f2f6f64b01f7eb25ae4093",
+    "gems_geodawn_features": "4371c82e3b8339b807bdffcf4ef59a225520fe2988d521be208ae33743123bc5"
+  },
+  "pooled_dti": {
+    "baseline": 0.13944445894661742,
+    "exclude_1000m": 0.15165058139994816,
+    "absolute_gain": 0.012206122453330748,
+    "relative_gain_percent": 8.753393677696105
+  },
+  "fold_scores": [
+    {
+      "fold": 0,
+      "baseline": 0.132429049283355,
+      "exclude_1000m": 0.14297432079808903
+    },
+    {
+      "fold": 1,
+      "baseline": 0.14514722577220734,
+      "exclude_1000m": 0.15822247101652495
+    },
+    {
+      "fold": 2,
+      "baseline": 0.14091076820853207,
+      "exclude_1000m": 0.1539653784088113
+    }
+  ],
+  "source_receipts": {
+    "run-a": "7569a10192572449c29a0dc9d93fc649e0a94dc4327582f05a41b08fee9271b2",
+    "run-b": "d8e994499b7953c61a4d4482b4a6681d1afc71543d6bde67acebac8dda2a6d56"
+  },
+  "replication_equal_excluding_elapsed": true,
+  "organizer_rasters_not_in_archive": true,
+  "original_raster_bytes_independently_rehashed_this_turn": false,
+  "reference_ground_truth": "8-connected held-out mapped fault components, 1.5km corridors",
+  "full_area_precision_verified": false,
+  "hidden_new_fault_score_known": false,
+  "submission_made": false,
+  "decision": "advance to offline candidate preparation; no scored submission"
+}

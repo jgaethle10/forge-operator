@@ -38,8 +38,107 @@ jobs:
           node --check systemia/mission-bridge/bridge.mjs
           node --check systemia/mission-bridge/cli.mjs
           node --test systemia/mission-bridge/bridge.test.mjs
+          node --check systemia/mission-bridge/gems/private-research-preflight.mjs
+          node --test systemia/mission-bridge/gems/private-research-preflight.test.mjs
+          node --check systemia/mission-bridge/gems/research-job-ledger.mjs
+          node --test systemia/mission-bridge/gems/research-job-ledger.test.mjs
+          node --check systemia/mission-bridge/gems/research-lease-binding.mjs
+          node --test systemia/mission-bridge/gems/research-lease-binding.test.mjs
+          node --check systemia/mission-bridge/gems/research-work-claim.mjs
+          node --test systemia/mission-bridge/gems/research-work-claim.test.mjs
+          node --check systemia/mission-bridge/gems/synthetic-research-worker.mjs
+          node --test systemia/mission-bridge/gems/synthetic-research-worker.test.mjs
+          node --test systemia/mission-bridge/gems/verify-synthetic-receipt.test.mjs
+          node --check systemia/mission-bridge/gems/private-dataset-integrity.mjs
+          node --test systemia/mission-bridge/gems/private-dataset-integrity.test.mjs
+          node --check systemia/mission-bridge/gems/kss-spatial-contract.mjs
+          node --test systemia/mission-bridge/gems/kss-spatial-contract.test.mjs
+          python3 -m py_compile systemia/mission-bridge/gems/gems_002_negative_ablation.py
+          python3 -m py_compile systemia/mission-bridge/gems/gems_external_layer_gate.py
+          python3 -m py_compile systemia/mission-bridge/gems/gems_nevada_disagreement_atlas.py
+          python3 -m py_compile systemia/mission-bridge/gems/gems_dem_metadata_recon.py
+          python3 -m py_compile systemia/mission-bridge/gems/gems_usgs_3dep_index.py
+          python3 -m py_compile systemia/mission-bridge/gems/gems_usgs_3dep_capture.py
+          python3 -m py_compile systemia/mission-bridge/gems/gems_005_directional_features.py systemia/mission-bridge/gems/gems_005_directional_ablation.py
+          python3 -m py_compile systemia/mission-bridge/gems/gems_cross_experiment_gate.py systemia/mission-bridge/gems/test_gems_cross_experiment_gate.py
+          bash -n systemia/mission-bridge/gems/execute_directional_ablation.sh
+          python3 -m py_compile systemia/mission-bridge/gems/test_gems_002_negative_ablation.py
+          bash -n systemia/mission-bridge/gems/execute_segment_replay.sh
+          bash -n systemia/mission-bridge/gems/execute_candidate_qc.sh
+          bash -n systemia/mission-bridge/gems/execute_full_area_replay.sh
+          bash -n systemia/mission-bridge/gems/execute_hard_negative_ablation.sh
+          bash -n systemia/mission-bridge/gems/execute_gems_research_bundle.sh
+          bash -n systemia/mission-bridge/gems/recover_and_run_gems004.sh
+          bash -n systemia/mission-bridge/gems/execute_gems006_seed_replication.sh
+          bash -n systemia/mission-bridge/gems/execute_gems007_southern_transfer.sh
+          python3 -m py_compile systemia/mission-bridge/gems/gems_007_southern_transfer.py systemia/mission-bridge/gems/test_gems_007_southern_transfer.py
+          python3 -m py_compile systemia/mission-bridge/gems/gems_006_seed_replication.py systemia/mission-bridge/gems/test_gems_006_seed_replication.py
+          python3 -m unittest discover -s systemia/mission-bridge/gems -p test_verify_official_input_hashes.py -v
+      - name: Run bounded synthetic GEMS computation (not official competition data)
+        run: node systemia/mission-bridge/gems/run-synthetic-smoke.mjs
+      - name: Independently verify the emitted synthetic receipt artifact
+        run: node systemia/mission-bridge/gems/verify-synthetic-receipt.mjs
+      - name: Preserve synthetic computation receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gems-synthetic-research-smoke
+          path: artifacts/systemia-mission-bridge/gems-synthetic-research-smoke.json
+          if-no-files-found: warn
+          retention-days: 14
       - name: Validate the first committed mission without running it
         run: node systemia/mission-bridge/cli.mjs --plan signal-public-ingress-20261116-001
+
+
+  gems-scientific-unit-tests:
+    # Isolated test runner only: no original data, no upload, no network to competition.
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+          cache-dependency-path: 'systemia/mission-bridge/gems/requirements-test.txt'
+      - name: Install bounded scientific test dependencies
+        run: python -m pip install --disable-pip-version-check -r systemia/mission-bridge/gems/requirements-test.txt
+      - name: Run real Python ablation and raster-guard tests against synthetic arrays
+        working-directory: systemia/mission-bridge/gems
+        run: |
+          python -m unittest -v test_gems_002_negative_ablation.py
+          python -m unittest -v test_gems_002_segment_holdouts.py
+          python -m unittest -v test_gems_002_prepare_candidate.py
+          python -m unittest -v test_audit_candidate_comparison.py
+          python -m unittest -v test_gems_002_full_area_validation.py
+          python -m unittest -v test_gems_004_hard_negative_ablation.py
+          python -m unittest -v test_gems_external_layer_gate.py
+          python -m unittest -v test_gems_nevada_disagreement_atlas.py
+          python -m unittest -v test_gems_dem_metadata_recon.py
+          python -m unittest -v test_gems_usgs_3dep_index.py
+          python -m unittest -v test_gems_usgs_3dep_capture.py
+          python -m unittest -v test_gems_005_directional_features.py
+          python -m unittest -v test_gems_005_directional_ablation.py
+          python -m unittest -v test_gems_cross_experiment_gate.py
+          python -m unittest -v test_gems_cross_pipeline_integration.py
+          python -m unittest -v test_gems_research_bundle.py
+          python -m unittest -v test_gems_source_recovery.py
+          python -m unittest -v test_gems_006_seed_replication.py
+          python -m unittest -v test_gems_007_southern_transfer.py
+          python -m unittest -v test_gems_008c_nbmg_service_scout.py
+          python -m unittest -v test_gems_008d_nbmg_activefault_probe.py
+          python -m unittest -v test_gems_008e_nbmg_response_import.py
+          python -m unittest -v test_gems_008e_direct_https_capture.py
+          python -m unittest -v test_gems_003_exploratory_overlay.py
+          python -m unittest -v test_verify_official_input_hashes.py
+      - name: Assert no scored submission or production tasks were invoked
+        run: |
+          test ! -e gems_candidate.tif
+          test ! -e systemia/mission-bridge/gems/gems_candidate.tif
+
 
   bounded-observation:
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'

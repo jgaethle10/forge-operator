@@ -107,3 +107,43 @@ test('Git diff selection admits only bounded mission manifest names without exec
   assert.equal(calls,1);
   assert.throws(()=>changedMissionIds({git:()=> 'systemia/mission-bridge/requests/../../escape.json'}),/unapproved_mission_filename_changed/);
 });
+
+
+test('GEMS specialist admits fixed source-only evidence, never private compute',async()=>{
+  const request=sample({mission_id:'gems-research-evidence-20261118-001',
+    route:'gems-research-evidence',objective:'Inspect fixed evidence of GEMS submission and research plans.'});
+  const admission=admitMissionRequest(request);
+  assert.equal(admission.execution_authority_granted,false);
+  assert.equal(admission.remote_node_access_granted,false);
+  assert.equal(admission.worker,'github-actions-readonly');
+  assert.deepEqual(admission.checks,[
+    'systemia/mission-bridge/gems/gems-001-evidence.json',
+    'systemia/mission-bridge/gems/gems-002-plan.json'
+  ]);
+  const root=fs.mkdtempSync(path.join(os.tmpdir(),'systemia-gems-source-'));
+  try {
+    for(const rel of admission.checks){
+      const file=path.join(root,rel);
+      fs.mkdirSync(path.dirname(file),{recursive:true});
+      fs.writeFileSync(file,'{"source_only":true}\\n');
+    }
+    const r=await runMissionRequest(request,{rootDir:root,
+      fetchImpl:async()=>{throw Error('network must not be called')}});
+    assert.equal(r.state,'observation_complete');
+    assert.equal(r.diagnosis,'gems_source_evidence_observed_only');
+    assert.equal(r.observations.length,2);
+    assert.equal(r.observations.every(x=>x.valid&&x.sha256.length===64),true);
+    assert.equal(r.external_write_performed,false);
+    assert.equal(r.remote_node_connected,false);
+    assert.equal(r.live_penguin_execution_verified,false);
+    assert.equal(r.payment_verified,false);
+  } finally { fs.rmSync(root,{recursive:true,force:true}); }
+});
+test('GEMS mission cannot smuggle external authority or arbitrary source paths',()=>{
+  for(const change of [{route:'gems-compute-dispatch'},{mode:'execute'},
+    {hostname:'nextgen'},{passport_grant:'fake'},{repository_path:'secrets.env'}]){
+    assert.throws(()=>admitMissionRequest(sample({
+      mission_id:'gems-research-evidence-20261118-001',route:'gems-research-evidence',...change
+    })));
+  }
+});

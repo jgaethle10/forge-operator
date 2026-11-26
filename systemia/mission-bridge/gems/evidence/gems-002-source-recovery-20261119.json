@@ -1,0 +1,34 @@
+{
+  "schema": "evercraft.gems.data-recovery-source-evidence.v1",
+  "checked_date": "2026-11-19",
+  "owner_archive": "gems_001_verified_submission.zip/evidence/input-sha256.txt",
+  "public_unofficial_mirror": "https://huggingface.co/datasets/fabricioslv/gems-prize-geodawn/tree/main",
+  "mirror_license_label": "other",
+  "mirror_affiliation": "unofficial",
+  "mirror_sha256_manifest_matches_archived_three_files": true,
+  "manifest": [
+    {
+      "name": "example_submission.tif",
+      "sha256": "2176d08e485aa2cd2860ce8df539db4faf4d76163b38a4dd8c30a40454d35cbc",
+      "source_metadata": "https://huggingface.co/datasets/fabricioslv/gems-prize-geodawn/blob/main/example_submission.tif"
+    },
+    {
+      "name": "existing_faults.tif",
+      "sha256": "7ba308ccdc4418b31a178f4f1ef21aaa6e152e4028f2f6f64b01f7eb25ae4093",
+      "source_metadata": "https://huggingface.co/datasets/fabricioslv/gems-prize-geodawn/blob/main/existing_faults.tif"
+    },
+    {
+      "name": "gems-geodawn-numerical-features.tif",
+      "sha256": "4371c82e3b8339b807bdffcf4ef59a225520fe2988d521be208ae33743123bc5",
+      "source_metadata": "https://huggingface.co/datasets/fabricioslv/gems-prize-geodawn/blob/main/gems-geodawn-numerical-features.tif"
+    }
+  ],
+  "source_authenticity": "metadata SHA256 matches participant archive; local download and rehash still required",
+  "source_rights": "competition participant should prefer authorized official DrivenData download; mirror license is 'other', independently confirm reuse rights and source attribution before using mirror",
+  "actual_training_rasters_downloaded": false,
+  "local_runtime_network_download_attempt": "blocked by environment network restriction",
+  "real_data_training_executed": false,
+  "scored_submission_made": false,
+  "penguin_touched": false,
+  "paid_compute_usd": 0
+}

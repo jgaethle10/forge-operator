@@ -1,0 +1,24 @@
+{
+  "schema": "evercraft.gems.research-checkpoint.v1",
+  "competition": "DOE GEMS Prize Challenge",
+  "baseline_submission_id": 330339,
+  "baseline_official_public_dti": 0.0552,
+  "baseline_southern_holdout_dti": 0.1023,
+  "best_continuity_variant_southern_holdout_dti": 0.08875294400232213,
+  "continuity_variant_count": 10,
+  "decision": "hold_gems_001_as_selected",
+  "hypotheses": [
+    "unlabeled-pixels-as-negative-contamination",
+    "geographical-and-whole-fault-generalization",
+    "confidence-density-and-geologic-structure-calibration"
+  ],
+  "workstreams": [
+    "geology-review",
+    "ml-negative-sampling-ablation",
+    "independent-evaluation"
+  ],
+  "execution_state": "not_dispatched_to_private_saban",
+  "scope": "source-only evidence checkpoint, no data movement, training, credentials, or worker control",
+  "production_unchanged": true,
+  "paid_compute_authorized": false
+}
