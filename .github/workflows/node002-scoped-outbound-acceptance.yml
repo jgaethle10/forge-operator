@@ -16,4 +16,4 @@ jobs:
         with:
           node-version: '22'
       - run: node --check systemia/network/outbound-node-agent.mjs
-      - run: node --test systemia/network/scoped-outbound-policy.test.mjs systemia/network/node002-release-authorization.test.mjs systemia/network/node002-release-ledger.test.mjs systemia/network/node002-release-stage.test.mjs systemia/network/node002-release-activation-plan.test.mjs systemia/network/node002-activation-authorization.test.mjs
+      - run: node --test systemia/network/scoped-outbound-policy.test.mjs systemia/network/node002-release-authorization.test.mjs systemia/network/node002-release-ledger.test.mjs systemia/network/node002-release-stage.test.mjs systemia/network/node002-release-activation-plan.test.mjs systemia/network/node002-activation-authorization.test.mjs systemia/network/node002-activation-ledger.test.mjs
