@@ -51,6 +51,8 @@ test('one company tick performs bounded registered Saban visual reviews; repeats
  assert.equal(first.queue.execution_authorized,false);
  assert.equal(first.queue.candidates.length,4);
  assert.equal(first.snapshot.counts.scanned,4);
+ assert.equal(first.snapshot.counts.held,2,'Unmerged graphics PRs must count as release holds');
+ assert.equal(first.report.release_held_projects,2);
  for(const key of ['work-saban-proof','saban-operations-graphics']){
   const entry=first.report.projects.find(p=>p.project_key===key);
   assert.ok(entry?.release_gate);
@@ -85,7 +87,7 @@ test('interrupted source review is held, never silently rerun on the next five-m
   spawn:()=>({status:1,error:null})});
  assert.equal(first.report.held_projects,4);
  assert.equal(first.report.source_review_completed_this_tick,0);
- assert.equal(first.snapshot.counts.held,4);
+ assert.equal(first.snapshot.counts.held,6,'Four interrupted reviews plus two release holds');
  const next=await runKaidanceCreativeDevelopment({root:ROOT,outDir:dir,
   now:new Date(+at+300000),spawn:()=>{throw Error('must_not_replay_unreconciled_job')}});
  assert.ok(next.report.projects.every(x=>x.status==='held_unreconciled_checkpoint'));
