@@ -130,6 +130,15 @@
       "products": [],
       "services": [],
       "priority": 2
+    },
+    {
+      "lane_key": "forest-restoration",
+      "description": "FOREST-001: FAIE forest restoration, dated treatment and workforce evidence, and Systemia-reviewed economic opportunities",
+      "mode": "observe_existing_workflows",
+      "cadence_seconds": 300,
+      "products": [],
+      "services": [],
+      "priority": 2
     }
   ]
 }
