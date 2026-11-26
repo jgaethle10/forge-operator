@@ -1,0 +1,56 @@
+{
+  "schema": "evercraft.kaidance.global-opportunity-sources.v1",
+  "heartbeat_seconds": 300,
+  "source_refresh_seconds": 21600,
+  "outreach_authorized": false,
+  "payment_authorized": false,
+  "deployment_authorized": false,
+  "scope": "WORLDWIDE_NO_COUNTRY_DEFAULT",
+  "commercial_intent": "Find source-backed, active potential contract needs globally, then qualify real buyer, eligibility, deadline and product fulfillment.",
+  "discovery_note": "A World Bank procurement notice is not a partnership, paid contract, or proof Evercraft is eligible; this one authorized public source is phase 1 of global coverage.",
+  "sources": [
+    {
+      "key": "worldbank-procurement",
+      "api_url": "https://search.worldbank.org/api/v2/procnotices",
+      "official_list_url": "https://projects.worldbank.org/en/projects-operations/opportunities",
+      "rows": 40,
+      "max_age_days": 21,
+      "enabled": true,
+      "source_kind": "official_public_json_api",
+      "refresh_floor_seconds": 21600,
+      "license": "World Bank public procurement dataset CC BY 4.0, attribute to source"
+    }
+  ],
+  "future_sources_review_only": [
+    {
+      "name": "IDB procurement notices",
+      "url": "https://www.iadb.org/en/how-we-can-work-together/procurement/procurement-projects/procurement-notices",
+      "status": "connector_not_implemented"
+    },
+    {
+      "name": "UNGM tender notices",
+      "url": "https://www.ungm.org/Public/Notice",
+      "status": "connector_not_implemented"
+    },
+    {
+      "name": "private farming and business partner research",
+      "url": "https://www.fiagro.org/",
+      "status": "human_source_review_only"
+    }
+  ],
+  "duplication_and_suppression_policy": {
+    "source_notice_id": "stable_work_key",
+    "private_business_contact_ledger": "Systemia Interaction Ledger + Passport",
+    "contact_rules": "fresh complete private Gmail readback, buyer verification, territory/consent/compliance, opted-out/spring-only suppression and exact-message permit required",
+    "do_not_contact_on_source_only": true,
+    "no_cold_outreach_ever_from_this_connector": true
+  },
+  "commercial_gate": {
+    "eligibility": "requires_verified_research",
+    "buyer": "requires_verified_research",
+    "deadline": "requires_official_notice_detail",
+    "offer_fulfillment": "requires_independent_readback",
+    "payment": "requires_authoritative_settlement_receipt",
+    "contract": "requires_signed_agreement"
+  }
+}
