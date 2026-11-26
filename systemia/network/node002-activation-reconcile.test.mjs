@@ -1,0 +1,11 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {reconcileActivationOutcome} from './node002-activation-reconcile.mjs';
+const intent={schema:'evercraft.node002.activation-ledger.v1',state:'verified_intent_pending_reconciliation',execution_authorized:false,last_sequence:1,commit:'a'.repeat(40),phase:'cemetery-restore',rollback_commit:'b'.repeat(40),rollback_phase:'hash-only',activation_grant_sha256:'c'.repeat(64)};
+const observation={node_id:'evercraft-node002-nextgen',sequence:1,activation_grant_sha256:intent.activation_grant_sha256,commit:intent.commit,phase:intent.phase,local_health_verified:true,broker_attestation_verified:true,source_integrity_verified:true,previous_jobs_drained:true};
+const run=patch=>reconcileActivationOutcome({intent,observation:{...observation,...patch}});
+test('verified activation reconciles without granting execution',()=>{const r=run({});assert.equal(r.outcome,'activated');assert.equal(r.state,'reconciled');assert.equal(r.execution_authorized,false)});
+test('verified rollback reconciles the previous release',()=>{const r=run({commit:intent.rollback_commit,phase:intent.rollback_phase,rollback_verified:true});assert.equal(r.outcome,'rolled_back');assert.equal(r.state,'reconciled')});
+test('missing health or job-drain evidence keeps intent pending',()=>{for(const field of ['local_health_verified','broker_attestation_verified','source_integrity_verified','previous_jobs_drained']){const r=run({[field]:false});assert.equal(r.outcome,'held_unverified');assert.equal(r.state,'verified_intent_pending_reconciliation')}});
+test('wrong release, phase or unverified rollback remains held',()=>{for(const patch of [{commit:'d'.repeat(40)},{phase:'cemetery-ingest'},{commit:intent.rollback_commit,phase:intent.rollback_phase,rollback_verified:false}])assert.equal(run(patch).outcome,'held_unverified')});
+test('mismatched observation identity and replay rejected',()=>{for(const patch of [{node_id:'other'},{sequence:2},{activation_grant_sha256:'d'.repeat(64)}])assert.throws(()=>run(patch),/activation_observation_binding_denied/);assert.throws(()=>reconcileActivationOutcome({intent:{...intent,state:'reconciled'},observation}),/activation_intent_invalid/)});
