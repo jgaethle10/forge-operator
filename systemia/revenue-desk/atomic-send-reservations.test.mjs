@@ -51,7 +51,7 @@ function setup(){
  const sign=r=>({hmac_sha256:createHmac('sha256',verifyKey).update(JSON.stringify(r)).digest('hex')});
  const kwargs={
   stateDir,ledger,report,reportProof:sign(report),coverageSecretFile:secretFile,
-  prospect:report.prospects[0],opportunityRef:'hmac256:'+'f'.repeat(64),
+  prospect:report.prospects[0],opportunityRef:report.prospects[0].prospect_ref,
   subjectRef,actorRef,subject:'Re: Website QA proposal',body:messageBody,sender,opportunity,now:NOW
  };
  return {dir,stateDir,ledger,passport,secretFile,report,sign,kwargs};
@@ -132,7 +132,7 @@ test('a second mission cannot evade exact scoped buyer identity with another age
   const other={...c.kwargs,opportunityRef:'hmac256:'+'a'.repeat(64)};
   const r=reserveColdOutreach(other);
   assert.equal(r.state,'held');
-  assert.deepEqual(r.reasons,['contact_or_opportunity_already_reserved']);
+  assert.deepEqual(r.reasons,['signed_contact_or_opportunity_unresolved']);
  }finally{dispose(c);}
 });
 
@@ -189,5 +189,45 @@ test('corrupt persisted reservation cannot change shared quota or impersonate a 
   const repeat=reserveColdOutreach(c.kwargs);
   assert.equal(repeat.state,'held');
   assert.deepEqual(repeat.reasons,['contact_or_opportunity_already_reserved']);
+ }finally{dispose(c);}
+});
+
+test('a caller cannot override a signed customer hold with a contact-ready row',()=>{
+ const c=setup();
+ try{
+  const signed={...c.report,prospects:[{...c.report.prospects[0],
+   contact_state:'customer_hold',actionable_as_new_cold_target:false,
+   reasons:['suppressed_or_customer_hold']}]};
+  const r=reserveColdOutreach({...c.kwargs,report:signed,reportProof:c.sign(signed)});
+  assert.equal(r.state,'held');
+  assert.deepEqual(r.reasons,['signed_contact_preference_or_readiness_hold']);
+  assert.equal(inspectReservations({stateDir:c.stateDir}).count,0);
+ }finally{dispose(c);}
+});
+
+test('a signed report must cover exactly one matching contact and opportunity',()=>{
+ const c=setup();
+ try{
+  for(const prospects of [[],[c.report.prospects[0],{...c.report.prospects[0],
+    contact_ref:'hmac256:'+'c'.repeat(64),contact_state:'customer_hold'}]]){
+   const signed={...c.report,prospects};
+   const r=reserveColdOutreach({...c.kwargs,report:signed,reportProof:c.sign(signed)});
+   assert.equal(r.state,'held');
+   assert.deepEqual(r.reasons,['signed_contact_or_opportunity_unresolved']);
+   assert.equal(inspectReservations({stateDir:c.stateDir}).count,0);
+  }
+ }finally{dispose(c);}
+});
+
+test('inconsistent signed readiness cannot release explicit suppression',()=>{
+ const c=setup();
+ try{
+  for(const contact_state of ['customer_hold','opted_out','do_not_contact','declined','blocked','bounced']){
+   const signed={...c.report,prospects:[{...c.report.prospects[0],contact_state}]};
+   const r=reserveColdOutreach({...c.kwargs,report:signed,reportProof:c.sign(signed)});
+   assert.equal(r.state,'held');
+   assert.deepEqual(r.reasons,['signed_contact_preference_or_readiness_hold']);
+  }
+  assert.equal(inspectReservations({stateDir:c.stateDir}).count,0);
  }finally{dispose(c);}
 });
