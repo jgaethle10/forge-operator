@@ -44,7 +44,7 @@ test('global scope is geographical, not a country filter; only current procureme
   notice('OP00483303','Contract Award'),
   {...notice('OP00483304'),noticedate:'01-Jan-2020'},
   {...notice('OP00483305'),notice_status:'Cancelled'},
-  notice('OP00483306','Request for Expression of Interest','Office furniture')
+  {...notice('OP00483306','Request for Expression of Interest','Office furniture'),project_name:'Administrative offices'}
  ];
  const result=normalizeGlobalNotices({procnotices:items},{now:at,maxAgeDays:21});
  assert.deepEqual(result.rows.map(r=>r.notice_id),['OP00483301','OP00483302']);
