@@ -21,6 +21,8 @@ on:
       - 'systemia/organism/kaidance-frontier-proof.mjs'
       - 'systemia/organism/kaidance-frontier-cycle.mjs'
       - 'systemia/organism/kaidance-company-heartbeat*.mjs'
+      - 'systemia/events/event-opportunity-*.mjs'
+      - 'tests/event-opportunity-scout.test.mjs'
       - 'systemia/organism/kaidance-next-action.mjs'
       - 'tests/kaidance-next-action.test.mjs'
       - 'systemia/organism/kaidance-company-heartbeat.workflow.json'
@@ -67,6 +69,8 @@ on:
       - 'systemia/organism/kaidance-frontier-proof.mjs'
       - 'systemia/organism/kaidance-frontier-cycle.mjs'
       - 'systemia/organism/kaidance-company-heartbeat*.mjs'
+      - 'systemia/events/event-opportunity-*.mjs'
+      - 'tests/event-opportunity-scout.test.mjs'
       - 'systemia/organism/kaidance-next-action.mjs'
       - 'tests/kaidance-next-action.test.mjs'
       - 'systemia/organism/kaidance-company-heartbeat.workflow.json'
@@ -123,6 +127,7 @@ jobs:
           path: |
             artifacts/kaidance-frontier/runtime/state.json
             artifacts/kaidance-company-heartbeat/state.json
+            artifacts/event-opportunity-scout/state.json
             artifacts/kaidance-company-heartbeat/next-action-state.json
             artifacts/kaidance-worlds-saban-review/goals/
             artifacts/kaidance-source-candidate/state.json
@@ -171,6 +176,16 @@ jobs:
       - name: Validate one-company evidence-backed next action without a new worker
         run: node --test tests/kaidance-next-action.test.mjs
 
+      - name: Verify event opportunity scout duplicate and outreach safety contracts
+        run: node --test tests/event-opportunity-scout.test.mjs
+
+      - name: Record source-only event scout receipt on pull requests
+        if: github.event_name == 'pull_request'
+        run: node systemia/events/event-opportunity-scout-runner.mjs --out artifacts/event-opportunity-scout
+
+      - name: Check bounded official UK event tender source on current KAIDANCE cycle
+        if: github.event_name != 'pull_request'
+        run: node systemia/events/event-opportunity-scout-runner.mjs --out artifacts/event-opportunity-scout --live
       - name: Reconcile Evercraft company portfolio on KAIDANCE heartbeat
         run: node systemia/organism/kaidance-company-heartbeat-runner.mjs --out artifacts/kaidance-company-heartbeat --prove-worlds
 
@@ -211,6 +226,7 @@ jobs:
           path: |
             artifacts/kaidance-frontier/runtime/state.json
             artifacts/kaidance-company-heartbeat/state.json
+            artifacts/event-opportunity-scout/state.json
             artifacts/kaidance-company-heartbeat/next-action-state.json
             artifacts/kaidance-worlds-saban-review/goals/
             artifacts/kaidance-source-candidate/state.json
@@ -233,6 +249,7 @@ jobs:
             artifacts/kaidance-offer-checkout/latest.json
             artifacts/kaidance-offer-checkout/actions.json
             artifacts/kaidance-offer-checkout/mission-snapshot.json
+            artifacts/event-opportunity-scout/latest.json
             artifacts/kaidance-company-heartbeat/latest.json
             artifacts/kaidance-company-heartbeat/mission-snapshot.json
             artifacts/kaidance-company-heartbeat/queue.json
