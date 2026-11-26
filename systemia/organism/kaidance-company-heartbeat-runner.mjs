@@ -268,6 +268,7 @@ export function runCompanyHeartbeat({
   physical_prototype_built:false,worker_dispatched:false};
  const researchContinuity=runPrivateResearchContinuity({enabled:rdContinuityEnabled,root:repo,outDir:out,now});
  const fmp=findmypartExecutionReceipt?.schema==='evercraft.findmypart.execution-cycle.v1'&&findmypartExecutionReceipt.tick===tick&&findmypartExecutionReceipt.outreach_authorized===false&&findmypartExecutionReceipt.buyers_qualified===0?findmypartExecutionReceipt:null;
+ const fmpShopCandidates=(Array.isArray(fmp?.service_fit_candidates)?fmp.service_fit_candidates:[]).slice(0,6).map(row=>({work_key:row.work_key,lane_key:'findmypart',priority:1,action:'reconcile_existing_revenue_desk_then_confirm_actual_stalled_case',authority:'systemia_operator_review_required',business_name:row.business_name,source_url:row.source_url,observed_at:row.observed_at,evidence_ref:row.body_digest,buyer_need_confirmed:false,execution_authorized:false,outreach_authorized:false}));
  const findmypartCandidates=[
   {work_key:'findmypart:product-development',lane_key:'findmypart',priority:1,action:'reconcile_repair_graph_recovery_benchmarks_and_buyer_door_then_lease_next_bounded_engineering_task',authority:'systemia_operator_review_required',execution_authorized:false,evidence_ref:'source:github:issue:1758'},
   {work_key:'findmypart:commercial-discovery',lane_key:'findmypart',priority:1,action:'reconcile_existing_revenue_desk_and_qualify_new_repair_shop_supplier_leads_from_approved_sources',authority:'systemia_operator_review_required',execution_authorized:false,outreach_authorized:false,evidence_ref:'source:github:issue:1600'}
@@ -281,6 +282,7 @@ export function runCompanyHeartbeat({
   execution_authorized:false,
   candidates:[
    ...findmypartCandidates,
+   ...fmpShopCandidates,
    ...(proof.status==='failed'?[{work_key:'worlds:source-proof-failure',lane_key:'worlds',priority:1,action:'investigate_failed_source_tests',authority:'review_required'}]:[]),
    ...(proof.status==='due_not_executed'?[{work_key:'worlds:source-proof-due',lane_key:'worlds',priority:2,action:'run_bounded_source_proof',authority:'existing_allowlisted_local_only'}]:[]),
    ...aiw.review_candidates.map(row=>({work_key:row.key,lane_key:'infrastructure-watch',priority:2,
@@ -314,7 +316,7 @@ export function runCompanyHeartbeat({
   counts:{...planned.snapshot.counts,
    scanned:planned.snapshot.counts.scanned+aiw.sources_observed+global.sources_observed+(network.status==='verified_receipt'?1:0)+(learning?.report?.counts?.tracked||0)+(aircore?.report?1:0),
    changed:planned.snapshot.counts.changed+(global.newly_seen||0)+(network.newly_seen||0)+(aircore?.report?.newly_seen||0),
-   held:planned.snapshot.counts.held+findmypartCandidates.length+aiw.review_candidates.length+global.review_candidates.length+network.review_candidates.length+(learning?.report?.counts?.failed||0)+
+   held:planned.snapshot.counts.held+findmypartCandidates.length+fmpShopCandidates.length+aiw.review_candidates.length+global.review_candidates.length+network.review_candidates.length+(learning?.report?.counts?.failed||0)+
     (aircore?.held||['source_proof_failed','missing_source_hold'].includes(aircore?.report?.source_status)?1:0)},
   evidence_refs:[
     ...planned.snapshot.evidence_refs,
