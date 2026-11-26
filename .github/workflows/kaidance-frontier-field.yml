@@ -22,6 +22,8 @@ on:
       - 'systemia/organism/kaidance-frontier-proof.mjs'
       - 'systemia/organism/kaidance-frontier-cycle.mjs'
       - 'systemia/organism/kaidance-company-heartbeat*.mjs'
+      - 'systemia/organism/lightforge-development-intake.mjs'
+      - 'tests/lightforge-development-intake.test.mjs'
       - 'systemia/organism/kaidance-global-opportunity-scout.mjs'
       - 'tests/kaidance-global-opportunity-scout.test.mjs'
       - 'systemia/organism/kaidance-next-action.mjs'
@@ -74,6 +76,8 @@ on:
       - 'systemia/organism/kaidance-frontier-proof.mjs'
       - 'systemia/organism/kaidance-frontier-cycle.mjs'
       - 'systemia/organism/kaidance-company-heartbeat*.mjs'
+      - 'systemia/organism/lightforge-development-intake.mjs'
+      - 'tests/lightforge-development-intake.test.mjs'
       - 'systemia/organism/kaidance-global-opportunity-scout.mjs'
       - 'tests/kaidance-global-opportunity-scout.test.mjs'
       - 'systemia/organism/kaidance-next-action.mjs'
@@ -188,6 +192,9 @@ jobs:
 
       - name: Verify worldwide source polling, 300-second queue reuse and outreach deny-by-default
         run: node --test tests/kaidance-global-opportunity-scout.test.mjs
+
+      - name: Validate unpublished LightForge release gating (no autonomous writer)
+        run: node --test tests/lightforge-development-intake.test.mjs
 
       - name: Validate KAIDANCE company heartbeat safety and truthful progress
         run: node --test tests/kaidance-company-heartbeat.test.mjs

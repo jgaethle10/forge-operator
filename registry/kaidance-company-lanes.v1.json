@@ -141,6 +141,15 @@
         "aiw-evidence-watch"
       ],
       "priority": 2
+    },
+    {
+      "lane_key": "lightforge",
+      "description": "Unpublished LightForge consumer holiday-lighting beta; release evidence and review only",
+      "mode": "observe_existing_workflows",
+      "cadence_seconds": 300,
+      "products": [],
+      "services": [],
+      "priority": 2
     }
   ]
 }

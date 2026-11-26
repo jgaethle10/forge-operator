@@ -1,0 +1,71 @@
+{
+  "schema": "evercraft.kaidance.lightforge-development.v1",
+  "product_key": "evercraft-lightforge",
+  "mission_key": "lightforge-consumer-beta-2026",
+  "visibility": "unpublished_internal_product",
+  "phase": "engineering_beta",
+  "release_candidate": "RC07-local-only",
+  "heartbeat_seconds": 300,
+  "customer_path": [
+    "download",
+    "connect compatible lights",
+    "choose show",
+    "play"
+  ],
+  "source_status": "local_artifact_not_yet_admitted_to_canonical_repository",
+  "deployment_status": "not_deployed",
+  "commercial_status": "do_not_sell_as_finished_product",
+  "gates": [
+    {
+      "key": "canonical-source",
+      "priority": 0,
+      "state": "unverified",
+      "next_action": "Admit source privately under Evercraft ownership; preserve history and release evidence"
+    },
+    {
+      "key": "windows-clean-install",
+      "priority": 1,
+      "state": "unverified",
+      "next_action": "Fresh Windows 10/11 install, launch, shutdown and protection software smoke test"
+    },
+    {
+      "key": "physical-wled",
+      "priority": 1,
+      "state": "unverified",
+      "next_action": "Test discover, pair, zone output, pixel output and state restoration on physical WLED hardware"
+    },
+    {
+      "key": "network-failure-recovery",
+      "priority": 1,
+      "state": "unverified",
+      "next_action": "Verify disconnect, power loss and interrupted shutdown fail safely on physical fixtures"
+    },
+    {
+      "key": "customer-beta",
+      "priority": 2,
+      "state": "unverified",
+      "next_action": "Observe a nontechnical customer complete download, pairing, choosing and playing without assistance"
+    },
+    {
+      "key": "layout-mapping",
+      "priority": 2,
+      "state": "unverified",
+      "next_action": "Verify actual home fixture order and segment placement match the preview"
+    },
+    {
+      "key": "installer-signing",
+      "priority": 2,
+      "state": "unverified",
+      "next_action": "Signed distributable, malware scan, update and uninstall verification"
+    }
+  ],
+  "authority": {
+    "read_source": true,
+    "queue_review": true,
+    "write_code": false,
+    "deploy": false,
+    "publish": false,
+    "send_outreach": false,
+    "accept_payment": false
+  }
+}
