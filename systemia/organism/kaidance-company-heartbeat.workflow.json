@@ -13,7 +13,8 @@
     "mission_snapshot": "artifacts/kaidance-company-heartbeat/mission-snapshot.json",
     "queue": "artifacts/kaidance-company-heartbeat/queue.json",
     "global_opportunity_review_queue": "artifacts/kaidance-global-opportunities/queue.json",
-    "global_opportunity_source_receipt": "artifacts/kaidance-global-opportunities/latest.json"
+    "global_opportunity_source_receipt": "artifacts/kaidance-global-opportunities/latest.json",
+    "kennedy_quality_review": "artifacts/kaidance-company-heartbeat/latest.json"
   },
   "authority": {
     "inventory_read": "autonomous",
@@ -26,7 +27,8 @@
     "private_customer_data": false,
     "official_global_source_poll": "bounded_read_only",
     "auto_bid": false,
-    "auto_partner_contact": false
+    "auto_partner_contact": false,
+    "kennedy_visual_qa_receipt_intake": "private_read_only_review"
   },
   "claims": {
     "all_public_products_inventoried": true,
@@ -34,6 +36,8 @@
     "all_projects_developed_every_tick": false,
     "github_cron_guaranteed": false,
     "global_buyers_verified": false,
-    "global_source_queue_is_paid_revenue": false
+    "global_source_queue_is_paid_revenue": false,
+    "kennedy_autonomous_quality_improvement_verified": false,
+    "aliev_independent_market_qualification_verified": false
   }
 }
