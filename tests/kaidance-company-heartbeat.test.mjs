@@ -159,3 +159,39 @@ test('existing heartbeat admits up to six official event reviews without repeati
   assert.equal(stale.queue.candidates.some(x=>x.lane_key==='events'),false);
  }finally{fs.rmSync(root,{recursive:true,force:true})}
 });
+
+test('US SAM event source is admitted as founder-review only, quarantined when stale',()=>{
+ const root=fs.mkdtempSync(path.join(os.tmpdir(),'kaidance-us-event-scout-'));
+ const out=path.join(root,'kaidance-company-heartbeat');
+ const dir=path.join(root,'event-opportunity-us-sam');
+ const at=new Date('2026-11-25T22:00:00.000Z');
+ const id='a'.repeat(32);
+ const item={opportunity_key:'event:'+'b'.repeat(20),source:'us_sam_public_v2',
+  source_url:'https://sam.gov/opp/'+id+'/view',
+  outreach_authorized:false,dispatch_authorized:false,buyer_contact_verified:false,
+  revenue_confirmed:false,deadline:'2026-12-20T00:00:00.000Z'};
+ fs.mkdirSync(dir,{recursive:true,mode:0o700});
+ try{
+  fs.writeFileSync(path.join(dir,'state.json'),JSON.stringify({
+   schema:'evercraft.events.us-sam-scout-state.v1',last_attempt_ms:at.getTime(),
+   last_success_at:at.toISOString(),
+   observation:{schema:'evercraft.events.us-sam-review.v1',candidates:[item,
+    {...item,opportunity_key:'event:'+'c'.repeat(20),source_url:'https://sam.gov.evil.example/opp/'+id+'/view'}]}
+  }),{mode:0o600});
+  const r=runCompanyHeartbeat({root:'.',outDir:out,now:at});
+  assert.equal(r.report.event_discovery.candidates_for_review,1);
+  assert.equal(r.report.event_discovery.us_source_status,'read_only_us_review_candidates');
+  const candidates=r.queue.candidates.filter(c=>c.lane_key==='events');
+  assert.equal(candidates.length,1);
+  assert.equal(candidates[0].source_region,'United States');
+  assert.equal(candidates[0].outreach_authorized,false);
+  assert.equal(candidates[0].dispatch_authorized,false);
+  assert.equal(r.next_action.candidates.some(x=>x.work_key===item.opportunity_key),true);
+  assert.equal(r.next_action.execution_performed,false);
+  assert.equal(r.next_action.customer_contacts,0);
+  const stale=runCompanyHeartbeat({root:'.',outDir:out,
+   now:new Date(at.getTime()+9*3600000)});
+  assert.equal(stale.report.event_discovery.us_source_status,'us_source_stale');
+  assert.equal(stale.queue.candidates.filter(c=>c.lane_key==='events').length,0);
+ }finally{fs.rmSync(root,{recursive:true,force:true})}
+});
