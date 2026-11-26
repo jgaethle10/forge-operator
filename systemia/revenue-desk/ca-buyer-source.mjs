@@ -1,3 +1,4 @@
+import {canadaNoticeUrl} from './ca-notice-url.mjs';
 import {execFile} from 'node:child_process';
 import {promisify} from 'node:util';
 import {createHash} from 'node:crypto';
@@ -53,8 +54,8 @@ export function normalizeCanada(input,{now=new Date()}={}){
   if((!local&&!zoned)||!Number.isFinite(due)||(local&&new Date(due).toISOString().slice(0,19)!==rawDue)||due+(local?14*3600000:0)<=+now){diagnostics.expired_or_unverified_deadline++;continue;}
   const lane=lanes.find(([,p])=>p.test([en,fr,descEn.slice(0,20000),descFr.slice(0,20000)].join(' ')))?.[0];
   if(!lane){diagnostics.unmatched_scope++;continue;}
-  let u;try{u=new URL(urlEn||urlFr);}catch{diagnostics.invalid_notice_id++;continue;}
-  if(u.protocol!=='https:'||u.hostname!=='canadabuys.canada.ca'||u.username||u.password||u.port||!/^\/(en|fr)\/tender-opportunities\//.test(u.pathname)){diagnostics.invalid_notice_id++;continue;}
+  const u=canadaNoticeUrl(urlEn)||canadaNoticeUrl(urlFr);
+  if(!u){diagnostics.invalid_notice_id++;continue;}
   const candidate_ref='ca:'+createHash('sha256').update(ref).digest('hex').slice(0,40);
   if(seen.has(candidate_ref))continue;seen.add(candidate_ref);
   candidates.push({candidate_ref,source_url:u.href,buyer:(buyerEn||buyerFr).slice(0,300),title:(en||fr).slice(0,300),deadline:local?rawDue:new Date(due).toISOString(),deadline_timezone:local?'unverified-source-local':null,suggested_lane:lane,stage:'research_required',qualified:false,contact_authorized:false});
