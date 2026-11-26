@@ -25,4 +25,4 @@ jobs:
       - name: AirCore source sizing, held gates and heartbeat integration
         run: node --test systemia/breath-of-fresh-air/aircore-sizing.test.mjs tests/kaidance-aircore-development.test.mjs
       - name: Existing company heartbeat guardrail regression
-        run: node --test tests/kaidance-company-heartbeat.test.mjs tests/kaidance-next-action.test.mjs
+        run: node --test tests/kaidance-company-heartbeat.test.mjs tests/kaidance-next-action.test.mjs tests/aiw-evidence-watch.test.mjs tests/kaidance-network-heartbeat-integration.test.mjs
