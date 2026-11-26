@@ -1,0 +1,35 @@
+{
+  "schema": "evercraft.events.regional-public-notice-intake.v1",
+  "source_method": "founder_research_public_official_portal_browser_review",
+  "source_evidence_date": "2026-11-25",
+  "authority": "public_notice_only_no_buyer_contact",
+  "automatic_outreach": false,
+  "no_guaranteed_active_bid_status": true,
+  "sources": [
+    {
+      "source": "oregonbuys",
+      "notice_id": "S-C01010-00018449",
+      "source_url": "https://oregonbuys.gov/bso/external/bidDetail.sda?docId=S-C01010-00018449&external=true&parentUrl=close",
+      "reviewed_on": "2026-11-25",
+      "status": "listed_open_on_review_date",
+      "title": "RFQ2026-86 On-Call Photography Services for North Clackamas Parks & Recreation District",
+      "buyer": "Clackamas County - North Clackamas Parks & Recreation District",
+      "deadline_iso": "2026-12-08T14:00:00-08:00",
+      "service_class": "event_creative_service",
+      "founder_review_note": "Seeking up to four on-call professional photographers for events and activities; qualified photography delivery partner and response requirements need verification."
+    },
+    {
+      "source": "oregonbuys",
+      "notice_id": "S-580100-00018461",
+      "source_url": "https://oregonbuys.gov/bso/external/bidDetail.sda?docId=S-580100-00018461&external=true&parentUrl=close",
+      "reviewed_on": "2026-11-25",
+      "status": "listed_open_on_review_date",
+      "title": "Institutional Brand and Positioning Strategy",
+      "buyer": "Eastern Oregon University",
+      "deadline_iso": "2026-12-11T12:00:00-08:00",
+      "service_class": "creative_service_adjacent",
+      "founder_review_note": "Experienced institutional research/brand-strategy procurement, adjacent to event services; likely requires qualified proposal partner and a careful no-false-credentials review."
+    }
+  ],
+  "tracking_note": "Snapshot expires within 72 hours; no scheduled scraper claims and no automated outreach. Founder may submit updated evidence after rechecking official notices."
+}

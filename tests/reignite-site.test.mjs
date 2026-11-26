@@ -36,11 +36,23 @@ test('music timing claims remain conditional and detailed ordinance review docum
  assert.match(docs,/exact parcel\/jurisdiction/);
 });
 
-test('all eight program options and quiet zone are present but proposed',()=>{
+test('nine proposed program options include an unapproved aviation fly-in',()=>{
  for(const text of ['Outdoor main stage','The visual dome','The Quiet Wing',
  'Take the Decks + Karaoke','Art + photography','Heritage + fundraising',
- 'Food + community','The history of Hangar B']) assert(html.includes(text),text);
+ 'Food + community','The history of Hangar B','Pilots for Hangar B']) assert(html.includes(text),text);
  assert.match(html,/Proposed<\/span>/);
+ assert.match(html,/Optional concept · not scheduled/);
+ assert.match(html,/no aircraft arrival invitations or slots exist/);
+ assert.doesNotMatch(html,/fly-in tickets available|book your arrival|guaranteed aircraft parking/i);
+});
+
+test('verified museum acquisition and preservation council are accurately linked without implied consent',()=>{
+ assert.match(html,/museum reopened on October 29, 2026 under Vintage Aviation Museum/);
+ assert.match(html,/Port of Tillamook Bay retained the underlying land/);
+ assert.match(html,/Hangar B Preservation Council/);
+ assert.match(html,/https:\/\/www\.tillamookair\.com\/new-page-2/);
+ assert.match(html,/https:\/\/www\.vintageaviationmuseum\.org\//);
+ assert.match(html,/None of those organizations has approved/);
 });
 
 test('fully owned, no hidden marketing capture or third-party dependencies',()=>{

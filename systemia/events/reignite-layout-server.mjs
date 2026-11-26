@@ -11,11 +11,13 @@ import path from 'node:path';
 import os from 'node:os';
 import { fileURLToPath } from 'node:url';
 import { createSeedPlan, makeProposal, decideProposal, digest, secureCompare, myProposalSummaries } from './reignite-layout-engine.mjs';
+import { emptyEvidenceDesk, addOwnerEvidence, ownerReadiness } from './reignite-evidence.mjs';
 
 const stateDir=path.resolve(process.env.REIGNITE_LAYOUT_STATE ||
  path.join(process.env.XDG_STATE_HOME||path.join(os.homedir(),'.local','state'),'evercraft','reignite-layout'));
 const authPath=path.join(stateDir,'auth.json');
 const dbPath=path.join(stateDir,'workspace.json');
+const evidencePath=path.join(stateDir,'readiness-evidence.json');
 const lockPath=path.join(stateDir,'runtime.lock');
 const host='127.0.0.1',port=Number(process.env.REIGNITE_LAYOUT_PORT||8809);
 const origin='http://'+host+':'+port;
@@ -66,10 +68,11 @@ function cli(){
  const action=process.argv[2];
  if(action==='init'){
    root();
-   if(fs.existsSync(authPath)||fs.existsSync(dbPath))throw Error('already_initialized_no_overwrite');
+   if(fs.existsSync(authPath)||fs.existsSync(dbPath)||fs.existsSync(evidencePath))throw Error('already_initialized_no_overwrite');
    const secret=token();
    privateWrite(authPath,{schema:1,owner_hash:hash(secret),invites:[],sessions:[]});
    privateWrite(dbPath,{schema:1,plan:createSeedPlan(),proposals:[],reviews:[]});
+   privateWrite(evidencePath,emptyEvidenceDesk());
    process.stdout.write('Owner key (store privately; shown once): '+secret+'\n');
    return;
  }
@@ -124,6 +127,11 @@ function serve(){
  fs.writeSync(lock,String(process.pid));
  let db=privateRead(dbPath);
  if(db.schema!==1||!db.plan||!Array.isArray(db.proposals)||!Array.isArray(db.reviews))throw Error('workspace_schema_invalid');
+ // Migration creates a private empty desk for older initialized layout workspaces.
+ // This is not permission to infer evidence from historical or public posts.
+ if(!fs.existsSync(evidencePath))privateWrite(evidencePath,emptyEvidenceDesk());
+ let evidenceDesk=privateRead(evidencePath);
+ ownerReadiness(evidenceDesk); // fail closed on malformed existing private evidence
  const quotas=new Map();
  const release=()=>{try{fs.closeSync(lock);fs.unlinkSync(lockPath)}catch{}};
  process.once('SIGTERM',()=>{release();process.exit(0)});
@@ -247,6 +255,11 @@ function serve(){
      return send(res,200,{schema:'evercraft.reignite.contributor-status.v1',
        revision:db.plan.revision,items:myProposalSummaries(db.proposals,who.id,db.plan.revision),
        event_approved:false,venue_authorized:false});
+   if(req.method==='GET'&&url==='/api/owner/readiness'){
+     if(who.role!=='owner')return send(res,403,{error:'owner_only'});
+     try{return send(res,200,ownerReadiness(evidenceDesk))}
+     catch{return send(res,503,{error:'readiness_evidence_validation_hold'})}
+   }
    if(req.method==='GET'&&url==='/api/reviews'){
      if(who.role!=='owner')return send(res,403,{error:'owner_only'});
      return send(res,200,{proposals:db.proposals.filter(p=>p.status==='pending').slice(-100),revision:db.plan.revision});
@@ -263,6 +276,15 @@ function serve(){
      if(!session||session.revoked)return send(res,401,{error:'session_already_revoked'});
      session.revoked=true;privateWrite(authPath,data);
      return send(res,200,{signed_out:true},{'Set-Cookie':sessionCookie('',0)});
+   }
+   if(req.method==='POST'&&url==='/api/owner/evidence'){
+     if(who.role!=='owner')return send(res,403,{error:'owner_only'});
+     try{
+       const proposed=await body(req);
+       const result=addOwnerEvidence(evidenceDesk,proposed,{actor:who.label});
+       privateWrite(evidencePath,result.desk);evidenceDesk=result.desk;
+       return send(res,201,{receipt:result.receipt,readiness:ownerReadiness(evidenceDesk)});
+     }catch(e){return send(res,e.http||(/revision_conflict/.test(e.message)?409:422),{error:e.message})}
    }
    if(req.method==='POST'&&url==='/api/proposals'){
      if(db.proposals.filter(p=>p.status==='pending').length>=100)return send(res,429,{error:'review_queue_full'});

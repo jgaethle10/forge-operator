@@ -13,7 +13,7 @@
 <header><div class="wrap head"><div><a class="back" href="../">← REIGNITE</a><h1>LAYOUT <span>STUDIO.</span></h1><p>Propose. Compare. Review. Never confuse a concept with permission.</p></div><div class="status" id="connectionStatus" role="status">Local concept mode · no live submission</div></div></header>
 <main id="main" class="wrap">
 <section class="quick-start" aria-labelledby="quickStartTitle">
-<div class="quick-head"><div><div class="overline">The easy way in · one-minute idea</div><h2 id="quickStartTitle">What would you love to bring?</h2><p>Three answers. We create the draft zone, sort out the technical details, and route it for review. You don't need to learn the layout editor.</p></div><span class="quick-step">1 IDEA → 1 REVIEW</span></div>
+<div class="quick-head"><div><div class="overline">The easy way in · one-minute idea</div><h2 id="quickStartTitle">What would you love to bring?</h2><p>A few quick answers. We create the draft zone, sort out the technical details, and route it for review. You don't need to learn the layout editor.</p></div><span class="quick-step">1 IDEA → 1 REVIEW</span></div>
 <form id="quickIdeaForm" class="quick-form" autocomplete="off">
 <label for="quickKind">What kind of experience?<select id="quickKind" name="kind" required></select></label>
 <label for="quickName">What should we call it?<input id="quickName" name="name" required minlength="3" maxlength="100" placeholder="E.g. Coastline photo gallery"></label>
@@ -22,6 +22,44 @@
 <div class="quick-action"><button type="submit" id="quickSend">Suggest this experience</button><button id="quickExport" class="secondary" type="button" disabled>Download my suggestion</button></div>
 </form>
 <p id="quickFeedback" class="quick-feedback" role="status">No login required to try an idea. A private invitation is needed to send it into the owner review queue.</p>
+</section>
+<section id="ownerReadinessPanel" class="owner-evidence" hidden aria-labelledby="ownerReadinessTitle">
+<div class="owner-head">
+<div><div class="overline">Private organizer desk · evidence references only</div>
+<h2 id="ownerReadinessTitle">What needs attention next?</h2>
+<p>One source, one review requirement. Nothing recorded here grants permission to proceed or replaces the museum, engineers, or permitting authorities.</p></div>
+<button id="refreshOwnerReadiness" class="small secondary" type="button">Refresh blockers</button>
+</div>
+<div id="ownerReadinessSummary" class="owner-metrics" role="status">No authenticated evidence imported in this preview.</div>
+<ol id="ownerReadinessActions" class="owner-actions"></ol>
+<details id="ownerFlyInSection" class="owner-source-form">
+<summary>Optional: aviation community fly-in <span id="ownerFlyInStatus">(not planned or authorized)</span></summary>
+<p id="ownerFlyInIntro" class="sub">A community pilot suggested a coordinated fly-in. Verify the Port, current museum authority and aviation operating constraints before asking anyone to arrive.</p>
+<ul id="ownerFlyInChecks" class="owner-flyin-list"></ul>
+<p class="sub">A fly-in is not automatically an airshow. This concept is NOT an airport invitation, aircraft parking reservation, event permit or FAA clearance.</p>
+</details>
+<details class="owner-source-form">
+<summary>Record a source reference or reported concern</summary>
+<form id="ownerEvidenceForm" autocomplete="off">
+<label for="ownerEvidenceGate">Which requirement?
+<select id="ownerEvidenceGate" name="gate_id" required></select></label>
+<label for="ownerEvidenceSource">Existing evidence reference
+<input id="ownerEvidenceSource" name="source_ref" maxlength="300" required placeholder="https://official.example/document OR private-ledger:venue/record001"></label>
+<label for="ownerEvidenceFinding">What does the source report?
+<select id="ownerEvidenceFinding" name="finding" required>
+<option value="submitted">Submitted for independent review, not verified</option>
+<option value="unsafe">Unsafe concern reported, STOP for qualified review</option>
+<option value="denied">Permission denied or declined, STOP</option>
+<option value="not_permitted">Not permitted under reported conditions, STOP</option>
+<option value="unknown">Unclear, still requires independent review</option>
+</select></label>
+<label for="ownerEvidenceNote">Why is this relevant?
+<textarea id="ownerEvidenceNote" name="note" maxlength="800" minlength="15" rows="3" required placeholder="Record what the source is about and whose qualified review is still required. No private contents or access tokens."></textarea></label>
+<div class="control-row"><button type="submit" id="ownerEvidenceSubmit">Record for review</button></div>
+<p class="sub">Use an official HTTPS source URL without query tokens or a reference to an existing privately held document. Uploads, confidential contents, venue drawings, and personal data do not belong in this form.</p>
+</form>
+</details>
+<p id="ownerEvidenceResult" class="feedback" role="status" aria-live="polite"></p>
 </section>
 <section id="myIdeasPanel" class="my-ideas" hidden aria-labelledby="myIdeasTitle">
 <div class="my-ideas-head">

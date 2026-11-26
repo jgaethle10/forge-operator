@@ -7,6 +7,13 @@ on:
       - 'tests/reignite-site.test.mjs'
       - 'tests/reignite-layout.test.mjs'
       - 'tests/reignite-organizer.test.mjs'
+      - 'tests/reignite-unified.test.mjs'
+      - 'tests/reignite-evidence.test.mjs'
+      - 'tests/reignite-contributor-flow.test.mjs'
+      - 'tests/reignite-mobile-chrome.test.mjs'
+      - 'systemia/events/reignite-evidence.mjs'
+      - 'systemia/opportunity-fabric/event-coordination.mjs'
+      - 'systemia/opportunity-fabric/reignite-readiness-*.mjs'
       - 'systemia/events/reignite-layout-*.mjs'
       - '.github/workflows/reignite-source-check.yml'
   workflow_dispatch:
@@ -31,5 +38,22 @@ jobs:
           node --check public/reignite/organizer/app.js
           node --check systemia/events/reignite-layout-engine.mjs
           node --check systemia/events/reignite-layout-server.mjs
+          node --check systemia/events/reignite-evidence.mjs
       - name: Test source honesty, facility proposals, invited editor and owner review
-        run: node --test tests/reignite-site.test.mjs tests/reignite-layout.test.mjs tests/reignite-organizer.test.mjs
+        run: node --test tests/reignite-site.test.mjs tests/reignite-layout.test.mjs tests/reignite-organizer.test.mjs tests/reignite-unified.test.mjs tests/reignite-evidence.test.mjs tests/reignite-contributor-flow.test.mjs
+
+  mobile-chrome-proof:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Confirm real Chrome or Chromium on GitHub runner
+        run: |
+          command -v google-chrome || command -v google-chrome-stable || command -v chromium || command -v chromium-browser
+      - name: Test real mobile-width browser and owner review against private localhost
+        run: node --test tests/reignite-mobile-chrome.test.mjs
