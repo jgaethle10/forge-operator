@@ -41,7 +41,8 @@
         "--out": "SYSTEMIA_COMPANY_HEARTBEAT_OUT_DIR"
       },
       "optional_env_args": {
-        "--aiw-receipt": "SYSTEMIA_AIW_EVIDENCE_RECEIPT_FILE"
+        "--aiw-receipt": "SYSTEMIA_AIW_EVIDENCE_RECEIPT_FILE",
+        "--kennedy-quality-receipt": "SYSTEMIA_KENNEDY_QUALITY_RECEIPT_FILE"
       }
     },
     {
