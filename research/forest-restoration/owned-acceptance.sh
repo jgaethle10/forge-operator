@@ -39,7 +39,33 @@ fi
 collect_county() {
   local fips="$1" url="https://data.bls.gov/cew/data/api/2025/a/area/$1.csv" raw="$RUN/qcew-$1.csv"
   printf '%s\n' "$url" > "$RUN/qcew-$fips.url"
-  if ! curl --disable --proto '=https' --tlsv1.2 --fail --silent --show-error --connect-timeout 15 --max-time 90 --max-filesize 33554432 --output "$raw.tmp" "$url" 2> "$RUN/qcew-$fips.err"; then return 1; fi
+  if [[ -n "${FOREST_QCEW_REUSE_RUN:-}" ]]; then
+    # Reuse only the precise CSV bound to an explicitly supplied prior manifest hash.
+    if ! node --input-type=module - "$FOREST_QCEW_REUSE_RUN" "${FOREST_QCEW_REUSE_MANIFEST_SHA256:-}" "$fips" "$raw.tmp" <<'REUSE_QCEW'
+import fs from 'node:fs';
+import path from 'node:path';
+import {createHash} from 'node:crypto';
+const [prior,expected,fips,out]=process.argv.slice(2);
+const hash=v=>createHash('sha256').update(v).digest('hex');
+if(!/^[a-f0-9]{64}$/.test(expected)||!['53077','53037'].includes(fips))throw Error('invalid_reuse_scope');
+const read=(file,max)=>{
+ const stat=fs.lstatSync(file);
+ if(!stat.isFile()||stat.isSymbolicLink()||stat.size>max)throw Error('invalid_reuse_file');
+ return fs.readFileSync(file);
+};
+const manifest=read(path.join(prior,'evidence.sha256'),65536);
+if(hash(manifest)!==expected)throw Error('prior_manifest_hash_mismatch');
+const name='qcew-'+fips+'.csv';
+const entry=manifest.toString('utf8').split('\n').filter(l=>l.endsWith('  '+name));
+const data=read(path.join(prior,name),33554432);
+if(entry.length!==1||entry[0]!==hash(data)+'  '+name)throw Error('prior_csv_hash_mismatch');
+fs.writeFileSync(out,data,{flag:'wx',mode:0o600});
+REUSE_QCEW
+    then return 1; fi
+    printf '%s\n' "$FOREST_QCEW_REUSE_MANIFEST_SHA256" > "$RUN/qcew-$fips.reused-manifest.sha256"
+  else
+    if ! curl --disable --proto '=https' --tlsv1.2 --fail --silent --show-error --connect-timeout 15 --max-time 90 --max-filesize 33554432 --output "$raw.tmp" "$url" 2> "$RUN/qcew-$fips.err"; then return 1; fi
+  fi
   mv -- "$raw.tmp" "$raw"
   if ! timeout 45 node qcew-baseline.mjs --file "$fips" 2025 "$raw" > "$RUN/qcew-$fips.json.tmp" 2>> "$RUN/qcew-$fips.err"; then return 1; fi
   if ! node -e 'const x=JSON.parse(require("fs").readFileSync(process.argv[1],"utf8"));const r=x.result;if(r?.schema!=="evercraft.forest-001.qcew-baseline.v1"||r.area_fips!==process.argv[2]||r.year!==2025||!r.industries.some(v=>v.state==="REPORTED"||v.state==="SUPPRESSED"))process.exit(1)' "$RUN/qcew-$fips.json.tmp" "$fips" 2>> "$RUN/qcew-$fips.err"; then return 1; fi
