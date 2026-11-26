@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {createHash} from 'node:crypto';
 import {fileURLToPath} from 'node:url';
-import {planDocumentCycle} from './public-demand-document-cycle.mjs';
+import {planDocumentCycle} from './public-demand-document-plan.mjs';
 import {buildReviewPacket} from './public-demand-review-packet.mjs';
 import {triageReview} from './public-demand-triage.mjs';
 const sha=x=>createHash('sha256').update(x).digest('hex');

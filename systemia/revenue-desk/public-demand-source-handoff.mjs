@@ -4,7 +4,7 @@ import {createHash} from 'node:crypto';
 import {fileURLToPath} from 'node:url';
 import {planPublicDemandResearch} from './public-demand-intake.mjs';
 import {runPublicDemandGoal} from './public-demand-durable.mjs';
-import {planDocumentCycle} from './public-demand-document-cycle.mjs';
+import {planDocumentCycle} from './public-demand-document-plan.mjs';
 import {admitCapture} from './public-demand-inbox-admit.mjs';
 import {startNativeBrowserRuntime} from '../evercraft-web/browser-worker/native-runtime.mjs';
 const sha=x=>createHash('sha256').update(x).digest('hex');

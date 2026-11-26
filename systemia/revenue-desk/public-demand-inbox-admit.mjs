@@ -3,7 +3,7 @@ import path from 'node:path';
 import {createHash,randomUUID} from 'node:crypto';
 import {fileURLToPath} from 'node:url';
 import {planReceiptBoundPdfs} from './public-demand-pdf-canary.mjs';
-import {planDocumentCycle} from './public-demand-document-cycle.mjs';
+import {planDocumentCycle} from './public-demand-document-plan.mjs';
 const sha=x=>createHash('sha256').update(x).digest('hex');
 function privateDir(dir){
  const s=fs.lstatSync(dir);

@@ -4,7 +4,9 @@ import path from 'node:path';
 import {spawnSync} from 'node:child_process';
 import {createHash,randomUUID} from 'node:crypto';
 import {fileURLToPath} from 'node:url';
-import {planReceiptBoundPdfs,resumePdfExtraction} from './public-demand-pdf-canary.mjs';
+import {resumePdfExtraction} from './public-demand-pdf-canary.mjs';
+import {planDocumentCycle} from './public-demand-document-plan.mjs';
+export {planDocumentCycle} from './public-demand-document-plan.mjs';
 import {runTriage} from './public-demand-triage.mjs';
 const sha=x=>createHash('sha256').update(x).digest('hex');
 const flags={qualified:false,contact_authorized:false,execution_authorized:false,send_performed:false};
@@ -30,22 +32,6 @@ function cli(name,args,timeout){
  const r=spawnSync(process.execPath,[script,...args],{timeout,maxBuffer:2*1024*1024,encoding:'utf8',env:{PATH:'/usr/bin:/bin',HOME:process.env.HOME||'/tmp'}});
  if(r.error||r.status!==0)throw Error('bounded_stage_failed:'+name);
  return JSON.parse(r.stdout);
-}
-export function planDocumentCycle({root,manifestRaw}){
- if(!path.isAbsolute(root)||!Buffer.isBuffer(manifestRaw)||manifestRaw.length>65536)throw Error('invalid_cycle_input');
- const m=JSON.parse(manifestRaw);
- if(m.schema!=='evercraft.public-demand.document-inbox.v1'||!Array.isArray(m.captures)||m.captures.length>20)throw Error('invalid_inbox');
- const jobs=[],seen=new Set();
- for(const c of m.captures){
-  if(!/^[a-f0-9]{64}$/.test(c.key)||!/^[a-f0-9]{64}$/.test(c.sha256)||!Array.isArray(c.indices)||c.indices.length<1||c.indices.length>20||new Set(c.indices).size!==c.indices.length)throw Error('invalid_capture_entry');
-  const parent=path.join(root,'captures',c.key+'.json'),raw=read(parent);
-  for(const index of c.indices){
-   const job=planReceiptBoundPdfs(raw,c.sha256,[index])[0],key=sha(JSON.stringify(job));
-   if(seen.has(key))continue;seen.add(key);
-   jobs.push({key,parent,parent_sha256:c.sha256,index,job});
-  }
- }
- return jobs;
 }
 export function runDocumentCycle({root,manifestFile}){
  privateDir(root);privateDir(path.join(root,'captures'));const docs=path.join(root,'documents'),cycles=path.join(root,'document-cycle-receipts');
