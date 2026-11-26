@@ -1,0 +1,236 @@
+{
+  "schema": "evercraft.ecosystem-convergence.candidates.v1",
+  "observed_on": "2026-11-26",
+  "source_blobs": {
+    "public_products": "6c8039bc51e539a5ed000fb0a15695f503c0ca80",
+    "company_lanes": "4b077f2de8a87bedc98ba4371b63e6755702388c"
+  },
+  "source_scope": "GitHub branch snapshot, not runtime or dormancy proof",
+  "counts": {
+    "registered": 69,
+    "named": 20,
+    "without_named_binding": 49,
+    "products_in_candidate_groups": 40
+  },
+  "groups": [
+    {
+      "key": "industrial-lifecycle",
+      "priority": "P0",
+      "existing_missions": [
+        1758,
+        1600
+      ],
+      "products": [
+        "findmypart",
+        "systemia-atlas-freight",
+        "buildflow",
+        "systemia-remote-ops"
+      ],
+      "adjacent_programs": [
+        "Sage & Supply",
+        "Evercraft Manufacturing",
+        "EIC",
+        "Atlas Private Freight Ledger",
+        "RouteTwin"
+      ],
+      "status": "existing_workstream_do_not_duplicate",
+      "buyer": "industrial maintenance or repair teams",
+      "next": "Reconcile existing FindMyPart engineering and commercial receipts; route sourcing, qualified remanufacture and freight only after specification and eligibility checks.",
+      "gate": "No safety-critical substitute, supplier agreement, purchase or shipment implied."
+    },
+    {
+      "key": "property-preservation",
+      "priority": "P0",
+      "existing_missions": [
+        2584,
+        2440,
+        1120
+      ],
+      "products": [
+        "evercraft-property-services",
+        "eps-estimate-engine",
+        "contractor-cloud",
+        "evernest",
+        "evernest-atlas",
+        "systemia-remote-ops",
+        "evermaps",
+        "findmypart"
+      ],
+      "status": "extend_existing_mission",
+      "buyer": "property manager or authorized rental operator",
+      "next": "Prove one owner-authorized maintenance ticket to estimate, local partner coverage review and owner report; reuse PROPERTY-001.",
+      "gate": "No property access, regulated activity, expense or partner commitment without authorization."
+    },
+    {
+      "key": "business-continuity",
+      "priority": "P0",
+      "existing_missions": [
+        1162,
+        1303,
+        2154
+      ],
+      "products": [
+        "legacy-rescue-lab",
+        "ibmi-rescue",
+        "systemia-website-audit",
+        "evercraft-web",
+        "website-launch",
+        "systemia-radar",
+        "buildflow",
+        "systemia-remote-ops"
+      ],
+      "status": "candidate_cross_route_existing_offers",
+      "buyer": "small business or legacy-system operator with a documented continuity problem",
+      "next": "Build evidence-only diagnostic routing fixture distinguishing website defects, IBM i modernization, and general legacy rescue; verify exact existing offers and avoid duplicate sales messages.",
+      "gate": "No invasive scan, credentials, production change or new pricing."
+    },
+    {
+      "key": "land-and-industrial-intelligence",
+      "priority": "P1",
+      "existing_missions": [
+        2562,
+        1632
+      ],
+      "products": [
+        "faie",
+        "evermaps",
+        "earthworks-autonomy",
+        "global-energy-atlas",
+        "aliev",
+        "ecoledger",
+        "globalstat",
+        "towi-research",
+        "systemia-atlas-freight"
+      ],
+      "adjacent_programs": [
+        "FOREST-001/002",
+        "Kennedy Space Station",
+        "American Infrastructure Watch"
+      ],
+      "status": "extend_existing_research",
+      "buyer": "land manager, infrastructure planner or timber processor",
+      "next": "Reuse the existing geographic proof and assess source-backed processing capacity, haul access and candidate site reports; distinguish planning from operating capacity.",
+      "gate": "No harvest eligibility, engineering certification, environmental savings or physical autonomy inferred."
+    },
+    {
+      "key": "event-production",
+      "priority": "P1",
+      "existing_missions": [
+        2547,
+        2546
+      ],
+      "products": [
+        "everystage",
+        "eventwave",
+        "fallen-sessions",
+        "evercraft-clip",
+        "forensiscope",
+        "payflow"
+      ],
+      "status": "existing_workstream_do_not_duplicate",
+      "buyer": "venue or authorized event organizer",
+      "next": "Reconcile existing events mission and prove an event brief to run-of-show and media deliverable without duplicating REIGNITE.",
+      "gate": "No tickets, donor funds, venue commitments or publication without approval."
+    },
+    {
+      "key": "workforce-and-training",
+      "priority": "P1",
+      "existing_missions": [
+        1426
+      ],
+      "products": [
+        "talent-atlas",
+        "career-command",
+        "systemia-university",
+        "systemia-field-library",
+        "infinite-classroom",
+        "ascend"
+      ],
+      "status": "candidate_needs_existing_mission_lookup",
+      "buyer": "employer or adult training organization",
+      "next": "Identify existing curricula, skills evidence and adult workforce onboarding artifacts; prove a training plan for a single industrial role.",
+      "gate": "Separate youth products and records; no automated credential, employment decision or hiring promise."
+    },
+    {
+      "key": "environmental-evidence",
+      "priority": "P1",
+      "existing_missions": [
+        1632,
+        2562,
+        1604
+      ],
+      "products": [
+        "evercraft-wildlife-atlas",
+        "faie",
+        "evermaps",
+        "towi-research",
+        "globalstat",
+        "ecoledger"
+      ],
+      "status": "extend_existing_research",
+      "buyer": "environmental researcher or public agency",
+      "next": "Compare existing source/provenance adapters and use one common evidence schema for a bounded public dataset.",
+      "gate": "No fabricated ecological inference or redistribution without rights."
+    },
+    {
+      "key": "evidence-and-decision",
+      "priority": "P2",
+      "existing_missions": [
+        1426
+      ],
+      "products": [
+        "forensiscope",
+        "forensic-record",
+        "systemia-decision-lab",
+        "ai-boardroom",
+        "thoughtdrop",
+        "systemia-field-library"
+      ],
+      "status": "candidate_needs_existing_mission_lookup",
+      "buyer": "business reviewer with a documented decision or evidence need",
+      "next": "Audit artifact extraction and decision-review contracts; prove source-linked evidence packet feeding a reviewed decision without crossing private data boundaries.",
+      "gate": "No legal determination, automated adjudication or access to private cases."
+    }
+  ],
+  "unclassified_products": [
+    "callproof-vault",
+    "christmas-lights-usa",
+    "chronosport",
+    "coda-y-codigo",
+    "daytrade-lens",
+    "deck-capital-fit",
+    "evercraft-circles",
+    "evercraft-containment",
+    "evercraft-cosmos-atlas",
+    "evercraft-fantasy-intelligence",
+    "evercraft-front-door",
+    "evercraft-global-health-atlas",
+    "evercraft-home",
+    "evercraft-network",
+    "evercraft-physics-atlas",
+    "evercraft-rewards",
+    "game-fabric",
+    "guardian",
+    "lineage",
+    "little-red-book-export-qa",
+    "opportunity-fabric",
+    "raven-nexus",
+    "revenue-war-map",
+    "roasted",
+    "seasonally",
+    "second-stitch",
+    "skyops-parking",
+    "space-dudz",
+    "systemia-portfolio-sentinel"
+  ],
+  "authority": {
+    "existing_systemia_first": true,
+    "existing_kaidance_only": true,
+    "new_scheduler": false,
+    "execution_authorized": false,
+    "outreach_authorized": false,
+    "payment_authorized": false,
+    "publication_authorized": false
+  },
+  "decision": "priorities are proposed for review, not dispatch; existing mission records take precedence; absence of lane binding is not proof of dormancy"
+}
