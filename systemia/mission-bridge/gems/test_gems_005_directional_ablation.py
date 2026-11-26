@@ -8,6 +8,35 @@ from scipy.ndimage import distance_transform_edt,maximum_filter
 import gems_005_directional_ablation as x
 
 class DirectionalAblationTests(unittest.TestCase):
+    def test_sampled_original_columns_equal_with_matching_nans_and_infinities(self):
+        original=np.array([
+            [np.nan, 2.0, np.inf, -np.inf],
+            [5.0, -7.0, 9.0, 0.0],
+            [0.1, np.nan, -3.0, 4.0]],dtype="float32")
+        augmented=np.concatenate((
+            original.copy(),np.ones((3,4),dtype="float32")),axis=1)
+        indices=np.array([2,0],dtype=np.int64)
+        self.assertTrue(x.copied_base_columns_equal(original,augmented,indices))
+        # An unsampled change is irrelevant to the sampled integrity check.
+        unchanged_sample=augmented.copy()
+        unchanged_sample[1,0]+=1
+        self.assertTrue(x.copied_base_columns_equal(
+            original,unchanged_sample,indices))
+        mutated=augmented.copy()
+        mutated[0,1]+=np.float32(0.00001)
+        self.assertFalse(x.copied_base_columns_equal(original,mutated,indices))
+        mutated=augmented.copy()
+        mutated[0,0]=0.0
+        self.assertFalse(x.copied_base_columns_equal(original,mutated,indices))
+        mutated=augmented.copy()
+        mutated[2,0]=np.nan
+        self.assertFalse(x.copied_base_columns_equal(original,mutated,indices))
+        mutated=augmented.copy()
+        mutated[0,2]=-np.inf
+        self.assertFalse(x.copied_base_columns_equal(original,mutated,indices))
+        self.assertFalse(x.copied_base_columns_equal(
+            original,augmented[:,:3],indices))
+
     def test_synthetic_three_fold_equal_training_and_full_area_scoring(self):
         shape=(130,160);raw=np.zeros(shape,np.int8)
         for row,col in [(5,10),(8,55),(20,90),(32,120),
@@ -19,6 +48,10 @@ class DirectionalAblationTests(unittest.TestCase):
         matrix=np.column_stack([np.sin((c.ravel()+2*j)/15)
             +.2*np.cos((y.ravel()+j)/12)+.03*j+.002*y.ravel()
             for j in range(34)]).astype("float32")
+        # Real GEMS-001 base features contain masked NaNs. Inject them into
+        # the full synthetic HGB experiment to exercise the original failure.
+        matrix[::3,0]=np.nan
+        matrix[::11,6]=np.nan
         extra=np.column_stack([np.sin(c.ravel()/11),np.cos(y.ravel()/9),
             np.sin((y.ravel()+c.ravel())/15),np.cos((y.ravel()-c.ravel())/11)]
             ).astype("float32")
