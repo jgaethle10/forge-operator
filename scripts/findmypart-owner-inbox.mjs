@@ -34,7 +34,7 @@ async function main(){
  const [command,reference,arg3,arg4]=process.argv.slice(2);
  if(command==='review-queue'){
   // Operator-only case references, never email or raw buyer content.
-  print(reviewFindMyPartInbound({storeDir:directory,key,enabled:true}));
+  print(reviewFindMyPartInbound({storeDir:directory,key,enabled:true,mailFile:process.env.SYSTEMIA_REVENUE_GMAIL_SNAPSHOT_FILE||null,hmacKeyFile:process.env.SYSTEMIA_REVENUE_GMAIL_HMAC_KEY_FILE||null}));
   return;
  }
  if(command==='list'){

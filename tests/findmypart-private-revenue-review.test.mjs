@@ -57,3 +57,40 @@ test('missing, unsafe, invalid and partial inboxes fail closed',()=>{
   assert.equal(reviewFindMyPartInbound({storeDir:dir,key,enabled:true,now}).summary.state,'hold_private_inbox_binding');
  }finally{fs.rmSync(dir,{recursive:true,force:true})}
 });
+
+test('existing owned Gmail metadata reconciliation identifies prior contact without clearing any customer for reply',async()=>{
+ const dir=fs.mkdtempSync(path.join(os.tmpdir(),'fmp-revenue-review-')),outDir=fs.mkdtempSync(path.join(os.tmpdir(),'fmp-cycle-'));
+ try{
+  const first=put(dir,1);put(dir,2,{email:'new@example.test'});put(dir,3,{email:'buyer@example.test',part_description:'Other part needed for separate project'});
+  const mailFile=path.join(dir,'mail.json'),hmacKeyFile=path.join(dir,'hmac.key');
+  fs.writeFileSync(hmacKeyFile,'fixture-only-secret-'.repeat(3),{mode:0o600});
+  const snapshot={schema:'evercraft.systemia.gmail-owned-metadata-snapshot.v1',source:'authenticated_gmail_readonly_api',observed_at:now.toISOString(),provider_send_performed:false,full_history_confirmed:true,messages:[
+   {message_id:'old-send',thread_id:'thread-one',direction:'outbound',occurred_at:'2026-11-25T21:00:00Z',from_address:'owner@example.test',to_addresses:['buyer@example.test']},
+   {message_id:'reply',thread_id:'thread-one',direction:'inbound',occurred_at:'2026-11-26T20:00:00Z',from_address:'buyer@example.test',to_addresses:['owner@example.test']},
+   {message_id:'auto',thread_id:'thread-two',direction:'inbound',occurred_at:'2026-11-26T21:00:00Z',from_address:'new@example.test',to_addresses:['owner@example.test'],is_auto_reply:true}
+  ]};
+  const save=doc=>fs.writeFileSync(mailFile,JSON.stringify(doc),{mode:0o600});save(snapshot);
+  const input={storeDir:dir,key,now,enabled:true,mailFile,hmacKeyFile};
+  const result=reviewFindMyPartInbound(input);
+  assert.equal(result.summary.unique_case_candidates,3);
+  assert.equal(result.summary.contact_history.state,'local_history_observed_not_authoritative');
+  assert.equal(result.summary.contact_history.prior_outbound_observed,2);
+  assert.equal(result.summary.contact_history.non_auto_inbound_observed,2);
+  assert.equal(result.summary.contact_history.no_matching_mail_observed,1);
+  assert.equal(result.rows.find(x=>x.reference===first).next_action,'review_existing_thread_and_commitments_before_any_quote');
+  assert.equal(result.rows[1].contact_history.state,'no_match_in_available_snapshot_not_clearance');
+  assert.ok(result.rows.every(x=>x.contact_history.contact_clearance_granted===false));
+  assert.doesNotMatch(JSON.stringify(result),/buyer@example|new@example|old-send|thread-one|hmac256:/);
+  const cycle=await runFindMyPartCycle({outDir,now,inboxBinding:input});
+  const company=runCompanyHeartbeat({outDir:path.join(outDir,'kaidance-company-heartbeat'),now,findmypartExecutionReceipt:cycle});
+  assert.equal(company.report.findmypart.inbound_contact_history.prior_outbound_observed,2);
+  assert.equal(company.report.findmypart.inbound_contact_history.contact_clearance_granted,false);
+  assert.equal(company.next_action.customer_contacts,0);
+  save({...snapshot,observed_at:'2026-11-24T22:00:00Z'});
+  assert.equal(reviewFindMyPartInbound(input).summary.contact_history.state,'hold_history_binding_or_integrity');
+  save({...snapshot,messages:[...snapshot.messages,{message_id:'bad',direction:'outbound'}]});
+  assert.equal(reviewFindMyPartInbound(input).summary.contact_history.state,'hold_history_binding_or_integrity');
+  save(snapshot);fs.chmodSync(mailFile,0o644);
+  assert.equal(reviewFindMyPartInbound(input).summary.contact_history.state,'hold_history_binding_or_integrity');
+ }finally{fs.rmSync(dir,{recursive:true,force:true});fs.rmSync(outDir,{recursive:true,force:true})}
+});
