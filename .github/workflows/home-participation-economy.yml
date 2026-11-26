@@ -31,6 +31,8 @@ jobs:
           node --check systemia/participation-economy/creator-access.mjs
           node --check systemia/participation-economy/creator-media-store.mjs
           node --check systemia/participation-economy/creator-media-pilot.mjs
+      - name: Verify seasonal household consent and nonbinding estimate bridge
+        run: node --test systemia/participation-economy/season-household-bridge.test.mjs
       - name: Run economy and fraud-hold tests
         run: node --test systemia/participation-economy/engine.test.mjs systemia/participation-economy/journal.test.mjs systemia/participation-economy/creator-intake.test.mjs systemia/participation-economy/creator-record-store.test.mjs systemia/participation-economy/creator-access.test.mjs systemia/participation-economy/creator-media-store.test.mjs systemia/participation-economy/creator-media-access.test.mjs
       - name: Prove demo remains read-only
