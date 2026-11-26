@@ -1,0 +1,29 @@
+name: Site Planner live federal imagery acceptance
+
+on:
+  push:
+    branches:
+      - feature/evercraft-site-planner-intake-v1
+    paths:
+      - 'products/site-planner/live_aerial_acceptance.py'
+      - '.github/workflows/site-planner-federal-acceptance.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: evercraft-site-planner-federal-acceptance
+  cancel-in-progress: false
+
+jobs:
+  source-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inspect public Census/USGS sources (no customer data, no secrets)
+        working-directory: products/site-planner
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: python3 live_aerial_acceptance.py

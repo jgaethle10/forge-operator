@@ -1,0 +1,24 @@
+name: Site Planner outbox integrity
+on:
+  push:
+    paths:
+      - 'products/site-planner/outbox_audit.py'
+      - 'products/site-planner/test_outbox_audit.py'
+      - '.github/workflows/site-planner-integrity.yml'
+  pull_request:
+    paths:
+      - 'products/site-planner/outbox_audit.py'
+      - 'products/site-planner/test_outbox_audit.py'
+      - '.github/workflows/site-planner-integrity.yml'
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify outbox lineage and tampering detection
+        run: |
+          cd products/site-planner
+          python3 -m unittest -v test_outbox_audit.py

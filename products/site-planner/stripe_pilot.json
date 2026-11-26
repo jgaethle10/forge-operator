@@ -1,0 +1,46 @@
+{
+  "schema": "evercraft.site-planner.stripe-catalog-snapshot.v1",
+  "merchant_name": "Evercraft LLC",
+  "stripe_account_id": "acct_1U0wDm5rgRECaZMD",
+  "livemode": true,
+  "product_key": "evercraft-site-planner-concept-pilot-v1",
+  "product_id": "prod_Vf1uyMq3FiZRfB",
+  "price_id": "price_1Udhqa5rgRECaZMDsK7sstdv",
+  "payment_link_id": "plink_1UdhsM5rgRECaZMDczQW5JTr",
+  "price_currency": "usd",
+  "unit_amount_cents": 49900,
+  "price_status": "standard",
+  "product_active_at_verification": false,
+  "payment_link_active_at_verification": false,
+  "managed_payments_enabled": false,
+  "automatic_tax_enabled": false,
+  "tax_classification_review_required": true,
+  "supported_scope": "One property, non-stamped EV charger placement/circulation concept, one preliminary PDF and one revision; no survey, stamped engineering or permit approval",
+  "checkout_configured_for_site_planner": false,
+  "payment_verification_connected": false,
+  "fulfillment_release_allowed": false,
+  "notes": "Stripe objects verified on Evercraft LLC live account and left INACTIVE. This read-only snapshot is not a settlement receipt, current Stripe status, checkout approval, guarantee of fulfillment, or customer entitlement.",
+  "standard": {
+    "price_id": "price_1Udhqa5rgRECaZMDsK7sstdv",
+    "payment_link_id": "plink_1UdhsM5rgRECaZMDczQW5JTr",
+    "unit_amount_cents": 49900,
+    "currency": "usd",
+    "last_verified_link_active": false
+  },
+  "founding_five": {
+    "price_id": "price_1UdiIw5rgRECaZMDDUwbMux8",
+    "payment_link_id": "plink_1UdiJV5rgRECaZMD3URffDU5",
+    "unit_amount_cents": 34900,
+    "currency": "usd",
+    "checkout_completed_session_limit": 5,
+    "completed_sessions_at_verification": 0,
+    "last_verified_link_active": false,
+    "offer_status": "prelaunch_hold"
+  },
+  "pricing_experiment": {
+    "name": "Founding Five",
+    "discount_from_standard_cents": 15000,
+    "customer_cap_message": "5 completed checkout sessions maximum, not necessarily five distinct customers",
+    "provisional": true
+  }
+}
