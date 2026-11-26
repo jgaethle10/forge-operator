@@ -71,7 +71,42 @@ function extract(file){
  if(!text.trim())return {state:'hold_no_extractable_text'};
  return {state:'extracted_requires_research',text,text_sha256:sha(text),page_limit:40,full_document_coverage_verified:false};
 }
+// Resume extraction from an explicitly pinned acquisition receipt. Never
+// download again or overwrite the original evidence/hold.
+export function resumePdfExtraction({receipt,expectedSha}={}){
+ if(!path.isAbsolute(receipt)||!/^([a-f0-9]{64})\.json$/.test(path.basename(receipt))||!/^[a-f0-9]{64}$/.test(expectedSha))throw Error('invalid_resume_binding');
+ const dir=path.dirname(receipt);privateDir(dir);
+ const raw=read(receipt,2000000);
+ if(sha(raw)!==expectedSha)throw Error('acquisition_receipt_mismatch');
+ const prior=JSON.parse(raw);
+ if(prior.schema!=='evercraft.public-demand.pdf-evidence.v1'||!['hold_isolated_parser_unavailable','hold_isolated_parser_failed'].includes(prior.state)||prior.qualified!==false||prior.contact_authorized!==false||prior.execution_authorized!==false||prior.send_performed!==false)throw Error('invalid_acquisition_hold');
+ const u=new URL(prior.url);
+ if(!allowedOrigins.has(u.origin)||u.origin!==new URL(prior.parent_source).origin||u.search||u.hash||u.username||u.password||!u.pathname.toLowerCase().endsWith('.pdf')||!/^[a-f0-9]{64}$/.test(prior.parent_receipt_sha256))throw Error('invalid_document_source');
+ const key=sha(JSON.stringify({url:prior.url,parent_receipt_sha256:prior.parent_receipt_sha256,parent_source:prior.parent_source}));
+ if(path.basename(receipt)!==key+'.json')throw Error('acquisition_identity_mismatch');
+ const pdf=path.join(dir,key+'.pdf'),bytes=read(pdf,MAX);
+ if(bytes.length!==prior.pdf_bytes||sha(bytes)!==prior.pdf_sha256||!bytes.subarray(0,5).equals(Buffer.from('%PDF-')))throw Error('retained_pdf_mismatch');
+ const dest=path.join(dir,key+'.extraction-v1.json');
+ if(fs.existsSync(dest)){
+  const saved=read(dest,2000000),record=JSON.parse(saved);
+  if(record.acquisition_receipt_sha256!==expectedSha||record.pdf_sha256!==prior.pdf_sha256||record.state!=='extracted_requires_research'||typeof record.text!=='string'||sha(record.text)!==record.text_sha256)throw Error('stored_extraction_mismatch');
+  const {text,...summary}=record;
+  return {...summary,receipt:dest,receipt_sha256:sha(saved),reused:true,network_performed:false};
+ }
+ const parsed=extract(pdf);
+ if(parsed.state!=='extracted_requires_research')return {url:prior.url,pdf_sha256:prior.pdf_sha256,acquisition_receipt_sha256:expectedSha,state:parsed.state,qualified:false,network_performed:false,send_performed:false};
+ const record={schema:'evercraft.public-demand.pdf-extraction.v1',url:prior.url,acquisition_receipt_sha256:expectedSha,pdf_sha256:prior.pdf_sha256,observed_at:new Date().toISOString(),...parsed,qualified:false,contact_authorized:false,execution_authorized:false,send_performed:false};
+ const body=Buffer.from(JSON.stringify(record));
+ retain(dest,body);
+ const {text,...summary}=record;
+ return {...summary,receipt:dest,receipt_sha256:sha(body),reused:false,network_performed:false};
+}
 async function main(){
+ if(process.argv[2]==='--resume'){
+  if(process.argv.length!==5)throw Error('usage: --resume absolute_receipt expected_sha');
+  console.log(JSON.stringify(resumePdfExtraction({receipt:process.argv[3],expectedSha:process.argv[4]}),null,2));
+  return;
+ }
  const [parent,expected,dir,...rest]=process.argv.slice(2);
  if(!parent||!path.isAbsolute(parent)||!dir||!rest.every(x=>/^\d+$/.test(x)))throw Error('usage: parent expected_sha absolute_output_dir pointer_indices');
  const plan=planReceiptBoundPdfs(read(parent,2000000),expected,rest.map(Number));
