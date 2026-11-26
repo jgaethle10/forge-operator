@@ -24,6 +24,12 @@ on:
       - 'systemia/organism/kaidance-next-action.mjs'
       - 'tests/kaidance-next-action.test.mjs'
       - 'systemia/organism/kaidance-company-heartbeat.workflow.json'
+      - 'systemia/infrastructure-watch/**'
+      - 'systemia/organism/aiw-evidence-watch.workflow.json'
+      - 'tests/aiw-evidence-watch.test.mjs'
+      - 'systemia/infrastructure-watch/**'
+      - 'systemia/organism/aiw-evidence-watch.workflow.json'
+      - 'tests/aiw-evidence-watch.test.mjs'
       - 'systemia/organism/kaidance-worlds-saban-*.mjs'
       - 'tests/kaidance-worlds-saban-review.test.mjs'
       - 'systemia/organism/kaidance-source-patch-*.mjs'
@@ -123,6 +129,10 @@ jobs:
           path: |
             artifacts/kaidance-frontier/runtime/state.json
             artifacts/kaidance-company-heartbeat/state.json
+            artifacts/aiw-evidence-watch/state.json
+            artifacts/aiw-evidence-watch/latest.json
+            artifacts/aiw-evidence-watch/state.json
+            artifacts/aiw-evidence-watch/latest.json
             artifacts/kaidance-company-heartbeat/next-action-state.json
             artifacts/kaidance-worlds-saban-review/goals/
             artifacts/kaidance-source-candidate/state.json
@@ -165,6 +175,12 @@ jobs:
       - name: Prove longitudinal ClinicalTrials.gov observation ledger
         run: node systemia/organism/medical-registry-observation-ledger.test.mjs
 
+      - name: Validate AIW official-source boundary and Kaidance/Systemia handoff
+        run: node --test tests/aiw-evidence-watch.test.mjs
+
+      - name: Reconcile due official bridge-source metadata for AIW (read only)
+        run: node systemia/infrastructure-watch/aiw-evidence-watch.mjs --out artifacts/aiw-evidence-watch
+
       - name: Validate KAIDANCE company heartbeat safety and truthful progress
         run: node --test tests/kaidance-company-heartbeat.test.mjs
 
@@ -172,6 +188,8 @@ jobs:
         run: node --test tests/kaidance-next-action.test.mjs
 
       - name: Reconcile Evercraft company portfolio on KAIDANCE heartbeat
+        env:
+          SYSTEMIA_AIW_EVIDENCE_RECEIPT_FILE: artifacts/aiw-evidence-watch/latest.json
         run: node systemia/organism/kaidance-company-heartbeat-runner.mjs --out artifacts/kaidance-company-heartbeat --prove-worlds
 
       - name: Verify durable Systemia goal and actual registered Saban World Engine assignment
@@ -233,6 +251,9 @@ jobs:
             artifacts/kaidance-offer-checkout/latest.json
             artifacts/kaidance-offer-checkout/actions.json
             artifacts/kaidance-offer-checkout/mission-snapshot.json
+            artifacts/aiw-evidence-watch/latest.json
+            artifacts/aiw-evidence-watch/queue.json
+            artifacts/aiw-evidence-watch/mission-snapshot.json
             artifacts/kaidance-company-heartbeat/latest.json
             artifacts/kaidance-company-heartbeat/mission-snapshot.json
             artifacts/kaidance-company-heartbeat/queue.json
