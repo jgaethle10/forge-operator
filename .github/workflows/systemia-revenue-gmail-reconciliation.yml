@@ -38,3 +38,4 @@ jobs:
           python3 systemia/revenue-desk/findmypart-queue-review-handoff.py --self-test
           node --test systemia/revenue-desk/node002-desk-shadow-worker.test.mjs
           node --test systemia/revenue-desk/node002-desk-compute.test.mjs
+          node --test systemia/network/outbound-node-restricted-convergence.test.mjs
