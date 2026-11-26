@@ -80,6 +80,9 @@ test('Daily source watch: first baseline, repeat skips, real metadata change is 
     assert.equal(pulse.queue.candidates.filter(x=>x.lane_key==='infrastructure-watch').length,1);
     assert.equal(pulse.queue.candidates.find(x=>x.lane_key==='infrastructure-watch').publication_authorized,false);
     assert.equal(pulse.mission_snapshot.counts.held,1);
+    assert.equal(pulse.next_action.current_next_action?.lane_key,'infrastructure-watch');
+    assert.equal(pulse.next_action.current_next_action?.dispatch_authorized,false);
+    assert.equal(pulse.next_action.publication_actions,0);
     assert.equal(pulse.report.advancement.production_deployments,0);
     assert.equal(fs.existsSync(path.join(pulseDir,'mission-snapshot.json')),true);
   }finally{fs.rmSync(pulseDir,{recursive:true,force:true})}
