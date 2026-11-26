@@ -8,7 +8,30 @@ const base={execution_authorized:false,publication_authorized:false,
   worker_launches:0,physical_experiments:0,verified_research_artifacts:0};
 const hold=(status)=>({...base,status,coverage_verified:false,missions:null});
 const str=(x)=>typeof x==='string'&&x.trim().length>0&&x.length<=240;
-export function reconcileResearchExport(value,now=new Date()){
+// Match the owner's reported completed-work receipt to the existing durable
+// Systemia goal-state format. A matched checkpoint is not independent artifact proof.
+export function matchGoalReceipt(m,state,now=new Date()){
+  const binding=m?.goal_binding, receipt=m?.last_work_receipt;
+  if(!binding)return 'goal_binding_missing';
+  if(!state||state.schema!=='evercraft.goal.state.v1'||
+     state.mission_key!==m.mission_id||state.goal_key!==binding.goal_key||
+     !Number.isSafeInteger(state.revision)||state.revision<2||
+     !Array.isArray(state.tasks)||state.tasks.length>2000)
+    return 'goal_state_mismatch';
+  const matches=state.tasks.filter(t=>t?.work_key===binding.work_key);
+  if(matches.length!==1)return 'goal_task_missing_or_duplicate';
+  const task=matches[0], observed=Date.parse(receipt?.observed_at);
+  if(task.mission_key!==m.mission_id||task.goal_key!==binding.goal_key||
+     task.status!=='complete'||task.last_result!=='complete'||
+     !Number.isSafeInteger(task.attempt)||task.attempt<1||
+     task.recovery_hold||!str(receipt?.ref)||
+     !Array.isArray(task.receipt_refs)||!task.receipt_refs.includes(receipt.ref)||
+     !Number.isFinite(observed)||observed>+new Date(now)||
+     Date.parse(task.updated_at)!==observed)
+    return 'completed_work_receipt_not_matched';
+  return 'completed_work_checkpoint_matched';
+}
+export function reconcileResearchExport(value,now=new Date(),readGoal=null){
   const clock=+new Date(now), age=clock-Date.parse(value?.exported_at);
   if(!Number.isFinite(clock)||!Number.isFinite(age)||age<0||age>900000)
     return hold('stale_or_missing_export');
@@ -32,7 +55,17 @@ export function reconcileResearchExport(value,now=new Date()){
       return hold('invalid_mission_contract');
     const result=inspectMissionContinuity({missions:[{...m,visibility:'internal_only'}],
       now,staleAfterDays:m.receipt_sla_seconds/86400});
-    rows.push({...result.missions[0],priority:priority.has(m.mission_id)});
+    let goalReadback='goal_binding_missing';
+    if(m.goal_binding){
+      try{goalReadback=readGoal?matchGoalReceipt(m,readGoal(m.goal_binding),now):'goal_reader_unavailable'}
+      catch{goalReadback='goal_read_failed'}
+    }
+    const row=result.missions[0], needsReadback=!['paused','terminal'].includes(row.disposition);
+    if(needsReadback&&goalReadback!=='completed_work_checkpoint_matched'){
+      row.problems=[...row.problems,'goal_receipt_readback_unverified'].sort();
+      row.status='needs_attention';
+    }
+    rows.push({...row,goal_readback:goalReadback,priority:priority.has(m.mission_id)});
   }
   if(!rows.length)return hold('no_admitted_rows_unverified');
   const priorityMissing=[...priority].filter(id=>!value.missions.some(m=>m.mission_id===id&&m.admission_state==='admitted')).length;
@@ -42,7 +75,8 @@ export function reconcileResearchExport(value,now=new Date()){
     coverage_verified:false,source_authority:'owner_export_reported_not_independently_verified',
     observed_at:new Date(now).toISOString(),exported_at:value.exported_at,
     counts:{reported_rows:value.missions.length,reported_admitted:rows.length,
-      attention,priority_missing:priorityMissing},
+      attention,priority_missing:priorityMissing,
+      goal_checkpoints_matched:rows.filter(r=>r.goal_readback==='completed_work_checkpoint_matched').length},
     missions:rows};
 }
 function privateStat(p,isDir){
@@ -71,10 +105,26 @@ export function runPrivateResearchContinuity({enabled=false,root,outDir,now=new 
     const dir=path.join(parent,'kaidance-rd-continuity');
     if(dir===path.resolve(outDir)||dir===repo||dir.startsWith(repo+path.sep))
       return {status:'held'};
+    privateStat(parent,true);
     privateStat(dir,true);
     if(fs.realpathSync(dir)!==dir)return {status:'held'};
     let result;
-    try{result=reconcileResearchExport(readBounded(path.join(dir,'mission-export.json')),now)}
+    try{result=reconcileResearchExport(readBounded(path.join(dir,'mission-export.json')),now,binding=>{
+      // Explicit owner crosswalk only; never crawl a private filesystem.
+      if(!str(binding?.goal_key)||!str(binding?.work_key)||!str(binding?.state_relpath))
+        throw Error('goal_binding_invalid');
+      const parts=binding.state_relpath.split('/');
+      if(parts.length<2||parts.length>12||parts.some(part=>!(/^[a-zA-Z0-9_-][a-zA-Z0-9_.-]{0,100}$/).test(part))||
+         !parts.at(-1).endsWith('.json')||parts[0]==='kaidance-rd-continuity')
+        throw Error('goal_path_invalid');
+      let current=parent;
+      for(const component of parts.slice(0,-1)){
+        current=path.join(current,component);privateStat(current,true);
+      }
+      const file=path.join(current,parts.at(-1));
+      if(fs.realpathSync(file)!==file)throw Error('goal_path_invalid');
+      return readBounded(file);
+    })}
     catch{result=hold('export_unavailable_or_invalid')}
     const file=path.join(dir,'latest.json');
     if(fs.existsSync(file))privateStat(file,false);
