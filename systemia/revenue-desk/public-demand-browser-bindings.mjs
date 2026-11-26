@@ -18,3 +18,10 @@ export function publicDemandRefreshBindings({enabled=false,sourceDir,browsersPat
   return {SYSTEMIA_PUBLIC_DEMAND_BROWSER_SOURCE:sourceDir,SYSTEMIA_PUBLIC_DEMAND_BROWSER_CACHE:browsersPath};
  }catch{return empty;}
 }
+
+// Only these two fixed local paths are supported; never accept a remote URL/path.
+export function selectPublicDemandBrowserCache({mode,organismRoot,home}={}){
+ if(mode==='organism'&&typeof organismRoot==='string'&&path.isAbsolute(organismRoot))return path.join(organismRoot,'browser-runtime','browsers');
+ if(mode==='home-playwright'&&typeof home==='string'&&path.isAbsolute(home))return path.join(home,'.cache','ms-playwright');
+ return null;
+}

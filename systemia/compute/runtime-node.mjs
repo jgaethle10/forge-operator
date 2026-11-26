@@ -10,7 +10,7 @@ import { bootstrapPrivateOrigin } from '../core/bootstrap/private-origin.mjs';
 import { KaidanceRuntime, startKaidanceHealthService } from '../collider/runtime.mjs';
 import { createNodeAttestation } from './device-identity.mjs';
 import { SystemiaCoreResidentSupervisor } from '../core/resident-supervisor.mjs';
-import { publicDemandRefreshBindings } from '../revenue-desk/public-demand-browser-bindings.mjs';
+import { publicDemandRefreshBindings, selectPublicDemandBrowserCache } from '../revenue-desk/public-demand-browser-bindings.mjs';
 import { runRegisteredAssignment } from '../saban/registered-worker.mjs';
 import { startChumPublicOrigin } from '../chum/public-origin-runtime.mjs';
 import { startOutboundCapacityBroker } from '../network/outbound-capacity-broker.mjs';
@@ -2842,14 +2842,18 @@ export async function startEvercraftComputeNode({
           }
 
           // Local owner opt-in only; remote admission input cannot choose browser paths.
-          // Use the native browser cache already prepared by the local organism.
-          const demandBrowserCache = path.join(path.dirname(allowedRoot), 'browser-runtime', 'browsers');
+          // The document refresh starts its own bounded native worker, not the
+          // general browser factory. Explicit local owner selection is required
+          // for reuse of the already-installed home Playwright cache.
           const demandBrowserBindings = publicDemandRefreshBindings({
             enabled: publicDemandEnabled &&
-              process.env.EVERCRAFT_PUBLIC_DEMAND_REFRESH_ADMISSION === 'true' &&
-              typeof browserRuntimeFactory === 'function',
+              process.env.EVERCRAFT_PUBLIC_DEMAND_REFRESH_ADMISSION === 'true',
             sourceDir: browserWorkerSourceDir,
-            browsersPath: demandBrowserCache,
+            browsersPath: selectPublicDemandBrowserCache({
+              mode: process.env.EVERCRAFT_PUBLIC_DEMAND_BROWSER_CACHE_MODE || 'organism',
+              organismRoot: path.dirname(allowedRoot),
+              home: os.homedir(),
+            }),
           });
           const serviceEnv = {
             ...demandBrowserBindings,

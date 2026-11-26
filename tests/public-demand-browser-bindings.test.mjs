@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import {publicDemandRefreshBindings} from '../systemia/revenue-desk/public-demand-browser-bindings.mjs';
+import {publicDemandRefreshBindings,selectPublicDemandBrowserCache} from '../systemia/revenue-desk/public-demand-browser-bindings.mjs';
 test('refresh requires explicit local opt-in, both owned native paths and document-link support',()=>{
  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'demand-native-bind-'));
  try{
@@ -17,4 +17,13 @@ test('refresh requires explicit local opt-in, both owned native paths and docume
   const link=path.join(dir,'link');fs.symlinkSync(browsersPath,link);assert.deepEqual(run(true,link),empty);
   fs.chmodSync(browsersPath,0o777);assert.deepEqual(run(),empty);
  }finally{fs.rmSync(dir,{recursive:true,force:true})}
+});
+
+test('owner cache mode selects one fixed path and unknown modes fail closed',()=>{
+ const home='/home/operator',organismRoot='/home/operator/state/organism';
+ assert.equal(selectPublicDemandBrowserCache({mode:'home-playwright',home,organismRoot}),home+'/.cache/ms-playwright');
+ assert.equal(selectPublicDemandBrowserCache({mode:'organism',home,organismRoot}),organismRoot+'/browser-runtime/browsers');
+ assert.equal(selectPublicDemandBrowserCache({mode:'/tmp/arbitrary',home,organismRoot}),null);
+ assert.equal(selectPublicDemandBrowserCache({mode:'home-playwright',home:'relative'}),null);
+ assert.equal(publicDemandRefreshBindings({enabled:true,sourceDir:home,browsersPath:null}).SYSTEMIA_PUBLIC_DEMAND_BROWSER_CACHE,'');
 });
