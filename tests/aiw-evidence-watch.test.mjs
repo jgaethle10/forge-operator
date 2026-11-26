@@ -77,9 +77,13 @@ test('Daily source watch: first baseline, repeat skips, real metadata change is 
     const pulse=runCompanyHeartbeat({root:'.',outDir:pulseDir,now:at,proveWorlds:false,aiwReceipt:c.latest});
     assert.equal(pulse.report.infrastructure_watch.status,'verified_receipt');
     assert.equal(pulse.queue.execution_authorized,false);
-    assert.equal(pulse.queue.candidates.filter(x=>x.lane_key==='infrastructure-watch').length,1);
-    assert.equal(pulse.queue.candidates.find(x=>x.lane_key==='infrastructure-watch').publication_authorized,false);
-    assert.equal(pulse.mission_snapshot.counts.held,1);
+    // Other independently admitted source-review candidates can share this
+    // existing lane. Check the exact AIW work key rather than monopolizing it.
+    const aiwWorkKey=c.latest.review_candidates[0].key;
+    const aiwQueue=pulse.queue.candidates.filter(x=>x.work_key===aiwWorkKey);
+    assert.equal(aiwQueue.length,1);
+    assert.equal(aiwQueue[0].publication_authorized,false);
+    assert.ok(pulse.mission_snapshot.counts.held>=1);
     assert.equal(pulse.next_action.current_next_action?.lane_key,'infrastructure-watch');
     assert.equal(pulse.next_action.current_next_action?.dispatch_authorized,false);
     assert.equal(pulse.next_action.publication_actions,0);
