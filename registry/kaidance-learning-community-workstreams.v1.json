@@ -1,0 +1,165 @@
+{
+  "schema": "evercraft.kaidance.learning-community-workstreams.v1",
+  "cadence_seconds": 300,
+  "policy": {
+    "authority": "existing_kaidance_systemia_saban_only",
+    "max_source_proofs_per_tick": 2,
+    "proof_timeout_ms": 25000,
+    "proof_expiry_seconds": 3600,
+    "production_mutations": false,
+    "automatic_code_writes": false,
+    "automatic_publication": false,
+    "external_contact": false,
+    "student_or_member_data_access": false,
+    "no_legacy_provider_contact": true
+  },
+  "workstreams": [
+    {
+      "key": "infinite-classroom",
+      "family": "education",
+      "product_keys": [
+        "infinite-classroom"
+      ],
+      "age_sensitive": true,
+      "source_files": [
+        "systemia/classroom/tutor-core.mjs",
+        "systemia/classroom/tutor-runtime.mjs",
+        "public/apps/infinite-classroom/play/index.html"
+      ],
+      "proof_tests": [
+        "tests/infinite-classroom-tutor-core.test.mjs",
+        "tests/infinite-classroom-worlds.test.mjs"
+      ],
+      "maturity": "owned_private_tutor_pilot_plus_offline_practice",
+      "priority": 1,
+      "next_work": "independent_child_safety_and_homework_verifier_then_real_nextgen_dialogue_receipt",
+      "release_gate": "parent_consent_verified_owned_model_actual_child_safe_qc"
+    },
+    {
+      "key": "evercraft-circles",
+      "family": "community",
+      "product_keys": [
+        "evercraft-circles"
+      ],
+      "age_sensitive": false,
+      "source_files": [
+        "registry/evercraft-circles/README.md",
+        "public/chum/products/evercraft-circles/index.html",
+        "registry/public-products.json"
+      ],
+      "proof_tests": [
+        "tests/evercraft-circles-kaidance.test.mjs"
+      ],
+      "maturity": "discovery_and_human_directed_beta",
+      "priority": 1,
+      "next_work": "build_private_member_roster_introductions_referral_ledger_and_consent_controls",
+      "release_gate": "verified_authenticated_member_beta_and_commercial_onboarding"
+    },
+    {
+      "key": "systemia-university",
+      "family": "education",
+      "product_keys": [
+        "systemia-university"
+      ],
+      "age_sensitive": false,
+      "source_files": [
+        "systemia/university/benchmark-engine.mjs",
+        "public/benchmarks/systemia-university/manifest.json",
+        "registry/systemia-university/README.md"
+      ],
+      "proof_tests": [
+        "tests/systemia-university-kaidance.test.mjs"
+      ],
+      "maturity": "benchmark_source_and_proving_lane",
+      "priority": 2,
+      "next_work": "verify_bound_agent_mission_scoring_and_human_review_before_credential_claims",
+      "release_gate": "validated_mission_evidence_review_and_authorized_public_result"
+    },
+    {
+      "key": "aiden-lab-deep-learning",
+      "family": "education",
+      "product_keys": [],
+      "age_sensitive": true,
+      "source_files": [
+        "public/aiden-lab/learning-worlds.mjs",
+        "public/aiden-lab/index.html",
+        "public/aiden-lab/README.md"
+      ],
+      "proof_tests": [
+        "tests/aiden-lab-public.test.mjs"
+      ],
+      "maturity": "owned_public_learning_worlds_source",
+      "priority": 2,
+      "next_work": "expand_real_science_scenarios_pedagogical_depth_and_visual_quality_with_review",
+      "release_gate": "age_safe_sources_accessibility_and_independent_public_readback"
+    },
+    {
+      "key": "subject-deep-learning-atlases",
+      "family": "education",
+      "product_keys": [
+        "evercraft-physics-atlas",
+        "evercraft-cosmos-atlas",
+        "evercraft-global-health-atlas"
+      ],
+      "age_sensitive": true,
+      "source_files": [
+        "public/aiden-lab/learning-worlds.mjs",
+        "systemia/migrations/base44-exit/EDUCATION-REBUILD-2026-11-04.md"
+      ],
+      "proof_tests": [
+        "tests/aiden-lab-public.test.mjs"
+      ],
+      "maturity": "partial_shared_learning_architecture",
+      "priority": 2,
+      "next_work": "reconcile_subject_specific_original_learning_features_and_build_versioned_modules",
+      "release_gate": "verified_original_feature_coverage_scientific_accuracy_and_child_privacy"
+    },
+    {
+      "key": "ascend-youth",
+      "family": "education",
+      "product_keys": [
+        "ascend"
+      ],
+      "age_sensitive": true,
+      "source_files": [
+        "registry/ascend/README.md",
+        "public/chum/products/ascend/index.html"
+      ],
+      "proof_tests": [
+        "tests/kaidance-education-family-source.test.mjs"
+      ],
+      "maturity": "public_discovery_not_child_runtime_proven",
+      "priority": 3,
+      "next_work": "separate_youth_consent_and_role_based_service_from_classroom_accounts",
+      "release_gate": "parent_guardian_consent_safeguarding_and_isolated_records"
+    },
+    {
+      "key": "nepal-offline-academy",
+      "family": "education",
+      "product_keys": [],
+      "age_sensitive": true,
+      "source_files": [
+        "systemia/migrations/base44-exit/EDUCATION-REBUILD-2026-11-04.md"
+      ],
+      "proof_tests": [],
+      "maturity": "historical_curriculum_held_no_owned_runtime_evidence",
+      "priority": 3,
+      "next_work": "recover_authorized_held_curriculum_and_teacher_key_then_build_offline_foundation_builder_frontier",
+      "release_gate": "rights_source_recovery_teacher_review_and_offline_delivery"
+    },
+    {
+      "key": "legacy-learning-census",
+      "family": "education",
+      "product_keys": [],
+      "age_sensitive": true,
+      "source_files": [
+        "systemia/migrations/base44-exit/EDUCATION-REBUILD-2026-11-04.md"
+      ],
+      "proof_tests": [],
+      "maturity": "incomplete_legacy_portfolio_inventory",
+      "priority": 3,
+      "next_work": "reconcile_all_remaining_historical_deep_learning_and_infinite_classroom_builds_without_provider_contact",
+      "release_gate": "legacy_fidelity_inventory_rights_and_explicit_disposition"
+    }
+  ]
+}
