@@ -28,7 +28,7 @@ function setup(t){
 function grant(passport,{subject='user:alice',tenant='alpha',scopes=['atlas.read','atlas.write'],resources=['tenant:alpha']}={}){
  return passport.issueGrant({idempotency_key:'g:'+subject+':'+tenant+':'+scopes.join(',')+':'+resources.join(','),
   subject_ref:subject,issuer_ref:'evercraft:identity-authority',product:'systemia-atlas',
-  scopes,resource_refs:resources,starts_at:'2025-01-01T00:00:00Z',ends_at:'2030-01-01T00:00:00Z',
+  scopes,...(resources.length?{resource_refs:resources}:{}),starts_at:'2025-01-01T00:00:00Z',ends_at:'2030-01-01T00:00:00Z',
   max_delegation_depth:0,authority_state:'verified_identity_authority',authority_receipt_ref:'test:identity:owner'});
 }
 const write=(ledger,sessionToken,tenant,type,payload,key,revision)=>ledger.mutate({
@@ -143,6 +143,7 @@ test('truncated, overexposed and conflicting logs cannot be accepted',t=>{
  const file=ledgerFile(root),original=fs.readFileSync(file,'utf8');
  fs.writeFileSync(file,original.trimEnd(),{mode:0o600});
  assert.throws(()=>ledger.read({tenant:'alpha',sessionToken:token}),/atlas_truncated_event_log/);
- fs.writeFileSync(file,original,{mode:0o644});
+ fs.writeFileSync(file,original,{mode:0o600});
+ fs.chmodSync(file,0o644);
  assert.throws(()=>ledger.read({tenant:'alpha',sessionToken:token}),/atlas_private_file_required/);
 });
