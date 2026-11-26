@@ -111,8 +111,8 @@ export async function runAiWSourceCycle({
   if(last!==null&&(!Number.isFinite(last)||time.getTime()<last-60000))
     throw Error('aiw_clock_rollback');
   const fingerprint=SHA(Buffer.from(JSON.stringify(registry)));
-  const due=!previous||previous.registry_fingerprint!==fingerprint||
-    time.getTime()-last>=INTERVAL;
+  const due=!previous||!fs.existsSync(path.join(out,'latest.json'))||
+    previous.registry_fingerprint!==fingerprint||time.getTime()-last>=INTERVAL;
   if(!due)return {skipped:true,reason:'daily_evidence_check_not_due',
     last_observed_at:previous.observed_at,previous_status:previous.status};
   const results=[];
