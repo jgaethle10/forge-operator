@@ -43,7 +43,7 @@ test('isolated Git worker overlap, conflicting reservation hold and actual ref w
   let active=0,maxActive=0;
   async function prepare(name,file,value){
    const dir=path.join(root,name);git(repo,'worktree','add','--detach',dir,base);
-   active++;maxActive=Math.max(active,maxActive===undefined?0:maxActive);
+   active++;maxActive=Math.max(active,maxActive);
    try{await fs.promises.writeFile(path.join(dir,file),value+'\n');
     await run('git',['-C',dir,'-c','user.name=Pilot','-c','user.email=pilot@example.test','commit','-am',name]);
     return git(dir,'rev-parse','HEAD');
@@ -55,20 +55,33 @@ test('isolated Git worker overlap, conflicting reservation hold and actual ref w
   assert.equal(pilot.publish({...input,testPassed:false}).reason,'failed_acceptance');
   // Candidate C cannot use A's resource permit, including a hidden shared path.
   assert.equal(pilot.publish({...input,candidate:cc}).reason,'expanded_diff');
+  assert.equal(pilot.publish(input).reason,'durable_verification_missing');
+  const [va,vc]=await Promise.all([pilot.verifyCandidate(input),pilot.verifyCandidate({id:'c',actor:'pilot:writer',fence:C.fence,expected:base,candidate:cc})]);
+  assert.equal(va.state,'verified');assert.equal(vc.state,'verified');assert.equal(va.dispatch.execution_checkpoint_persisted,true);
   const result=pilot.publish(input);assert.equal(result.state,'published_synthetic');assert.equal(git(repo,'rev-parse','refs/heads/pilot-integration'),ca);
   pilot=new EngineeringFencePilot(options);
   assert.equal(pilot.publish(input).reason,'stale_or_expired_fence');
   assert.equal(pilot.publish({id:'c',actor:'pilot:writer',fence:C.fence,expected:base,candidate:cc,testPassed:true}).reason,'stale_target_rebase_retest_required');
   assert.equal(git(repo,'cat-file','-t',cc),'commit');
-  // The old C artifact is preserved; fresh base and separate intake required.
-  const d=proposal('d','r/file.txt',ca);pilot.submit(d);
+  // Rebase in a NEW worktree, retest, and serialize actual integration.
+  assert.equal(pilot.supersedeStale({id:'c',actor:'pilot:writer',fence:C.fence,candidate:cc}).state,'superseded');
+  assert.equal(git(repo,'rev-parse','refs/engineering-pilot/artifacts/c-'+C.fence),cc);
+  const c2dir=path.join(root,'work-c-rebased');git(repo,'worktree','add','--detach',c2dir,ca);
+  git(c2dir,'-c','user.name=Pilot','-c','user.email=pilot@example.test','cherry-pick',cc);
+  const c2=git(c2dir,'rev-parse','HEAD');pilot.submit(proposal('c-rebased','s/file.txt',ca));
+  const C2=pilot.reserve('c-rebased',{actor:'pilot:writer'});assert.equal(C2.state,'reserved');assert.ok(C2.fence>C.fence);
+  const rebased={id:'c-rebased',actor:'pilot:writer',fence:C2.fence,expected:ca,candidate:c2};
+  assert.equal((await pilot.verifyCandidate(rebased)).state,'verified');
+  assert.equal(pilot.publish(rebased).state,'published_synthetic');
+  assert.equal(git(repo,'show',c2+':r/file.txt'),'A');assert.equal(git(repo,'show',c2+':s/file.txt'),'C');
+  const d=proposal('d','r/file.txt',c2);pilot.submit(d);
   const D=pilot.reserve('d',{actor:'pilot:writer',ttlMs:1});assert.equal(D.state,'reserved');clock+=2;
-  assert.equal(pilot.publish({id:'d',actor:'pilot:writer',fence:D.fence,expected:ca,candidate:ca,testPassed:true}).reason,'stale_or_expired_fence');
-  assert.equal(git(repo,'rev-parse','refs/heads/pilot-integration'),ca);
+  assert.equal(pilot.publish({id:'d',actor:'pilot:writer',fence:D.fence,expected:c2,candidate:c2,testPassed:true}).reason,'stale_or_expired_fence');
+  assert.equal(git(repo,'rev-parse','refs/heads/pilot-integration'),c2);
   fs.mkdirSync(path.join(root,'fence.lock'),{mode:0o700});
   assert.equal(pilot.reserve('b',{actor:'pilot:writer'}).reason,'reservation_or_writer_reconciliation_required');
   fs.rmdirSync(path.join(root,'fence.lock'));
-  console.log(JSON.stringify({synthetic:true,parallel_preparations:maxActive,conflict_holds:1,stale_ref_holds:1,verified_ref_writes:1,production_mutations:0}));
+  console.log(JSON.stringify({synthetic:true,parallel_preparations:maxActive,conflict_holds:1,stale_ref_holds:1,verified_ref_writes:2,production_mutations:0}));
  }finally{fs.rmSync(root,{recursive:true,force:true});}
 });
 test('existing Lineage CAS preserves losing candidate object',async()=>{
