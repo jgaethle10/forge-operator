@@ -1,0 +1,38 @@
+{
+  "schema": "evercraft.kaidance.flight-sentinel-continuity.v1",
+  "heartbeat_seconds": 300,
+  "existing_clock": "systemia/organism/kaidance-company-heartbeat-runner.mjs",
+  "new_scheduler_authorized": false,
+  "mission_admission_policy": "existing_systemia_authority_only",
+  "private_rd_export_required": true,
+  "source_checks_only": true,
+  "automatic_research_or_network_execution": false,
+  "physical_or_aviation_activity_authorized": false,
+  "external_publication_authorized": false,
+  "projects": [
+    {
+      "project_key": "flight-sentinel-aircraft",
+      "lane_key": "science-research",
+      "existing_pr": 1882,
+      "existing_branch": "research/flight-sentinel-v0-2",
+      "source_files": [
+        "research/flight-sentinel/v0_6/recovery_reference.py",
+        "research/flight-sentinel/v0_6/test_recovery_reference.py"
+      ],
+      "review_work_key": "flight-sentinel-aircraft:systemia-research-continuity",
+      "review_action": "reconcile_existing_aircraft_guardian_pr_with_private_systemia_rd_admission"
+    },
+    {
+      "project_key": "flight-sentinel-infrastructure",
+      "lane_key": "infrastructure-watch",
+      "existing_pr": 2112,
+      "existing_branch": "research/flight-sentinel-infrastructure-guardian-001",
+      "source_files": [
+        "research/flight-sentinel/infrastructure_guardian/v0_2/dependency_lab.py",
+        "research/flight-sentinel/infrastructure_guardian/v0_2/test_dependency_lab.py"
+      ],
+      "review_work_key": "flight-sentinel-infrastructure:systemia-research-continuity",
+      "review_action": "reconcile_existing_infrastructure_guardian_pr_with_private_systemia_rd_admission"
+    }
+  ]
+}
