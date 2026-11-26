@@ -16,6 +16,7 @@ import {runKaidanceCreativeDevelopment} from './kaidance-creative-development.mj
 import {runLearningCommunityCycle} from './kaidance-learning-community-cycle.mjs';
 import {runAirCoreDevelopmentCycle} from './kaidance-aircore-development.mjs';
 import {runPrivateResearchContinuity} from './kaidance-rd-continuity.mjs';
+import {inspectFlightSentinelContinuity} from './kaidance-flight-sentinel-continuity.mjs';
 const sourceRoot=path.resolve(fileURLToPath(new URL('../../',import.meta.url)));
 const sha=value=>'sha256:'+createHash('sha256').update(value).digest('hex');
 function readJson(file){return JSON.parse(fs.readFileSync(file,'utf8'))}
@@ -266,8 +267,11 @@ export function runCompanyHeartbeat({
  }:{state:aircore?.held?'held':'not_executed',reason:aircore?.reason||null,
   physical_prototype_built:false,worker_dispatched:false};
  const researchContinuity=runPrivateResearchContinuity({enabled:rdContinuityEnabled,root:repo,outDir:out,now});
+ // Source-only liveness of two existing public Flight Sentinel research PRs.
+ // No mission admission or execution receipt is inferred from source presence.
+ const flightSentinel=inspectFlightSentinelContinuity({root:repo});
  const report={...planned.report,proof,infrastructure_watch:aiw,
-  research_continuity:researchContinuity,
+  research_continuity:researchContinuity,flight_sentinel_research:flightSentinel,
   global_opportunities:global,network_development:network,
   learning_community:learningSummary,aircore_development:aircoreSummary};
  const queue={schema:'evercraft.kaidance.company-heartbeat.queue.v1',observed_at:report.observed_at,
@@ -296,6 +300,7 @@ export function runCompanyHeartbeat({
     ...row,execution_authorized:false,hardware_purchase_authorized:false,
     partner_contact_authorized:false,authority:'systemia_operator_review_required'
    })),
+   ...flightSentinel.review_candidates,
    ...report.company_portfolio.products_not_yet_named.slice(0,12).map(key=>({
     work_key:'product:'+key+':adapter-admission',lane_key:null,priority:3,
     action:'bind_existing_systemia_capability_or_admit_bounded_new_adapter',authority:'source_review_required'
@@ -304,12 +309,13 @@ export function runCompanyHeartbeat({
   no_remote_work_dispatched:true,no_code_changes_made:true};
  const snapshot={...planned.snapshot,
   counts:{...planned.snapshot.counts,
-   scanned:planned.snapshot.counts.scanned+aiw.sources_observed+global.sources_observed+(network.status==='verified_receipt'?1:0)+(learning?.report?.counts?.tracked||0)+(aircore?.report?1:0),
+   scanned:planned.snapshot.counts.scanned+flightSentinel.tracked_projects+aiw.sources_observed+global.sources_observed+(network.status==='verified_receipt'?1:0)+(learning?.report?.counts?.tracked||0)+(aircore?.report?1:0),
    changed:planned.snapshot.counts.changed+(global.newly_seen||0)+(network.newly_seen||0)+(aircore?.report?.newly_seen||0),
-   held:planned.snapshot.counts.held+aiw.review_candidates.length+global.review_candidates.length+network.review_candidates.length+(learning?.report?.counts?.failed||0)+
+   held:planned.snapshot.counts.held+flightSentinel.review_candidates.length+aiw.review_candidates.length+global.review_candidates.length+network.review_candidates.length+(learning?.report?.counts?.failed||0)+
     (aircore?.held||['source_proof_failed','missing_source_hold'].includes(aircore?.report?.source_status)?1:0)},
   evidence_refs:[
     ...planned.snapshot.evidence_refs,
+    'source:registry/kaidance-flight-sentinel-continuity.v1.json',
     ...(learning?.report_ref?['source:registry/kaidance-learning-community-workstreams.v1.json',learning.report_ref]:[]),
     ...(aircore?.receipt_ref?['source:registry/kaidance-aircore-development.v1.json',aircore.receipt_ref]:[]),
     ...(aiw.status==='verified_receipt'?[
