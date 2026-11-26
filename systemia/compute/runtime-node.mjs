@@ -10,6 +10,7 @@ import { bootstrapPrivateOrigin } from '../core/bootstrap/private-origin.mjs';
 import { KaidanceRuntime, startKaidanceHealthService } from '../collider/runtime.mjs';
 import { createNodeAttestation } from './device-identity.mjs';
 import { SystemiaCoreResidentSupervisor } from '../core/resident-supervisor.mjs';
+import { publicDemandRefreshBindings } from '../revenue-desk/public-demand-browser-bindings.mjs';
 import { runRegisteredAssignment } from '../saban/registered-worker.mjs';
 import { startChumPublicOrigin } from '../chum/public-origin-runtime.mjs';
 import { startOutboundCapacityBroker } from '../network/outbound-capacity-broker.mjs';
@@ -2840,7 +2841,18 @@ export async function startEvercraftComputeNode({
             }
           }
 
+          // Local owner opt-in only; remote admission input cannot choose browser paths.
+          // Use the native browser cache already prepared by the local organism.
+          const demandBrowserCache = path.join(path.dirname(allowedRoot), 'browser-runtime', 'browsers');
+          const demandBrowserBindings = publicDemandRefreshBindings({
+            enabled: publicDemandEnabled &&
+              process.env.EVERCRAFT_PUBLIC_DEMAND_REFRESH_ADMISSION === 'true' &&
+              typeof browserRuntimeFactory === 'function',
+            sourceDir: browserWorkerSourceDir,
+            browsersPath: demandBrowserCache,
+          });
           const serviceEnv = {
+            ...demandBrowserBindings,
             SYSTEMIA_PUBLIC_DEMAND_RESEARCH_ROOT: publicDemandEnabled ? publicDemandRoot : '',
             SYSTEMIA_PUBLIC_DEMAND_DOCUMENT_INBOX: publicDemandEnabled ? path.join(publicDemandRoot, 'document-inbox.json') : '',
             NODE_ENV: String(process.env.NODE_ENV || 'production'),

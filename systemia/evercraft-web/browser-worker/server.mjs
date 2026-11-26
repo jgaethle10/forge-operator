@@ -3,6 +3,7 @@ import http from 'node:http';
 import { chromium } from 'playwright';
 import { createSecureOutboundProxy } from './secure-proxy.mjs';
 import { HEADING_SELECTOR, MAX_HEADINGS } from './snapshot-contract.mjs';
+import {collectPublicDocumentLinks} from './document-link-contract.mjs';
 import { AuthenticatedBrowserSessionManager, renderHumanBrowserHandoffPage } from './authenticated-handoff.mjs';
 import {
   assertBrowserRequestUrl,
@@ -262,6 +263,7 @@ async function browse(job) {
     }
 
     const snapshot = await extractPage(page, job.max_text_chars);
+    snapshot.document_links = await page.evaluate(collectPublicDocumentLinks);
     const finalUrl = redactUrl(page.url());
     const status = response?.status() || 0;
 
@@ -290,6 +292,7 @@ async function browse(job) {
       http_status:status,
       title:snapshot.title,
       text_sha256:sha256(snapshot.text),
+      document_links_sha256:sha256(JSON.stringify(snapshot.document_links)),
       screenshot_sha256:screenshot?.sha256 || null,
       actions:actionReceipts,
       blocked_network_events:blocked,
