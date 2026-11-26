@@ -130,6 +130,17 @@
       "products": [],
       "services": [],
       "priority": 2
+    },
+    {
+      "lane_key": "infrastructure-watch",
+      "description": "American Infrastructure Watch official bridge-source discovery, dated evidence checks, and controlled publication review",
+      "mode": "observe_existing_workflows",
+      "cadence_seconds": 300,
+      "products": [],
+      "services": [
+        "aiw-evidence-watch"
+      ],
+      "priority": 2
     }
   ]
 }
