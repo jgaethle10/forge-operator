@@ -30,6 +30,33 @@ export function sourceFingerprint(root,files){
  }
  return 'sha256:'+hash.digest('hex');
 }
+function eventScoutReview(out,now){
+ // A sibling receipt from the SAME existing Kaidance workflow, never a new runner.
+ if(path.basename(out)!=='kaidance-company-heartbeat')
+  return {status:'not_in_canonical_heartbeat_root',candidates:[]};
+ const file=path.join(path.dirname(out),'event-opportunity-scout/state.json');
+ try{
+  if(!fs.existsSync(file))return {status:'no_source_receipt',candidates:[]};
+  const st=fs.lstatSync(file);
+  if(!st.isFile()||st.isSymbolicLink()||(st.mode&0o077)!==0||st.size>256*1024)
+   return {status:'unsafe_source_receipt',candidates:[]};
+  const data=JSON.parse(fs.readFileSync(file,'utf8'));
+  if(data.schema!=='evercraft.events.opportunity-scout-state.v1'||
+    data.observation?.schema!=='evercraft.events.opportunity-review.v1')
+   return {status:'wrong_source_schema',candidates:[]};
+  const age=new Date(now).getTime()-Date.parse(data.last_success_at);
+  if(!Number.isFinite(age)||age<0||age>8*3600000)
+   return {status:'stale_or_unverified_source',candidates:[]};
+  const candidates=(data.observation.candidates||[]).filter(c=>
+   /^event:[a-f0-9]{20}$/.test(c?.opportunity_key||'')&&
+   c.outreach_authorized===false&&c.dispatch_authorized===false&&
+   c.source_url?.startsWith('https://www.find-tender.service.gov.uk/')&&
+   c.buyer_contact_verified===false&&c.revenue_confirmed===false&&
+   (!c.deadline||Date.parse(c.deadline)>new Date(now).getTime()))
+   .slice(0,6);
+  return {status:'read_only_review_candidates',candidates};
+ }catch{return {status:'unreadable_source_receipt',candidates:[]}}
+}
 function countWorkflowManifests(root,max=30000){
  let files=0,count=0;
  function walk(dir,depth=0){
@@ -76,12 +103,24 @@ export function runCompanyHeartbeat({
  }
  const planned=planCompanyHeartbeat({manifest,products,supervisor,previous,now,
   worldsFingerprint:fingerprint,proof,workflowManifestCount:countWorkflowManifests(repo)});
- const report={...planned.report,proof};
+ const scout=eventScoutReview(out,now);
+ const report={...planned.report,proof,
+  event_discovery:{lane_key:'events',source_status:scout.status,
+   candidates_for_review:scout.candidates.length,
+   external_work_performed:false,public_uk_procurement_only:true,
+   any_buyer_contact:false,any_sponsor_commitment:false}};
  const queue={schema:'evercraft.kaidance.company-heartbeat.queue.v1',observed_at:report.observed_at,
   execution_authorized:false,
   candidates:[
    ...(proof.status==='failed'?[{work_key:'worlds:source-proof-failure',lane_key:'worlds',priority:1,action:'investigate_failed_source_tests',authority:'review_required'}]:[]),
    ...(proof.status==='due_not_executed'?[{work_key:'worlds:source-proof-due',lane_key:'worlds',priority:2,action:'run_bounded_source_proof',authority:'existing_allowlisted_local_only'}]:[]),
+   ...scout.candidates.map((c)=>({
+    work_key:c.opportunity_key,lane_key:'events',priority:3,
+    action:'verify_event_tender_source_buyer_eligibility_and_delivery_capacity',
+    evidence_ref:c.source_url,authority:'founder_review_required',
+    outreach_authorized:false,dispatch_authorized:false,
+    source_region:'United Kingdom',deadline:c.deadline
+   })),
    ...report.company_portfolio.products_not_yet_named.slice(0,12).map(key=>({
     work_key:'product:'+key+':adapter-admission',lane_key:null,priority:3,
     action:'bind_existing_systemia_capability_or_admit_bounded_new_adapter',authority:'source_review_required'
