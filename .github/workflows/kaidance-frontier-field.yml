@@ -23,6 +23,11 @@ on:
       - 'systemia/organism/kaidance-frontier-cycle.mjs'
       - 'systemia/organism/kaidance-company-heartbeat*.mjs'
       - 'systemia/organism/kaidance-creative-development.mjs'
+      - 'systemia/organism/kaidance-learning-community-cycle.mjs'
+      - 'tests/kaidance-learning-community-cycle.test.mjs'
+      - 'tests/evercraft-circles-kaidance.test.mjs'
+      - 'tests/systemia-university-kaidance.test.mjs'
+      - 'tests/kaidance-education-family-source.test.mjs'
       - 'registry/kaidance-creative-development.v1.json'
       - 'tests/kaidance-creative-development.test.mjs'
       - 'public/leiland/**'
@@ -87,6 +92,11 @@ on:
       - 'systemia/organism/kaidance-frontier-cycle.mjs'
       - 'systemia/organism/kaidance-company-heartbeat*.mjs'
       - 'systemia/organism/kaidance-creative-development.mjs'
+      - 'systemia/organism/kaidance-learning-community-cycle.mjs'
+      - 'tests/kaidance-learning-community-cycle.test.mjs'
+      - 'tests/evercraft-circles-kaidance.test.mjs'
+      - 'tests/systemia-university-kaidance.test.mjs'
+      - 'tests/kaidance-education-family-source.test.mjs'
       - 'registry/kaidance-creative-development.v1.json'
       - 'tests/kaidance-creative-development.test.mjs'
       - 'public/leiland/**'
@@ -161,6 +171,7 @@ jobs:
           path: |
             artifacts/kaidance-frontier/runtime/state.json
             artifacts/kaidance-company-heartbeat/state.json
+            artifacts/kaidance-company-heartbeat/learning-community/state.json
             artifacts/kaidance-network-development/state.json
             artifacts/kaidance-creative-development/state.json
             artifacts/kaidance-global-opportunities/state.json
@@ -234,11 +245,14 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         run: node systemia/organism/kaidance-network-development.mjs --out artifacts/kaidance-network-development
 
+      - name: Prove KAIDANCE learning/Circles source and protected development work
+        run: node --test tests/kaidance-learning-community-cycle.test.mjs tests/evercraft-circles-kaidance.test.mjs tests/systemia-university-kaidance.test.mjs tests/kaidance-education-family-source.test.mjs
+
       - name: Reconcile Evercraft company portfolio on KAIDANCE heartbeat
         env:
           SYSTEMIA_AIW_EVIDENCE_RECEIPT_FILE: artifacts/aiw-evidence-watch/latest.json
           SYSTEMIA_NETWORK_DEVELOPMENT_RECEIPT_FILE: artifacts/kaidance-network-development/latest.json
-        run: node systemia/organism/kaidance-company-heartbeat-runner.mjs --out artifacts/kaidance-company-heartbeat --prove-worlds
+        run: node systemia/organism/kaidance-company-heartbeat-runner.mjs --out artifacts/kaidance-company-heartbeat --prove-worlds --prove-learning
 
       - name: Verify durable Systemia goal and actual registered Saban World Engine assignment
         run: node --test tests/kaidance-worlds-saban-review.test.mjs
@@ -280,6 +294,7 @@ jobs:
           path: |
             artifacts/kaidance-frontier/runtime/state.json
             artifacts/kaidance-company-heartbeat/state.json
+            artifacts/kaidance-company-heartbeat/learning-community/state.json
             artifacts/kaidance-network-development/state.json
             artifacts/kaidance-creative-development/state.json
             artifacts/kaidance-global-opportunities/state.json
@@ -319,6 +334,8 @@ jobs:
             artifacts/kaidance-network-development/latest.json
             artifacts/kaidance-network-development/mission-snapshot.json
             artifacts/kaidance-company-heartbeat/latest.json
+            artifacts/kaidance-company-heartbeat/learning-community/latest.json
+            artifacts/kaidance-company-heartbeat/learning-community/queue.json
             artifacts/kaidance-company-heartbeat/mission-snapshot.json
             artifacts/kaidance-company-heartbeat/queue.json
             artifacts/kaidance-company-heartbeat/next-action.json
