@@ -458,6 +458,10 @@
       "env_args": {
         "--root": "SYSTEMIA_PUBLIC_DEMAND_RESEARCH_ROOT",
         "--inbox": "SYSTEMIA_PUBLIC_DEMAND_DOCUMENT_INBOX"
+      },
+      "optional_env_args": {
+        "--browser-source": "SYSTEMIA_PUBLIC_DEMAND_BROWSER_SOURCE",
+        "--browser-cache": "SYSTEMIA_PUBLIC_DEMAND_BROWSER_CACHE"
       }
     }
   ]

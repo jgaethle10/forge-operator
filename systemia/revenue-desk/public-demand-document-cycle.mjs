@@ -82,7 +82,8 @@ export function runDocumentCycle({root,manifestFile}){
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)){
  try{
   const args=process.argv.slice(2);if(![4,8].includes(args.length)||args[0]!=='--root'||args[2]!=='--inbox'||(args.length===8&&(args[4]!=='--browser-source'||args[6]!=='--browser-cache')))throw Error('usage: --root absolute_root --inbox absolute_inbox [--browser-source absolute_path --browser-cache absolute_path]');
-  if(!path.isAbsolute(args[3])||(args.length===8&&(!path.isAbsolute(args[5])||!path.isAbsolute(args[7]))))throw Error('absolute_bindings_required');
+  if(!path.isAbsolute(args[1])||!path.isAbsolute(args[3])||(args.length===8&&(!path.isAbsolute(args[5])||!path.isAbsolute(args[7]))))throw Error('absolute_bindings_required');
+  if(args.length===8&&path.resolve(args[3])!==path.join(path.resolve(args[1]),'document-inbox.json'))throw Error('refresh_requires_canonical_inbox');
   const result=runDocumentCycle({root:args[1],manifestFile:args[3]});
   if(result.state==='idle'&&args.length===8){
    const {refreshWithBrowser}=await import('./public-demand-source-refresh.mjs');

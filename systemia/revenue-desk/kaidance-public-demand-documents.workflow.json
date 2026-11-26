@@ -9,10 +9,11 @@
   "entrypoint": "systemia/revenue-desk/public-demand-document-cycle.mjs",
   "proof": "tests/public-demand-document-cycle.test.mjs",
   "outputs": {
-    "private_receipts": "configured private research root/document-cycle-receipts"
+    "private_receipts": "configured private research root/document-cycle-receipts",
+    "source_refresh_receipts": "configured private research root/source-refresh-receipts; optional owner browser binding"
   },
   "authority": {
-    "public_research": "explicit_receipt_bound_inbox_only",
+    "public_research": "receipt_bound_inbox_and_opt_in_registered_source_refresh",
     "private_checkpoint_write": true,
     "crm_write": false,
     "outreach": false,

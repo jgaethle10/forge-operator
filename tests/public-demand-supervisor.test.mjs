@@ -13,6 +13,7 @@ test('canonical document cycle is optional, five-minute and runs only with both 
  const c=candidates[0];
  assert.equal(c.cadence_seconds,300);assert.equal(c.optional_when_unconfigured,true);
  assert.deepEqual(c.env_args,{'--root':'SYSTEMIA_PUBLIC_DEMAND_RESEARCH_ROOT','--inbox':'SYSTEMIA_PUBLIC_DEMAND_DOCUMENT_INBOX'});
+ assert.deepEqual(c.optional_env_args,{'--browser-source':'SYSTEMIA_PUBLIC_DEMAND_BROWSER_SOURCE','--browser-cache':'SYSTEMIA_PUBLIC_DEMAND_BROWSER_CACHE'});
  const tmp=fs.mkdtempSync(path.join(root,'.public-demand-supervisor-proof-'));
  const cfg=path.join(tmp,'config.json'),state=path.join(tmp,'state'),research=path.join(tmp,'research'),inbox=path.join(research,'document-inbox.json');
  fs.mkdirSync(research,{mode:0o700});

@@ -38,7 +38,7 @@ export function admitCapture({root,sourceFile,expectedSha,indices}){
   if(existing&&existing.sha256!==expectedSha)throw Error('capture_identity_conflict');
   const oldUrls=new Set(oldJobs.map(x=>x.job.url));
   const admitted=indices.filter((i,n)=>!oldUrls.has(jobs[n].url));
-  if(!admitted.length)return {state:'unchanged',added:0,inbox_sha256:sha(before),qualified:false,contact_authorized:false,send_performed:false};
+  if(!admitted.length)return {state:'unchanged',added:0,inbox_sha256:sha(before),qualified:false,contact_authorized:false,execution_authorized:false,send_performed:false};
   if(existing){existing.indices=[...new Set([...existing.indices,...admitted])];}
   else m.captures.push({key,sha256:expectedSha,indices:admitted});
   if(m.captures.length>20||m.captures.some(c=>c.indices.length>20))throw Error('inbox_capacity');
