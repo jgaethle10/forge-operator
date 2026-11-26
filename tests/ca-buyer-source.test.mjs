@@ -68,3 +68,18 @@ test('observed procurement destinations are research-only; spoofed destinations 
   for(const job of plan.jobs){assert.equal(job.contact_authorized,false);assert.equal(job.execution_authorized,false);}
  }
 });
+
+test('urgent source-local deadlines rank before distant research without certifying timezone',()=>{
+ const distant=[...row];distant[2]='example-distant';distant[3]='2029-12-31T16:00:00';
+ const urgent=[...row];urgent[2]='example-urgent';urgent[3]='2026-11-30T14:00:00';
+ const result=normalizeCanada(csv(distant,row,urgent),{now});
+ const p=planBuyerResearch({schema:'evercraft.kaidance.discovery-checkpoint.v1',records:result.candidates},{now});
+ assert.equal(p.jobs.length,3);
+ assert.equal(p.jobs[0].deadline,urgent[3]);
+ assert.equal(p.jobs[0].deadline_timezone,'unverified-source-local');
+ assert.equal(p.jobs[2].deadline,distant[3]);
+ for(const j of p.jobs){assert.equal(j.contact_authorized,false);assert.equal(j.execution_authorized,false);}
+ const later=planBuyerResearch({schema:'evercraft.kaidance.discovery-checkpoint.v1',records:result.candidates},{now:new Date('2026-12-02T00:00:00Z')});
+ assert.equal(later.jobs.length,2);
+ assert.equal(later.held,1);
+});
