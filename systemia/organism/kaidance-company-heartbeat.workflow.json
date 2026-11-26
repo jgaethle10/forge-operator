@@ -20,7 +20,10 @@
     "network_development_source_receipt": "artifacts/kaidance-network-development/latest.json",
     "network_development_mission_snapshot": "artifacts/kaidance-network-development/mission-snapshot.json",
     "aircore_source_receipt": "artifacts/kaidance-company-heartbeat/aircore-development/latest.json",
-    "aircore_review_queue": "artifacts/kaidance-company-heartbeat/aircore-development/queue.json"
+    "aircore_review_queue": "artifacts/kaidance-company-heartbeat/aircore-development/queue.json",
+    "events_uk_source_receipt": "artifacts/event-opportunity-scout/latest.json",
+    "events_us_source_receipt": "artifacts/event-opportunity-us-sam/latest.json",
+    "events_regional_review_receipt": "artifacts/event-opportunity-regional/latest.json"
   },
   "authority": {
     "inventory_read": "autonomous",
@@ -42,7 +45,11 @@
     "aircore_bounded_source_proof": "allowlisted_local_only",
     "aircore_physical_tests": false,
     "aircore_hardware_purchase": false,
-    "aircore_partner_outreach": false
+    "aircore_partner_outreach": false,
+    "events_official_source_poll": "bounded_read_only",
+    "events_auto_outreach": false,
+    "events_auto_bid": false,
+    "events_auto_booking": false
   },
   "claims": {
     "all_public_products_inventoried": true,
@@ -56,6 +63,9 @@
     "network_field_validated": false,
     "network_runtime_active_after_source_merge": false,
     "aircore_prototype_built": false,
-    "aircore_cadr_verified": false
+    "aircore_cadr_verified": false,
+    "events_resident_active_after_source_merge": false,
+    "events_buyers_verified": false,
+    "events_revenue_verified": false
   }
 }

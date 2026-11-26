@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import {planCompanyHeartbeat,validateCompanyLanes} from '../systemia/organism/kaidance-company-heartbeat.mjs';
-import {runCompanyHeartbeat,sourceFingerprint} from '../systemia/organism/kaidance-company-heartbeat-runner.mjs';
+import {runCompanyHeartbeat,sourceFingerprint,runResidentEventSources} from '../systemia/organism/kaidance-company-heartbeat-runner.mjs';
 import {runRegionalEventReview} from '../systemia/events/event-opportunity-regional-review-runner.mjs';
 const products=JSON.parse(fs.readFileSync('registry/public-products.json','utf8'));
 const supervisor=JSON.parse(fs.readFileSync('systemia/core/resident-services.json','utf8'));
@@ -260,4 +260,31 @@ test('existing company tick reconciles owner-private R&D once, without publishin
   assert.equal(JSON.parse(fs.readFileSync(privateFile,'utf8')).missions,null);
   assert.equal(next.mission_snapshot.counts.admitted,0);
  }finally{fs.rmSync(state,{recursive:true,force:true})}
+});
+
+
+test('owned resident runs event sources in existing private sibling roots; CI and duplicate pulses do not poll',async()=>{
+ const root=fs.mkdtempSync(path.join(os.tmpdir(),'kaidance-resident-events-'));
+ try{
+  const outDir=path.join(root,'kaidance-company-heartbeat'),now=new Date('2026-11-26T19:00:00Z');
+  const seen=[];
+  const uk=async x=>{seen.push(['uk',x]);return {status:'mock_uk'}};
+  const us=async x=>{seen.push(['us',x]);throw Error('private error must not leak')};
+  const regional=x=>{seen.push(['regional',x]);return {status:'mock_regional'}};
+  const cfg={root:'.',outDir,now,uk,us,regional,apiKey:'test_key_never_logged'};
+  assert.equal((await runResidentEventSources(cfg)).status,'not_admitted');
+  assert.equal((await runResidentEventSources({...cfg,enabled:true,githubActions:true})).status,'not_admitted');
+  assert.equal(seen.length,0);
+  const r=await runResidentEventSources({...cfg,enabled:true});
+  assert.deepEqual(r.sources,[{key:'uk',status:'mock_uk'},{key:'us',status:'held_source_failure'},{key:'regional',status:'mock_regional'}]);
+  assert.equal(seen[0][1].outDir,path.join(root,'event-opportunity-scout'));
+  assert.equal(seen[0][1].live,true);
+  assert.equal(seen[1][1].outDir,path.join(root,'event-opportunity-us-sam'));
+  assert.equal(seen[2][1].outDir,path.join(root,'event-opportunity-regional'));
+  assert.equal(JSON.stringify(r).includes(cfg.apiKey),false);
+  fs.mkdirSync(outDir);
+  fs.writeFileSync(path.join(outDir,'state.json'),JSON.stringify({tick:Math.floor(now.getTime()/300000)}),{mode:0o600});
+  assert.equal((await runResidentEventSources({...cfg,enabled:true})).status,'duplicate_or_clock_rollback');
+  assert.equal(seen.length,3);
+ }finally{fs.rmSync(root,{recursive:true,force:true})}
 });
