@@ -27,6 +27,10 @@ function setup(){
  const passDir=path.join(dir,'passport');
  const passport=new EvercraftPassport({stateDir:passDir});
  const ledger=new EvercraftInteractionLedger({stateDir:path.join(dir,'ledger'),passportStateDir:passDir});
+ fs.mkdirSync(ledger.stateDir,{recursive:true,mode:0o700});
+ fs.writeFileSync(ledger.organizationRegistryFile,JSON.stringify({organizations:[{
+  organization_key:'fixture-org',state:'clear',contact_emails:['buyer@firm.example'],
+  contact_subject_refs:['contact:fixture-buyer'],evidence_ref:'fixture:review'}]}),{mode:0o600});
  const secretFile=path.join(dir,'signer.key');fs.writeFileSync(secretFile,verifyKey,{mode:0o600});
  const report=reconcileGmailOutreach({
   messages:[],prospects:[{
