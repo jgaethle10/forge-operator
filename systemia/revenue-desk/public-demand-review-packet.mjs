@@ -57,4 +57,6 @@ function main(){
  }finally{if(fs.existsSync(tmp))fs.unlinkSync(tmp);}
  console.log(JSON.stringify({receipt:dest,receipt_sha256:sha(body),source_url:packet.source_url,dates:packet.evidence.dates,scope:packet.evidence.scope.excerpts.slice(0,3),eligibility:packet.evidence.eligibility.excerpts.slice(0,3),payment:packet.evidence.payment.excerpts.slice(0,3),qualified:false,network_performed:false,send_performed:false},null,2));
 }
-if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url))main().catch(e=>{console.error(e.message);process.exitCode=1;});
+if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)){
+ try{main();}catch(e){console.error(e.message);process.exitCode=1;}
+}
