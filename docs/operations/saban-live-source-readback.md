@@ -26,6 +26,7 @@ node systemia/saban/live-source-readback.mjs \
   --yard-state /ABSOLUTE/PATH/TO/EXISTING/PRIVATE/YARD/STATE \
   --broker-deployment EXISTING_BROKER_DEPLOYMENT_ID \
   --node-id EXACT_ADMITTED_NODE_ID \
+  --device-fingerprint INDEPENDENTLY_ADMITTED_SHA256_FINGERPRINT \
   --git-commit FULL_REVIEWED_40_CHARACTER_COMMIT_SHA
 ```
 
@@ -57,3 +58,7 @@ node systemia/saban/attested-remote-source.proof.mjs
 The first command tests deterministic Git-pinned expectations and fail-closed preflight conditions. The second runs a real **synthetic loopback** Yard/broker/NodeSeed proof, which is intentionally separate from the HTTPS-only live CLI. They are included in the **existing** Saban multiplier CI, not a new workflow or resident heartbeat.
 
 If no existing authorized broker or live Remote Operator is available, the truthful status is **HOLD**. Do not manufacture a control grant, expose a port, substitute cloud compute, install another scheduler or restart the running company machine just to make this proof green.
+
+### Coordinator identity pin
+
+The live CLI requires the expected `sha256:` device fingerprint from an independently trusted existing admission record, not from the inventory being tested. A mismatched inventory holds before requesting a control grant or reading any source pages. A successful fresh signed challenge must match this pin and reports `coordinator_device_pin_matched: true`. This is an explicit caller expectation, not proof that its origin was independently attested. Historical source pins still refer to the actual remote release; changing this collector does not authorize updating the remote file.
