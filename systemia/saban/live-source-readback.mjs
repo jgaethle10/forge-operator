@@ -10,7 +10,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { fileURLToPath } from 'node:url';
+import { pathToFileURL } from 'node:url';
 import { YardOperator } from '../yard/operator.mjs';
 import { collectAttestedRemoteSource } from './attested-remote-source.mjs';
 
@@ -100,7 +100,7 @@ export function pinnedCanaryExpectation({ repo, gitCommit, pageBytes = DEFAULT_P
   }
   const bytes = execFileSync('git', [
     '-C', root, 'show', gitCommit + ':' + CANARY_PATH,
-  ], { encoding: 'buffer', timeout: 5000, maxBuffer: MAX_CANARY_BYTES + 4096 });
+  ], { timeout: 5000, maxBuffer: MAX_CANARY_BYTES + 4096 });
   if (bytes.length > MAX_CANARY_BYTES) throw new Error('pinned_canary_too_large');
   if (bytes.length > MAX_PAGES * pageBytes) throw new Error('page_budget_insufficient');
   return {
@@ -156,7 +156,8 @@ export async function runLiveSourceReadback(input) {
     physical_hardware_verified: false,
     field_verified: false,
     live_running_process_verified: false,
-    runtime_mutated: false,
+    live_workload_or_deployment_mutated: false,
+    node_and_broker_metadata_receipts_may_append: true,
     new_scheduler_created: false,
     source_content_returned: false,
     credentials_returned: false,
@@ -211,7 +212,7 @@ export async function runLiveSourceReadback(input) {
 }
 
 const isMain = process.argv[1] &&
-  import.meta.url === new URL('file://' + path.resolve(process.argv[1])).href;
+  import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href;
 if (isMain) {
   const help = [
     'Read-only Saban live canary. No shell execution on the remote node.',
