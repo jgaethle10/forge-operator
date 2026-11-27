@@ -11,6 +11,7 @@ import { KaidanceRuntime, startKaidanceHealthService } from '../collider/runtime
 import { createNodeAttestation } from './device-identity.mjs';
 import { SystemiaCoreResidentSupervisor } from '../core/resident-supervisor.mjs';
 import { resolveLeilandCoreBindings } from '../leiland/core-admission.mjs';
+import { normalizeLocalLlamaResidentAdmission } from '../raven/local-llama-resident-admission.mjs';
 import { runRegisteredAssignment } from '../saban/registered-worker.mjs';
 import { startChumPublicOrigin } from '../chum/public-origin-runtime.mjs';
 import { startOutboundCapacityBroker } from '../network/outbound-capacity-broker.mjs';
@@ -295,7 +296,10 @@ function loadOrCreatePrivateToken(file) {
   return file;
 }
 
-function normalizeRavenInferenceConfig(input = {}) {
+function normalizeRavenInferenceConfig(input = {}, nodeId) {
+  const localLlama = normalizeLocalLlamaResidentAdmission({input,nodeId,
+    ownerAdmission:process.env.EVERCRAFT_NEXTGEN_LLAMA_RESIDENT_ADMISSION === 'true'});
+  if (localLlama) return localLlama;
   const provider = String(input.raven_inference_provider || '').trim().toLowerCase();
   const model = String(input.raven_inference_model || '').trim();
   const configured = Boolean(provider || model);
@@ -2869,7 +2873,7 @@ export async function startEvercraftComputeNode({
             ],
           });
 
-          const ravenInference = normalizeRavenInferenceConfig(body.input || {});
+          const ravenInference = normalizeRavenInferenceConfig(body.input || {}, nodeId);
           const ravenPrivateStateRoot = path.join(stateRoot, 'raven-private');
           const ravenPrivateBindingsRoot = path.join(stateRoot, '.private-bindings', 'raven');
           let ravenControlTokenFile = '';
@@ -3016,6 +3020,8 @@ export async function startEvercraftComputeNode({
             RAVEN_PRIVATE_PORT: ravenInference.configured ? '4321' : '',
             RAVEN_INFERENCE_GATEWAY_PORT: ravenInference.configured ? '4322' : '',
             RAVEN_OLLAMA_ORIGIN: ravenInference.ollama_origin,
+            RAVEN_LOCAL_LLAMA_ORIGIN: ravenInference.local_llama_origin || '',
+            RAVEN_LOCAL_LLAMA_ADMITTED: ravenInference.provider === 'llama.cpp' ? 'true' : '',
             ...leilandEnv,
           };
 
