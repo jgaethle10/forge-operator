@@ -12,7 +12,7 @@ const KEY=/^findmypart:shop:[a-z0-9-]{1,80}$/;
 const NAME=/^[A-Za-z0-9][A-Za-z0-9 .&'()-]{2,119}$/;
 // Public business contacts, individually sourced; never match an entire shared mail domain.
 const CONTACTS=Object.freeze({
- 'findmypart:shop:small-engine-specialties':Object.freeze({host:'sespecialties.com',address:'kyle@sesspecialties.com',source:'https://www.sespecialties.com/parts-and-service'}),
+ 'findmypart:shop:small-engine-specialties':Object.freeze({host:'sespecialties.com',address:'kyle@sesspecialties.com',source:'https://www.sespecialties.com/parts-and-service',alternateAddress:'smallenginespecialties@yahoo.com',alternateSource:'https://www.husqvarna.com/us/locations/small-engine-specialties/?id=USF218409-1'}),
  'findmypart:shop:outdoor-power-repair':Object.freeze({host:'outdoorpowerandrepair.com',address:'opr98837@gmail.com',source:'https://www.outdoorpowerandrepair.com/'})
 });
 function officialContact(t){const c=CONTACTS[t.work_key];return c?.host===t.host?c:null}
@@ -46,8 +46,8 @@ export async function reviewTargetedHistory({targets,accessToken,fetchImpl=globa
   const h=target.host;
   // Provider search is a candidate generator, not an exact-address guarantee.
   const contact=officialContact(target);
-  const address=contact?.address;
-  const exactQuery=address?' from:'+address+' to:'+address+' cc:'+address+' bcc:'+address:'';
+  const addresses=[contact?.address,contact?.alternateAddress].filter(Boolean);
+  const exactQuery=addresses.map(address=>' from:'+address+' to:'+address+' cc:'+address+' bcc:'+address).join('');
   const q='in:anywhere -in:drafts {from:'+h+' to:'+h+' cc:'+h+' bcc:'+h+' "'+target.name+'"'+exactQuery+'}';
   const ids=new Set(),tokens=new Set();
   let pageToken=null,pages=0,truncated=false;
@@ -85,15 +85,15 @@ export async function reviewTargetedHistory({targets,accessToken,fetchImpl=globa
   const sent=mail.filter(m=>m.direction==='outbound'&&m.to_addresses.some(a=>domain(a)===h));
   const inbound=mail.filter(m=>m.direction==='inbound'&&domain(m.from_address)===h);
   const reply=inbound.filter(m=>!m.is_auto_reply&&!m.is_bounce&&m.thread_id&&sent.some(s=>s.thread_id===m.thread_id&&Date.parse(s.occurred_at)<Date.parse(m.occurred_at)));
-  const exactSent=address?mail.filter(m=>m.direction==='outbound'&&m.to_addresses.includes(address)):[];
-  const exactInbound=address?mail.filter(m=>m.direction==='inbound'&&m.from_address===address):[];
-  const exactReply=exactInbound.filter(m=>!m.is_auto_reply&&!m.is_bounce&&m.thread_id&&exactSent.some(s=>s.thread_id===m.thread_id&&Date.parse(s.occurred_at)<Date.parse(m.occurred_at)));
+  const exactSent=mail.filter(m=>m.direction==='outbound'&&m.to_addresses.some(a=>addresses.includes(a)));
+  const exactInbound=mail.filter(m=>m.direction==='inbound'&&addresses.includes(m.from_address));
+  const exactReply=exactInbound.filter(m=>!m.is_auto_reply&&!m.is_bounce&&m.thread_id&&exactSent.some(s=>s.thread_id===m.thread_id&&s.to_addresses.includes(m.from_address)&&Date.parse(s.occurred_at)<Date.parse(m.occurred_at)));
   const otherSent=mail.filter(m=>m.direction==='outbound'&&!sent.includes(m)&&!exactSent.includes(m)&&m.to_addresses.length>0);
   const otherInbound=mail.filter(m=>m.direction==='inbound'&&!inbound.includes(m)&&!exactInbound.includes(m));
   const otherReply=otherInbound.filter(m=>!m.is_auto_reply&&!m.is_bounce&&m.thread_id&&m.from_address&&otherSent.some(s=>s.thread_id===m.thread_id&&s.to_addresses.includes(m.from_address)&&Date.parse(s.occurred_at)<Date.parse(m.occurred_at)));
-  results.push({work_key:target.work_key,provider_candidates:ids.size,search_truncated:truncated,exact_domain_outbound:sent.length,exact_domain_inbound:inbound.length,same_thread_reply_candidates:reply.length,official_contact_source:contact?.source||null,exact_public_contact_outbound:exactSent.length,exact_public_contact_inbound:exactInbound.length,exact_public_contact_same_thread_reply_candidates:exactReply.length,unattributed_outbound_candidates:otherSent.length,unattributed_inbound_candidates:otherInbound.length,unattributed_same_thread_reply_candidates:otherReply.length,state:reply.length||exactReply.length?'review_existing_thread_for_actual_buyer_need':sent.length||inbound.length||exactSent.length||exactInbound.length?'review_existing_contact_history':ids.size?'review_unattributed_search_hits':'no_search_match_not_clearance',contact_clearance:false,outreach_authorized:false});
+  results.push({work_key:target.work_key,provider_candidates:ids.size,search_truncated:truncated,exact_domain_outbound:sent.length,exact_domain_inbound:inbound.length,same_thread_reply_candidates:reply.length,official_contact_source:contact?.source||null,authorized_dealer_contact_source:contact?.alternateSource||null,exact_public_contact_outbound:exactSent.length,exact_public_contact_inbound:exactInbound.length,exact_public_contact_same_thread_reply_candidates:exactReply.length,unattributed_outbound_candidates:otherSent.length,unattributed_inbound_candidates:otherInbound.length,unattributed_same_thread_reply_candidates:otherReply.length,state:reply.length||exactReply.length?'review_existing_thread_for_actual_buyer_need':sent.length||inbound.length||exactSent.length||exactInbound.length?'review_existing_contact_history':ids.size?'review_unattributed_search_hits':'no_search_match_not_clearance',contact_clearance:false,outreach_authorized:false});
  }
- return {schema:'evercraft.findmypart.gmail-targeted-history.v3',search_basis:'official_domain_or_business_name_or_exact_public_contact',candidates_reviewed:results.length,metadata_requests:cache.size,results,full_history_confirmed:false,buyer_replies_verified:0,buyers_qualified:0,send_authority:false,private_records_exported:0};
+ return {schema:'evercraft.findmypart.gmail-targeted-history.v4',search_basis:'official_domain_or_business_name_or_exact_source_bound_contact',candidates_reviewed:results.length,metadata_requests:cache.size,results,full_history_confirmed:false,buyer_replies_verified:0,buyers_qualified:0,send_authority:false,private_records_exported:0};
 }
 async function main(){
  const args=process.argv.slice(2),i=args.indexOf('--mailbox');
