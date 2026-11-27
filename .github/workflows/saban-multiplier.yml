@@ -68,6 +68,9 @@ jobs:
       - name: Prove signed NodeSeed identity bound to complete source pages over Yard
         run: node systemia/saban/attested-remote-source.proof.mjs
 
+      - name: Verify challenge-bound signed hash completion on isolated NodeSeed
+        run: node --test systemia/compute/signed-content-hash-completion.test.mjs
+
       - name: Reconcile two shadow delegated sales artifacts and auditor receipts
         run: node --test systemia/saban/shadow-delegated-sales-reconciliation.test.mjs
 

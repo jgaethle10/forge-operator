@@ -56,6 +56,8 @@ jobs:
           node --check systemia/raven/seal-inference-key.mjs
       - name: Prove local Raven credential sealer
         run: node --test systemia/raven/seal-inference-key.test.mjs
+      - name: Prove deferred browser startup cannot outlive node or lease
+        run: node --test systemia/compute/browser-start-shutdown.test.mjs
       - name: Prove current-stack local organism and restart continuity
         run: node systemia/compute/local-organism.proof.mjs
       - name: Prove local-organism self-healing health watch
