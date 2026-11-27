@@ -1,4 +1,5 @@
 import { createHash } from 'node:crypto';
+import {verifyContentHashCompletionSignature,COMPLETION_WORKLOAD} from '../compute/signed-content-hash-completion.mjs';
 
 // The registered worker's canonical receipt format is deliberately shared by
 // NodeSeed, Yard and Saban. These checks prove integrity and consistency with
@@ -118,4 +119,26 @@ export function verifyNodeSeedWorkerCompletion({
     content_hash_verified: workload === 'systemia.content-hash.v1',
     authority_material_persisted: false,
   };
+}
+
+
+// Optional strict path; legacy receipt integrity checks retain their exact
+// semantics. A valid signature binds a device to its response, not code bytes.
+export function verifySignedNodeSeedHashCompletion({
+  response,nodeId,idempotencyKey,payload,expectedNonce,expectedDeviceFingerprint,
+  expectedLeaseId,now=new Date(),
+}={}) {
+  const checked=verifyNodeSeedWorkerCompletion({
+    response,nodeId,workloadClass:COMPLETION_WORKLOAD,idempotencyKey,payload,
+  });
+  requireReceipt(verifyContentHashCompletionSignature({
+    response,expectedNonce,expectedDeviceFingerprint,expectedLeaseId,now,
+  }), 'completion_signature_invalid');
+  return {...checked,
+    schema:'evercraft.saban.signed-hash-completion-verification.v1',
+    device_response_signature_verified:true,
+    fresh_execution_reported:response.deduplicated===false,
+    deduplicated:response.deduplicated===true,
+    loaded_code_verified:false,physical_hardware_verified:false,
+    independent_live_admission_verified:false};
 }
