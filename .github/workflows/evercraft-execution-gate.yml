@@ -33,3 +33,4 @@ jobs:
           node --test systemia/passport/passport.test.mjs
           node --test systemia/meter/meter.test.mjs
           node --test systemia/execution-gate/gate.test.mjs
+          node --test systemia/execution-gate/engineering-fence-pilot.test.mjs

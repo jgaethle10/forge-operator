@@ -11,6 +11,7 @@ import {planCompanyHeartbeat,validateCompanyLanes} from './kaidance-company-hear
 import {researchCycle} from '../evermaps/cemetery/research-cycle.mjs';
 import {classifyNext} from '../evermaps/cemetery/source-classification.mjs';
 import {writeKaidanceNextAction} from './kaidance-next-action.mjs';
+import {observeEngineeringPilot} from './kaidance-engineering-pilot-observation.mjs';
 import {runGlobalOpportunityScout} from './kaidance-global-opportunity-scout.mjs';
 import {runKaidanceCreativeDevelopment} from './kaidance-creative-development.mjs';
 import {runLearningCommunityCycle} from './kaidance-learning-community-cycle.mjs';
@@ -324,7 +325,7 @@ export function runCompanyHeartbeat({
  root=sourceRoot,outDir=path.join(sourceRoot,'artifacts/kaidance-company-heartbeat'),
  now=new Date(),proveWorlds=false,proveLearning=false,proveAirCore=false,
  learningCycle=runLearningCommunityCycle,aircoreCycle=runAirCoreDevelopmentCycle,
- spawn=spawnSync,aiwReceipt=null,globalOpportunityReceipt=null,networkDevelopmentReceipt=null,rdContinuityEnabled=false
+ spawn=spawnSync,aiwReceipt=null,globalOpportunityReceipt=null,networkDevelopmentReceipt=null,rdContinuityEnabled=false,engineeringPilotRoot=null
 }={}){
  const repo=path.resolve(root),out=path.resolve(outDir);
  const manifest=readJson(path.join(repo,'registry/kaidance-company-lanes.v1.json'));
@@ -415,7 +416,9 @@ export function runCompanyHeartbeat({
    regional_source_status:regionalScout.status,regional_crawl_performed:false,
    external_work_performed:false,source_regions:['United Kingdom','United States'],
    any_buyer_contact:false,any_sponsor_commitment:false};
+ const engineeringPilot=observeEngineeringPilot({root:engineeringPilotRoot,now});
  const report={...planned.report,proof,event_discovery:eventDiscovery,infrastructure_watch:aiw,
+  engineering_pilot:engineeringPilot,
   research_continuity:researchContinuity,
   global_opportunities:global,network_development:network,
   learning_community:learningSummary,aircore_development:aircoreSummary};
@@ -474,6 +477,7 @@ export function runCompanyHeartbeat({
   ],
   no_remote_work_dispatched:true,no_code_changes_made:true};
  const snapshot={...planned.snapshot,
+  ...(engineeringPilot.state==='observed_synthetic'?{engineering_pilot_receipt:engineeringPilot.receipt_hash}:{}),
   counts:{...planned.snapshot.counts,
    scanned:planned.snapshot.counts.scanned+aiw.sources_observed+global.sources_observed+(network.status==='verified_receipt'?1:0)+(learning?.report?.counts?.tracked||0)+(aircore?.report?1:0),
    changed:planned.snapshot.counts.changed+(global.newly_seen||0)+(network.newly_seen||0)+(aircore?.report?.newly_seen||0),
@@ -532,7 +536,8 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
     proveLearning:process.argv.includes('--prove-learning')||process.env.SYSTEMIA_KAIDANCE_LEARNING_SOURCE_PROOFS==='true',
     proveAirCore:process.argv.includes('--prove-aircore')||process.env.SYSTEMIA_KAIDANCE_AIRCORE_SOURCE_PROOFS==='true',
     aiwReceipt,globalOpportunityReceipt,networkDevelopmentReceipt,
-    rdContinuityEnabled:process.env.SYSTEMIA_KAIDANCE_RD_CONTINUITY_ENABLED==='true'});
+    rdContinuityEnabled:process.env.SYSTEMIA_KAIDANCE_RD_CONTINUITY_ENABLED==='true',
+    engineeringPilotRoot:process.env.SYSTEMIA_ENGINEERING_PILOT_OBSERVE==='true'&&process.env.GITHUB_ACTIONS!=='true'?process.env.SYSTEMIA_ENGINEERING_PILOT_ROOT:null});
   // The same company heartbeat owns Leiland + visual art-direction review.
   // This is not another scheduler or a remote code-generation worker.
   let creative={status:'held',reviewed_this_tick:0};
