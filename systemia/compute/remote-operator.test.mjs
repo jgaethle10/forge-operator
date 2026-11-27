@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import { createHash } from 'node:crypto';
 import { EvercraftRemoteOperator } from './remote-operator.mjs';
 
 const root = fs.mkdtempSync(path.join(os.tmpdir(), 'evercraft-remote-operator-'));
@@ -52,6 +53,78 @@ try {
     () => operator.read({ root_key: 'home', path: '.ssh/id_ed25519' }),
     /operator_sensitive_path_denied/
   );
+
+
+  // A large file remains a hard failure under the original unpaged API.
+  // Explicit binary paging carries file identity, page identity and cursor.
+  const source = Buffer.from('A🦃B\nmultiple UTF8 bytes, exact pages\n', 'utf8');
+  const sourcePath = path.join(home, 'paged.txt');
+  fs.writeFileSync(sourcePath, source);
+  assert.throws(() => operator.read({
+    root_key: 'home', path: 'paged.txt', max_bytes: 3,
+  }), /operator_file_too_large/);
+  assert.throws(() => operator.read({
+    root_key: 'home', path: 'paged.txt', max_bytes: 3, offset_bytes: 0,
+  }), /operator_paged_read_requires_base64/);
+  assert.throws(() => operator.read({
+    root_key: 'home', path: 'paged.txt', encoding: 'base64', offset_bytes: -1,
+  }), /operator_read_offset_invalid/);
+  assert.throws(() => operator.read({
+    root_key: 'home', path: 'paged.txt', encoding: 'base64', offset_bytes: 1,
+  }), /operator_expected_file_sha256_required/);
+
+  const observed = [];
+  let next = 0;
+  let expectedSha;
+  let pageCount = 0;
+  while (next !== null) {
+    const page = operator.read({
+      root_key: 'home',
+      path: 'paged.txt',
+      encoding: 'base64',
+      max_bytes: 3,
+      offset_bytes: next,
+      ...(expectedSha ? { expected_sha256: expectedSha } : {}),
+    });
+    assert.equal(page.read_mode, 'paged');
+    assert.equal(page.file_bytes, source.length);
+    assert.equal(page.offset_bytes, observed.reduce((n, p) => n + p.length, 0));
+    if (!expectedSha) expectedSha = page.sha256;
+    else assert.equal(page.sha256, expectedSha);
+    const bytes = Buffer.from(page.content, 'base64');
+    assert.equal(page.page_sha256,
+      'sha256:' + createHash('sha256').update(bytes).digest('hex'));
+    assert.equal(page.bytes, bytes.length);
+    assert.equal(page.truncated, page.next_offset_bytes !== null);
+    observed.push(bytes);
+    next = page.next_offset_bytes;
+    assert.ok(++pageCount < 100);
+  }
+  assert.ok(pageCount > 2);
+  assert.deepEqual(Buffer.concat(observed), source);
+  assert.equal(expectedSha,
+    'sha256:' + createHash('sha256').update(source).digest('hex'));
+
+  // A stale continuation token cannot silently splice pages from two versions.
+  fs.writeFileSync(sourcePath, Buffer.concat([source, Buffer.from('modified')]));
+  assert.throws(() => operator.read({
+    root_key: 'home', path: 'paged.txt', encoding: 'base64',
+    offset_bytes: 3, max_bytes: 3, expected_sha256: expectedSha,
+  }), /operator_file_identity_mismatch/);
+  assert.throws(() => operator.read({
+    root_key: 'home', path: '.ssh/id_ed25519',
+    encoding: 'base64', offset_bytes: 0,
+  }), /operator_sensitive_path_denied/);
+
+  // File-size cap prevents allocating arbitrarily large buffers for a read.
+  const huge = path.join(home, 'too-large-for-paging.bin');
+  const fd = fs.openSync(huge, 'w');
+  try { fs.ftruncateSync(fd, 16 * 1024 * 1024 + 1); }
+  finally { fs.closeSync(fd); }
+  assert.throws(() => operator.read({
+    root_key: 'home', path: 'too-large-for-paging.bin',
+    encoding: 'base64', offset_bytes: 0,
+  }), /operator_file_exceeds_paged_cap/);
 
   const written = operator.write({
     root_key: 'home',
@@ -118,6 +191,9 @@ try {
     receipt_contents_redacted: true,
     read_only_network_observation_available: true,
     chromeos_host_boundary_not_overclaimed: true,
+    byte_exact_hash_bound_pages_verified: true,
+    stale_page_identity_blocked: true,
+    truncated_read_never_silently_succeeds: true,
   }));
 } finally {
   fs.rmSync(root, { recursive: true, force: true });
