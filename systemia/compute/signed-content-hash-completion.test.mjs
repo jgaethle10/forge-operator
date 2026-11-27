@@ -5,6 +5,8 @@ import path from 'node:path';
 import os from 'node:os';
 import {randomBytes,createHash} from 'node:crypto';
 import {startNodeSeed} from './node-seed.mjs';
+import {startOutboundCapacityBroker} from '../network/outbound-capacity-broker.mjs';
+import {startOutboundNodeAgent} from '../network/outbound-node-agent.mjs';
 import {verifyNodeSeedWorkerCompletion,verifySignedNodeSeedHashCompletion} from '../saban/nodeseed-worker-completion-verifier.mjs';
 const nonce=()=>randomBytes(24).toString('hex');
 const workload='systemia.content-hash.v1';
@@ -65,4 +67,65 @@ test('real isolated NodeSeed: challenge-bound completion, replay, forged and uns
   assert.equal(verifiedReplay.fresh_execution_reported,false);
   assert.throws(()=>verifySignedNodeSeedHashCompletion({...args,response:replay.body}),/completion_signature_invalid/);
   await post('/v1/leases/'+leaseId+'/release',{token});
+});
+
+
+test('existing outbound broker preserves the nonce and signed completion end to end',async t=>{
+  const root=fs.mkdtempSync(path.join(os.tmpdir(),'signed-hash-broker-'));
+  let seed,broker,agent;
+  t.after(async()=>{
+    try{await agent?.close();}catch{}
+    try{await broker?.close();}catch{}
+    try{await seed?.close();}catch{}
+    fs.rmSync(root,{recursive:true,force:true});
+  });
+  seed=await startNodeSeed({root:path.join(root,'compute'),nodeId,host:'127.0.0.1',
+    port:0,advertiseHost:'127.0.0.1',allocatorToken:allocator,announce:false});
+  const expectedDeviceFingerprint=seed.device_fingerprint;
+  broker=await startOutboundCapacityBroker({stateDir:path.join(root,'broker'),
+    authorizedDevices:{[expectedDeviceFingerprint]:nodeId},pollWaitMs:75,
+    commandTimeoutMs:8000,capacityFreshMs:3000});
+  agent=await startOutboundNodeAgent({brokerUrl:broker.endpoint,
+    localCapacityEndpoint:seed.endpoint,localAllocatorToken:allocator,pollBackoffMs:25});
+  const grant=broker.controlGrant(nodeId);
+  assert.ok(grant?.allocator_token);
+  async function post(route,body,auth=false){
+    const res=await fetch(grant.capacity_endpoint+route,{method:'POST',
+      headers:{'content-type':'application/json',...(auth?{authorization:'Bearer '+grant.allocator_token}:{})},
+      body:JSON.stringify(body),signal:AbortSignal.timeout(15000)});
+    return {status:res.status,body:await res.json()};
+  }
+  const leased=await post('/v1/leases',{workload_class:workload,requested_ttl_ms:120000},true);
+  assert.equal(leased.status,201);
+  const {lease_id:leaseId,token}=leased.body;
+  const idempotencyKey='signed-broker-task-001';
+  const payload={value:'bounded synthetic outbound proof'};
+  const expectedNonce=nonce();
+  const request={lease_id:leaseId,token,workload_class:workload,idempotency_key:idempotencyKey,input:{payload}};
+  const first=await post('/v1/jobs',{...request,completion_nonce:expectedNonce});
+  assert.equal(first.status,200);
+  const args={response:first.body,nodeId,idempotencyKey,payload,expectedNonce,
+    expectedDeviceFingerprint,expectedLeaseId:leaseId};
+  const verified=verifySignedNodeSeedHashCompletion(args);
+  assert.equal(verified.device_response_signature_verified,true);
+  assert.equal(verified.content_hash_verified,true);
+  assert.equal(verified.fresh_execution_reported,true);
+  const tampered=structuredClone(first.body);
+  tampered.completion_signature.statement.nonce=nonce();
+  assert.throws(()=>verifySignedNodeSeedHashCompletion({...args,response:tampered}),/completion_signature_invalid/);
+  const nextNonce=nonce();
+  const replay=await post('/v1/jobs',{...request,completion_nonce:nextNonce});
+  assert.equal(replay.status,200);
+  const checked=verifySignedNodeSeedHashCompletion({...args,response:replay.body,expectedNonce:nextNonce});
+  assert.equal(checked.deduplicated,true);
+  assert.equal(checked.fresh_execution_reported,false);
+  assert.throws(()=>verifySignedNodeSeedHashCompletion({...args,response:replay.body}),/completion_signature_invalid/);
+  const denied=await post('/v1/jobs',{...request,token:'bad-lease-token',completion_nonce:nonce()});
+  assert.equal(denied.status,401);
+  assert.equal(denied.body.completion_signature,undefined);
+  assert.equal((await post('/v1/leases/'+leaseId+'/release',{token})).status,200);
+  for(const secret of [allocator,grant.allocator_token,token]){
+    assert.equal(JSON.stringify(verified).includes(secret),false);
+    assert.equal(JSON.stringify(broker.snapshot()).includes(secret),false);
+  }
 });
