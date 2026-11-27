@@ -2,8 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { CANDIDATES,classifyCandidate,probeCandidate } from './probe-owned-search-candidates.mjs';
 const f=CANDIDATES[0],j=CANDIDATES[1];
-const sample='<meta name="robots" content="noindex,nofollow"> Missing part.';
-const ok=(url,body='Missing part.',xRobots='')=>({observed:true,status:200,final_url:url,content_type:'text/html; charset=utf-8',body,x_robots_tag:xRobots});
+const sample='<meta name="robots" content="noindex,nofollow"> No more waste.';
+const ok=(url,body='No more waste.',xRobots='')=>({observed:true,status:200,final_url:url,content_type:'text/html; charset=utf-8',body,x_robots_tag:xRobots});
 const gate={release_phase:'STAGED_NOT_PUBLICLY_RELEASED',launch_permission:false};
 test('prelaunch noindex FindMyPart stays held despite a reachable owned URL',()=>{
  const p=classifyCandidate(f,sample,ok(f.url,sample),gate);
@@ -13,7 +13,7 @@ test('prelaunch noindex FindMyPart stays held despite a reachable owned URL',()=
  assert.equal(p.search_engine_indexing_verified,false);
 });
 test('a source index hold cannot be bypassed by omitting noindex on the hosted copy',()=>{
- const p=classifyCandidate(f,sample,ok(f.url,'Missing part.'),gate);
+ const p=classifyCandidate(f,sample,ok(f.url,'No more waste.'),gate);
  assert.equal(p.state,'OWNED_PAGE_INDEX_HOLD');assert.equal(p.exact_source_readback,false);
 });
 test('redirect to a legacy or arbitrary host is not first-party verification',()=>{
