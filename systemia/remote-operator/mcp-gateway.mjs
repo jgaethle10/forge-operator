@@ -110,7 +110,7 @@ export function remoteOperatorTools() {
           encoding: { type: 'string', enum: ['utf8', 'base64'], default: 'utf8' },
           max_bytes: { type: 'integer', minimum: 1, maximum: 8388608 },
           offset_bytes: { type: 'integer', minimum: 0, description: 'Enable binary paging, starting at byte offset 0. Omit for legacy all-or-nothing read.' },
-          expected_sha256: { type: 'string', pattern: '^sha256:[a-f0-9]{64}
+          expected_sha256: { type: 'string', description: 'Whole-file SHA-256 supplied by the first page; required for all continuation pages.' },
         },
         required: ['path'],
         additionalProperties: false,
