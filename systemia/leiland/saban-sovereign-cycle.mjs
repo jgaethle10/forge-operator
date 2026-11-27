@@ -50,6 +50,7 @@ export async function runLeilandSabanCycle({stateDir,now=new Date(),rootDir=ROOT
  const lock=file+'.lock';
  try{privateDir(folder);fs.mkdirSync(lock,{mode:0o700})}
  catch{return idle('held_busy_or_unsafe')}
+ let attempted=false;
  try{
   const prior=read(file);
   if(prior?.tick>tick)return idle('held_clock_rollback');
@@ -70,6 +71,7 @@ export async function runLeilandSabanCycle({stateDir,now=new Date(),rootDir=ROOT
   save(file,checkpoint);
   let completion;
   try{
+   attempted=true;
    const receipt=await registeredAssignment({software,rootDir,executionContext,
     assignment:{agent_id:'leiland-synthetic-reviewer',role:'synthetic_repair_evidence_review',
      idempotency_key:checkpoint.assignment_key,work:{kind:'synthetic_review',key:'findmypart'}}});
@@ -93,6 +95,6 @@ export async function runLeilandSabanCycle({stateDir,now=new Date(),rootDir=ROOT
   }
   save(file,completion);
   return completion;
- }catch{return idle('held_state_or_contract')}
+ }catch{return idle('held_state_or_contract',{assignment_attempted:attempted,inference_completed:attempted?null:0})}
  finally{fs.rmdirSync(lock)}
 }
