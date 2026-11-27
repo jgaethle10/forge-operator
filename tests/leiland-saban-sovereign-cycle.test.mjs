@@ -19,7 +19,7 @@ function accepted({software,assignment}){
    state:'provider_reported_completed',lane:'findmypart',synthetic_input:true,
    inference_completed:1,inference_request_attempted:true,result_released:true,
    external_actions_authorized:false,authorization_digest:digest,
-   receipts:[{lane:'findmypart',provider_receipt:digest,output_digest:digest,output_quality_verified:false}]}};
+   receipts:[{lane:'findmypart',provider_receipt:digest,output_digest:digest,output_quality_verified:false,quality_profile:'findmypart-extraction-fixture-v1',synthetic_extraction_validated:true}]}};
 }
 test('default disabled writes nothing and calls no worker',async t=>{
  const f=fixture(t);
@@ -38,7 +38,7 @@ test('one P0 synthetic assignment, durable checkpoint and hour cooldown',async t
   const saved=JSON.parse(fs.readFileSync(path.join(f.stateDir,'leiland-sovereign-cycle.json'),'utf8'));
   assert.equal(saved.state,'pending');return accepted(a);
  },...opts});
- assert.equal((await run()).state,'completed');
+ const first=await run();assert.equal(first.state,'completed');assert.equal(first.synthetic_extraction_validated,true);
  assert.equal((await run()).state,'cooldown');
  assert.equal((await run({now:new Date(+now+55*60000)})).state,'cooldown');
  assert.equal((await run({now:new Date(+now+60*60000)})).state,'completed');
@@ -66,4 +66,16 @@ test('tampered checkpoint fails closed',async t=>{
  const r=JSON.parse(fs.readFileSync(file,'utf8'));r.tick-=30;
  fs.writeFileSync(file,JSON.stringify(r));
  assert.equal((await runLeilandSabanCycle({...f,registeredAssignment:()=>assert.fail()})).state,'held_state_or_contract');
+});
+
+test('provider completion alone is not qualified extraction; hold without retry',async t=>{
+ const f=fixture(t);
+ const r=await runLeilandSabanCycle({...f,registeredAssignment:async a=>{
+  const receipt=accepted(a);
+  delete receipt.result.receipts[0].synthetic_extraction_validated;
+  return receipt;
+ }});
+ assert.equal(r.state,'held');assert.equal(r.inference_completed,null);
+ assert.equal((await runLeilandSabanCycle({...f,now:new Date(+now+3600000),
+  registeredAssignment:()=>assert.fail()})).state,'held_unreconciled_checkpoint');
 });
