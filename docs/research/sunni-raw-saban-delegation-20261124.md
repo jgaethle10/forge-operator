@@ -57,3 +57,19 @@ The accompanying \`shadow-delegated-sales-reconciliation.test.mjs\` runs twelve 
 The Saban multiplier workflow now runs **both** evidence test files; the exact PR-head Actions result remains the verification gate. No production runtime integration, invoice, customer deliverable, or external network claim follows from these fixtures.
 
 Limitations: the expected hashes must be frozen by an authorized coordinator **before** work begins, distinct agent IDs in a JSON manifest do not authenticate agents, and checks against a mutable local directory are not a hardened cross-process identity/provenance transport. For real work, bind to the existing signed NodeSeed/Passport receipts and independent source-scoped authorization, then complete the Work Saban pilot's multi-tenant and customer-security review.
+
+
+## 2026-11-26 follow-on: complete remote-source observations before task reconciliation
+
+Raven #2616 rejects clipped/incomplete model outputs; NodeSeed #2618 adds opt-in, hash-bound, byte-exact file pages over the existing authorized Remote Operator. The next **shadow-only Saban** boundary is \`systemia/saban/remote-source-observation.mjs\`: given coordinator-predeclared source SHA-256 and byte length, mission and source bindings, and a captured sequence of paged replies, it refuses to call source bytes verified unless **all** pages are in order, byte-exact, page-hash valid, same whole-file identity, and terminated with the explicit final-page marker. Missing pages, invented completion, stale hashes, replayed pages, unexpected extra pages and malicious base64 hold. A worker's claimed success never overrides this check. The module does not read the remote filesystem or create a service.
+
+The **existing** \`reconcileShadowSalesDelegation\` now has an optional source-page input. If a source observation is declared in the coordinator manifest, missing or inconsistent pages stop reconciliation **before** either worker's artifact can be accepted. Once complete source bytes are verified, the existing artifact SHA/byte checks and independent sales arithmetic check remain mandatory. The previous non-remote shadow workflow stays unchanged when no remote observation is declared. The caller is responsible for a trusted declaration; the verifier cannot establish who created it or when.
+
+Source-observation status is deliberately **not** \`task_complete\`, \`authenticated_worker\` or \`objective_semantics_verified\`. The observed payload is caller-captured, not a signed immutable node snapshot; source page hashes do not prove the node identity or a hostile filesystem's immutable history. The synthetic test uses real local Remote Operator reads and source fixture bytes only; no network, customer information, model execution, shell, live deployment, systemd unit or duplicate heartbeat.
+
+Reproduce:
+
+    node --test systemia/saban/remote-source-observation.test.mjs
+    node --test systemia/saban/shadow-delegated-sales-reconciliation.test.mjs
+
+The established Saban multiplier workflow runs both suites. Do not promote this shadow proof into automatic action or claim real independent agent verification until the existing Passport / NodeSeed attestation, coordinator expectation custody and live admission are established.
