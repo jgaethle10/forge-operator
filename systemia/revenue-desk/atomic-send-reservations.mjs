@@ -99,6 +99,22 @@ export function reserveColdOutreach({
  if(report?.generated_at!==now && Math.abs(Date.parse(report?.generated_at)-at)>MAX_SNAPSHOT_AGE_MS)
   throw Error('snapshot_outside_reservation_window');
  const signedAt=signedSnapshot(report,reportProof,{secretFile:coverageSecretFile,nowMs:at});
+ // Use the authenticated row, never a caller-supplied readiness flag.
+ // A second row sharing either identity is ambiguous and must hold.
+ const matching=Array.isArray(report.prospects)?report.prospects.filter(row=>
+   row?.contact_ref===prospect.contact_ref||row?.prospect_ref===opportunityRef):[];
+ if(matching.length!==1||matching[0].contact_ref!==prospect.contact_ref||
+    matching[0].prospect_ref!==opportunityRef)
+  return {state:'held',reasons:['signed_contact_or_opportunity_unresolved'],send_performed:false};
+ const verifiedProspect=matching[0];
+ if(report.organization_registry_valid!==true||
+    !OPAQUE.test(verifiedProspect.organization_ref||'')||
+    verifiedProspect.organization_contact_state!=='clear')
+  return {state:'held',reasons:['signed_organization_identity_or_hold'],send_performed:false};
+ if(verifiedProspect.actionable_as_new_cold_target!==true||
+    !Array.isArray(verifiedProspect.reasons)||verifiedProspect.reasons.length!==0||
+    ['opted_out','bounced','blocked','do_not_contact','customer_hold','declined'].includes(verifiedProspect.contact_state))
+  return {state:'held',reasons:['signed_contact_preference_or_readiness_hold'],send_performed:false};
  const q=report.quota;
  const providerCap=requireInt(q.provider_daily_cap,'provider_cap');
  const sent=requireInt(q.rolling_24h_units,'gmail_sent_units');
@@ -106,7 +122,7 @@ export function reserveColdOutreach({
  const maxCold=Math.min(400,requireInt(q.cold_target,'cold_target'),providerCap-reserve);
  if(providerCap<reserve||maxCold<1)throw Error('insufficient_provider_capacity');
  const exactMessage=subject+'\n\n'+body;
- const permitCheck=checkOutboundCandidate({row:prospect,quota:q,sender,message:exactMessage,opportunity,now});
+ const permitCheck=checkOutboundCandidate({row:verifiedProspect,quota:q,sender,message:exactMessage,opportunity,now});
  if(permitCheck.decision!=='candidate_passed_non_authoritative_preflight')
   return {state:'held',reasons:permitCheck.reasons,send_performed:false};
  const dir=privateDir(stateDir),lock=path.join(dir,'.reservation-lock');

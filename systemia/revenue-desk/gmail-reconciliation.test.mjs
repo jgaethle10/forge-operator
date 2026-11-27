@@ -16,7 +16,10 @@ const email=(i,to,at='2026-11-19T19:00:00-08:00')=>({
 });
 const args=(additional={})=>({
  messages:[],prospects:[prospect()],now,hmacKey:key,historyComplete:true,
- providerDailyCap:500,coldTarget:400,replyReserve:100,...additional
+ providerDailyCap:500,coldTarget:400,replyReserve:100,
+ organizationRegistry:[{organization_key:'fixture-org',state:'clear',evidence_ref:'fixture:review',
+  contact_emails:[...new Set((additional.prospects||[prospect()]).map(p=>p.business_email.toLowerCase()))]}],
+ ...additional
 });
 
 test('real Gmail sent receipt blocks repeat contact and enforces 72-hour cooldown',()=>{
@@ -124,4 +127,28 @@ test('same opportunity with a second verified company mailbox cannot evade exist
  assert.equal(r.prospects[0].last_contact_ref,'gmail:mail-existing');
  assert.ok(r.prospects[0].reasons.includes('prior_contact_reconcile_before_new_outreach'));
  assert.ok(r.prospects[1].reasons.includes('duplicate_opportunity_across_agents'));
+});
+
+test('seasonal organization hold survives alternate contacts, changed campaign and spring review date',()=>{
+ const org={organization_key:'fixture-park',state:'customer_hold',evidence_ref:'fixture:spring-review',
+  contact_emails:['owner@park.example','manager@park.example'],review_not_before:'2027-03-20'};
+ for(const clock of [now,'2027-04-01T00:00:00Z']){
+  const r=reconcileGmailOutreach(args({now:clock,organizationRegistry:[org],prospects:[
+   prospect({prospect_key:'winter-maintenance',business_email:'owner@park.example'}),
+   prospect({prospect_key:'spring-other-offer',business_email:'manager@park.example'})
+  ]}));
+  assert.equal(r.prospects.length,2);
+  assert.ok(r.prospects.every(x=>!x.actionable_as_new_cold_target&&x.reasons.includes('organization_contact_hold')));
+  assert.equal(r.prospects[0].organization_ref,r.prospects[1].organization_ref);
+  assert.ok(!JSON.stringify(r).includes('fixture-park'));
+ }
+});
+
+test('missing, unmapped or conflicting organization identity fails closed',()=>{
+ const org={organization_key:'fixture-a',state:'clear',evidence_ref:'fixture:review',contact_emails:['orders@acme.example']};
+ for(const registry of [null,[],[{...org,contact_emails:['other@example.test']}],[org,{...org,organization_key:'fixture-b',state:'customer_hold'}]]){
+  const r=reconcileGmailOutreach(args({organizationRegistry:registry}));
+  assert.equal(r.prospects[0].actionable_as_new_cold_target,false);
+  assert.ok(r.prospects[0].reasons.some(x=>x.startsWith('organization_')));
+ }
 });

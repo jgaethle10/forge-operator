@@ -100,3 +100,9 @@ Passport grant
 ```
 
 The design makes duplicate or content-swapped agent sends fail at the authority layer, not merely because someone remembered a CRM rule.
+
+## P0 organization preference gate (#2561)
+
+All five contact channels now require an explicit clear organization preference from the owner-maintained `organization-registry.json` in the canonical Interaction Ledger state directory (mode 0700, file mode 0600). Use the same private registry revision for Revenue Desk reconciliation. Each organization must include its unique opaque `contact_subject_refs` array (Passport contact resource identifiers), verified `contact_emails`, organization_key, evidence_ref and state. Never commit registry contents. Missing, malformed, conflicting or unmapped records deny contact; customer_hold, do_not_contact and review_required remain held after any seasonal date. A date is a review trigger only. Registry creation, owner-authenticated updates, exact cross-system identity binding and current revision reconciliation are independent deployment requirements.
+
+`recheckContactBeforeDispatch` reads the registry and ledger anew at wall-clock time and checks exact active Passport permit actor, resource, channel, grant and content fingerprint. It is read-only and never grants provider dispatch authority. Provider adapters must integrate a serialized final pre-send gate and cancellation/reconciliation of queued and already accepted operations; this method alone does not prove atomicity or live enforcement. Historical provider receipts should still be recorded, including any incident, rather than suppressed after a hold. No sender or scheduler is introduced.

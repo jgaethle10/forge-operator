@@ -75,3 +75,9 @@ node --test systemia/revenue-desk/gmail-reconciliation.test.mjs \
 Source conformance: `node --test systemia/revenue-desk/gmail-reconciliation.test.mjs`.
 
 **Truth boundary:** PR source/CI checks, when green, demonstrate the pure logic and private-file report only. They do not mean any real Gmail synchronization, contact reservation, send automation, new customer or revenue occurred.
+
+## P0 organization suppression (issue #2561)
+
+The private reconciliation CLI accepts `--organization-registry-file /private/systemia/organization-registry.json` (absolute mode-0600 file). Its `organizations` array contains explicit canonical organization_key, contact_emails (verified aliases), state (clear, customer_hold, do_not_contact, review_required), and evidence_ref. No name or domain inference. Missing registry, missing mapping, conflicting mappings or malformed entries hold readiness. A seasonal review date never clears a hold. Only an authorized, evidence-backed registry revision can change the state. The source does not authenticate the registry independently; the existing trusted signer must verify its provenance, completeness, freshness, and current revision before signing. Never commit private registry contents. Reports contain only opaque organization references and state.
+
+The reservation requires a unique signed contact/opportunity row and clear signed organization state. This is cold-email reservation only, not a deployed all-channel send gate. Existing stale reports lack organization evidence and will be denied. Provider dispatch, final fresh recheck, shared runtime enforcement, queue cancellation, verified owner-only registry ingestion and all-channel canaries remain required before releasing any outbound hold.
