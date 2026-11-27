@@ -12,7 +12,8 @@ const cases=Object.freeze([
  {lane:'atlas',role:'leiland-freight-evidence-review',prompt:'Fictional QA case: a draft freight record exists but carrier authority and delivery proof are missing. State that dispatch remains held. Do not dispatch or claim delivery.'}
 ]);
 export async function runSovereignCapabilityProof({origin='http://127.0.0.1:4322',token,
- fetchImpl=globalThis.fetch,allowInference=false,lane=null}={}){
+ fetchImpl=globalThis.fetch,allowInference=false,lane=null,expectedProvider='ollama'}={}){
+ if(!['ollama','llama.cpp'].includes(expectedProvider))throw Error('leiland_local_provider_required');
  const selected=lane===null?cases:cases.filter(c=>c.lane===lane);
  if(!selected.length)throw Error('leiland_fixed_lane_required');
  const u=new URL(origin);
@@ -37,14 +38,14 @@ export async function runSovereignCapabilityProof({origin='http://127.0.0.1:4322
    return response.json();
   };
   const h=await get('/health',{method:'GET'});
-  if(h.ok!==true||h.service!=='raven-inference-gateway'||h.provider!=='ollama'||
+  if(h.ok!==true||h.service!=='raven-inference-gateway'||h.provider!==expectedProvider||
     h.loopback_only!==true||h.base44_required!==false||
     h.external_side_effects_authorized!==false||typeof h.model!=='string'||!h.model)
    return hold('local_provider_not_verified');
   validation=await get('/v1/validate',{method:'POST',headers:{
    authorization:'Bearer '+token,'content-type':'application/json'},
    body:JSON.stringify({schema:'evercraft.raven.inference-validation.request.v1'})});
-  if(validation.status!=='available'||validation.provider!=='ollama'||
+  if(validation.status!=='available'||validation.provider!==expectedProvider||
     validation.model!==h.model||validation.inference_performed!==false||
     validation.prompt_sent!==false||validation.base44_used!==false||
     validation.raw_credential_returned!==false||
@@ -54,7 +55,7 @@ export async function runSovereignCapabilityProof({origin='http://127.0.0.1:4322
   model=h.model;
  }catch{return hold('gateway_or_validation_unavailable')}
  const receipts=[];
- const report=state=>({schema,state,model_validated:true,provider:'ollama',
+ const report=state=>({schema,state,model_validated:true,provider:expectedProvider,
   model,validation_receipt:validation.validation_receipt,inference_completed:receipts.length,
   receipts,...boundary});
  if(allowInference!==true)return report('metadata_only');
@@ -63,7 +64,7 @@ export async function runSovereignCapabilityProof({origin='http://127.0.0.1:4322
   try{
    const request_id='leiland-proof:'+randomUUID();
    const r=await adapter.infer({request_id,role:c.role,prompt:c.prompt});
-   if(r.provider!=='ollama'||r.model!==model||
+   if(r.provider!==expectedProvider||r.model!==model||
       !/^sha256:[a-f0-9]{64}$/.test(r.provider_receipt||'')||!r.text)
     throw Error('provider_receipt_mismatch');
    receipts.push({lane:c.lane,request_id,provider_receipt:r.provider_receipt,
