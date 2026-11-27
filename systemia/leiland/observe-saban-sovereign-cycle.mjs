@@ -33,9 +33,12 @@ export function observeLeilandSabanCycle({root,now=new Date()}={}){
   if(r.state!=='completed'||r.assignment_attempted!==true||r.inference_completed!==1||
     r.quality_reviewed!==false||!digest(r.provider_receipt)||!digest(r.output_digest)||!digest(r.authorization_digest))
    return report('held_receipt_invalid');
-  if(tick-r.tick>=12)return report('stale_receipt',{source_tick:r.tick});
+  const extractionQualified=r.quality_profile==='findmypart-extraction-fixture-v1'&&r.synthetic_extraction_validated===true;
+ if((r.quality_profile!==undefined||r.synthetic_extraction_validated!==undefined)&&!extractionQualified)
+   return report('held_receipt_invalid');
+ if(tick-r.tick>=12)return report('stale_receipt',{source_tick:r.tick});
   // Do not return raw prompts, response, identities, model metadata or provider digests.
   return report('reported_synthetic_completion',{source_tick:r.tick,
-   source_receipt_ref:state_hash,reported_inference_count:1,observed_this_tick:r.tick===tick});
+   source_receipt_ref:state_hash,reported_inference_count:1,reported_synthetic_extraction_validated:extractionQualified,observed_this_tick:r.tick===tick});
  }catch{return report('held_source_unavailable')}
 }
