@@ -12,7 +12,9 @@ const cases=Object.freeze([
  {lane:'atlas',role:'leiland-freight-evidence-review',prompt:'Fictional QA case: a draft freight record exists but carrier authority and delivery proof are missing. State that dispatch remains held. Do not dispatch or claim delivery.'}
 ]);
 export async function runSovereignCapabilityProof({origin='http://127.0.0.1:4322',token,
- fetchImpl=globalThis.fetch,allowInference=false}={}){
+ fetchImpl=globalThis.fetch,allowInference=false,lane=null}={}){
+ const selected=lane===null?cases:cases.filter(c=>c.lane===lane);
+ if(!selected.length)throw Error('leiland_fixed_lane_required');
  const u=new URL(origin);
  if(u.protocol!=='http:'||u.hostname!=='127.0.0.1'||u.username||u.password||
     u.pathname!=='/'||u.search||u.hash)throw Error('leiland_loopback_gateway_required');
@@ -57,7 +59,7 @@ export async function runSovereignCapabilityProof({origin='http://127.0.0.1:4322
   receipts,...boundary});
  if(allowInference!==true)return report('metadata_only');
  const adapter=createHttpInferenceAdapter({origin:base,token,fetchImpl:guardedFetch,timeoutMs:35000});
- for(const c of cases){
+ for(const c of selected){
   try{
    const request_id='leiland-proof:'+randomUUID();
    const r=await adapter.infer({request_id,role:c.role,prompt:c.prompt});
