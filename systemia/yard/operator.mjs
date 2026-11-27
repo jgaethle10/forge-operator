@@ -1182,7 +1182,20 @@ export class YardOperator {
             method:'POST',body:JSON.stringify({token:lease.token}),
             signal:AbortSignal.timeout(5000),redirect:'error',
           });
-          released = reply?.ok === true && /^sha256:[a-f0-9]{64}$/.test(reply?.receipt?.receipt_hash||'');
+          // Compute ReceiptChain uses a bare SHA-256 hex digest over its
+          // ordered receipt body. Bind the acknowledgement to this lease,
+          // workload and observed node rather than accepting any hash string.
+          const receipt = reply?.receipt;
+          if (reply?.ok === true && receipt && typeof receipt === 'object') {
+            const {receipt_hash, ...body} = receipt;
+            released = receipt.schema === 'evercraft.compute.receipt.v1' &&
+              receipt.type === 'capacity.lease.released' &&
+              receipt.lease_id === lease.lease_id &&
+              receipt.workload_class === workloadClass &&
+              receipt.node_id === capacity.node_id &&
+              /^[a-f0-9]{64}$/.test(receipt_hash||'') &&
+              sha(body) === receipt_hash;
+          }
         } catch {}
       }
       const status = released ? 'lease_release_acknowledged' : 'held_outcome_unknown';
