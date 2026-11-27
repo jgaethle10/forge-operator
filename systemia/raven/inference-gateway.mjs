@@ -10,6 +10,37 @@ function clean(value, max = 50000) {
   return String(value ?? "").replace(/[\u0000-\u001f]+/g, " ").trim().slice(0, max);
 }
 
+// These limits are explicit failures, never silent slicing of model context.
+// A short successful-looking answer must not conceal a clipped observation.
+const MAX_INFERENCE_TEXT_CHARS = 50000;
+
+function completeInferenceText(value, kind) {
+  const text = clean(value, Number.MAX_SAFE_INTEGER);
+  if (text.length > MAX_INFERENCE_TEXT_CHARS) {
+    throw new Error('raven_inference_' + kind + '_exceeds_limit');
+  }
+  return text;
+}
+
+export function assertInferenceFinishState(provider, body) {
+  if (provider === 'ollama' &&
+      (body?.done === false ||
+       (typeof body?.done_reason === 'string' && body.done_reason !== 'stop'))) {
+    throw new Error('raven_inference_provider_output_incomplete');
+  }
+  if (provider === 'gemini' &&
+      (Array.isArray(body?.candidates) ? body.candidates : []).some(
+        candidate => typeof candidate?.finishReason === 'string' &&
+          candidate.finishReason !== 'STOP'
+      )) {
+    throw new Error('raven_inference_provider_output_incomplete');
+  }
+  if (provider === 'openai' &&
+      typeof body?.status === 'string' && body.status !== 'completed') {
+    throw new Error('raven_inference_provider_output_incomplete');
+  }
+}
+
 function sha256(value) {
   return "sha256:" + createHash("sha256").update(String(value)).digest("hex");
 }
@@ -64,11 +95,11 @@ function latestVaultSecret(stateDir, provider) {
 }
 
 function openAIText(body) {
-  if (clean(body?.output_text)) return clean(body.output_text);
+  if (clean(body?.output_text, Number.MAX_SAFE_INTEGER)) return completeInferenceText(body.output_text, 'output');
   const chunks = [];
   for (const item of Array.isArray(body?.output) ? body.output : []) {
     for (const part of Array.isArray(item?.content) ? item.content : []) {
-      const text = clean(part?.text || part?.value || part?.content);
+      const text = clean(part?.text || part?.value || part?.content, Number.MAX_SAFE_INTEGER);
       if (text) chunks.push(text);
     }
   }
@@ -79,7 +110,7 @@ function geminiText(body) {
   const chunks = [];
   for (const candidate of Array.isArray(body?.candidates) ? body.candidates : []) {
     for (const part of Array.isArray(candidate?.content?.parts) ? candidate.content.parts : []) {
-      const text = clean(part?.text);
+      const text = clean(part?.text, Number.MAX_SAFE_INTEGER);
       if (text) chunks.push(text);
     }
   }
@@ -133,7 +164,8 @@ export function createInferenceEngine({
         stream: false,
       }),
     }, { fetchImpl, timeoutMs });
-    const text = clean(body?.response);
+    if (response.ok) assertInferenceFinishState('ollama', body);
+    const text = completeInferenceText(body?.response, 'output');
     if (!response.ok || !text) {
       throw new Error(clean(body?.error || ("ollama_http_" + response.status), 2000));
     }
@@ -165,7 +197,8 @@ export function createInferenceEngine({
         contents: [{ role: "user", parts: [{ text: input }] }],
       }),
     }, { fetchImpl, timeoutMs });
-    const text = geminiText(body);
+    if (response.ok) assertInferenceFinishState('gemini', body);
+    const text = completeInferenceText(geminiText(body), 'output');
     if (!response.ok || !text) {
       throw new Error(clean(body?.error?.message || ("gemini_http_" + response.status), 2000));
     }
@@ -197,7 +230,8 @@ export function createInferenceEngine({
         input: [{ role: "user", content: input }],
       }),
     }, { fetchImpl, timeoutMs });
-    const text = openAIText(body);
+    if (response.ok) assertInferenceFinishState('openai', body);
+    const text = completeInferenceText(openAIText(body), 'output');
     if (!response.ok || !text) {
       throw new Error(clean(body?.error?.message || ("openai_http_" + response.status), 2000));
     }
@@ -343,7 +377,7 @@ export function createInferenceEngine({
     async infer({ request_id, role, input }) {
       const requestId = clean(request_id, 260);
       const roleKey = clean(role, 120);
-      const prompt = clean(input, 50000);
+      const prompt = completeInferenceText(input, 'input');
       if (!requestId) throw new Error("inference_request_id_required");
       if (!roleKey) throw new Error("inference_role_required");
       if (!prompt) throw new Error("inference_input_required");
