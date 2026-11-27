@@ -96,7 +96,8 @@ async function enroll(client,expectedMailbox,bindingFile){
  let request,resolveCode,rejectCode;
  const result=new Promise((resolve,reject)=>{resolveCode=resolve;rejectCode=reject});
  const server=http.createServer((req,res)=>{
-  const parsed=request&&req.method==='GET'?callbackCode(req.url,request.state):{accepted:false};
+  let parsed={accepted:false};
+  try{if(request&&req.method==='GET')parsed=callbackCode(req.url,request.state)}catch{}
   res.writeHead(parsed.accepted?200:400,{'content-type':'text/plain; charset=utf-8','cache-control':'no-store','referrer-policy':'no-referrer','connection':'close'});
   res.end(parsed.accepted?'Authorization callback received. Return to the Evercraft terminal.':'Invalid callback.');
   if(parsed.error)rejectCode(Error('gmail_owner_consent_denied'));
