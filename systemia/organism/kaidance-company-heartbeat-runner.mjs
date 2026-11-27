@@ -17,6 +17,7 @@ import {runKaidanceCreativeDevelopment} from './kaidance-creative-development.mj
 import {runLearningCommunityCycle} from './kaidance-learning-community-cycle.mjs';
 import {runAirCoreDevelopmentCycle} from './kaidance-aircore-development.mjs';
 import {runPrivateResearchContinuity} from './kaidance-rd-continuity.mjs';
+import {observeOwnedGmail} from '../revenue-desk/kaidance-gmail-observation.mjs';
 import {runFindMyPartCycle} from './kaidance-findmypart-execution.mjs';
 import {runCommercialSourceProof} from './kaidance-commercial-source-proof.mjs';
 import {runEventOpportunityScout} from '../events/event-opportunity-scout-runner.mjs';
@@ -349,7 +350,7 @@ export function runCompanyHeartbeat({
  root=sourceRoot,outDir=path.join(sourceRoot,'artifacts/kaidance-company-heartbeat'),
  now=new Date(),proveWorlds=false,proveLearning=false,proveAirCore=false,
  learningCycle=runLearningCommunityCycle,aircoreCycle=runAirCoreDevelopmentCycle,
- spawn=spawnSync,aiwReceipt=null,globalOpportunityReceipt=null,networkDevelopmentReceipt=null,rdContinuityEnabled=false,forestReceipt=null,findmypartExecutionReceipt=null,commercialSourceProof=null,eventResidentPulse=null,engineeringPilotRoot=null
+ spawn=spawnSync,aiwReceipt=null,globalOpportunityReceipt=null,networkDevelopmentReceipt=null,rdContinuityEnabled=false,forestReceipt=null,findmypartExecutionReceipt=null,commercialSourceProof=null,eventResidentPulse=null,engineeringPilotRoot=null,gmailObservationRoot=null
 }={}){
  const repo=path.resolve(root),out=path.resolve(outDir);
  const manifest=readJson(path.join(repo,'registry/kaidance-company-lanes.v1.json'));
@@ -457,7 +458,8 @@ export function runCompanyHeartbeat({
    external_work_performed:false,source_regions:['United Kingdom','United States'],
    any_buyer_contact:false,any_sponsor_commitment:false};
  const engineeringPilot=observeEngineeringPilot({root:engineeringPilotRoot,now});
- const report={...planned.report,proof,engineering_pilot:engineeringPilot,commercial_source_proof:commercialSourceProof||{status:'not_executed',executed:false},event_discovery:eventDiscovery,infrastructure_watch:aiw,forest_restoration:forest,
+ const gmailObservation=observeOwnedGmail({root:gmailObservationRoot,now}).summary;
+ const report={...planned.report,proof,gmail_observation:gmailObservation,engineering_pilot:engineeringPilot,commercial_source_proof:commercialSourceProof||{status:'not_executed',executed:false},event_discovery:eventDiscovery,infrastructure_watch:aiw,forest_restoration:forest,
   findmypart:{state:'review_queued',priority:1,heartbeat_seconds:300,workstreams:findmypartCandidates.map(x=>x.work_key),worker_dispatched:false,source_poll_performed:fmp?.source_poll_performed===true,buyers_qualified:0,outreach_authorized:false,engineering_benchmark_executed:fmp?.engineering_benchmark_executed===true,commercial_status:fmp?.commercial_status||'not_executed',inbound_revenue_review:inboundSummary,inbound_contact_history:contactHistory,source_observation:fmp?.observation||null,service_fit_evidence:fmpShopCandidates.map(({work_key,source_url,observed_at,evidence_ref})=>({work_key,source_url,observed_at,evidence_ref})),code_changes:0},
   research_continuity:researchContinuity,
   global_opportunities:global,network_development:network,
@@ -601,6 +603,7 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
     proveLearning:process.argv.includes('--prove-learning')||process.env.SYSTEMIA_KAIDANCE_LEARNING_SOURCE_PROOFS==='true',
     proveAirCore:process.argv.includes('--prove-aircore')||process.env.SYSTEMIA_KAIDANCE_AIRCORE_SOURCE_PROOFS==='true',
     aiwReceipt,globalOpportunityReceipt,networkDevelopmentReceipt,forestReceipt,
+    gmailObservationRoot:process.env.GITHUB_ACTIONS!=='true'&&process.env.SYSTEMIA_REVENUE_GMAIL_OBSERVE==='true'?process.env.SYSTEMIA_REVENUE_GMAIL_SNAPSHOT_DIR||null:null,
     rdContinuityEnabled:process.env.SYSTEMIA_KAIDANCE_RD_CONTINUITY_ENABLED==='true',
     engineeringPilotRoot:process.env.SYSTEMIA_ENGINEERING_PILOT_OBSERVE==='true'&&process.env.GITHUB_ACTIONS!=='true'?process.env.SYSTEMIA_ENGINEERING_PILOT_ROOT:null});
   // The same company heartbeat owns Leiland + visual art-direction review.
