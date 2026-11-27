@@ -1,0 +1,7 @@
+# FindMyPart inbound commercial handoff
+
+Existing encrypted public intake -> exact quote catalog -> private owner inbox -> existing Kaidance FindMyPart review -> Revenue Desk contact reconciliation. No replacement CRM.
+
+Optional existing owned mailbox metadata input: SYSTEMIA_REVENUE_GMAIL_SNAPSHOT_FILE points to the private output of owned-gmail-import.mjs; SYSTEMIA_REVENUE_GMAIL_HMAC_KEY_FILE is the existing private reconciliation key file. Both must be absolute, nonsymlink, owner-private, in owner-private directories. A snapshot older than 24 hours, malformed, too large or with invalid message/prospect rows is held. No provider calls, credentials obtained, new schedule, send, payment or CRM mutation. Contact observations are per case, not unique recipient counts. A matching inbound message is not necessarily a reply to this case; a prior outbound message is not necessarily a quote. No-match is not clearance and full-history claims do not grant authority. Existing Interaction Ledger/Passport and owner review remain mandatory.
+
+Owned binding to actual Revenue Desk SQLite and contact/commitment history is still unverified. Current source tests use synthetic private fixtures only. Do not expose private owner inbox output in public logs or GitHub. Kaidance receives only aggregates.

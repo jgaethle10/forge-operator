@@ -79,7 +79,12 @@ test('Daily source watch: first baseline, repeat skips, real metadata change is 
     assert.equal(pulse.queue.execution_authorized,false);
     assert.equal(pulse.queue.candidates.filter(x=>x.lane_key==='infrastructure-watch').length,1);
     assert.equal(pulse.queue.candidates.find(x=>x.lane_key==='infrastructure-watch').publication_authorized,false);
-    assert.equal(pulse.mission_snapshot.counts.held,1);
+    // Unified heartbeat has two FindMyPart review keys and the missing
+    // Forest receipt hold in addition to this AIW source change.
+    assert.equal(pulse.queue.candidates.filter(x=>x.lane_key==='findmypart').length,2);
+    assert.equal(pulse.report.forest_restoration.status,'not_connected');
+    assert.equal(pulse.report.forest_restoration.review_candidates.length,1);
+    assert.equal(pulse.mission_snapshot.counts.held,4);
     assert.equal(pulse.next_action.current_next_action?.lane_key,'infrastructure-watch');
     assert.equal(pulse.next_action.current_next_action?.dispatch_authorized,false);
     assert.equal(pulse.next_action.publication_actions,0);

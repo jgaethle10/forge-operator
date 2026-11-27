@@ -125,9 +125,28 @@ test('private child folder does not alter unsafe existing directories or symboli
   fs.mkdirSync(path.join(root,'alert-outbox'),{mode:0o700});
   ensurePrivateIntakeDirectory(root,'alert-outbox',uid,gid);
   assert.equal(fs.statSync(path.join(root,'alert-outbox')).mode&0o077,0);
-  fs.mkdirSync(path.join(root,'alert-receipts'),{mode:0o755});
+  const receipts=path.join(root,'alert-receipts');
+  fs.mkdirSync(receipts,{mode:0o700});
+  // mkdir mode is masked by the caller's umask (including owner umask 077).
+  // Deliberately create the unsafe fixture without changing process umask.
+  fs.chmodSync(receipts,0o755);
+  assert.equal(fs.statSync(receipts).mode&0o777,0o755);
   assert.throws(()=>ensurePrivateIntakeDirectory(root,'alert-receipts',uid,gid),
    /private_child_directory_unsafe/);
+  assert.equal(fs.statSync(receipts).mode&0o777,0o755);
+  fs.rmdirSync(receipts);
+  const target=path.join(root,'target');
+  fs.mkdirSync(target,{mode:0o700});
+  fs.symlinkSync(target,receipts,'dir');
+  assert.throws(()=>ensurePrivateIntakeDirectory(root,'alert-receipts',uid,gid),
+   /private_child_directory_unsafe/);
+  assert.equal(fs.lstatSync(receipts).isSymbolicLink(),true);
+  fs.unlinkSync(receipts);
+  fs.symlinkSync(path.join(root,'missing-target'),receipts,'dir');
+  assert.throws(()=>ensurePrivateIntakeDirectory(root,'alert-receipts',uid,gid),
+   /private_child_directory_unsafe/);
+  assert.equal(fs.lstatSync(receipts).isSymbolicLink(),true);
+  assert.equal(fs.existsSync(path.join(root,'missing-target')),false);
   assert.throws(()=>ensurePrivateIntakeDirectory(root,'../../bad',uid,gid),
    /invalid_private_child/);
  }finally{fs.rmSync(root,{recursive:true,force:true})}
