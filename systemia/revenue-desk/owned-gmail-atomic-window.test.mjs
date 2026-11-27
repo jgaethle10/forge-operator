@@ -66,15 +66,35 @@ test('exclusive atomic generations preserve prior bytes and refuse duplicate wri
  }finally{fs.rmSync(root,{recursive:true,force:true})}
 });
 
-test('search timestamp disagreement holds with only coarse direction and offset',async()=>{
- for(const [t,code] of [[at,'upper_exact'],[at+500,'upper_subsecond'],[at-30*3600000-1000,'lower_within_minute'],[at-32*3600000,'lower_within_day']]){
-  const p=provider();
-  const fetchImpl=async(url,req)=>{
-   const response=await p.fetchImpl(url,req);
-   if(new URL(url).searchParams.get('format')!=='metadata')return response;
-   const row=await response.json();
-   return ok({...row,internalDate:String(t)});
-  };
-  await assert.rejects(synchronizeWindow({...options,fetchImpl}),{message:'gmail_sync_metadata_window_membership_hold_'+code});
- }
+test('provider search membership is preserved separately from internal timestamp reporting',async()=>{
+ const p=provider({ids:['a','b','c','d','e']});
+ const times={a:at,b:at+500,c:at-30*3600000-1000,d:at-32*3600000,e:at-3600000};
+ const fetchImpl=async(url,req)=>{
+  const response=await p.fetchImpl(url,req);
+  if(new URL(url).searchParams.get('format')!=='metadata')return response;
+  const row=await response.json();
+  return ok({...row,internalDate:String(times[row.id])});
+ };
+ const {snapshot,stats}=await synchronizeWindow({...options,fetchImpl});
+ assert.equal(stats.provider_listed_count,5);
+ assert.equal(stats.messages,1);
+ assert.equal(stats.outside_window_count,4);
+ assert.equal(stats.internal_date_coverage_confirmed,false);
+ assert.deepEqual(snapshot.messages.map(r=>r.message_id),['e']);
+ assert.deepEqual(snapshot.gmail_sync.outside_window_rows.map(r=>r.message_id),['a','b','c','d']);
+ const root=fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(),'gmail-partition-')));
+ try{
+  commitGeneration(root,snapshot,mailbox);
+  assert.deepEqual(readLatestGeneration(root,mailbox),snapshot);
+  const next=provider({ids:['a','b','c','d','e']});
+  const refresh=await synchronizeWindow({...options,clock:()=>at+300000,previous:snapshot,fetchImpl:next.fetchImpl});
+  assert.equal(refresh.stats.metadata_requests,0);
+  assert.equal(refresh.stats.reused_rows,5);
+  assert.deepEqual(refresh.snapshot.messages.map(r=>r.message_id),['a','b','e']);
+  assert.deepEqual(refresh.snapshot.gmail_sync.outside_window_rows.map(r=>r.message_id),['c','d']);
+  for(const mutate of [s=>s.gmail_sync.provider_listed_count++,s=>s.gmail_sync.outside_window_rows.push(s.messages[0]),s=>s.gmail_sync.internal_date_coverage_confirmed=true,s=>s.gmail_sync.outside_window_rows[0].occurred_at=s.messages[0].occurred_at]){
+   const bad=structuredClone(snapshot);mutate(bad);
+   await assert.rejects(synchronizeWindow({...options,previous:bad,fetchImpl:async()=>assert.fail('no network')}),/prior_generation_invalid/);
+  }
+ }finally{fs.rmSync(root,{recursive:true,force:true})}
 });
