@@ -2,7 +2,7 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {composeCandidate,readScopedEdgeEnv,hostnameRoutes,
- assertCoexistence,syntheticHost,sha256} from '../scripts/client001-caddy-coexistence.mjs';
+ assertCoexistence,syntheticHost,sha256,evaluatePhysicalEdge} from '../scripts/client001-caddy-coexistence.mjs';
 
 const fragment=readFileSync('infra/evercraft-edge/client001-on-the-go/Caddyfile.example','utf8');
 const base=[
@@ -62,4 +62,54 @@ test('Caddy JSON tampering, host collision or dropped Fabric route fail closed',
  assert.throws(()=>assertCoexistence(initial,altered,{fabricHost:'missing.invalid'}),/original_fabric_host_not_found/);
  const duplicate={apps:{http:{servers:{srv0:{routes:[route,{match:[{host:[syntheticHost]}],handle:[]}]}}}}};
  assert.throws(()=>assertCoexistence(duplicate,duplicate,{fabricHost:host}),/client_host_conflicts_with_existing_edge/);
+});
+
+test('protected Caddyfile may be supplied through stdin without trying to reopen it',()=>{
+ const visits=[];
+ const io={readFileSync(file){
+  visits.push(String(file));
+  if(file==='/etc/evercraft/Caddyfile'){
+   const e=Error('EACCES: permission denied /etc/evercraft/Caddyfile');
+   e.code='EACCES';throw e;
+  }
+  if(file.endsWith('Caddyfile.example'))return fragment;
+  if(file==='/etc/evercraft/public-edge.env')
+   return 'EVERCRAFT_PUBLIC_HOST=fabric.systemiacommandcenters.invalid\nEVERCRAFT_ACME_EMAIL=ops@example.invalid\n';
+  throw Error('unexpected_read');
+ }};
+ const adapter=(text,env)=>{
+  const routes=[{match:[{host:[env.EVERCRAFT_PUBLIC_HOST]}],
+   handle:[{handler:'reverse_proxy',upstreams:[{dial:'127.0.0.1:8787'}]}],terminal:true}];
+  if(text.includes('READ-ONLY REHEARSAL'))
+   routes.push({match:[{host:[syntheticHost,'www.'+syntheticHost]}],
+    handle:[{handler:'file_server'}],terminal:true});
+  return {apps:{http:{servers:{srv0:{routes}}}}};
+ };
+ const stageInspector=()=>({canonical_sha256:'a'.repeat(64),release_staged:true,
+  staged_sha256_matches:true});
+ const blocked=evaluatePhysicalEdge({io,adapter,stageInspector});
+ assert.equal(blocked.result,'HOLD_REHEARSAL_INCOMPLETE');
+ assert.match(blocked.reason,/EACCES/);
+ const seen=visits.length;
+ const streamed=evaluatePhysicalEdge({io,adapter,stageInspector,baseContent:base});
+ assert.equal(streamed.result,'PASS_SOURCE_COMPOSITION_ONLY');
+ assert.equal(streamed.state,'HOLD_PUBLIC_PROMOTION');
+ assert.equal(streamed.existing_routes_preserved,true);
+ assert.equal(streamed.original_bytes_preserved,true);
+ assert.equal(streamed.synthetic_hosts_present,true);
+ assert.equal(streamed.staged_digest_verified,true);
+ assert.equal(streamed.production_config_modified,false);
+ assert.equal(streamed.service_reloaded,false);
+ assert.equal(streamed.client001_publicly_deployed,false);
+ assert.equal(streamed.original_config_sha256,sha256(base));
+ assert.ok(!visits.slice(seen).includes('/etc/evercraft/Caddyfile'));
+});
+test('empty, oversized and NUL-bearing piped Caddyfile content fails closed',()=>{
+ for(const bad of ['', '\0', 'x'.repeat(2*1024*1024+1)]){
+  const result=evaluatePhysicalEdge({baseContent:bad});
+  assert.equal(result.result,'HOLD_REHEARSAL_INCOMPLETE');
+  assert.equal(result.reason,'invalid_protected_caddyfile_input');
+  assert.equal(result.production_config_modified,false);
+  assert.equal(result.state,'HOLD_PUBLIC_PROMOTION');
+ }
 });
