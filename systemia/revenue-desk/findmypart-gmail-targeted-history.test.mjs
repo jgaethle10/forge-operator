@@ -100,3 +100,32 @@ test('first-party alternate address matches exactly, never the whole shared prov
  }});
  assert.equal(wrong.results[0].official_contact_source,null);
 });
+
+test('manufacturer directory alias restores historical positive control without matching unrelated shared-provider addresses',async()=>{
+ const t={work_key:'findmypart:shop:small-engine-specialties',host:'sespecialties.com',name:'Small Engine Specialties'};
+ const rows={
+  a:row('a','t','owner@owner.test','smallenginespecialties@yahoo.com',true,now-7*86400000),
+  b:row('b','t','kyle@sesspecialties.com','owner@owner.test',false,now-6*86400000),
+  c:row('c','t','another@yahoo.com','owner@owner.test',false,now-5*86400000)
+ };
+ const r=await reviewTargetedHistory({targets:[t],accessToken:'synthetic-readonly-token',sleep:async()=>{},clock:()=>now,fetchImpl:async(url)=>{
+  const u=new URL(url);
+  if(u.pathname.endsWith('/messages')){
+   const q=u.searchParams.get('q');
+   assert.match(q,/to:smallenginespecialties@yahoo\.com/);
+   assert.match(q,/to:kyle@sesspecialties\.com/);
+   assert.ok(!q.includes('from:yahoo.com'));
+   return ok({messages:Object.keys(rows).map(id=>({id}))});
+  }
+  return ok(rows[u.pathname.split('/').at(-1)]);
+ }});
+ const v=r.results[0];
+ assert.equal(v.exact_public_contact_outbound,1);
+ assert.equal(v.exact_public_contact_inbound,1);
+ assert.equal(v.exact_public_contact_same_thread_reply_candidates,0);
+ assert.equal(v.unattributed_inbound_candidates,1);
+ assert.equal(v.state,'review_existing_contact_history');
+ assert.match(v.authorized_dealer_contact_source,/husqvarna\.com/);
+ assert.equal(v.contact_clearance,false);
+ assert.equal(r.buyers_qualified,0);
+});
