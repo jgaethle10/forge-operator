@@ -16,7 +16,7 @@ export async function runAssignment({assignment,contract,executionContext={}}={}
   identityStateDir:b.identityStateDir,passportStateDir:b.passportStateDir,
   sessionKeyring:b.sessionKeyring,sessionToken:b.sessionToken,
   origin:b.origin,token:b.token,expectedProvider:'llama.cpp',
-  lane:'findmypart',allowInference:true,
+  lane:'findmypart',allowInference:true,qualityProfile:'findmypart-extraction-fixture-v1',
   ...(b.fetchImpl?{fetchImpl:b.fetchImpl}:{})
  });
  return {...result,schema:'evercraft.leiland.saban-proof.v1',external_actions_authorized:false};
