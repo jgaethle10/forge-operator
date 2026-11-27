@@ -56,3 +56,6 @@ jobs:
 
       - name: Bounded existing-resident Gmail refresh adapter proof
         run: node --test systemia/revenue-desk/kaidance-gmail-bounded-refresh.test.mjs
+
+      - name: Existing resident Gmail tick admission proof
+        run: node --test systemia/revenue-desk/kaidance-gmail-resident-tick.test.mjs
