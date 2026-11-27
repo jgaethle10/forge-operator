@@ -327,7 +327,8 @@ export async function executeMultiplicationPlan({
   rootDir = process.cwd(),
   reconcile = false,
   statePath = null,
-  resume = false
+  resume = false,
+  shadowSalesEvidence = null
 }) {
   if (!contract.adapter) {
     throw new Error(`No execution adapter declared for ${contract.software_id}`);
@@ -384,7 +385,8 @@ export async function executeMultiplicationPlan({
     plan,
     results,
     schedulerSummary: schedulerReceipt.summary,
-    reconciliation
+    reconciliation,
+    shadowSalesEvidence
   });
   const resultsDigest = 'sha256:' + crypto
     .createHash('sha256')

@@ -59,6 +59,9 @@ jobs:
       - name: Reconcile two shadow delegated sales artifacts and auditor receipts
         run: node --test systemia/saban/shadow-delegated-sales-reconciliation.test.mjs
 
+      - name: Prove opt-in fail-closed quality gate with real local artifacts
+        run: node --test systemia/saban/quality-evidence-opt-in.test.mjs
+
       - name: Execute bounded CHUM swarm
         run: npm run proof:saban-chum
 
