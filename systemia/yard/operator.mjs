@@ -652,6 +652,7 @@ export class YardOperator {
     rollbackTarget,
     leaseTtlMs = 30_000,
     allocatorToken = '',
+    brokerRecoveryGuard = false,
   } = {}) {
     if (!deploymentId) throw new Error('deploymentId is required');
     if (!immutableRelease(releaseRef)) throw new Error('releaseRef must be immutable');
@@ -668,7 +669,49 @@ export class YardOperator {
       throw new Error('requested workload is not supported by capacity offer');
     }
 
-    const lease = await request(`${capacityEndpoint}/v1/leases`, {
+    // Opt-in candidate only: a fresh private broker attempt must not be replayed
+    // after an uncertain lease or job outcome. Other deployments are unchanged.
+    let journal = null;
+    let lease = null;
+    let record = null;
+    const writeJournal = (state, extra = {}) => {
+      if (!journal) return;
+      const value = { schema: 'evercraft.yard.broker-lease-recovery.v1',
+        deployment_id: deploymentId, state, ...extra };
+      const temporary = journal + '.' + randomBytes(6).toString('hex') + '.tmp';
+      try {
+        const fd = fs.openSync(temporary, 'wx', 0o600);
+        try { fs.writeFileSync(fd, JSON.stringify(value)+'\n'); fs.fsyncSync(fd); }
+        finally { fs.closeSync(fd); }
+        fs.renameSync(temporary, journal);
+        const dir = fs.openSync(this.stateDir, 'r');
+        try { fs.fsyncSync(dir); } finally { fs.closeSync(dir); }
+      } finally { fs.rmSync(temporary, {force:true}); }
+    };
+    if (brokerRecoveryGuard === true) {
+      const u = new URL(capacityEndpoint);
+      const st = fs.lstatSync(this.stateDir);
+      if (workloadClass !== 'systemia.remote-capacity-broker.v1' ||
+          !/^[a-zA-Z0-9._-]{3,160}$/.test(deploymentId) ||
+          u.protocol !== 'http:' || u.hostname !== '127.0.0.1' ||
+          !u.port || u.username || u.password || u.pathname !== '/' || u.search || u.hash ||
+          !st.isDirectory() || st.isSymbolicLink() || (st.mode & 0o077) !== 0 ||
+          fs.realpathSync(this.stateDir) !== this.stateDir ||
+          st.uid !== process.getuid() ||
+          this.deploymentStatus(deploymentId) || fs.existsSync(this.#secretFile(deploymentId)))
+        throw Error('broker_recovery_guard_requires_fresh_private_loopback_deployment');
+      journal = path.join(this.stateDir, '.broker-recovery-'+deploymentId+'.json');
+      const fd = fs.openSync(journal, 'wx', 0o600);
+      try {
+        fs.writeFileSync(fd, JSON.stringify({schema:'evercraft.yard.broker-lease-recovery.v1',
+          deployment_id:deploymentId,state:'lease_request_pending'})+'\n');
+        fs.fsyncSync(fd);
+      } finally { fs.closeSync(fd); }
+      const dir = fs.openSync(this.stateDir, 'r');
+      try { fs.fsyncSync(dir); } finally { fs.closeSync(dir); }
+    }
+    try {
+    lease = await request(`${capacityEndpoint}/v1/leases`, {
       method: 'POST',
       headers: allocatorToken ? { authorization: `Bearer ${allocatorToken}` } : {},
       body: JSON.stringify({
@@ -677,6 +720,23 @@ export class YardOperator {
       }),
     });
 
+    if (journal) {
+      if (typeof lease.lease_id !== 'string' || !/^[a-zA-Z0-9._-]+$/.test(lease.lease_id) ||
+          typeof lease.token !== 'string' || !lease.token ||
+          lease.workload_class !== workloadClass)
+        throw Error('broker_lease_ack_invalid');
+      // Keep lease authority private before the first job request. Existing
+      // Yard secret format; never copy tokens into the public journal.
+      const fd = fs.openSync(this.#secretFile(deploymentId), 'wx', 0o600);
+      try {
+        fs.writeFileSync(fd, JSON.stringify({lease_id:lease.lease_id,token:lease.token,
+          capacity_endpoint:capacityEndpoint,allocator_token:null})+'\n');
+        fs.fsyncSync(fd);
+      } finally { fs.closeSync(fd); }
+      const dir = fs.openSync(path.dirname(this.#secretFile(deploymentId)), 'r');
+      try { fs.fsyncSync(dir); } finally { fs.closeSync(dir); }
+      writeJournal('job_request_pending',{lease_id:lease.lease_id,expires_at:lease.expires_at||null});
+    }
     let job;
     try {
       job = await request(`${capacityEndpoint}/v1/jobs`, {
@@ -690,6 +750,7 @@ export class YardOperator {
         }),
       });
     } catch (error) {
+      if (journal) throw error;
       try {
         await request(`${capacityEndpoint}/v1/leases/${lease.lease_id}/release`, {
           method: 'POST',
@@ -1084,7 +1145,7 @@ export class YardOperator {
       }
     }
 
-    const record = {
+    record = {
       deployment_id: deploymentId,
       state: 'ready',
       receipt,
@@ -1109,7 +1170,34 @@ export class YardOperator {
     });
     this.deployments.set(deploymentId, record);
     this.#persist(record);
+    if (journal) writeJournal('ready',{lease_id:lease.lease_id});
     return record;
+    } catch (error) {
+      if (!journal) throw error;
+      let released = false;
+      if (typeof lease?.lease_id === 'string' && /^[a-zA-Z0-9._-]+$/.test(lease.lease_id) &&
+          typeof lease.token === 'string' && lease.token) {
+        try {
+          const reply = await request(`${capacityEndpoint}/v1/leases/${lease.lease_id}/release`, {
+            method:'POST',body:JSON.stringify({token:lease.token}),
+            signal:AbortSignal.timeout(5000),redirect:'error',
+          });
+          released = reply?.ok === true && /^sha256:[a-f0-9]{64}$/.test(reply?.receipt?.receipt_hash||'');
+        } catch {}
+      }
+      const status = released ? 'lease_release_acknowledged' : 'held_outcome_unknown';
+      // A ready record may have been partially published before a disk error.
+      // Do not leave that record usable as a live deployment.
+      try {
+        if (record) {
+          record.state='held';
+          this.deployments.set(deploymentId,record);
+          this.#persist(record);
+        }
+        writeJournal(status,{lease_id:lease?.lease_id||null,manual_reconciliation_required:true});
+      } catch { throw Error('broker_recovery_journal_write_failed_manual_reconciliation_required'); }
+      throw Error('broker_deployment_'+status+'_manual_reconciliation_required');
+    }
   }
 
   async deploySiblingRelease({
