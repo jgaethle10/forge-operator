@@ -8,7 +8,7 @@ import {fileURLToPath} from 'node:url';
 import {readLatestGeneration} from './owned-gmail-atomic-window.mjs';
 import {observeOwnedGmail} from './kaidance-gmail-observation.mjs';
 const worker=fileURLToPath(new URL('./owned-gmail-atomic-window.mjs',import.meta.url));
-const hold=(status)=>({schema:'evercraft.kaidance.gmail-refresh.v1',status,checkpoint_advanced:false,send_authority:false,contact_clearance:false,quota_authority:false,private_records_exported:0});
+const hold=(status)=>({schema:'evercraft.kaidance.gmail-refresh.v1',status,checkpoint_advanced:null,send_authority:false,contact_clearance:false,quota_authority:false,private_records_exported:0});
 function ownedRoot(p){
  if(!path.isAbsolute(p)||fs.realpathSync(p)!==p)throw Error('private_root');
  const s=fs.lstatSync(p);
