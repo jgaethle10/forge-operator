@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createInferenceEngine,startRavenInferenceGateway,supportedInferenceProviders} from '../systemia/raven/inference-gateway.mjs';
-import {runSovereignCapabilityProof} from '../systemia/leiland/sovereign-capability-proof.mjs';
+import {runSovereignCapabilityProof,validateSyntheticExtraction} from '../systemia/leiland/sovereign-capability-proof.mjs';
 const token='fixture-gateway-token-for-local-llama-proof-1234567890';
 const model='synthetic-local-model';
 const localLlamaProofOrigin='http://127.0.0.1:18080';
@@ -47,4 +47,36 @@ test('model drift or tool call output is held, not accepted',async()=>{
  }
  const engine=createInferenceEngine({...config,fetchImpl:async()=>Response.json({data:[{id:'wrong'}]})});
  await assert.rejects(engine.validate(),/model_mismatch/);
+});
+
+test('strict extraction fixture rejects duplicates, wrong identifiers, extra fields and prose',()=>{
+ const good='{"nameplate_part":"TX-42","catalog_part":"TX-42"}';
+ assert.equal(validateSyntheticExtraction(good),true);
+ assert.equal(validateSyntheticExtraction(' { "catalog_part":"TX-42", "nameplate_part":"TX-42" } '),true);
+ for(const output of ['{"nameplate_part":"TX-42","nameplate_part":"TX-42"}',
+  '{"nameplate_part":"TX-42","catalog_part":"TX-43"}',
+  '{"nameplate_part":null,"catalog_part":"TX-42"}',good.replace('}',',"fitment":true}'),
+  'Answer: '+good,good+' '.repeat(1024),null])assert.equal(validateSyntheticExtraction(output),false);
+});
+test('existing gateway quality profile accepts exact synthetic extraction and holds wrong output',async t=>{
+ let output='{"nameplate_part":"TX-42","catalog_part":"TX-42"}',calls=0;
+ const gateway=await startRavenInferenceGateway({...config,port:0,controlToken:token,
+  fetchImpl:async(url,init)=>{
+   if(new URL(url).pathname==='/v1/models')return Response.json({data:[{id:model}]});
+   calls++;const packet=JSON.parse(init.body);assert.match(packet.messages[0].content,/Extract part identifiers/);
+   return Response.json({model,choices:[{message:{content:output}}]});
+  }});
+ t.after(()=>gateway.close());
+ const args={origin:gateway.url,token,expectedProvider:'llama.cpp',lane:'findmypart',allowInference:true,qualityProfile:'findmypart-extraction-fixture-v1'};
+ const result=await runSovereignCapabilityProof(args);
+ assert.equal(result.state,'provider_reported_completed');
+ assert.equal(result.receipts[0].synthetic_extraction_validated,true);
+ assert.equal(result.receipts[0].output_quality_verified,false);
+ assert.doesNotMatch(JSON.stringify(result),/TX-42/);
+ output='{"nameplate_part":"TX-42","catalog_part":"TX-43"}';
+ const held=await runSovereignCapabilityProof(args);
+ assert.equal(held.state,'held');assert.equal(held.reason,'synthetic_extraction_validation_failed');
+ assert.equal(held.receipts.length,0);
+ await assert.rejects(runSovereignCapabilityProof({...args,lane:'atlas'}),/quality_profile_invalid/);
+ assert.equal(calls,2);
 });
