@@ -50,3 +50,6 @@ jobs:
 
       - name: Owned Gmail history cursor discovery proof
         run: node --test systemia/revenue-desk/owned-gmail-history-delta.test.mjs
+
+      - name: Atomic owned Gmail rolling-window sync proof
+        run: node --test systemia/revenue-desk/owned-gmail-atomic-window.test.mjs
