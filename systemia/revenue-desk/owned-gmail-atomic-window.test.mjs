@@ -65,3 +65,16 @@ test('exclusive atomic generations preserve prior bytes and refuse duplicate wri
   assert.deepEqual(fs.readdirSync(root),[name]);
  }finally{fs.rmSync(root,{recursive:true,force:true})}
 });
+
+test('search timestamp disagreement holds with only coarse direction and offset',async()=>{
+ for(const [t,code] of [[at,'upper_exact'],[at+500,'upper_subsecond'],[at-30*3600000-1000,'lower_within_minute'],[at-32*3600000,'lower_within_day']]){
+  const p=provider();
+  const fetchImpl=async(url,req)=>{
+   const response=await p.fetchImpl(url,req);
+   if(new URL(url).searchParams.get('format')!=='metadata')return response;
+   const row=await response.json();
+   return ok({...row,internalDate:String(t)});
+  };
+  await assert.rejects(synchronizeWindow({...options,fetchImpl}),{message:'gmail_sync_metadata_window_membership_hold_'+code});
+ }
+});
