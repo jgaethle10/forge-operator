@@ -63,7 +63,7 @@ export async function runSovereignCapabilityProof({origin='http://127.0.0.1:4322
  for(const c of selected){
   try{
    const request_id='leiland-proof:'+randomUUID();
-   const r=await adapter.infer({request_id,role:c.role,prompt:c.prompt});
+   const r=await adapter.infer({request_id,role:c.role,prompt:expectedProvider==='llama.cpp'?c.prompt+' /no_think':c.prompt});
    if(r.provider!==expectedProvider||r.model!==model||
       !/^sha256:[a-f0-9]{64}$/.test(r.provider_receipt||'')||!r.text)
     throw Error('provider_receipt_mismatch');
