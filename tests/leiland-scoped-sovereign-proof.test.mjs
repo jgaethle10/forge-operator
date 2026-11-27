@@ -7,6 +7,7 @@ import {createHmac} from 'node:crypto';
 import {EvercraftPassport} from '../systemia/passport/passport.mjs';
 import {EvercraftIdentity} from '../systemia/identity/identity.mjs';
 import {runScopedSovereignProof} from '../systemia/leiland/scoped-sovereign-proof.mjs';
+import {runLeilandSabanCycle} from '../systemia/leiland/saban-sovereign-cycle.mjs';
 const token='test-only-existing-gateway-token-1234567890';
 const secret='test-only-session-key-1234567890-1234567890';
 const subject='user:synthetic-reviewer';
@@ -54,7 +55,7 @@ function setup(t){
  const revoke=()=>identity.revokeSession({sessionId:session.session_id,subjectRef:subject,reason:'explicit_logout'});
  const run=opts=>runScopedSovereignProof({identityStateDir,passportStateDir,
   sessionKeyring:{test:secret},sessionToken,lane:'findmypart',token,fetchImpl,allowInference:true,...opts});
- return {run,grant,calls,revoke,fetchImpl};
+ return {run,grant,calls,revoke,fetchImpl,root,binding:{identityStateDir,passportStateDir,sessionKeyring:{test:secret},sessionToken,origin:'http://127.0.0.1:4322',token,expectedProvider:'llama.cpp'}};
 }
 test('exact product scope admits only one fixed synthetic task',async t=>{
  const {run,grant,calls}=setup(t);grant();
@@ -113,4 +114,33 @@ test('metadata only respects product permission and does not send a prompt',asyn
  assert.equal(r.state,'metadata_only');assert.equal(r.inference_completed,0);
  assert.equal(r.inference_request_attempted,false);
  assert.deepEqual(calls,['/health','/v1/validate']);
+});
+
+test('actual registered Saban adapter invokes exact scoped extraction and commits only qualified fixture result',async t=>{
+ const f=setup(t);f.grant();
+ let output='{"nameplate_part":"TX-42","catalog_part":"TX-42"}';
+ const executionContext={leilandLocalProofEnabled:true,leilandLocalProofBinding:{...f.binding,
+  fetchImpl:async(url,opts)=>{
+   const response=await f.fetchImpl(url,opts);
+   const body=await response.json();
+   if(new URL(url).pathname==='/v1/infer'){
+    assert.match(JSON.parse(opts.body).input,/Extract part identifiers/);
+    body.text=output;
+   }
+   return Response.json({...body,provider:'llama.cpp'});
+  }}};
+ const now=new Date(),stateDir=path.join(f.root,'cycle');
+ fs.mkdirSync(stateDir,{mode:0o700});
+ const result=await runLeilandSabanCycle({stateDir,now,executionContext});
+ assert.equal(result.state,'completed');assert.equal(result.synthetic_extraction_validated,true);
+ assert.equal(result.quality_reviewed,false);assert.equal(result.external_actions_authorized,false);
+ assert.deepEqual(f.calls,['/health','/v1/validate','/v1/infer']);
+ assert.equal((await runLeilandSabanCycle({stateDir,now,executionContext})).state,'cooldown');
+ assert.equal(f.calls.length,3);
+ const badDir=path.join(f.root,'bad-cycle');fs.mkdirSync(badDir,{mode:0o700});
+ output='{"nameplate_part":"TX-42","catalog_part":"TX-43"}';
+ const held=await runLeilandSabanCycle({stateDir:badDir,now,executionContext});
+ assert.equal(held.state,'held');assert.equal(held.inference_completed,null);
+ assert.equal((await runLeilandSabanCycle({stateDir:badDir,now,executionContext})).state,'held_unreconciled_checkpoint');
+ assert.equal(f.calls.length,6);
 });
