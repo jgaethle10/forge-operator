@@ -66,3 +66,37 @@ test('business-name hits outside official domain remain unverified candidates',a
  assert.equal(v.state,'review_unattributed_search_hits');assert.equal(v.contact_clearance,false);assert.equal(r.buyers_qualified,0);
  assert.ok(!JSON.stringify(r).includes('alternate.test'));
 });
+
+test('first-party alternate address matches exactly, never the whole shared provider domain',async()=>{
+ const t={work_key:'findmypart:shop:outdoor-power-repair',host:'outdoorpowerandrepair.com',name:'Outdoor Power & Repair'};
+ const rows={
+  a:row('a','t','owner@owner.test','opr98837@gmail.com',true,now-7*86400000),
+  b:row('b','t','opr98837@gmail.com','owner@owner.test',false,now-6*86400000),
+  c:row('c','t','another@gmail.com','owner@owner.test',false,now-5*86400000)
+ };
+ const opts={accessToken:'synthetic-readonly-token',sleep:async()=>{},clock:()=>now};
+ const r=await reviewTargetedHistory({...opts,targets:[t],fetchImpl:async(url)=>{
+  const u=new URL(url);
+  if(u.pathname.endsWith('/messages')){
+   const q=u.searchParams.get('q');
+   assert.match(q,/to:opr98837@gmail\.com/);
+   assert.ok(!q.includes('from:gmail.com'));
+   return ok({messages:Object.keys(rows).map(id=>({id}))});
+  }
+  return ok(rows[u.pathname.split('/').at(-1)]);
+ }});
+ const v=r.results[0];
+ assert.equal(v.exact_public_contact_outbound,1);
+ assert.equal(v.exact_public_contact_inbound,1);
+ assert.equal(v.exact_public_contact_same_thread_reply_candidates,1);
+ assert.equal(v.unattributed_inbound_candidates,1);
+ assert.equal(v.exact_domain_inbound,0);
+ assert.equal(v.contact_clearance,false);
+ assert.equal(r.buyers_qualified,0);
+ assert.ok(!JSON.stringify(r).includes('@gmail.com'));
+ const wrong=await reviewTargetedHistory({...opts,targets:[{...t,host:'different.test'}],fetchImpl:async(url)=>{
+  assert.ok(!new URL(url).searchParams.get('q').includes('opr98837'));
+  return ok({});
+ }});
+ assert.equal(wrong.results[0].official_contact_source,null);
+});
