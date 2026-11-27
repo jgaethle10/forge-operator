@@ -59,6 +59,9 @@ jobs:
       - name: Verify complete Remote Operator source pages before Saban evidence
         run: node --test systemia/saban/remote-source-observation.test.mjs
 
+      - name: Prove Git-pinned live readback command holds without Yard authority
+        run: node --test systemia/saban/live-source-readback.test.mjs
+
       - name: Prove signed NodeSeed identity bound to complete source pages over Yard
         run: node systemia/saban/attested-remote-source.proof.mjs
 
