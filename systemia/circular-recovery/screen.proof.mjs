@@ -1,0 +1,14 @@
+import assert from 'node:assert/strict';
+import {assessRecovery} from './screen.mjs';
+const base={id:'synthetic-1',stream:'plastic',pathway:'mechanical',evidence:[{source:'fixture',ref:'fixture:1',state:'modeled'}],material:{identityVerified:true,contaminantsScreened:true},balance:{inputKg:100,productKg:70,residueKg:20,emissionKg:0,otherOutputKg:10},environment:{energyKwh:20,baselineKgCO2e:30,processKgCO2e:10,boundaryRef:'fixture:boundary'},market:{specRef:'fixture:spec',buyerEvidenceRef:'fixture:market'}};
+const result=assessRecovery(base);
+assert.equal(result.stage,'desktop_review_candidate');
+for(const k of ['authorityGranted','physicalExecution','commercialCommitment','environmentalClaimVerified'])assert.equal(result[k],false);
+assert.ok(assessRecovery({...base,material:null}).gaps.includes('feedstock_characterization'));
+assert.ok(assessRecovery({...base,balance:{...base.balance,productKg:80}}).gaps.includes('mass_balance_open'));
+assert.ok(assessRecovery({...base,balance:{...base.balance,residueKg:-1}}).gaps.includes('mass_balance_missing'));
+assert.ok(assessRecovery({...base,stream:'tire',pathway:'thermal'}).gaps.includes('qualified_process_safety_and_permit_review'));
+assert.ok(assessRecovery({...base,evidence:[]}).gaps.includes('source_evidence'));
+assert.ok(assessRecovery({...base,market:null}).gaps.includes('market_validation'));
+assert.throws(()=>assessRecovery({...base,pathway:'unknown'}),/invalid_record_identity/);
+console.log('PASS: eight synthetic desktop screening cases; no execution authority');
