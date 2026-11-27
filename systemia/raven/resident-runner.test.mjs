@@ -13,7 +13,10 @@ test("resident runner requires private token-file permissions", () => {
   const root = tempRoot();
   try {
     const file = path.join(root, "token");
-    fs.writeFileSync(file, "012345678901234567890123456789012345", { mode: 0o644 });
+    fs.writeFileSync(file, "012345678901234567890123456789012345", { mode: 0o600 });
+    // Explicit chmod: restrictive caller umask otherwise masks the negative fixture.
+    fs.chmodSync(file, 0o644);
+    assert.equal(fs.statSync(file).mode & 0o777, 0o644);
     assert.throws(() => loadControlToken(file), /permissions_too_open/);
     fs.chmodSync(file, 0o600);
     assert.equal(loadControlToken(file), "012345678901234567890123456789012345");
@@ -26,7 +29,10 @@ test("Raven inference token uses the same private-file boundary", () => {
   const root = tempRoot();
   try {
     const file = path.join(root, "inference-token");
-    fs.writeFileSync(file, "abcdefghijklmnopqrstuvwxyz0123456789TOKEN", { mode: 0o644 });
+    fs.writeFileSync(file, "abcdefghijklmnopqrstuvwxyz0123456789TOKEN", { mode: 0o600 });
+    // Explicit chmod: restrictive caller umask otherwise masks the negative fixture.
+    fs.chmodSync(file, 0o644);
+    assert.equal(fs.statSync(file).mode & 0o777, 0o644);
     assert.throws(() => loadInferenceToken(file), /permissions_too_open/);
     fs.chmodSync(file, 0o600);
     assert.equal(loadInferenceToken(file), "abcdefghijklmnopqrstuvwxyz0123456789TOKEN");
