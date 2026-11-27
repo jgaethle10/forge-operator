@@ -42,6 +42,7 @@ import {
 } from './fabric-mobile-site.mjs';
 import { renderEarthWorksSimulator } from './earthworks-simulator-page.mjs';
 import { serveAidenLab } from './aiden-lab-public-route.mjs';
+import { serveForestIntelligence } from './forest-intelligence-public-route.mjs';
 import { createFabricFaieSurface } from './fabric-faie-runtime.mjs';
 import {gatherGitEntriesAsync,makePublicSnapshot} from '../hudson/publish-public-snapshot.mjs';
 import {createHudsonFeedCache} from '../hudson/public-feed-cache.mjs';
@@ -885,6 +886,7 @@ export async function startFabricLocalRuntime({
       // Evidence-first public science atlas. Exact allowlisted static files only.
       // A source commit is not a live deployment claim; external parity is separate.
       if (serveAidenLab(req,res,{repoRoot:ownedPublicRoot})) return;
+      if (serveForestIntelligence(req,res,{repoRoot:ownedPublicRoot})) return;
 
       // Public-safe availability signal. Hides unconfigured intake before a
       // buyer tries to submit PII. Never exposes paths, key, identity or volume.
