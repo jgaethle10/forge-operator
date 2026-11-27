@@ -72,7 +72,13 @@ export async function synchronizeWindow({accessToken,expectedMailbox,previous=nu
     await sleep(150);
    }else{reused++}
    const t=Date.parse(row.occurred_at);
-   if(!Number.isFinite(t)||t<at-30*3600000||t>=at)fail('metadata_window_membership_hold');
+   if(!Number.isFinite(t))fail('metadata_window_invalid_timestamp');
+   if(t<at-30*3600000||t>=at){
+    const side=t<at-30*3600000?'lower':'upper';
+    const offset=side==='lower'?at-30*3600000-t:t-at;
+    const bucket=offset===0?'exact':offset<1000?'subsecond':offset<=60000?'within_minute':offset<=3600000?'within_hour':offset<=86400000?'within_day':'over_day';
+    fail('metadata_window_membership_hold_'+side+'_'+bucket);
+   }
    next.set(key,row);
   }
   budget();
