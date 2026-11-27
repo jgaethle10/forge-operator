@@ -6,6 +6,7 @@ import path from 'node:path';
 import os from 'node:os';
 import {readFindMyPartPrivateInquiry,reconcileFindMyPartInquiryOutbox} from '../systemia/mcp/findmypart-public-inquiry.mjs';
 import {prepareFindMyPartQuote} from '../systemia/mcp/findmypart-private-quote.mjs';
+import {reviewPrivateInquiry} from '../systemia/findmypart/private-review-projection.mjs';
 
 const directory=process.env.EVERCRAFT_FINDMYPART_LEADS_DIR||
  path.join(os.homedir(),'.local','state','evercraft','findmypart-leads');
@@ -53,6 +54,13 @@ async function main(){
   print({schema:'evercraft.findmypart.private-outbox-recovery.v1',...result});
   return;
  }
+ if(command==='review'){
+  if(!refPattern.test(String(reference||'')))throw Error('valid_reference_required');
+  if(arg3!=='--review-only'||arg4||process.argv.length!==5)throw Error('explicit_review_only_flag_required');
+  checkPrivateDir();
+  print(reviewPrivateInquiry({storeDir:directory,key,reference}));
+  return;
+ }
  if(command==='show'){
   if(!refPattern.test(String(reference||'')))throw Error('valid_reference_required');
   if(arg3!=='--reveal')throw Error('explicit_reveal_flag_required');
@@ -75,7 +83,7 @@ async function main(){
   print(prepareFindMyPartQuote(record,arg3));
   return;
  }
- throw Error('usage: node scripts/findmypart-owner-inbox.mjs list|status|reconcile|show FMP-<id> --reveal|quote FMP-<id> quick|deep|rescue --reveal');
+ throw Error('usage: node scripts/findmypart-owner-inbox.mjs list|status|reconcile|review FMP-<id> --review-only|show FMP-<id> --reveal|quote FMP-<id> quick|deep|rescue --reveal');
 }
 main().catch(error=>{
  process.stderr.write('FindMyPart owner inbox: '+String(error?.message||'operation_failed')+'\n');

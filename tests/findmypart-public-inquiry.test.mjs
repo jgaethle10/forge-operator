@@ -307,3 +307,58 @@ test('operator can prepare one exact-price unsent quote without creating payment
   assert.equal(files.filter(name=>name.includes('checkout')||name.includes('payment')).length,0);
  }finally{await rt.close();fs.rmSync(dir,{recursive:true,force:true})}
 });
+
+
+test('private owner review projects an actual encrypted intake without model or payment authority',async()=>{
+ const dir=temp(),reviewKey=crypto.randomBytes(32);
+ const env={PATH:process.env.PATH,
+  EVERCRAFT_FINDMYPART_LEADS_DIR:dir,EVERCRAFT_FINDMYPART_INTAKE_KEY_B64:reviewKey.toString('base64')};
+ const cli=path.join(process.cwd(),'scripts/findmypart-owner-inbox.mjs');
+ const rt=await startFabricLocalRuntime({host:'127.0.0.1',port:0,catalog:[],faieSurfaceEnabled:false,
+   findMyPartLeadsDir:dir,findMyPartIntakeKey:reviewKey});
+ try{
+  const response=await post(rt.url,{...brief,equipment_context:'Fictional brake assembly',
+   agent_execution_authorized:true,payment_created:true,references:[{kind:'photo',reference:'fabricated'}]});
+  assert.equal(response.status,201);
+  const {reference}=await response.json();
+  const record=path.join(dir,reference+'.enc'),before=fs.readFileSync(record);
+  const names=fs.readdirSync(dir).sort();
+  const alerts=fs.readdirSync(path.join(dir,'alert-outbox')).sort();
+  const run=(args,overrides={})=>execFileSync(process.execPath,[cli,...args],{
+   env:{...env,...overrides},encoding:'utf8',stdio:['ignore','pipe','pipe']});
+  assert.throws(()=>run(['review',reference]));
+  assert.throws(()=>run(['review',reference,'--review-only','--extra']));
+  assert.throws(()=>run(['review','../invalid','--review-only']));
+  assert.throws(()=>run(['review',reference,'--review-only'],{EVERCRAFT_FINDMYPART_INTAKE_KEY_B64:Buffer.alloc(32).toString('base64')}));
+  const raw=run(['review',reference,'--review-only']);
+  const review=JSON.parse(raw);
+  assert.equal(review.schema,'evercraft.findmypart.owner-review-projection.v1');
+  assert.equal(review.status,'held_for_human_review');
+  assert.equal(review.reason,'no_authorized_evidence_processing_scope');
+  assert.equal(review.contains_buyer_pii,false);
+  assert.equal(review.inference_performed,false);
+  assert.equal(review.agent_execution_authorized,false);
+  assert.equal(review.payment_created,false);
+  assert.equal(review.fulfillment,'not_authorized');
+  assert.equal(review.safety_review_required,true);
+  assert.equal(review.source_count,0);
+  assert.equal(review.attachment_count,0);
+  assert.equal(review.tracks.length,6);
+  assert.ok(review.tracks.every(x=>x.status==='not_searched'&&x.leads===0));
+  for(const v of [brief.email,brief.part_description,'Fictional brake assembly',reference,'fabricated',env.EVERCRAFT_FINDMYPART_INTAKE_KEY_B64])assert.ok(!raw.includes(v));
+  assert.deepEqual(JSON.parse(run(['review',reference,'--review-only'])),review);
+  assert.deepEqual(fs.readFileSync(record),before);
+  assert.deepEqual(fs.readdirSync(dir).sort(),names);
+  assert.deepEqual(fs.readdirSync(path.join(dir,'alert-outbox')).sort(),alerts);
+  const original=readFindMyPartPrivateInquiry({storeDir:dir,key:reviewKey,reference});
+  assert.equal(original.state,'NEW_HUMAN_REVIEW_REQUIRED');
+  assert.equal(original.agent_execution_authorized,false);
+  const other='FMP-'+'A'.repeat(24);
+  fs.copyFileSync(record,path.join(dir,other+'.enc'));
+  assert.throws(()=>run(['review',other,'--review-only']));
+  const tampered=JSON.parse(before);
+  const bytes=Buffer.from(tampered.data,'base64');bytes[0]^=1;tampered.data=bytes.toString('base64');
+  fs.writeFileSync(record,JSON.stringify(tampered));
+  assert.throws(()=>run(['review',reference,'--review-only']));
+ }finally{await rt.close();fs.rmSync(dir,{recursive:true,force:true})}
+});
