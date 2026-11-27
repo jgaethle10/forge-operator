@@ -1,0 +1,18 @@
+# FindMyPart | Revenue Command — owner Site candidate
+
+P0 founder request, 2026-11-26. Stacked on #2606 exact 61abe0112a19a8d89fdad5d09b39e98c14f872c7 (which depends on #2605). No edits to shared runner, service catalog, scheduler, existing site routes or runtime. Coordinate #2612 before production. Do not merge independently.
+
+## Review-only interactive prototype
+Open index.html from an isolated owner checkout. No external assets/network, no persistent browser storage or automatic execution. Capture/edit cases, compare views, enter qualification/evidence/assumption/offer/follow-up, record exact operator assertions, prepare a review request and explicitly export a private draft JSON. Import existing `evercraft.findmypart.execution-cycle.v1` report from the existing cycle (not a new polling process), preserving stable shop work keys and treating service-fit observations as unqualified. A recent imported receipt is not live health or authenticated transport. A new case has NO CASE RECEIPT until specifically associated with an imported source. Private draft bundles restore only to an empty session; duplicate identities and nonzero execution/send/payment authority are rejected. No real records preloaded. Do not upload private drafts to GitHub. Stage/qualification/outcome labels are operator assertions, not reconciled facts.
+
+Existing pricing: Quick $19, Deep $49, Rescue $99; #1600 checkout remains independently gated. Existing Revenue Desk, Passport, Interaction Ledger, encrypted inquiry inbox and Systemia are the authoritative systems, not this draft interface.
+
+## Acceptance / integration order
+1. Run isolated browser checks on mobile and desktop (capture, edit, view filter, offer, event, export/reimport, malformed receipt, duplicate canonical reference, stale receipt, no outbound network). No production change.
+2. Systemia #2260 admit a bounded review work item with existing engineering fence, exact pin, declared read/write paths and single coordinator. Resolve #2605/#2606/#2612 dependencies without independently merging stacked candidates.
+3. Reuse existing owned Revenue Desk read-only SQLite adapter and authenticated projection of existing private inbox, queue/execution receipts and Interaction Ledger. Show verified fields only from scoped receipts; distinguish actual buyer need, inventory, fitment, send, replies, accepted work, payment and fulfillment. Review-only browser data must never write directly to the canonical store.
+4. Use existing Systemia admitted work dispatch for draft edits and review requests, revision precondition / idempotency, authenticated owner, conflict rejection, immutable receipt and readback. Establish canonical cross-node authority before mutation. No new scheduler or CRM.
+5. Serve behind existing private authenticated owned Sites edge (not public/indexed routes, no third-party runtime). Verify authorization, no-cache, CSP, no sensitive logs, CSRF protection where applicable, private receipts, exact deployed source and two distinct five-minute cycle receipts. Confirm working private URL independently.
+6. Only then enable durable operational interface. No automated sends, payments, procurement, fitment approval or fabrication authority; use existing exact-scope gates.
+
+Initial pure model checks exercised during authoring: ranking, round-trip, duplicate IDs, negative amount, qualification reference requirement, authority rejection, no receipt, unqualified imported candidate, invalid qualified count and stale receipt (10 checks). Subsequent per-case association and duplicate canonical-reference guard require rerun. Browser execution and runtime deployment not yet verified. No live revenue or lead qualification claimed.
