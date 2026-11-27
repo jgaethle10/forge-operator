@@ -10,7 +10,10 @@ import {EvercraftPassport} from '../systemia/passport/passport.mjs';
 import {EvercraftIdentity} from '../systemia/identity/identity.mjs';
 import {startRavenInferenceGateway} from '../systemia/raven/inference-gateway.mjs';
 import {runScopedSovereignProof} from '../systemia/leiland/scoped-sovereign-proof.mjs';
-assert.equal(process.argv.slice(2).join(' '),'--execute-local-proof');
+import {runLeilandSabanCycle} from '../systemia/leiland/saban-sovereign-cycle.mjs';
+const mode=process.argv.slice(2).join(' ');
+assert.ok(['--execute-local-proof','--execute-local-saban-proof'].includes(mode));
+const saban=mode==='--execute-local-saban-proof';
 const root=fs.mkdtempSync(path.join(os.tmpdir(),'leiland-local-scope-'));
 let gateway;
 try{
@@ -21,7 +24,7 @@ try{
  gateway=await startRavenInferenceGateway({port:0,controlToken:token,
   provider:'llama.cpp',model:'leiland-qwen3-4b',allowLocalLlamaProof:true,
   localLlamaProofOrigin:'http://127.0.0.1:18080'});
- for(const [lane,product] of [['findmypart','findmypart'],['atlas','systemia-atlas']]){
+ for(const [lane,product] of saban?[['findmypart','findmypart']]:[['findmypart','findmypart'],['atlas','systemia-atlas']]){
   const subject_ref='user:fixture-'+lane,now=Date.now(),until=new Date(now+300000).toISOString();
   const session={schema:'evercraft.identity.session.v1',signing_key_id:'test',subject_ref,
    display_name:'Synthetic Operator',session_id:randomUUID(),issued_at:new Date(now).toISOString(),expires_at:until};
@@ -36,6 +39,15 @@ try{
   const denied=await runScopedSovereignProof({...args,lane:lane==='atlas'?'findmypart':'atlas'});
   assert.equal(denied.state,'held');assert.equal(denied.inference_request_attempted,false);
   const started=Date.now();
+  if(saban){
+   const executionContext={leilandLocalProofEnabled:true,leilandLocalProofBinding:args};
+   const cycle=await runLeilandSabanCycle({stateDir:root,executionContext});
+   assert.equal(cycle.state,'completed');assert.equal(cycle.inference_completed,1);
+   const duplicate=await runLeilandSabanCycle({stateDir:root,executionContext});
+   assert.equal(duplicate.state,'cooldown');assert.equal(duplicate.assignment_attempted,false);
+   console.log(JSON.stringify({...cycle,elapsed_ms:Date.now()-started,duplicate_held:true}));
+   continue;
+  }
   const r=await runScopedSovereignProof(args);
   assert.equal(r.state,'provider_reported_completed');
   assert.equal(r.inference_completed,1);assert.equal(r.result_released,true);
@@ -46,8 +58,8 @@ try{
    cross_product_denied:true,synthetic_identity:true,quality_reviewed:false,
    external_actions_authorized:false}));
  }
- console.log('LEILAND_004=PASS');
- console.log('SCOPED_LOCAL_GATEWAY_RESPONSES=2');
+ console.log(saban?'LEILAND_005=PASS':'LEILAND_004=PASS');
+ console.log(saban?'SCOPED_LOCAL_GATEWAY_RESPONSES=1':'SCOPED_LOCAL_GATEWAY_RESPONSES=2');
  console.log('LIVE_PERMISSIONS_CHANGED=false');
  console.log('PERSISTENT_SERVICE_CREATED=false');
 }finally{
