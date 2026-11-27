@@ -42,3 +42,8 @@ jobs:
 
       - name: Owner Gmail readonly OAuth and custody proof
         run: node --test systemia/revenue-desk/owned-gmail-binding.test.mjs
+
+      - name: Existing company heartbeat Gmail observation proof
+        run: |
+          node --test systemia/revenue-desk/kaidance-gmail-observation.test.mjs
+          node --test --test-name-pattern='company heartbeat exposes only a redacted Gmail' tests/kaidance-company-heartbeat.test.mjs

@@ -310,3 +310,28 @@ test('FindMyPart has two stable priority-one review workstreams on successive co
   }
  }finally{fs.rmSync(dir,{recursive:true,force:true})}
 });
+
+test('company heartbeat exposes only a redacted Gmail snapshot observation and no contact authority',()=>{
+ const root=fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(),'kaidance-gmail-observation-')));
+ const gmail=path.join(root,'gmail'),out=path.join(root,'kaidance-company-heartbeat');
+ fs.mkdirSync(gmail,{mode:0o700});
+ const file=path.join(gmail,'recent-20261121T160000Z.json');
+ const data={schema:'evercraft.systemia.gmail-owned-metadata-snapshot.v1',source:'authenticated_gmail_readonly_api',mailbox_scope:'lookback_hours_30',observed_at:now.toISOString(),listing_exhausted:true,provider_send_performed:false,full_history_confirmed:false,listing_pages:1,messages:[{message_id:'private-fixture-id',direction:'outbound',occurred_at:now.toISOString(),from_address:'private@example.test',to_addresses:['other@example.test'],is_bounce:false,is_auto_reply:false}]};
+ fs.writeFileSync(file,JSON.stringify(data),{mode:0o600});
+ const before=fs.readFileSync(file);
+ try{
+  const first=runCompanyHeartbeat({root:'.',outDir:out,now,gmailObservationRoot:gmail});
+  assert.equal(first.report.gmail_observation.status,'recent_metadata_observed_not_authoritative');
+  assert.equal(first.report.gmail_observation.rolling_24h_at_capture.outbound_messages,1);
+  assert.equal(first.report.gmail_observation.outreach_authorized,false);
+  assert.equal(first.queue.execution_authorized,false);
+  assert.equal(first.report.gmail_observation.quota_authority,false);
+  assert.ok(!JSON.stringify(first.report).includes('private-fixture-id'));
+  assert.ok(!JSON.stringify(first.report).includes('@example.test'));
+  assert.deepEqual(fs.readFileSync(file),before);
+  assert.equal(runCompanyHeartbeat({root:'.',outDir:out,now,gmailObservationRoot:gmail}).duplicate,true);
+  const stale=runCompanyHeartbeat({root:'.',outDir:out,now:new Date(+now+31*60000),gmailObservationRoot:gmail});
+  assert.equal(stale.report.gmail_observation.status,'hold_stale_snapshot');
+  assert.equal(stale.report.gmail_observation.outreach_authorized,false);
+ }finally{fs.rmSync(root,{recursive:true,force:true})}
+});
