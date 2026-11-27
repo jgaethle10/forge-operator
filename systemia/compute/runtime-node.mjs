@@ -720,6 +720,10 @@ export async function startEvercraftComputeNode({
   };
   const leases = new Map();
   const services = new Map();
+  const pendingBrowserStarts = new Set();
+  const releasingBrowserLeases = new Set();
+  let closing = false;
+  let closePromise;
   const stagedBlobs = new Map();
   const sabanInflight = new Map();
   const leaseArtifactAccess = new Map();
@@ -963,14 +967,20 @@ export async function startEvercraftComputeNode({
   async function stopService(serviceId, reason = 'operator_requested') {
     const entry = services.get(serviceId);
     if (!entry) return null;
-    await entry.service.close();
-    services.delete(serviceId);
-    return chain.issue('service.stopped', {
-      service_id: serviceId,
-      lease_id: entry.lease_id,
-      workload_class: entry.workload_class,
-      reason,
-    });
+    if (!entry.stopPromise) {
+      entry.stopPromise = (async () => {
+        await entry.service.close();
+        services.delete(serviceId);
+        return chain.issue('service.stopped', {
+          service_id: serviceId,
+          lease_id: entry.lease_id,
+          workload_class: entry.workload_class,
+          reason,
+        });
+      })();
+    }
+    try { return await entry.stopPromise; }
+    catch (error) { entry.stopPromise = null; throw error; }
   }
 
   const leaseMonitor = setInterval(() => {
@@ -2597,6 +2607,14 @@ export async function startEvercraftComputeNode({
             return send(res, 503, { error: 'browser_runtime_unavailable' });
           }
 
+          const stillAdmitted = () => !closing &&
+            !releasingBrowserLeases.has(body.lease_id) &&
+            leases.get(body.lease_id) === lease && lease.expires_at >= Date.now();
+          if (!stillAdmitted()) return send(res, 410, {error:'browser_start_admission_ended'});
+
+          // Track the whole asynchronous start, including registration or
+          // cleanup, before yielding to shutdown.
+          const startup = (async () => {
           const factory = typeof browserRuntimeFactory === 'function'
             ? browserRuntimeFactory
             : startBrowserContainer;
@@ -2616,6 +2634,13 @@ export async function startEvercraftComputeNode({
             runtime,
             service: runtime,
           });
+
+          // The lease or node may have ended while the factory awaited a
+          // real listener. Keep ownership in services until close succeeds.
+          if (!stillAdmitted()) {
+            await stopService(serviceId, 'browser_start_admission_ended');
+            return send(res, 410, {error:'browser_start_admission_ended'});
+          }
 
           const result = {
             schema: 'evercraft.compute.resident-service.v1',
@@ -2655,6 +2680,10 @@ export async function startEvercraftComputeNode({
             result,
             receipt,
           });
+          })();
+          pendingBrowserStarts.add(startup);
+          try { return await startup; }
+          finally { pendingBrowserStarts.delete(startup); }
         }
 
         if (workloadClass === 'systemia.chum-public-origin.v1') {
@@ -4152,11 +4181,15 @@ export async function startEvercraftComputeNode({
         if (!lease || lease.token_hash !== sha(body.token || '')) {
           return send(res, 401, { error: 'invalid_lease' });
         }
-        for (const [serviceId, entry] of services.entries()) {
-          if (entry.lease_id === leaseId) await stopService(serviceId, 'lease_released');
-        }
-        cleanupStagedLease(leaseId);
-        leases.delete(leaseId);
+        if (releasingBrowserLeases.has(leaseId)) return send(res, 409, {error:'lease_release_in_progress'});
+        releasingBrowserLeases.add(leaseId);
+        try {
+          for (const [serviceId, entry] of services.entries()) {
+            if (entry.lease_id === leaseId) await stopService(serviceId, 'lease_released');
+          }
+          cleanupStagedLease(leaseId);
+          leases.delete(leaseId);
+        } finally { releasingBrowserLeases.delete(leaseId); }
         return send(res, 200, {
           ok: true,
           receipt: chain.issue('capacity.lease.released', {
@@ -4193,14 +4226,22 @@ export async function startEvercraftComputeNode({
     endpoint,
     allowed_root: allowedRoot,
     placement_labels: nodePlacementLabels,
-    close: async () => {
+    close: () => {
+      if (closePromise) return closePromise;
+      closing = true;
       clearInterval(leaseMonitor);
-      for (const serviceId of [...services.keys()]) {
-        await stopService(serviceId, 'compute_node_shutdown');
-      }
-      await new Promise((resolve, reject) =>
-        server.close((error) => error ? reject(error) : resolve())
-      );
+      closePromise = (async () => {
+        // No new browser startups admitted after closing=true. A factory
+        // already in flight must settle and relinquish its listener first.
+        await Promise.allSettled([...pendingBrowserStarts]);
+        for (const serviceId of [...services.keys()]) {
+          await stopService(serviceId, 'compute_node_shutdown');
+        }
+        await new Promise((resolve, reject) =>
+          server.close((error) => error ? reject(error) : resolve())
+        );
+      })();
+      return closePromise;
     },
   };
 }
