@@ -34,6 +34,9 @@ on:
       - 'tests/leiland-*sovereign*proof.test.mjs'
       - 'tests/leiland-raven-local-llama-proof.test.mjs'
       - 'scripts/leiland-local-scoped-canary.mjs'
+      - 'tests/leiland-saban-sovereign-cycle.test.mjs'
+      - 'systemia/saban/multiplication-registry.json'
+      - 'systemia/yard/saban-intent-drain-runner.mjs'
       - 'systemia/collider/public-projection.mjs'
       - '.github/workflows/leiland-public.yml'
   push:
@@ -70,6 +73,9 @@ on:
       - 'tests/leiland-*sovereign*proof.test.mjs'
       - 'tests/leiland-raven-local-llama-proof.test.mjs'
       - 'scripts/leiland-local-scoped-canary.mjs'
+      - 'tests/leiland-saban-sovereign-cycle.test.mjs'
+      - 'systemia/saban/multiplication-registry.json'
+      - 'systemia/yard/saban-intent-drain-runner.mjs'
       - 'systemia/collider/public-projection.mjs'
       - '.github/workflows/leiland-public.yml'
   workflow_dispatch:
@@ -109,7 +115,7 @@ jobs:
       - name: Prove private sovereign gateway and exact product authorization (fixtures only)
         run: |
           node --check scripts/leiland-local-scoped-canary.mjs
-          node --test tests/leiland-raven-local-llama-proof.test.mjs tests/leiland-scoped-sovereign-proof.test.mjs tests/leiland-sovereign-capability-proof.test.mjs systemia/raven/inference-gateway.test.mjs
+          node --test tests/leiland-saban-sovereign-cycle.test.mjs tests/saban-yard-unified-dispatch.test.mjs tests/leiland-raven-local-llama-proof.test.mjs tests/leiland-scoped-sovereign-proof.test.mjs tests/leiland-sovereign-capability-proof.test.mjs systemia/raven/inference-gateway.test.mjs
 
   leiland-browser:
     name: Leiland real Chromium iPhone / desktop / portrait proof
