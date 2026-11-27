@@ -9,21 +9,29 @@ import {readHistoryCheckpoint,collectHistoryDelta} from './owned-gmail-history-d
 import {HEADERS,getJson,parseGmailMetadata} from './owned-gmail-import.mjs';
 import {summarizeRecentGmail} from './kaidance-gmail-observation.mjs';
 const BASE='https://gmail.googleapis.com/gmail/v1/users/me/messages';
-const SCHEMA='evercraft.gmail.atomic-window.v1';
+const SCHEMA='evercraft.gmail.atomic-window.v2';
 const CAP=1000,MAX_BYTES=8*1024*1024;
 const fail=c=>{throw Error('gmail_sync_'+c)};
 const sleepDefault=ms=>new Promise(r=>setTimeout(r,ms));
 const cursor=x=>typeof x==='string'&&/^[1-9][0-9]{0,39}$/.test(x);
 const id=x=>typeof x==='string'&&/^[A-Za-z0-9_-]{1,256}$/.test(x);
 const query=at=>'in:anywhere -in:drafts after:'+Math.floor((at-30*3600000)/1000)+' before:'+Math.floor(at/1000);
+const within=(t,at)=>t>=at-30*3600000&&t<at;
+const allRows=s=>[...s.messages,...s.gmail_sync.outside_window_rows];
 function validatePrior(s,expectedMailbox){
- const at=Date.parse(s?.observed_at);
- if(s?.gmail_sync?.schema!==SCHEMA||s.gmail_sync.mailbox!==expectedMailbox.toLowerCase()||!cursor(s.gmail_sync.history_id)||s.gmail_sync.include_spam_trash!==true||s.requested_query!==query(at)||s.messages?.length>CAP||summarizeRecentGmail(s,new Date(at)).status!=='recent_metadata_observed_not_authoritative'||s.messages.some(r=>!id(r.message_id)))fail('prior_generation_invalid');
+ const at=Date.parse(s?.observed_at),g=s?.gmail_sync;
+ if(typeof expectedMailbox!=='string'||g?.schema!==SCHEMA||g.mailbox!==expectedMailbox.toLowerCase()||!cursor(g.history_id)||g.include_spam_trash!==true||g.internal_date_coverage_confirmed!==false||g.selection_basis!=='provider_search_membership'||s.requested_query!==query(at)||!Array.isArray(g.outside_window_rows)||summarizeRecentGmail(s,new Date(at)).status!=='recent_metadata_observed_not_authoritative')fail('prior_generation_invalid');
+ const rows=allRows(s);
+ if(rows.length>CAP||g.provider_listed_count!==rows.length||new Set(rows.map(r=>r?.message_id)).size!==rows.length)fail('prior_generation_invalid');
+ for(const r of rows){
+  if(!id(r?.message_id)||!Number.isFinite(Date.parse(r.occurred_at))||!['inbound','outbound'].includes(r.direction)||!Array.isArray(r.to_addresses)||r.to_addresses.length>1000||r.to_addresses.some(x=>typeof x!=='string'||!x||x.length>254)||new Set(r.to_addresses).size!==r.to_addresses.length||typeof r.is_bounce!=='boolean'||typeof r.is_auto_reply!=='boolean')fail('prior_generation_invalid');
+ }
+ if(s.messages.some(r=>!within(Date.parse(r.occurred_at),at))||g.outside_window_rows.some(r=>within(Date.parse(r.occurred_at),at)))fail('prior_generation_invalid');
 }
 export async function synchronizeWindow({accessToken,expectedMailbox,previous=null,fetchImpl=globalThis.fetch,clock=Date.now,sleep=sleepDefault,maxRounds=3}={}){
  if(typeof expectedMailbox!=='string'||!expectedMailbox.includes('@')||!Number.isInteger(maxRounds)||maxRounds<1||maxRounds>3)fail('arguments_invalid');
  if(previous)validatePrior(previous,expectedMailbox);
- let staged=new Map((previous?.messages||[]).map(r=>[r.message_id,r]));
+ let staged=new Map((previous?allRows(previous):[]).map(r=>[r.message_id,r]));
  let stagedCursor=previous?.gmail_sync.history_id||null;
  let fetched=0,reused=0,rounds=0,historyRecords=0;
  const deadline=clock()+240000;
@@ -73,12 +81,6 @@ export async function synchronizeWindow({accessToken,expectedMailbox,previous=nu
    }else{reused++}
    const t=Date.parse(row.occurred_at);
    if(!Number.isFinite(t))fail('metadata_window_invalid_timestamp');
-   if(t<at-30*3600000||t>=at){
-    const side=t<at-30*3600000?'lower':'upper';
-    const offset=side==='lower'?at-30*3600000-t:t-at;
-    const bucket=offset===0?'exact':offset<1000?'subsecond':offset<=60000?'within_minute':offset<=3600000?'within_hour':offset<=86400000?'within_day':'over_day';
-    fail('metadata_window_membership_hold_'+side+'_'+bucket);
-   }
    next.set(key,row);
   }
   budget();
@@ -87,9 +89,11 @@ export async function synchronizeWindow({accessToken,expectedMailbox,previous=nu
   // Any concurrent changes invalidate the bracket. Keep only in-memory rows
   // and replay all changes from the pre-list cursor on a bounded next round.
   if(end!==start){staged=next;stagedCursor=start;continue}
-  const snapshot={schema:'evercraft.systemia.gmail-owned-metadata-snapshot.v1',observed_at:new Date(at).toISOString(),mailbox_scope:'lookback_hours_30',requested_query:q,listing_pages:pages,listing_exhausted:true,messages:[...next.values()],source:'authenticated_gmail_readonly_api',provider_send_performed:false,full_history_confirmed:false,gmail_sync:{schema:SCHEMA,mailbox:expectedMailbox.toLowerCase(),history_id:end,include_spam_trash:true}};
+  const inside=[],outside=[];
+  for(const row of next.values())(within(Date.parse(row.occurred_at),at)?inside:outside).push(row);
+  const snapshot={schema:'evercraft.systemia.gmail-owned-metadata-snapshot.v1',observed_at:new Date(at).toISOString(),mailbox_scope:'lookback_hours_30',requested_query:q,listing_pages:pages,listing_exhausted:true,messages:inside,source:'authenticated_gmail_readonly_api',provider_send_performed:false,full_history_confirmed:false,gmail_sync:{schema:SCHEMA,mailbox:expectedMailbox.toLowerCase(),history_id:end,include_spam_trash:true,selection_basis:'provider_search_membership',internal_date_coverage_confirmed:false,provider_listed_count:next.size,outside_window_rows:outside}};
   validatePrior(snapshot,expectedMailbox);
-  return {snapshot,stats:{mode:previous?'incremental':'baseline',rounds,metadata_requests:fetched,reused_rows:reused,history_records:historyRecords,messages:next.size,listing_pages:pages,checkpoint_committable:true}};
+  return {snapshot,stats:{mode:previous?'incremental':'baseline',rounds,metadata_requests:fetched,reused_rows:reused,history_records:historyRecords,messages:inside.length,provider_listed_count:next.size,outside_window_count:outside.length,internal_date_coverage_confirmed:false,listing_pages:pages,checkpoint_committable:true}};
  }
  fail('mailbox_changed_during_capture_hold');
 }
