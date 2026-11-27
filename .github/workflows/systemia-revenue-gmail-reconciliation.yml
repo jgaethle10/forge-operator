@@ -53,3 +53,6 @@ jobs:
 
       - name: Atomic owned Gmail rolling-window sync proof
         run: node --test systemia/revenue-desk/owned-gmail-atomic-window.test.mjs
+
+      - name: Bounded existing-resident Gmail refresh adapter proof
+        run: node --test systemia/revenue-desk/kaidance-gmail-bounded-refresh.test.mjs
