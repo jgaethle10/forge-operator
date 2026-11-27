@@ -56,6 +56,9 @@ jobs:
       - name: Fail closed on unverified delegated artifacts
         run: node --test systemia/saban/declared-artifact-evidence.test.mjs
 
+      - name: Verify complete Remote Operator source pages before Saban evidence
+        run: node --test systemia/saban/remote-source-observation.test.mjs
+
       - name: Reconcile two shadow delegated sales artifacts and auditor receipts
         run: node --test systemia/saban/shadow-delegated-sales-reconciliation.test.mjs
 
