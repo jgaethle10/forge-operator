@@ -9,6 +9,7 @@ import { once } from 'node:events';
 import { bootstrapPrivateOrigin } from '../core/bootstrap/private-origin.mjs';
 import { KaidanceRuntime, startKaidanceHealthService } from '../collider/runtime.mjs';
 import { createNodeAttestation } from './device-identity.mjs';
+import { COMPLETION_WORKLOAD, validCompletionNonce, signContentHashCompletion } from './signed-content-hash-completion.mjs';
 import { SystemiaCoreResidentSupervisor } from '../core/resident-supervisor.mjs';
 import { resolveLeilandCoreBindings } from '../leiland/core-admission.mjs';
 import { runRegisteredAssignment } from '../saban/registered-worker.mjs';
@@ -1400,6 +1401,15 @@ export async function startEvercraftComputeNode({
         }
 
         if (NodeSeedMicroWorkloads.includes(workloadClass)) {
+          // Only an explicit request for the harmless existing hash workload
+          // can obtain a task-bound signature. Reject before any execution.
+          const wantsCompletionSignature = Object.hasOwn(body, 'completion_nonce');
+          if (wantsCompletionSignature &&
+              (workloadClass !== COMPLETION_WORKLOAD ||
+               !validCompletionNonce(body.completion_nonce) || !deviceIdentity?.private_key_pem ||
+               !deviceIdentity?.public_key_pem)) {
+            return send(res, 422, {error:'signed_completion_not_admitted'});
+          }
           const idempotencyKey = String(
             body.idempotency_key ||
             body.input?.idempotency_key ||
@@ -1424,7 +1434,7 @@ export async function startEvercraftComputeNode({
             }
             return send(res, 422, { error: message });
           }
-          return send(res, 200, {
+          const completionResponse = {
             ok: true,
             node_id: nodeId,
             workload_class: workloadClass,
@@ -1443,7 +1453,13 @@ export async function startEvercraftComputeNode({
                 worker_receipt_hash: worker.receipt_hash,
               }
             ),
-          });
+          };
+          if (wantsCompletionSignature) {
+            completionResponse.completion_signature = signContentHashCompletion({
+              identity: deviceIdentity, response: completionResponse, nonce: body.completion_nonce,
+            });
+          }
+          return send(res, 200, completionResponse);
         }
 
         if (workloadClass === 'saban.logical-agent') {
