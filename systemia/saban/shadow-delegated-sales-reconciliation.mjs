@@ -5,6 +5,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {createHash} from 'node:crypto';
 import {evaluateDeclaredArtifact} from './declared-artifact-evidence.mjs';
+import {verifyRemoteSourceObservation} from './remote-source-observation.mjs';
 import {checkSalesReport} from '../../public/work-saban/report/engine.mjs';
 
 const SHA=/^sha256:[a-f0-9]{64}$/;
@@ -40,7 +41,7 @@ function expectedEntries(mission,entries) {
 }
 
 export function reconcileShadowSalesDelegation({
-  root,csvText,manifest,workerReports=[],
+  root,csvText,manifest,workerReports=[],sourcePages,
 }={}){
   // No writes and no model calls. User-supplied CSV remains local to caller.
   const receipt={
@@ -53,6 +54,9 @@ export function reconcileShadowSalesDelegation({
     independent_worker_identity_verified:false,
     live_systemia_admission_verified:false,
     customer_data_transmitted:false,
+    remote_source_observation_status:'not_requested',
+    remote_source_pages_verified:0,
+    remote_node_identity_attested:false,
   };
   try{
     const mission=manifest?.mission_id;
@@ -65,6 +69,28 @@ export function reconcileShadowSalesDelegation({
     if(!SHA.test(String(manifest.source_sha256||''))||
        sourceHash!==manifest.source_sha256)
       return fail(receipt,'source_identity_mismatch');
+    // Optional, explicit source-read quality gate. When a coordinator
+    // declares a remote source, omission of pages is itself a hold.
+    // This path only verifies source bytes, never model/task semantics.
+    if(Object.hasOwn(manifest,'source_observation')||sourcePages!==undefined){
+      const bound=manifest.source_observation;
+      if(!bound||typeof bound!=='object'){
+        receipt.remote_source_observation_status='hold';
+        return fail(receipt,'source_observation_binding_missing');
+      }
+      const source=verifyRemoteSourceObservation({
+        missionId:mission,sourceId:bound.source_id,
+        rootKey:bound.root_key,relativePath:bound.relative_path,
+        expectedSha256:sourceHash,
+        expectedBytes:Buffer.byteLength(csvText,'utf8'),
+        pages:sourcePages,
+      });
+      receipt.remote_source_observation_status=source.status;
+      receipt.remote_source_pages_verified=source.pages_verified;
+      if(source.status!=='source_bytes_verified'){
+        return fail(receipt,'source_observation_'+source.reason);
+      }
+    }
     const entries=expectedEntries(mission,manifest.entries);
     if(!Array.isArray(workerReports)||workerReports.length!==2)
       return fail(receipt,'two_worker_reports_required');
