@@ -19,6 +19,10 @@ test('resident Fabric updater verifies the exact local FindMyPart route before a
  assert.match(updater,/return 15/);
  assert.match(updater,/return 16/);
  assert.match(updater,/return 17/);
+ assert.match(updater,/return 18/);
+ assert.match(updater,/return 19/);
+ assert.match(updater,/\/findmypart\/search\/\$module/);
+ assert.match(updater,/id="search-form"/);
  assert.match(updater,/payment_ready!==false/);
  assert.match(updater,/payment_verified!==false/);
  assert.match(updater,/runuser -u "\$RUN_USER"/);
@@ -28,8 +32,11 @@ test('resident Fabric updater verifies the exact local FindMyPart route before a
 test('resident source, buyer app and diagnostics agree on the same paths',()=>{
  assert.match(localRuntime,/findMyPartAssets\.has\(findMyPartPath\)/);
  assert.match(localRuntime,/\/findmypart\/app\.mjs/);
+ for(const route of ['/findmypart/search/','/findmypart/search/app.mjs',
+   '/findmypart/search/engine.mjs','/findmypart/search/candidates.mjs',
+   '/findmypart/search/recovery-links.mjs'])assert.ok(localRuntime.includes(route));
  assert.match(buyerHtml,/id="part-request-form"/);
- assert.match(buyerHtml,/Missing part\./);
+ assert.match(buyerHtml,/No more waste\./);
  assert.match(buyerApp,/\/api\/findmypart\/inquiry/);
  assert.match(buyerApp,/\/api\/findmypart\/readiness/);
  for(const route of ['/findmypart/','/findmypart','/api/findmypart/readiness'])
