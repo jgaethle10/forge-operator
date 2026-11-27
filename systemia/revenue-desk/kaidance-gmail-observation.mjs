@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 const SCHEMA='evercraft.systemia.gmail-owned-metadata-snapshot.v1';
 const MAX_BYTES=8*1024*1024, MAX_ROWS=20000, MAX_AGE=30*60*1000;
-const hold=(status)=>({schema:'evercraft.kaidance.gmail-observation.v1',status,full_history_confirmed:false,contact_clearance:false,outreach_authorized:false,quota_authority:false,private_records_exported:0});
+const hold=(status)=>({schema:'evercraft.kaidance.gmail-observation.v1',status,internal_date_coverage_confirmed:false,full_history_confirmed:false,contact_clearance:false,outreach_authorized:false,quota_authority:false,private_records_exported:0});
 const validTime=x=>typeof x==='string'&&Number.isFinite(Date.parse(x));
 export function summarizeRecentGmail(snapshot,now=new Date()){
  const at=Date.parse(snapshot?.observed_at), age=+now-at;
