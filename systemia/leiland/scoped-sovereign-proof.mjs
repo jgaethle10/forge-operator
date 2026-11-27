@@ -13,7 +13,7 @@ const boundary={synthetic_input:true,external_actions_authorized:false,
  publication_authorized:false,purchase_authorized:false,worker_dispatched:false};
 export async function runScopedSovereignProof({
  identityStateDir,passportStateDir,sessionKeyring,sessionToken,lane,
- origin,token,fetchImpl=globalThis.fetch,allowInference=false,expectedProvider='ollama'
+ origin,token,fetchImpl=globalThis.fetch,allowInference=false,expectedProvider='ollama',qualityProfile=null
 }={}){
  let attempted=false,completed=null;
  const held=()=>({schema,state:'held',inference_request_attempted:attempted,
@@ -39,7 +39,7 @@ export async function runScopedSovereignProof({
   passport=new EvercraftPassport({stateDir:passportStateDir});
   const initial=access();
   let final=null;
-  const report=await runSovereignCapabilityProof({lane,origin,token,allowInference,expectedProvider,
+  const report=await runSovereignCapabilityProof({lane,origin,token,allowInference,expectedProvider,qualityProfile,
    fetchImpl:(url,opts)=>{
     const decision=access();
     if(decision.grant_id!==initial.grant_id)throw Error('leiland_grant_changed');
