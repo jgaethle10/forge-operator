@@ -96,7 +96,8 @@ test('existing company tick includes GEMS held R&D without duplicating a schedul
  assert.equal(cases[0].retry_authorized,false);
  assert.equal(r.queue.execution_authorized,false);
  assert.equal(r.mission_snapshot.counts.admitted,0);
- assert.ok(r.mission_snapshot.counts.held>=3);
+ assert.equal(r.report.gems_research.held_workstreams,3);
+ assert.equal(r.mission_snapshot.counts.held,0,'historical GEMS holds must not inflate company action holds');
  assert.ok(r.mission_snapshot.evidence_refs.some(x=>x==='source:registry/kaidance-gems-research-continuity.v1.json'));
  assert.equal(r.duplicate,false);
  const dup=runCompanyHeartbeat({root:'.',outDir:out,now});
