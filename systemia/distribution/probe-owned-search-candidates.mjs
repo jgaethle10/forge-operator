@@ -8,7 +8,7 @@ import { createHash } from 'node:crypto';
 
 export const CANDIDATES=Object.freeze([
  {key:'findmypart',url:'https://fabric.systemiacommandcenters.com/findmypart/',
-  source:'public/findmypart/index.html',identity:'Missing part.',
+  source:'public/findmypart/index.html',identity:'No more waste.',
   release_gate:'systemia/launch/findmypart-launch-readiness.json'},
  {key:'journal',url:'https://fabric.systemiacommandcenters.com/journal/',
   source:'public/journal/index.html',identity:'Evercraft Journal',release_gate:null}
