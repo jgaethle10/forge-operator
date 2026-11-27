@@ -701,6 +701,37 @@ export class YardOperator {
           st.uid !== process.getuid() ||
           this.deploymentStatus(deploymentId) || fs.existsSync(this.#secretFile(deploymentId)))
         throw Error('broker_recovery_guard_requires_fresh_private_loopback_deployment');
+      // Recovery guard is deliberately restricted to a short, empty,
+      // ephemeral broker. This is not permission to commission it.
+      const brokerRoot = input?.state_root;
+      if (!input || Object.keys(input).sort().join(',') !== 'authorized_devices,port,state_root' ||
+          input.port !== 0 || !input.authorized_devices ||
+          Object.getPrototypeOf(input.authorized_devices) !== Object.prototype ||
+          Object.keys(input.authorized_devices).length !== 0 ||
+          !Number.isInteger(leaseTtlMs) || leaseTtlMs < 30000 || leaseTtlMs > 60000 ||
+          typeof brokerRoot !== 'string' || !path.isAbsolute(brokerRoot) ||
+          path.resolve(brokerRoot) !== brokerRoot || brokerRoot === '/' ||
+          brokerRoot.split(path.sep).includes('remote-broker-resident'))
+        throw Error('broker_recovery_guard_scope_invalid');
+      // Reject existing state (including dangling symlinks) and any
+      // symlinked existing ancestor. Compute still enforces its own root.
+      let ancestor=brokerRoot;
+      let first=true;
+      while (true) {
+        try {
+          const st=fs.lstatSync(ancestor);
+          if (first || !st.isDirectory() || st.isSymbolicLink() ||
+              fs.realpathSync(ancestor)!==ancestor)
+            throw Error('broker_recovery_guard_state_not_fresh');
+          break;
+        } catch(error) {
+          if(error.code!=='ENOENT')throw error;
+        }
+        first=false;
+        const parent=path.dirname(ancestor);
+        if(parent===ancestor)throw Error('broker_recovery_guard_state_not_fresh');
+        ancestor=parent;
+      }
       journalIdentity = {
         owner_pid:process.pid,
         boot_id:fs.readFileSync('/proc/sys/kernel/random/boot_id','utf8').trim(),
@@ -1173,7 +1204,9 @@ export class YardOperator {
       },
       updated_at: new Date().toISOString(),
     };
-    this.#saveLeaseSecret(deploymentId, {
+    // Guarded deployments already durably hold the exact lease secret.
+    // Never overwrite it with the broader allocator credential.
+    if (!journal) this.#saveLeaseSecret(deploymentId, {
       lease_id: lease.lease_id,
       token: lease.token,
       capacity_endpoint: capacityEndpoint,
