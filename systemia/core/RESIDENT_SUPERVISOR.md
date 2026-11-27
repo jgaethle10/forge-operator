@@ -46,3 +46,30 @@ Evercraft Compute does not forward raw Raven authority tokens from a deployment 
 If provider/model are absent, both Raven residents remain intentionally disabled. If configured, private Raven and the inference gateway activate together. Provider/model are non-secret configuration; hosted provider API keys remain in the Evercraft encrypted provider vault.
 
 The Chromebook local organism passes only `RAVEN_INFERENCE_PROVIDER`, `RAVEN_INFERENCE_MODEL`, optional `RAVEN_PROVIDER_CREDENTIAL_STATE_DIR`, and optional loopback `RAVEN_OLLAMA_ORIGIN` into the admitted Core request. The Core boundary owns secret creation after admission.
+
+### Conditional NextGen llama.cpp admission (source candidate)
+
+The existing Raven gateway can be bound to an already-running owned model API only
+on the exact Compute identity `evercraft-node002-nextgen`. The owner of the
+Compute process must explicitly configure `EVERCRAFT_NEXTGEN_LLAMA_RESIDENT_ADMISSION=true`.
+An admitted Core request must additionally select exactly:
+
+- `raven_inference_provider: "llama.cpp"`
+- `raven_inference_model: "leiland-qwen3-4b"`
+- `raven_local_llama_origin: "http://127.0.0.1:8080"`
+
+Other models, ports, hosts and mixed Ollama configuration are refused. Core passes
+only the validated origin and admission marker to the existing optional Raven
+gateway runner, which uses metadata-only validation before reporting startup.
+The transport remains bounded, local and without cloud fallback. The ordinary
+provider set and existing services remain unchanged by default.
+
+This is a binding candidate, not activation instructions. The model service must
+already be separately supervised on the same admitted node, with verified artifact
+provenance and resource budget; a metadata response alone does not attest the
+model process. No cross-machine routing or new NodeSeed permission is implied.
+Do not install another Core on an outbound-only worker or restart an active
+release to satisfy this configuration. Reconcile the exact existing resident
+placement and authenticated transport first. The owner-side installer is not
+changed in this candidate. No resident activation, persistent model, production
+permission or general-purpose autonomous inference is proven by the fixture tests.
