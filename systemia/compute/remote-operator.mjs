@@ -7,6 +7,9 @@ import { promisify } from 'node:util';
 import { observeNodeNetwork } from './network-observer.mjs';
 
 const execFileAsync = promisify(execFile);
+const MAX_PAGED_FILE_BYTES = 16 * 1024 * 1024;
+const SHA256_PATTERN = /^sha256:[a-f0-9]{64}$/;
+
 const sha = (value) => {
   const hash = createHash('sha256');
   if (Buffer.isBuffer(value)) hash.update(value);
@@ -311,29 +314,115 @@ export class EvercraftRemoteOperator {
     return { ok: true, root_key: resolved.key, path: resolved.relative, entries, receipt };
   }
 
-  read({ root_key = 'home', path: relativePath, encoding = 'utf8', max_bytes } = {}) {
+  read({
+    root_key = 'home',
+    path: relativePath,
+    encoding = 'utf8',
+    max_bytes,
+    offset_bytes,
+    expected_sha256,
+  } = {}) {
     const resolved = this.#resolveExisting(root_key, relativePath);
     const stat = fs.statSync(resolved.target);
     if (!stat.isFile()) throw new Error('operator_path_not_file');
     const limit = boundedInt(max_bytes, this.maxReadBytes, 1, this.maxReadBytes);
-    if (stat.size > limit) throw new Error('operator_file_too_large');
-    const buffer = fs.readFileSync(resolved.target);
     const normalizedEncoding = encoding === 'base64' ? 'base64' : 'utf8';
-    const content = buffer.toString(normalizedEncoding);
+
+    // The legacy read contract stays all-or-nothing. Pagination is explicitly
+    // requested by offset_bytes (including zero), never silently introduced.
+    if (offset_bytes === undefined) {
+      if (stat.size > limit) throw new Error('operator_file_too_large');
+      const buffer = fs.readFileSync(resolved.target);
+      const receipt = this.#receipt('fs.read', {
+        root_key: resolved.key,
+        path_sha256: sha(resolved.relative),
+        bytes: buffer.length,
+        content_sha256: sha(buffer),
+      });
+      return {
+        ok: true,
+        root_key: resolved.key,
+        path: resolved.relative,
+        encoding: normalizedEncoding,
+        content: buffer.toString(normalizedEncoding),
+        bytes: buffer.length,
+        sha256: sha(buffer),
+        receipt,
+      };
+    }
+
+    // Byte-exact binary pages prevent cutting a multibyte UTF-8 character in
+    // half and inadvertently manufacturing replacement characters.
+    if (normalizedEncoding !== 'base64') throw new Error('operator_paged_read_requires_base64');
+    if (!Number.isSafeInteger(offset_bytes) || offset_bytes < 0) {
+      throw new Error('operator_read_offset_invalid');
+    }
+    if (stat.size > MAX_PAGED_FILE_BYTES) {
+      throw new Error('operator_file_exceeds_paged_cap');
+    }
+    if (offset_bytes > 0 && !SHA256_PATTERN.test(String(expected_sha256 || ''))) {
+      throw new Error('operator_expected_file_sha256_required');
+    }
+    if (expected_sha256 !== undefined && !SHA256_PATTERN.test(String(expected_sha256))) {
+      throw new Error('operator_expected_file_sha256_invalid');
+    }
+
+    const fd = fs.openSync(resolved.target, fs.constants.O_RDONLY | fs.constants.O_NOFOLLOW);
+    let full;
+    try {
+      const before = fs.fstatSync(fd);
+      if (!before.isFile() || before.size > MAX_PAGED_FILE_BYTES) {
+        throw new Error('operator_file_exceeds_paged_cap');
+      }
+      if (offset_bytes > before.size) throw new Error('operator_read_offset_invalid');
+      full = Buffer.alloc(before.size);
+      let position = 0;
+      while (position < full.length) {
+        const count = fs.readSync(fd, full, position, full.length - position, position);
+        if (count < 1) throw new Error('operator_file_changed_during_read');
+        position += count;
+      }
+      const after = fs.fstatSync(fd);
+      if (before.dev !== after.dev || before.ino !== after.ino ||
+          before.size !== after.size || before.mtimeMs !== after.mtimeMs ||
+          before.ctimeMs !== after.ctimeMs) {
+        throw new Error('operator_file_changed_during_read');
+      }
+    } finally {
+      fs.closeSync(fd);
+    }
+    const fileHash = sha(full);
+    if (expected_sha256 !== undefined && expected_sha256 !== fileHash) {
+      throw new Error('operator_file_identity_mismatch');
+    }
+    const page = full.subarray(offset_bytes, Math.min(full.length, offset_bytes + limit));
+    const nextOffset = offset_bytes + page.length;
+    const more = nextOffset < full.length;
     const receipt = this.#receipt('fs.read', {
       root_key: resolved.key,
       path_sha256: sha(resolved.relative),
-      bytes: buffer.length,
-      content_sha256: sha(buffer),
+      read_mode: 'paged',
+      offset_bytes,
+      bytes: page.length,
+      file_bytes: full.length,
+      more,
+      content_sha256: sha(page),
+      file_sha256: fileHash,
     });
     return {
       ok: true,
       root_key: resolved.key,
       path: resolved.relative,
-      encoding: normalizedEncoding,
-      content,
-      bytes: buffer.length,
-      sha256: sha(buffer),
+      read_mode: 'paged',
+      encoding: 'base64',
+      content: page.toString('base64'),
+      bytes: page.length,
+      offset_bytes,
+      file_bytes: full.length,
+      sha256: fileHash,
+      page_sha256: sha(page),
+      truncated: more,
+      next_offset_bytes: more ? nextOffset : null,
       receipt,
     };
   }

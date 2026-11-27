@@ -93,6 +93,51 @@ try {
   assert.equal(read.status, 200);
   assert.equal(read.body.content, 'hello from node\n');
 
+
+  // The same existing remote broker route transports byte-exact pages.
+  const sample = Buffer.from('routed 🦃 multi-byte source\n', 'utf8');
+  fs.writeFileSync(path.join(operatorHome, 'paged-source.txt'), sample);
+  const pieces = [];
+  let nextOffset = 0;
+  let stableSha = null;
+  while (nextOffset !== null) {
+    const response = await request(grant.capacity_endpoint + '/v1/operator/fs/read', {
+      method: 'POST',
+      token: grant.allocator_token,
+      body: {
+        root_key: 'home',
+        path: 'paged-source.txt',
+        encoding: 'base64',
+        max_bytes: 7,
+        offset_bytes: nextOffset,
+        ...(stableSha ? { expected_sha256: stableSha } : {}),
+      },
+    });
+    assert.equal(response.status, 200);
+    const chunk = response.body;
+    assert.equal(chunk.read_mode, 'paged');
+    assert.equal(chunk.file_bytes, sample.length);
+    assert.equal(chunk.offset_bytes, nextOffset);
+    if (stableSha) assert.equal(chunk.sha256, stableSha);
+    stableSha ||= chunk.sha256;
+    pieces.push(Buffer.from(chunk.content, 'base64'));
+    assert.equal(chunk.truncated, chunk.next_offset_bytes !== null);
+    nextOffset = chunk.next_offset_bytes;
+    assert.ok(pieces.length < 20);
+  }
+  assert.ok(pieces.length > 1);
+  assert.deepEqual(Buffer.concat(pieces), sample);
+  const invalidContinuation = await request(grant.capacity_endpoint + '/v1/operator/fs/read', {
+    method: 'POST',
+    token: grant.allocator_token,
+    body: {
+      root_key: 'home', path: 'paged-source.txt', encoding: 'base64',
+      max_bytes: 7, offset_bytes: 7,
+    },
+  });
+  assert.equal(invalidContinuation.status, 422);
+  assert.equal(invalidContinuation.body.error, 'operator_expected_file_sha256_required');
+
   const sensitive = await request(grant.capacity_endpoint + '/v1/operator/fs/read', {
     method: 'POST',
     token: grant.allocator_token,
@@ -162,6 +207,7 @@ try {
     remote_filesystem_verified: true,
     remote_execution_verified: true,
     plaintext_operation_payloads_persisted_in_receipts: false,
+    hash_bound_paged_read_verified_through_broker: true,
   }, null, 2));
 } finally {
   if (agent) await agent.close();

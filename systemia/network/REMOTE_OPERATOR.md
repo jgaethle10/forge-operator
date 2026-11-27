@@ -56,6 +56,14 @@ Filesystem routes:
 
 Absolute paths, parent traversal and symlink write targets are rejected. Common high-risk secret locations and key files are blocked from the direct read/write API, including `.ssh`, `.gnupg`, `.aws`, `.kube`, provider credential custody, Identity/Passport state, `.env*`, private keys and token-bearing dotfiles.
 
+## Verified paged reads
+
+The original `remote_read_file` API remains all-or-nothing. An oversized file is rejected instead of returning an unlabeled prefix. To opt into bounded paging within the **existing authenticated** `POST /v1/operator/fs/read` route, send `encoding: "base64"`, `offset_bytes: 0`, and an optional `max_bytes` within the admitted node's per-page read limit. Continue by using the response's `next_offset_bytes` and supplying `expected_sha256` equal to the **whole-file** `sha256` returned on the first page.
+
+A paged response includes `read_mode: "paged"`, byte-exact base64 `content`, `bytes`, `offset_bytes`, `file_bytes`, `page_sha256`, whole-file `sha256`, `truncated`, and `next_offset_bytes` (null when complete). A caller must not declare a file fully observed until `truncated === false` and all pages have been assembled and verified in order. The node rejects stale continuations when a source file's whole-file hash changes, invalid offsets, UTF-8 paging that could split a multibyte character, secret paths, and paged files beyond a hard 16 MiB allocation cap. The legacy read and sensitive-path policy remain intact; pagination does not grant elevated access, broaden named roots, or create a new scheduler.
+
+The node computes the hash from its bounded file observation and guards basic inode/stat changes during the read. This is **not** a signed immutable snapshot, cross-node attestation, or protection against every concurrent filesystem mutation. A high-assurance multi-page consumer must verify the assembled digest, maintain authorization, and not equate bytes received with semantic task completion. Receipts persist hashes, page offsets and counts, not file contents.
+
 ## Command execution
 
 `POST /v1/operator/exec` is a bounded non-interactive program runner, not a raw public shell.

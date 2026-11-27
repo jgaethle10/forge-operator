@@ -101,7 +101,7 @@ export function remoteOperatorTools() {
     {
       name: 'remote_read_file',
       title: 'Read a file from an authorized Evercraft node',
-      description: 'Read one bounded file from an admitted root. Common secret/key locations are blocked by the node before content leaves the device.',
+      description: 'Read a complete bounded file, or opt into byte-exact pages with offset_bytes (starting at 0), encoding=base64, and expected_sha256 from the first page for continuation. Check truncated and next_offset_bytes; never treat one page as the whole file. Common secret/key locations are blocked by the node.',
       inputSchema: {
         type: 'object',
         properties: {
@@ -109,6 +109,8 @@ export function remoteOperatorTools() {
           path: { type: 'string', minLength: 1 },
           encoding: { type: 'string', enum: ['utf8', 'base64'], default: 'utf8' },
           max_bytes: { type: 'integer', minimum: 1, maximum: 8388608 },
+          offset_bytes: { type: 'integer', minimum: 0, description: 'Enable binary paging, starting at byte offset 0. Omit for legacy all-or-nothing read.' },
+          expected_sha256: { type: 'string', description: 'Whole-file SHA-256 supplied by the first page; required for all continuation pages.' },
         },
         required: ['path'],
         additionalProperties: false,

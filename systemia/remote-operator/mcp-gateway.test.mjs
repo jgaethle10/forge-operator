@@ -57,6 +57,11 @@ const listed = await executeRemoteOperatorMcpRpc({
   gateway,
 });
 assert.equal(listed.result.tools.length, 6);
+const readTool = listed.result.tools.find((tool) => tool.name === 'remote_read_file');
+assert.equal(readTool.inputSchema.properties.offset_bytes.minimum, 0);
+assert.equal(readTool.inputSchema.properties.expected_sha256.type, 'string');
+assert.match(readTool.description, /truncated/);
+
 
 const denied = await executeRemoteOperatorMcpRpc({
   rpc: {
