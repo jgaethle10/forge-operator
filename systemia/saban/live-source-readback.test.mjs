@@ -11,6 +11,9 @@ import {
   pinnedCanaryExpectation, verifyExistingYardState, runLiveSourceReadback,
 } from './live-source-readback.mjs';
 
+import { collectAttestedRemoteSource } from './attested-remote-source.mjs';
+
+const devicePin = 'sha256:' + 'a'.repeat(64);
 const repo = fileURLToPath(new URL('../../', import.meta.url));
 const gitCommit = execFileSync('git', [
   '-C', repo, 'rev-parse', 'HEAD',
@@ -24,9 +27,16 @@ test('argument contract requires exact ids, pinned commit and no arbitrary path 
     '--yard-state', '/private/yard',
     '--broker-deployment', 'broker-001',
     '--node-id', 'penguin-node-001',
+    '--device-fingerprint', devicePin,
     '--git-commit', gitCommit,
   ]);
   assert.equal(args.pageBytes, 262144);
+  assert.equal(args.expectedDeviceFingerprint, devicePin);
+  assert.throws(() => parseLiveReadbackArgs([
+    '--repo', repo, '--yard-state', '/private/yard',
+    '--broker-deployment', 'broker-001', '--node-id', 'node-001',
+    '--git-commit', gitCommit,
+  ]), /independent_device_fingerprint_required/);
   assert.equal(args.brokerDeploymentId, 'broker-001');
   assert.equal(parseLiveReadbackArgs(['--help']).help, true);
   assert.throws(() => parseLiveReadbackArgs([]), /required_arguments_missing/);
@@ -93,6 +103,7 @@ test('without an existing Yard authority the live readback is a content-free HOL
     repo, yardState: state,
     brokerDeploymentId: 'broker-001',
     nodeId: 'node-001',
+    expectedDeviceFingerprint: devicePin,
     gitCommit,
     pageBytes: 262144,
   });
@@ -127,4 +138,41 @@ test('CLI invalid inputs exit HOLD and never print a private path or token', () 
     {encoding:'utf8',timeout:5000});
   assert.equal(help.status, 0);
   assert.match(help.stdout, /No loopback proof override/);
+});
+
+
+test('independent coordinator device pin rejects substituted Yard inventory before grant or HTTP', async () => {
+  const otherPin = 'sha256:' + 'b'.repeat(64);
+  let grants = 0, network = 0, inventoryReads = 0;
+  const yard = {
+    async listRemoteCapacityNodes() {
+      inventoryReads++;
+      return {schema:'evercraft.yard.remote-capacity-nodes.v1',
+        broker_deployment_id:'broker-001',
+        nodes:[{node_id:'node-001', connected:true, device_fingerprint:otherPin,
+          secure_envelope_schema:'evercraft.secure-envelope.v1',
+          capacity:{authorized:true, session_attestation_verified:true,
+            attestation_supported:true, device_fingerprint:otherPin}}]};
+    },
+    async remoteCapacityGrant() { grants++; throw new Error('must not grant'); },
+  };
+  const input = {yard, brokerDeploymentId:'broker-001', nodeId:'node-001',
+    missionId:'mission-001', sourceId:'source-001', relativePath:CANARY_PATH,
+    expectedSha256:sha('canary'), expectedBytes:6,
+    expectedDeviceFingerprint:devicePin,
+    fetchImpl:async()=>{network++; throw new Error('must not fetch');}};
+  const mismatch = await collectAttestedRemoteSource(input);
+  assert.equal(mismatch.status, 'hold');
+  assert.equal(mismatch.reason, 'coordinator_device_pin_mismatch');
+  assert.equal(mismatch.coordinator_device_pin_matched, false);
+  assert.equal(mismatch.remote_node_identity_attested, false);
+  assert.equal(grants, 0);
+  assert.equal(network, 0);
+  assert.equal(inventoryReads, 1);
+  const invalid = await collectAttestedRemoteSource({...input, expectedDeviceFingerprint:'bad'});
+  assert.equal(invalid.reason, 'coordinator_device_pin_invalid');
+  assert.equal(inventoryReads, 1);
+  const missing = await runLiveSourceReadback({repo, gitCommit});
+  assert.equal(missing.reason, 'independent_device_fingerprint_required');
+  assert.equal(missing.local_git_object_pinned, false);
 });

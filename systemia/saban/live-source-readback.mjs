@@ -19,12 +19,14 @@ const MAX_CANARY_BYTES = 1024 * 1024;
 const MAX_PAGES = 128;
 const DEFAULT_PAGE_BYTES = 262144;
 const GIT_REF = /^[a-f0-9]{40}$/i;
+const DEVICE_PIN = /^sha256:[a-f0-9]{64}$/;
 const SAFE_ID = /^[a-z0-9][a-z0-9._-]{3,127}$/;
 const FIELDS = Object.freeze({
   '--repo': 'repo',
   '--yard-state': 'yardState',
   '--broker-deployment': 'brokerDeploymentId',
   '--node-id': 'nodeId',
+  '--device-fingerprint': 'expectedDeviceFingerprint',
   '--git-commit': 'gitCommit',
   '--page-bytes': 'pageBytes',
 });
@@ -53,6 +55,9 @@ export function parseLiveReadbackArgs(argv = []) {
     throw new Error('broker_or_node_id_invalid');
   }
   if (!GIT_REF.test(result.gitCommit)) throw new Error('pinned_git_commit_required');
+  if (!DEVICE_PIN.test(String(result.expectedDeviceFingerprint || ''))) {
+    throw new Error('independent_device_fingerprint_required');
+  }
   const pageBytes = result.pageBytes === undefined
     ? DEFAULT_PAGE_BYTES : Number(result.pageBytes);
   if (!Number.isSafeInteger(pageBytes) || pageBytes < 1 || pageBytes > 1024 * 1024) {
@@ -151,6 +156,7 @@ export async function runLiveSourceReadback(input) {
     canary_path: CANARY_PATH,
     pinned_git_commit: input?.gitCommit ?? null,
     local_git_object_pinned: false,
+    coordinator_device_pin_matched: false,
     source_bytes_verified: false,
     remote_node_identity_attested: false,
     physical_hardware_verified: false,
@@ -163,6 +169,10 @@ export async function runLiveSourceReadback(input) {
     credentials_returned: false,
     readback: null,
   };
+  if (!DEVICE_PIN.test(String(input?.expectedDeviceFingerprint || ''))) {
+    base.reason = 'independent_device_fingerprint_required';
+    return base;
+  }
   try {
     const pin = pinnedCanaryExpectation(input);
     base.local_git_object_pinned = true;
@@ -174,6 +184,7 @@ export async function runLiveSourceReadback(input) {
       yard,
       brokerDeploymentId: input.brokerDeploymentId,
       nodeId: input.nodeId,
+      expectedDeviceFingerprint: input.expectedDeviceFingerprint,
       missionId: 'saban-live-readback-001',
       sourceId: 'saban-public-source-canary-001',
       rootKey: pin.root_key,
@@ -184,6 +195,7 @@ export async function runLiveSourceReadback(input) {
       allowLoopbackProof: false,
     });
     base.remote_node_identity_attested = result.remote_node_identity_attested === true;
+    base.coordinator_device_pin_matched = result.coordinator_device_pin_matched === true;
     base.source_bytes_verified = result.source_bytes_verified === true;
     base.readback = {
       status: result.status,
@@ -199,6 +211,8 @@ export async function runLiveSourceReadback(input) {
     };
     if (result.status === 'attested_source_bytes_verified' &&
         result.remote_node_identity_attested === true &&
+        result.coordinator_device_pin_matched === true &&
+        result.secure_envelope_broker_route === true &&
         result.source_bytes_verified === true) {
       base.status = 'signed_live_session_canary_matched';
     } else {
@@ -218,6 +232,7 @@ if (isMain) {
     'Read-only Saban live canary. No shell execution on the remote node.',
     'Required: --repo ABSOLUTE_REPO --yard-state ABSOLUTE_PRIVATE_YARD_STATE',
     '  --broker-deployment ID --node-id ID --git-commit PINNED_40_CHAR_SHA',
+    '  --device-fingerprint INDEPENDENTLY_ADMITTED_SHA256_FINGERPRINT',
     'Optional: --page-bytes NUMBER (1..1048576, default 262144)',
     'Canary: ' + CANARY_PATH + ' under the admitted evercraft root.',
     'No loopback proof override; requires the existing Yard verified HTTPS route.',
