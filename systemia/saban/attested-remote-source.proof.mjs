@@ -91,12 +91,17 @@ try {
     timeoutMs: 15000,
     allowLoopbackProof: true,
   };
-  const good = await collectAttestedRemoteSource(common);
+  // Expected fingerprint comes directly from the separately started synthetic node,
+  // not from the broker inventory being checked.
+  const good = await collectAttestedRemoteSource({
+    ...common, expectedDeviceFingerprint: sourceSeed.device_fingerprint,
+  });
   assert.equal(good.status, 'attested_source_bytes_verified',
     JSON.stringify(good));
   assert.equal(good.broker_session_attestation_verified, true);
   assert.equal(good.remote_node_identity_attested, true);
   assert.equal(good.device_fingerprint, sourceSeed.device_fingerprint);
+  assert.equal(good.coordinator_device_pin_matched, true);
   assert.equal(good.source_bytes_verified, true);
   assert.equal(good.source_observation_receipt.observed_sha256, sha(original));
   assert.ok(good.pages_verified > 3);
@@ -111,6 +116,13 @@ try {
     original.toString('base64'), 'Evercraft signed source proof']) {
     assert.equal(safe.includes(secret), false, 'receipt exposed source or secret');
   }
+
+  const wrongPin = await collectAttestedRemoteSource({
+    ...common, expectedDeviceFingerprint: 'sha256:'+'f'.repeat(64),
+  });
+  assert.equal(wrongPin.reason, 'coordinator_device_pin_mismatch');
+  assert.equal(wrongPin.control_grant_receipt_hash, null);
+  assert.equal(wrongPin.remote_node_identity_attested, false);
 
   const wrongHash = await collectAttestedRemoteSource({
     ...common, expectedSha256: sha('wrong coordinator expectation'),
@@ -188,6 +200,8 @@ try {
     proof_environment: 'synthetic_local_only',
     real_yard_broker_and_outbound_nodeseed: true,
     signed_fresh_challenge_verified: true,
+    independently_pinned_device_matched: true,
+    wrong_device_pin_held_before_grant: true,
     broker_control_grant_bound: true,
     byte_exact_paged_source_verified: true,
     corrupted_declaration_held: true,
