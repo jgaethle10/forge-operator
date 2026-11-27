@@ -652,6 +652,7 @@ export class YardOperator {
     rollbackTarget,
     leaseTtlMs = 30_000,
     allocatorToken = '',
+    brokerRecoveryGuard = false,
   } = {}) {
     if (!deploymentId) throw new Error('deploymentId is required');
     if (!immutableRelease(releaseRef)) throw new Error('releaseRef must be immutable');
@@ -668,7 +669,91 @@ export class YardOperator {
       throw new Error('requested workload is not supported by capacity offer');
     }
 
-    const lease = await request(`${capacityEndpoint}/v1/leases`, {
+    // Opt-in candidate only: a fresh private broker attempt must not be replayed
+    // after an uncertain lease or job outcome. Other deployments are unchanged.
+    let journal = null;
+    let journalIdentity = null;
+    let lease = null;
+    let record = null;
+    const writeJournal = (state, extra = {}) => {
+      if (!journal) return;
+      const value = { schema: 'evercraft.yard.broker-lease-recovery.v1',
+        deployment_id: deploymentId, ...journalIdentity, state, ...extra };
+      const temporary = journal + '.' + randomBytes(6).toString('hex') + '.tmp';
+      try {
+        const fd = fs.openSync(temporary, 'wx', 0o600);
+        try { fs.writeFileSync(fd, JSON.stringify(value)+'\n'); fs.fsyncSync(fd); }
+        finally { fs.closeSync(fd); }
+        fs.renameSync(temporary, journal);
+        const dir = fs.openSync(this.stateDir, 'r');
+        try { fs.fsyncSync(dir); } finally { fs.closeSync(dir); }
+      } finally { fs.rmSync(temporary, {force:true}); }
+    };
+    if (brokerRecoveryGuard === true) {
+      const u = new URL(capacityEndpoint);
+      const st = fs.lstatSync(this.stateDir);
+      if (workloadClass !== 'systemia.remote-capacity-broker.v1' ||
+          !/^[a-zA-Z0-9._-]{3,160}$/.test(deploymentId) ||
+          u.protocol !== 'http:' || u.hostname !== '127.0.0.1' ||
+          !u.port || u.username || u.password || u.pathname !== '/' || u.search || u.hash ||
+          !st.isDirectory() || st.isSymbolicLink() || (st.mode & 0o077) !== 0 ||
+          fs.realpathSync(this.stateDir) !== this.stateDir ||
+          st.uid !== process.getuid() ||
+          this.deploymentStatus(deploymentId) || fs.existsSync(this.#secretFile(deploymentId)))
+        throw Error('broker_recovery_guard_requires_fresh_private_loopback_deployment');
+      // Recovery guard is deliberately restricted to a short, empty,
+      // ephemeral broker. This is not permission to commission it.
+      const brokerRoot = input?.state_root;
+      if (!input || Object.keys(input).sort().join(',') !== 'authorized_devices,port,state_root' ||
+          input.port !== 0 || !input.authorized_devices ||
+          Object.getPrototypeOf(input.authorized_devices) !== Object.prototype ||
+          Object.keys(input.authorized_devices).length !== 0 ||
+          !Number.isInteger(leaseTtlMs) || leaseTtlMs < 30000 || leaseTtlMs > 60000 ||
+          typeof brokerRoot !== 'string' || !path.isAbsolute(brokerRoot) ||
+          path.resolve(brokerRoot) !== brokerRoot || brokerRoot === '/' ||
+          brokerRoot.split(path.sep).includes('remote-broker-resident'))
+        throw Error('broker_recovery_guard_scope_invalid');
+      // Reject existing state (including dangling symlinks) and any
+      // symlinked existing ancestor. Compute still enforces its own root.
+      let ancestor=brokerRoot;
+      let first=true;
+      while (true) {
+        try {
+          const st=fs.lstatSync(ancestor);
+          if (first || !st.isDirectory() || st.isSymbolicLink() ||
+              fs.realpathSync(ancestor)!==ancestor)
+            throw Error('broker_recovery_guard_state_not_fresh');
+          break;
+        } catch(error) {
+          if(error.code!=='ENOENT')throw error;
+        }
+        first=false;
+        const parent=path.dirname(ancestor);
+        if(parent===ancestor)throw Error('broker_recovery_guard_state_not_fresh');
+        ancestor=parent;
+      }
+      journalIdentity = {
+        owner_pid:process.pid,
+        boot_id:fs.readFileSync('/proc/sys/kernel/random/boot_id','utf8').trim(),
+        node_id:capacity.node_id,
+        device_fingerprint:capacity.device_fingerprint,
+        capacity_endpoint:capacityEndpoint,
+        workload_class:workloadClass,
+      };
+      if (!journalIdentity.node_id || !/^sha256:[a-f0-9]{64}$/.test(journalIdentity.device_fingerprint||''))
+        throw Error('broker_recovery_capacity_identity_required');
+      journal = path.join(this.stateDir, '.broker-recovery-'+deploymentId+'.json');
+      const fd = fs.openSync(journal, 'wx', 0o600);
+      try {
+        fs.writeFileSync(fd, JSON.stringify({schema:'evercraft.yard.broker-lease-recovery.v1',
+          deployment_id:deploymentId,...journalIdentity,state:'lease_request_pending'})+'\n');
+        fs.fsyncSync(fd);
+      } finally { fs.closeSync(fd); }
+      const dir = fs.openSync(this.stateDir, 'r');
+      try { fs.fsyncSync(dir); } finally { fs.closeSync(dir); }
+    }
+    try {
+    lease = await request(`${capacityEndpoint}/v1/leases`, {
       method: 'POST',
       headers: allocatorToken ? { authorization: `Bearer ${allocatorToken}` } : {},
       body: JSON.stringify({
@@ -677,6 +762,23 @@ export class YardOperator {
       }),
     });
 
+    if (journal) {
+      if (typeof lease.lease_id !== 'string' || !/^[a-zA-Z0-9._-]+$/.test(lease.lease_id) ||
+          typeof lease.token !== 'string' || !lease.token ||
+          lease.workload_class !== workloadClass)
+        throw Error('broker_lease_ack_invalid');
+      // Keep lease authority private before the first job request. Existing
+      // Yard secret format; never copy tokens into the public journal.
+      const fd = fs.openSync(this.#secretFile(deploymentId), 'wx', 0o600);
+      try {
+        fs.writeFileSync(fd, JSON.stringify({lease_id:lease.lease_id,token:lease.token,
+          capacity_endpoint:capacityEndpoint,allocator_token:null})+'\n');
+        fs.fsyncSync(fd);
+      } finally { fs.closeSync(fd); }
+      const dir = fs.openSync(path.dirname(this.#secretFile(deploymentId)), 'r');
+      try { fs.fsyncSync(dir); } finally { fs.closeSync(dir); }
+      writeJournal('job_request_pending',{lease_id:lease.lease_id,expires_at:lease.expires_at||null,lease_token_digest:sha(lease.token)});
+    }
     let job;
     try {
       job = await request(`${capacityEndpoint}/v1/jobs`, {
@@ -690,6 +792,7 @@ export class YardOperator {
         }),
       });
     } catch (error) {
+      if (journal) throw error;
       try {
         await request(`${capacityEndpoint}/v1/leases/${lease.lease_id}/release`, {
           method: 'POST',
@@ -1084,7 +1187,7 @@ export class YardOperator {
       }
     }
 
-    const record = {
+    record = {
       deployment_id: deploymentId,
       state: 'ready',
       receipt,
@@ -1101,7 +1204,9 @@ export class YardOperator {
       },
       updated_at: new Date().toISOString(),
     };
-    this.#saveLeaseSecret(deploymentId, {
+    // Guarded deployments already durably hold the exact lease secret.
+    // Never overwrite it with the broader allocator credential.
+    if (!journal) this.#saveLeaseSecret(deploymentId, {
       lease_id: lease.lease_id,
       token: lease.token,
       capacity_endpoint: capacityEndpoint,
@@ -1109,7 +1214,139 @@ export class YardOperator {
     });
     this.deployments.set(deploymentId, record);
     this.#persist(record);
+    if (journal) writeJournal('ready',{lease_id:lease.lease_id});
     return record;
+    } catch (error) {
+      if (!journal) throw error;
+      let released = false;
+      if (typeof lease?.lease_id === 'string' && /^[a-zA-Z0-9._-]+$/.test(lease.lease_id) &&
+          typeof lease.token === 'string' && lease.token) {
+        try {
+          const reply = await request(`${capacityEndpoint}/v1/leases/${lease.lease_id}/release`, {
+            method:'POST',body:JSON.stringify({token:lease.token}),
+            signal:AbortSignal.timeout(5000),redirect:'error',
+          });
+          // Compute ReceiptChain uses a bare SHA-256 hex digest over its
+          // ordered receipt body. Bind the acknowledgement to this lease,
+          // workload and observed node rather than accepting any hash string.
+          const receipt = reply?.receipt;
+          if (reply?.ok === true && receipt && typeof receipt === 'object') {
+            const {receipt_hash, ...body} = receipt;
+            released = receipt.schema === 'evercraft.compute.receipt.v1' &&
+              receipt.type === 'capacity.lease.released' &&
+              receipt.lease_id === lease.lease_id &&
+              receipt.workload_class === workloadClass &&
+              receipt.node_id === capacity.node_id &&
+              /^[a-f0-9]{64}$/.test(receipt_hash||'') &&
+              sha(body) === receipt_hash;
+          }
+        } catch {}
+      }
+      const status = released ? 'lease_release_acknowledged' : 'held_outcome_unknown';
+      // A ready record may have been partially published before a disk error.
+      // Do not leave that record usable as a live deployment.
+      try {
+        if (record) {
+          record.state='held';
+          this.deployments.set(deploymentId,record);
+          this.#persist(record);
+        }
+        writeJournal(status,{lease_id:lease?.lease_id||null,manual_reconciliation_required:true});
+      } catch { throw Error('broker_recovery_journal_write_failed_manual_reconciliation_required'); }
+      throw Error('broker_deployment_'+status+'_manual_reconciliation_required');
+    }
+  }
+
+  // Explicit owner-side reconciliation of an interrupted guarded deployment.
+  // No allocator token, fresh lease, job submission, or automatic retry.
+  // Not invoked by the resident, and not a physical commissioning gate.
+  async reconcileInterruptedBrokerDeployment({deploymentId,confirm=false}={}) {
+    const held=reason=>({state:'held',reason,automatic_retry:false,job_submitted:false});
+    if(confirm!==true || !/^[a-zA-Z0-9._-]{3,160}$/.test(deploymentId||''))
+      return held('explicit_confirmation_required');
+    const root=this.stateDir;
+    const journalFile=path.join(root,'.broker-recovery-'+deploymentId+'.json');
+    const outcomeFile=path.join(root,'.broker-reconciliation-'+deploymentId+'.json');
+    const privateDir=p=>{
+      const st=fs.lstatSync(p);
+      return st.isDirectory()&&!st.isSymbolicLink()&&st.uid===process.getuid()&&
+        (st.mode&0o077)===0&&fs.realpathSync(p)===p;
+    };
+    const privateRead=p=>{
+      const st=fs.lstatSync(p);
+      if(!st.isFile()||st.isSymbolicLink()||st.nlink!==1||st.uid!==process.getuid()||
+         (st.mode&0o077)!==0||st.size>16384||fs.realpathSync(p)!==p)
+        throw Error('private_recovery_record_invalid');
+      return JSON.parse(fs.readFileSync(p,'utf8'));
+    };
+    let journal,secret;
+    try {
+      if(!privateDir(root)||!privateDir(path.join(root,'.lease-secrets')))
+        return held('private_recovery_root_invalid');
+      if(this.deploymentStatus(deploymentId))return held('deployment_record_exists');
+      journal=privateRead(journalFile);
+      if(journal.schema!=='evercraft.yard.broker-lease-recovery.v1'||
+         journal.deployment_id!==deploymentId||journal.state!=='job_request_pending'||
+         journal.workload_class!=='systemia.remote-capacity-broker.v1'||
+         !Number.isSafeInteger(journal.owner_pid)||journal.owner_pid<1||
+         journal.boot_id!==fs.readFileSync('/proc/sys/kernel/random/boot_id','utf8').trim())
+        return held('interrupted_job_identity_unverified');
+      try{process.kill(journal.owner_pid,0);return held('deploying_process_not_confirmed_dead');}
+      catch(e){if(e.code!=='ESRCH')return held('deploying_process_not_confirmed_dead');}
+      secret=privateRead(this.#secretFile(deploymentId));
+      const u=new URL(secret.capacity_endpoint);
+      if(u.protocol!=='http:'||u.hostname!=='127.0.0.1'||!u.port||
+         u.username||u.password||u.pathname!=='/'||u.search||u.hash||
+         secret.capacity_endpoint!==journal.capacity_endpoint||
+         secret.lease_id!==journal.lease_id||
+         !/^[a-zA-Z0-9._-]+$/.test(secret.lease_id||'')||
+         typeof secret.token!=='string'||!secret.token||secret.allocator_token!==null||
+         sha(secret.token)!==journal.lease_token_digest)
+        return held('saved_lease_binding_invalid');
+      const capacity=await request(u.origin+'/v1/capacity',{
+        signal:AbortSignal.timeout(5000),redirect:'error'});
+      if(capacity.protocol!=='evercraft.capacity.v1'||
+         capacity.node_id!==journal.node_id||
+         capacity.device_fingerprint!==journal.device_fingerprint||
+         !capacity.supported_workloads?.includes(journal.workload_class))
+        return held('capacity_identity_mismatch');
+    }catch{return held('private_recovery_evidence_unavailable');}
+    // Exclusive durable reservation before sending release. Crash or lost
+    // response leaves an unresolved record; do not automatically retry.
+    const result={schema:'evercraft.yard.broker-reconciliation.v1',
+      deployment_id:deploymentId,lease_id:journal.lease_id,
+      state:'release_request_pending',automatic_retry:false,job_submitted:false};
+    try{
+      const fd=fs.openSync(outcomeFile,'wx',0o600);
+      try{fs.writeFileSync(fd,JSON.stringify(result)+'\n');fs.fsyncSync(fd);}
+      finally{fs.closeSync(fd);}
+      const dir=fs.openSync(root,'r');
+      try{fs.fsyncSync(dir);}finally{fs.closeSync(dir);}
+    }catch{return held('reconciliation_already_reserved_or_unavailable');}
+    let acknowledged=false;
+    try{
+      const reply=await request(journal.capacity_endpoint+'/v1/leases/'+journal.lease_id+'/release',{
+        method:'POST',body:JSON.stringify({token:secret.token}),
+        signal:AbortSignal.timeout(5000),redirect:'error'});
+      const {receipt_hash,...body}=reply.receipt||{};
+      acknowledged=reply.ok===true&&body.schema==='evercraft.compute.receipt.v1'&&
+        body.type==='capacity.lease.released'&&body.node_id===journal.node_id&&
+        body.lease_id===journal.lease_id&&body.workload_class===journal.workload_class&&
+        /^[a-f0-9]{64}$/.test(receipt_hash||'')&&sha(body)===receipt_hash;
+      if(acknowledged)result.release_receipt_hash=receipt_hash;
+    }catch{}
+    result.state=acknowledged?'lease_release_acknowledged':'held_outcome_unknown';
+    const temporary=outcomeFile+'.'+randomBytes(6).toString('hex')+'.tmp';
+    try{
+      const fd=fs.openSync(temporary,'wx',0o600);
+      try{fs.writeFileSync(fd,JSON.stringify(result)+'\n');fs.fsyncSync(fd);}
+      finally{fs.closeSync(fd);}
+      fs.renameSync(temporary,outcomeFile);
+      const dir=fs.openSync(root,'r');
+      try{fs.fsyncSync(dir);}finally{fs.closeSync(dir);}
+    }catch{return held('reconciliation_outcome_persistence_failed');}
+    finally{fs.rmSync(temporary,{force:true});}
+    return result;
   }
 
   async deploySiblingRelease({
