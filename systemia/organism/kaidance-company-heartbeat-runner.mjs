@@ -16,6 +16,7 @@ import {runKaidanceCreativeDevelopment} from './kaidance-creative-development.mj
 import {runLearningCommunityCycle} from './kaidance-learning-community-cycle.mjs';
 import {runAirCoreDevelopmentCycle} from './kaidance-aircore-development.mjs';
 import {runPrivateResearchContinuity} from './kaidance-rd-continuity.mjs';
+import {reviewGemsResearchSource} from './kaidance-gems-research-continuity.mjs';
 import {runEventOpportunityScout} from '../events/event-opportunity-scout-runner.mjs';
 import {runSAMEventScout} from '../events/event-opportunity-us-sam-runner.mjs';
 import {runRegionalEventReview} from '../events/event-opportunity-regional-review-runner.mjs';
@@ -406,6 +407,9 @@ export function runCompanyHeartbeat({
  }:{state:aircore?.held?'held':'not_executed',reason:aircore?.reason||null,
   physical_prototype_built:false,worker_dispatched:false};
  const researchContinuity=runPrivateResearchContinuity({enabled:rdContinuityEnabled,root:repo,outDir:out,now});
+ // Research stays on the existing company tick; an issue reference is never a
+ // Passport lease, authenticated private evidence export or real GEMS result.
+ const gemsResearch=reviewGemsResearchSource({root:repo,now});
  const scout=eventScoutReview(out,now);
  const usScout=usSAMScoutReview(out,now);
  const regionalScout=regionalEventReview(out,now);
@@ -416,7 +420,7 @@ export function runCompanyHeartbeat({
    external_work_performed:false,source_regions:['United Kingdom','United States'],
    any_buyer_contact:false,any_sponsor_commitment:false};
  const report={...planned.report,proof,event_discovery:eventDiscovery,infrastructure_watch:aiw,
-  research_continuity:researchContinuity,
+  research_continuity:researchContinuity,gems_research:gemsResearch,
   global_opportunities:global,network_development:network,
   learning_community:learningSummary,aircore_development:aircoreSummary};
  const queue={schema:'evercraft.kaidance.company-heartbeat.queue.v1',observed_at:report.observed_at,
@@ -467,6 +471,7 @@ export function runCompanyHeartbeat({
     ...row,execution_authorized:false,hardware_purchase_authorized:false,
     partner_contact_authorized:false,authority:'systemia_operator_review_required'
    })),
+   ...gemsResearch.review_candidates,
    ...report.company_portfolio.products_not_yet_named.slice(0,12).map(key=>({
     work_key:'product:'+key+':adapter-admission',lane_key:null,priority:3,
     action:'bind_existing_systemia_capability_or_admit_bounded_new_adapter',authority:'source_review_required'
@@ -475,14 +480,18 @@ export function runCompanyHeartbeat({
   no_remote_work_dispatched:true,no_code_changes_made:true};
  const snapshot={...planned.snapshot,
   counts:{...planned.snapshot.counts,
-   scanned:planned.snapshot.counts.scanned+aiw.sources_observed+global.sources_observed+(network.status==='verified_receipt'?1:0)+(learning?.report?.counts?.tracked||0)+(aircore?.report?1:0),
+   scanned:planned.snapshot.counts.scanned+aiw.sources_observed+global.sources_observed+(network.status==='verified_receipt'?1:0)+(learning?.report?.counts?.tracked||0)+(aircore?.report?1:0)+(gemsResearch.source_registry_verified?1:0),
    changed:planned.snapshot.counts.changed+(global.newly_seen||0)+(network.newly_seen||0)+(aircore?.report?.newly_seen||0),
    held:planned.snapshot.counts.held+aiw.review_candidates.length+global.review_candidates.length+network.review_candidates.length+(learning?.report?.counts?.failed||0)+
-    (aircore?.held||['source_proof_failed','missing_source_hold'].includes(aircore?.report?.source_status)?1:0)},
+    (aircore?.held||['source_proof_failed','missing_source_hold'].includes(aircore?.report?.source_status)?1:0)+
+    (gemsResearch.source_registry_verified?gemsResearch.held_workstreams:1)},
   evidence_refs:[
     ...planned.snapshot.evidence_refs,
     ...(learning?.report_ref?['source:registry/kaidance-learning-community-workstreams.v1.json',learning.report_ref]:[]),
     ...(aircore?.receipt_ref?['source:registry/kaidance-aircore-development.v1.json',aircore.receipt_ref]:[]),
+    ...(gemsResearch.source_registry_verified?[
+      'source:registry/kaidance-gems-research-continuity.v1.json',gemsResearch.source_registry_fingerprint,
+      gemsResearch.evidence_ref]:[]),
     ...(aiw.status==='verified_receipt'?[
       'source:systemia/infrastructure-watch/source-registry.v1.json',sha(JSON.stringify(aiw))]:[]),
     ...(global.status==='verified_source_receipt'?[
@@ -569,6 +578,8 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
    learning_community_state:result.report?.learning_community?.state||null,
    learning_source_proofs_run:result.report?.learning_community?.source_proofs_run||0,
    aircore_source_status:result.report?.aircore_development?.source_status||null,
+   gems_research_source_status:result.report?.gems_research?.status||null,
+   gems_scientific_validation_verified:false,gems_capture_retried:false,
    aircore_verified_cadr_cfm:null,aircore_prototype_built:false,
    next_action_execution_authorized:false,
    creative_development:creative,
