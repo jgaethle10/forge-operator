@@ -67,7 +67,7 @@ export async function synchronizeWindow({accessToken,expectedMailbox,previous=nu
     const params=new URLSearchParams({format:'metadata'});
     for(const h of HEADERS)params.append('metadataHeaders',h);
     const value=await get(BASE+'/'+encodeURIComponent(key)+'?'+params,'metadata');
-    if(value?.id!==key||!Array.isArray(value.labelIds)||value.labelIds.includes('DRAFT'))fail('metadata_identity_or_membership_hold');
+    if(value?.id!==key||(value.labelIds!==undefined&&!Array.isArray(value.labelIds))||value.labelIds?.includes('DRAFT'))fail('metadata_identity_or_membership_hold');
     row=parseGmailMetadata(value);fetched++;
     await sleep(150);
    }else{reused++}
