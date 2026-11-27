@@ -74,6 +74,7 @@ function matchLink(offer,account){
  if(!httpsStripe(l.url)||l.url!==offer.checkout_url)return {state:'hold_checkout_url_mismatch',provider_link:l};
  if(l.line_items_complete!==true||!Array.isArray(l.line_items)||l.line_items.length!==1)return {state:'hold_line_items_incomplete',provider_link:l};
  const item=l.line_items[0];
+ if(item?.fixed_quantity_verified!==true)return {state:'hold_checkout_has_variable_total',provider_link:l};
  if(item.price_id!==offer.price_id||item.product_id!==offer.product_id||
   item.currency!==offer.currency||item.unit_amount!==offer.amount_cents||item.quantity!==1||
   item.type!=='one_time')return {state:'hold_exact_price_or_sku_mismatch',provider_link:l};

@@ -3,6 +3,18 @@
 import fs from 'node:fs';
 import path from 'node:path';
 const API='https://api.stripe.com';
+function optionalItemsCount(link){
+ if(!Object.hasOwn(link,'optional_items'))return null;
+ if(link.optional_items===null)return 0;
+ return Array.isArray(link.optional_items)?link.optional_items.length:null;
+}
+function fixedQuantityVerified(item){
+ return item?.quantity===1&&
+  Object.hasOwn(item,'adjustable_quantity')&&
+  (item.adjustable_quantity===null||item.adjustable_quantity?.enabled===false)&&
+  item.price!==null&&typeof item.price==='object'&&
+  Object.hasOwn(item.price,'custom_unit_amount')&&item.price.custom_unit_amount===null;
+}
 export function privateKeyFile(filename,repoRoot=''){
  if(typeof filename!=='string'||!path.isAbsolute(filename)||!fs.existsSync(filename))throw Error('stripe_key_file_missing');
  const resolved=path.resolve(filename);
@@ -36,17 +48,18 @@ export async function readOfferStripeLinks({bindings,offerCatalog=bindings?.offe
    for(const offer of offers){
     let link;
     try{
-     link=await stripeGet('/v1/payment_links/'+encodeURIComponent(offer.payment_link_id),key,fetchFn);
+     link=await stripeGet('/v1/payment_links/'+encodeURIComponent(offer.payment_link_id)+'?expand%5B%5D=optional_items',key,fetchFn);
      const items=await stripeGet('/v1/payment_links/'+encodeURIComponent(offer.payment_link_id)+'/line_items?limit=100',key,fetchFn);
      if(link.id!==offer.payment_link_id||items.has_more!==false||!Array.isArray(items.data))continue;
      rows.push({id:link.id,active:link.active===true,url:link.url,
       automatic_tax_enabled:link.automatic_tax?.enabled,
       managed_payments_enabled:link.managed_payments?.enabled,
       allow_promotion_codes:link.allow_promotion_codes,
-      optional_items_count:Array.isArray(link.optional_items)?link.optional_items.length:null,
+      optional_items_count:optionalItemsCount(link),
       shipping_options_count:Array.isArray(link.shipping_options)?link.shipping_options.length:null,
       after_completion:link.after_completion||null,
       line_items_complete:true,line_items:items.data.map(item=>({
+       fixed_quantity_verified:fixedQuantityVerified(item),
        price_id:typeof item.price==='object'?item.price.id:null,
        product_id:typeof item.price?.product==='string'?item.price.product:item.price?.product?.id||null,
        unit_amount:item.price?.unit_amount,quantity:item.quantity,
