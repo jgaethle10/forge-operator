@@ -11,6 +11,40 @@
   },
   "software": [
     {
+      "software_id": "leiland-sovereign-proof",
+      "name": "Leiland Sovereign Intelligence Proof",
+      "aliases": [],
+      "adapter": "systemia/leiland/saban-sovereign-adapter.mjs",
+      "default_logical_agents": 1,
+      "max_logical_agents": 1,
+      "default_physical_workers": 1,
+      "max_physical_workers": 1,
+      "lease_seconds": 300,
+      "roles": [
+        "synthetic_repair_evidence_review"
+      ],
+      "work_sources": [],
+      "side_effects": {
+        "default": "deny",
+        "local_receipts": true,
+        "external_network": false,
+        "local_model_calls": "explicit_operator_fixture_only",
+        "production_provider_calls": false,
+        "automatic_publication": false,
+        "automatic_checkout": false,
+        "unsolicited_human_outreach": false,
+        "payment_obligation": false
+      },
+      "max_attempts_per_job": 1,
+      "budget": {
+        "max_logical_agents": 1,
+        "max_physical_workers": 1,
+        "max_work_items": 1,
+        "max_attempts_per_job": 1
+      },
+      "assignment_strategy": "role_item_cartesian"
+    },
+    {
       "software_id": "chum",
       "name": "CHUM",
       "expansion": "Capability Handoff & Utility Mesh",
