@@ -39,6 +39,11 @@ on:
       - 'registry/kaidance-aircore-development.v1.json'
       - 'registry/kaidance-creative-development.v1.json'
       - 'tests/kaidance-creative-development.test.mjs'
+      - 'tests/kaidance-saban-graphics-source.test.mjs'
+      - 'public/work-saban/demo/**'
+      - 'systemia/saban/scheduler.mjs'
+      - 'systemia/saban/work-state.mjs'
+      - 'systemia/graphics-command/**'
       - 'public/leiland/**'
       - 'public/kaidance/visual.mjs'
       - 'public/kaidance/current-field.mjs'
@@ -120,6 +125,11 @@ on:
       - 'registry/kaidance-aircore-development.v1.json'
       - 'registry/kaidance-creative-development.v1.json'
       - 'tests/kaidance-creative-development.test.mjs'
+      - 'tests/kaidance-saban-graphics-source.test.mjs'
+      - 'public/work-saban/demo/**'
+      - 'systemia/saban/scheduler.mjs'
+      - 'systemia/saban/work-state.mjs'
+      - 'systemia/graphics-command/**'
       - 'public/leiland/**'
       - 'public/kaidance/visual.mjs'
       - 'public/kaidance/current-field.mjs'
@@ -262,7 +272,7 @@ jobs:
         run: node systemia/organism/mission-continuity-readonly.proof.mjs
 
       - name: Validate KAIDANCE Leiland and graphics Saban development boundaries
-        run: node --test tests/kaidance-creative-development.test.mjs
+        run: node --test tests/kaidance-creative-development.test.mjs tests/kaidance-saban-graphics-source.test.mjs
 
       - name: Validate one-company evidence-backed next action without a new worker
         run: node --test tests/kaidance-next-action.test.mjs

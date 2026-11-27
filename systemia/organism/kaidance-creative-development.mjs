@@ -12,9 +12,32 @@ import {runRegisteredAssignment} from '../saban/registered-worker.mjs';
 const ROOT=fileURLToPath(new URL('../../',import.meta.url));
 const SHA=s=>'sha256:'+createHash('sha256').update(s).digest('hex');
 const STATE='evercraft.kaidance.creative-development-state.v1';
-const KEYS=['evercraft-graphics','leiland-observatory'];
+const KEYS=['evercraft-graphics','leiland-observatory','saban-operations-graphics','work-saban-proof'];
 const PREFIX={'leiland-observatory':['public/leiland/'],
- 'evercraft-graphics':['public/kaidance/','systemia/media-studio/']};
+ 'evercraft-graphics':['public/kaidance/','systemia/media-studio/','systemia/graphics-command/'],
+ 'work-saban-proof':['public/work-saban/demo/'],
+ 'saban-operations-graphics':['systemia/saban/','systemia/graphics-command/']};
+const RELEASE_GATES=Object.freeze({
+ 'work-saban-proof':Object.freeze({
+   pr_number:1868,required_source:'public/work-saban/demo/visual-replay.mjs',source:'github_draft_pr'
+ }),
+ 'saban-operations-graphics':Object.freeze({
+   pr_number:1914,required_source:'systemia/graphics-command/saban-transition-view.mjs',source:'github_draft_pr'
+ })
+});
+function releaseGate(root,projectKey){
+ const gate=RELEASE_GATES[projectKey];
+ if(!gate)return null;
+ const target=path.resolve(root,gate.required_source);
+ const exists=fs.existsSync(target);
+ if(exists)source(root,gate.required_source); // enforce realpath and symlink guard
+ return {pr_number:gate.pr_number,source_ref:'github:jgaethle10/forge-operator:pull:'+gate.pr_number,
+   phase:exists?'source_present_acceptance_required':'candidate_not_in_checked_out_source',
+   authority:'systemia_review_required',code_write_authorized:false,
+   merge_authorized:false,deploy_authorized:false,publication_authorized:false,
+   runtime_receipts_verified:false,visual_acceptance_verified:false,
+   release_readiness_verified:false};
+}
 const ROLES=new Set(['beauty_judge','world_builder','documentary_truth_guard','brand_art_director','data_graphics_director']);
 const read=f=>JSON.parse(fs.readFileSync(f,'utf8'));
 export function validateCreativeRegistry(m){
@@ -24,11 +47,14 @@ export function validateCreativeRegistry(m){
   m.registered_saban_software!=='fallen-creative-council'||
   m.authority?.github_code_write!==false||m.authority?.auto_deploy!==false||
   m.authority?.auto_publish!==false||m.authority?.provider_calls!==false||
-  !Array.isArray(m.projects)||m.projects.length!==2||
+  !Array.isArray(m.projects)||m.projects.length!==4||
   m.projects.map(p=>p.project_key).sort().join(',')!==KEYS.join(','))
    throw Error('creative_registry_untrusted');
  for(const p of m.projects){
   if(!Array.isArray(p.source_files)||p.source_files.length<3||p.source_files.length>10||
+   (RELEASE_GATES[p.project_key]?
+     JSON.stringify(p.review_gate)!==JSON.stringify(RELEASE_GATES[p.project_key]):
+     p.review_gate!==undefined)||
    new Set(p.source_files).size!==p.source_files.length||
    p.source_files.some(f=>typeof f!=='string'||!PREFIX[p.project_key].some(prefix=>f.startsWith(prefix))||
     !/^[a-z0-9./-]+$/.test(f)||f.includes('..')||f.includes('//'))||
@@ -52,7 +78,13 @@ function source(root,relative){
 }
 export function creativeFingerprint(root,p){
  const h=createHash('sha256');
- for(const rel of [...p.source_files,p.proof_test].sort()){
+ const files=[...p.source_files,p.proof_test];
+ // An unmerged PR is never read from another branch or counted as reviewed.
+ // Once an approved visual source actually lands in this checkout, its bytes
+ // enter the fingerprint and force a new bounded source review.
+ const gated=RELEASE_GATES[p.project_key]?.required_source;
+ if(gated&&fs.existsSync(path.resolve(root,gated)))files.push(gated);
+ for(const rel of files.sort()){
   h.update(rel+'\0');h.update(fs.readFileSync(source(root,rel)));h.update('\0');
  }
  return 'sha256:'+h.digest('hex');
@@ -153,7 +185,7 @@ export async function runKaidanceCreativeDevelopment({root=ROOT,outDir,now=new D
    }
   }
   projects.push({project_key:p.project_key,title:p.title,source_fingerprint:fingerprint,
-   status,review_run_this_tick:ran,
+   status,release_gate:releaseGate(repo,p.project_key),review_run_this_tick:ran,
    review_receipt_ref:state.projects[p.project_key]?.review_receipt_ref||null,
    last_reviewed_at:state.projects[p.project_key]?.reviewed_at||null,
    verified_source_tests_this_tick:ran,
@@ -168,22 +200,29 @@ export async function runKaidanceCreativeDevelopment({root=ROOT,outDir,now=new D
     evidence_ref:stateRow.review_receipt_ref||null,
     art_direction:(stateRow.notes||[]).map(n=>({role:n.role,
      directives:n.directives,reject_if:n.reject_if})),
+    release_gate:p.release_gate,
     next_action:stateRow.pending?'systemia_reconcile_unfinished_readonly_review':
-     'develop_tested_isolated_graphics_patch_for_review',
+     p.release_gate?.phase==='candidate_not_in_checked_out_source'?
+       'review_existing_graphics_pr_and_merge_only_after_owner_acceptance':
+     p.release_gate?.phase==='source_present_acceptance_required'?
+       'verify_source_visual_tests_and_authorized_node_receipts_before_release':
+       'develop_tested_isolated_graphics_patch_for_review',
     requires_systemia_approval:true,code_write_authorized:false,
     auto_publish_authorized:false};
   })};
+ const releaseHeld=projects.filter(p=>p.release_gate!==null).length;
  const report={schema:'evercraft.kaidance.creative-development.v1',
   observed_at:at.toISOString(),tick,heartbeat_seconds:300,
   scheduler:'existing_company_heartbeat',projects,
   source_review_completed_this_tick:changed,held_projects:held,
+  release_held_projects:releaseHeld,
   code_changes:0,visual_assets_generated:0,autonomous_code_generation:false,
   real_browser_render_executed:false,publication_authorized:false,
   limitations:['GitHub cron is best effort','source proof is not visual acceptance',
    'creative review is not code generation','no private inference or live model activity inferred']};
  const snapshot={schema:'evercraft.kaidance.mission-snapshot.v1',
-  snapshot_ref:SHA(JSON.stringify({tick,projects:projects.map(x=>x.source_fingerprint),changed,held})),
-  observed_at:at.toISOString(),counts:{scanned:2,changed,admitted:0,held},
+  snapshot_ref:SHA(JSON.stringify({tick,projects:projects.map(x=>x.source_fingerprint),changed,held,releaseHeld})),
+  observed_at:at.toISOString(),counts:{scanned:m.projects.length,changed,admitted:0,held:held+releaseHeld},
   evidence_refs:projects.flatMap(p=>[p.source_fingerprint,...(p.review_run_this_tick?[p.review_receipt_ref]:[])]).slice(0,12)};
  atomic(path.join(out,'latest.json'),report);atomic(path.join(out,'queue.json'),queue);
  atomic(path.join(out,'mission-snapshot.json'),snapshot);
