@@ -15,7 +15,9 @@ export async function runScopedSovereignProof({
  identityStateDir,passportStateDir,sessionKeyring,sessionToken,lane,
  origin,token,fetchImpl=globalThis.fetch,allowInference=false
 }={}){
- const held=()=>({schema,state:'held',inference_completed:0,...boundary});
+ let attempted=false,completed=null;
+ const held=()=>({schema,state:'held',inference_request_attempted:attempted,
+  inference_completed:attempted?completed:0,result_released:false,...boundary});
  if(!Object.hasOwn(products,lane)||!identityStateDir||!passportStateDir||
     !sessionKeyring||typeof sessionKeyring!=='object'||Array.isArray(sessionKeyring))return held();
  const product=products[lane],resource='synthetic-leiland:'+lane;
@@ -41,16 +43,16 @@ export async function runScopedSovereignProof({
    fetchImpl:(url,opts)=>{
     const decision=access();
     if(decision.grant_id!==initial.grant_id)throw Error('leiland_grant_changed');
-    if(new URL(url).pathname==='/v1/infer')final=decision;
+    if(new URL(url).pathname==='/v1/infer'){final=decision;attempted=true;}
     return fetchImpl(url,opts);
    }});
+  completed=report.state==='held'&&attempted?null:report.inference_completed;
   const end=access();
-  if(end.grant_id!==initial.grant_id)return {...held(),inference_completed:report.inference_completed,
-   result_released:false};
-  if(report.state==='held')return {...held(),inference_completed:report.inference_completed};
+  if(end.grant_id!==initial.grant_id)return held();
+  if(report.state==='held')return held();
   if(report.inference_completed>0&&!final)return held();
   return {schema,state:report.state,lane,authorization_digest:hash(initial),
-   inference_completed:report.inference_completed,receipts:report.receipts,
+   inference_request_attempted:attempted,inference_completed:report.inference_completed,receipts:report.receipts,
    result_released:true,...boundary};
  }catch{return held()}
 }
