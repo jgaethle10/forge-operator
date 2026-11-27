@@ -113,6 +113,31 @@ cd "$HOME/.local/share/evercraft/forge-operator"
 node scripts/client001-caddy-coexistence.mjs
 ```
 
+**Protected live Caddyfile on Penguin:** If the default command reports
+`EACCES` and the operator confirms that
+`/etc/evercraft/Caddyfile` is deliberately `root:caddy 0640`,
+**do not use `chmod`, `chgrp`, group membership changes or
+`sudo node`**. Instead, after syncing the updated script, use:
+
+```bash
+(
+  set -euo pipefail
+  cd "$HOME/.local/share/evercraft/forge-operator"
+  sudo -u caddy cat /etc/evercraft/Caddyfile |
+    node scripts/client001-caddy-coexistence.mjs --base-stdin
+)
+```
+
+Only the existing Caddy service account opens its protected file. The
+rehearsal JS still runs as the normal operator user and consumes the
+config via a pipe in process memory; it does **not** print/store the
+source, relax filesystem permissions or modify any live service.
+Like any privileged read, this grants the operator process temporary
+access to configuration bytes, so **verify the canonical checkout and
+don't run altered or unreviewed scripts**. If your operator policy
+requires that config bytes never enter the normal user process, HOLD
+instead and implement a reviewed root-owned audit helper.
+
 This read-only script checks the on-node staged source digest, reads the
 real Caddyfile and the limited nonsecret
 `/etc/evercraft/public-edge.env` hostname/contact settings, and invokes
