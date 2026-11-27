@@ -6,7 +6,7 @@
   "lanes": [
     {
       "lane_key": "worlds",
-      "description": "Evercraft Worlds, Flightworks, Yakima Timewalk and Mossmere",
+      "description": "Evercraft Worlds, Flightworks, Yakima Timewalk and Mossmere and Reality Engine research",
       "mode": "bounded_source_proof",
       "cadence_seconds": 300,
       "products": [],
@@ -15,13 +15,17 @@
         "public/worlds/wayfinder-core.mjs",
         "public/worlds/gateway/index.html",
         "public/worlds/flight/index.html",
-        "public/worlds/hidden-world/yakima-walk/index.html"
+        "public/worlds/hidden-world/yakima-walk/index.html",
+        "research/reality-engine/benchmark.py",
+        "research/reality-engine/demo.html",
+        "tests/reality-engine-proof.test.mjs"
       ],
       "proof_tests": [
         "tests/worlds-destinations.test.mjs",
         "tests/worlds-destination-portal.test.mjs",
         "tests/worlds-wayfinder-navigation.test.mjs",
-        "tests/worlds-navigation-public-readback.test.mjs"
+        "tests/worlds-navigation-public-readback.test.mjs",
+        "tests/reality-engine-proof.test.mjs"
       ],
       "proof_expiry_seconds": 3600,
       "priority": 1,

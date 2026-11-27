@@ -27,7 +27,7 @@ export function validateCompanyLanes(manifest,products,supervisor){
   if(lane.mode==='bounded_source_proof'){
    if(lane.lane_key!=='worlds'||(lane.source_files||[]).length<1||(lane.proof_tests||[]).length<1)throw Error('unbounded_company_proof');
    for(const f of [...lane.source_files,...lane.proof_tests]){
-    if(typeof f!=='string'||!/^(?:public\/worlds|tests)\/[a-z0-9./-]+$/.test(f)||f.includes('..')||f.includes('//'))throw Error('unsafe_company_proof_file');
+    if(typeof f!=='string'||!/^(?:(?:public\/worlds|tests)\/[a-z0-9./-]+|research\/reality-engine\/(?:benchmark\.py|demo\.html))$/.test(f)||f.includes('..')||f.includes('//'))throw Error('unsafe_company_proof_file');
    }
   }
  }
