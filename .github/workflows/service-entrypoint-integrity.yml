@@ -1,0 +1,43 @@
+name: Evercraft service entrypoint integrity
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/check-evercraft-service-integrity.py'
+      - 'tests/service-entrypoint-integrity.test.py'
+      - 'scripts/inspect-penguin-broker-restart-safety.mjs'
+      - 'tests/penguin-broker-restart-safety.test.mjs'
+      - 'systemia/yard/broker-recovery-admission.mjs'
+      - 'tests/broker-cold-restart-identity.test.mjs'
+      - '.github/workflows/service-entrypoint-integrity.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/check-evercraft-service-integrity.py'
+      - 'tests/service-entrypoint-integrity.test.py'
+      - 'scripts/inspect-penguin-broker-restart-safety.mjs'
+      - 'tests/penguin-broker-restart-safety.test.mjs'
+      - 'systemia/yard/broker-recovery-admission.mjs'
+      - 'tests/broker-cold-restart-identity.test.mjs'
+      - '.github/workflows/service-entrypoint-integrity.yml'
+
+jobs:
+  integrity:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Compile read-only fleet scanner
+        run: python -m py_compile scripts/check-evercraft-service-integrity.py
+      - name: Test fleet scanner without accessing host systemd
+        run: python -m unittest discover -s tests -p 'service-entrypoint-integrity.test.py' -v
+      - name: Test Penguin broker restart refusal and cold-start identity rejection
+        run: node --test tests/penguin-broker-restart-safety.test.mjs tests/broker-cold-restart-identity.test.mjs
