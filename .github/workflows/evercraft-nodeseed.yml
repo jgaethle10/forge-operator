@@ -25,3 +25,6 @@ jobs:
         run: node systemia/compute/node-seed-proof.mjs
       - name: Prove public edge field admission
         run: node systemia/compute/public-edge-field-admit.proof.mjs
+
+      - name: Prove authorized Remote Operator all-or-nothing and paged reads
+        run: npm run test:remote-operator
