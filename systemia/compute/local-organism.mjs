@@ -85,6 +85,7 @@ export async function startLocalOrganism({
   ravenInferenceModel = '',
   ravenProviderCredentialStateDir = '',
   ravenOllamaOrigin = '',
+  ravenLocalLlamaOrigin = '',
   // Explicitly requested owner-controlled admission; off by default.
   leilandObservatory = null,
   zeroSpendCapacity = true,
@@ -262,6 +263,7 @@ export async function startLocalOrganism({
         raven_inference_model: String(ravenInferenceModel || '').trim(),
         provider_credential_state_dir: String(ravenProviderCredentialStateDir || '').trim(),
         raven_ollama_origin: String(ravenOllamaOrigin || '').trim(),
+        ...(ravenLocalLlamaOrigin ? {raven_local_llama_origin:ravenLocalLlamaOrigin} : {}),
         ...(leilandObservatory ? {leiland_observatory:leilandObservatory} : {}),
       },
       rollbackTarget: 'local-organism:core-previous',
@@ -546,6 +548,7 @@ if (isCli) {
       process.env.EVERCRAFT_CREDENTIAL_STATE_DIR ||
       '',
     ravenOllamaOrigin: process.env.RAVEN_OLLAMA_ORIGIN || '',
+    ravenLocalLlamaOrigin: process.env.RAVEN_LOCAL_LLAMA_ORIGIN || '',
     // Service manager must explicitly enable and supply both bindings;
     // no default publication root or guessed release is ever authorized.
     leilandObservatory:
