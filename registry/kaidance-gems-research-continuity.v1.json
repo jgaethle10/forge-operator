@@ -1,0 +1,63 @@
+{
+  "schema": "evercraft.kaidance.gems-research-continuity.v1",
+  "mission_key": "doe-gems-geodawn-research",
+  "lane_key": "science-research",
+  "heartbeat_seconds": 300,
+  "source_authority": "founder_reported_git_issue_source_only",
+  "canonical": {
+    "repository": "jgaethle10/forge-operator",
+    "research_branch": "research/gems-systemia-bridge-20261118",
+    "research_source_commit": "fae48adc188d2a2d28e12a5b540453dfe64aceb4",
+    "research_pr": 2259,
+    "continuity_issue": 2260
+  },
+  "selected_entry": {
+    "driven_data_submission_id": 330339,
+    "official_public_dti_reported": 0.0552,
+    "reported_not_freshly_verified": true,
+    "selection_change_authorized": false
+  },
+  "workstreams": [
+    {
+      "work_key": "gems:008e:owner-private-capture",
+      "state": "blocked_private_capture_error_review",
+      "next_action": "inspect_authorized_private_penguin_capture_stderr_before_any_retry",
+      "automatic_retry": false,
+      "source_independence_verified": false
+    },
+    {
+      "work_key": "gems:007:frozen-quota",
+      "state": "blocked_frozen_negative_bin_quota",
+      "next_action": "preserve_original_quota_and_gems007_blocker_no_model_fit",
+      "automatic_retry": false,
+      "source_independence_verified": false
+    },
+    {
+      "work_key": "gems:independent-fault-truth",
+      "state": "hold_unqualified_source_lineage",
+      "next_action": "review_original_fault_provenance_and_source_rights_before_validation",
+      "automatic_retry": false,
+      "source_independence_verified": false
+    }
+  ],
+  "claims": {
+    "actual_nbmg_features_obtained": false,
+    "penguin_5_synthetic_tests_reported_pass": true,
+    "penguin_https_capture_reported_failed": true,
+    "private_capture_error_contents_observed": false,
+    "independent_fault_validation_qualified": false,
+    "new_scored_submission_made": false,
+    "new_training_executed": false,
+    "paid_compute_authorized": false
+  },
+  "authority": {
+    "owner_private_evidence_mount": false,
+    "network_probe": false,
+    "remote_shell": false,
+    "automatic_work_dispatch": false,
+    "license_or_competition_submission": false,
+    "code_write": false,
+    "deployment": false,
+    "external_outreach": false
+  }
+}
