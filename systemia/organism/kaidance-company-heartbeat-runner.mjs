@@ -11,6 +11,7 @@ import {planCompanyHeartbeat,validateCompanyLanes} from './kaidance-company-hear
 import {researchCycle} from '../evermaps/cemetery/research-cycle.mjs';
 import {classifyNext} from '../evermaps/cemetery/source-classification.mjs';
 import {writeKaidanceNextAction} from './kaidance-next-action.mjs';
+import {observeLeilandSabanCycle} from '../leiland/observe-saban-sovereign-cycle.mjs';
 import {observeEngineeringPilot} from './kaidance-engineering-pilot-observation.mjs';
 import {runGlobalOpportunityScout} from './kaidance-global-opportunity-scout.mjs';
 import {runKaidanceCreativeDevelopment} from './kaidance-creative-development.mjs';
@@ -350,7 +351,7 @@ export function runCompanyHeartbeat({
  root=sourceRoot,outDir=path.join(sourceRoot,'artifacts/kaidance-company-heartbeat'),
  now=new Date(),proveWorlds=false,proveLearning=false,proveAirCore=false,
  learningCycle=runLearningCommunityCycle,aircoreCycle=runAirCoreDevelopmentCycle,
- spawn=spawnSync,aiwReceipt=null,globalOpportunityReceipt=null,networkDevelopmentReceipt=null,rdContinuityEnabled=false,forestReceipt=null,findmypartExecutionReceipt=null,commercialSourceProof=null,eventResidentPulse=null,engineeringPilotRoot=null
+ spawn=spawnSync,aiwReceipt=null,globalOpportunityReceipt=null,networkDevelopmentReceipt=null,rdContinuityEnabled=false,forestReceipt=null,findmypartExecutionReceipt=null,commercialSourceProof=null,eventResidentPulse=null,engineeringPilotRoot=null,leilandSabanRoot=null
 }={}){
  const repo=path.resolve(root),out=path.resolve(outDir);
  const manifest=readJson(path.join(repo,'registry/kaidance-company-lanes.v1.json'));
@@ -459,7 +460,8 @@ export function runCompanyHeartbeat({
    external_work_performed:false,source_regions:['United Kingdom','United States'],
    any_buyer_contact:false,any_sponsor_commitment:false};
  const engineeringPilot=observeEngineeringPilot({root:engineeringPilotRoot,now});
- const report={...planned.report,proof,engineering_pilot:engineeringPilot,commercial_source_proof:commercialSourceProof||{status:'not_executed',executed:false},event_discovery:eventDiscovery,infrastructure_watch:aiw,forest_restoration:forest,
+ const leiland=observeLeilandSabanCycle({root:leilandSabanRoot,now});
+ const report={...planned.report,proof,leiland_intelligence:leiland,engineering_pilot:engineeringPilot,commercial_source_proof:commercialSourceProof||{status:'not_executed',executed:false},event_discovery:eventDiscovery,infrastructure_watch:aiw,forest_restoration:forest,
   findmypart:{state:'review_queued',priority:1,heartbeat_seconds:300,workstreams:findmypartCandidates.map(x=>x.work_key),worker_dispatched:false,source_poll_performed:fmp?.source_poll_performed===true,buyers_qualified:0,outreach_authorized:false,engineering_benchmark_executed:fmp?.engineering_benchmark_executed===true,commercial_status:fmp?.commercial_status||'not_executed',industrial_proof:industrialProof,inbound_revenue_review:inboundSummary,inbound_contact_history:contactHistory,source_observation:fmp?.observation||null,service_fit_evidence:fmpShopCandidates.map(({work_key,source_url,observed_at,evidence_ref})=>({work_key,source_url,observed_at,evidence_ref})),code_changes:0},
   research_continuity:researchContinuity,
   global_opportunities:global,network_development:network,
@@ -604,7 +606,8 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
     proveAirCore:process.argv.includes('--prove-aircore')||process.env.SYSTEMIA_KAIDANCE_AIRCORE_SOURCE_PROOFS==='true',
     aiwReceipt,globalOpportunityReceipt,networkDevelopmentReceipt,forestReceipt,
     rdContinuityEnabled:process.env.SYSTEMIA_KAIDANCE_RD_CONTINUITY_ENABLED==='true',
-    engineeringPilotRoot:process.env.SYSTEMIA_ENGINEERING_PILOT_OBSERVE==='true'&&process.env.GITHUB_ACTIONS!=='true'?process.env.SYSTEMIA_ENGINEERING_PILOT_ROOT:null});
+    engineeringPilotRoot:process.env.SYSTEMIA_ENGINEERING_PILOT_OBSERVE==='true'&&process.env.GITHUB_ACTIONS!=='true'?process.env.SYSTEMIA_ENGINEERING_PILOT_ROOT:null,
+    leilandSabanRoot:process.env.SYSTEMIA_LEILAND_OBSERVE==='true'&&process.env.GITHUB_ACTIONS!=='true'?process.env.SYSTEMIA_LEILAND_SABAN_ROOT:null});
   // The same company heartbeat owns Leiland + visual art-direction review.
   // This is not another scheduler or a remote code-generation worker.
   let creative={status:'held',reviewed_this_tick:0};

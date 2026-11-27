@@ -132,7 +132,9 @@
       "optional_env_args": {
         "--credential-state-dir": "RAVEN_PROVIDER_CREDENTIAL_STATE_DIR",
         "--port": "RAVEN_INFERENCE_GATEWAY_PORT",
-        "--ollama-origin": "RAVEN_OLLAMA_ORIGIN"
+        "--ollama-origin": "RAVEN_OLLAMA_ORIGIN",
+        "--local-llama-origin": "RAVEN_LOCAL_LLAMA_ORIGIN",
+        "--local-llama-admitted": "RAVEN_LOCAL_LLAMA_ADMITTED"
       },
       "max_restarts_per_hour": 12,
       "restart_backoff_ms": 5000

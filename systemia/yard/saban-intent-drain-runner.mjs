@@ -6,6 +6,7 @@ import {YardOperator} from './operator.mjs';
 import {writeSafeNodeSeedInventory} from '../saban/nodeseed-inventory-ingest.mjs';
 import {dispatchAmbientJobsOnce} from '../saban/ambient-job-dispatcher.mjs';
 import {runClassroomAutoProbeCycle} from '../classroom/node002-auto-probe-cycle.mjs';
+import {runLeilandSabanCycle} from '../leiland/saban-sovereign-cycle.mjs';
 
 const MODULE_FILE=fileURLToPath(import.meta.url);
 function arg(name,fallback=''){
@@ -28,6 +29,7 @@ export async function runYardSabanIntentDrain({
   classroomProbeEnabled=false,
   classroomProbeOperation='readiness',
   classroomProbeCycle=runClassroomAutoProbeCycle,
+  leilandLocalProofContext=null,
   now=new Date(),
 }={}){
   if(!yardStateDir)throw new Error('yard_state_dir_required');
@@ -113,6 +115,13 @@ export async function runYardSabanIntentDrain({
       classroomProbe={state:'held',reason:'classroom_cycle_failed',dispatch_attempted:false};
     }
   }
+  // Programmatic operator proof only; no CLI/env activation or remote authority.
+  let leilandProof=null;
+  if(leilandLocalProofContext?.leilandLocalProofEnabled===true){
+    try{leilandProof=await runLeilandSabanCycle({stateDir:sabanRoot,now,
+      executionContext:leilandLocalProofContext});}
+    catch{leilandProof={state:'held',assignment_attempted:null};}
+  }
   const receipt={
     ...drained,
     schema:'evercraft.yard.saban-intent-drain.v1',
@@ -122,6 +131,7 @@ export async function runYardSabanIntentDrain({
     unified_dispatch_enabled:dispatchQueued===true,
     content_hash_only:dispatchQueued===true,
     classroom_probe:classroomProbe,
+    leiland_local_proof:leilandProof,
     dispatch_cycle:dispatched?{
       considered_jobs:dispatched.considered_jobs,
       handoff_wait:dispatched.handoff_wait,

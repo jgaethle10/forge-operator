@@ -4,6 +4,8 @@ import path from "node:path";
 import { createHash, timingSafeEqual } from "node:crypto";
 import { ProviderCredentialVault } from "../evercraft-home/credential-vault.mjs";
 
+import {createLocalLlamaProofAdapter} from "./local-llama-proof-adapter.mjs";
+
 const PROVIDERS = Object.freeze(["ollama", "gemini", "openai"]);
 
 function clean(value, max = 50000) {
@@ -112,11 +114,16 @@ export function createInferenceEngine({
   fetchImpl = globalThis.fetch,
   timeoutMs = 120000,
   now = () => new Date(),
+  localLlamaProofOrigin,
+  allowLocalLlamaProof = false,
 } = {}) {
   const providerKey = clean(provider, 80).toLowerCase();
   const modelKey = clean(model, 300);
-  if (!PROVIDERS.includes(providerKey)) throw new Error("raven_inference_provider_invalid");
+  const localProof = providerKey === "llama.cpp" && allowLocalLlamaProof === true;
+  if (!PROVIDERS.includes(providerKey) && !localProof) throw new Error("raven_inference_provider_invalid");
   if (!modelKey) throw new Error("raven_inference_model_required");
+
+  const llamaProof = localProof ? createLocalLlamaProofAdapter({origin:localLlamaProofOrigin,model:modelKey,fetchImpl,timeoutMs:Math.min(timeoutMs,35000)}) : null;
 
   async function inferOllama(input) {
     const base = clean(ollamaOrigin, 2000).replace(/\/$/, "");
@@ -309,7 +316,7 @@ export function createInferenceEngine({
     model: modelKey,
     async validate() {
       const startedAt = now().toISOString();
-      const result = providerKey === "ollama"
+      const result = localProof ? await llamaProof.validate() : providerKey === "ollama"
         ? await validateOllama()
         : providerKey === "gemini"
           ? await validateGemini()
@@ -349,7 +356,7 @@ export function createInferenceEngine({
       if (!prompt) throw new Error("inference_input_required");
 
       const startedAt = now().toISOString();
-      const result = providerKey === "ollama"
+      const result = localProof ? await llamaProof.infer(prompt) : providerKey === "ollama"
         ? await inferOllama(prompt)
         : providerKey === "gemini"
           ? await inferGemini(prompt)
@@ -395,6 +402,8 @@ export async function startRavenInferenceGateway({
   ollamaOrigin,
   openaiOrigin,
   geminiOrigin,
+  localLlamaProofOrigin,
+  allowLocalLlamaProof = false,
   fetchImpl = globalThis.fetch,
 } = {}) {
   if (!["127.0.0.1", "localhost", "::1"].includes(host)) {
@@ -409,6 +418,8 @@ export async function startRavenInferenceGateway({
     ollamaOrigin,
     openaiOrigin,
     geminiOrigin,
+    localLlamaProofOrigin,
+    allowLocalLlamaProof,
     fetchImpl,
   });
   let closed = false;
