@@ -20,7 +20,8 @@ const extractionPrompt='Fictional QA case. Extract part identifiers from the fic
 export function validateSyntheticExtraction(raw){
  if(typeof raw!=='string'||Buffer.byteLength(raw,'utf8')>1024)return false;
  const m=raw.match(/^\s*\{\s*"(nameplate_part|catalog_part)"\s*:\s*"TX-42"\s*,\s*"(nameplate_part|catalog_part)"\s*:\s*"TX-42"\s*\}\s*$/);
- return Boolean(m&&m[1]!==m[2]);
+ if(!m||m[1]===m[2])return false;
+ try{JSON.parse(raw);return true}catch{return false}
 }
 export async function runSovereignCapabilityProof({origin='http://127.0.0.1:4322',token,
  fetchImpl=globalThis.fetch,allowInference=false,lane=null,expectedProvider='ollama',qualityProfile=null}={}){
