@@ -10,7 +10,7 @@ const story=fs.readFileSync('public/findmypart/brand/launch-portrait.svg','utf8'
 const wordmark=fs.readFileSync('public/findmypart/brand/wordmark.svg','utf8');
 
 test('practical orange blue black identity is consistent across customer surfaces',()=>{
-  assert.match(landing,/<title>FindMyPart \| Missing part\. Not the end\.<\/title>/);
+  assert.match(landing,/<title>FindMyPart \| No more waste\. We source the solution\.<\/title>/);
   assert.match(landing,/--ink:#151c25/);
   assert.match(landing,/--orange:#f16b27/);
   assert.match(landing,/--blue:#2565a3/);
@@ -33,8 +33,8 @@ test('practical orange blue black identity is consistent across customer surface
 
 test('working-customer homepage is genuinely short and action focused',()=>{
   assert.match(landing,/For the part nobody can find/);
-  assert.match(landing,/Missing part\./);
-  assert.match(landing,/Not the end\./);
+  assert.match(landing,/No more waste\./);
+  assert.match(landing,/We source the solution\./);
   assert.match(landing,/Search parts free/);
   assert.ok(landing.includes('href="/findmypart/search/"'));
   assert.match(landing,/Need us to investigate instead/);
@@ -93,8 +93,41 @@ test('owned Fabric serves exact FindMyPart site and art as GET/HEAD read-only, n
      assert.match(res.headers.get('content-type')||'',/text\/html/);
      assert.match(res.headers.get('x-robots-tag')||'',/noindex/);
      assert.match(res.headers.get('content-security-policy')||'',/form-action 'none'/);
-     assert.match(await res.text(),/Missing part\./);
+     assert.match(await res.text(),/No more waste\./);
    }
+   // Exercise the real browser journey: the homepage link, HTML and every module import.
+   const searchHtml=fs.readFileSync('public/findmypart/search/index.html','utf8');
+   assert.match(searchHtml,/No more waste\./);
+   assert.match(searchHtml,/We source the solution\./);
+   assert.match(searchHtml,/src="\/findmypart\/search\/app\.mjs"/);
+   for(const route of ['/findmypart/search','/findmypart/search/','/findmypart/search/index.html']){
+     const res=await fetch(runtime.url+route);
+     assert.equal(res.status,200,route);
+     assert.match(res.headers.get('content-type')||'',/text\/html/);
+     assert.match(res.headers.get('x-robots-tag')||'',/noindex/);
+     assert.match(res.headers.get('x-content-type-options')||'',/nosniff/);
+     assert.match(await res.text(),/id="search-form"/);
+   }
+   for(const [name,token] of [
+     ['app.mjs',"from './engine.mjs'"],
+     ['engine.mjs','analyzePartQuery'],
+     ['candidates.mjs','candidateFromInput'],
+     ['recovery-links.mjs','recoveryResearchLinks']
+   ]){
+     const route='/findmypart/search/'+name;
+     const res=await fetch(runtime.url+route);
+     assert.equal(res.status,200,route);
+     assert.match(res.headers.get('content-type')||'',/text\/javascript/);
+     assert.match(res.headers.get('x-robots-tag')||'',/noindex/);
+     assert.match(res.headers.get('x-content-type-options')||'',/nosniff/);
+     assert.ok((await res.text()).includes(token),route);
+     const head=await fetch(runtime.url+route,{method:'HEAD'});
+     assert.equal(head.status,200,route+' HEAD');
+     assert.equal((await head.text()).length,0);
+     const post=await fetch(runtime.url+route,{method:'POST'});
+     assert.equal(post.status,405,route+' POST');
+   }
+   assert.equal((await fetch(runtime.url+'/findmypart/search/not-in-allowlist.mjs')).status,404);
    const sample=await fetch(runtime.url+'/findmypart/sample-report/');
    assert.equal(sample.status,200);
    assert.match(await sample.text(),/NOT A REAL HUNT OR SUPPLIER QUOTE/);
