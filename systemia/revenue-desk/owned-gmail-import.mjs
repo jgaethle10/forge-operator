@@ -5,7 +5,7 @@ import {pathToFileURL} from 'node:url';
 // User-authorized Gmail API on an Evercraft-owned node. Metadata only.
 // No OAuth grant creation, body, attachment, send endpoint, or send authority.
 const BASE='https://gmail.googleapis.com/gmail/v1/users/me/messages';
-const HEADERS=['From','To','Cc','Bcc','Auto-Submitted','X-Autoreply','X-Autorespond','X-Failed-Recipients'];
+export const HEADERS=['From','To','Cc','Bcc','Auto-Submitted','X-Autoreply','X-Autorespond','X-Failed-Recipients'];
 const ADDRESS=/[a-zA-Z0-9_.!#$%&'*+/=?^_{|}~-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
 const clean=v=>String(v??'').trim();
 function readFileStrict(file){
@@ -47,7 +47,7 @@ export function parseGmailMetadata(m){
 const REASONS=new Set(['rateLimitExceeded','userRateLimitExceeded','dailyLimitExceeded','quotaExceeded','insufficientPermissions','forbidden','authError','accessNotConfigured','domainPolicy','backendError','notFound','SERVICE_DISABLED','ACCESS_TOKEN_SCOPE_INSUFFICIENT','RESOURCE_EXHAUSTED','RATE_LIMIT_EXCEEDED']);
 const RATE=new Set(['rateLimitExceeded','userRateLimitExceeded','RATE_LIMIT_EXCEEDED']);
 const sleepDefault=ms=>new Promise(resolve=>setTimeout(resolve,ms));
-async function getJson(url,token,fetchImpl,{stage,maxRetries,sleep}){
+export async function getJson(url,token,fetchImpl,{stage,maxRetries,sleep}){
  for(let attempt=0;;attempt++){
   let response;
   try{
