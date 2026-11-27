@@ -44,6 +44,7 @@ export async function collectAttestedRemoteSource({
   rootKey = 'home',
   relativePath,
   expectedSha256,
+  expectedDeviceFingerprint,
   expectedBytes,
   pageBytes = 8192,
   timeoutMs = 15000,
@@ -58,6 +59,7 @@ export async function collectAttestedRemoteSource({
     source_id: sourceId ?? null,
     node_id: nodeId ?? null,
     device_fingerprint: null,
+    coordinator_device_pin_matched: false,
     broker_deployment_id: brokerDeploymentId ?? null,
     control_grant_receipt_hash: null,
     remote_node_identity_attested: false,
@@ -94,6 +96,10 @@ export async function collectAttestedRemoteSource({
     return hold(receipt, 'source_read_constraints_invalid');
   }
 
+  if (expectedDeviceFingerprint !== undefined && !HASH.test(String(expectedDeviceFingerprint))) {
+    return hold(receipt, 'coordinator_device_pin_invalid');
+  }
+
   try {
     const inventory = await yard.listRemoteCapacityNodes(brokerDeploymentId);
     if (inventory?.schema !== 'evercraft.yard.remote-capacity-nodes.v1' ||
@@ -109,6 +115,10 @@ export async function collectAttestedRemoteSource({
         selected.capacity?.device_fingerprint !== selected.device_fingerprint ||
         selected.secure_envelope_schema !== 'evercraft.secure-envelope.v1') {
       return hold(receipt, 'eligible_attested_remote_session_required');
+    }
+    if (expectedDeviceFingerprint !== undefined &&
+        selected.device_fingerprint !== expectedDeviceFingerprint) {
+      return hold(receipt, 'coordinator_device_pin_mismatch');
     }
     receipt.broker_session_attestation_verified = true;
     const grant = await yard.remoteCapacityGrant(brokerDeploymentId, nodeId, {
@@ -160,6 +170,8 @@ export async function collectAttestedRemoteSource({
     }
     receipt.remote_node_identity_attested = true;
     receipt.device_fingerprint = verified.device_fingerprint;
+    receipt.coordinator_device_pin_matched = expectedDeviceFingerprint !== undefined &&
+      verified.device_fingerprint === expectedDeviceFingerprint;
 
     const pages = [];
     let cursor = 0;
