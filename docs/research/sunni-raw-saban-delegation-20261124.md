@@ -73,3 +73,14 @@ Reproduce:
     node --test systemia/saban/shadow-delegated-sales-reconciliation.test.mjs
 
 The established Saban multiplier workflow runs both suites. Do not promote this shadow proof into automatic action or claim real independent agent verification until the existing Passport / NodeSeed attestation, coordinator expectation custody and live admission are established.
+
+
+## 2026-11-26 signed-session Saban source read proof (separate from field acceptance)
+
+The next small, source-only proof is \`systemia/saban/attested-remote-source.mjs\`. It uses the **existing** Yard remote-capacity inventory and authorized control grant, requires connected/authorized/session-attested NodeSeed inventory and matching fingerprints, and issues an independently generated fresh nonce through the existing \`/v1/attest\` broker path. The preexisting device identity verifier checks the Ed25519 statement against the nonce, node ID and selected device fingerprint before any file pages are accepted. It then reads the declared source through the existing outbound-only Remote Operator paged-read API, with SHA-256 continuity between pages and the complete-source evaluator from merged #2622.
+
+The only externally returned receipt contains immutable-looking **hash references and counters**, not source content, allocator tokens, private identity keys, raw signatures, or remote HTTP error bodies. It explicitly reports \`field_verified: false\`, \`physical_hardware_verified: false\`, \`objective_semantics_verified: false\`, \`coordinator_expectation_origin_attested: false\`, \`runtime_dispatched: false\` and \`runtime_mutated: false\`. Source digests and an attested session establish a bounded evidentiary link, **not** individually signed file pages or an immutable source snapshot. The caller must have a trusted predeclared whole-file digest/byte count and cannot trust self-reported agent success.
+
+Proof command: \`node systemia/saban/attested-remote-source.proof.mjs\`. The test starts a real, locally scoped **synthetic** Yard + broker host + signed NodeSeed + outbound agent, exercises a fresh attestation, reads a synthetic multi-page source, and deliberately fails invalid source expectations, secret paths, wrong device fingerprints, modified signed statements, changed sources and unapproved loopback routes. It is added to the existing Saban multiplier workflow, not a scheduler or deployment.
+
+**Still required before claiming the founder's live-hardware milestone:** a genuine authorized Yard broker deployment and actual admitted Penguin/NextGen NodeSeed, with a verified route, approved source path, trusted predeclared SHA/length, capture of the identity and page receipts, and independent verification on that live node. Neither a CI simulation nor a cryptographically signed device identity alone certifies physical field readiness or authorizes any mutation. Maintain FindMyPart revenue priority and the existing heartbeat.
