@@ -9,6 +9,7 @@ import {HEADERS,getJson,parseGmailMetadata} from './owned-gmail-import.mjs';
 const BASE='https://gmail.googleapis.com/gmail/v1/users/me/messages';
 const HOST=/^(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,63}$/;
 const KEY=/^findmypart:shop:[a-z0-9-]{1,80}$/;
+const NAME=/^[A-Za-z0-9][A-Za-z0-9 .&'()-]{2,119}$/;
 const sleepDefault=ms=>new Promise(r=>setTimeout(r,ms));
 const fail=c=>{throw Error('gmail_targeted_'+c)};
 const id=x=>typeof x==='string'&&/^[A-Za-z0-9_-]{1,256}$/.test(x);
@@ -23,11 +24,12 @@ export function selectShopTargets(queue,now=Date.now()){
   let u;try{u=new URL(r.source_url)}catch{fail('source_hold')}
   const host=u.hostname.toLowerCase().replace(/^www\./,'');
   if(u.protocol!=='https:'||u.username||u.password||!HOST.test(host))fail('source_hold');
-  return {work_key:r.work_key,host};
+  if(!NAME.test(r.business_name||''))fail('business_name_hold');
+  return {work_key:r.work_key,host,name:r.business_name};
  });
 }
 export async function reviewTargetedHistory({targets,accessToken,fetchImpl=globalThis.fetch,sleep=sleepDefault,clock=Date.now}={}){
- if(!Array.isArray(targets)||targets.length>6||new Set(targets.map(x=>x?.work_key)).size!==targets.length||targets.some(x=>!KEY.test(x?.work_key||'')||!HOST.test(x?.host||'')))fail('targets_hold');
+ if(!Array.isArray(targets)||targets.length>6||new Set(targets.map(x=>x?.work_key)).size!==targets.length||targets.some(x=>!KEY.test(x?.work_key||'')||!HOST.test(x?.host||'')||!NAME.test(x?.name||'')))fail('targets_hold');
  if(typeof accessToken!=='string'||accessToken.length<16)fail('token_hold');
  const deadline=clock()+90000,cache=new Map(),results=[];
  const get=async(url,stage)=>{
@@ -37,7 +39,7 @@ export async function reviewTargetedHistory({targets,accessToken,fetchImpl=globa
  for(const target of targets){
   const h=target.host;
   // Provider search is a candidate generator, not an exact-address guarantee.
-  const q='in:anywhere -in:drafts {from:'+h+' to:'+h+' cc:'+h+' bcc:'+h+'}';
+  const q='in:anywhere -in:drafts {from:'+h+' to:'+h+' cc:'+h+' bcc:'+h+' "'+target.name+'"}';
   const ids=new Set(),tokens=new Set();
   let pageToken=null,pages=0,truncated=false;
   do{
@@ -74,9 +76,12 @@ export async function reviewTargetedHistory({targets,accessToken,fetchImpl=globa
   const sent=mail.filter(m=>m.direction==='outbound'&&m.to_addresses.some(a=>domain(a)===h));
   const inbound=mail.filter(m=>m.direction==='inbound'&&domain(m.from_address)===h);
   const reply=inbound.filter(m=>!m.is_auto_reply&&!m.is_bounce&&m.thread_id&&sent.some(s=>s.thread_id===m.thread_id&&Date.parse(s.occurred_at)<Date.parse(m.occurred_at)));
-  results.push({work_key:target.work_key,provider_candidates:ids.size,search_truncated:truncated,exact_domain_outbound:sent.length,exact_domain_inbound:inbound.length,same_thread_reply_candidates:reply.length,state:reply.length?'review_existing_thread_for_actual_buyer_need':sent.length||inbound.length?'review_existing_contact_history':'no_domain_match_not_clearance',contact_clearance:false,outreach_authorized:false});
+  const otherSent=mail.filter(m=>m.direction==='outbound'&&!sent.includes(m)&&m.to_addresses.length>0);
+  const otherInbound=mail.filter(m=>m.direction==='inbound'&&!inbound.includes(m));
+  const otherReply=otherInbound.filter(m=>!m.is_auto_reply&&!m.is_bounce&&m.thread_id&&m.from_address&&otherSent.some(s=>s.thread_id===m.thread_id&&s.to_addresses.includes(m.from_address)&&Date.parse(s.occurred_at)<Date.parse(m.occurred_at)));
+  results.push({work_key:target.work_key,provider_candidates:ids.size,search_truncated:truncated,exact_domain_outbound:sent.length,exact_domain_inbound:inbound.length,same_thread_reply_candidates:reply.length,unattributed_outbound_candidates:otherSent.length,unattributed_inbound_candidates:otherInbound.length,unattributed_same_thread_reply_candidates:otherReply.length,state:reply.length?'review_existing_thread_for_actual_buyer_need':sent.length||inbound.length?'review_existing_contact_history':ids.size?'review_unattributed_search_hits':'no_search_match_not_clearance',contact_clearance:false,outreach_authorized:false});
  }
- return {schema:'evercraft.findmypart.gmail-targeted-history.v1',candidates_reviewed:results.length,metadata_requests:cache.size,results,full_history_confirmed:false,buyer_replies_verified:0,buyers_qualified:0,send_authority:false,private_records_exported:0};
+ return {schema:'evercraft.findmypart.gmail-targeted-history.v2',search_basis:'official_domain_or_business_name_phrase',candidates_reviewed:results.length,metadata_requests:cache.size,results,full_history_confirmed:false,buyer_replies_verified:0,buyers_qualified:0,send_authority:false,private_records_exported:0};
 }
 async function main(){
  const args=process.argv.slice(2),i=args.indexOf('--mailbox');
