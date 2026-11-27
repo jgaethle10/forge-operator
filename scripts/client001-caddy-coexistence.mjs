@@ -100,7 +100,8 @@ function adapt(candidate,env){
  try{return JSON.parse(result.stdout)}catch{throw Error('adapter_did_not_return_json')}
 }
 export function evaluatePhysicalEdge({
- base=defaultBase,edgeEnv=defaultEnv,io=fs,adapter=adapt
+ base=defaultBase,edgeEnv=defaultEnv,io=fs,adapter=adapt,
+ baseContent=null,stageInspector=inspectSourceStage
 }={}){
  const evidence={schema:'evercraft.client001.caddy-coexistence-rehearsal.v1',
   state:'HOLD_PUBLIC_PROMOTION',source:'physical_penguin_read_only',
@@ -114,10 +115,16 @@ export function evaluatePhysicalEdge({
    'actual_customer_host_acme_validation','independent_external_client001_browser',
    'authorized_reversible_promotion']};
  try{
-  const existing=io.readFileSync(base,'utf8');
+  // Allow a single read-only stream from the Caddy service account. Never
+  // weaken /etc/evercraft permissions or execute repo-owned JS as root/caddy.
+  // The protected Caddyfile is held only in process memory and never printed.
+  const existing=baseContent===null?io.readFileSync(base,'utf8'):baseContent;
+  if(typeof existing!=='string'||existing.length===0||
+      Buffer.byteLength(existing,'utf8')>2*1024*1024||existing.includes('\0'))
+   throw Error('invalid_protected_caddyfile_input');
   const fragment=io.readFileSync(fragmentFile,'utf8');
   const scoped=readScopedEdgeEnv(io.readFileSync(edgeEnv,'utf8'));
-  const stage=inspectSourceStage();
+  const stage=stageInspector();
   evidence.canonical_source_sha256=stage.canonical_sha256;
   evidence.staged_digest_verified=stage.staged_sha256_matches;
   if(!stage.release_staged||!stage.staged_sha256_matches)
@@ -143,8 +150,14 @@ export function evaluatePhysicalEdge({
  return evidence;
 }
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)){
- if(process.argv.length!==2)throw Error('Usage: node scripts/client001-caddy-coexistence.mjs (read-only, no options)');
- const result=evaluatePhysicalEdge();
+ const args=process.argv.slice(2);
+ if(args.length>1||(args.length===1&&args[0]!=='--base-stdin'))
+  throw Error('Usage: node scripts/client001-caddy-coexistence.mjs [--base-stdin] (read-only)');
+ // --base-stdin is for: sudo -u caddy cat /etc/evercraft/Caddyfile |
+ //   node scripts/client001-caddy-coexistence.mjs --base-stdin
+ // Never run a user-writable repository script via sudo.
+ const result=evaluatePhysicalEdge(args.length===1?
+  {baseContent:fs.readFileSync(0,'utf8')}:{});
  process.stdout.write(JSON.stringify(result,null,2)+'\n');
  if(result.result!=='PASS_SOURCE_COMPOSITION_ONLY')process.exitCode=1;
 }
