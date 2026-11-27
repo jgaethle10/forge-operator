@@ -26,7 +26,8 @@ function setup(t){
  const sessionToken=encoded+'.'+createHmac('sha256',secret).update(encoded).digest('base64url');
  function grant({product='findmypart',scopes=['leiland.synthetic-review'],resource_refs=['synthetic-leiland:findmypart']}={}){
   return passport.issueGrant({idempotency_key:'grant:'+product,subject_ref:subject,
-   issuer_ref:'evercraft:identity-authority',product,scopes,resource_refs,
+   issuer_ref:'evercraft:identity-authority',product,scopes,
+   ...(resource_refs===null?{}:{resource_refs}),
    starts_at:new Date(now-60000).toISOString(),ends_at:until,
    max_delegation_depth:0,authority_state:'verified_identity_authority',
    authority_receipt_ref:'test:identity:owner'});
@@ -71,7 +72,8 @@ test('exact product scope admits only one fixed synthetic task',async t=>{
 test('missing, unscoped and wrong-resource grants never reach gateway',async t=>{
  const {run,grant,calls}=setup(t);
  assert.equal((await run()).state,'held');
- grant({resource_refs:[]});
+ assert.throws(()=>grant({resource_refs:[]}),/resource_refs_required/);
+ grant({resource_refs:null});
  assert.equal((await run()).state,'held');
  grant({product:'systemia-atlas',resource_refs:['synthetic-leiland:findmypart']});
  assert.equal((await run({lane:'atlas'})).state,'held');
