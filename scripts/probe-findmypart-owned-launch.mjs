@@ -8,7 +8,17 @@ const observed_at_utc=new Date().toISOString();
 const sha=(body)=>crypto.createHash('sha256').update(body).digest('hex');
 const checks=[
  {route:'/findmypart/',source:'public/findmypart/index.html',type:'text/html',
-   tokens:['Missing part.','Not the end.','part-request-form','Quick Hunt','Deep Hunt','Rescue Hunt','$19','$49','$99']},
+   tokens:['No more waste.','We source the solution.','part-request-form','Quick Hunt','Deep Hunt','Rescue Hunt','$19','$49','$99']},
+ {route:'/findmypart/search/',source:'public/findmypart/search/index.html',type:'text/html',
+   tokens:['No more waste.','We source the solution.','id="search-form"','/findmypart/search/app.mjs']},
+ {route:'/findmypart/search/app.mjs',source:'public/findmypart/search/app.mjs',type:'javascript',
+   tokens:["from './engine.mjs'","from './candidates.mjs'","from './recovery-links.mjs'"]},
+ {route:'/findmypart/search/engine.mjs',source:'public/findmypart/search/engine.mjs',type:'javascript',
+   tokens:['analyzePartQuery']},
+ {route:'/findmypart/search/candidates.mjs',source:'public/findmypart/search/candidates.mjs',type:'javascript',
+   tokens:['candidateFromInput']},
+ {route:'/findmypart/search/recovery-links.mjs',source:'public/findmypart/search/recovery-links.mjs',type:'javascript',
+   tokens:['recoveryResearchLinks']},
  {route:'/findmypart/app.mjs',source:'public/findmypart/app.mjs',type:'javascript',
    tokens:['/api/findmypart/inquiry','/api/findmypart/readiness']},
  {route:'/findmypart/sample-report/',source:'public/findmypart/sample-report/index.html',type:'text/html',
