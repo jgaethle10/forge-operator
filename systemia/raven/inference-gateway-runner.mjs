@@ -32,6 +32,7 @@ export async function startRavenInferenceResident({
   repoRoot = process.cwd(),
   localLlamaOrigin = "",
   localLlamaAdmitted = false,
+  fetchImpl = globalThis.fetch,
 } = {}) {
   void repoRoot;
   const binding = requireLocalLlamaResidentBinding({provider,model,origin:localLlamaOrigin,admitted:localLlamaAdmitted});
@@ -40,7 +41,8 @@ export async function startRavenInferenceResident({
     provider,
     model,
     credentialStateDir,
-    port: Number(port || 4322),
+    port: Number(port ?? 4322),
+    fetchImpl,
     ollamaOrigin: String(ollamaOrigin || "").trim() || undefined,
     ...binding,
   });
