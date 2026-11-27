@@ -11,9 +11,21 @@ const cases=Object.freeze([
  {lane:'findmypart',role:'leiland-repair-evidence-review',prompt:'Fictional QA case: a discontinued machine knob has an unverified listing. Name the two checks: exact part identity and equipment compatibility. Do not claim a fit or purchase.'},
  {lane:'atlas',role:'leiland-freight-evidence-review',prompt:'Fictional QA case: a draft freight record exists but carrier authority and delivery proof are missing. State that dispatch remains held. Do not dispatch or claim delivery.'}
 ]);
+// Narrow known-answer fixture, ported from LEILAND-016 case A. Never use
+// this oracle for real customer evidence or infer general model accuracy.
+const extractionProfile='findmypart-extraction-fixture-v1';
+const extractionPrompt='Fictional QA case. Extract part identifiers from the fictional text below. Return only JSON with two keys: "nameplate_part" and "catalog_part". Copy the exact identifier for each source, or use JSON null if absent. Do not infer, compare, recommend or add fields. Text: Equipment plate: replacement part TX-42. Catalog entry: part TX-42. Catalog availability and fitment not checked.';
+// Deliberately accept only two literal fields in either order. No duplicate
+// keys, escapes, extra text or nested values can pass this fixture contract.
+export function validateSyntheticExtraction(raw){
+ if(typeof raw!=='string'||Buffer.byteLength(raw,'utf8')>1024)return false;
+ const m=raw.match(/^\s*\{\s*"(nameplate_part|catalog_part)"\s*:\s*"TX-42"\s*,\s*"(nameplate_part|catalog_part)"\s*:\s*"TX-42"\s*\}\s*$/);
+ return Boolean(m&&m[1]!==m[2]);
+}
 export async function runSovereignCapabilityProof({origin='http://127.0.0.1:4322',token,
- fetchImpl=globalThis.fetch,allowInference=false,lane=null,expectedProvider='ollama'}={}){
+ fetchImpl=globalThis.fetch,allowInference=false,lane=null,expectedProvider='ollama',qualityProfile=null}={}){
  if(!['ollama','llama.cpp'].includes(expectedProvider))throw Error('leiland_local_provider_required');
+ if(qualityProfile!==null&&(qualityProfile!==extractionProfile||lane!=='findmypart'||expectedProvider!=='llama.cpp'))throw Error('leiland_quality_profile_invalid');
  const selected=lane===null?cases:cases.filter(c=>c.lane===lane);
  if(!selected.length)throw Error('leiland_fixed_lane_required');
  const u=new URL(origin);
@@ -63,12 +75,16 @@ export async function runSovereignCapabilityProof({origin='http://127.0.0.1:4322
  for(const c of selected){
   try{
    const request_id='leiland-proof:'+randomUUID();
-   const r=await adapter.infer({request_id,role:c.role,prompt:expectedProvider==='llama.cpp'?c.prompt+' /no_think':c.prompt});
+   const prompt=qualityProfile===extractionProfile?extractionPrompt:c.prompt;
+   const r=await adapter.infer({request_id,role:c.role,prompt:expectedProvider==='llama.cpp'?prompt+' /no_think':prompt});
    if(r.provider!==expectedProvider||r.model!==model||
       !/^sha256:[a-f0-9]{64}$/.test(r.provider_receipt||'')||!r.text)
     throw Error('provider_receipt_mismatch');
+   if(qualityProfile===extractionProfile&&!validateSyntheticExtraction(r.text))
+    return {...report('held'),reason:'synthetic_extraction_validation_failed'};
    receipts.push({lane:c.lane,request_id,provider_receipt:r.provider_receipt,
-    output_digest:sha(r.text),output_quality_verified:false});
+    output_digest:sha(r.text),output_quality_verified:false,
+    ...(qualityProfile===extractionProfile?{quality_profile:extractionProfile,synthetic_extraction_validated:true}: {})});
   }catch{return {...report('held'),reason:'inference_or_receipt_held'}}
  }
  return report('provider_reported_completed');
