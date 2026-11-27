@@ -120,3 +120,16 @@ For Gemini/OpenAI, the script first checks the Evercraft encrypted provider vaul
 The bootstrap then persists only provider/model/vault-path configuration through the user-mode local-organism installer, restarts the owned organism, verifies loopback health for private Raven and the inference gateway, and performs a metadata-only provider/model validation. Gemini uses `models.get`, OpenAI uses the retrieve-model endpoint, and Ollama checks the local model inventory. No prompt is sent during validation.
 
 It deliberately does **not** make a model inference call after setup, so activation cannot silently create an inference charge merely to print a green status. A successful bootstrap proves wiring plus provider-key/model visibility. The canonical Tieton acceptance remains the first bounded model-inference proof.
+
+
+## Inference completeness boundary (November 26, 2026)
+
+Raven's existing inference gateway now explicitly rejects any request text longer than the current 50,000-character prompt contract **before** calling an Ollama/Gemini/OpenAI provider. It also rejects replies longer than 50,000 characters rather than silently returning an apparently successful clipped response.
+
+For provider APIs that expose a terminal state, the gateway holds partial output: Ollama `done=false` or a non-`stop` `done_reason`, Gemini candidate `finishReason` other than `STOP`, and OpenAI response `status` other than `completed`. Such cases are errors, not a "completed" inference receipt. These checks use returned provider metadata, **not** a second judge model, and add no scheduler, tool execution, new endpoint, third-party runtime or additional model bill.
+
+This does **not** prove the factual correctness of model text, detect arbitrary provider-side silent clipping without metadata, or independently verify tool execution. Boundaries remain Systemia mission admission, existing Raven inference permissions and the Saban/NodeSeed evidence system. The gateway still uses its existing bounded private HTTP API, credential controls and loopback-only Ollama origin. Prompts, raw provider outputs and credentials are not added to error receipts.
+
+Prove with `node --test systemia/raven/inference-gateway.test.mjs` and the existing Raven Private Runtime Core GitHub workflow. Regression tests include exact-size acceptance, oversized-input no-call, oversized multi-part output, incomplete finish states for all three providers, and blocked HTTP responses. Live deployment is a separate step, not implied by a merged PR.
+
+The design lesson from the externally supplied Sunni/XIDE beta guide is to simplify user objectives without concealing missing observations. Only generic engineering practices were adapted; no third-party agent source was imported.
