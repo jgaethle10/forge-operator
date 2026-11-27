@@ -134,3 +134,25 @@ test('tampered, future, stale and unauthorized opportunity receipts are denied',
   assert.equal(denied.queue.candidates.filter(x=>x.work_key.startsWith('global:')).length,0);
  }finally{fs.rmSync(out,{recursive:true,force:true})}
 });
+
+test('PROPERTY-001 matches specific service demand, not generic property mentions, and remains review-only',async()=>{
+ const out=tmp();
+ try{
+  const items=[
+   {...notice('OP00483401','Request for Expression of Interest','Vacant property maintenance'),project_name:'Housing services',project_ctry_name:'United States'},
+   {...notice('OP00483402','Request for Expression of Interest','Purchase of office property'),project_name:'Administrative offices'},
+   {...notice('OP00483403','Contract Award','Property preservation'),project_name:'Housing services'}
+  ];
+  const r=(await runGlobalOpportunityScout({outDir:out,now:at,registry:config,fetcher:async()=>response(items)})).report;
+  assert.deepEqual(r.review_candidates.map(x=>x.notice_id),['OP00483401']);
+  assert.deepEqual(r.review_candidates[0].fit_offer_keys,['evercraft-property-services']);
+  assert.equal(r.review_candidates[0].revenue_usd,null);
+  assert.equal(classifyGlobalOpportunityReceipt(r,at).status,'verified_source_receipt');
+  const result=runCompanyHeartbeat({root:'.',outDir:path.join(out,'company'),now:at,globalOpportunityReceipt:r});
+  const c=result.queue.candidates.find(x=>x.work_key==='global:worldbank:op00483401');
+  assert.ok(c);
+  assert.equal(c.outreach_authorized,false);
+  assert.equal(c.execution_authorized,false);
+  assert.equal(result.mission_snapshot.counts.admitted,0);
+ }finally{fs.rmSync(out,{recursive:true,force:true})}
+});

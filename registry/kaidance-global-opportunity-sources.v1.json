@@ -36,6 +36,41 @@
       "name": "private farming and business partner research",
       "url": "https://www.fiagro.org/",
       "status": "human_source_review_only"
+    },
+    {
+      "name": "Mortgage Contracting Services",
+      "url": "https://mcs360.com/service-partners/",
+      "status": "human_source_review_only",
+      "mission": "PROPERTY-001",
+      "outreach_authorized": false
+    },
+    {
+      "name": "National Mortgage Field Services",
+      "url": "https://nmfs.com/become-a-property-preservation-vendor/",
+      "status": "human_source_review_only",
+      "mission": "PROPERTY-001",
+      "outreach_authorized": false
+    },
+    {
+      "name": "Canopy Property Services",
+      "url": "https://www.canopyprop.com/vendors/",
+      "status": "human_source_review_only",
+      "mission": "PROPERTY-001",
+      "outreach_authorized": false
+    },
+    {
+      "name": "Brookstone Management",
+      "url": "https://www.brookstonemanagement.com/vendors/",
+      "status": "human_source_review_only",
+      "mission": "PROPERTY-001",
+      "outreach_authorized": false
+    },
+    {
+      "name": "Bremerton Housing Authority",
+      "url": "https://bremertonhousing.org/current-opportunities-and-awards/",
+      "status": "human_source_review_only",
+      "mission": "PROPERTY-001",
+      "outreach_authorized": false
     }
   ],
   "duplication_and_suppression_policy": {
