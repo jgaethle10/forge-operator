@@ -3,6 +3,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { startRavenInferenceGateway } from "./inference-gateway.mjs";
+import { requireLocalLlamaResidentBinding } from "./local-llama-resident-admission.mjs";
 
 function arg(name, fallback = "") {
   const index = process.argv.indexOf(name);
@@ -29,16 +30,25 @@ export async function startRavenInferenceResident({
   port = 4322,
   ollamaOrigin = "",
   repoRoot = process.cwd(),
+  localLlamaOrigin = "",
+  localLlamaAdmitted = false,
 } = {}) {
   void repoRoot;
-  return startRavenInferenceGateway({
+  const binding = requireLocalLlamaResidentBinding({provider,model,origin:localLlamaOrigin,admitted:localLlamaAdmitted});
+  const runtime = await startRavenInferenceGateway({
     controlToken: loadGatewayToken(controlTokenFile),
     provider,
     model,
     credentialStateDir,
     port: Number(port || 4322),
     ollamaOrigin: String(ollamaOrigin || "").trim() || undefined,
+    ...binding,
   });
+  if (provider === "llama.cpp") {
+    try { await runtime.engine.validate(); }
+    catch { await runtime.close(); throw new Error("raven_local_llama_metadata_unavailable"); }
+  }
+  return runtime;
 }
 
 async function main() {
@@ -49,6 +59,8 @@ async function main() {
     credentialStateDir: arg("--credential-state-dir", process.env.RAVEN_PROVIDER_CREDENTIAL_STATE_DIR || process.env.EVERCRAFT_CREDENTIAL_STATE_DIR || ""),
     port: Number(arg("--port", process.env.RAVEN_INFERENCE_GATEWAY_PORT || "4322")),
     ollamaOrigin: arg("--ollama-origin", process.env.RAVEN_OLLAMA_ORIGIN || ""),
+    localLlamaOrigin: arg("--local-llama-origin", ""),
+    localLlamaAdmitted: arg("--local-llama-admitted", "") === "true",
   });
   process.stdout.write(JSON.stringify({
     schema: "evercraft.raven.inference-gateway-runner.v1",
