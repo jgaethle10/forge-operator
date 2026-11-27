@@ -307,7 +307,7 @@ test("Raven holds Gemini MAX_TOKENS completion instead of accepting partial text
   try {
     new ProviderCredentialVault({stateDir:root}).put({
       provider:"gemini",environment:"live",label:"proof",
-      apiKeyId:"test",apiSecret:"fixture-credential",actorRef:"proof"
+      apiKeyId:"fixture-inference-key",apiSecret:"fixture-credential",actorRef:"proof"
     });
     const engine=createInferenceEngine({
       provider:"gemini",model:"proof-model",credentialStateDir:root,
@@ -325,7 +325,7 @@ test("Raven rejects aggregate Gemini output over limit even if individual parts 
   try {
     new ProviderCredentialVault({stateDir:root}).put({
       provider:"gemini",environment:"live",label:"proof",
-      apiKeyId:"test",apiSecret:"fixture-credential",actorRef:"proof"
+      apiKeyId:"fixture-inference-key",apiSecret:"fixture-credential",actorRef:"proof"
     });
     const engine=createInferenceEngine({
       provider:"gemini",model:"proof-model",credentialStateDir:root,
@@ -345,7 +345,7 @@ test("Raven holds an explicitly incomplete OpenAI response", async () => {
   try {
     new ProviderCredentialVault({stateDir:root}).put({
       provider:"openai",environment:"live",label:"proof",
-      apiKeyId:"test",apiSecret:"fixture-credential",actorRef:"proof"
+      apiKeyId:"fixture-inference-key",apiSecret:"fixture-credential",actorRef:"proof"
     });
     const engine=createInferenceEngine({
       provider:"openai",model:"proof-model",credentialStateDir:root,
