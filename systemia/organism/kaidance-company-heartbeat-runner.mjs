@@ -19,6 +19,7 @@ import {runPrivateResearchContinuity} from './kaidance-rd-continuity.mjs';
 import {runEventOpportunityScout} from '../events/event-opportunity-scout-runner.mjs';
 import {runSAMEventScout} from '../events/event-opportunity-us-sam-runner.mjs';
 import {runRegionalEventReview} from '../events/event-opportunity-regional-review-runner.mjs';
+import {runFridayEngineeringLog} from './kaidance-friday-engineering-log.mjs';
 const sourceRoot=path.resolve(fileURLToPath(new URL('../../',import.meta.url)));
 const sha=value=>'sha256:'+createHash('sha256').update(value).digest('hex');
 function readJson(file){return JSON.parse(fs.readFileSync(file,'utf8'))}
@@ -557,7 +558,20 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
    // Classification advances only on a newly committed company tick.
    if(!result.duplicate) cemeteryClassification=await classifyNext({outDir:target});
   }
+  let fridayEngineeringLog={status:'disabled'};
+  if(process.env.SYSTEMIA_KAIDANCE_FRIDAY_ENGINEERING_LOG==='true'&&process.env.GITHUB_ACTIONS!=='true'){
+   try{
+    const target=path.join(path.dirname(path.resolve(outDir)),'kaidance-friday-engineering-log');
+    if(target===sourceRoot||target.startsWith(sourceRoot+path.sep)||target===path.resolve(outDir))
+     throw Error('engineering_log_private_sibling_required');
+    fridayEngineeringLog=await runFridayEngineeringLog({root:sourceRoot,outDir:target,
+     token:process.env.SYSTEMIA_KAIDANCE_ENGINEERING_LOG_GITHUB_TOKEN||''});
+   }catch{
+    fridayEngineeringLog={status:'held'};
+   }
+  }
   console.log(JSON.stringify({schema:'evercraft.kaidance.company-heartbeat-cli.v1',ok:true,
+   friday_engineering_log:fridayEngineeringLog,
    cemetery_research:cemetery,cemetery_classification:cemeteryClassification,duplicate:result.duplicate,source_proof:result.report?.proof?.status||null,
    public_products_observed:result.report?.company_portfolio?.public_products||null,
    infrastructure_watch_receipt:result.report?.infrastructure_watch?.status||null,
