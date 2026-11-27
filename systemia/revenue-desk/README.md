@@ -75,3 +75,25 @@ node --test systemia/revenue-desk/gmail-reconciliation.test.mjs \
 Source conformance: `node --test systemia/revenue-desk/gmail-reconciliation.test.mjs`.
 
 **Truth boundary:** PR source/CI checks, when green, demonstrate the pure logic and private-file report only. They do not mean any real Gmail synchronization, contact reservation, send automation, new customer or revenue occurred.
+
+
+## Owner-operated Gmail read-only binding candidate (2026-11-26)
+
+Use an authorized existing Google Cloud project, enable Gmail API, configure the OAuth consent screen and create a **Desktop app** client. Download the installed-client JSON to an owner-chosen private directory (0700; files 0600; never commit, paste into chat, or put on shared Windows mounts). Add the intended mailbox as a test user if required. Google consent must be completed by the owner in their own browser. See https://developers.google.com/identity/protocols/oauth2/native-app and https://developers.google.com/workspace/gmail/api/reference/rest/v1/users/getProfile.
+
+From the exact reviewed checkout (substitute actual private paths and mailbox locally):
+
+```bash
+node systemia/revenue-desk/owned-gmail-binding.mjs --enroll \
+  --client-file /private/owner/gmail-desktop-client.json \
+  --binding-file /private/owner/gmail-readonly-binding.json \
+  --mailbox owner@example.test
+node systemia/revenue-desk/owned-gmail-binding.mjs --probe \
+  --client-file /private/owner/gmail-desktop-client.json \
+  --binding-file /private/owner/gmail-readonly-binding.json \
+  --mailbox owner@example.test
+```
+
+The ephemeral callback listens only on IPv4 loopback on a random port, validates state and PKCE, requires the exact Gmail readonly scope and checks the authenticated Gmail profile matches the expected mailbox before creating a private, non-overwriting refresh binding. A probe refreshes in memory and checks profile again; no access token is printed or persisted. A changed refresh token or changed returned scope holds for owner reconciliation. Do not open firewall ports or paste callback URLs if WSL loopback forwarding fails. No public callback or unattended consent.
+
+After a successful probe, use `--import-recent` with the same three arguments plus `--out-file /private/owner/gmail-recent-unique.json`. This calls the existing metadata collector with a bounded 30-hour window. It is not full mailbox history, sender/alias coverage, an Interaction Ledger receipt, quota authority, or send permission. The owner-selected private files are staging custody, not a claim of integration with the existing Home provider vault. External testing-mode refresh grants may expire; reauthorization and Google app verification must be handled through Google's normal rules. No new scheduler, provider sender or remote execution authority is introduced.

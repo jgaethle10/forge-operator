@@ -43,28 +43,54 @@ export function parseGmailMetadata(m){
   occurred_at:new Date(internalTime).toISOString(),
   from_address:from,to_addresses:to,is_auto_reply:auto,is_bounce:bounced};
 }
-async function getJson(url,token,fetchImpl){
- const response=await fetchImpl(url,{
-  method:'GET',headers:{Authorization:'Bearer '+token,Accept:'application/json'}
- });
- if(!response?.ok){
-  if(response?.status===429)throw Error('gmail_rate_limited_hold');
-  if(response?.status===401||response?.status===403)throw Error('gmail_authorization_or_scope_hold');
-  throw Error('gmail_api_fetch_failed');
+// Never log provider messages, response bodies, request URLs or mailbox IDs.
+const REASONS=new Set(['rateLimitExceeded','userRateLimitExceeded','dailyLimitExceeded','quotaExceeded','insufficientPermissions','forbidden','authError','accessNotConfigured','domainPolicy','backendError','notFound','SERVICE_DISABLED','ACCESS_TOKEN_SCOPE_INSUFFICIENT','RESOURCE_EXHAUSTED','RATE_LIMIT_EXCEEDED']);
+const RATE=new Set(['rateLimitExceeded','userRateLimitExceeded','RATE_LIMIT_EXCEEDED']);
+const sleepDefault=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+async function getJson(url,token,fetchImpl,{stage,maxRetries,sleep}){
+ for(let attempt=0;;attempt++){
+  let response;
+  try{
+   response=await fetchImpl(url,{method:'GET',headers:{Authorization:'Bearer '+token,Accept:'application/json'},redirect:'error',signal:AbortSignal.timeout(15000)});
+  }catch{throw Error('gmail_api_transport_hold_'+stage)}
+  if(response?.ok)return response.json();
+  const status=Number.isInteger(response?.status)&&response.status>=100&&response.status<=599?response.status:0;
+  let reasons=[];
+  try{
+   const e=(await response.json()).error;
+   reasons=[...(Array.isArray(e?.errors)?e.errors:[]),...(Array.isArray(e?.details)?e.details:[])].map(x=>x?.reason).filter(x=>REASONS.has(x));
+  }catch{}
+  const daily=reasons.some(x=>['dailyLimitExceeded','quotaExceeded'].includes(x));
+  const rate=status===429||(status===403&&reasons.some(x=>RATE.has(x)));
+  const transient=!daily&&(rate||[500,502,503,504].includes(status));
+  let delay=1000*2**attempt;
+  const retryAfter=response?.headers?.get?.('retry-after');
+  if(retryAfter){
+   const seconds=/^\d+$/.test(retryAfter)?Number(retryAfter)*1000:Date.parse(retryAfter)-Date.now();
+   if(Number.isFinite(seconds))delay=Math.max(delay,seconds);
+  }
+  if(transient&&attempt<maxRetries&&delay<=30000){
+   await sleep(delay);continue;
+  }
+  const kind=daily?'quota':rate?'rate_limited':status===401||status===403?'authorization_or_scope':status===404?'message_unavailable':'api_fetch_failed';
+  const suffix=[stage,String(status),...[...new Set(reasons)].sort().map(x=>x.toLowerCase())].join('_');
+  throw Error('gmail_'+kind+'_hold_'+suffix);
  }
- return response.json();
 }
 // Full pagination for this query, not necessarily complete historical coverage.
 // A short rolling query cannot establish historical contact freshness.
 export async function fetchOwnedGmailMetadata({
  accessToken,now=new Date().toISOString(),lookbackHours=30,
- maxPages=200,fetchImpl=globalThis.fetch,concurrency=6
+ maxPages=200,fetchImpl=globalThis.fetch,concurrency=1,
+ maxRetries=3,pauseMs=150,sleep=sleepDefault
 }={}){
  if(typeof accessToken!=='string'||accessToken.length<16)throw Error('gmail_owned_access_token_required');
  const at=Date.parse(now);
  if(!Number.isFinite(at))throw Error('gmail_window_clock_invalid');
  if(!Number.isInteger(maxPages)||maxPages<1||maxPages>500||
-    !Number.isInteger(concurrency)||concurrency<1||concurrency>12)
+    !Number.isInteger(concurrency)||concurrency<1||concurrency>12||
+    !Number.isInteger(maxRetries)||maxRetries<0||maxRetries>3||
+    !Number.isInteger(pauseMs)||pauseMs<0||pauseMs>1000||typeof sleep!=='function')
    throw Error('gmail_pagination_limits_invalid');
  if(lookbackHours!==null&&(!Number.isInteger(lookbackHours)||lookbackHours<25||lookbackHours>24*365))
    throw Error('gmail_lookback_window_invalid');
@@ -76,7 +102,7 @@ export async function fetchOwnedGmailMetadata({
   if(page>=maxPages)throw Error('gmail_history_page_limit_incomplete');
   const params=new URLSearchParams({q,maxResults:'500'});
   if(nextPage)params.set('pageToken',nextPage);
-  const result=await getJson(BASE+'?'+params.toString(),accessToken,fetchImpl);
+  const result=await getJson(BASE+'?'+params.toString(),accessToken,fetchImpl,{stage:'list',maxRetries,sleep});
   if(!Array.isArray(result.messages)&&result.messages!==undefined)
     throw Error('gmail_message_list_invalid');
   for(const x of result.messages||[]){
@@ -93,10 +119,12 @@ export async function fetchOwnedGmailMetadata({
   const found=await Promise.all(batch.map(async id=>{
    const qs=new URLSearchParams({format:'metadata'});
    for(const h of HEADERS)qs.append('metadataHeaders',h);
-   const data=await getJson(BASE+'/'+encodeURIComponent(id)+'?'+qs.toString(),accessToken,fetchImpl);
+   const data=await getJson(BASE+'/'+encodeURIComponent(id)+'?'+qs.toString(),accessToken,fetchImpl,{stage:'metadata',maxRetries,sleep});
+   if(data?.id!==id)throw Error('gmail_message_identity_mismatch');
    return parseGmailMetadata(data);
   }));
   rows.push(...found);
+  if(i+concurrency<uniqueIds.length&&pauseMs)await sleep(pauseMs);
  }
  if(rows.length!==uniqueIds.length)throw Error('gmail_history_metadata_incomplete');
  return {schema:'evercraft.systemia.gmail-owned-metadata-snapshot.v1',
