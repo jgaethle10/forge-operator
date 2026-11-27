@@ -119,7 +119,7 @@ export async function collectAttestedRemoteSource({
         grant.node_id !== nodeId ||
         grant.device_fingerprint !== selected.device_fingerprint ||
         !grant.allocator_token || !grant.capacity_endpoint ||
-        !HASH.test(String(grant.control_grant_receipt_hash || ''))) {
+        !/^(?:sha256:)?[a-f0-9]{64}$/.test(String(grant.control_grant_receipt_hash || ''))) {
       return hold(receipt, 'yard_grant_identity_mismatch');
     }
 
