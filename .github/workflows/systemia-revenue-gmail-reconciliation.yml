@@ -47,3 +47,6 @@ jobs:
         run: |
           node --test systemia/revenue-desk/kaidance-gmail-observation.test.mjs
           node --test --test-name-pattern='company heartbeat exposes only a redacted Gmail' tests/kaidance-company-heartbeat.test.mjs
+
+      - name: Owned Gmail history cursor discovery proof
+        run: node --test systemia/revenue-desk/owned-gmail-history-delta.test.mjs
