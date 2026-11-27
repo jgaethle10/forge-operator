@@ -18,7 +18,7 @@ The static, non-sensitive project registry `registry/kaidance-gems-research-cont
 The existing `systemia/organism/kaidance-company-heartbeat-runner.mjs` invokes `reviewGemsResearchSource` exactly once on each **newly admitted** five-minute company tick, alongside the existing `runPrivateResearchContinuity`. It emits:
 - `gems_research` in the ordinary private/CI company `latest.json`: registry fingerprint, source-only provenance, three held workstreams, previous reported selected DTI, and unequivocal no-execution fields;
 - One stable `science-research` Systemia-review queue candidate `gems:008e:review-capture-error`, priority **3**, action `inspect_authorized_private_penguin_capture_stderr_before_any_retry`, `retry_authorized:false`, `network_authorized:false`, `execution_authorized:false`;
-- The existing mission snapshot's source refs and held/scanned counts. No heartbeat counts the block as completed scientific progress and no extra `changed` count is synthesized.
+- The existing mission snapshot's source refs and one additional scanned source. The three GEMS historical blockers remain in the GEMS-specific `held_workstreams` count; they do **not** inflate the company-wide actionable `counts.held` contract. No heartbeat counts the block as completed scientific progress and no extra `changed` count is synthesized.
 
 A duplicate five-minute tick writes no new progress; running without the registry or with tampering shows an explicit fail-closed `held_source` state. The manifest and adapter are intentionally read-only. They **do not** contact NBMG or DrivenData, read a private log, submit model artifacts, modify selected entries, automatically create work leases, run experiments, change code or interfere with FindMyPart/revenue P0.
 
