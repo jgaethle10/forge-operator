@@ -83,12 +83,13 @@ export async function runLeilandSabanCycle({stateDir,now=new Date(),rootDir=ROOT
       r.inference_request_attempted!==true||r.result_released!==true||
       r.external_actions_authorized!==false||r.receipts?.length!==1||
       proof?.lane!=='findmypart'||proof.output_quality_verified!==false||
+      proof.quality_profile!=='findmypart-extraction-fixture-v1'||proof.synthetic_extraction_validated!==true||
       !digest(proof.provider_receipt)||!digest(proof.output_digest)||!digest(r.authorization_digest))
     throw Error('leiland_assignment_receipt_held');
    completion={...checkpoint,state:'completed',assignment_attempted:true,
     inference_completed:1,provider_receipt:proof.provider_receipt,
     output_digest:proof.output_digest,authorization_digest:r.authorization_digest,
-    quality_reviewed:false};
+    quality_reviewed:false,synthetic_extraction_validated:true,quality_profile:proof.quality_profile};
   }catch{
    completion={...checkpoint,state:'held',assignment_attempted:true,
     inference_completed:null,reason:'assignment_outcome_requires_reconciliation'};
