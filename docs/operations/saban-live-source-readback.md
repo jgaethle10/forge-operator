@@ -62,3 +62,15 @@ If no existing authorized broker or live Remote Operator is available, the truth
 ### Coordinator identity pin
 
 The live CLI requires the expected `sha256:` device fingerprint from an independently trusted existing admission record, not from the inventory being tested. A mismatched inventory holds before requesting a control grant or reading any source pages. A successful fresh signed challenge must match this pin and reports `coordinator_device_pin_matched: true`. This is an explicit caller expectation, not proof that its origin was independently attested. Historical source pins still refer to the actual remote release; changing this collector does not authorize updating the remote file.
+
+## Local running-dispatcher entrypoint witness (separate evidence)
+
+The existing `evercraft-saban-dispatch.service` is a short-lived systemd oneshot. On the authorized Linux host/account, while it is already running, invoke:
+
+```bash
+node systemia/saban/dispatch-entrypoint-witness.mjs /ABSOLUTE/INSTALLED/REPO REVIEWED_40_CHAR_COMMIT
+```
+
+The observer reads only the fixed dispatcher unit, current MainPID, bounded process metadata, and the fixed dispatcher source. It compares the process's entrypoint argument, process-root file identity, stable PID/start ticks, file metadata and current source bytes with the pinned Git blob. No restart, artificial job, remote command, new timer or private arguments in output. If the service is not active or permissions prevent observation, HOLD is correct.
+
+A successful result proves a local observation of the process and **current entrypoint bytes**, not the JavaScript already loaded, all dependencies, immutable launch-time bytes, physical hardware, or task completion. The observer cannot authenticate its own host or eliminate all process/filesystem races. The next stage requires independently recorded launch-time and task-bound evidence through the existing worker and receipt path. Do not publish private host data or use this as execution authority.

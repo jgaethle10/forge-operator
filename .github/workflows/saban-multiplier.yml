@@ -62,6 +62,9 @@ jobs:
       - name: Prove Git-pinned live readback command holds without Yard authority
         run: node --test systemia/saban/live-source-readback.test.mjs
 
+      - name: Observe real synthetic Linux dispatcher entrypoint without service changes
+        run: node --test systemia/saban/dispatch-entrypoint-witness.test.mjs
+
       - name: Prove signed NodeSeed identity bound to complete source pages over Yard
         run: node systemia/saban/attested-remote-source.proof.mjs
 
