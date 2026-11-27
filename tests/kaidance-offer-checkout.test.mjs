@@ -23,7 +23,7 @@ function link(offer){return {id:offer.payment_link_id,active:true,url:offer.chec
  allow_promotion_codes:false,optional_items_count:0,shipping_options_count:0,
  after_completion:{type:'hosted_confirmation'},line_items_complete:true,
  line_items:[{price_id:offer.price_id,product_id:offer.product_id,unit_amount:offer.amount_cents,
-  currency:'usd',type:'one_time',quantity:1}]};}
+  currency:'usd',type:'one_time',quantity:1,fixed_quantity_verified:true}]};}
 function provider(off=[founding,audit],merchant='evercraft-llc'){
  return {schema:'evercraft.payments.stripe-link-readback.v1',accounts:[{
   merchant,account_id:bindings.merchant_accounts[merchant].stripe_account_id,livemode:true,
@@ -62,6 +62,8 @@ test('Mismatched account, stale readback, wrong SKU or redirect never routes buy
   (()=>{const p=provider();p.accounts[0].links[0].url='https://buy.stripe.com/wrong';return p})(),
   (()=>{const p=provider();p.accounts[0].links[0].automatic_tax_enabled=true;return p})(),
   (()=>{const p=provider();p.accounts[0].links[0].managed_payments_enabled=true;return p})(),
+  (()=>{const p=provider();p.accounts[0].links[0].line_items[0].fixed_quantity_verified=false;return p})(),
+  (()=>{const p=provider();delete p.accounts[0].links[0].line_items[0].fixed_quantity_verified;return p})(),
   (()=>{const p=provider();p.accounts[0].links[0].optional_items_count=1;return p})()
  ];
  for(const snapshot of scenarios){
@@ -97,7 +99,7 @@ test('Owner-private read-only Stripe adapter pins merchant, SKU and price line i
    const route=new URL(url).pathname;
    if(route==='/v1/account')return {ok:true,json:async()=>({id:bindings.merchant_accounts['evercraft-llc'].stripe_account_id})};
    if(route.endsWith('/line_items'))return {ok:true,json:async()=>({has_more:false,data:[{
-    quantity:1,price:{id:founding.price_id,product:founding.product_id,unit_amount:5000,currency:'usd',type:'one_time'}
+    quantity:1,adjustable_quantity:null,price:{id:founding.price_id,product:founding.product_id,unit_amount:5000,currency:'usd',type:'one_time',custom_unit_amount:null}
    }]})};
    return {ok:true,json:async()=>({id:founding.payment_link_id,active:true,url:founding.checkout_url,
     automatic_tax:{enabled:false},managed_payments:{enabled:false},
