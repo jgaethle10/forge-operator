@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import { pathToFileURL } from 'node:url';
 import { admitProofFirstOutreach } from './engine.mjs';
+import { commercialExclusion } from '../saban/revenue-swarm.mjs';
 
 // A read-only specialist for Systemia's existing proof-first-sales pipeline.
 // These are routing hypotheses, not claims of independent service readiness.
@@ -75,7 +76,45 @@ function boundedInt(number, max) {
   return Number.isFinite(n) ? Math.max(0, Math.min(max, Math.floor(n))) : 0;
 }
 
-export function qualifyClientSignal(raw = {}, now = new Date()) {
+// Internal buyer-specific scope hypotheses, not approved offer/price bindings.
+// Explicit source and evidence references are required; no fuzzy name matching.
+function portfolioMatches(raw, portfolio, evidence, sourceKind) {
+  if (portfolio?.schema !== 'evercraft.saban.scoped-portfolio-review.v1' ||
+      portfolio.review_only !== true || sourceKind === 'unknown' || !evidence.length)
+    return [];
+  const candidates = new Map();
+  const ambiguous = new Set();
+  for (const row of portfolio.candidates || []) {
+    if (!['machine_offer','registry_product'].includes(row?.source) ||
+        typeof row.key !== 'string' || commercialExclusion({
+          public_id: row.key, commercial_state: row.source_commercial_state
+        })) continue;
+    const id = row.source + ':' + row.key;
+    if (candidates.has(id)) ambiguous.add(id);
+    candidates.set(id, row);
+  }
+  const matches = [];
+  const seen = new Set();
+  for (const hint of (Array.isArray(raw.portfolio_scope_hypotheses) ? raw.portfolio_scope_hypotheses : []).slice(0,50)) {
+    const id = hint?.source + ':' + hint?.key;
+    const row = candidates.get(id);
+    const ref = clean(hint?.evidence_ref);
+    const scope = clean(hint?.proposed_deliverable);
+    if (!row || ambiguous.has(id) || seen.has(id) || !evidence.includes(ref) ||
+        !scope || scope.length > 1000) continue;
+    seen.add(id);
+    matches.push({
+      key: id, name: row.name, evidence_ref: ref, proposed_deliverable: scope,
+      sale_state: 'buyer_specific_scope_review', price_usd: null,
+      required_gate: 'verify_need_feasibility_scope_capacity_exact_price_and_authority',
+      public_proof_url: null, first_delivery_permitted_for_review: true,
+      commercial_commitment_authorized: false
+    });
+  }
+  return matches;
+}
+
+export function qualifyClientSignal(raw = {}, now = new Date(), { portfolio = null } = {}) {
   const prospectKey = clean(raw.prospect_key);
   const business = clean(raw.business);
   if (!prospectKey || !business) throw new Error('prospect_key_and_business_required');
@@ -83,6 +122,7 @@ export function qualifyClientSignal(raw = {}, now = new Date()) {
   const sourceKind = ALLOWED_KINDS.has(raw.source_kind) ? raw.source_kind : 'unknown';
   const needTags = unique((Array.isArray(raw.need_tags) ? raw.need_tags : []).filter(t => VALID_NEEDS.has(t)));
   const matches = CLIENT_SCOUT_OFFERS.filter(o => o.need_tags.some(t => needTags.includes(t)));
+  const scopedMatches = portfolioMatches(raw, portfolio, evidence, sourceKind);
   const hasEvidence = evidence.length > 0 && sourceKind !== 'unknown';
   const age = evidenceAgeDays(raw.observed_at, now);
   const replyConfirmed = raw.reply_confirmed === true;
@@ -120,6 +160,8 @@ export function qualifyClientSignal(raw = {}, now = new Date()) {
     disposition = 'waiting_reply'; reason = 'unanswered_outbound_limit_reached';
   } else if (!hasEvidence) {
     disposition = 'research_only'; reason = 'source_evidence_missing';
+  } else if (!matches.length && scopedMatches.length) {
+    disposition = 'scope_hypothesis_review'; reason = 'portfolio_fit_requires_buyer_and_deliverable_verification';
   } else if (!matches.length) {
     disposition = 'research_only'; reason = 'no_scoped_offer_fit';
   } else if (priorRelationship && scopeRequested && budgetConfirmed && deliveryCapacityConfirmed) {
@@ -162,7 +204,10 @@ export function qualifyClientSignal(raw = {}, now = new Date()) {
       price_usd: o.price_usd, required_gate: o.required_gate,
       public_proof_url: o.public_proof_url,
     })),
-    next_action: disposition === 'scoping_priority'
+    portfolio_scope_hypotheses: scopedMatches,
+    next_action: disposition === 'scope_hypothesis_review'
+      ? 'review_evidence_and_define_feasible_buyer_specific_deliverable'
+      : disposition === 'scoping_priority'
       ? 'verify_scope_capacity_checkout_and_exact_buyer_terms'
       : disposition === 'relationship_review'
         ? 'review_last_exchange_then_request_specific_need_only_if_contact_permitted'
@@ -182,12 +227,12 @@ export function qualifyClientSignal(raw = {}, now = new Date()) {
   };
 }
 
-export function rankClientSignals(signals, now = new Date()) {
+export function rankClientSignals(signals, now = new Date(), options = {}) {
   if (!Array.isArray(signals)) throw new Error('signals_array_required');
   const seen = new Set();
   const ranked = [];
   for (const signal of signals) {
-    const result = qualifyClientSignal(signal, now);
+    const result = qualifyClientSignal(signal, now, options);
     if (seen.has(result.prospect_key)) {
       // Duplicate records must be reconciled, not treated as two prospects.
       continue;
@@ -195,8 +240,8 @@ export function rankClientSignals(signals, now = new Date()) {
     seen.add(result.prospect_key);
     ranked.push(result);
   }
-  const priority = { scoping_priority: 0, relationship_review: 1, research_only: 2,
-    fulfill_prior_commitment: 3, waiting_reply: 4, do_not_contact: 5 };
+  const priority = { scoping_priority: 0, relationship_review: 1, scope_hypothesis_review: 2, research_only: 3,
+    fulfill_prior_commitment: 4, waiting_reply: 5, do_not_contact: 6 };
   return ranked.sort((a, b) =>
     (priority[a.disposition] - priority[b.disposition]) ||
     (b.score - a.score) ||
@@ -212,6 +257,8 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
   } else {
     // Read local authorized records only. Do not commit real customer/prospect inputs.
     const records = JSON.parse(fs.readFileSync(inputPath, 'utf8'));
-    process.stdout.write(JSON.stringify(rankClientSignals(records), null, 2) + '\n');
+    const portfolioPath = process.argv[3];
+    const portfolio = portfolioPath ? JSON.parse(fs.readFileSync(portfolioPath,'utf8')).scoped_portfolio_review : null;
+    process.stdout.write(JSON.stringify(rankClientSignals(records, new Date(), {portfolio}), null, 2) + '\n');
   }
 }
