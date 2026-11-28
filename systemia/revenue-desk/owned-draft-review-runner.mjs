@@ -22,9 +22,19 @@ function verifySource(directory){
   if(actual!==want)throw Error('gmail_binding_source_mismatch');
  }
 }
+function privateOutput(file){
+ if(typeof file!=='string'||!path.isAbsolute(file)||path.normalize(file)!==file)throw Error('gmail_review_output_path_hold');
+ const parent=path.dirname(file),st=fs.lstatSync(parent);
+ if(fs.realpathSync(parent)!==parent||!st.isDirectory()||st.isSymbolicLink()||st.uid!==process.getuid()||(st.mode&0o077)||fs.existsSync(file))throw Error('gmail_review_output_path_hold');
+ return receipt=>{
+  const fd=fs.openSync(file,fs.constants.O_WRONLY|fs.constants.O_CREAT|fs.constants.O_EXCL|fs.constants.O_NOFOLLOW,0o600);
+  try{fs.writeFileSync(fd,JSON.stringify(receipt,null,2)+'\n');fs.fsyncSync(fd)}finally{fs.closeSync(fd)}
+ };
+}
 async function main(){
  const args=process.argv.slice(2);
- if(args.length!==2&&args.length!==4||args[0]!=='--binding-source'||(args.length===4&&args[2]!=='--reviewed-lanes-file'))throw Error('gmail_draft_runner_usage');
+ if(![2,4,6].includes(args.length)||args[0]!=='--binding-source'||(args.length>=4&&args[2]!=='--reviewed-lanes-file')||(args.length===6&&args[4]!=='--review-output'))throw Error('gmail_draft_runner_usage');
+ const onPrivateReview=args.length===6?privateOutput(args[5]):undefined;
  const root=path.join(os.homedir(),'.local/state/evercraft-revenue-desk/.secrets');
  const clientPath=path.join(root,'gmail-desktop-client.json');
  const bindingPath=path.join(root,'gmail-readonly-binding.json');
@@ -37,10 +47,10 @@ async function main(){
  const client=m.desktopClient(m.readPrivateJson(clientPath)),binding=m.readPrivateJson(bindingPath);
  // Existing owner-enrolled mailbox identity is checked again against Google's profile.
  const accessToken=await m.refreshBinding({client,binding,expectedMailbox:binding.expected_mailbox});
- const reviewedLanes=args.length===4?m.readPrivateJson(args[3]):{};
+ const reviewedLanes=args.length>=4?m.readPrivateJson(args[3]):{};
  if(!reviewedLanes||typeof reviewedLanes!=='object'||Array.isArray(reviewedLanes)||Object.keys(reviewedLanes).length>400)throw Error('gmail_reviewed_lanes_hold');
- const r=await reviewOwnedDrafts({accessToken,reviewedLanes,maxDrafts:20,maxListPages:10});
- console.log(JSON.stringify({...r,mailbox_identity_verified:true,review_map_entries:Object.keys(reviewedLanes).length},null,2));
+ const r=await reviewOwnedDrafts({accessToken,reviewedLanes,maxDrafts:20,maxListPages:10,onPrivateReview});
+ console.log(JSON.stringify({...r,mailbox_identity_verified:true,review_map_entries:Object.keys(reviewedLanes).length,private_review_saved:!!onPrivateReview},null,2));
 }
 if(process.argv[1]&&pathToFileURL(path.resolve(process.argv[1])).href===import.meta.url)main().catch(e=>{
  const code=String(e?.message??'');
