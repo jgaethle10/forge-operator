@@ -28,7 +28,8 @@ export function buildRecoveryCandidate({record,sourceDigest,revision,dossierKey,
 }
 export function stageRecoveryResearch({intakeStateDir,passportStateDir,...input}={}){
  if(!intakeStateDir||!passportStateDir)throw Error('owner_state_required');
- const candidate=buildRecoveryCandidate(input);
+ // Authorization and intake time must not come from a replayed record.
+ const candidate=buildRecoveryCandidate({...input,at:new Date().toISOString()});
  const passport=new EvercraftPassport({stateDir:passportStateDir});
  // Intake resolves idempotency duplicates before its own authorization check.
  if(passport.authorize({subject_ref:candidate.adapter_actor_ref,product:'evercraft-intake',
