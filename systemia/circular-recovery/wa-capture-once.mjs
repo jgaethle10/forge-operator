@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // Explicit one-source owner-host acquisition. No timer, private data upload or live mutations.
 import {captureEcologyWorkbook} from './wa-workbook-capture.mjs';
+import {describeCaptureError} from './wa-source-diagnose.mjs';
 const [sourceKey,outDir,...extra]=process.argv.slice(2);
 if(!sourceKey||!outDir||extra.length){
  console.error('usage: node wa-capture-once.mjs SOURCE_KEY PRIVATE_ABSOLUTE_DIRECTORY');
@@ -14,7 +15,7 @@ if(!sourceKey||!outDir||extra.length){
   const code=String(e?.message||'');
   console.error(JSON.stringify({status:'held',sourceKey,
    reason:/^[a-z_]{3,90}$/.test(code)?code:'source_transport_or_storage_failed',
-   productionChanged:false}));
+   ...describeCaptureError(e),productionChanged:false}));
   process.exitCode=1;
  }
 }
