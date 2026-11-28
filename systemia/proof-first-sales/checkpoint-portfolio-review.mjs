@@ -14,11 +14,13 @@ function validSource(c){
  if(!m)return false;
  try{
    const u=new URL(c.source_url);
-   if(u.protocol!=='https:'||u.hostname!==host[m[1]]||u.username||u.password||u.port||u.hash)return false;
+   if(u.protocol!=='https:'||u.username||u.password||u.port||u.hash)return false;
+   if(m[1]==='ca')return (u.hostname==='canadabuys.canada.ca'&&/^\/(en|fr)\/tender-opportunities\/.+/.test(u.pathname))|| (u.hostname==='www.merx.com'&&/^\/public\/solicitations\/.+/.test(u.pathname))|| (u.hostname==='discovery.ariba.com'&&/^\/rfx\/\d+\/?$/.test(u.pathname))|| (u.hostname==='portal.us.bn.cloud.ariba.com'&&/^\/dashboard\/public(?:\/|$)/.test(u.pathname));
+   if(u.hostname!==host[m[1]])return false;
    if(m[1]==='uk')return /^\/Notice\/\d{6}-\d{4}$/.test(u.pathname);
    if(m[1]==='sam')return /^[a-f0-9]{32}$/.test(m[2])&&u.pathname==='/opp/'+m[2]+'/view';
    if(m[1]==='nyc')return /^\d+$/.test(m[2])&&u.pathname==='/resource/3khw-qi8f.json'&&u.searchParams.get('request_id')===m[2];
-   return u.pathname.startsWith('/en/tender-opportunities/tender-notice/')||u.pathname.startsWith('/fr/occasions-de-marche/avis-appel-offres/');
+   return false;
  }catch{return false;}
 }
 export function reviewCheckpoint(checkpoint,{portfolio,painIndex,now=new Date()}={}){
@@ -31,15 +33,18 @@ export function reviewCheckpoint(checkpoint,{portfolio,painIndex,now=new Date()}
     !Array.isArray(checkpoint.receipt.sources))throw Error('invalid_or_stale_checkpoint');
  const observed=new Set(checkpoint.receipt.sources.filter(s=>s.state==='observed').map(s=>s.source));
  const counts={records_seen:checkpoint.records.length,held:0,eligible:0,processed:0,matched:0};
- const signals=[],seen=new Set();
+ const signals=[],seen=new Set(),holdReasons={};
  for(const c of checkpoint.records){
    if(typeof c?.candidate_ref!=='string'||seen.has(c.candidate_ref))throw Error('duplicate_or_invalid_checkpoint_identity');
    seen.add(c.candidate_ref);
-   if(c.stage!=='research_required'||c.qualified!==false||c.contact_authorized!==false||
-     !observed.has(c.candidate_ref.split(':')[0])||c.last_seen_at!==checkpoint.last_cycle_at||
-     !validSource(c)||c.deadline_timezone!==null||!validDate(c.deadline)||Date.parse(c.deadline)<=at||
-     typeof c.title!=='string'||c.title.trim().length<12||c.title.length>300||
-     typeof c.buyer!=='string'||!c.buyer.trim()||c.buyer.length>300){counts.held++;continue;}
+   const reasons=[];
+   if(c.stage!=='research_required'||c.qualified!==false||c.contact_authorized!==false)reasons.push('invalid_research_authority');
+   if(!observed.has(c.candidate_ref.split(':')[0])||c.last_seen_at!==checkpoint.last_cycle_at)reasons.push('source_not_fresh');
+   if(!validSource(c))reasons.push('source_url_not_admitted');
+   if(c.deadline_timezone!==null||!validDate(c.deadline))reasons.push('deadline_needs_verification');
+   else if(Date.parse(c.deadline)<=at)reasons.push('deadline_expired');
+   if(typeof c.title!=='string'||c.title.trim().length<12||c.title.length>300||typeof c.buyer!=='string'||!c.buyer.trim()||c.buyer.length>300)reasons.push('incomplete_buyer_or_title');
+   if(reasons.length){counts.held++;for(const reason of reasons)holdReasons[reason]=(holdReasons[reason]||0)+1;continue;}
    signals.push({prospect_key:c.candidate_ref,business:c.buyer,source_kind:'public_hiring',
       observed_at:c.last_seen_at,deadline_at:c.deadline,evidence_refs:[c.source_url],
       demand_evidence_ref:c.source_url,demand_text:c.title});
@@ -57,7 +62,7 @@ export function reviewCheckpoint(checkpoint,{portfolio,painIndex,now=new Date()}
  counts.matched=rows.filter(r=>r.hypotheses.length>0).length;
  return {schema:'evercraft.systemia.checkpoint-portfolio-review.v1',observed_at:now.toISOString(),counts,
     sources:checkpoint.receipt.sources.map(s=>({source:s.source,state:s.state,candidates:s.candidates,coverage_complete:s.coverage_complete===true})),
-    coverage_complete:false,review_only:true,external_effects_authorized:false,rows};
+    hold_reasons:holdReasons,coverage_complete:false,review_only:true,external_effects_authorized:false,rows};
 }
 function privateRead(file){
  if(!path.isAbsolute(file))throw Error('absolute_checkpoint_required');
