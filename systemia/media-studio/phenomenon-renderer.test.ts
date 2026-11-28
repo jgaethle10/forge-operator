@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { compilePhenomenonCanvas, validatePhenomenon, type PhenomenonInput } from './phenomenon-renderer.js';
@@ -102,4 +103,23 @@ test('phenomenon canvas rejects unsafe palette input at the compiler boundary', 
   const result = validatePhenomenon(unsafe);
   assert.equal(result.status, 'rejected');
   assert.ok(result.errors.includes('color_palette_invalid'));
+});
+
+test('local resilience uses the native exact-frame engine without passing illustration off as measured flows',()=>{
+  const story: PhenomenonInput=JSON.parse(readFileSync(new URL('./local-resilience.phenomenon.json',import.meta.url),'utf8'));
+  assert.equal(validatePhenomenon(story).status,'accepted');
+  const bundle=compilePhenomenonCanvas(story);
+  assert.equal(bundle.receipt.evidence_state,'synthetic_visualization');
+  assert.equal(bundle.receipt.publication_authority,false);
+  assert.equal(bundle.receipt.stream_count,9);
+  assert.match(story.source.label,/not geographic coordinates or measured economic flows/);
+  assert.match(story.encoding.motionLabel,/not a dollar amount/);
+  assert.ok(story.field.streamlines.some(s=>s.id==='chain-wage-recirculation'));
+  assert.ok(story.field.streamlines.some(s=>s.id==='local-external'));
+  assert.equal(bundle.stage.width,1080);
+  assert.equal(bundle.stage.height,1920);
+  assert.match(bundle.html,/__evercraftRenderFrame/);
+  const plan=buildDistributedRenderPlan({id:'local-resilience-preview',stage:bundle.stage,assets:[],maxFramesPerShard:30});
+  assert.equal(plan.stageDigest,bundle.receipt.stage_digest);
+  assert.ok(plan.shards.length>0);
 });
