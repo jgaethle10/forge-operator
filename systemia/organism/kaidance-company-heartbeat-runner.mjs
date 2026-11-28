@@ -17,6 +17,7 @@ import {runLearningCommunityCycle} from './kaidance-learning-community-cycle.mjs
 import {runAirCoreDevelopmentCycle} from './kaidance-aircore-development.mjs';
 import {runPrivateResearchContinuity} from './kaidance-rd-continuity.mjs';
 import {runFindMyPartCycle} from './kaidance-findmypart-execution.mjs';
+import {expandForestOnce} from '../../research/forest-restoration/forest-005-growth-worker.mjs';
 import {runCommercialSourceProof} from './kaidance-commercial-source-proof.mjs';
 import {runEventOpportunityScout} from '../events/event-opportunity-scout-runner.mjs';
 import {runSAMEventScout} from '../events/event-opportunity-us-sam-runner.mjs';
@@ -348,7 +349,7 @@ export function runCompanyHeartbeat({
  root=sourceRoot,outDir=path.join(sourceRoot,'artifacts/kaidance-company-heartbeat'),
  now=new Date(),proveWorlds=false,proveLearning=false,proveAirCore=false,
  learningCycle=runLearningCommunityCycle,aircoreCycle=runAirCoreDevelopmentCycle,
- spawn=spawnSync,aiwReceipt=null,globalOpportunityReceipt=null,networkDevelopmentReceipt=null,rdContinuityEnabled=false,forestReceipt=null,findmypartExecutionReceipt=null,commercialSourceProof=null,eventResidentPulse=null
+ spawn=spawnSync,aiwReceipt=null,globalOpportunityReceipt=null,networkDevelopmentReceipt=null,rdContinuityEnabled=false,forestReceipt=null,forestGrowthReceipt=null,findmypartExecutionReceipt=null,commercialSourceProof=null,eventResidentPulse=null
 }={}){
  const repo=path.resolve(root),out=path.resolve(outDir);
  const manifest=readJson(path.join(repo,'registry/kaidance-company-lanes.v1.json'));
@@ -431,6 +432,8 @@ export function runCompanyHeartbeat({
   physical_prototype_built:false,worker_dispatched:false};
  const researchContinuity=runPrivateResearchContinuity({enabled:rdContinuityEnabled,root:repo,outDir:out,now});
  const forest=classifyForestReceipt(forestReceipt,now);
+ const growth=forestGrowthReceipt;
+ forest.growth=growth?.schema==='evercraft.forest-005.growth-step.v1'&&growth.publication_authorized===false&&growth.observed_at===new Date(now).toISOString()&&['expanded','duplicate_tick','coverage_complete','retry_wait','source_or_validation_hold'].includes(growth.state)&&Number.isSafeInteger(growth.verified_counties)&&growth.verified_counties>=0&&growth.verified_counties<=11&&growth.target_counties===11&&growth.new_counties===(growth.state==='expanded'?1:0)?{state:growth.state,verified_counties:growth.verified_counties,target_counties:11,new_counties:growth.new_counties,publication_authorized:false,observed_at:growth.observed_at}:{state:'not_verified',new_counties:0,publication_authorized:false};
  const fmp=findmypartExecutionReceipt?.schema==='evercraft.findmypart.execution-cycle.v1'&&findmypartExecutionReceipt.tick===tick&&findmypartExecutionReceipt.outreach_authorized===false&&findmypartExecutionReceipt.buyers_qualified===0?findmypartExecutionReceipt:null;
  const inbound=fmp?.inbound_revenue_review;
  const inboundSummary=inbound?.schema==='evercraft.findmypart.inbound-revenue-review.v1'&&inbound.contains_buyer_pii===false&&inbound.prior_contact_verified===false&&inbound.buyers_qualified===0&&inbound.outreach_authorized===false&&inbound.payment_verified===false&&inbound.fulfillment_authorized===false&&['not_admitted','hold_inbox_capacity','hold_inbox_integrity','hold_private_inbox_binding','inbox_empty','consented_inquiries_require_review'].includes(inbound.state)&&['observed_inquiries','unique_case_candidates','duplicate_inquiries','invalid_inquiries'].every(k=>Number.isSafeInteger(inbound[k])&&inbound[k]>=0&&inbound[k]<=500)&&(inbound.oldest_pending_ms===null||Number.isSafeInteger(inbound.oldest_pending_ms)&&inbound.oldest_pending_ms>=0)?
@@ -594,7 +597,24 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
      commercialSourceProof=runCommercialSourceProof({root:sourceRoot,outDir:path.join(outDir,'commercial-source-proof'),now:at,enabled:true});
    }catch{commercialSourceProof={status:'held',executed:false}}
   }
-  const result=runCompanyHeartbeat({outDir,now:at,findmypartExecutionReceipt,commercialSourceProof,eventResidentPulse:eventSourcePulse,proveWorlds:process.argv.includes('--prove-worlds'),
+  let forestGrowthReceipt=null;
+  // Explicit owned admission only; preserve existing P0 work before this
+  // bounded research step. No standalone timer or hosted CI live requests.
+  if(process.env.SYSTEMIA_FOREST_GROWTH_ENABLED==='true'&&process.env.GITHUB_ACTIONS!=='true'&&path.isAbsolute(outDir)&&path.basename(outDir)==='kaidance-company-heartbeat'){
+   try{
+    const parent=fs.lstatSync(path.dirname(outDir));
+    if(!parent.isDirectory()||parent.isSymbolicLink()||(parent.mode&0o077)!==0||parent.uid!==process.getuid())throw Error('private_root_required');
+    const existing=path.join(outDir,'state.json');
+    if(!fs.existsSync(existing)||readJson(existing).tick<Math.floor(+at/300000)){
+     fs.mkdirSync(outDir,{recursive:true,mode:0o700});
+     const st=fs.lstatSync(outDir);
+     if(!st.isDirectory()||st.isSymbolicLink()||st.uid!==process.getuid()||(st.mode&0o077)!==0||fs.realpathSync(outDir)!==path.resolve(outDir))throw Error('private_heartbeat_root_required');
+     const root=path.join(outDir,'forest-growth');fs.mkdirSync(root,{recursive:true,mode:0o700});
+     forestGrowthReceipt=await expandForestOnce({root,now:+at});
+    }
+   }catch{console.error(JSON.stringify({schema:'evercraft.forest-005.growth-hold.v1',status:'held'}))}
+  }
+  const result=runCompanyHeartbeat({outDir,now:at,forestGrowthReceipt,findmypartExecutionReceipt,commercialSourceProof,eventResidentPulse:eventSourcePulse,proveWorlds:process.argv.includes('--prove-worlds'),
     proveLearning:process.argv.includes('--prove-learning')||process.env.SYSTEMIA_KAIDANCE_LEARNING_SOURCE_PROOFS==='true',
     proveAirCore:process.argv.includes('--prove-aircore')||process.env.SYSTEMIA_KAIDANCE_AIRCORE_SOURCE_PROOFS==='true',
     aiwReceipt,globalOpportunityReceipt,networkDevelopmentReceipt,forestReceipt,
