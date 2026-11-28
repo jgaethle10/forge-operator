@@ -308,9 +308,9 @@ export function runCompanyHeartbeat({
   no_remote_work_dispatched:true,no_code_changes_made:true};
  const snapshot={...planned.snapshot,
   counts:{...planned.snapshot.counts,
-   scanned:planned.snapshot.counts.scanned+aiw.sources_observed+global.sources_observed+(network.status==='verified_receipt'?1:0)+(learning?.report?.counts?.tracked||0)+(aircore?.report?1:0)+externalSkills.candidate_count,
+   scanned:planned.snapshot.counts.scanned+aiw.sources_observed+global.sources_observed+(network.status==='verified_receipt'?1:0)+(learning?.report?.counts?.tracked||0)+(aircore?.report?1:0)+externalSkills.candidate_count+externalSkills.technology_candidate_count,
    changed:planned.snapshot.counts.changed+(global.newly_seen||0)+(network.newly_seen||0)+(aircore?.report?.newly_seen||0),
-   held:planned.snapshot.counts.held+aiw.review_candidates.length+global.review_candidates.length+network.review_candidates.length+(learning?.report?.counts?.failed||0)+
+   held:planned.snapshot.counts.held+externalSkills.quarantined+externalSkills.technology_quarantined+aiw.review_candidates.length+global.review_candidates.length+network.review_candidates.length+(learning?.report?.counts?.failed||0)+
     (aircore?.held||['source_proof_failed','missing_source_hold'].includes(aircore?.report?.source_status)?1:0)},
   evidence_refs:[
     ...planned.snapshot.evidence_refs,
@@ -400,6 +400,7 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
    external_skill_intake_status:result.report?.external_skill_intake?.status||null,
    external_skills_quarantined:result.report?.external_skill_intake?.quarantined||0,
    external_skills_installed:0,
+   external_technologies_quarantined:result.report?.external_skill_intake?.technology_quarantined||0,
    aircore_verified_cadr_cfm:null,aircore_prototype_built:false,
    next_action_execution_authorized:false,
    creative_development:creative,
