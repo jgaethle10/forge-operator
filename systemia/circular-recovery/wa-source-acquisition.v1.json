@@ -1,0 +1,51 @@
+{
+  "schema": "evercraft.circular-recovery.source-acquisition.v1",
+  "catalog": "https://ecology.wa.gov/research-data/data-resources/solid-waste-recycling-data",
+  "catalogReviewedOn": "2026-11-27",
+  "sources": [
+    {
+      "key": "wa-generation-recovery-2024",
+      "url": "https://ecology.wa.gov/waste-generations-and-recovery",
+      "scope": "state material generation and recovery",
+      "year": 2024
+    },
+    {
+      "key": "wa-material-sector-2024",
+      "url": "https://ecology.wa.gov/materials-collection-type-and-sector-2024",
+      "scope": "state recovered material by collection type and sector",
+      "year": 2024
+    },
+    {
+      "key": "wa-county-disposal-1994-2024",
+      "url": "https://ecology.wa.gov/getattachment/5750e753-1097-4b3e-8a6f-64028bdf516e/solid-waste-disposal-data-by-county-1994-to-2024-updated-23-July-2026.xlsx",
+      "scope": "county disposal history",
+      "year": 2024,
+      "catalogAlias": "https://ecology.wa.gov/disposal-by-county",
+      "endpointEvidence": {
+        "state": "owner_reported_http_301",
+        "observedOn": "2026-11-28",
+        "host": "ecology.wa.gov",
+        "https": true,
+        "queryPresent": false,
+        "credentialsPresent": false,
+        "bodyCaptured": false
+      }
+    },
+    {
+      "key": "wa-facility-disposal-2024",
+      "url": "https://ecology.wa.gov/disposal-by-facility",
+      "scope": "facility disposal",
+      "year": 2024
+    }
+  ],
+  "captureState": "pending_owner_host",
+  "workbookBytesCaptured": 0,
+  "rowsVerified": 0,
+  "interpretationGate": [
+    "Verify source reporting period and methodology notes",
+    "Record exact worksheet/cell references and published mass units",
+    "Keep state recovery distinct from county disposal",
+    "Do not equate disposal with collectable supply"
+  ],
+  "maxBytes": 33554432
+}

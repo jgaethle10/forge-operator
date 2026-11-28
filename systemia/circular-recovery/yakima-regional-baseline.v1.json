@@ -1,0 +1,79 @@
+{
+  "schema": "evercraft.circular-recovery.regional-baseline.v1",
+  "reviewedOn": "2026-11-27",
+  "region": "Yakima County, Washington, USA",
+  "observations": [
+    {
+      "key": "orchard-area-2022",
+      "seedId": "cr-003-biomass",
+      "family": "usda-nass",
+      "source": "https://data.nass.usda.gov/Publications/AgCensus/2022/Full_Report/Volume_1%2C_Chapter_2_County_Level/Washington/st53_2_030_030.pdf",
+      "locator": "Table 30, page 405, Yakima row, 2022 total",
+      "year": 2022,
+      "values": {
+        "orchardAcres": 87343,
+        "farmsWithOrchards": 854
+      },
+      "state": "reported",
+      "limitation": "Area and farm count are not waste generation, accessible supply, or landowner consent."
+    },
+    {
+      "key": "county-disposal-fees",
+      "seedIds": [
+        "cr-001-plastic",
+        "cr-002-tire",
+        "cr-003-biomass"
+      ],
+      "family": "yakima-county",
+      "source": "https://www.yakimacounty.us/754/Miscellaneous-Special-Waste",
+      "locator": "Tires, Agriculture Waste, Yard & Wood Waste Diversion Program",
+      "values": {
+        "passengerTireUsdEach": 10,
+        "passengerTireUsdPerTon": 262,
+        "agriculturalWasteUsdPerTon": 66.5,
+        "cleanYardWasteUsdPerTon": 23
+      },
+      "state": "reported",
+      "limitation": "Published disposal rates, not payments to Evercraft; agricultural category mixes bins, crates, Milar and PVC, not a plastic-only stream. Confirm rates and load eligibility before commercial use."
+    },
+    {
+      "key": "state-tire-counterevidence",
+      "seedId": "cr-002-tire",
+      "family": "wa-ecology",
+      "source": "https://content.govdelivery.com/accounts/WAECY/bulletins/4272685",
+      "locator": "August 2026 update, Determining tire recycling impacts",
+      "values": {
+        "landfilledPct": 40,
+        "burnedForEnergyPct": 26,
+        "recycledPct": 26
+      },
+      "state": "reported",
+      "relationship": "challenges",
+      "limitation": "Statewide shares, not county supply. The summarized lifecycle analysis found landfilling had lower impacts than burning or recycling in its comparison; do not generalize without reviewing scenarios and boundaries."
+    },
+    {
+      "key": "state-data-catalog",
+      "seedIds": [
+        "cr-001-plastic",
+        "cr-002-tire",
+        "cr-003-biomass"
+      ],
+      "family": "wa-ecology",
+      "source": "https://ecology.wa.gov/research-data/data-resources/solid-waste-recycling-data",
+      "locator": "Data section, 2024 generation and recovery; county disposal 1994–2024",
+      "state": "reported",
+      "limitation": "Catalog located; spreadsheets not downloaded or parsed. County disposal totals are not source-separated accessible feedstock."
+    }
+  ],
+  "nextEvidence": [
+    "Exact source workbook bytes and schema, units, geography and reporting year",
+    "Measured residue per orchard acre by crop and activity, moisture, existing uses and collectable fraction",
+    "Generator-approved waste quantities and material specification",
+    "Qualified downstream facility, pricing and product safety review"
+  ],
+  "localAvailableTonnes": null,
+  "verifiedRevenueUsd": null,
+  "environmentalBenefitVerified": false,
+  "physicalExecutionAuthorized": false,
+  "sourceByteCustodyVerified": false
+}

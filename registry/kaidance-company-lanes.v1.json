@@ -189,6 +189,15 @@
       "products": [],
       "services": [],
       "priority": 2
+    },
+    {
+      "lane_key": "circular-recovery",
+      "description": "Private ecological materials recovery research, TOWI-bound desktop screening and existing Systemia durable-goal continuity; no physical or commercial authority",
+      "mode": "observe_existing_workflows",
+      "cadence_seconds": 300,
+      "products": [],
+      "services": [],
+      "priority": 2
     }
   ]
 }

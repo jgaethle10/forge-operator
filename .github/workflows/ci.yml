@@ -31,6 +31,11 @@ jobs:
         with:
           node-version: 22
 
+      - name: Verify circular recovery desktop and admission proofs
+        run: |
+          node systemia/circular-recovery/screen.proof.mjs
+          node --test systemia/circular-recovery/*.test.mjs
+
       - name: Verify or install media runtime
         run: |
           set -euo pipefail
