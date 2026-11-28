@@ -7,6 +7,9 @@ on:
       - "systemia/forensiscope/asr-runner.test.mjs"
       - "systemia/forensiscope/transcription-engine.mjs"
       - "systemia/forensiscope/transcription-engine.test.mjs"
+      - "systemia/forensiscope/faster_whisper_local.py"
+      - "systemia/forensiscope/test_faster_whisper_local.py"
+      - "systemia/forensiscope/faster-whisper-bridge.test.mjs"
       - "systemia/compute/runtime-node.mjs"
       - "systemia/forensiscope/batch-transcribe.mjs"
       - "systemia/forensiscope/batch-transcribe.test.mjs"
@@ -24,6 +27,9 @@ on:
       - "systemia/forensiscope/asr-runner.test.mjs"
       - "systemia/forensiscope/transcription-engine.mjs"
       - "systemia/forensiscope/transcription-engine.test.mjs"
+      - "systemia/forensiscope/faster_whisper_local.py"
+      - "systemia/forensiscope/test_faster_whisper_local.py"
+      - "systemia/forensiscope/faster-whisper-bridge.test.mjs"
       - "systemia/compute/runtime-node.mjs"
       - "systemia/forensiscope/batch-transcribe.mjs"
       - "systemia/forensiscope/batch-transcribe.test.mjs"
@@ -56,3 +62,8 @@ jobs:
           node --check systemia/forensiscope/doctor.mjs
       - name: ForensiScope runtime tests
         run: npm run test:forensiscope-runtime
+      - name: ForensiScope local-ASR contract (synthetic, no model download)
+        run: |
+          python3 --version
+          python3 -m unittest discover -s systemia/forensiscope -p 'test_faster_whisper_local.py' -v
+          node --test systemia/forensiscope/faster-whisper-bridge.test.mjs
