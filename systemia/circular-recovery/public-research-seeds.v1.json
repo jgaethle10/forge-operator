@@ -1,0 +1,127 @@
+{
+  "schema": "evercraft.circular-recovery.public-research-seeds.v1",
+  "reviewedOn": "2026-11-27",
+  "scope": "public-source desktop research questions only",
+  "sources": {
+    "epaPlastic": {
+      "family": "US EPA",
+      "url": "https://www.epa.gov/plastics/advanced-recycling-plastics",
+      "state": "reported",
+      "note": "Mechanical recycling predominates, but variable plastic inputs can yield inconsistent material properties."
+    },
+    "waData": {
+      "family": "WA Ecology",
+      "url": "https://ecology.wa.gov/research-data/data-resources/solid-waste-recycling-data",
+      "state": "reported",
+      "note": "State waste and recovery datasets are available for investigation; local stream volumes have not been extracted."
+    },
+    "waTires": {
+      "family": "WA Ecology",
+      "url": "https://ecology.wa.gov/waste-toxics/solid-waste-litter/waste-tires",
+      "state": "reported",
+      "note": "Waste-tire collection, transport and storage are regulated; local eligibility must be reviewed before activity."
+    },
+    "epaTire": {
+      "family": "US EPA",
+      "url": "https://www.epa.gov/chemical-research/tire-crumb-questions-and-answers",
+      "state": "reported",
+      "note": "Crumb rubber production separates rubber from reinforcing steel and fabric; product exposure and environmental performance need application-specific review."
+    },
+    "arsOrchard": {
+      "family": "USDA ARS",
+      "url": "https://www.ars.usda.gov/research/publications/publication/?seqNo115=419307",
+      "state": "reported",
+      "note": "A four-year whole-orchard recycling study examined soil carbon, greenhouse gases and almond productivity; transfer to Yakima crops is unverified."
+    },
+    "arsBiochar": {
+      "family": "USDA ARS",
+      "url": "https://www.ars.usda.gov/midwest-area/stpaul/swmr/docs/biochar/",
+      "state": "reported",
+      "note": "Biomass-derived biochar is studied for stabilization of biomass carbon; local net benefit is not established."
+    },
+    "doeHeat": {
+      "family": "US DOE",
+      "url": "https://www.energy.gov/cmei/ito/waste-heat-recovery-basics",
+      "state": "reported",
+      "note": "Commercial waste heat recovery exists; material and maintenance constraints can restrict adoption."
+    }
+  },
+  "rows": [
+    {
+      "id": "cr-001-plastic",
+      "stream": "plastic",
+      "pathway": "mechanical",
+      "sourceKeys": [
+        "epaPlastic",
+        "waData"
+      ],
+      "question": "Can segregated discarded agricultural polymers become durable non-safety-critical manufacturing feedstock?",
+      "next": "Obtain polymer identification, actual available volumes, contamination data, recovery yield and target product requirements; compare against virgin resin and existing disposal.",
+      "potentialOffer": "Feedstock and buyer-fit desktop assessment",
+      "status": "source_review_candidate",
+      "localSupplyVerified": false,
+      "buyerVerified": false,
+      "physicalExecutionAuthorized": false,
+      "commercialCommitment": false,
+      "environmentalClaimVerified": false
+    },
+    {
+      "id": "cr-002-tire",
+      "stream": "tire",
+      "pathway": "mechanical",
+      "sourceKeys": [
+        "waTires",
+        "epaTire",
+        "waData"
+      ],
+      "question": "Which permitted recovery pathways preserve rubber and steel value while controlling particle release and exposure?",
+      "next": "Identify authorized facilities and documented output specifications; compare retreading eligibility, material reuse and end-of-life alternatives.",
+      "potentialOffer": "Tire material-flow and recovery-market study",
+      "status": "source_review_candidate",
+      "localSupplyVerified": false,
+      "buyerVerified": false,
+      "physicalExecutionAuthorized": false,
+      "commercialCommitment": false,
+      "environmentalClaimVerified": false
+    },
+    {
+      "id": "cr-003-biomass",
+      "stream": "biomass",
+      "pathway": "biochar",
+      "sourceKeys": [
+        "arsOrchard",
+        "arsBiochar"
+      ],
+      "question": "Can clean orchard residues produce useful materials or stable carbon outcomes relative to direct orchard recycling?",
+      "next": "Obtain actual clean dry biomass availability, competing uses, qualified conversion partner data, emissions and soil suitability; preserve a no-conversion comparator.",
+      "potentialOffer": "Orchard residue feasibility and baseline study",
+      "status": "source_review_candidate",
+      "localSupplyVerified": false,
+      "buyerVerified": false,
+      "physicalExecutionAuthorized": false,
+      "commercialCommitment": false,
+      "environmentalClaimVerified": false
+    },
+    {
+      "id": "cr-005-heat",
+      "stream": "industrial-waste-heat",
+      "pathway": "heat-recovery",
+      "sourceKeys": [
+        "doeHeat"
+      ],
+      "question": "Which industrial waste heat streams have compatible local heat demand and viable economics?",
+      "next": "Obtain measured heat source/sink profiles, coincidence, uptime, constraints and independent engineering review. Existing screening engine does not yet support this stream.",
+      "potentialOffer": "Waste-heat opportunity screening",
+      "status": "source_review_candidate",
+      "localSupplyVerified": false,
+      "buyerVerified": false,
+      "physicalExecutionAuthorized": false,
+      "commercialCommitment": false,
+      "environmentalClaimVerified": false
+    }
+  ],
+  "towiDossiersCreated": 0,
+  "systemiaMissionsAdmitted": 0,
+  "heartbeatActivated": false,
+  "sourceNote": "Public web pages reviewed as reported context, not raw-data custody or independent experimental validation. No private sources or synthetic facts. Existing TOWI and Systemia admission must establish real dossier and evidence bindings."
+}
