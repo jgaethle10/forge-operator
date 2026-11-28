@@ -32,14 +32,24 @@ function plain(p){
  }
  return null;
 }
-export async function reviewOwnedDrafts({accessToken,reviewedLanes={},fetchImpl=fetch,now=new Date(),clock=Date.now,maxDrafts=20}={}){
- if(typeof accessToken!=='string'||accessToken.length<16||!Number.isFinite(+now)||!Number.isInteger(maxDrafts)||maxDrafts<1||maxDrafts>40)throw Error('gmail_draft_input_hold');
+export async function reviewOwnedDrafts({accessToken,reviewedLanes={},fetchImpl=fetch,now=new Date(),clock=Date.now,maxDrafts=20,maxListPages=1}={}){
+ if(typeof accessToken!=='string'||accessToken.length<16||!Number.isFinite(+now)||!Number.isInteger(maxDrafts)||maxDrafts<1||maxDrafts>40||!Number.isInteger(maxListPages)||maxListPages<1||maxListPages>10)throw Error('gmail_draft_input_hold');
  const deadline=clock()+90000;
  const req=(pathname,query={})=>get({token:accessToken,fetchImpl,pathname,query,clock,deadline});
- const list=await req('/drafts',{maxResults:String(maxDrafts)});
- if(list.drafts!==undefined&&!Array.isArray(list.drafts))throw Error('gmail_draft_list_hold');
- const entries=list.drafts??[];
- if(entries.length>maxDrafts||entries.some(d=>!validId(d.id)||!validId(d.message?.id))||new Set(entries.map(d=>d.id)).size!==entries.length)throw Error('gmail_draft_list_hold');
+ const inventory=[],ids=new Set(),cursors=new Set();let pageToken=null,pages=0;
+ do{
+  const list=await req('/drafts',{maxResults:String(maxDrafts),...(pageToken?{pageToken}:{})});
+  if(list.drafts!==undefined&&!Array.isArray(list.drafts))throw Error('gmail_draft_list_hold');
+  const items=list.drafts??[];
+  if(items.length>maxDrafts||items.some(d=>!validId(d.id)||!validId(d.message?.id)))throw Error('gmail_draft_list_hold');
+  for(const d of items){if(ids.has(d.id))throw Error('gmail_draft_inventory_changed');ids.add(d.id);inventory.push(d);}
+  pages++;pageToken=list.nextPageToken??null;
+  if(pageToken!==null){if(typeof pageToken!=='string'||!pageToken||pageToken.length>4096||cursors.has(pageToken))throw Error('gmail_draft_cursor_hold');cursors.add(pageToken);}
+ }while(pageToken&&pages<maxListPages);
+ // Review already classified commercial drafts ahead of unclassified inventory.
+ // Never claim full body review from a paginated list.
+ const priority=d=>Object.hasOwn(reviewedLanes,d.id)&&['direct_offer','customer_reply'].includes(reviewedLanes[d.id])?0:1;
+ const entries=inventory.sort((a,b)=>priority(a)-priority(b)).slice(0,maxDrafts);
  const records=[],holds={};let skipped=0;
  for(const item of entries){
   // No automatic sales label inferred from private messages. The existing
@@ -77,7 +87,7 @@ export async function reviewOwnedDrafts({accessToken,reviewedLanes={},fetchImpl=
  }
  const reviewed=reviewPreparedDrafts(records,{now});
  // Do not export bodies, addresses, draft IDs, thread IDs or token.
- return {schema:'evercraft.systemia.owned-draft-review.v1',observed_at:now.toISOString(),listed:entries.length,reviewed:records.length,read_holds:skipped,unprocessed:entries.length-records.length-skipped,pagination_remaining:!!list.nextPageToken,hold_reasons:holds,counts:reviewed.counts,
+ return {schema:'evercraft.systemia.owned-draft-review.v1',observed_at:now.toISOString(),listed:inventory.length,list_pages:pages,selected_for_body_review:entries.length,reviewed:records.length,read_holds:skipped,unprocessed:inventory.length-records.length-skipped,pagination_remaining:!!pageToken,hold_reasons:holds,counts:reviewed.counts,
  reason_counts:reviewed.rows.reduce((out,r)=>{for(const reason of r.reasons)out[reason]=(out[reason]??0)+1;return out;},{}),
  source:'owned_gmail_readonly',full_history_confirmed:false,provider_quota_verified:false,review_only:true,send_authority:false,provider_write_performed:false};
 }
