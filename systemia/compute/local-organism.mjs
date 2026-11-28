@@ -87,6 +87,7 @@ export async function startLocalOrganism({
   ravenOllamaOrigin = '',
   // Explicitly requested owner-controlled admission; off by default.
   leilandObservatory = null,
+  publicDemandDocuments = false,
   zeroSpendCapacity = true,
   nativeBrowserBootstrap = true,
   nativeBrowserPreparer = prepareNativeBrowserRuntime,
@@ -263,6 +264,7 @@ export async function startLocalOrganism({
         provider_credential_state_dir: String(ravenProviderCredentialStateDir || '').trim(),
         raven_ollama_origin: String(ravenOllamaOrigin || '').trim(),
         ...(leilandObservatory ? {leiland_observatory:leilandObservatory} : {}),
+        ...(publicDemandDocuments === true ? {public_demand_documents:true} : {}),
       },
       rollbackTarget: 'local-organism:core-previous',
       leaseTtlMs: 3_600_000,
@@ -556,6 +558,7 @@ if (isCli) {
           publication_root: process.env.LEILAND_PUBLICATION_ROOT || '',
         }
         : null,
+    publicDemandDocuments: process.env.EVERCRAFT_PUBLIC_DEMAND_DOCUMENTS_ADMISSION === 'true',
     zeroSpendCapacity: String(
       process.env.EVERCRAFT_LOCAL_ZERO_SPEND ?? 'true'
     ).toLowerCase() !== 'false',

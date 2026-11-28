@@ -1,0 +1,11 @@
+{
+  "service_key": "kaidance-award-history",
+  "mode": "cycle",
+  "manifest": "systemia/revenue-desk/kaidance-award-history.workflow.json",
+  "executable": "systemia/revenue-desk/uk-award-history-runner.mjs",
+  "cadence_seconds": 3600,
+  "optional_when_unconfigured": true,
+  "env_args": {
+    "--directory": "SYSTEMIA_KAIDANCE_AWARD_HISTORY_DIR"
+  }
+}

@@ -213,12 +213,12 @@ export class SystemiaCoreResidentSupervisor {
 
   async #runCycle(entry) {
     const { config, state } = entry;
-    if (state.status === 'running') {
+    if (this.cycleChildren.has(config.service_key) || state.status === 'running') {
       const receipt = this.#receipt('cycle.held', {
         service_key: config.service_key,
         reason: 'previous_cycle_still_running',
       });
-      state.status = 'held';
+      state.status = 'running';
       state.hold_reason = 'previous_cycle_still_running';
       state.last_receipt_hash = receipt.receipt_hash;
       this.#persistHealth();

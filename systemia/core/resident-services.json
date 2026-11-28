@@ -462,6 +462,22 @@
       },
       "max_restarts_per_hour": 8,
       "restart_backoff_ms": 5000
+    },
+    {
+      "service_key": "kaidance-public-demand-documents",
+      "mode": "cycle",
+      "manifest": "systemia/revenue-desk/kaidance-public-demand-documents.workflow.json",
+      "executable": "systemia/revenue-desk/public-demand-document-cycle.mjs",
+      "cadence_seconds": 300,
+      "optional_when_unconfigured": true,
+      "env_args": {
+        "--root": "SYSTEMIA_PUBLIC_DEMAND_RESEARCH_ROOT",
+        "--inbox": "SYSTEMIA_PUBLIC_DEMAND_DOCUMENT_INBOX"
+      },
+      "optional_env_args": {
+        "--browser-source": "SYSTEMIA_PUBLIC_DEMAND_BROWSER_SOURCE",
+        "--browser-cache": "SYSTEMIA_PUBLIC_DEMAND_BROWSER_CACHE"
+      }
     }
   ]
 }
