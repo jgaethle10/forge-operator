@@ -646,7 +646,7 @@ verify_current_runtime() {
   findmypart_html="$(curl --fail --silent --show-error --max-time 5 'http://127.0.0.1:8787/findmypart/' 2>/dev/null || true)"
   if [[ -z "$findmypart_html" ]] ||
      ! grep -Fq 'id="part-request-form"' <<< "$findmypart_html" ||
-     ! grep -Fq 'Missing part.' <<< "$findmypart_html"; then
+     ! grep -Fq 'No more waste.' <<< "$findmypart_html"; then
     echo "ERROR: FindMyPart resident buyer page not serving approved route" >&2
     return 15
   fi
@@ -657,6 +657,30 @@ verify_current_runtime() {
     echo "ERROR: FindMyPart resident customer form script not served" >&2
     return 16
   fi
+  # The homepage's primary free-search link must not be a public 404 again.
+  # Test HTML and every first-party browser module with read-only loopback GET.
+  local findmypart_search_html="" findmypart_search_module="" search_token=""
+  findmypart_search_html="$(curl --fail --silent --show-error --max-time 5 'http://127.0.0.1:8787/findmypart/search/' 2>/dev/null || true)"
+  if [[ -z "$findmypart_search_html" ]] ||
+     ! grep -Fq 'id="search-form"' <<< "$findmypart_search_html" ||
+     ! grep -Fq 'We source the solution.' <<< "$findmypart_search_html"; then
+    echo "ERROR: FindMyPart free-search page not served" >&2
+    return 18
+  fi
+  for module in app.mjs engine.mjs candidates.mjs recovery-links.mjs; do
+    case "$module" in
+      app.mjs) search_token='engine.mjs' ;;
+      engine.mjs) search_token='analyzePartQuery' ;;
+      candidates.mjs) search_token='candidateFromInput' ;;
+      recovery-links.mjs) search_token='recoveryResearchLinks' ;;
+    esac
+    findmypart_search_module="$(curl --fail --silent --show-error --max-time 5 "http://127.0.0.1:8787/findmypart/search/$module" 2>/dev/null || true)"
+    if [[ -z "$findmypart_search_module" ]] ||
+       ! grep -Fq "$search_token" <<< "$findmypart_search_module"; then
+      echo "ERROR: FindMyPart free-search browser module not served: $module" >&2
+      return 19
+    fi
+  done
   findmypart_readiness="$(curl --fail --silent --show-error --max-time 5 'http://127.0.0.1:8787/api/findmypart/readiness' 2>/dev/null || true)"
   if ! runuser -u "$RUN_USER" -- env FINDMYPART_READINESS_JSON="$findmypart_readiness" node -e "
     try {

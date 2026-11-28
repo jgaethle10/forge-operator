@@ -26,7 +26,7 @@ export const HARBOR_FINDMYPART_LAUNCH = {
       "white": "#ffffff",
       "workshop_gray": "#f7f8fa"
     },
-    "tagline": "Missing part. Not the end."
+    "tagline": "No more waste. We source the solution."
   },
   "artwork": [
     {
@@ -64,7 +64,7 @@ export const HARBOR_FINDMYPART_LAUNCH = {
   "captions": {
     "facebook": {
       "artwork": "FindMyPart-Early-Access-Square.png",
-      "draft": "One missing part can leave an otherwise useful machine sitting for months. Sometimes it gets thrown away.\n\nWe're building FindMyPart at Evercraft for exactly that problem. The mission goes beyond locating replacements: explore original parts, salvage, repair information, cross-references, and even fabrication research when conventional sourcing ends.\n\nOur early-access experience starts with free description-based research tools. Automatic photo identification, integrated global discovery, and engineering verification are still being developed.\n\nHave something sitting because one component is missing? We'd love to hear about the problem.\n\nFindMyPart. Missing part. Not the end.",
+      "draft": "One missing part can leave an otherwise useful machine sitting for months. Sometimes it gets thrown away.\n\nWe're building FindMyPart at Evercraft for exactly that problem. The mission goes beyond locating replacements: explore original parts, salvage, repair information, cross-references, and even fabrication research when conventional sourcing ends.\n\nOur early-access experience starts with free description-based research tools. Automatic photo identification, integrated global discovery, and engineering verification are still being developed.\n\nHave something sitting because one component is missing? We'd love to hear about the problem.\n\nFindMyPart. No more waste. We source the solution.",
       "call_to_action": "Invite examples; do not say publicly live without release verification."
     },
     "instagram": {
@@ -74,7 +74,7 @@ export const HARBOR_FINDMYPART_LAUNCH = {
     },
     "linkedin": {
       "artwork": "FindMyPart-Early-Access-Landscape.png",
-      "draft": "Equipment often reaches an artificial end of life when one unavailable component prevents the rest from operating.\n\nEvercraft is developing FindMyPart to investigate more than conventional replacement inventory: manufacturer references, salvage, repair pathways, technical documentation, and potentially viable fabrication or substitution routes.\n\nThe early-access product begins with user-directed research and candidate tracking. Automated photo identification, global supplier integration and engineering validation are future capabilities, not present claims.\n\nWe're particularly interested in understanding how this problem affects independent repair shops, machinery owners and maintenance teams.\n\nFindMyPart. Missing part. Not the end.",
+      "draft": "Equipment often reaches an artificial end of life when one unavailable component prevents the rest from operating.\n\nEvercraft is developing FindMyPart to investigate more than conventional replacement inventory: manufacturer references, salvage, repair pathways, technical documentation, and potentially viable fabrication or substitution routes.\n\nThe early-access product begins with user-directed research and candidate tracking. Automated photo identification, global supplier integration and engineering validation are future capabilities, not present claims.\n\nWe're particularly interested in understanding how this problem affects independent repair shops, machinery owners and maintenance teams.\n\nFindMyPart. No more waste. We source the solution.",
       "call_to_action": "Invite industry feedback; no verified stock or fitment claims."
     },
     "tiktok": {

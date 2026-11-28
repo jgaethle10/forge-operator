@@ -42,7 +42,7 @@ Never count synthetic QA, a checkout session, an open email app, a social post, 
 
 ## Messaging templates
 ### Launch headline
-Missing part. Not the end.
+No more waste. We source the solution.
 
 ### Site one-line
 Tell us about the part. We'll help figure out the next move.
@@ -70,12 +70,12 @@ One primary CTA: **Tell us about your part**. The first contact asks only what p
 **0:04-0:10**: The search line from an exploded diagram runs into empty catalog fields. Voice: "The diagnosis is done. But the part? Gone from every catalog you've tried."
 **0:10-0:17**: Ultraviolet locator rings widen: exact source, supersession, donor, drawings. Each step labeled `CANDIDATE` or `NEEDS CHECK`. Voice: "That shouldn't be the end of the investigation."
 **0:17-0:24**: A grounded research dossier assembles with citations and an unresolved-questions line. Voice: "FindMyPart follows the evidence. More than another search result. A next move you can actually evaluate."
-**0:24-0:30**: Brand lockup, no product stock claims. Voice: "FindMyPart. Missing part. Not the end." Lower third: `One-time sourcing research from $19. Parts and fitment not guaranteed.`
+**0:24-0:30**: Brand lockup, no product stock claims. Voice: "FindMyPart. No more waste. We source the solution." Lower third: `One-time sourcing research from $19. Parts and fitment not guaranteed.`
 
 **Sound:** self-authored metallic foley, tight sub pulse, quiet evolving synth texture with no imitation of commercial music. Voice: understated, confident, warm, no overacted theatrical AI. Shot design: custom vector animation from the original brand SVG; no unlicensed parts photography.
 
 ### 10-second clip
-A stamped obsolete number disappears from a catalog. Locator expands through the part's silhouette, three evidence labels snap into place. Voice: "A catalog dead end isn't the end of the hunt. FindMyPart. Missing part. Not the end." End card: `Research from $19 · By Evercraft`.
+A stamped obsolete number disappears from a catalog. Locator expands through the part's silhouette, three evidence labels snap into place. Voice: "A catalog dead end isn't the end of the hunt. FindMyPart. No more waste. We source the solution." End card: `Research from $19 · By Evercraft`.
 
 ### Email handoff for opted-in shop
 Subject: One stalled repair, one research trail

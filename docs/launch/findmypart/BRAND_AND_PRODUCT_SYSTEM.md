@@ -7,7 +7,7 @@ A missing component can strand a vehicle, machine, restoration or repair. The pr
 
 **Positioning:** FindMyPart is an evidence-first parts research service for hard-to-source, obsolete and partly identified components. We investigate sourcing and repair pathways, show what is known, what is provisional, and what requires verification. The purchase is **research**, not replacement inventory.
 
-**Tagline:** Missing part. Not the end.
+**Tagline:** No more waste. We source the solution.
 
 **One-line promise:** When the usual catalogs stop, FindMyPart helps you work out the next evidence-backed sourcing move.
 
@@ -37,7 +37,7 @@ A missing component can strand a vehicle, machine, restoration or repair. The pr
 **Don't:** Use generic chatbot sparkles, random AI imagery, car-parts stock photos, counterfeit supplier logos, claims of guaranteed availability, or part photos without licensed rights.
 
 ### The buyer experience
-1. **Recognize:** “Missing part. Not the end.” One short explanation, one prominent **Tell us about your part** action.
+1. **Recognize:** “No more waste. We source the solution.” One short explanation, one prominent **Tell us about your part** action.
 2. **Describe:** A short question first: what part, what machine. Optional photos/markings only when relevant. No mandatory tier selection before the problem is understood.
 3. **Choose:** Quick $19, Deep $49 or Rescue $99 *after* a clear explanation. All are one-time research services, not parts prices.
 4. **Confirm:** A human-readable scope; no checkout without owned secure storage and verified product/price.
