@@ -311,6 +311,31 @@ export function loadFabricCatalogFromRepository({catalogPath=''}={}){
   return normalizeFabricCatalog(mapped);
 }
 
+// Nontransactional inquiry continuation, separate from historically held checkout.
+// This routes to the existing owned capability page and its customer-initiated
+// email composer. It is not a verified delivery promise or payment route.
+export function scopedInquiryOption(item={}) {
+  const id=String(item.public_id||'').toLowerCase();
+  const state=String(item.commercial_state||'').toLowerCase();
+  const machine=String(item.state||item.machine_state||'').toLowerCase();
+  if(!/^[a-z0-9][a-z0-9._:-]{0,159}$/.test(id) ||
+     /^(?:product:)?(?:rivet|aliev)(?:[-.:]|$)/.test(id) ||
+     id==='systemia-yard-runtime-extension-v1' ||
+     /(?:^|[_-])(?:hold|held|retired|disabled|unavailable|blocked)(?:$|[_-])/.test(state+'_'+machine) ||
+     !['sell_now','verification_required','verify','discovery_only','free','commercial_pilot',
+       'contractor_beta','scoped_human_review_offers','offer_defined_checkout_not_declared'].includes(state))
+    return null;
+  return {
+    capability_id:id,
+    url:'https://fabric.systemiacommandcenters.com/capabilities/'+encodeURIComponent(id),
+    state:'scoped_inquiry_only',
+    next_step:'Describe the desired outcome, constraints and timing; agree feasibility, scope, price and delivery before purchase.',
+    customer_initiated:true,
+    delivery_verified:false,checkout_available:false,
+    inquiry_submitted:false,external_action_taken:false
+  };
+}
+
 export function normalizeFabricCatalog(input=[]){
   if(!Array.isArray(input)) throw new Error('fabric_catalog_must_be_array');
   if(input.length>256) throw new Error('fabric_catalog_too_large');
@@ -343,6 +368,7 @@ export function normalizeFabricCatalog(input=[]){
       entry_paid_offer:normalizeEntryPaidOffer(item.entry_paid_offer),
       start_url_state:owned?'owned_offer_page_available':clean(item.start_url_state||'',120)||null,
       human_offer_url:owned?.human_form_url||null,
+      scoped_inquiry:scopedInquiryOption({...item,public_id:publicId}),
       preferred_agent_route:clean(item.preferred_agent_route||'',120)||null,
       connections,
     };
@@ -740,6 +766,7 @@ export async function executeFabricDirectoryRpc(rpc,catalog=[]){
         // probe from this successful plugin call. Keep customer payment
         // blocked until provider settlement/fulfillment is verified.
         human_offer_url:null,
+        scoped_inquiry:capability.scoped_inquiry,
         owned_human_buyer_options:[],
         human_buyer_options:[],
         human_buyer_options_state:'held_provider_http_402_requires_new_payment_receipt',
