@@ -107,3 +107,33 @@ test('Git diff selection admits only bounded mission manifest names without exec
   assert.equal(calls,1);
   assert.throws(()=>changedMissionIds({git:()=> 'systemia/mission-bridge/requests/../../escape.json'}),/unapproved_mission_filename_changed/);
 });
+
+test('founder studio observer is fixed-source-only; no runtime, asset or dispatch authority',async()=>{
+  const request=sample({route:'founder-studio-source-evidence',mission_id:'founder-studio-evidence-20261128-001'});
+  const a=admitMissionRequest(request);
+  assert.equal(a.checks.length,8);
+  assert.equal(a.execution_authority_granted,false);
+  assert.equal(a.remote_node_access_granted,false);
+  assert.equal(a.passport_execution_lease_present,false);
+  for(const bad of [{mode:'execute'},{asset_root:'/private'},{paths:['secret']},{token:'fake'},{route:'studio-render'}]){
+    assert.throws(()=>admitMissionRequest({...request,...bad}));
+  }
+  const tmp=fs.mkdtempSync(path.join(os.tmpdir(),'studio-source-'));
+  try{
+    for(const f of a.checks){
+      fs.mkdirSync(path.dirname(path.join(tmp,f)),{recursive:true});
+      fs.writeFileSync(path.join(tmp,f),'source evidence only');
+    }
+    const fetchImpl=async()=>{assert.fail('source observer must not use network')};
+    const r=await runMissionRequest(request,{rootDir:tmp,fetchImpl});
+    assert.equal(r.state,'observation_complete');
+    assert.equal(r.diagnosis,'allowlisted_studio_source_present');
+    assert.equal(r.remote_node_connected,false);
+    assert.equal(r.external_write_performed,false);
+    assert.equal(r.observations.every(o=>o.sha256?.length===64),true);
+    fs.unlinkSync(path.join(tmp,a.checks[0]));
+    const missing=await runMissionRequest(request,{rootDir:tmp,fetchImpl});
+    assert.equal(missing.state,'observation_incomplete');
+    assert.equal(missing.diagnosis,'studio_source_incomplete');
+  }finally{fs.rmSync(tmp,{recursive:true,force:true})}
+});
