@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Evercraft | Scenic filament study</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#05070d;color:#c7d9eb;font:12px ui-monospace,monospace;overflow:hidden}canvas{position:absolute;inset:0;width:100vw;height:100vh}header,footer{position:absolute;left:22px;right:22px;pointer-events:none}header{top:20px}footer{bottom:18px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}h1{font:600 clamp(18px,4vw,30px) system-ui;letter-spacing:.12em;margin:5px 0}small{color:#8da5bb;letter-spacing:.08em}button{position:absolute;right:20px;top:24px;background:#0a1521;color:#c7d9eb;border:1px solid #445d75;padding:8px;cursor:pointer}
+</style><canvas aria-label="Illustrative filament field, not live telemetry"></canvas><header><small>EVERCRAFT / SHARED OBSERVATORY LAB</small><h1>THE LIVING FIELD</h1><small>SCENIC GEOMETRY / NO LIVE TELEMETRY</small></header><button type="button" aria-pressed="false">Pause</button><footer><span>PROCEDURAL FILAMENT STUDY</span><span>NOT MODEL ACTIVATIONS</span></footer>
+<script type="module">
+import {buildArcLengthTable} from './arc-length.mjs';
+const c=document.querySelector('canvas'),ctx=c.getContext('2d',{alpha:false}),bg=document.createElement('canvas'),b=bg.getContext('2d');
+const reduced=matchMedia('(prefers-reduced-motion: reduce)'),button=document.querySelector('button');
+let w,h,d,paths=[],paused=false,raf=0,last=0;
+const colors=['249,173,97','230,121,245','148,239,151','106,179,255'];
+function rng(seed){return()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;};}
+const rgba=(rgb,a)=>`rgba(${rgb},${a})`;
+function resize(){
+ w=innerWidth;h=innerHeight;d=Math.min(devicePixelRatio||1,w<600?1.5:2);c.width=bg.width=Math.round(w*d);c.height=bg.height=Math.round(h*d);ctx.setTransform(d,0,0,d,0,0);b.setTransform(d,0,0,d,0,0);
+ const rand=rng(20261127);paths=[];const cx=w*.5,cy=h*.51,span=Math.min(w*.43,h*.48),tall=Math.min(h*.32,w*.72);
+ b.globalCompositeOperation='source-over';b.fillStyle='#05070d';b.fillRect(0,0,w,h);
+ for(let q=0;q<4;q++){
+  const sx=q%2?1:-1,sy=q<2?-1:1,col=colors[q],gx=cx+sx*span*.48,gy=cy+sy*tall*.52;
+  const glow=b.createRadialGradient(gx,gy,0,gx,gy,Math.max(span,tall)*.85);glow.addColorStop(0,rgba(col,.105));glow.addColorStop(1,rgba(col,0));b.fillStyle=glow;b.fillRect(0,0,w,h);
+ }
+ b.globalCompositeOperation='lighter';
+ for(let i=0;i<(w<600?760:1640);i++){
+  const q=i%4,sx=q%2?1:-1,sy=q<2?-1:1,col=colors[q],z=rand(),r=Math.sqrt(rand()),a=rand()*Math.PI*2;
+  const x=cx+sx*span*(.13+.87*r),y=cy+sy*tall*(.12+.88*rand()),endY=cy+sy*tall*(rand()*.92),bend=(rand()-.5)*tall*.8;
+  const sample=t=>{const v=1-t;return {x:v*v*v*x+3*v*v*t*(cx+sx*span*.75)+3*v*t*t*(cx+sx*span*.15)+t*t*t*cx,y:v*v*v*y+3*v*v*t*(y+bend)+3*v*t*t*(endY-bend*.5)+t*t*t*endY,z:0};};
+  b.beginPath();for(let j=0;j<=20;j++){const p=sample(j/20);j?b.lineTo(p.x,p.y):b.moveTo(p.x,p.y);}b.strokeStyle=rgba(col,.018+z*z*.15);b.lineWidth=.25+z*.85;b.stroke();
+  if(i%3===0){const table=buildArcLengthTable(sample,32);paths.push({table,col,phase:rand(),speed:18+rand()*60,size:.55+z*1.1});}
+  if(i%2===0){b.fillStyle=rgba(col,.1+z*.5);b.fillRect(x+Math.cos(a)*2,y+Math.sin(a)*2,.5+z,.5+z);}
+ }
+ for(let i=0;i<180;i++){const y=cy+(rand()-.5)*tall*2,x=cx+(rand()-.5)*span*.045;b.fillStyle=rgba('209,238,255',.04+rand()*.35);b.fillRect(x,y,1,1);}
+ draw(0);
+}
+function draw(ms){
+ ctx.globalCompositeOperation='source-over';ctx.drawImage(bg,0,0,w,h);ctx.globalCompositeOperation='lighter';
+ for(const p of paths){const f=((p.phase+ms*.001*p.speed/p.table.length)%1+1)%1,a=p.table.pointAt(f),tail=p.table.pointAt(Math.max(0,f-.025));ctx.strokeStyle=rgba(p.col,.45);ctx.lineWidth=p.size*.75;ctx.beginPath();ctx.moveTo(tail.x,tail.y);ctx.lineTo(a.x,a.y);ctx.stroke();ctx.fillStyle=rgba(p.col,.85);ctx.fillRect(a.x-p.size*.5,a.y-p.size*.5,p.size,p.size);}
+ ctx.globalCompositeOperation='source-over';
+}
+function tick(t){raf=0;if(paused||reduced.matches||document.hidden)return;if(t-last>=32){draw(t);last=t;}raf=requestAnimationFrame(tick);}
+function sync(){cancelAnimationFrame(raf);raf=0;button.textContent=paused?'Resume':'Pause';button.setAttribute('aria-pressed',String(paused));if(!paused&&!reduced.matches&&!document.hidden)raf=requestAnimationFrame(tick);else if(reduced.matches)draw(0);}
+button.onclick=()=>{paused=!paused;sync();};reduced.addEventListener('change',sync);document.addEventListener('visibilitychange',sync);addEventListener('resize',resize);resize();sync();
+// Explicit test hooks expose only scenic rendering, never system state.
+window.scenicCanary={renderAt(ms){if(!Number.isFinite(ms))throw Error('invalid_time');draw(ms);},particleCount(){return paths.length;}};
+</script></html>
