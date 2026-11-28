@@ -3,7 +3,7 @@
   "id": "local-resilience-where-your-money-goes",
   "title": "WHERE YOUR MONEY GOES",
   "subtitle": "Same $100 purchase. Different possible paths. Illustrative, not measured local transactions.",
-  "callout": "Local ownership can increase opportunities for local recirculation. Both paths also support local jobs and pay outside suppliers.",
+  "callout": "Both purchases can support local jobs and local services; both can pay outside suppliers. Local ownership may create more opportunities to recirculate spending.",
   "durationSec": 12,
   "aspectRatio": "9:16",
   "geography": {
@@ -68,6 +68,11 @@
         "label": "OUTSIDE SUPPLIERS",
         "lat": 10,
         "lon": 73
+      },
+      {
+        "label": "LOCAL SERVICES",
+        "lat": 35,
+        "lon": 9
       }
     ]
   },
@@ -253,6 +258,28 @@
           {
             "lat": 13,
             "lon": 73
+          }
+        ],
+        "particles": 28,
+        "speed": 0.7,
+        "sourceRefs": [
+          "model:local-resilience-spending-paths-v1"
+        ]
+      },
+      {
+        "id": "chain-wage-recirculation",
+        "points": [
+          {
+            "lat": 44,
+            "lon": 15
+          },
+          {
+            "lat": 38,
+            "lon": 11
+          },
+          {
+            "lat": 36,
+            "lon": 9
           }
         ],
         "particles": 28,
