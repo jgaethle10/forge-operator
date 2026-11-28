@@ -1,0 +1,18 @@
+# Install as ~/.config/systemd/user/evercraft-demand-revenue-desk-bridge.service
+# Monitor ONLY. Explicit --apply must be executed separately after operator review.
+[Unit]
+Description=Evercraft Demand Command read-only Revenue Desk import preview
+After=network.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=%h/forge-operator/sites/demand-command/backend
+ExecStart=/usr/bin/python3 revenue_desk_bridge.py --receipt=%h/.local/state/evercraft/demand-command/revenue-desk-preview.json
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=%h/.local/state/evercraft/demand-command
+
+[Install]
+WantedBy=default.target

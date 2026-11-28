@@ -1,0 +1,12 @@
+# Install as ~/.config/systemd/user/evercraft-demand-revenue-desk-bridge.timer
+[Unit]
+Description=Evercraft Demand Command Revenue Desk preview every five minutes
+
+[Timer]
+OnBootSec=2min
+OnUnitActiveSec=5min
+Persistent=true
+Unit=evercraft-demand-revenue-desk-bridge.service
+
+[Install]
+WantedBy=timers.target

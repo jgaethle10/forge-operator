@@ -1,0 +1,41 @@
+# Demand Command PRIVATE owner-only HTTPS route. STAGED TEMPLATE ONLY.
+# Stage as a separate site block next to Penguin's /etc/evercraft/Caddyfile
+# ONLY AFTER reviewing the current edge config, verifying DNS and tunnel, and
+# replacing the placeholder with a true locally generated Caddy bcrypt hash.
+#
+# Requires owned WAN 80/443 -> Chromebook 18080/8443 (existing edge).
+# Requires NextGen -> Penguin SSH reverse forward: 127.0.0.1:18897 -> 127.0.0.1:18896.
+# Do not publish the NextGen API directly or relax its loopback-only bind.
+# Do not paste the hash or secrets into chat.
+#
+# Generate on the operator-controlled Chromebook: caddy hash-password
+# Never commit a populated copy of this template.
+#
+# Confirmed field Caddy v2.6.2 on Penguin: the correct directive is "basicauth".
+# "basic_auth" is only available from Caddy v2.8.0 onward.
+# The bcrypt hash uses Caddy's local hash-password command.
+
+demand.systemiacommandcenters.com {
+    encode gzip
+    basicauth {
+        owner REPLACE_WITH_LOCAL_CADDY_BCRYPT_HASH
+    }
+    reverse_proxy 127.0.0.1:18897 {
+        transport http {
+            dial_timeout 5s
+            response_header_timeout 15s
+        }
+    }
+    header {
+        X-Content-Type-Options nosniff
+        Referrer-Policy no-referrer
+        X-Frame-Options DENY
+        Cache-Control "private, no-store"
+        X-Robots-Tag "noindex, nofollow"
+        Strict-Transport-Security "max-age=31536000"
+        -Server
+    }
+    log {
+        output discard
+    }
+}
