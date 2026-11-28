@@ -1,0 +1,23 @@
+name: Forest growth worker proof
+on:
+  pull_request:
+    paths:
+      - 'research/forest-restoration/forest-005-growth-worker.mjs'
+      - 'research/forest-restoration/qcew-baseline.mjs'
+      - 'tests/forest-005-growth-worker.test.mjs'
+      - '.github/workflows/forest-growth-worker-proof.yml'
+  push:
+    branches: [research/forest-growth-worker-20261127]
+permissions:
+  contents: read
+jobs:
+  synthetic-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node research/forest-restoration/qcew-baseline.mjs --self-test
+      - run: node --test tests/forest-005-growth-worker.test.mjs
