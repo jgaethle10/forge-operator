@@ -1,0 +1,301 @@
+{
+  "schema": "evercraft.fallen.phenomenon.v1",
+  "id": "local-resilience-where-your-money-goes",
+  "title": "WHERE YOUR MONEY GOES",
+  "subtitle": "Same $100 purchase. Different possible paths. Illustrative, not measured local transactions.",
+  "callout": "Both purchases can support local jobs and local services; both can pay outside suppliers. Local ownership may create more opportunities to recirculate spending.",
+  "durationSec": 12,
+  "aspectRatio": "9:16",
+  "geography": {
+    "bounds": {
+      "north": 90,
+      "south": 0,
+      "west": 0,
+      "east": 100
+    },
+    "outlines": [
+      {
+        "id": "divider",
+        "points": [
+          {
+            "lat": 8,
+            "lon": 50
+          },
+          {
+            "lat": 78,
+            "lon": 50
+          }
+        ]
+      }
+    ],
+    "labels": [
+      {
+        "label": "$100",
+        "lat": 81,
+        "lon": 50
+      },
+      {
+        "label": "CHAIN STORE",
+        "lat": 67,
+        "lon": 25
+      },
+      {
+        "label": "LOCAL STORE",
+        "lat": 67,
+        "lon": 75
+      },
+      {
+        "label": "LOCAL WAGES",
+        "lat": 47,
+        "lon": 15
+      },
+      {
+        "label": "LOCAL WAGES",
+        "lat": 47,
+        "lon": 65
+      },
+      {
+        "label": "HQ / SUPPLIERS",
+        "lat": 24,
+        "lon": 27
+      },
+      {
+        "label": "LOCAL SERVICES",
+        "lat": 28,
+        "lon": 82
+      },
+      {
+        "label": "OUTSIDE SUPPLIERS",
+        "lat": 10,
+        "lon": 73
+      },
+      {
+        "label": "LOCAL SERVICES",
+        "lat": 35,
+        "lon": 9
+      }
+    ]
+  },
+  "encoding": {
+    "motionLabel": "Possible spending direction; particle count is not a dollar amount"
+  },
+  "field": {
+    "kind": "flow",
+    "evidenceState": "synthetic_visualization",
+    "sourceRefs": [
+      "model:local-resilience-spending-paths-v1"
+    ],
+    "streamlines": [
+      {
+        "id": "purchase-chain",
+        "points": [
+          {
+            "lat": 78,
+            "lon": 50
+          },
+          {
+            "lat": 74,
+            "lon": 38
+          },
+          {
+            "lat": 70,
+            "lon": 25
+          }
+        ],
+        "particles": 28,
+        "speed": 0.7,
+        "sourceRefs": [
+          "model:local-resilience-spending-paths-v1"
+        ]
+      },
+      {
+        "id": "purchase-local",
+        "points": [
+          {
+            "lat": 78,
+            "lon": 50
+          },
+          {
+            "lat": 74,
+            "lon": 62
+          },
+          {
+            "lat": 70,
+            "lon": 75
+          }
+        ],
+        "particles": 28,
+        "speed": 0.7,
+        "sourceRefs": [
+          "model:local-resilience-spending-paths-v1"
+        ]
+      },
+      {
+        "id": "chain-local-wages",
+        "points": [
+          {
+            "lat": 64,
+            "lon": 25
+          },
+          {
+            "lat": 55,
+            "lon": 20
+          },
+          {
+            "lat": 50,
+            "lon": 15
+          }
+        ],
+        "particles": 28,
+        "speed": 0.7,
+        "sourceRefs": [
+          "model:local-resilience-spending-paths-v1"
+        ]
+      },
+      {
+        "id": "chain-external",
+        "points": [
+          {
+            "lat": 64,
+            "lon": 25
+          },
+          {
+            "lat": 47,
+            "lon": 30
+          },
+          {
+            "lat": 27,
+            "lon": 27
+          }
+        ],
+        "particles": 28,
+        "speed": 0.7,
+        "sourceRefs": [
+          "model:local-resilience-spending-paths-v1"
+        ]
+      },
+      {
+        "id": "local-wages",
+        "points": [
+          {
+            "lat": 64,
+            "lon": 75
+          },
+          {
+            "lat": 56,
+            "lon": 69
+          },
+          {
+            "lat": 50,
+            "lon": 65
+          }
+        ],
+        "particles": 28,
+        "speed": 0.7,
+        "sourceRefs": [
+          "model:local-resilience-spending-paths-v1"
+        ]
+      },
+      {
+        "id": "local-services",
+        "points": [
+          {
+            "lat": 44,
+            "lon": 65
+          },
+          {
+            "lat": 36,
+            "lon": 69
+          },
+          {
+            "lat": 31,
+            "lon": 82
+          }
+        ],
+        "particles": 28,
+        "speed": 0.7,
+        "sourceRefs": [
+          "model:local-resilience-spending-paths-v1"
+        ]
+      },
+      {
+        "id": "local-recirculation",
+        "points": [
+          {
+            "lat": 31,
+            "lon": 85
+          },
+          {
+            "lat": 43,
+            "lon": 91
+          },
+          {
+            "lat": 58,
+            "lon": 89
+          },
+          {
+            "lat": 64,
+            "lon": 78
+          }
+        ],
+        "particles": 28,
+        "speed": 0.7,
+        "sourceRefs": [
+          "model:local-resilience-spending-paths-v1"
+        ]
+      },
+      {
+        "id": "local-external",
+        "points": [
+          {
+            "lat": 64,
+            "lon": 75
+          },
+          {
+            "lat": 43,
+            "lon": 78
+          },
+          {
+            "lat": 13,
+            "lon": 73
+          }
+        ],
+        "particles": 28,
+        "speed": 0.7,
+        "sourceRefs": [
+          "model:local-resilience-spending-paths-v1"
+        ]
+      },
+      {
+        "id": "chain-wage-recirculation",
+        "points": [
+          {
+            "lat": 44,
+            "lon": 15
+          },
+          {
+            "lat": 38,
+            "lon": 11
+          },
+          {
+            "lat": 36,
+            "lon": 9
+          }
+        ],
+        "particles": 28,
+        "speed": 0.7,
+        "sourceRefs": [
+          "model:local-resilience-spending-paths-v1"
+        ]
+      }
+    ],
+    "particleDensity": 1.25,
+    "trailFraction": 0.065
+  },
+  "source": {
+    "label": "Schematic illustration • not geographic coordinates or measured economic flows",
+    "refs": [
+      "model:local-resilience-spending-paths-v1"
+    ]
+  }
+}

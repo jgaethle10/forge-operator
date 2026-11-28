@@ -1,0 +1,8 @@
+{
+  "schema": "evercraft.systemia.chat-mission-request.v1",
+  "mission_id": "founder-studio-evidence-20261128-001",
+  "objective": "Verify existing owned studio and founder gateway source boundaries before authenticated studio dispatch; do not render or publish.",
+  "route": "founder-studio-source-evidence",
+  "mode": "observe",
+  "requested_at": "2026-11-28T18:55:00.000Z"
+}

@@ -39,3 +39,11 @@ node systemia/mission-bridge/cli.mjs --request signal-public-ingress-20261116-00
 ```
 
 The last command performs external **GETs** and writes `artifacts/systemia-mission-bridge/*.json` locally. It does not deploy or mutate any Evercraft service.
+
+## Founder studio connectivity canary (November 28)
+
+`founder-studio-source-evidence` checks exactly eight repository files spanning Intake Fabric, Execution Gate, Home, Wing Courier, Fallen rendering and Journal/Worlds. Its receipt reports only file existence, length and SHA-256. It cannot retrieve private assets, contact a worker, mint a Passport grant, render or publish. Source presence must not be presented as an operational studio connection.
+
+The existing private ChatGPT mission gateway issue #2260 remains the authority/integration tracker. Extend that gateway with a bounded founder-studio workload after authenticated admission is proven; reuse the existing private asset-demand and render-worker contracts. Do not add a second public connector, scheduler, generic shell, or unauthenticated asset endpoint.
+
+First live acceptance case: Local Resilience Network / "Where Your Money Goes": request an owner-only draft illustrating two illustrative spending paths, inventory rights-cleared Evercraft assets by opaque IDs and hashes, plan and render a short preview on existing owned capacity with an exact started execution lease, and return the asset manifest, render receipt and privately retrievable artifact. No customer asset reuse without verified rights; no publication, payments, or fabricated regional economic multipliers. If the private ingress, identity, capacity or artifact return is unavailable, hold and report the missing binding. The Git source observer is not this acceptance case.

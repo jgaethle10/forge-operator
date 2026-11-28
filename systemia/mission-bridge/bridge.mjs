@@ -11,7 +11,22 @@ const SOURCE_FILES=Object.freeze([
   'systemia/mission-bridge/bridge.mjs',
   'systemia/mcp/signal-public-inquiry.mjs',
 ]);
+const STUDIO_SOURCE_FILES=Object.freeze([
+  "systemia/intake-fabric/README.md",
+  "systemia/execution-gate/gate.mjs",
+  "systemia/evercraft-home/README.md",
+  "systemia/wing-courier/private-asset-demand.mjs",
+  "systemia/media-studio/render-worker/README.md",
+  "systemia/media-studio/cli.ts",
+  "systemia/media-studio/journal-education.ts",
+  "public/worlds/owned-asset-client.mjs"
+]);
 const ROUTES=Object.freeze({
+  'founder-studio-source-evidence':Object.freeze({
+    specialist:'systemia.founder-studio-source-observer',
+    worker:'github-actions-readonly',
+    checks:STUDIO_SOURCE_FILES
+  }),
   'signal-public-ingress':Object.freeze({
     specialist:'systemia.signal-public-edge-observer',
     worker:'github-actions-readonly',
@@ -111,8 +126,8 @@ export async function runMissionRequest(input,{fetchImpl=fetch,rootDir=process.c
         observations.push({route,valid:false,reason:String(error?.name||'request_failed').slice(0,50)});
       }
     }
-  }else if(admission.route==='forge-source-evidence'){
-    for(const entry of SOURCE_FILES){
+  }else if(admission.route==='forge-source-evidence'||admission.route==='founder-studio-source-evidence'){
+    for(const entry of admission.checks){
       const absolute=path.join(rootDir,entry);
       const boundary=path.relative(rootDir,absolute);
       if(boundary.startsWith('..')||path.isAbsolute(boundary))throw Error('source_path_escape');
@@ -133,7 +148,9 @@ export async function runMissionRequest(input,{fetchImpl=fetch,rootDir=process.c
   const diagnosis=admission.route==='signal-public-ingress'
     ?complete?'external_signal_readiness_and_offer_observed':
       offer?.valid===true&&signalReadiness?.valid!==true?'offer_reachable_api_unverified':'public_signal_path_incomplete'
-    :complete?'allowlisted_forge_source_present':'forge_source_incomplete';
+    :admission.route==='founder-studio-source-evidence'
+      ?complete?'allowlisted_studio_source_present':'studio_source_incomplete'
+      :complete?'allowlisted_forge_source_present':'forge_source_incomplete';
   return Object.freeze({
     schema:'evercraft.systemia.chat-mission-observation.v1',
     mission_id:admission.mission_id,request_sha256:admission.request_sha256,

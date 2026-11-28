@@ -8,6 +8,7 @@ on:
       - "systemia/media-studio/cli.ts"
       - "systemia/media-studio/visual-stage*.ts"
       - "systemia/media-studio/phenomenon-renderer*.ts"
+      - "systemia/media-studio/local-resilience*"
       - "systemia/worldstate/phenomenon-bridge*"
       - "systemia/worldstate/subscriptions.json"
       - "systemia/media-studio/render-worker/**"
@@ -21,6 +22,7 @@ on:
       - "systemia/media-studio/cli.ts"
       - "systemia/media-studio/visual-stage*.ts"
       - "systemia/media-studio/phenomenon-renderer*.ts"
+      - "systemia/media-studio/local-resilience*"
       - "systemia/worldstate/phenomenon-bridge*"
       - "systemia/worldstate/subscriptions.json"
       - "systemia/media-studio/render-worker/**"
@@ -51,6 +53,7 @@ jobs:
         run: |
           node --import tsx --test systemia/media-studio/phenomenon-renderer.test.ts
           npm run proof:worldstate-phenomenon
+          node --test systemia/media-studio/local-resilience-model.test.mjs
 
       - name: Compile bounded phenomenon canary
         run: |
@@ -291,6 +294,31 @@ jobs:
           console.log(JSON.stringify({output_sha256:receipt.output_sha256,frames:receipt.total_frames,workers:receipt.workers}));
           NODE
 
+      - name: Render local resilience draft through native Fallen workers
+        env:
+          FALLEN_RENDER_WORKERS: >-
+            [{"id":"studio-a","url":"http://127.0.0.1:8794","token":"studio-a"},{"id":"studio-b","url":"http://127.0.0.1:8795","token":"studio-b"}]
+        run: |
+          npm run media:studio -- phenomenon-stage systemia/media-studio/local-resilience.phenomenon.json /tmp/local-resilience.stage.json /tmp/local-resilience.compile.receipt.json
+          node - <<'NODE'
+          const fs=require('fs');
+          const stage=JSON.parse(fs.readFileSync('/tmp/local-resilience.stage.json','utf8'));
+          const receipt=JSON.parse(fs.readFileSync('/tmp/local-resilience.compile.receipt.json','utf8'));
+          if(receipt.evidence_state!=='synthetic_visualization'||receipt.publication_authority!==false)throw Error('local_resilience_evidence_boundary');
+          stage.fps=8;
+          fs.writeFileSync('/tmp/local-resilience.stage.json',JSON.stringify(stage,null,2));
+          fs.writeFileSync('/tmp/local-resilience.input.json',JSON.stringify({id:'local-resilience-preview',stage,assetScopeId:'local-resilience-assets',assets:[],maxFramesPerShard:12}));
+          NODE
+          npm run media:studio -- render-plan /tmp/local-resilience.input.json /tmp/local-resilience.plan.json
+          node systemia/media-studio/distributed-render-coordinator.mjs /tmp/local-resilience.plan.json /tmp/local-resilience.mp4 /tmp/local-resilience.render.receipt.json
+          node - <<'NODE'
+          const fs=require('fs'),crypto=require('crypto');
+          const r=JSON.parse(fs.readFileSync('/tmp/local-resilience.render.receipt.json','utf8'));
+          const digest=crypto.createHash('sha256').update(fs.readFileSync('/tmp/local-resilience.mp4')).digest('hex');
+          if(r.schema!=='evercraft.fallen.distributed-render-receipt.v1'||r.total_frames!==96||r.workers.length!==2||r.boundaries?.every_frame_sha256_verified!==true||r.boundaries?.publication_authority!==false||r.output_sha256!==digest)throw Error('local_resilience_render_receipt_invalid');
+          NODE
+          ffprobe -v error -show_entries stream=codec_name,width,height,nb_frames -show_entries format=duration,size -of json /tmp/local-resilience.mp4
+
       - name: Verify rendered studio canary
         run: |
           node - <<'NODE'
@@ -322,6 +350,19 @@ jobs:
           cp /tmp/phenomenon-ci.render.receipt.json "$GITHUB_WORKSPACE/artifacts/studio-world-canary/"
           cp /tmp/phenomenon-ci.stage.json "$GITHUB_WORKSPACE/artifacts/studio-world-canary/"
           cp /tmp/phenomenon-ci.render-plan.json "$GITHUB_WORKSPACE/artifacts/studio-world-canary/"
+
+      - name: Package local resilience draft
+        run: |
+          mkdir -p artifacts/local-resilience-draft
+          cp /tmp/local-resilience.mp4 /tmp/local-resilience.stage.json /tmp/local-resilience.compile.receipt.json /tmp/local-resilience.plan.json /tmp/local-resilience.render.receipt.json artifacts/local-resilience-draft/
+
+      - name: Upload local resilience draft (synthetic scene only)
+        uses: actions/upload-artifact@v4
+        with:
+          name: fallen-local-resilience-draft
+          path: artifacts/local-resilience-draft/
+          if-no-files-found: error
+          retention-days: 7
 
       - name: Upload watchable studio specimen
         uses: actions/upload-artifact@v4
