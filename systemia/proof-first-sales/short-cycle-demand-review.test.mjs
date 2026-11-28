@@ -1,0 +1,13 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import {normalizeAskHits,scoutAskDemand} from './short-cycle-demand-review.mjs';
+import {buildScopedPortfolio} from '../saban/revenue-swarm.mjs';
+const read=p=>JSON.parse(fs.readFileSync(new URL('../../'+p,import.meta.url),'utf8'));
+const now=new Date('2026-11-28T16:00:00Z');
+const context={now,portfolio:buildScopedPortfolio({catalog:read('public/.well-known/evercraft-machine-catalog.json'),registry:read('registry/catalog.json')}),painIndex:read('public/.well-known/evercraft-pain-index.json')};
+const hit={objectID:'12345',title:'Ask HN: Looking to hire',story_text:'We need technical SEO for our Shopify site and have a paid project.',created_at:'2026-11-27T12:00:00Z',_tags:['story','ask_hn'],url:null};
+test('explicit hiring request yields a source-bound unverified research signal',()=>{const r=normalizeAskHits([hit,hit],now);assert.equal(r.length,1);assert.equal(r[0].source_kind,'public_hiring');assert.equal(r[0].demand_evidence_ref,'https://news.ycombinator.com/item?id=12345');});
+test('old, closed, job seeker, link story, generic monthly thread and no demand excluded',()=>{for(const x of [{created_at:'2026-10-01'},{story_text:'We are not hiring for a paid project.'},{story_text:'I am looking for work on a paid project.'},{url:'https://example.test'},{title:'Ask HN: Who is hiring?',story_text:hit.story_text},{title:'Ask HN: advice',story_text:'What is the best SEO framework?'}])assert.equal(normalizeAskHits([{...hit,...x}],now).length,0);});
+test('actual catalog integration deduplicates search overlap without contact authority',async()=>{const r=await scoutAskDemand({...context,fetchFn:async u=>{assert.equal(u.origin,'https://hn.algolia.com');assert.equal(u.searchParams.get('tags'),'ask_hn');return new Response(JSON.stringify({hits:[hit]}));}});assert.equal(r.counts.records_seen,4);assert.equal(r.counts.distinct_research_signals,1);assert.equal(r.counts.matched,1);assert.equal(r.rows[0].contact_authorized,false);assert.ok(r.rows[0].hypotheses.some(x=>x.key==='audit-center-website-audit-machine-v1'));});
+test('all provider failures are held, not zero-demand claims',async()=>{const r=await scoutAskDemand({...context,fetchFn:async()=>new Response('',{status:429})});assert.ok(r.sources.every(x=>x.state==='held'));assert.equal(r.coverage_complete,false);});
