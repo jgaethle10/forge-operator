@@ -37,3 +37,10 @@ test('all 11 counties complete exactly once; no repeat fetch',async t=>{
  const end=await expandForestOnce({root,now:at+12*300000,fetchCounty:async()=>{throw Error('unexpected_fetch')}});
  assert.equal(end.state,'coverage_complete');assert.equal(end.verified_counties,11);assert.equal(new Set(calls).size,11);
 });
+
+test('serial replays in the same heartbeat tick cannot expand twice',async t=>{
+ const root=fixture(t);const a=await expandForestOnce({root,now:at,fetchCounty:async c=>csv(c)});
+ assert.equal(a.state,'expanded');
+ const b=await expandForestOnce({root,now:at+1000,fetchCounty:async()=>{throw Error('unexpected_fetch')}});
+ assert.equal(b.state,'duplicate_tick');assert.equal(b.verified_counties,1);
+});
