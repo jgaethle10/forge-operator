@@ -1,0 +1,13 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import {reviewCheckpoint} from './checkpoint-portfolio-review.mjs';
+import {buildScopedPortfolio} from '../saban/revenue-swarm.mjs';
+const read=p=>JSON.parse(fs.readFileSync(new URL('../../'+p,import.meta.url),'utf8'));
+const ctx={now:new Date('2026-11-28T16:00:00Z'),portfolio:buildScopedPortfolio({catalog:read('public/.well-known/evercraft-machine-catalog.json'),registry:read('registry/catalog.json')}),painIndex:read('public/.well-known/evercraft-pain-index.json')};
+const ts='2026-11-28T15:55:00Z';
+const c={candidate_ref:'uk:abc',source_url:'https://www.find-tender.service.gov.uk/Notice/123456-2026',buyer:'Fixture agency',title:'Website technical SEO audit',deadline:'2026-12-03T12:00:00Z',deadline_timezone:null,stage:'research_required',qualified:false,contact_authorized:false,last_seen_at:ts};
+const cp={schema:'evercraft.kaidance.discovery-checkpoint.v1',last_cycle_at:ts,receipt:{schema:'evercraft.kaidance.discovery-checkpoint-receipt.v1',observed_at:ts,qualified_count:0,send_performed:false,crm_write_performed:false,sources:[{source:'uk',state:'observed',candidates:1}]},records:[c]};
+test('fresh official title becomes scoped research only',()=>{const r=reviewCheckpoint(cp,ctx);assert.equal(r.counts.matched,1);assert.equal(r.rows[0].contact_authorized,false);assert.ok(r.rows[0].hypotheses.some(h=>h.key==='audit-center-website-audit-machine-v1'));});
+test('held or stale source, spoofed URL, local deadline and closed notice cannot promote',()=>{for(const change of [{last_seen_at:'2026-11-27T15:55:00Z'},{source_url:'https://evil.test/Notice/123456-2026'},{deadline_timezone:'unverified-source-local'},{deadline:'2026-11-27T12:00:00Z'},{contact_authorized:true}])assert.equal(reviewCheckpoint({...cp,records:[{...c,...change}]},ctx).counts.held,1);assert.equal(reviewCheckpoint({...cp,receipt:{...cp.receipt,sources:[{source:'uk',state:'held'}]}},ctx).counts.held,1);});
+test('duplicate, stale checkpoint and authority-bearing receipt rejected',()=>{assert.throws(()=>reviewCheckpoint({...cp,records:[c,c]},ctx));assert.throws(()=>reviewCheckpoint(cp,{...ctx,now:new Date('2026-11-29')}));assert.throws(()=>reviewCheckpoint({...cp,receipt:{...cp.receipt,send_performed:true}},ctx));});
