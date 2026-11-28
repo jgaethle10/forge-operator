@@ -9,6 +9,9 @@ import {EvercraftPassport} from '../passport/passport.mjs';
 import {EvercraftIntakeFabric} from '../intake-fabric/intake.mjs';
 import {stageTowiRecoveryResearch} from './towi-bridge.mjs';
 import {runAdmittedRecoveryReview} from './goal-review.mjs';
+import {bindRecoveryContinuity} from './continuity-bridge.mjs';
+import {matchGoalReceipt} from '../organism/kaidance-rd-continuity.mjs';
+import {readGoalState} from '../organism/goal-store.mjs';
 test('existing TOWI, Passport, Intake and durable dispatch: accepted review completes once',async t=>{
  const root=fs.mkdtempSync(path.join(os.tmpdir(),'circular-goal-'));
  t.after(()=>fs.rmSync(root,{recursive:true,force:true}));
@@ -45,6 +48,15 @@ test('existing TOWI, Passport, Intake and durable dispatch: accepted review comp
  const result=await runAdmittedRecoveryReview({...opts,candidateId});
  assert.equal(result.completedDesktopReview,true);assert.equal(result.executedThisCall,true);
  assert.equal(result.screen.stage,'research_gaps');assert.equal(result.attempt,1);
+ const goalState=await readGoalState(path.join(outDir,result.goalKey+'.json'));
+ const mission={mission_id:'circular-recovery-research',admission_state:'admitted',disposition:'active'};
+ const crosswalk={mission,goalState,review:result,stateDirectoryName:'goals'};
+ const row=bindRecoveryContinuity(crosswalk);
+ assert.equal(matchGoalReceipt(row,goalState),'completed_work_checkpoint_matched');
+ assert.equal(row.goal_binding.state_relpath,'goals/'+result.goalKey+'.json');
+ assert.throws(()=>bindRecoveryContinuity({...crosswalk,mission:{...mission,admission_state:'proposed'}}),/requires_existing_admitted_mission/);
+ assert.throws(()=>bindRecoveryContinuity({...crosswalk,review:{...result,screenReceiptRef:'sha256:'+'0'.repeat(64)}}),/checkpoint_not_matched/);
+
  for(const k of ['heartbeatConnected','physicalExecution','environmentalClaimVerified','commercialCommitment','publicationAuthority'])assert.equal(result[k],false);
  const replay=await runAdmittedRecoveryReview({...opts,candidateId});
  assert.equal(replay.executedThisCall,false);assert.equal(replay.attempt,1);assert.equal(replay.screenReceiptRef,result.screenReceiptRef);
