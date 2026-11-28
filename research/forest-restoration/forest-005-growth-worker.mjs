@@ -46,15 +46,16 @@ export async function expandForestOnce({root,now=Date.now(),fetchCounty=download
  const lock=path.join(root,'.growth-lock');
  try{fs.mkdirSync(lock,{mode:0o700})}catch(e){if(e.code==='EEXIST')return {state:'held_busy',new_counties:0,publication_authorized:false};throw e}
  try{
-  const completed=[],eligible=[];
+  const completed=[],eligible=[];let alreadyAttempted=false;const tick=Math.floor(now/300000);
   for(const area of Object.keys(AREAS)){
    const dir=path.join(root,area);
-   if(fs.existsSync(dir)){const st=fs.lstatSync(dir);if(!st.isDirectory()||st.isSymbolicLink()||st.uid!==process.getuid()||(st.mode&0o077))throw Error('private_county_hold');verify(dir,area);completed.push(area);continue}
+   if(fs.existsSync(dir)){const st=fs.lstatSync(dir);if(!st.isDirectory()||st.isSymbolicLink()||st.uid!==process.getuid()||(st.mode&0o077))throw Error('private_county_hold');const receipt=verify(dir,area);const recorded=Date.parse(receipt.observed_at);if(!Number.isFinite(recorded)||recorded>now)throw Error('receipt_clock_hold');if(Math.floor(recorded/300000)===tick)alreadyAttempted=true;completed.push(area);continue}
    const hold=path.join(root,area+'.retry.json');
-   if(fs.existsSync(hold)){const h=JSON.parse(readPrivate(hold,4096));if(!Number.isSafeInteger(h.at)||h.at>now)throw Error('retry_clock_hold');if(now-h.at<RETRY)continue}
+   if(fs.existsSync(hold)){const h=JSON.parse(readPrivate(hold,4096));if(!Number.isSafeInteger(h.at)||h.at>now)throw Error('retry_clock_hold');if(Math.floor(h.at/300000)===tick)alreadyAttempted=true;if(now-h.at<RETRY)continue}
    eligible.push(area);
   }
   const base={schema:'evercraft.forest-005.growth-step.v1',observed_at:new Date(now).toISOString(),verified_counties:completed.length,target_counties:Object.keys(AREAS).length,new_counties:0,publication_authorized:false,execution_scope:'private_payroll_research_only'};
+  if(alreadyAttempted)return {...base,state:'duplicate_tick'};
   if(!eligible.length)return {...base,state:completed.length===Object.keys(AREAS).length?'coverage_complete':'retry_wait'};
   const area=eligible[0],tmp=fs.mkdtempSync(path.join(root,'.stage-'));fs.chmodSync(tmp,0o700);
   try{
