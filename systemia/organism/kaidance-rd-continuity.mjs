@@ -79,6 +79,47 @@ export function reconcileResearchExport(value,now=new Date(),readGoal=null){
       goal_checkpoints_matched:rows.filter(r=>r.goal_readback==='completed_work_checkpoint_matched').length},
     missions:rows};
 }
+export const PROGRAMS=Object.freeze([
+  Object.freeze({key:'first-contact',sourceIssue:1832,next:'reconcile existing UAP source and sensor/materials evidence'}),
+  Object.freeze({key:'medical-discovery',sourceIssue:1891,next:'reconcile v9 protocol review and historical trial evidence'}),
+  Object.freeze({key:'oncology',sourceIssue:null,next:'recover original cancer research artifacts and canonical work identity'}),
+  Object.freeze({key:'final-hours',sourceIssue:null,next:'recover September study charter and canonical work identity'})
+]);
+const empty=()=>PROGRAMS.map(p=>({program:p.key,status:'identity_recovery_required'}));
+const validId=x=>typeof x==='string'&&x.trim()===x&&x.length>0&&x.length<=240;
+const fourBase=()=>({lane:'science-research',heartbeat_seconds:300,execution_authorized:false,
+ publication_authorized:false,verified_research_artifacts:0,coverage_verified:false});
+// bindings are supplied by the authorized owner, never inferred from public source references.
+// This validates an existing all_rd snapshot, not a replacement export.
+// No identifiers or source-private contents are returned.
+export function assessFourProgramContinuity({missionExport,bindings,now=new Date(),readGoal=null}={}){
+ return projectFourProgramContinuity(missionExport,bindings,reconcileResearchExport(missionExport,now,readGoal));
+}
+// Use the already-reconciled snapshot from the single private heartbeat read.
+function projectFourProgramContinuity(missionExport,bindings,report){
+ if(!report.missions)return {...fourBase(),status:'held_export',programs:empty()};
+ if(!bindings||typeof bindings!=='object'||Array.isArray(bindings)||
+   Object.keys(bindings).some(k=>!PROGRAMS.some(p=>p.key===k))||
+   Object.values(bindings).some(v=>!validId(v))||
+   new Set(Object.values(bindings)).size!==Object.values(bindings).length)
+   return {...fourBase(),status:'held_crosswalk',programs:empty()};
+ const programs=PROGRAMS.map(p=>{
+   const id=Object.hasOwn(bindings,p.key)?bindings[p.key]:null;
+   if(!id)return {program:p.key,status:'identity_recovery_required'};
+   const mission=missionExport.missions.find(m=>m.mission_id===id);
+   if(!mission||mission.admission_state!=='admitted')
+      return {program:p.key,status:'admission_unverified'};
+   if(!missionExport.priority_mission_ids.includes(id))
+      return {program:p.key,status:'priority_binding_review_required'};
+   if(mission.disposition==='blocked_needs_human')
+      return {program:p.key,status:'reported_human_block'};
+   if(['paused','terminal'].includes(mission.disposition))
+      return {program:p.key,status:'reported_disposition_review'};
+   return {program:p.key,status:'reported_admission_requires_private_receipt_review'};
+ });
+ return {...fourBase(),status:'review_required',programs};
+}
+
 function privateStat(p,isDir){
   const s=fs.lstatSync(p);
   if(s.isSymbolicLink()||(isDir?!s.isDirectory():!s.isFile())||
@@ -109,7 +150,8 @@ export function runPrivateResearchContinuity({enabled=false,root,outDir,now=new 
     privateStat(dir,true);
     if(fs.realpathSync(dir)!==dir)return {status:'held'};
     let result;
-    try{result=reconcileResearchExport(readBounded(path.join(dir,'mission-export.json')),now,binding=>{
+    try{const missionExport=readBounded(path.join(dir,'mission-export.json'));
+      result=reconcileResearchExport(missionExport,now,binding=>{
       // Explicit owner crosswalk only; never crawl a private filesystem.
       if(!str(binding?.goal_key)||!str(binding?.work_key)||!str(binding?.state_relpath))
         throw Error('goal_binding_invalid');
@@ -124,8 +166,12 @@ export function runPrivateResearchContinuity({enabled=false,root,outDir,now=new 
       const file=path.join(current,parts.at(-1));
       if(fs.realpathSync(file)!==file)throw Error('goal_path_invalid');
       return readBounded(file);
-    })}
-    catch{result=hold('export_unavailable_or_invalid')}
+    });
+      result.four_program_continuity=projectFourProgramContinuity(missionExport,missionExport?.research_program_bindings,result);
+    }
+    catch{result=hold('export_unavailable_or_invalid');
+      result.four_program_continuity=projectFourProgramContinuity(null,null,result);
+    }
     const file=path.join(dir,'latest.json');
     if(fs.existsSync(file))privateStat(file,false);
     const temp=path.join(dir,'.latest-'+randomBytes(12).toString('hex'));
