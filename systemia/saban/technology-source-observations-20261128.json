@@ -1,0 +1,665 @@
+{
+  "schema": "evercraft.technology-intake.source-observation.v1",
+  "mission_ref": "https://github.com/jgaethle10/forge-operator/issues/2192#issuecomment-7233273029",
+  "scope": "Repository commit discovery and README inspection only; not source-code/license-chain audit or an admission record. Commit selections are returned recent commits, not a claim of latest release or default-branch HEAD.",
+  "observed_repositories": [
+    {
+      "repository": "mattpocock/skills",
+      "commit": "bbadaa631c37af594e5a05c9cefacd9956136b18",
+      "readme_path": "README.md",
+      "readme_blob_sha": "f7038f139299985eea6c3e18398dbafb379a0010",
+      "readme_url": "https://github.com/mattpocock/skills/blob/bbadaa631c37af594e5a05c9cefacd9956136b18/README.md",
+      "observation": "Composable model-independent engineering skills; compare spec/TDD/debugging.",
+      "license_verified": false,
+      "benchmark_verified": false,
+      "execution_authorized": false
+    },
+    {
+      "repository": "addyosmani/agent-skills",
+      "commit": "e997ac5b9a74eab332d5e9793bb38a38c8cfdd74",
+      "readme_path": "README.md",
+      "readme_blob_sha": "cd4b32384d2222c3fe7f51856ddfed33a7765fd8",
+      "readme_url": "https://github.com/addyosmani/agent-skills/blob/e997ac5b9a74eab332d5e9793bb38a38c8cfdd74/README.md",
+      "observation": "Define/plan/build/verify/review/ship lifecycle; compare against Saban.",
+      "license_verified": false,
+      "benchmark_verified": false,
+      "execution_authorized": false
+    },
+    {
+      "repository": "cloudflare/security-audit-skill",
+      "commit": "c1c8a8c1471069fb0e188eeaff69b8e8db6564a8",
+      "readme_path": "README.md",
+      "readme_blob_sha": "c80305c88cd5087db37f76a0d230c1fc092c864c",
+      "readme_url": "https://github.com/cloudflare/security-audit-skill/blob/c1c8a8c1471069fb0e188eeaff69b8e8db6564a8/README.md",
+      "observation": "Coverage ledger and independent verification; test on owned fixtures.",
+      "license_verified": false,
+      "benchmark_verified": false,
+      "execution_authorized": false
+    },
+    {
+      "repository": "obsidianmd/obsidian-skills",
+      "commit": "9c9560a870fd490b0e1a847f2c8401a50e2d931d",
+      "readme_path": "README.md",
+      "readme_blob_sha": "975a73aed2995ceb80d4fa9509a41694124e9792",
+      "readme_url": "https://github.com/obsidianmd/obsidian-skills/blob/9c9560a870fd490b0e1a847f2c8401a50e2d931d/README.md",
+      "observation": "Portable skills; compare linked knowledge representation.",
+      "license_verified": false,
+      "benchmark_verified": false,
+      "execution_authorized": false
+    },
+    {
+      "repository": "google/elephant-goldfish-model",
+      "commit": "46933754e63c0424daa9c270d7e0734245d79560",
+      "readme_path": "README.md",
+      "readme_blob_sha": "31e32c0aaf4416a6661e677a88a7211888e06e3b",
+      "readme_url": "https://github.com/google/elephant-goldfish-model/blob/46933754e63c0424daa9c270d7e0734245d79560/README.md",
+      "observation": "Fresh-context reviewers inspect draft and sources; human makes architectural tradeoffs.",
+      "license_verified": false,
+      "benchmark_verified": false,
+      "execution_authorized": false
+    },
+    {
+      "repository": "openai/plugins",
+      "commit": "981b02c0c44058b595f3b4180002c3ae3c806d40",
+      "readme_path": "README.md",
+      "readme_blob_sha": "e901b40b9d643a5f878157158759fa0a6d3e2909",
+      "readme_url": "https://github.com/openai/plugins/blob/981b02c0c44058b595f3b4180002c3ae3c806d40/README.md",
+      "observation": "Curated plugin examples; manifests and optional skills/apps/MCP/hooks.",
+      "license_verified": false,
+      "benchmark_verified": false,
+      "execution_authorized": false
+    },
+    {
+      "repository": "openai/skills",
+      "commit": "49f948faa9258a0c61caceaf225e179651397431",
+      "readme_path": "README.md",
+      "readme_blob_sha": "c205d307226b98189c28cbcce6ff792cbb7b2d05",
+      "readme_url": "https://github.com/openai/skills/blob/49f948faa9258a0c61caceaf225e179651397431/README.md",
+      "observation": "Deprecated according to pinned README; retain historical source, current examples in openai/plugins.",
+      "license_verified": false,
+      "benchmark_verified": false,
+      "execution_authorized": false
+    },
+    {
+      "repository": "facebookresearch/sam2",
+      "commit": "2b90b9f5ceec907a1c18123530e92e794ad901a4",
+      "readme_path": "README.md",
+      "readme_blob_sha": "85a7eb958bced5495ff990c2bcbe7d99662c660f",
+      "readme_url": "https://github.com/facebookresearch/sam2/blob/2b90b9f5ceec907a1c18123530e92e794ad901a4/README.md",
+      "observation": "Streaming-memory visual segmentation; SAM 2.1 small 46M parameters; README states Apache-2.0 for checkpoints and training/demo code. Python >=3.10, torch >=2.5.1, torchvision >=0.20.1. Hardware and dependency/weight verification pending.",
+      "license_verified": false,
+      "benchmark_verified": false,
+      "execution_authorized": false
+    },
+    {
+      "repository": "DepthAnything/Video-Depth-Anything",
+      "commit": "4f5ae23172ba60fd7bc11ef671cca678842c7072",
+      "readme_path": "README.md",
+      "readme_blob_sha": "a3c2bb46aa428ba8b021ba9182710931f680524f",
+      "readme_url": "https://github.com/DepthAnything/Video-Depth-Anything/blob/4f5ae23172ba60fd7bc11ef671cca678842c7072/README.md",
+      "observation": "Small relative and metric models 28.4M params; README states Small Apache-2.0, Base/Large CC-BY-NC-4.0. Verify exact checkpoint terms and digest; no calibrated measurements claimed.",
+      "license_verified": false,
+      "benchmark_verified": false,
+      "execution_authorized": false
+    },
+    {
+      "repository": "NousResearch/hermes-agent",
+      "commit": "29bbd2d97b8e5bcda44d7e02ee2239a93afd5e58",
+      "readme_path": "README.md",
+      "readme_blob_sha": "830be257308736e48f25ac4f2d097888b3a63a2c",
+      "readme_url": "https://github.com/NousResearch/hermes-agent/blob/29bbd2d97b8e5bcda44d7e02ee2239a93afd5e58/README.md",
+      "observation": "Provider/model switching, isolated delegation, memory and learning loop; clip identity not fully confirmed; architecture comparison only.",
+      "license_verified": false,
+      "benchmark_verified": false,
+      "execution_authorized": false
+    },
+    {
+      "repository": "PeterL1n/RobustVideoMatting",
+      "commit": "53d74c6826735f01f4406b5ca9075eee27bec094",
+      "readme_path": "README.md",
+      "readme_blob_sha": "03e2c7156dbc618987a28079ffad58281eeb31a3",
+      "readme_url": "https://github.com/PeterL1n/RobustVideoMatting/blob/53d74c6826735f01f4406b5ca9075eee27bec094/README.md",
+      "observation": "Temporal matting, MobileNetv3, ONNX CPU/CUDA; code GPL-3.0 per README; weight rights pending.",
+      "license_verified": false,
+      "benchmark_verified": false,
+      "execution_authorized": false
+    },
+    {
+      "repository": "sczhou/ProPainter",
+      "commit": "326782529a63d997cab80ab21439b92ed422b3d3",
+      "readme_path": "README.md",
+      "readme_blob_sha": "4561aa4128a936d77dfe28ae49387c4f43da058b",
+      "readme_url": "https://github.com/sczhou/ProPainter/blob/326782529a63d997cab80ab21439b92ed422b3d3/README.md",
+      "observation": "README explicitly restricts code/models to noncommercial use under NTU S-Lab License 1.0; commercial hold.",
+      "license_verified": false,
+      "benchmark_verified": false,
+      "execution_authorized": false
+    },
+    {
+      "repository": "facebookresearch/co-tracker",
+      "commit": "82e02e8029753ad4ef13cf06be7f4fc5facdda4d",
+      "readme_path": "README.md",
+      "readme_blob_sha": "d7e05175054166c16aeaac5ddf937c5ffcc0f1b2",
+      "readme_url": "https://github.com/facebookresearch/co-tracker/blob/82e02e8029753ad4ef13cf06be7f4fc5facdda4d/README.md",
+      "observation": "Point tracking; majority CC-BY-NC; distinct Particle Video Revisited MIT and TAP-Vid/LocoTrack Apache-2.0, not blanket commercial clearance.",
+      "license_verified": false,
+      "benchmark_verified": false,
+      "execution_authorized": false
+    },
+    {
+      "repository": "healkeiser/fxhoudinimcp",
+      "commit": "6112a04c3ef531c8bdedb7d529a3718c90fdc51e",
+      "readme_path": "README.md",
+      "readme_blob_sha": "78b60b0983634f5b456c7f7f698028d4ef31273c",
+      "readme_url": "https://github.com/healkeiser/fxhoudinimcp/blob/6112a04c3ef531c8bdedb7d529a3718c90fdc51e/README.md",
+      "observation": "Scene and simulation tool contracts; Houdini 20.5+ required; clip alias unconfirmed; architecture only.",
+      "license_verified": false,
+      "benchmark_verified": false,
+      "execution_authorized": false
+    },
+    {
+      "repository": "squall01337/mixamo-llm-mocap",
+      "commit": "da5e7cc48557f0272832429a8df3fbf2b3c1273d",
+      "readme_path": "README.md",
+      "readme_blob_sha": "b6a9fc6c31e69d63a4a934ba5c145306d754892d",
+      "readme_url": "https://github.com/squall01337/mixamo-llm-mocap/blob/da5e7cc48557f0272832429a8df3fbf2b3c1273d/README.md",
+      "observation": "Scripted mocap, review frames and retargeting; external GVHMR checkpoints ~5 GB, Blender and Mixamo asset rights; dependency hold.",
+      "license_verified": false,
+      "benchmark_verified": false,
+      "execution_authorized": false
+    },
+    {
+      "repository": "ttiimmaacc/cinema4d-mcp",
+      "commit": "6bab376f0adbbfe20698c79689a14547e6bd9bb9",
+      "readme_path": "README.md",
+      "readme_blob_sha": "45354c6f6b8e27fceccc087f4a5db0f8cd4ed98c",
+      "readme_url": "https://github.com/ttiimmaacc/cinema4d-mcp/blob/6bab376f0adbbfe20698c79689a14547e6bd9bb9/README.md",
+      "observation": "Socket bridge to Cinema 4D scene operations; proprietary runtime required; architecture study only.",
+      "license_verified": false,
+      "benchmark_verified": false,
+      "execution_authorized": false
+    }
+  ],
+  "plugin_marketplace": {
+    "repository": "openai/plugins",
+    "commit": "981b02c0c44058b595f3b4180002c3ae3c806d40",
+    "path": ".agents/plugins/marketplace.json",
+    "blob_sha": "ea8a0c4bc4530ea9a5ddafcd5937da58c0e33ac9",
+    "count": 65,
+    "entries": [
+      {
+        "name": "linear",
+        "source": {
+          "source": "local",
+          "path": "./plugins/linear"
+        }
+      },
+      {
+        "name": "atlassian-rovo",
+        "source": {
+          "source": "local",
+          "path": "./plugins/atlassian-rovo"
+        }
+      },
+      {
+        "name": "google-calendar",
+        "source": {
+          "source": "local",
+          "path": "./plugins/google-calendar"
+        }
+      },
+      {
+        "name": "gmail",
+        "source": {
+          "source": "local",
+          "path": "./plugins/gmail"
+        }
+      },
+      {
+        "name": "slack",
+        "source": {
+          "source": "local",
+          "path": "./plugins/slack"
+        }
+      },
+      {
+        "name": "teams",
+        "source": {
+          "source": "local",
+          "path": "./plugins/teams"
+        }
+      },
+      {
+        "name": "sharepoint",
+        "source": {
+          "source": "local",
+          "path": "./plugins/sharepoint"
+        }
+      },
+      {
+        "name": "outlook-email",
+        "source": {
+          "source": "local",
+          "path": "./plugins/outlook-email"
+        }
+      },
+      {
+        "name": "outlook-calendar",
+        "source": {
+          "source": "local",
+          "path": "./plugins/outlook-calendar"
+        }
+      },
+      {
+        "name": "canva",
+        "source": {
+          "source": "local",
+          "path": "./plugins/canva"
+        }
+      },
+      {
+        "name": "figma",
+        "source": {
+          "source": "local",
+          "path": "./plugins/figma"
+        }
+      },
+      {
+        "name": "stripe",
+        "source": {
+          "source": "local",
+          "path": "./plugins/stripe"
+        }
+      },
+      {
+        "name": "vercel",
+        "source": {
+          "source": "local",
+          "path": "./plugins/vercel"
+        }
+      },
+      {
+        "name": "game-studio",
+        "source": {
+          "source": "local",
+          "path": "./plugins/game-studio"
+        }
+      },
+      {
+        "name": "superpowers",
+        "source": {
+          "source": "local",
+          "path": "./plugins/superpowers"
+        }
+      },
+      {
+        "name": "github",
+        "source": {
+          "source": "local",
+          "path": "./plugins/github"
+        }
+      },
+      {
+        "name": "circleci",
+        "source": {
+          "source": "local",
+          "path": "./plugins/circleci"
+        }
+      },
+      {
+        "name": "google-drive",
+        "source": {
+          "source": "local",
+          "path": "./plugins/google-drive"
+        }
+      },
+      {
+        "name": "notion",
+        "source": {
+          "source": "local",
+          "path": "./plugins/notion"
+        }
+      },
+      {
+        "name": "cloudflare",
+        "source": {
+          "source": "local",
+          "path": "./plugins/cloudflare"
+        }
+      },
+      {
+        "name": "sentry",
+        "source": {
+          "source": "local",
+          "path": "./plugins/sentry"
+        }
+      },
+      {
+        "name": "build-ios-apps",
+        "source": {
+          "source": "local",
+          "path": "./plugins/build-ios-apps"
+        }
+      },
+      {
+        "name": "build-macos-apps",
+        "source": {
+          "source": "local",
+          "path": "./plugins/build-macos-apps"
+        }
+      },
+      {
+        "name": "build-web-apps",
+        "source": {
+          "source": "local",
+          "path": "./plugins/build-web-apps"
+        }
+      },
+      {
+        "name": "build-web-data-visualization",
+        "source": {
+          "source": "local",
+          "path": "./plugins/build-web-data-visualization"
+        }
+      },
+      {
+        "name": "test-android-apps",
+        "source": {
+          "source": "local",
+          "path": "./plugins/test-android-apps"
+        }
+      },
+      {
+        "name": "life-science-research",
+        "source": {
+          "source": "local",
+          "path": "./plugins/life-science-research"
+        }
+      },
+      {
+        "name": "zotero",
+        "source": {
+          "source": "local",
+          "path": "./plugins/zotero"
+        }
+      },
+      {
+        "name": "expo",
+        "source": {
+          "source": "local",
+          "path": "./plugins/expo"
+        }
+      },
+      {
+        "name": "coderabbit",
+        "source": {
+          "source": "local",
+          "path": "./plugins/coderabbit"
+        }
+      },
+      {
+        "name": "remotion",
+        "source": {
+          "source": "local",
+          "path": "./plugins/remotion"
+        }
+      },
+      {
+        "name": "plugin-eval",
+        "source": {
+          "source": "local",
+          "path": "./plugins/plugin-eval"
+        }
+      },
+      {
+        "name": "granola",
+        "source": {
+          "source": "local",
+          "path": "./plugins/granola"
+        }
+      },
+      {
+        "name": "monday-com",
+        "source": {
+          "source": "local",
+          "path": "./plugins/monday-com"
+        }
+      },
+      {
+        "name": "temporal",
+        "source": {
+          "source": "local",
+          "path": "./plugins/temporal"
+        }
+      },
+      {
+        "name": "hyperframes",
+        "source": {
+          "source": "local",
+          "path": "./plugins/hyperframes"
+        }
+      },
+      {
+        "name": "supabase",
+        "source": {
+          "source": "local",
+          "path": "./plugins/supabase"
+        }
+      },
+      {
+        "name": "codex-security",
+        "source": {
+          "source": "local",
+          "path": "./plugins/codex-security"
+        }
+      },
+      {
+        "name": "twilio-developer-kit",
+        "source": {
+          "source": "local",
+          "path": "./plugins/twilio-developer-kit"
+        }
+      },
+      {
+        "name": "openai-developers",
+        "source": {
+          "source": "local",
+          "path": "./plugins/openai-developers"
+        }
+      },
+      {
+        "name": "datadog",
+        "source": {
+          "source": "local",
+          "path": "./plugins/datadog"
+        }
+      },
+      {
+        "name": "zoom",
+        "source": {
+          "source": "local",
+          "path": "./plugins/zoom"
+        }
+      },
+      {
+        "name": "mixpanel-headless",
+        "source": {
+          "source": "local",
+          "path": "./plugins/mixpanel-headless"
+        }
+      },
+      {
+        "name": "airtable",
+        "source": {
+          "source": "local",
+          "path": "./plugins/airtable"
+        }
+      },
+      {
+        "name": "nvidia",
+        "source": {
+          "source": "local",
+          "path": "./plugins/nvidia"
+        }
+      },
+      {
+        "name": "posthog",
+        "source": {
+          "source": "local",
+          "path": "./plugins/posthog"
+        }
+      },
+      {
+        "name": "ngs-analysis",
+        "source": {
+          "source": "local",
+          "path": "./plugins/ngs-analysis"
+        }
+      },
+      {
+        "name": "shopify",
+        "source": {
+          "source": "local",
+          "path": "./plugins/shopify"
+        }
+      },
+      {
+        "name": "magicpath",
+        "source": {
+          "source": "local",
+          "path": "./plugins/magicpath"
+        }
+      },
+      {
+        "name": "openai-ads-conversions",
+        "source": {
+          "source": "local",
+          "path": "./plugins/openai-ads-conversions"
+        }
+      },
+      {
+        "name": "boltz-api-cli",
+        "source": {
+          "source": "local",
+          "path": "./plugins/boltz-api-cli"
+        }
+      },
+      {
+        "name": "dropbox",
+        "source": {
+          "source": "local",
+          "path": "./plugins/dropbox"
+        }
+      },
+      {
+        "name": "product-design",
+        "source": {
+          "source": "local",
+          "path": "./plugins/product-design"
+        }
+      },
+      {
+        "name": "data-analytics",
+        "source": {
+          "source": "local",
+          "path": "./plugins/data-analytics"
+        }
+      },
+      {
+        "name": "creative-production",
+        "source": {
+          "source": "local",
+          "path": "./plugins/creative-production"
+        }
+      },
+      {
+        "name": "public-equity-investing",
+        "source": {
+          "source": "local",
+          "path": "./plugins/public-equity-investing"
+        }
+      },
+      {
+        "name": "adobe",
+        "source": {
+          "source": "local",
+          "path": "./plugins/adobe"
+        }
+      },
+      {
+        "name": "lovable",
+        "source": {
+          "source": "local",
+          "path": "./plugins/lovable"
+        }
+      },
+      {
+        "name": "clickup",
+        "source": {
+          "source": "local",
+          "path": "./plugins/clickup"
+        }
+      },
+      {
+        "name": "consensus",
+        "source": {
+          "source": "local",
+          "path": "./plugins/consensus"
+        }
+      },
+      {
+        "name": "chatcut",
+        "source": {
+          "source": "local",
+          "path": "./plugins/chatcut"
+        }
+      },
+      {
+        "name": "higgsfield",
+        "source": {
+          "source": "local",
+          "path": "./plugins/higgsfield"
+        }
+      },
+      {
+        "name": "crowdstrike-falcon-foundry",
+        "source": {
+          "source": "url",
+          "url": "https://github.com/CrowdStrike/foundry-skills.git"
+        }
+      },
+      {
+        "name": "crowdstrike-falcon-fusion",
+        "source": {
+          "source": "url",
+          "url": "https://github.com/CrowdStrike/fusion-skills.git"
+        }
+      },
+      {
+        "name": "qodo",
+        "source": {
+          "source": "git-subdir",
+          "url": "https://github.com/qodo-ai/qodo-skills.git",
+          "path": "codex-packages/qodo"
+        }
+      }
+    ],
+    "individual_manifests_reviewed": false
+  },
+  "unresolved": [
+    "Antigravity models documentation and dynamic workflows documentation: immutable snapshot pending",
+    "Explee vendor architecture: source snapshot pending",
+    "Owned filament preview: existing PR #2640, full source comparison pending",
+    "All exact dependency, license text and checkpoint digest verification pending",
+    "Current main heartbeat differs; reconcile existing #2591 rather than merge stale branch",
+    "New CI not returned on prior head d48b30ffa7f067dd22845e6a98f90f377d5f655d"
+  ],
+  "authority": {
+    "execution": false,
+    "install": false,
+    "network_at_runtime": false,
+    "customer_data": false,
+    "spend": false,
+    "outreach": false
+  }
+}
