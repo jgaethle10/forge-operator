@@ -81,3 +81,6 @@ test('owner private crosswalk matches only explicitly bound goal checkpoint file
  assert.equal(report().counts.goal_checkpoints_matched,0);
  assert.equal(report().status,'review_required');
 });
+
+// Keep the four-program review contract on the existing frontier CI entrypoint.
+import './kaidance-four-program-continuity.test.mjs';
