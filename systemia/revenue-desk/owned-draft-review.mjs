@@ -32,7 +32,7 @@ function plain(p){
  }
  return null;
 }
-export async function reviewOwnedDrafts({accessToken,reviewedLanes={},fetchImpl=fetch,now=new Date(),clock=Date.now,maxDrafts=20,maxListPages=1}={}){
+export async function reviewOwnedDrafts({accessToken,reviewedLanes={},fetchImpl=fetch,now=new Date(),clock=Date.now,maxDrafts=20,maxListPages=1,onPrivateReview}={}){
  if(typeof accessToken!=='string'||accessToken.length<16||!Number.isFinite(+now)||!Number.isInteger(maxDrafts)||maxDrafts<1||maxDrafts>40||!Number.isInteger(maxListPages)||maxListPages<1||maxListPages>10)throw Error('gmail_draft_input_hold');
  const deadline=clock()+90000;
  const req=(pathname,query={})=>get({token:accessToken,fetchImpl,pathname,query,clock,deadline});
@@ -48,13 +48,19 @@ export async function reviewOwnedDrafts({accessToken,reviewedLanes={},fetchImpl=
  }while(pageToken&&pages<maxListPages);
  // Review already classified commercial drafts ahead of unclassified inventory.
  // Never claim full body review from a paginated list.
- const priority=d=>Object.hasOwn(reviewedLanes,d.id)&&['direct_offer','customer_reply'].includes(reviewedLanes[d.id])?0:1;
+ const classify=d=>{
+  if(!Object.hasOwn(reviewedLanes,d.id))return 'other';
+  const entry=reviewedLanes[d.id];
+  // A stable Gmail draft ID alone cannot bind a review to its current message.
+  return entry&&typeof entry==='object'&&entry.message_id===d.message.id&&lanes.has(entry.lane)?entry.lane:'other';
+ };
+ const priority=d=>{const lane=classify(d);return ['direct_offer','customer_reply'].includes(lane)?0:lane!=='other'?1:2;};
  const entries=inventory.sort((a,b)=>priority(a)-priority(b)).slice(0,maxDrafts);
  const records=[],holds={};let skipped=0;
  for(const item of entries){
   // No automatic sales label inferred from private messages. The existing
   // reviewer can supply lane labels by exact draft ID, otherwise 'other'.
-  const lane=Object.hasOwn(reviewedLanes,item.id)&&lanes.has(reviewedLanes[item.id])?reviewedLanes[item.id]:'other';
+  const lane=classify(item);
   try{
    const result=await req('/drafts/'+item.id,{format:'full'});
    const m=result?.message,p=m?.payload;
@@ -67,7 +73,7 @@ export async function reviewOwnedDrafts({accessToken,reviewedLanes={},fetchImpl=
    const draft={id:item.id,to:a?[a]:[],cc:cc?['present']:[],bcc:bcc?['present']:[],email_ts:new Date(t).toISOString(),body};
    let history=null;
    // Only individually reviewed commercial drafts warrant a history query.
-   if(a&&!cc&&!bcc&&(lane==='direct_offer'||lane==='customer_reply')){
+   if(a&&!cc&&!bcc&&lane!=='other'){
     const q='in:anywhere -in:drafts {from:'+a+' to:'+a+' cc:'+a+' bcc:'+a+'}';
     const h=await req('/messages',{q,maxResults:'50',includeSpamTrash:'true'});
     if(h.messages!==undefined&&!Array.isArray(h.messages))throw Error('gmail_history_list_hold');
@@ -86,8 +92,9 @@ export async function reviewOwnedDrafts({accessToken,reviewedLanes={},fetchImpl=
   }catch(e){skipped++;const key=/^gmail_[a-z0-9_]+$/.test(e?.message||'')?e.message:'gmail_draft_read_hold';holds[key]=(holds[key]??0)+1;if(clock()>=deadline)break;}
  }
  const reviewed=reviewPreparedDrafts(records,{now});
+ if(onPrivateReview!==undefined){if(typeof onPrivateReview!=='function')throw Error('gmail_draft_private_review_sink_invalid');await onPrivateReview({schema:reviewed.schema,observed_at:now.toISOString(),rows:reviewed.rows,review_only:true,external_effects_authorized:false});}
  // Do not export bodies, addresses, draft IDs, thread IDs or token.
  return {schema:'evercraft.systemia.owned-draft-review.v1',observed_at:now.toISOString(),listed:inventory.length,list_pages:pages,selected_for_body_review:entries.length,reviewed:records.length,read_holds:skipped,unprocessed:inventory.length-records.length-skipped,pagination_remaining:!!pageToken,hold_reasons:holds,counts:reviewed.counts,
  reason_counts:reviewed.rows.reduce((out,r)=>{for(const reason of r.reasons)out[reason]=(out[reason]??0)+1;return out;},{}),
- source:'owned_gmail_readonly',full_history_confirmed:false,provider_quota_verified:false,review_only:true,send_authority:false,provider_write_performed:false};
+ classified:records.filter(r=>r.lane!=='other').length,classified_inventory:inventory.filter(d=>classify(d)!=='other').length,source:'owned_gmail_readonly',full_history_confirmed:false,provider_quota_verified:false,review_only:true,send_authority:false,provider_write_performed:false};
 }
