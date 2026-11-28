@@ -80,10 +80,17 @@ export function reviewDemandBatch(signals,{portfolio,painIndex,now=new Date(),qu
    else if(records.length>1)state='reconcile_history';
    else{
      const raw=records[0];
+     const at=new Date(now).getTime(), age=at-Date.parse(raw.observed_at||'');
+     const deadline=raw.deadline_at==null?null:Date.parse(raw.deadline_at);
+     if(!Number.isFinite(age)||age<0||age>30*86400000||
+        (deadline!==null&&(!Number.isFinite(deadline)||deadline<=at))) {
+       state='research_only';
+     } else {
      hypotheses=deriveDemandScopeHypotheses(raw,{portfolio,painIndex,now});
      // Replace unreviewed supplied hypotheses in this automatic lane.
      qualification=qualify({...raw,portfolio_scope_hypotheses:hypotheses},now,{portfolio});
      state=qualification.disposition;
+     }
    }
    rows.push({prospect_key:key,records_seen:records.length,state,hypotheses,qualification,
      independent_review_required:true,send_authority:false,checkout_authority:false,paid_order_confirmed:false});
