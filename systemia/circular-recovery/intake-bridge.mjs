@@ -8,7 +8,7 @@ const HEX=/^sha256:[a-f0-9]{64}$/;
 const ACTOR=/^adapter:[a-z0-9][a-z0-9-]{2,71}$/;
 export function buildRecoveryCandidate({record,sourceDigest,revision,dossierKey,adapterActorRef,at}={}){
  if(!HEX.test(sourceDigest||'')||!Number.isSafeInteger(revision)||revision<1||
-    typeof dossierKey!=='string'||!/^dossier:[a-z0-9-]{1,80}$/.test(dossierKey)||
+    typeof dossierKey!=='string'||!/^(?:towi-dossier|dossier):[a-z0-9-]{1,80}$/.test(dossierKey)||
     !ACTOR.test(adapterActorRef||'')||!Number.isFinite(Date.parse(at||'')))
    throw Error('recovery_source_binding_invalid');
  const result=assessRecovery(record);
