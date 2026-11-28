@@ -52,11 +52,12 @@ function readExisting(file){
   return {value,hash:digest(bytes)};
  }finally{fs.closeSync(fd)}
 }
-function preserve(previous,next,key,mutable=[]){
+function preserve(previous,next,key,mutable=[],strict=false){
  const m=indexed(next,key);
  for(const old of previous){
   const row=m.get(old[key]);
   if(!row)throw Error('history_removal_refused');
+  if(strict&&stable(old)!==stable(row))throw Error('historical_binding_change_refused');
   for(const k of Object.keys(old)){
    if(mutable.includes(k))continue;
    if(old[k]!==row[k])throw Error('historical_binding_change_refused');
@@ -93,8 +94,8 @@ export function writePrivateDependencyExport({root,outDir,expectedHash,requests,
      throw Error('request_state_regression');
     if(old.follow_up_hold===true&&next.follow_up_hold!==true)throw Error('hold_release_requires_separate_review');
    }
-   preserve(p.receipts,rec,'event_id');
-   preserve(p.continuation_review_receipts,acks,'continuation_id');
+   preserve(p.receipts,rec,'event_id',[],true);
+   preserve(p.continuation_review_receipts,acks,'continuation_id',[],true);
   }
   const projection=projectExternalDependencies({requests:req,receipts:rec,now:at});
   const valid=new Set([...projection.candidates.map(x=>x.continuation_id),...(prior?.value.reviewed_continuation_ids??[])]);
