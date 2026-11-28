@@ -5,7 +5,7 @@ export function simulate({households,monthlyDollars,shiftBps,chainBps,localBps,r
   }
   if(rounds<1)throw Error('invalid_rounds');
   const initial=households*monthlyDollars*100*12;
-  const portion=(c,b)=>Math.floor(c*b/10000);
+  const portion=(c,b)=>Number(BigInt(c)*BigInt(b)/10000n);
   function run(shift){
     const redirected=portion(initial,shift);
     let circulating=portion(initial-redirected,chainBps)+portion(redirected,localBps);
