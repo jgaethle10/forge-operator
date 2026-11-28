@@ -84,3 +84,29 @@ test('owner private crosswalk matches only explicitly bound goal checkpoint file
 
 // Keep the four-program review contract on the existing frontier CI entrypoint.
 import './kaidance-four-program-continuity.test.mjs';
+
+test('existing private heartbeat persists four-program review without exposing bindings',t=>{
+ const temp=fs.mkdtempSync(path.join(os.tmpdir(),'rd-four-program-'));t.after(()=>fs.rmSync(temp,{recursive:true,force:true}));
+ const root=path.join(temp,'repo'),state=path.join(temp,'state'),outDir=path.join(state,'company'),dir=path.join(state,'kaidance-rd-continuity');
+ fs.mkdirSync(root);fs.mkdirSync(state,{mode:0o700});fs.mkdirSync(dir,{mode:0o700});
+ const exportPath=path.join(dir,'mission-export.json');
+ const write=value=>fs.writeFileSync(exportPath,JSON.stringify(value),{mode:0o600});
+ const opts={root,outDir,now,enabled:true};
+ const read=()=>JSON.parse(fs.readFileSync(path.join(dir,'latest.json'),'utf8'));
+ write({...v,research_program_bindings:{'first-contact':m.mission_id}});
+ assert.deepEqual(runPrivateResearchContinuity(opts),{status:'private_reconciled'});
+ let p=read().four_program_continuity;
+ assert.equal(p.programs.length,4);assert.equal(p.programs[0].status,'reported_admission_requires_private_receipt_review');
+ assert.equal(p.programs[3].status,'identity_recovery_required');
+ assert.doesNotMatch(JSON.stringify(p),/PRIVATE_FIXTURE|SECRET_/);
+ assert.equal(p.execution_authorized,false);
+ write({...v,research_program_bindings:{'first-contact':m.mission_id,oncology:m.mission_id}});
+ assert.deepEqual(runPrivateResearchContinuity(opts),{status:'private_reconciled'});
+ assert.equal(read().four_program_continuity.status,'held_crosswalk');
+ write({...v,coverage_complete:false});
+ assert.deepEqual(runPrivateResearchContinuity(opts),{status:'held'});
+ assert.equal(read().four_program_continuity.status,'held_export');
+ write(v);
+ assert.deepEqual(runPrivateResearchContinuity(opts),{status:'private_reconciled'});
+ assert.equal(read().four_program_continuity.status,'held_crosswalk');
+});
