@@ -260,6 +260,62 @@ export function planKaidanceNextAction({
    'check_original_event_tender_and_eligibility_before_founder_approved_pitch',
    'company',candidate.evidence_ref,'founder_review_required'));
  }
+ // FindMyPart: a source-fit observation is a review handoff, never a buyer,
+ // permission to contact, or authority to write the Revenue Desk.
+ const fmp=companyReport.findmypart;
+ // Actual consented inquiries outrank cold service-fit observations. The
+ // aggregate and queue row must agree, with no contact/payment authority.
+ const inbound=fmp?.inbound_revenue_review;
+ if(fmp?.priority===1&&fmp.state==='review_queued'&&fmp.buyers_qualified===0&&fmp.outreach_authorized===false&&inbound?.state==='consented_inquiries_require_review'&&
+    inbound.prior_contact_verified===false&&inbound.outreach_authorized===false&&inbound.payment_verified===false&&
+    ['observed_inquiries','unique_case_candidates','duplicate_inquiries','invalid_inquiries'].every(k=>Number.isSafeInteger(inbound[k])&&inbound[k]>=0&&inbound[k]<=500)&&
+    inbound.unique_case_candidates>0&&inbound.invalid_inquiries===0&&inbound.unique_case_candidates+inbound.duplicate_inquiries===inbound.observed_inquiries&&
+    Number.isSafeInteger(inbound.oldest_pending_ms)&&inbound.oldest_pending_ms>=0){
+  const row=(companyQueue.candidates||[]).find(x=>x?.work_key==='findmypart:consented-inbound-review'&&
+   x.lane_key==='findmypart'&&x.priority===1&&x.action==='reconcile_existing_revenue_desk_inbound_case_before_any_reply'&&
+   x.authority==='systemia_operator_review_required'&&x.execution_authorized===false&&x.outreach_authorized===false&&x.evidence_ref===hash(inbound));
+  if(row)choices.push(action(1,row.work_key,'findmypart',row.action,'company_findmypart_receipt',row.evidence_ref,'existing_systemia_operator_review'));
+ }
+ if(fmp?.priority===1&&fmp.state==='review_queued'&&fmp.buyers_qualified===0&&
+    fmp.outreach_authorized===false&&Array.isArray(fmp.service_fit_evidence)&&fmp.service_fit_evidence.length<=6){
+  const seen=new Set();
+  for(const row of companyQueue.candidates||[]){
+   if(row?.lane_key!=='findmypart'||row.priority!==1||
+      !/^findmypart:shop:[a-z0-9-]{1,80}$/.test(row.work_key||'')||
+      seen.has(row.work_key)||row.action!=='reconcile_existing_revenue_desk_then_confirm_actual_stalled_case'||
+      row.authority!=='systemia_operator_review_required'||row.execution_authorized!==false||
+      row.outreach_authorized!==false||row.buyer_need_confirmed!==false||
+      !HASH.test(row.evidence_ref||''))continue;
+   const age=at.getTime()-Date.parse(row.observed_at);
+   if(!Number.isFinite(age)||age<0||age>86400000)continue;
+   try{const u=new URL(row.source_url);if(u.protocol!=='https:'||u.username||u.password||u.hash)continue}catch{continue}
+   if(!fmp.service_fit_evidence.some(e=>e?.work_key===row.work_key&&
+      e.source_url===row.source_url&&e.observed_at===row.observed_at&&e.evidence_ref===row.evidence_ref))continue;
+   seen.add(row.work_key);
+   choices.push(action(1,row.work_key,'findmypart',row.action,'company_findmypart_receipt',
+    row.evidence_ref,'existing_systemia_operator_review'));
+  }
+ }
+ // FOREST-001: review-only decisions from the current company report and queue.
+ const forest=companyReport.forest_restoration;
+ const forestActions={
+  'forest-001:collect_initial_baseline':'collect_initial_baseline',
+  'forest-001:review_invalid_receipt':'review_invalid_receipt',
+  'forest-001:review_source_freshness':'review_source_freshness',
+  'forest-001:resolve-dnr':'resolve_dnr_source_hold',
+  'forest-001:resolve-qcew_yakima':'resolve_qcew_yakima_source_hold',
+  'forest-001:resolve-qcew_kittitas':'resolve_qcew_kittitas_source_hold'
+ };
+ if(forest?.execution_authorized===false&&forest.worker_verified===false&&Array.isArray(forest.review_candidates)){
+  const seen=new Set();
+  for(const row of (companyQueue.candidates||[])){
+   if(!Object.hasOwn(forestActions,row.work_key)||seen.has(row.work_key)||row.action!==forestActions[row.work_key]||row.lane_key!=='forest-restoration'||row.execution_authorized!==false||row.publication_authorized!==false||row.authority!=='systemia_operator_review_required'||!forest.review_candidates.some(x=>x.work_key===row.work_key&&x.action===row.action))continue;
+   seen.add(row.work_key);
+   choices.push(action(3,row.work_key,'forest-restoration',row.action,'company_forest_receipt',
+    /^[a-f0-9]{64}$/.test(forest.evidence_manifest_sha256||'')?'sha256:'+forest.evidence_manifest_sha256:null,
+    'existing_systemia_operator_review'));
+  }
+ }
  const unbound=companyQueue.candidates?.filter(x=>
   x?.action==='bind_existing_systemia_capability_or_admit_bounded_new_adapter'&&
   /^product:[a-z0-9-]+:adapter-admission$/.test(x.work_key||'')&&

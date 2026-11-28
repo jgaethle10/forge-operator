@@ -6,6 +6,7 @@ import path from 'node:path';
 import os from 'node:os';
 import {readFindMyPartPrivateInquiry,reconcileFindMyPartInquiryOutbox} from '../systemia/mcp/findmypart-public-inquiry.mjs';
 import {prepareFindMyPartQuote} from '../systemia/mcp/findmypart-private-quote.mjs';
+import {reviewFindMyPartInbound} from '../systemia/organism/findmypart-private-revenue-review.mjs';
 
 const directory=process.env.EVERCRAFT_FINDMYPART_LEADS_DIR||
  path.join(os.homedir(),'.local','state','evercraft','findmypart-leads');
@@ -31,6 +32,11 @@ function list(){
 }
 async function main(){
  const [command,reference,arg3,arg4]=process.argv.slice(2);
+ if(command==='review-queue'){
+  // Operator-only case references, never email or raw buyer content.
+  print(reviewFindMyPartInbound({storeDir:directory,key,enabled:true,mailFile:process.env.SYSTEMIA_REVENUE_GMAIL_SNAPSHOT_FILE||null,hmacKeyFile:process.env.SYSTEMIA_REVENUE_GMAIL_HMAC_KEY_FILE||null}));
+  return;
+ }
  if(command==='list'){
   const entries=list();
   print({schema:'evercraft.findmypart.private-inbox-list.v1',count:entries.length,contains_buyer_pii:false,entries});
@@ -75,7 +81,7 @@ async function main(){
   print(prepareFindMyPartQuote(record,arg3));
   return;
  }
- throw Error('usage: node scripts/findmypart-owner-inbox.mjs list|status|reconcile|show FMP-<id> --reveal|quote FMP-<id> quick|deep|rescue --reveal');
+ throw Error('usage: node scripts/findmypart-owner-inbox.mjs list|status|review-queue|reconcile|show FMP-<id> --reveal|quote FMP-<id> quick|deep|rescue --reveal');
 }
 main().catch(error=>{
  process.stderr.write('FindMyPart owner inbox: '+String(error?.message||'operation_failed')+'\n');
