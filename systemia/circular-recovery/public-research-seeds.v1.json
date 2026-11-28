@@ -31,19 +31,19 @@
       "family": "USDA ARS",
       "url": "https://www.ars.usda.gov/research/publications/publication/?seqNo115=419307",
       "state": "reported",
-      "note": "A four-year whole-orchard recycling study examined soil carbon, greenhouse gases and almond productivity; transfer to Yakima crops is unverified."
+      "note": "A California almond-orchard comparison reported 49% of initial wood carbon remaining after four years and modeled 6.6% at year 20. Early nitrous oxide emissions increased relative to controls; early bearing-year yields did not differ significantly. Results are not Yakima measurements or biochar performance."
     },
     "arsBiochar": {
       "family": "USDA ARS",
       "url": "https://www.ars.usda.gov/midwest-area/stpaul/swmr/docs/biochar/",
       "state": "reported",
-      "note": "Biomass-derived biochar is studied for stabilization of biomass carbon; local net benefit is not established."
+      "note": "USDA describes biochar as a heterogeneous biomass-derived carbon material; crop responses vary and can be negative. Local net benefit and economics remain unverified."
     },
     "doeHeat": {
       "family": "US DOE",
       "url": "https://www.energy.gov/cmei/ito/waste-heat-recovery-basics",
       "state": "reported",
-      "note": "Commercial waste heat recovery exists; material and maintenance constraints can restrict adoption."
+      "note": "DOE estimates industrial energy losses as waste heat at 20–50% of input across industry; this is not a site-specific recoverable fraction. Material constraints and maintenance costs can limit adoption."
     }
   },
   "rows": [
@@ -123,5 +123,5 @@
   "towiDossiersCreated": 0,
   "systemiaMissionsAdmitted": 0,
   "heartbeatActivated": false,
-  "sourceNote": "Public web pages reviewed as reported context, not raw-data custody or independent experimental validation. No private sources or synthetic facts. Existing TOWI and Systemia admission must establish real dossier and evidence bindings."
+  "sourceNote": "Seven agency pages checked 2026-11-27. Reported source context, not raw-data custody or independent experimental validation. Numerical findings retain original study/sector scope. Existing TOWI and Systemia admission must establish real dossier and evidence bindings."
 }
