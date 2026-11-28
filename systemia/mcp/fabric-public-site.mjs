@@ -1,3 +1,4 @@
+import {scopedInquiryOption} from './fabric-directory.mjs';
 import { PUBLIC_PAYMENT_OFFERS } from './public-payment-offers.mjs';
 import {renderWebsiteAuditDecisionJourney} from './website-audit-experience.mjs';
 import crypto from 'node:crypto';
@@ -780,6 +781,18 @@ export function renderCapabilityDetail(item){
     ? '<ul>'+useWhen.map((value)=>'<li>“'+escapeHtml(value)+'”</li>').join('')+'</ul>'
     : '<p>This capability is currently discovered from its published problem description.</p>';
   const startState=item.start_url_state||'not_declared';
+  const inquiry=scopedInquiryOption(item);
+  const inquirySubject=encodeURIComponent('Evercraft scoped inquiry | '+item.public_id);
+  const inquiryBody=encodeURIComponent([
+    'Hello Evercraft,','','Capability: '+item.public_id,
+    'Desired outcome: ','Constraints: ','Timing: ','',
+    'Please confirm feasible scope, delivery and price before any payment.',
+    'I will not include passwords or confidential records in this initial email.'
+  ].join('\n'));
+  const inquiryPanel=inquiry
+    ? '<section class="detail-panel"><h2>Request a scoped engagement</h2><p>Tell us what you need. We can discuss a bounded service, pilot or custom project and agree scope, feasibility, timing and price before purchase. This is an inquiry, not an order or a guaranteed delivery.</p><p><a class="btn primary" href="mailto:jessegaethle10@gmail.com?subject='+escapeHtml(inquirySubject)+'&amp;body='+escapeHtml(inquiryBody)+'">Open an inquiry email</a></p><p>Review and send the email yourself. Nothing is submitted automatically. Please do not include passwords or confidential records.</p></section>'
+    : '';
+
   const heroActions=item.public_id==='earthworks-site-autonomy-study-v1'
     ? '<div class="actions"><a class="btn primary" href="/earthworks">Open Live Yard</a><a class="btn" href="mailto:jessegaethle10@gmail.com?subject=EarthWorks%20Site%20Autonomy%20Study&body=Company%3A%20%0ASite%3A%20%0AMaterial%20loop%3A%20%0AWhat%20is%20costing%20production%3A%20">Discuss one material loop</a><a class="btn" href="/capabilities">Browse all capabilities</a></div>'
     : '<div class="actions"><a class="btn primary" href="/offers">See simple offers</a><a class="btn" href="/capabilities">Browse all capabilities</a></div>';
@@ -792,6 +805,7 @@ export function renderCapabilityDetail(item){
     heroActions,
     '</section>',
     '<div class="detail-grid">',
+    inquiryPanel,
     '<section class="detail-panel"><h2>When this is the right tool</h2>'+prompts+'</section>',
     '<section class="detail-panel"><h2>Current offer</h2>'
       +(item.pricing?'<p class="strong">'+escapeHtml(item.pricing)+'</p>':'<p>No fixed public price is currently represented by Fabric.</p>')
@@ -800,7 +814,7 @@ export function renderCapabilityDetail(item){
       +'<p><strong>Machine state:</strong> '+escapeHtml(item.state)+'</p>'
       +'<p><strong>Verified start-path state:</strong> '+escapeHtml(startState)+'</p>'
       +'<p>Discovery itself does not create a charge, paid engagement, deployment, message, or other external action. Fabric will not invent a checkout or start route that the catalog has not verified.</p></section>',
-    '<section class="detail-panel"><h2>Continue deliberately</h2><p>For an AI or agent, use capability ID <code>'+escapeHtml(item.public_id)+'</code> through Evercraft Fabric. A paid or human continuation is exposed only when the capability publishes a verified start path.</p>'+resources+'</section>',
+    '<section class="detail-panel"><h2>Continue deliberately</h2><p>For an AI or agent, use capability ID <code>'+escapeHtml(item.public_id)+'</code> through Evercraft Fabric. Any scoped inquiry is separate from verified checkout. A paid start path requires its own verification.</p>'+resources+'</section>',
     '<section class="detail-panel"><h2>Why the door is trustworthy</h2><p>This page is rendered from the same live public-safe capability metadata Fabric exposes to agents. If availability, pricing, or routing state changes in the catalog, this surface changes with it.</p><p><a class="docs-link" href="/capabilities/'+encodeURIComponent(item.public_id)+'.json">Machine-readable capability JSON →</a></p></section>',
     '</div>',
     '</main>'
