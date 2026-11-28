@@ -99,6 +99,21 @@ export function reserveColdOutreach({
  if(report?.generated_at!==now && Math.abs(Date.parse(report?.generated_at)-at)>MAX_SNAPSHOT_AGE_MS)
   throw Error('snapshot_outside_reservation_window');
  const signedAt=signedSnapshot(report,reportProof,{secretFile:coverageSecretFile,nowMs:at});
+ // Only the unique matching row inside the authenticated report is authority
+ // for this reservation. Never accept caller-modified eligibility or aliases.
+ if(report.schema!=='evercraft.systemia.gmail-reconciliation.v1'||!Array.isArray(report.prospects))
+  throw Error('signed_gmail_prospects_missing');
+ const selected=report.prospects.filter(r=>r?.contact_ref===prospect.contact_ref&&r?.prospect_ref===opportunityRef);
+ if(selected.length!==1||prospect.prospect_ref!==opportunityRef)
+  return {state:'held',reasons:['prospect_not_uniquely_bound_to_signed_report'],send_performed:false};
+ const signedProspect=selected[0];
+ if(!OPAQUE.test(signedProspect.prospect_ref)||!OPAQUE.test(signedProspect.contact_ref)||
+    signedProspect.send_authorized!==false||signedProspect.actionable_as_new_cold_target!==true||
+    !Array.isArray(signedProspect.reasons)||signedProspect.reasons.length!==0)
+  return {state:'held',reasons:['signed_prospect_not_eligible'],send_performed:false};
+ // Exact signed row, rather than the input object, supplies preflight flags.
+ if(JSON.stringify(prospect)!==JSON.stringify(signedProspect))
+  return {state:'held',reasons:['prospect_differs_from_signed_report'],send_performed:false};
  const q=report.quota;
  const providerCap=requireInt(q.provider_daily_cap,'provider_cap');
  const sent=requireInt(q.rolling_24h_units,'gmail_sent_units');
@@ -106,7 +121,7 @@ export function reserveColdOutreach({
  const maxCold=Math.min(400,requireInt(q.cold_target,'cold_target'),providerCap-reserve);
  if(providerCap<reserve||maxCold<1)throw Error('insufficient_provider_capacity');
  const exactMessage=subject+'\n\n'+body;
- const permitCheck=checkOutboundCandidate({row:prospect,quota:q,sender,message:exactMessage,opportunity,now});
+ const permitCheck=checkOutboundCandidate({row:signedProspect,quota:q,sender,message:exactMessage,opportunity,now});
  if(permitCheck.decision!=='candidate_passed_non_authoritative_preflight')
   return {state:'held',reasons:permitCheck.reasons,send_performed:false};
  const dir=privateDir(stateDir),lock=path.join(dir,'.reservation-lock');

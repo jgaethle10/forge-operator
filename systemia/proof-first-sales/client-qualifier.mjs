@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import { pathToFileURL } from 'node:url';
 import { admitProofFirstOutreach } from './engine.mjs';
 import { commercialExclusion } from '../saban/revenue-swarm.mjs';
+import { reviewDemandBatch } from './demand-portfolio-review.mjs';
 
 // A read-only specialist for Systemia's existing proof-first-sales pipeline.
 // These are routing hypotheses, not claims of independent service readiness.
@@ -259,6 +260,16 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
     const records = JSON.parse(fs.readFileSync(inputPath, 'utf8'));
     const portfolioPath = process.argv[3];
     const portfolio = portfolioPath ? JSON.parse(fs.readFileSync(portfolioPath,'utf8')).scoped_portfolio_review : null;
-    process.stdout.write(JSON.stringify(rankClientSignals(records, new Date(), {portfolio}), null, 2) + '\n');
+    const painIndexPath = process.argv[4];
+    if (painIndexPath && !portfolio) throw Error('scoped_portfolio_required');
+    const offerMode = process.argv[5];
+    if (process.argv.length > 6 || (offerMode && (offerMode !== '--prepare-offers' || !painIndexPath))) throw Error('invalid_offer_review_mode');
+    const painIndex = painIndexPath ? JSON.parse(fs.readFileSync(painIndexPath,'utf8')) : null;
+    const report = offerMode
+      ? (await import('./demand-offer-preparation.mjs')).prepareDemandOffers(records,{portfolio,painIndex})
+      : painIndex
+        ? reviewDemandBatch(records, {portfolio, painIndex, qualify:qualifyClientSignal})
+        : rankClientSignals(records, new Date(), {portfolio});
+    process.stdout.write(JSON.stringify(report, null, 2) + '\n');
   }
 }

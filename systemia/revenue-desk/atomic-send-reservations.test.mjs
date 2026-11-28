@@ -51,7 +51,7 @@ function setup(){
  const sign=r=>({hmac_sha256:createHmac('sha256',verifyKey).update(JSON.stringify(r)).digest('hex')});
  const kwargs={
   stateDir,ledger,report,reportProof:sign(report),coverageSecretFile:secretFile,
-  prospect:report.prospects[0],opportunityRef:'hmac256:'+'f'.repeat(64),
+  prospect:report.prospects[0],opportunityRef:report.prospects[0].prospect_ref,
   subjectRef,actorRef,subject:'Re: Website QA proposal',body:messageBody,sender,opportunity,now:NOW
  };
  return {dir,stateDir,ledger,passport,secretFile,report,sign,kwargs};
@@ -132,7 +132,7 @@ test('a second mission cannot evade exact scoped buyer identity with another age
   const other={...c.kwargs,opportunityRef:'hmac256:'+'a'.repeat(64)};
   const r=reserveColdOutreach(other);
   assert.equal(r.state,'held');
-  assert.deepEqual(r.reasons,['contact_or_opportunity_already_reserved']);
+  assert.deepEqual(r.reasons,['prospect_not_uniquely_bound_to_signed_report']);
  }finally{dispose(c);}
 });
 
@@ -189,5 +189,19 @@ test('corrupt persisted reservation cannot change shared quota or impersonate a 
   const repeat=reserveColdOutreach(c.kwargs);
   assert.equal(repeat.state,'held');
   assert.deepEqual(repeat.reasons,['contact_or_opportunity_already_reserved']);
+ }finally{dispose(c);}
+});
+
+test('signed report must contain the exact unique selected prospect and opportunity',()=>{
+ const c=setup();
+ try{
+  const wrong={...c.kwargs.prospect,contact_ref:'hmac256:'+'a'.repeat(64)};
+  assert.deepEqual(reserveColdOutreach({...c.kwargs,prospect:wrong}).reasons,['prospect_not_uniquely_bound_to_signed_report']);
+  const dup={...c.report,prospects:[c.report.prospects[0],c.report.prospects[0]]};
+  assert.deepEqual(reserveColdOutreach({...c.kwargs,report:dup,reportProof:c.sign(dup)}).reasons,['prospect_not_uniquely_bound_to_signed_report']);
+  const blocked={...c.report,prospects:[{...c.report.prospects[0],actionable_as_new_cold_target:false,reasons:['prior_contact_reconcile_before_new_outreach']}]};
+  assert.deepEqual(reserveColdOutreach({...c.kwargs,report:blocked,reportProof:c.sign(blocked)}).reasons,['signed_prospect_not_eligible']);
+  assert.deepEqual(reserveColdOutreach({...c.kwargs,prospect:{...c.kwargs.prospect,stage:'paid'}}).reasons,['prospect_differs_from_signed_report']);
+  assert.equal(inspectReservations({stateDir:c.stateDir}).count,0);
  }finally{dispose(c);}
 });
