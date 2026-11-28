@@ -262,9 +262,14 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
     const portfolio = portfolioPath ? JSON.parse(fs.readFileSync(portfolioPath,'utf8')).scoped_portfolio_review : null;
     const painIndexPath = process.argv[4];
     if (painIndexPath && !portfolio) throw Error('scoped_portfolio_required');
-    const report = painIndexPath
-      ? reviewDemandBatch(records, {portfolio, painIndex:JSON.parse(fs.readFileSync(painIndexPath,'utf8')), qualify:qualifyClientSignal})
-      : rankClientSignals(records, new Date(), {portfolio});
+    const offerMode = process.argv[5];
+    if (process.argv.length > 6 || (offerMode && (offerMode !== '--prepare-offers' || !painIndexPath))) throw Error('invalid_offer_review_mode');
+    const painIndex = painIndexPath ? JSON.parse(fs.readFileSync(painIndexPath,'utf8')) : null;
+    const report = offerMode
+      ? (await import('./demand-offer-preparation.mjs')).prepareDemandOffers(records,{portfolio,painIndex})
+      : painIndex
+        ? reviewDemandBatch(records, {portfolio, painIndex, qualify:qualifyClientSignal})
+        : rankClientSignals(records, new Date(), {portfolio});
     process.stdout.write(JSON.stringify(report, null, 2) + '\n');
   }
 }
