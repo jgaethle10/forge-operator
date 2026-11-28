@@ -62,11 +62,64 @@ function probeCasesForOffer(offer, cases) {
     .map((c) => c.case_id);
 }
 
+// Founder Nov 27: automation maturity alone is not a commercial exclusion.
+// This is an internal review lane, never publication, quote or payment authority.
+export function commercialExclusion(row) {
+  const key = String(row?.public_id || row?.product_key || '').toLowerCase();
+  if (/^rivet(?:-|$)/.test(key)) return 'retired_rivet';
+  if (/^aliev(?:-|$)/.test(key)) return 'legacy_identity_authority_hold';
+  const state = String(row?.commercial_state || '').toLowerCase();
+  if (['hold','retired','disabled','unavailable','legal_hold','safety_hold','authority_hold'].includes(state))
+    return 'explicit_commercial_hold';
+  return null;
+}
+export function buildScopedPortfolio({catalog, registry = null} = {}) {
+  const rows = [], excluded = [], seen = new Set();
+  const add = (row, source, key) => {
+    if (typeof key !== 'string' || !key || seen.has(source + ':' + key)) return;
+    seen.add(source + ':' + key);
+    const reason = commercialExclusion(row);
+    if (reason) { excluded.push({source, key, reason}); return; }
+    const state = row.commercial_state || 'not_declared';
+    const mode = state === 'sell_now' ? 'existing_offer_recheck'
+      : state === 'free' ? 'free_intake_to_scoped_service'
+      : ['commercial_pilot','contractor_beta','scoped_human_review_offers'].includes(state)
+        ? 'bounded_pilot_or_manual_scope_review'
+        : 'first_delivery_or_paid_discovery_scope_review';
+    rows.push({
+      source, key, name: row.name || key, source_commercial_state: state,
+      machine_state: row.machine_state || null,
+      problem: typeof row.problem === 'string' ? row.problem : null,
+      listed_pricing: typeof row.pricing === 'string' ? row.pricing : null,
+      review_mode: mode,
+      next_action: 'match_evidenced_buyer_need_and_validate_bounded_deliverable',
+      prior_delivery_verified: null, automation_required_for_consideration: false,
+      buyer_need_verified: false, scope_confirmed: false,
+      commercial_commitment_authorized: false, publication_authorized: false,
+      outreach_authorized: false, checkout_authorized: false
+    });
+  };
+  for (const row of catalog?.offers || []) add(row, 'machine_offer', row?.public_id);
+  for (const row of registry?.products || []) add(row, 'registry_product', row?.product_key);
+  return {
+    schema: 'evercraft.saban.scoped-portfolio-review.v1',
+    candidates: rows, exclusions: excluded,
+    source_counts: {
+      machine_offer: rows.filter(r => r.source === 'machine_offer').length,
+      registry_product: rows.filter(r => r.source === 'registry_product').length
+    },
+    cross_catalog_identity_reconciled: false,
+    distinct_sellable_offer_count: null,
+    review_only: true, external_effects_authorized: false
+  };
+}
+
 export function buildRevenueFormation({
   catalog,
   painIndex,
   probeSuite,
   commerceCanary = null,
+  registry = null,
   generatedAt = new Date().toISOString()
 }) {
   const canaries = canaryMap(commerceCanary);
@@ -77,7 +130,7 @@ export function buildRevenueFormation({
   );
 
   const sellNow = (catalog?.offers || [])
-    .filter((offer) => offer?.public_id && offer?.commercial_state === 'sell_now');
+    .filter((offer) => offer?.public_id && offer?.commercial_state === 'sell_now' && !commercialExclusion(offer));
 
   const rows = sellNow.map((offer) => {
     const prices = moneyValues(offer.pricing);
@@ -210,12 +263,14 @@ export function buildRevenueFormation({
       human_handoff: humanHandoff,
       repair_before_distribution: broken
     },
-    focus_rotation: formation
+    focus_rotation: formation,
+    scoped_portfolio_review: buildScopedPortfolio({catalog, registry})
   };
 }
 
 async function main() {
   const catalog = readJson('public/.well-known/evercraft-machine-catalog.json', { offers: [] });
+  const registry = readJson('registry/catalog.json', { products: [] });
   const painIndex = readJson('public/.well-known/evercraft-pain-index.json', { entries: [] });
   const probeSuite = readJson('chum-probes/probe-suite.json', { cases: [] });
   const commerceCanary = readJson('artifacts/chum/commerce-canary-latest.json', null);
@@ -224,7 +279,8 @@ async function main() {
     catalog,
     painIndex,
     probeSuite,
-    commerceCanary
+    commerceCanary,
+    registry
   });
 
   fs.mkdirSync('artifacts/saban-revenue', { recursive: true });
@@ -242,6 +298,8 @@ async function main() {
     `Healthy commerce doors: ${receipt.summary.canary_healthy}`,
     `Broken commerce doors: ${receipt.summary.canary_broken}`,
     `Probe-covered: ${receipt.summary.probe_covered}`,
+    `Internal scoped review source rows: ${receipt.scoped_portfolio_review.candidates.length} (not deduplicated offers or approved sales)`,
+    `Explicit exclusions: ${receipt.scoped_portfolio_review.exclusions.length}`,
     '',
     '## First-dollar velocity',
     '',

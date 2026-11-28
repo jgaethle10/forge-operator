@@ -1,5 +1,5 @@
 import fs from 'node:fs';
-import { buildRevenueFormation } from '../systemia/saban/revenue-swarm.mjs';
+import { buildRevenueFormation, buildScopedPortfolio, commercialExclusion } from '../systemia/saban/revenue-swarm.mjs';
 
 const catalog = JSON.parse(fs.readFileSync('public/.well-known/evercraft-machine-catalog.json','utf8'));
 const painIndex = JSON.parse(fs.readFileSync('public/.well-known/evercraft-pain-index.json','utf8'));
@@ -21,7 +21,7 @@ const result = buildRevenueFormation({
 });
 
 const fail=(message)=>{throw new Error('SABAN_REVENUE_FAIL: '+message);};
-const expectedSellNow=(catalog.offers||[]).filter((o)=>o.commercial_state==='sell_now').length;
+const expectedSellNow=(catalog.offers||[]).filter((o)=>o.commercial_state==='sell_now'&&!commercialExclusion(o)).length;
 
 if(result.schema!=='evercraft.saban.revenue-formation.v1') fail('unexpected schema');
 if(result.summary.sell_now_offers!==expectedSellNow) fail(`expected ${expectedSellNow} current sell-now offers`);
@@ -76,3 +76,23 @@ console.log('SABAN_REVENUE_PASS',JSON.stringify({
   high_value_top:result.lanes.high_value_cash.slice(0,4).map((x)=>x.public_id),
   broken_door_fail_closed:true
 }));
+
+const registry = JSON.parse(fs.readFileSync('registry/catalog.json','utf8'));
+const expanded = buildRevenueFormation({catalog, painIndex, probeSuite, registry, commerceCanary:healthyCanary});
+const scoped = expanded.scoped_portfolio_review;
+if(scoped.candidates.length<=expectedSellNow) fail('first-delivery consideration did not expand');
+if(!scoped.candidates.some(x=>x.key==='findmypart-repair-shop-desk-v1'&&x.review_mode==='first_delivery_or_paid_discovery_scope_review')) fail('first-delivery FindMyPart missing');
+if(!scoped.candidates.some(x=>x.key==='ai-boardroom'&&x.source==='registry_product')) fail('registry scope candidate missing');
+if(scoped.candidates.some(x=>/^rivet(?:-|$)/.test(x.key)||/^aliev(?:-|$)/.test(x.key))) fail('retired or legacy held identity admitted');
+if(expanded.focus_rotation.some(x=>/^rivet(?:-|$)/.test(x.public_id)||/^aliev(?:-|$)/.test(x.public_id))) fail('retired or legacy held identity in distribution');
+if(!scoped.exclusions.some(x=>x.key==='rivet-site-underwriting-v1'&&x.reason==='retired_rivet')) fail('retirement not recorded');
+if(!scoped.exclusions.some(x=>x.key==='income-war-map-v1')) fail('explicit hold bypassed');
+if(scoped.candidates.some(x=>x.checkout_authorized||x.publication_authorized||x.outreach_authorized||x.commercial_commitment_authorized||x.buyer_need_verified||x.scope_confirmed||x.automation_required_for_consideration)) fail('review lane grants false authority');
+if(scoped.distinct_sellable_offer_count!==null||scoped.cross_catalog_identity_reconciled!==false) fail('source overlap must not be counted as distinct sellable offers');
+const synthetic=buildScopedPortfolio({catalog:{offers:[
+ {public_id:'manual-first-v1',commercial_state:'verification_required'},
+ {public_id:'legal-v1',commercial_state:'legal_hold'},
+ {public_id:'manual-first-v1',commercial_state:'verification_required'}
+]}});
+if(synthetic.candidates.length!==1||synthetic.exclusions.length!==1) fail('explicit hold and dedupe failed');
+console.log('SABAN_SCOPED_PORTFOLIO_PASS',JSON.stringify({source_counts:scoped.source_counts,excluded:scoped.exclusions.length,review_only:scoped.review_only}));

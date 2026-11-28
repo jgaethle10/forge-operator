@@ -79,3 +79,33 @@ test('ranks actionable relationships first and deduplicates prospect keys', () =
   assert.equal(rows[0].matched_offers[0].key, 'commercial_studio');
   assert.equal(CLIENT_SCOUT_OFFERS.length, 5);
 });
+
+test('first-delivery portfolio hypothesis stays review only and binds exact evidence', () => {
+  const portfolio = {schema:'evercraft.saban.scoped-portfolio-review.v1',review_only:true,candidates:[
+    {source:'machine_offer',key:'findmypart-repair-shop-desk-v1',name:'Repair Shop Desk',source_commercial_state:'verification_required'},
+    {source:'machine_offer',key:'rivet-site-underwriting-v1',name:'Retired',source_commercial_state:'sell_now'},
+    {source:'machine_offer',key:'held-v1',name:'Held',source_commercial_state:'legal_hold'}
+  ]};
+  const signal = {prospect_key:'synthetic-portfolio',business:'Synthetic repair shop',source_kind:'client_request',
+    evidence_refs:['synthetic:repair-brief'],scope_requested:true,budget_confirmed:true,delivery_capacity_confirmed:true,
+    portfolio_scope_hypotheses:[
+      {source:'machine_offer',key:'findmypart-repair-shop-desk-v1',evidence_ref:'synthetic:repair-brief',proposed_deliverable:'Research one obsolete part and document source evidence'},
+      {source:'machine_offer',key:'findmypart-repair-shop-desk-v1',evidence_ref:'synthetic:other',proposed_deliverable:'Unbound'},
+      {source:'machine_offer',key:'rivet-site-underwriting-v1',evidence_ref:'synthetic:repair-brief',proposed_deliverable:'Retired'},
+      {source:'machine_offer',key:'held-v1',evidence_ref:'synthetic:repair-brief',proposed_deliverable:'Held'}
+    ]};
+  const result=qualifyClientSignal(signal,now,{portfolio});
+  assert.equal(result.disposition,'scope_hypothesis_review');
+  assert.equal(result.portfolio_scope_hypotheses.length,1);
+  assert.equal(result.portfolio_scope_hypotheses[0].price_usd,null);
+  assert.equal(result.portfolio_scope_hypotheses[0].commercial_commitment_authorized,false);
+  assert.equal(result.buyer_confirmed,false);
+  assert.equal(result.outreach_preflight.can_send_from_this_module,false);
+  assert.equal(result.paid_order_confirmed,false);
+  assert.equal(qualifyClientSignal({...signal,opted_out:true},now,{portfolio}).disposition,'do_not_contact');
+  assert.equal(qualifyClientSignal({...signal,evidence_refs:[]},now,{portfolio}).portfolio_scope_hypotheses.length,0);
+  assert.equal(qualifyClientSignal(signal,now).portfolio_scope_hypotheses.length,0);
+  const invalid={...signal,portfolio_scope_hypotheses:[{...signal.portfolio_scope_hypotheses[0],evidence_ref:'synthetic:wrong'}]};
+  assert.equal(qualifyClientSignal(invalid,now,{portfolio}).portfolio_scope_hypotheses.length,0);
+  assert.equal(rankClientSignals([signal],now,{portfolio})[0].disposition,'scope_hypothesis_review');
+});

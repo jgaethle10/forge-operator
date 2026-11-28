@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import {
- approvedHumanBuyerOptions,loadFabricCatalogFromRepository,executeFabricDirectoryRpc,fabricDirectoryTools,
+ approvedHumanBuyerOptions,loadFabricCatalogFromRepository,executeFabricDirectoryRpc,fabricDirectoryTools,matchFabricCapabilities,scopedInquiryOption,
 } from '../systemia/mcp/fabric-directory.mjs';
 
 const catalog=loadFabricCatalogFromRepository();
@@ -89,4 +89,36 @@ test('agent discovery never creates a payment when given a business problem',asy
  name:'match_evercraft_capability',arguments:{intent:'My website needs a $49 conversion audit',limit:5}}},catalog);
  assert.equal(r.result.structuredContent.transactional,false);
  assert.equal(r.result.structuredContent.external_action_taken,false);
+});
+
+import {renderCapabilityDetail} from '../systemia/mcp/fabric-public-site.mjs';
+
+test('first-delivery discovery exposes an owned inquiry separate from checkout',async()=>{
+ const id='findmypart-repair-shop-desk-v1';
+ const capability=byId(id);
+ assert.ok(capability);
+ const result=await run(id);
+ assert.equal(result.scoped_inquiry.capability_id,id);
+ assert.equal(result.scoped_inquiry.url,'https://fabric.systemiacommandcenters.com/capabilities/'+id);
+ assert.equal(result.scoped_inquiry.checkout_available,false);
+ assert.equal(result.scoped_inquiry.inquiry_submitted,false);
+ assert.equal(result.human_offer_url,null);
+ assert.equal(result.buyer_checkout_available,false);
+ const matches=matchFabricCapabilities('source difficult obsolete parts for my repair shop',catalog,{limit:5});
+ assert.ok(matches.some(x=>x.public_id===id&&x.scoped_inquiry?.state==='scoped_inquiry_only'));
+ const html=renderCapabilityDetail(capability);
+ assert.match(html,/Request a scoped engagement/);
+ assert.match(html,/mailto:jessegaethle10@gmail.com/);
+ assert.match(html,/findmypart-repair-shop-desk-v1/);
+ assert.match(html,/Nothing is submitted automatically/);
+});
+test('retired or explicitly held identities never receive scoped inquiry continuation',async()=>{
+ for(const id of ['rivet-site-underwriting-v1','aliev-site-opportunity-snapshot-v1','income-war-map-v1']){
+  assert.equal(scopedInquiryOption(byId(id)),null,id);
+  assert.equal((await run(id)).scoped_inquiry,null,id);
+  assert.doesNotMatch(renderCapabilityDetail(byId(id)),/Request a scoped engagement/);
+ }
+ assert.equal(scopedInquiryOption({public_id:'example',commercial_state:'safety_hold'}),null);
+ assert.equal(scopedInquiryOption({public_id:'example',commercial_state:'discovery_only',state:'authority_blocked'}),null);
+ assert.equal(scopedInquiryOption({public_id:'systemia-yard-runtime-extension-v1',commercial_state:'verification_required'}),null);
 });
