@@ -42,7 +42,7 @@ export function deriveDemandScopeHypotheses(raw,{portfolio,painIndex,now=new Dat
  }
  const text=norm(demand), words=new Set(tokens(demand)), matches=new Map(), repeated=new Set();
  for(const entry of painIndex.entries){
-   const source=entry?.kind==='machine_offer'?'machine_offer':entry?.kind==='registry_product'?'registry_product':null;
+   const source=entry?.kind==='machine_offer'?'machine_offer':entry?.kind==='product'?'registry_product':null;
    const key=source==='machine_offer'?entry?.public_id:entry?.product_key;
    const id=source+':'+key, row=candidates.get(id);
    if(!source||typeof key!=='string'||!row||duplicate.has(id)||retired(key)||
@@ -53,8 +53,9 @@ export function deriveDemandScopeHypotheses(raw,{portfolio,painIndex,now=new Dat
    const ranked=phrases.map(p=>({p,score:matchScore(text,p,words)})).filter(x=>x.score>0).sort((a,b)=>b.score-a.score||a.p.localeCompare(b.p));
    if(!ranked.length)continue;
    const outputs=clean(entry.outputs);
-   if(!outputs||outputs.length>850)continue;
-   matches.set(id,{source,key,evidence_ref:ref,proposed_deliverable:'Review scope for: '+outputs,matched_phrase:ranked[0].p,match_score:ranked[0].score});
+   if(outputs.length>850||(!outputs&&source==='machine_offer'))continue;
+   const scope=outputs?'Review scope for: '+outputs:'Define and verify a bounded deliverable for '+clean(row.name||key)+' against the buyer evidence; no existing delivery contract inferred.';
+   matches.set(id,{source,key,evidence_ref:ref,proposed_deliverable:scope,matched_phrase:ranked[0].p,match_score:ranked[0].score});
  }
  return [...matches.entries()].filter(([id])=>!repeated.has(id)).map(([,m])=>m)
  .sort((a,b)=>b.match_score-a.match_score||a.key.localeCompare(b.key)).slice(0,3);
